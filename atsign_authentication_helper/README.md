@@ -10,7 +10,9 @@ This plugin can be added to the project as git dependency in pubspec.yaml
 dependencies:
   atsign_authentication_helper:
     git:
-        url: git@git.geekyants.com:flutter-client-projects/atsign-authentication-helper.git
+        url: git@github.com:atsign-foundation/at_widgets.git
+	path: atsign_authentication_helper
+	ref: dev_env
 ```
 
 
