@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/atsign_authentication_helper.iml" filepath="$PROJECT_DIR$/atsign_authentication_helper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/atsign_authentication_helper_android.iml" filepath="$PROJECT_DIR$/android/atsign_authentication_helper_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/example/android/atsign_authentication_helper_example_android.iml" filepath="$PROJECT_DIR$/example/android/atsign_authentication_helper_example_android.iml" />
+    </modules>
+  </component>
+</project>
