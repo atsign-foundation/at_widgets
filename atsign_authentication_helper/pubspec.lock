@@ -32,52 +32,52 @@ packages:
   at_client:
     dependency: transitive
     description:
-      path: "../../projects/atsign_foundation/at_client"
-      relative: true
-    source: path
-    version: "0.1.0"
+      name: at_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+1"
   at_client_mobile:
     dependency: "direct main"
     description:
-      path: "../../projects/atsign_foundation/at_client_mobile"
-      relative: true
-    source: path
-    version: "0.1.0"
+      name: at_client_mobile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0+1"
   at_commons:
     dependency: "direct main"
     description:
-      path: "../../projects/atsign_foundation/at_commons"
-      relative: true
-    source: path
-    version: "0.1.0"
+      name: at_commons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+1"
   at_lookup:
-    dependency: "direct main"
+    dependency: transitive
     description:
-      path: "../../projects/atsign_foundation/at_lookup"
-      relative: true
-    source: path
-    version: "0.1.0"
+      name: at_lookup
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0+1"
   at_persistence_secondary_server:
     dependency: transitive
     description:
-      path: "../../projects/atsign_foundation/at_persistence_secondary_server"
-      relative: true
-    source: path
-    version: "0.1.0"
+      name: at_persistence_secondary_server
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+1"
   at_persistence_spec:
     dependency: transitive
     description:
-      path: "../../projects/atsign_foundation/at_persistence_spec"
-      relative: true
-    source: path
-    version: "0.1.0"
+      name: at_persistence_spec
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+1"
   at_utils:
     dependency: transitive
     description:
-      path: "../../projects/atsign_foundation/at_utils"
-      relative: true
-    source: path
-    version: "0.1.0"
+      name: at_utils
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+1"
   base2e15:
     dependency: transitive
     description:
@@ -182,14 +182,14 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.13"
+    version: "2.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
   flutter_keychain:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_keychain
       url: "https://pub.dartlang.org"
@@ -219,13 +219,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  google_fonts:
-    dependency: "direct main"
-    description:
-      name: google_fonts
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
   hive:
     dependency: transitive
     description:

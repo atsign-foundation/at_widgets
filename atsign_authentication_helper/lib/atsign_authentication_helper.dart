@@ -22,5 +22,4 @@
 
 library atsign_auth_helper;
 
-export './screens/start_button.dart';
-export './services/client_sdk_service.dart';
+export './screens/scan_qr.dart';

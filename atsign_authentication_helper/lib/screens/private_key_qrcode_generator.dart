@@ -3,10 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:atsign_authentication_helper/widgets/custom_button.dart';
-import 'package:atsign_authentication_helper/services/client_sdk_service.dart';
+import 'package:atsign_authentication_helper/services/authentication_service.dart';
 import 'package:atsign_authentication_helper/services/size_config.dart';
 import 'package:atsign_authentication_helper/utils/text_strings.dart';
-import 'package:atsign_authentication_helper/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +33,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
   void initState() {
     super.initState();
     // _generateAESKey();
-    atsign = ClientSdkService.getInstance().currentAtsign;
+    atsign = AuthenticationService.getInstance().currentAtsign;
   }
 
   GlobalKey globalKey = new GlobalKey();
@@ -101,12 +100,8 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Text(
                     TextStrings().saveKeyTitle,
-                    // style: CustomTextStyles.primaryBold16,
                   ),
                 ),
-                // shape: RoundedRectangleBorder(
-                //     borderRadius:
-                //         BorderRadius.vertical(bottom: Radius.circular(30))),
               ),
             ),
             body: Padding(
@@ -118,7 +113,6 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   ),
                   Text(
                     TextStrings().importantTitle,
-                    // style: CustomTextStyles.primaryMedium14,
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
@@ -126,7 +120,6 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   ),
                   Text(
                     TextStrings().saveKeyDescription,
-                    // style: CustomTextStyles.primaryRegular16,
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
@@ -167,7 +160,8 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  ClientSdkService.getInstance().nextScreen));
+                                  AuthenticationService.getInstance()
+                                      .nextScreen));
                     },
                   )
                 ],
@@ -180,7 +174,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
 
   _generateAESKey() async {
     var aesEncryptedKeys =
-        await ClientSdkService.getInstance().getEncryptedKeys(atsign);
+        await AuthenticationService.getInstance().getEncryptedKeys(atsign);
     var directory;
     String path;
     directory = await path_provider.getApplicationDocumentsDirectory();
@@ -192,7 +186,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     var keyString = jsonEncode(aesEncryptedKeys);
     emptyFile.writeAsStringSync(keyString);
     _logger.info('Saved encrypted keys to file');
-    aesKey = await ClientSdkService.getInstance().getAESKey(atsign);
+    aesKey = await AuthenticationService.getInstance().getAESKey(atsign);
     _logger.info('aeskey is $aesKey');
     setState(() {});
   }

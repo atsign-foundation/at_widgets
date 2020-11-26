@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:atsign_authentication_helper/utils/constants.dart';
 import 'package:atsign_authentication_helper/widgets/custom_button.dart';
 import 'package:atsign_authentication_helper/widgets/website_webview.dart';
 import 'package:atsign_authentication_helper/services/at_error_dialog.dart';
 import 'package:atsign_authentication_helper/services/size_config.dart';
-import 'package:atsign_authentication_helper/services/client_sdk_service.dart';
+import 'package:atsign_authentication_helper/services/authentication_service.dart';
 import 'package:atsign_authentication_helper/utils/colors.dart';
 import 'package:atsign_authentication_helper/utils/text_strings.dart';
 import 'package:file_picker/file_picker.dart';
@@ -16,7 +17,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 class ScanQrScreen extends StatefulWidget {
-  ScanQrScreen({Key key}) : super(key: key);
+  final Widget nextScreen;
+  final AtClientService atClientServiceInstance;
+  ScanQrScreen(
+      {Key key,
+      @required this.nextScreen,
+      @required this.atClientServiceInstance})
+      : super(key: key);
 
   @override
   _ScanQrScreenState createState() => _ScanQrScreenState();
@@ -25,7 +32,8 @@ class ScanQrScreen extends StatefulWidget {
 class _ScanQrScreenState extends State<ScanQrScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QrReaderViewController _controller;
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  AuthenticationService authenticationService =
+      AuthenticationService.getInstance();
   bool loading = false;
   bool cameraPermissionGrated = false;
   bool scanCompleted = false;
@@ -37,6 +45,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   @override
   void initState() {
     askCameraPermission();
+    authenticationService.atClientServiceInstance =
+        widget.atClientServiceInstance;
+    authenticationService.setNextScreen = widget.nextScreen;
     super.initState();
   }
 
@@ -67,20 +78,18 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   }
 
   void onScan(String data, List<Offset> offsets, context) async {
-    print("here scan completed => $data ");
     _controller.stopCamera();
     this.setState(() {
       scanCompleted = true;
     });
     String authenticateMessage =
-        await clientSdkService.authenticate(data, context);
+        await authenticationService.authenticate(data, context);
 
-    print("message from authenticate => $authenticateMessage");
     showSnackBar(context, authenticateMessage);
     this.setState(() {
       scanCompleted = false;
     });
-    if (authenticateMessage != clientSdkService.AUTH_SUCCESS) {
+    if (authenticateMessage != authenticationService.AUTH_SUCCESS) {
       await _controller.startCamera((data, offsets) {
         onScan(data, offsets, context);
       });
@@ -112,9 +121,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         });
       } else {
         String authenticateMessage =
-            await clientSdkService.authenticate(cramKey, context);
+            await authenticationService.authenticate(cramKey, context);
 
-        showSnackBar(context, authenticateMessage);
+        _showAlertDialog(authenticateMessage);
         setState(() {
           loading = false;
         });
@@ -210,15 +219,14 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     assert(aesKey != null || aesKey != '');
     assert(atsign != null || atsign != '');
     assert(contents != null || contents != '');
-    await clientSdkService
+    await authenticationService
         .authenticateWithAESKey(atsign, jsonData: contents, decryptKey: aesKey)
         .then((response) async {
-      await clientSdkService.startMonitor();
       if (response) {
         await Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => clientSdkService.nextScreen));
+                builder: (context) => authenticationService.nextScreen));
       }
       setState(() {
         loading = false;
@@ -226,11 +234,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     }).catchError((err) {
       print("Error in authenticateWithAESKey => ${err}");
       throw Exception(err.toString());
-      // _showAlertDialog(err);
-      // setState(() {
-      //   loading = false;
-      // });
-      // _logger.severe('Scanning QR code throws $err Error');
     });
   }
 
@@ -244,6 +247,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Scaffold(
       appBar: AppBar(),

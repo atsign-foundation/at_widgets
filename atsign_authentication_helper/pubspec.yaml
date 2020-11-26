@@ -13,7 +13,6 @@ dependencies:
     sdk: flutter
 
   path_provider: ^1.6.24
-  flutter_keychain: ^1.0.0
   archive: ^2.0.13
   file_picker: ^2.0.10
   flutter_qr_reader: ^1.0.3
@@ -21,26 +20,10 @@ dependencies:
   share: ^0.6.5+2
   webview_flutter: ^1.0.0
   qr_flutter: ^3.2.0
-  google_fonts: ^1.1.0
   
-  at_client_mobile:
-    path: ../../projects/atsign_foundation/at_client_mobile
-    # git:
-    #   url: git@github.com:atsign-company/atsign_foundation.git
-    #   path: at_client_mobile
-    #   ref: dev_env
-  at_commons:
-    path: ../../projects/atsign_foundation/at_commons
-    # git:
-    #   url: git@github.com:atsign-company/atsign_foundation.git
-    #   path: at_commons
-    #   ref: dev_env
-  at_lookup:
-    path: ../../projects/atsign_foundation/at_lookup
-    # git:
-    #   url: git@github.com:atsign-company/atsign_foundation.git
-    #   path: at_lookup
-    #   ref: dev_env
+  at_client_mobile: ^1.0.0
+  at_commons: ^1.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
