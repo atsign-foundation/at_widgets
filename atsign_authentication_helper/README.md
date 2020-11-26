@@ -10,9 +10,9 @@ This plugin can be added to the project as git dependency in pubspec.yaml
 dependencies:
   atsign_authentication_helper:
     git:
-        url: git@github.com:atsign-foundation/at_widgets.git
-	      path: atsign_authentication_helper
-	      ref: dev_env
+      url: git@github.com:atsign-foundation/at_widgets.git
+      path: atsign_authentication_helper
+      ref: dev_env
 ```
 
 
@@ -37,12 +37,13 @@ compileSdkVersion 29
 minSdkVersion 24
 targetSdkVersion 29
 ```
+
 ### iOS
 Add the following permission string to info.plist
 
 ```
   <key>NSCameraUsageDescription</key>
-	<string>The camera is used to scan QR code to pair your device with your @sign</string>
+  <string>The camera is used to scan QR code to pair your device with your @sign</string>
 ```
 
 Also, update the Podfile with the following lines of code:
@@ -85,15 +86,15 @@ end
 
 ### Plugin description
 This plugin provides two screens:
-## QR scanner screen
+#### QR scanner screen
 This helps in CRAM authentication. The user can scan a QR code using the camera or upload the image file of the QR code
 There is also an option to pair the AtSign using the `Upload key file` option. A zip file of the restore keys or providing both the backup files of AtKeys (multiple select) will work.
-## Screen to save keys
+#### Screen to save keys
 This screen will help to save the restore keys generated after a successful CRAM authentication in a zip format. The continue option navigates to the screen provided in the `nextScreen` parameter.
 
+### Sample usage
 It is expected that the app will first create an AtClientService instance using the preferences and pass it to the plugin in the `atClientServiceInstance` parameter. Also, the navigation decision can be covered in the app logic.
 
-Sample usage:
 ```
 FlatButton(
   color: Colors.black12,
@@ -106,5 +107,5 @@ FlatButton(
             .atClientServiceInstance,
           nextScreen: SecondScreen())));
   },
-  child: Text('Show QR scanner screen')))
+  child: Text('Show QR scanner screen'))
 ```
