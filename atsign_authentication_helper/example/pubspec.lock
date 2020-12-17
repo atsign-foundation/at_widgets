@@ -32,52 +32,66 @@ packages:
   at_client:
     dependency: transitive
     description:
-      name: at_client
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1+1"
+      path: at_client
+      ref: dev_env
+      resolved-ref: "685498148804da13fe02fcb892df8415393fac20"
+      url: "git@github.com:atsign-company/atsign_foundation.git"
+    source: git
+    version: "0.1.0"
   at_client_mobile:
     dependency: transitive
     description:
-      name: at_client_mobile
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0+1"
+      path: at_client_mobile
+      ref: dev_env
+      resolved-ref: "685498148804da13fe02fcb892df8415393fac20"
+      url: "git@github.com:atsign-company/atsign_foundation.git"
+    source: git
+    version: "0.1.0"
   at_commons:
     dependency: transitive
     description:
-      name: at_commons
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1+1"
+      path: at_commons
+      ref: dev_env
+      resolved-ref: "685498148804da13fe02fcb892df8415393fac20"
+      url: "git@github.com:atsign-company/atsign_foundation.git"
+    source: git
+    version: "0.1.0"
   at_lookup:
     dependency: transitive
     description:
-      name: at_lookup
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0+1"
+      path: at_lookup
+      ref: dev_env
+      resolved-ref: "685498148804da13fe02fcb892df8415393fac20"
+      url: "git@github.com:atsign-company/atsign_foundation.git"
+    source: git
+    version: "0.1.0"
   at_persistence_secondary_server:
     dependency: transitive
     description:
-      name: at_persistence_secondary_server
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1+1"
+      path: at_persistence_secondary_server
+      ref: dev_env
+      resolved-ref: "685498148804da13fe02fcb892df8415393fac20"
+      url: "git@github.com:atsign-company/atsign_foundation.git"
+    source: git
+    version: "0.1.0"
   at_persistence_spec:
     dependency: transitive
     description:
-      name: at_persistence_spec
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1+1"
+      path: at_persistence_spec
+      ref: dev_env
+      resolved-ref: "685498148804da13fe02fcb892df8415393fac20"
+      url: "git@github.com:atsign-company/atsign_foundation.git"
+    source: git
+    version: "0.1.0"
   at_utils:
     dependency: transitive
     description:
-      name: at_utils
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1+1"
+      path: at_utils
+      ref: dev_env
+      resolved-ref: "685498148804da13fe02fcb892df8415393fac20"
+      url: "git@github.com:atsign-company/atsign_foundation.git"
+    source: git
+    version: "0.1.0"
   atsign_authentication_helper:
     dependency: "direct main"
     description:

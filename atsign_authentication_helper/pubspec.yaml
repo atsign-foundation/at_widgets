@@ -20,9 +20,12 @@ dependencies:
   share: ^0.6.5+2
   webview_flutter: ^1.0.0
   qr_flutter: ^3.2.0
-  
-  at_client_mobile: ^1.0.0
-  at_commons: ^1.0.1
+
+  at_client_mobile:
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_client_mobile
+      ref: dev_env
 
 dev_dependencies:
   flutter_test:
