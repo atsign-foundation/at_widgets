@@ -30,40 +30,40 @@ packages:
     source: hosted
     version: "2.5.0-nullsafety.1"
   at_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   at_client_mobile:
     dependency: "direct main"
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.0+2"
   at_commons:
     dependency: "direct main"
     description:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   at_lookup:
     dependency: transitive
     description:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.0+2"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -72,12 +72,12 @@ packages:
     source: hosted
     version: "1.0.1+1"
   at_utils:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   base2e15:
     dependency: transitive
     description:

@@ -35,20 +35,20 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   at_client_mobile:
     dependency: transitive
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.0+2"
   at_common_flutter:
     dependency: transitive
     description:
-      path: "../../at_common_flutter"
-      relative: true
-    source: path
+      name: at_common_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.0.1"
   at_commons:
     dependency: transitive
@@ -56,15 +56,13 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   at_contact:
     dependency: transitive
     description:
-      path: at_contact
-      ref: master
-      resolved-ref: d6ad1e7c402afe9c1eda0d9ef26e1d2334cd1255
-      url: "git@github.com:atsign-foundation/at_libraries.git"
-    source: git
+      name: at_contact
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.0"
   at_contacts_flutter:
     dependency: "direct main"
@@ -79,14 +77,14 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.0+2"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -100,15 +98,13 @@ packages:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   atsign_authentication_helper:
     dependency: "direct main"
     description:
-      path: atsign_authentication_helper
-      ref: dev_env
-      resolved-ref: "1585a9497db4eb7c80823114d4e98f8a9e7c5ac3"
-      url: "git@github.com:atsign-foundation/at_widgets.git"
-    source: git
+      name: atsign_authentication_helper
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.0.1"
   base2e15:
     dependency: transitive

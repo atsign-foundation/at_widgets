@@ -21,11 +21,7 @@ dependencies:
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
     path: ../
-  atsign_authentication_helper:
-    git:
-      url: git@github.com:atsign-foundation/at_widgets.git
-      path: atsign_authentication_helper
-      ref: dev_env
+  atsign_authentication_helper: ^0.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -28,20 +28,20 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   at_client_mobile:
     dependency: "direct main"
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.0+2"
   at_common_flutter:
     dependency: "direct main"
     description:
-      path: "../at_common_flutter"
-      relative: true
-    source: path
+      name: at_common_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.0.1"
   at_commons:
     dependency: "direct main"
@@ -49,15 +49,13 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   at_contact:
     dependency: "direct main"
     description:
-      path: at_contact
-      ref: master
-      resolved-ref: d6ad1e7c402afe9c1eda0d9ef26e1d2334cd1255
-      url: "git@github.com:atsign-foundation/at_libraries.git"
-    source: git
+      name: at_contact
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.0"
   at_lookup:
     dependency: "direct main"
@@ -65,14 +63,14 @@ packages:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.0+2"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -86,7 +84,7 @@ packages:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.1+2"
   base2e15:
     dependency: transitive
     description:
