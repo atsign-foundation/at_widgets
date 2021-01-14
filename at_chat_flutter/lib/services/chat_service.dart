@@ -6,7 +6,6 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_lookup/src/connection/outbound_connection.dart';
-import 'package:at_chat_flutter/utils/init_chat_service.dart';
 
 class ChatService {
   ChatService._();

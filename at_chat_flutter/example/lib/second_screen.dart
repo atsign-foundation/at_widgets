@@ -27,6 +27,7 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text('Second Screen')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

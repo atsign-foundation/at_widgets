@@ -1,6 +1,6 @@
 name: atsign_authentication_helper
 description: A new flutter plugin project.
-version: 0.0.1
+version: 0.0.2
 homepage: https://atsign.com/
 
 environment:
@@ -20,10 +20,10 @@ dependencies:
   webview_flutter: ^1.0.0
   qr_flutter: ^3.2.0
   
-  at_client_mobile: ^1.0.0+2
-  at_commons: ^1.0.1+2
-  at_utils: ^1.0.1+2
-  at_client: ^1.0.1+2
+  at_client_mobile: ^1.0.0+3
+  at_commons: ^1.0.1+3
+  at_utils: ^1.0.1+3
+  at_client: ^1.0.1+3
 
 dev_dependencies:
   flutter_test:
