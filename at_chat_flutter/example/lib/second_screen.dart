@@ -55,6 +55,11 @@ class _SecondScreenState extends State<SecondScreen> {
               autofocus: true,
               onChanged: (value) {
                 chatWithAtSign = value;
+                if (showOptions) {
+                  setState(() {
+                    showOptions = false;
+                  });
+                }
               },
               // validator: Validators.validateAdduser,
               decoration: InputDecoration(

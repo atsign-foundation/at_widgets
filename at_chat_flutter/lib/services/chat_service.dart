@@ -131,8 +131,8 @@ class ChatService {
     var result = await atClientInstance
         .getKeys(
             sharedBy: chatWithAtSign, sharedWith: currentAtSign, regex: chatKey)
-        .catchError(
-            (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+        .catchError((e) =>
+            print("error in checkForMissedMessages:getKeys ${e.toString()}"));
     result.forEach((key) {
       if (referenceKey.compareTo(key) == -1) {
         print('missed key - $key');
@@ -143,8 +143,9 @@ class ChatService {
 
   getMissingKey(String missingKey) async {
     AtKey missingAtkey = AtKey.fromString(missingKey);
-    var result = await atClientInstance.get(missingAtkey).catchError(
-        (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+    var result = await atClientInstance
+        .get(missingAtkey)
+        .catchError((e) => print("error in getMissingKey:get ${e.toString()}"));
     print('result - $result');
     if (result != null) {
       setChatHistory(Message(
@@ -152,7 +153,8 @@ class ChatService {
           sender: chatWithAtSign,
           time: int.parse(missingKey
               .replaceFirst(chatWithAtSign, '')
-              .replaceFirst(chatKey, '')),
+              .replaceFirst(chatKey, '')
+              .split('.')[0]),
           type: MessageType.INCOMING));
     }
   }
