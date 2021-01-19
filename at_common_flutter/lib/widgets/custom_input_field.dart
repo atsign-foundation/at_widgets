@@ -2,11 +2,15 @@ import 'package:at_common_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomInputField extends StatelessWidget {
-  final String hintText;
+  final String hintText, initialValue;
   final double width, height;
   final IconData icon;
-  final Function onTap;
+  final Function onTap, onSubmitted;
   final Color iconColor;
+  final ValueChanged<String> value;
+  final bool isReadOnly;
+
+  final textController = TextEditingController();
 
   CustomInputField(
       {this.hintText = '',
@@ -14,10 +18,15 @@ class CustomInputField extends StatelessWidget {
       this.width = 300,
       this.iconColor,
       this.icon,
-      this.onTap});
+      this.onTap,
+      this.value,
+      this.initialValue = '',
+      this.onSubmitted,
+      this.isReadOnly = false});
 
   @override
   Widget build(BuildContext context) {
+    textController.text = initialValue;
     return Container(
       width: width,
       height: height,
@@ -30,6 +39,7 @@ class CustomInputField extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: TextField(
+              readOnly: isReadOnly,
               decoration: InputDecoration(
                 hintText: hintText,
                 enabledBorder: InputBorder.none,
@@ -37,6 +47,15 @@ class CustomInputField extends StatelessWidget {
                 hintStyle: TextStyle(color: ColorConstants.darkGrey),
               ),
               onTap: onTap ?? null,
+              onChanged: (val) {
+                value(val);
+              },
+              controller: textController,
+              onSubmitted: (str) {
+                if (onSubmitted != null) {
+                  onSubmitted(str);
+                }
+              },
             ),
           ),
           icon != null

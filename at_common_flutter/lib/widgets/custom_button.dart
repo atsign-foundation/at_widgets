@@ -1,10 +1,11 @@
-import 'package:at_common_flutter/utils/text_styles.dart';
-
 /// Custom button widget [isInverted] toggles between black and white button,
 /// [isInverted=false] by default, if true bg color and border color goes [white]
 /// from [black], text color goes [black] from [white].
+
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_common_flutter/utils/colors.dart';
+import 'package:at_common_flutter/utils/text_styles.dart';
 
 class CustomButton extends StatelessWidget {
   final bool isInverted;
@@ -12,7 +13,7 @@ class CustomButton extends StatelessWidget {
   final String buttonText;
   final double height;
   final double width;
-  final bool isOrange;
+  final Color buttonColor;
 
   const CustomButton(
       {Key key,
@@ -21,7 +22,7 @@ class CustomButton extends StatelessWidget {
       this.buttonText = '',
       this.height,
       this.width,
-      this.isOrange = false})
+      this.buttonColor = ColorConstants.orange})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -33,11 +34,7 @@ class CustomButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.toWidth),
-            color: (isOrange)
-                ? Color(0xffF05E3E)
-                : (isInverted)
-                    ? Colors.white
-                    : Colors.black),
+            color: (isInverted) ? buttonColor : Colors.black),
         child: Center(
           child: Text(
             buttonText,
