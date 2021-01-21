@@ -17,6 +17,11 @@ class AuthenticationService {
     atClientServiceInstance = instance;
   }
 
+  AtClientPreference atClientPreference;
+  set setAtClientPreference(AtClientPreference preference) {
+    atClientPreference = preference;
+  }
+
   String _atsign;
   String get currentAtsign => _atsign;
   final String AUTH_SUCCESS = "Authentication successful";
@@ -59,15 +64,18 @@ class AuthenticationService {
 
   // first time setup with cram authentication
   Future<bool> authenticateWithCram(String atsign, {String cramSecret}) async {
-    var result = await atClientServiceInstance.authenticate(atsign,
-        cramSecret: cramSecret);
+    atClientPreference.cramSecret = cramSecret;
+    var result =
+        await atClientServiceInstance.authenticate(atsign, atClientPreference);
     return result;
   }
 
   Future<bool> authenticateWithAESKey(String atsign,
       {String cramSecret, String jsonData, String decryptKey}) async {
-    var result = await atClientServiceInstance.authenticate(atsign,
-        cramSecret: cramSecret, jsonData: jsonData, decryptKey: decryptKey);
+    atClientPreference.cramSecret = cramSecret;
+    var result = await atClientServiceInstance.authenticate(
+        atsign, atClientPreference,
+        jsonData: jsonData, decryptKey: decryptKey);
     _atsign = atsign;
     return result;
   }

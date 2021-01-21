@@ -19,10 +19,12 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 class ScanQrScreen extends StatefulWidget {
   final Widget nextScreen;
   final AtClientService atClientServiceInstance;
+  final AtClientPreference atClientPreference;
   ScanQrScreen(
       {Key key,
       @required this.nextScreen,
-      @required this.atClientServiceInstance})
+      @required this.atClientServiceInstance,
+      @required this.atClientPreference})
       : super(key: key);
 
   @override
@@ -47,6 +49,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     askCameraPermission();
     authenticationService.atClientServiceInstance =
         widget.atClientServiceInstance;
+    authenticationService.atClientPreference = widget.atClientPreference;
     authenticationService.setNextScreen = widget.nextScreen;
     super.initState();
   }

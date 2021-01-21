@@ -48,6 +48,8 @@ class _MyAppState extends State<MyApp> {
                                   builder: (context) => ScanQrScreen(
                                       atClientServiceInstance: clientSdkService
                                           .atClientServiceInstance,
+                                      atClientPreference:
+                                          clientSdkService.atClientPreference,
                                       nextScreen: SecondScreen())));
                         },
                         child: Text('Show QR scanner screen'))),
