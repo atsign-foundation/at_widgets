@@ -127,6 +127,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                         height: 50.toHeight * deviceTextFactor,
                         isInverted: true,
                         buttonText: TextStrings().buttonCancel,
+                        buttonColor: Colors.white,
                         onPressed: () {
                           _contactService.getAtSignError = '';
                           Navigator.pop(context);
