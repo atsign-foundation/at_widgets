@@ -10,14 +10,13 @@ class CustomNav {
 
   push(Widget widget, context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => widget));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
     });
   }
 
   pop(context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pop(context);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    Navigator.pop(context);
+    // });
   }
 }

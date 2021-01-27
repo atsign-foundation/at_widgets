@@ -11,25 +11,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^1.6.24
   archive: ^2.0.13
   file_picker: 2.0.7
   flutter_qr_reader: ^1.0.3
+  path_provider: ^1.6.24
   permission_handler: ^5.0.1+1
   share: ^0.6.5+2
-  provider: ^4.0.0
   url_launcher: ^5.7.0
-
-
-  # at_client_mobile: 
-  #   git:
-  #     url: git@github.com:atsign-company/atsign_foundation.git
-  #     path: at_client_mobile
-  #     ref: dev_env
-  at_client_mobile:
-    path: /Users/apple/Documents/shris/@company/self_key/atsign_foundation/at_client_mobile
+  at_client_mobile: 
+    git:
+      url: git@github.com:atsign-company/atsign_foundation.git
+      path: at_client_mobile
+      ref: onboard_self_key
   at_server_status:
-    path: /Users/apple/Documents/shris/@company/at_libraries/at_server_status
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_server_status
+      ref: dev_env
 
 dev_dependencies:
   flutter_test:

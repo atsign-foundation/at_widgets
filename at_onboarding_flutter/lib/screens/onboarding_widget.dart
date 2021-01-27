@@ -7,15 +7,19 @@ import 'package:at_onboarding_flutter/utils/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 
-class OnboardingWidget extends StatefulWidget {
-  ///The atsign to onboard if not null else takes the atsign from keychain.
+class Onboarding {
+  ///Required field as for navigation.
+  final BuildContext context;
+
+  ///Onboards the given [atsign] if not null.
+  ///if [atsign] is null then takes the atsign from keychain.
+  ///if[atsign] is empty then it directly jumps into authenticate without performing onboarding. (or)
+  ///if [atsign] is empty then it just presents pairAtSign screen without onboarding the atsign. (or)
+  ///Just provide an empty string for ignoring existing atsign in keychain or app's atsign.
   final String atsign;
 
-  ///The namespace that the app's data get appended with.
-  /// ```
-  /// Example : persona, buzz, mosphere
-  /// ```
-  final String namespace;
+  ///The atClientPreference [required] to continue with the onboarding.
+  final AtClientPreference atClientPreference;
 
   ///Default the plugin connects to [root.atsign.org] to perform onboarding.
   final String domain;
@@ -27,8 +31,68 @@ class OnboardingWidget extends StatefulWidget {
   final Widget logo;
 
   ///Function returns atClientServiceMap on successful onboarding.
-  ///Function returns error when failed in onboarding the existing or given atsign if [nextScreen] is null;
   final Function onboard;
+
+  ///Function returns error when failed in onboarding the existing or given atsign if [nextScreen] is null;
+  final Function onError;
+
+  ///after successful onboarding will gets redirected to this screen if it is not null.
+  final Widget nextScreen;
+  Onboarding(
+      {Key key,
+      @required this.context,
+      this.atsign,
+      this.onboard,
+      this.onError,
+      this.nextScreen,
+      @required this.atClientPreference,
+      this.appColor,
+      this.logo,
+      this.domain}) {
+    _show();
+  }
+  void _show() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => OnboardingWidget(
+            atsign: this.atsign,
+            onboard: this.onboard,
+            onError: this.onError,
+            nextScreen: this.nextScreen,
+            atClientPreference: this.atClientPreference,
+            appColor: this.appColor,
+            logo: this.logo,
+            domain: this.domain));
+    print('printing inside show value');
+  }
+}
+
+class OnboardingWidget extends StatefulWidget {
+  ///Onboards the given [atsign] if not null.
+  ///if [atsign] is null then takes the atsign from keychain.
+  ///if[atsign] is empty then it directly jumps into authenticate without performing onboarding. (or)
+  ///if [atsign] is empty then it just presents pairAtSign screen without onboarding the atsign. (or)
+  ///Just provide an empty string for ignoring existing atsign in keychain or app's atsign.
+  final String atsign;
+
+  ///The atClientPreference [required] to continue with the onboarding.
+  final AtClientPreference atClientPreference;
+
+  ///Default the plugin connects to [root.atsign.org] to perform onboarding.
+  final String domain;
+
+  ///The color of the screen to match with the app's aesthetics. default it is [black].
+  final Color appColor;
+
+  ///if logo is not null then displays the widget in the left side of appbar else displays nothing.
+  final Widget logo;
+
+  ///Function returns atClientServiceMap on successful onboarding.
+  final Function onboard;
+
+  ///Function returns error when failed in onboarding the existing or given atsign if [nextScreen] is null;
+  final Function onError;
 
   ///after successful onboarding will gets redirected to this screen if it is not null.
   final Widget nextScreen;
@@ -37,8 +101,9 @@ class OnboardingWidget extends StatefulWidget {
       {Key key,
       this.atsign,
       this.onboard,
+      this.onError,
       this.nextScreen,
-      this.namespace,
+      @required this.atClientPreference,
       this.appColor,
       this.logo,
       this.domain});
@@ -49,16 +114,20 @@ class OnboardingWidget extends StatefulWidget {
 class _OnboardingWidgetState extends State<OnboardingWidget> {
   var _onboardingService = OnboardingService.getInstance();
   Future<bool> _future;
+  var data;
+  var error;
   @override
   void initState() {
-    // print("received atsign is ${widget.atsign}");
     AppConstants.rootDomain = widget.domain;
     _onboardingService.setLogo = widget.logo;
     _onboardingService.setNextScreen = widget.nextScreen;
     _onboardingService.onboardFunc = widget.onboard;
     ColorConstants.setAppColor = widget.appColor;
-    _onboardingService.namespace = widget.namespace;
-    _future = _onboardingService.onboard();
+    _onboardingService.setAtClientPreference = widget.atClientPreference;
+    _onboardingService.setAtsign = widget.atsign;
+    if (widget.atsign != '') {
+      _future = _onboardingService.onboard();
+    }
 
     super.initState();
   }
@@ -66,38 +135,40 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    if (widget.atsign == '') {
+      return PairAtsignWidget(
+        getAtSign: true,
+      );
+    }
+
     return FutureBuilder<bool>(
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (widget.nextScreen == null) {
-              CustomNav().pop(context);
-              return Container();
+            CustomNav().pop(context);
+            if (widget.nextScreen != null) {
+              CustomNav().push(widget.nextScreen, context);
             }
-            CustomNav().push(widget.nextScreen, context);
-            // return widget.nextScreen;
-            // WidgetsBinding.instance.addPostFrameCallback((_) {
-            //   Navigator.pushReplacement(context,
-            //       MaterialPageRoute(builder: (context) => widget.nextScreen));
-            // });
-            // Navigator.pushReplacement(context,
-            //     MaterialPageRoute(builder: (context) => widget.nextScreen));
           } else if (snapshot.hasError) {
             if (widget.nextScreen == null) {
-              widget.onboard(snapshot.error);
               CustomNav().pop(context);
-              return Container();
+              widget.onError(snapshot.error);
             }
-            if (snapshot.error == OnboardingStatus.ACTIVATE) {
+            if (snapshot.error == OnboardingStatus.ACTIVATE ||
+                snapshot.error == OnboardingStatus.RESTORE) {
               return PairAtsignWidget(
-                onboardStatus: OnboardingStatus.ACTIVATE,
+                onboardStatus: snapshot.error,
               );
             } else if (snapshot.error == OnboardingStatus.ATSIGN_NOT_FOUND) {
               return PairAtsignWidget(
                 getAtSign: true,
               );
+            } else {
+              CustomNav().pop(context);
+              Future.delayed((Duration(milliseconds: 200)), () {
+                widget.onError(snapshot.error);
+              });
             }
-            return PairAtsignWidget();
           }
           return Center(child: CircularProgressIndicator());
         });

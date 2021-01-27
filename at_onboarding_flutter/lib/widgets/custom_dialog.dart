@@ -1,3 +1,4 @@
+// import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
@@ -21,7 +22,7 @@ class CustomDialog extends StatelessWidget {
   final bool showClose;
 
   ///This is mandate field to display in the dialog.
-  final String message;
+  final dynamic message;
 
   ///if set to true will displays the textfield for atsign.
   final bool isAtsignForm;
@@ -112,9 +113,11 @@ class CustomDialog extends StatelessWidget {
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 Navigator.pop(context);
+                var isExisting = await OnboardingService.getInstance()
+                    .isExistingAtsign(_atsignController.text);
                 var atsignStatus = await OnboardingService.getInstance()
-                    .checkAtsignStatus(_atsignController.text);
-                this.onAtsign(atsignStatus);
+                    .checkAtsignStatus(atsign: _atsignController.text);
+                this.onAtsign(atsignStatus, isExisting, _atsignController.text);
               }
             },
             child: Text(
@@ -161,18 +164,23 @@ class CustomDialog extends StatelessWidget {
       case ServerStatus:
         return _getServerStatusMessage(error);
         break;
-      case String:
-        if (error == OnboardingStatus.ACTIVATE) {
-          return 'Your atsign got reactivated. Please activate with the new QRCode available on ${AppConstants.serverDomain} website.';
-        } else if (error == ResponseStatus.AUTH_FAILED) {
+      case OnboardingStatus:
+        return error.message;
+        break;
+      case ResponseStatus:
+        if (error == ResponseStatus.AUTH_FAILED) {
           if (_onboardingService.isPkam) {
             return 'Please provide valid backup zip file to continue.';
           } else {
             return _onboardingService.serverStatus == ServerStatus.activated
-                ? 'QR code was already activated. Please provide a relevant backupzip file to authenticate.'
+                ? 'Please provide a relevant backupzip file to authenticate.'
                 : 'Please provide a valid QRcode available on ${AppConstants.website} website to authenticate.';
           }
+        } else {
+          return '';
         }
+        break;
+      case String:
         return error;
         break;
       default:
@@ -196,7 +204,7 @@ class CustomDialog extends StatelessWidget {
     }
   }
 
-  Widget _getMessage(String message, bool isErrorDialog) {
+  Widget _getMessage(var message, bool isErrorDialog) {
     if (message == null) {
       return null;
     }

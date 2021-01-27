@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
+import 'package:at_onboarding_flutter/utils/color_constants.dart';
 import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
 import 'package:at_onboarding_flutter/utils/images.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
@@ -59,6 +60,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
       child: AbsorbPointer(
         absorbing: _loading,
         child: Scaffold(
+          backgroundColor: ColorConstants.light,
           key: _scaffoldKey,
           appBar: CustomAppBar(
             title: Strings.saveBackupZipTitle,
@@ -92,19 +94,6 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   Images.backupZip,
                   package: AppConstants.package,
                 )),
-                // Center(
-                //   child: Container(
-                //     child: RepaintBoundary(
-                //       key: globalKey,
-                //       child: QrImage(
-                //         backgroundColor: Colors.white,
-                //         data: atsign + ':' + aesKey,
-                //         size: 300,
-                //         // onError:
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 SizedBox(
                   height: 30.toHeight,
                 ),

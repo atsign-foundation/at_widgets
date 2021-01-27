@@ -5,7 +5,6 @@ import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 
 class OnboardingService {
   static final OnboardingService _singleton = OnboardingService._internal();
@@ -21,6 +20,8 @@ class OnboardingService {
 
   Map<String, AtClientService> atClientServiceMap = {};
   String _atsign;
+  AtClientPreference _atClientPreference;
+
   String _namespace;
   Widget _applogo;
   bool _isPkam;
@@ -33,8 +34,15 @@ class OnboardingService {
 
   get isPkam => _isPkam;
 
+  set setAtClientPreference(AtClientPreference _preference) =>
+      _atClientPreference = _preference
+        ..cramSecret = null
+        ..privateKey = null;
+  get atClientPreference => _atClientPreference;
+
   set namespace(String namespace) => _namespace = namespace;
   get appNamespace => _namespace;
+  set setAtsign(String atsign) => _atsign = atsign;
   String get currentAtsign => _atsign;
 
   // next route set from using app
@@ -68,30 +76,17 @@ class OnboardingService {
     return await _keyChainManager.getAtSign();
   }
 
-  Future<AtClientPreference> _getAtClientPreference({String cramSecret}) async {
-    final appDocumentDirectory =
-        await path_provider.getApplicationSupportDirectory();
-    String path = appDocumentDirectory.path;
-    var _atClientPreference = AtClientPreference()
-      ..isLocalStoreRequired = true
-      ..commitLogPath = path
-      ..cramSecret = cramSecret
-      ..namespace = _namespace
-      ..syncStrategy = SyncStrategy.ONDEMAND
-      ..rootDomain = AppConstants.serverDomain
-      ..hiveStoragePath = path;
-    return _atClientPreference;
-  }
-
   ///Returns `true` if authentication is successful for the existing atsign in device.
-  Future<bool> onboard({String atsign}) async {
+  Future<bool> onboard() async {
+    var atsign = _atsign;
     var atClientServiceInstance = _getClientServiceForAtsign(atsign);
-    var _atClientPreference = await _getAtClientPreference();
     var result = await atClientServiceInstance.onboard(
         atClientPreference: _atClientPreference, atsign: atsign);
     _atsign = atsign == null ? await this.getAtSign() : atsign;
     atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
-    onboardFunc(this.atClientServiceMap);
+    // Future.delayed((Duration(milliseconds: 500)), () {
+    onboardFunc(this.atClientServiceMap, _atsign);
+    // });
     _sync();
     return result;
   }
@@ -120,74 +115,26 @@ class OnboardingService {
         return c.future;
       }
       var atClientService = _getClientServiceForAtsign(atsign);
-      var _atClientPreference =
-          await _getAtClientPreference(cramSecret: cramSecret);
+      _atClientPreference..cramSecret = cramSecret;
+      if (cramSecret != null) {
+        _atClientPreference..privateKey = null;
+      }
       await atClientService.authenticate(atsign, _atClientPreference,
           jsonData: jsonData, decryptKey: decryptKey, status: status);
       _atsign = atsign;
       atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
-      onboardFunc(this.atClientServiceMap);
+      onboardFunc(this.atClientServiceMap, atsign);
       c.complete(ResponseStatus.AUTH_SUCCESS);
       await _sync();
       // return result;
     } catch (e) {
       print("error in authenticating =>  ${e.toString()}");
-      c.complete(ResponseStatus.AUTH_FAILED);
+      c.complete(
+          e.runtimeType == OnboardingStatus ? e : ResponseStatus.AUTH_FAILED);
       print(e);
     }
     return c.future;
   }
-
-  // // QR code scan
-  // Future authenticate(String qrCodeString, BuildContext context) async {
-  //   Completer c = Completer();
-  //   if (qrCodeString.contains('@')) {
-  //     try {
-  //       List<String> params = qrCodeString.split(':');
-  //       if (params?.length == 2) {
-  //         await authenticateWithCram(params[0], cramSecret: params[1]);
-  //         _atsign = params[0];
-  //         c.complete(authSuccess);
-  //         await Navigator.pushReplacement(
-  //             context,
-  //             MaterialPageRoute(
-  //                 builder: (context) => PrivateKeyQRCodeGenScreen()));
-  //       }
-  //     } catch (e) {
-  //       print("error in authenticating =>  ${e.toString()}");
-  //       c.complete('Failed to Authenticate');
-  //       print(e);
-  //     }
-  //   } else {
-  //     // wrong Qr code
-  //     c.complete("incorrect QR code");
-  //     print("incorrect QR code");
-  //   }
-  //   return c.future;
-  // }
-
-  // // first time setup with cram authentication
-  // Future<bool> authenticateWithCram(String atsign, {String cramSecret}) async {
-  //   var result = await atClientServiceInstance.authenticate(atsign,
-  //       cramSecret: cramSecret);
-  //   return result;
-  // }
-
-  ///authenticates by restoring a backup zip file.
-  Future<bool> authenticateWithAESKey(String atsign,
-      {String jsonData, String decryptKey}) async {
-    var atClientService = _getClientServiceForAtsign(atsign);
-    var _atClientPreference = await _getAtClientPreference();
-    var result = await atClientService.authenticate(atsign, _atClientPreference,
-        jsonData: jsonData, decryptKey: decryptKey);
-    _atsign = atsign;
-    return result;
-  }
-
-  // ///Fetches atsign from device keychain.
-  // Future<String> getAtSign() async {
-  //   return await atClientServiceInstance.getAtSign();
-  // }
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
@@ -221,6 +168,10 @@ class OnboardingService {
   }
 
   Future<bool> isExistingAtsign(String atsign) async {
+    if (atsign == null) {
+      return null;
+    }
+    atsign = this.formatAtSign(atsign);
     var atSignsList = await getAtsignList();
     var status = await _checkAtSignServerStatus(atsign);
     var isExist = atSignsList != null ? atSignsList.contains(atsign) : false;
@@ -241,7 +192,11 @@ class OnboardingService {
     return status.serverStatus;
   }
 
-  Future<AtSignStatus> checkAtsignStatus(String atsign) async {
+  Future<AtSignStatus> checkAtsignStatus({String atsign}) async {
+    atsign = atsign ?? this._atsign;
+    if (atsign == null) {
+      return null;
+    }
     atsign = this.formatAtSign(atsign);
     var atStatusImpl = AtStatusImpl(rootUrl: AppConstants.serverDomain);
     var status = await atStatusImpl.get(atsign);
@@ -249,6 +204,8 @@ class OnboardingService {
   }
 
   _sync() async {
-    await _getAtClientForAtsign().getSyncManager().sync();
+    if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
+      await _getAtClientForAtsign().getSyncManager().sync();
+    }
   }
 }

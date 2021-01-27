@@ -1,17 +1,30 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter_example/utils/app_constants.dart';
-import 'package:at_utils/at_logger.dart';
 import 'package:at_commons/at_commons.dart' as at_commons;
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class AtService {
   static final AtService _singleton = AtService._internal();
 
   AtService._internal();
-  final AtSignLogger _logger = AtSignLogger('AtService');
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
 
   factory AtService.getInstance() {
     return _singleton;
+  }
+
+  Future<AtClientPreference> getAtClientPreference() async {
+    final appDocumentDirectory =
+        await path_provider.getApplicationSupportDirectory();
+    String path = appDocumentDirectory.path;
+    var _atClientPreference = AtClientPreference()
+      ..isLocalStoreRequired = true
+      ..commitLogPath = path
+      ..namespace = AppConstants.appNamespace
+      ..syncStrategy = SyncStrategy.ONDEMAND
+      ..rootDomain = AppConstants.rootDomain
+      ..hiveStoragePath = path;
+    return _atClientPreference;
   }
 
   Map<String, AtClientService> atClientServiceMap = {};

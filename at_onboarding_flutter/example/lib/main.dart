@@ -16,8 +16,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  var atClientPrefernce;
   @override
   void initState() {
+    AtService.getInstance()
+        .getAtClientPreference()
+        .then((value) => atClientPrefernce = value);
     super.initState();
   }
 
@@ -32,21 +36,17 @@ class _MyAppState extends State<MyApp> {
           builder: (context) => Center(
             child: RaisedButton(
                 onPressed: () async {
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => OnboardingWidget(
-                                // logo: Icon(Icons.ac_unit),
-                                namespace: AppConstants.appNamespace,
-                                domain: AppConstants.rootDomain,
-                                appColor: Color.fromARGB(255, 240, 94, 62),
-                                onboard: (value) {
-                                  AtService.getInstance().atClientServiceMap =
-                                      value;
-                                  print('value  in example is $value');
-                                },
-                                nextScreen: DashBoard(),
-                              )));
+                  Onboarding(
+                    context: context,
+                    atClientPreference: atClientPrefernce,
+                    domain: AppConstants.rootDomain,
+                    appColor: Color.fromARGB(255, 240, 94, 62),
+                    onboard: (value) {
+                      AtService.getInstance().atClientServiceMap = value;
+                      print('value  in example is $value');
+                    },
+                    nextScreen: DashBoard(),
+                  );
                 },
                 child: Text(AppStrings.scan_qr)),
           ),

@@ -53,7 +53,18 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   @override
   void initState() {
     askCameraPermission();
-    _getAtsignForm();
+    if (widget.getAtSign == true ||
+        OnboardingService.getInstance().currentAtsign == null) {
+      _getAtsignForm();
+    }
+    if (widget.onboardStatus != null) {
+      if (widget.onboardStatus == OnboardingStatus.ACTIVATE) {
+        _isQR = true;
+      }
+      if (widget.onboardStatus == OnboardingStatus.RESTORE) {
+        _isBackup = true;
+      }
+    }
     super.initState();
   }
 
@@ -483,37 +494,34 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       ),
       Builder(
         builder: (context) => Container(
-            alignment: Alignment.center,
-            width: 300.toWidth,
-            height: 350.toHeight,
-            color: Colors.black,
-            child:
-                // !cameraPermissionGrated
-                // ?
-                SizedBox()
-            // : Stack(
-            //     children: [
-            //       QrReaderView(
-            //         width: 300.toWidth,
-            //         height: 350.toHeight,
-            //         callback: (container) {
-            //           this._controller = container;
-            //           _controller.startCamera((data, offsets) {
-            //             onScan(data, offsets, context);
-            //           });
-            //         },
-            //       ),
-            //       scanCompleted
-            //           ? Center(
-            //               child: CircularProgressIndicator(
-            //                   valueColor:
-            //                       AlwaysStoppedAnimation<Color>(
-            //                           ColorConstants.redText)),
-            //             )
-            //           : SizedBox()
-            //     ],
-            //   ),
-            ),
+          alignment: Alignment.center,
+          width: 300.toWidth,
+          height: 350.toHeight,
+          color: Colors.black,
+          child: !cameraPermissionGrated
+              ? SizedBox()
+              : Stack(
+                  children: [
+                    QrReaderView(
+                      width: 300.toWidth,
+                      height: 350.toHeight,
+                      callback: (container) {
+                        this._controller = container;
+                        _controller.startCamera((data, offsets) {
+                          onScan(data, offsets, context);
+                        });
+                      },
+                    ),
+                    // scanCompleted
+                    //     ? Center(
+                    //         child: CircularProgressIndicator(
+                    //             valueColor: AlwaysStoppedAnimation<Color>(
+                    //                 ColorConstants.redText)),
+                    //       )
+                    //     : SizedBox()
+                  ],
+                ),
+        ),
       ),
       SizedBox(
         height: 25.toHeight,
@@ -532,6 +540,44 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     ];
   }
 
+  _getResultForAtsign({AtSignStatus status}) async {
+    status =
+        status ?? await OnboardingService.getInstance().checkAtsignStatus();
+    if (status == null) {
+      return null;
+    }
+    switch (_atsignStatus) {
+      case AtSignStatus.teapot:
+        _isQR = true;
+        break;
+      case AtSignStatus.activated:
+        _isBackup = true;
+        break;
+      case AtSignStatus.unavailable:
+      case AtSignStatus.notFound:
+        _showAlertDialog(Strings.atsignNotFound, getClose: true, onClose: () {
+          if (widget.getAtSign == true ||
+              OnboardingService.getInstance().currentAtsign == null) {
+            _getAtsignForm();
+          }
+        });
+        break;
+      case AtSignStatus.error:
+        _showAlertDialog(Strings.atsignNull, getClose: true, onClose: () {
+          if (widget.getAtSign == true ||
+              OnboardingService.getInstance().currentAtsign == null) {
+            _getAtsignForm();
+          }
+        });
+        break;
+      default:
+        break;
+    }
+    setState(() {
+      loading = false;
+    });
+  }
+
   _getAtsignForm() {
     loading = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -546,13 +592,23 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           },
           child: CustomDialog(
             isAtsignForm: true,
-            onAtsign: (atsignStatus) {
+            onAtsign: (atsignStatus, isExist, atsign) {
               _atsignStatus = atsignStatus ?? AtSignStatus.error;
               switch (_atsignStatus) {
                 case AtSignStatus.teapot:
+                  if (isExist) {
+                    _showAlertDialog(CustomStrings().pairedAtsign(atsign),
+                        getClose: true, onClose: _getAtsignForm);
+                    break;
+                  }
                   _isQR = true;
                   break;
                 case AtSignStatus.activated:
+                  if (isExist) {
+                    _showAlertDialog(CustomStrings().pairedAtsign(atsign),
+                        getClose: true, onClose: _getAtsignForm);
+                    break;
+                  }
                   _isBackup = true;
                   break;
                 case AtSignStatus.unavailable:
