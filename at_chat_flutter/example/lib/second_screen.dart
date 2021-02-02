@@ -140,15 +140,6 @@ class _SecondScreenState extends State<SecondScreen> {
                     ),
                   ],
                 ),
-          FlatButton(
-            onPressed: () {
-              checkMonitorConnection();
-            },
-            child: Container(
-              height: 40,
-              child: Text('Check monitor connection'),
-            ),
-          )
         ],
       ),
     );

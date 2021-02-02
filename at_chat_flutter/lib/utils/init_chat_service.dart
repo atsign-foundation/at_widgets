@@ -11,10 +11,6 @@ void setChatWithAtSign(String atsign) {
   ChatService().setAtsignToChatWith(atsign);
 }
 
-void checkMonitorConnection() {
-  ChatService().checkOutboundConnnection();
-}
-
 void disposeContactsControllers() {
   ChatService().disposeControllers();
 }

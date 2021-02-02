@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_chat_flutter/models/message_model.dart';
-import 'package:at_lookup/src/connection/outbound_connection.dart';
 
 class ChatService {
   ChatService._();
@@ -15,7 +14,6 @@ class ChatService {
   final String storageKey = 'chatHistory.';
   final String chatKey = 'chat';
 
-  OutboundConnection monitorConnection;
   AtClientImpl atClientInstance;
   String rootDomain;
   int rootPort;
@@ -49,8 +47,7 @@ class ChatService {
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     String privateKey = await getPrivateKey(currentAtSign);
-    monitorConnection =
-        await atClientInstance.startMonitor(privateKey, _notificationCallback);
+    await atClientInstance.startMonitor(privateKey, _notificationCallback);
     print("Monitor started");
     return true;
   }
@@ -105,6 +102,7 @@ class ChatService {
       chatHistory = [];
       AtKey key = AtKey()
         ..key = storageKey + (atsign ?? chatWithAtSign)?.substring(1)
+        ..sharedBy = currentAtSign
         ..metadata = Metadata();
       var keyValue = await atClientInstance.get(key).catchError(
           (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
@@ -189,11 +187,4 @@ class ChatService {
     print("send notification => $result");
   }
 
-  void checkOutboundConnnection() {
-    if (monitorConnection == null) {
-      print('OutboundConnection is not established');
-    } else if (monitorConnection.isInValid()) {
-      print('OutboundConnection is invalid');
-    }
-  }
 }
