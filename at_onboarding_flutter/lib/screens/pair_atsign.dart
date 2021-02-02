@@ -53,8 +53,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   @override
   void initState() {
     askCameraPermission();
-    if (widget.getAtSign == true ||
-        OnboardingService.getInstance().currentAtsign == null) {
+    if (widget.getAtSign == true) {
       _getAtsignForm();
     }
     if (widget.onboardStatus != null) {
@@ -108,7 +107,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       scanCompleted = false;
     });
     if (authResponse == ResponseStatus.AUTH_SUCCESS) {
-      if (widget.onboardStatus == OnboardingStatus.ACTIVATE) {
+      if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
+          widget.onboardStatus == OnboardingStatus.RESTORE) {
+        if (_onboardingService.nextScreen == null) {
+          Navigator.pop(context);
+        }
         await Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -277,6 +280,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           _showAlertDialog(_incorrectKeyFile);
           return;
         }
+
         if (pickedFile.extension == 'zip') {
           var bytes = selectedFile.readAsBytesSync();
           final archive = ZipDecoder().decodeBytes(bytes);
@@ -512,13 +516,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                         });
                       },
                     ),
-                    // scanCompleted
-                    //     ? Center(
-                    //         child: CircularProgressIndicator(
-                    //             valueColor: AlwaysStoppedAnimation<Color>(
-                    //                 ColorConstants.redText)),
-                    //       )
-                    //     : SizedBox()
                   ],
                 ),
         ),
@@ -540,42 +537,17 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     ];
   }
 
-  _getResultForAtsign({AtSignStatus status}) async {
-    status =
-        status ?? await OnboardingService.getInstance().checkAtsignStatus();
-    if (status == null) {
-      return null;
-    }
-    switch (_atsignStatus) {
-      case AtSignStatus.teapot:
-        _isQR = true;
-        break;
-      case AtSignStatus.activated:
-        _isBackup = true;
-        break;
-      case AtSignStatus.unavailable:
-      case AtSignStatus.notFound:
-        _showAlertDialog(Strings.atsignNotFound, getClose: true, onClose: () {
-          if (widget.getAtSign == true ||
-              OnboardingService.getInstance().currentAtsign == null) {
-            _getAtsignForm();
-          }
-        });
-        break;
-      case AtSignStatus.error:
-        _showAlertDialog(Strings.atsignNull, getClose: true, onClose: () {
-          if (widget.getAtSign == true ||
-              OnboardingService.getInstance().currentAtsign == null) {
-            _getAtsignForm();
-          }
-        });
-        break;
-      default:
-        break;
-    }
-    setState(() {
-      loading = false;
-    });
+  bool _validatePickedFileContents(String fileContents) {
+    var result = fileContents
+            .contains(BackupKeyConstants.PKAM_PRIVATE_KEY_FROM_KEY_FILE) &&
+        fileContents
+            .contains(BackupKeyConstants.PKAM_PUBLIC_KEY_FROM_KEY_FILE) &&
+        fileContents
+            .contains(BackupKeyConstants.ENCRYPTION_PRIVATE_KEY_FROM_FILE) &&
+        fileContents
+            .contains(BackupKeyConstants.ENCRYPTION_PUBLIC_KEY_FROM_FILE) &&
+        fileContents.contains(BackupKeyConstants.SELF_ENCRYPTION_KEY_FROM_FILE);
+    return result;
   }
 
   _getAtsignForm() {

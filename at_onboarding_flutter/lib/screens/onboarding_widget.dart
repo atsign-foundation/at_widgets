@@ -6,6 +6,7 @@ import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_utils/at_logger.dart';
 
 class Onboarding {
   ///Required field as for navigation.
@@ -38,12 +39,15 @@ class Onboarding {
 
   ///after successful onboarding will gets redirected to this screen if it is not null.
   final Widget nextScreen;
+
+  final AtSignLogger _logger = AtSignLogger('At Onboarding Flutter');
+
   Onboarding(
       {Key key,
       @required this.context,
       this.atsign,
-      this.onboard,
-      this.onError,
+      @required this.onboard,
+      @required this.onError,
       this.nextScreen,
       @required this.atClientPreference,
       this.appColor,
@@ -52,19 +56,22 @@ class Onboarding {
     _show();
   }
   void _show() {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => OnboardingWidget(
-            atsign: this.atsign,
-            onboard: this.onboard,
-            onError: this.onError,
-            nextScreen: this.nextScreen,
-            atClientPreference: this.atClientPreference,
-            appColor: this.appColor,
-            logo: this.logo,
-            domain: this.domain));
-    print('printing inside show value');
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => OnboardingWidget(
+              atsign: this.atsign,
+              onboard: this.onboard,
+              onError: this.onError,
+              nextScreen: this.nextScreen,
+              atClientPreference: this.atClientPreference,
+              appColor: this.appColor,
+              logo: this.logo,
+              domain: this.domain));
+    });
+
+    _logger.info('Onboarding...!');
   }
 }
 
@@ -100,8 +107,8 @@ class OnboardingWidget extends StatefulWidget {
   OnboardingWidget(
       {Key key,
       this.atsign,
-      this.onboard,
-      this.onError,
+      @required this.onboard,
+      @required this.onError,
       this.nextScreen,
       @required this.atClientPreference,
       this.appColor,
@@ -152,7 +159,9 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
           } else if (snapshot.hasError) {
             if (widget.nextScreen == null) {
               CustomNav().pop(context);
-              widget.onError(snapshot.error);
+              Future.delayed((Duration(milliseconds: 200)), () {
+                widget.onError(snapshot.error);
+              });
             }
             if (snapshot.error == OnboardingStatus.ACTIVATE ||
                 snapshot.error == OnboardingStatus.RESTORE) {

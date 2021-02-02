@@ -18,16 +18,24 @@ dependencies:
   permission_handler: ^5.0.1+1
   share: ^0.6.5+2
   url_launcher: ^5.7.0
-  at_client_mobile: 
-    git:
-      url: git@github.com:atsign-company/atsign_foundation.git
-      path: at_client_mobile
-      ref: onboard_self_key
+  # at_client_mobile: 
+  #   git:
+  #     url: https://github.com/atsign-foundation/at_client_sdk.git
+  #     path: at_client_mobile
+  #     ref: dev_env
+  # at_server_status:
+  #   git:
+  #     url: https://github.com/atsign-foundation/at_libraries.git
+  #     path: at_server_status
+  #     ref: dev_env
+  at_client_mobile:
+    path: /Users/apple/Documents/shris/@company/at_foundation/at_client_sdk/at_client_mobile
   at_server_status:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: at_server_status
       ref: dev_env
+ 
 
 dev_dependencies:
   flutter_test:

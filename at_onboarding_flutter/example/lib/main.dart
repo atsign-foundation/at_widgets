@@ -41,9 +41,12 @@ class _MyAppState extends State<MyApp> {
                     atClientPreference: atClientPrefernce,
                     domain: AppConstants.rootDomain,
                     appColor: Color.fromARGB(255, 240, 94, 62),
-                    onboard: (value) {
+                    onboard: (value, atsign) {
                       AtService.getInstance().atClientServiceMap = value;
                       print('value  in example is $value');
+                    },
+                    onError: (error) {
+                      print('Onboarding has encountered with an error $error');
                     },
                     nextScreen: DashBoard(),
                   );
