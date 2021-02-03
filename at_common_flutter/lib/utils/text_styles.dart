@@ -7,19 +7,15 @@ class CustomTextStyles {
   static CustomTextStyles _instance = CustomTextStyles._();
   factory CustomTextStyles() => _instance;
 
-  static TextStyle primaryBold16 = TextStyle(
-    color: ColorConstants.fontPrimary,
-    fontSize: 16.toFont,
-    fontWeight: FontWeight.w700,
-  );
+  static TextStyle primaryBold16(Color fontColor) => TextStyle(
+        color: fontColor,
+        fontSize: 16.toFont,
+        fontWeight: FontWeight.w700,
+      );
+
   static TextStyle primaryBold18 = TextStyle(
     color: ColorConstants.fontPrimary,
     fontSize: 18.toFont,
-    fontWeight: FontWeight.w700,
-  );
-  static TextStyle whiteBold16 = TextStyle(
-    color: Colors.white,
-    fontSize: 16.toFont,
     fontWeight: FontWeight.w700,
   );
   static TextStyle blueRegular18 = TextStyle(

@@ -8,3 +8,4 @@ This package provides the following custom widgets:
 1. CustomAppBar
 2. CustomButton
 3. CustomInputField
+4. SizeConfig service
