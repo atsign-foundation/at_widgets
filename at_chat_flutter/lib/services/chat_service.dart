@@ -47,7 +47,7 @@ class ChatService {
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     String privateKey = await getPrivateKey(currentAtSign);
-    await atClientInstance.startMonitor(privateKey, _notificationCallback);
+    atClientInstance.startMonitor(privateKey, _notificationCallback);
     print("Monitor started");
     return true;
   }

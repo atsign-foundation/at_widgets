@@ -25,12 +25,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  # atsign_authentication_helper: ^0.0.2
-  atsign_authentication_helper:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: atsign_authentication_helper
-      ref: dev_env
+  atsign_authentication_helper: ^0.0.3
 
 dev_dependencies:
   flutter_test:
