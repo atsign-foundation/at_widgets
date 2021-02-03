@@ -312,12 +312,25 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           List<String> params = result.split(':');
           atsign = params[0];
           aesKey = params[1];
-        } else {
-          _showAlertDialog(_incorrectKeyFile);
-          setState(() {
-            loading = false;
-          });
-          return;
+        }
+        // else if(){
+        // var result1 = selectedFile.readAsBytesSync();
+        // fileContents = String.fromCharCodes(result1);
+        // var result = _validatePickedFileContents(fileContents);
+        // print('result after extracting data is......$result');
+        // }
+        else {
+          var result1 = selectedFile.readAsBytesSync();
+          fileContents = String.fromCharCodes(result1);
+          var result = _validatePickedFileContents(fileContents);
+          print('result after extracting data is......$result');
+          if (!result) {
+            _showAlertDialog(_incorrectKeyFile);
+            setState(() {
+              loading = false;
+            });
+            return;
+          }
         }
       }
       if (aesKey == null && atsign == null && fileContents != null) {

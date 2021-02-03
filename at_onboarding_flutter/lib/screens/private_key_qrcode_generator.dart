@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
@@ -97,11 +98,20 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                 SizedBox(
                   height: 30.toHeight,
                 ),
-                CustomButton(
-                  width: 230.toWidth,
+                BackupKeyWidget(
+                  atClientService: OnboardingService.getInstance()
+                      .atClientServiceMap[atsign],
+                  isButton: true,
+                  buttonWidth: 230.toWidth,
+                  atsign: atsign,
+                  buttonColor: ColorConstants.appColor,
                   buttonText: Strings.saveButtonTitle,
-                  onPressed: _saveBackuzip,
                 ),
+                // CustomButton(
+                //   width: 230.toWidth,
+                //   buttonText: Strings.saveButtonTitle,
+                //   onPressed: _saveBackuzip,
+                // ),
                 SizedBox(
                   height: 10.toHeight,
                 ),
@@ -144,12 +154,14 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
       var keyString = jsonEncode(aesEncryptedKeys);
       // keyString = keyString + imageData;
       encryptedKeysFile.writeAsStringSync(keyString);
-      var encoder = ZipFileEncoder();
-      encoder.create('$path' + '${atsign + AppConstants.backupZipExtension}');
-      encoder.addFile(encryptedKeysFile);
-      encoder.close();
-      encryptedKeysFile.deleteSync();
-      await Share.shareFiles([encoder.zip_path],
+      // var encoder = ZipFileEncoder();
+      // encoder.create('$path' + '${atsign + AppConstants.backupZipExtension}');
+      // encoder.addFile(encryptedKeysFile);
+      // encoder.close();
+      // encryptedKeysFile.deleteSync();
+      await Share.shareFiles([encryptedKeysFile.path],
+          text: 'encryptATKey',
+          // subject: '$atsign' + '_key',
           sharePositionOrigin:
               Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
     } on Exception catch (ex) {

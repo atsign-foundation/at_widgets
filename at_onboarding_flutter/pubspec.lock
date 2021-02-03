@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.5.0-nullsafety.1"
+  at_backupkey_flutter:
+    dependency: "direct main"
+    description:
+      path: "/Users/apple/Documents/shris/@company/backupkey_plugin/at_backupkey_flutter"
+      relative: false
+    source: path
+    version: "0.0.1"
   at_client:
     dependency: transitive
     description:
@@ -316,7 +323,7 @@ packages:
     source: hosted
     version: "1.8.0-nullsafety.1"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -358,7 +365,7 @@ packages:
     source: hosted
     version: "1.9.2"
   permission_handler:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: permission_handler
       url: "https://pub.dartlang.org"
@@ -400,7 +407,7 @@ packages:
     source: hosted
     version: "3.0.13"
   share:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: share
       url: "https://pub.dartlang.org"
