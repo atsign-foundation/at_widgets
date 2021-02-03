@@ -93,7 +93,7 @@ There is also an option to pair the AtSign using the `Upload key file` option. A
 This screen will help to save the restore keys generated after a successful CRAM authentication in a zip format. The continue option navigates to the screen provided in the `nextScreen` parameter.
 
 ### Sample usage
-It is expected that the app will first create an AtClientService instance using the preferences and pass it to the plugin in the `atClientServiceInstance` parameter. Also, the navigation decision can be covered in the app logic.
+It is expected that the app will first create an AtClientService instance using the preferences and pass the instances of both AtClientService and AtClientPreference to the plugin in the `atClientServiceInstance` and `atClientPreference` parameters, respectively. Also, the navigation decision can be covered in the app logic.
 
 ```
 FlatButton(
@@ -105,6 +105,8 @@ FlatButton(
         builder: (context) => ScanQrScreen(
           atClientServiceInstance: clientSdkService
             .atClientServiceInstance,
+          atClientPreference: clientSdkService
+            .atClientPreference,
           nextScreen: SecondScreen())));
   },
   child: Text('Show QR scanner screen'))
