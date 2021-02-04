@@ -14,8 +14,11 @@ dependencies:
   share: ^0.6.5+2
   permission_handler: ^5.0.1+1
   path_provider: ^1.6.24
-  at_client_mobile:
-    path: /Users/apple/Documents/shris/@company/at_foundation/at_client_sdk/at_client_mobile
+  at_client_mobile: 
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: at_client_mobile
+      ref: onboard_self_key
   
 
 dev_dependencies:
