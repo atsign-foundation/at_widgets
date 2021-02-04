@@ -81,9 +81,9 @@ class _EmptyGroupState extends State<EmptyGroup> {
                   ),
                 );
               },
-              isInverted: Theme.of(context).primaryColor == Color(0xFF000000)
-                  ? false
-                  : true,
+              // isInverted: Theme.of(context).primaryColor == Color(0xFF000000)
+              //     ? false
+              //     : true,
             )
           ],
         ),

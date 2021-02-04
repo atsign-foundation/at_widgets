@@ -1,6 +1,6 @@
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
-import 'package:atsign_location/utils/constants/constants.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 

@@ -83,10 +83,10 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                           });
                         }
                       },
-                      isInverted:
-                          Theme.of(context).primaryColor == Color(0xFF000000)
-                              ? false
-                              : true,
+                      // isInverted:
+                      //     Theme.of(context).primaryColor == Color(0xFF000000)
+                      //         ? false
+                      //         : true,
                     ),
               SizedBox(height: 5.toHeight),
               InkWell(

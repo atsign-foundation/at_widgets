@@ -45,7 +45,7 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
                   buttonText: widget.buttontext,
                   width: 120.toWidth,
                   height: 40.toHeight,
-                  isInverted: false,
+                  // isInverted: false,
                   onPressed: () async {
                     setState(() {
                       isLoading = true;
