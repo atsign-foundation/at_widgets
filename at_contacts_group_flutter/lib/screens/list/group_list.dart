@@ -66,7 +66,7 @@ class _GroupListState extends State<GroupList> {
                     selectedList: (selectedList) {
                       selectedContactList = selectedList;
                       if (selectedContactList.length > 0) {
-                        GroupService().setSelectedContacts(selectedContactList);
+                        // GroupService().setSelectedContacts(selectedContactList);
 
                         Navigator.push(
                           context,

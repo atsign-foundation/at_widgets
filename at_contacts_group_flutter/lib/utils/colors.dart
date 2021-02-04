@@ -33,7 +33,10 @@ class AllColors {
   Color EVENT_MEMBERS = Color(0xFFC1D9E9);
   // ignore: non_constant_identifier_names
   Color MILD_GREY = Color(0xFFE4E4E4);
-
+  Color BLUE_TEXT = Color(0xFF03A2E0);
+  Color DIVIDER_COLOR = Color(0xFF707070);
+  Color INPUT_FIELD_COLOR = Color(0xFFF7F7FF);
+  Color FADED_TEXT = Color(0xFF6D6D79);
   // ignore: non_constant_identifier_names
   Color LIGHT_GREY_LABEL = Color(0xFFB3B6BE);
 }

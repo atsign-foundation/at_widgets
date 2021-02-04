@@ -28,10 +28,10 @@ class _NewGroupState extends State<NewGroup> {
   }
 
   getContacts() {
-    if (GroupService().selecteContactList.length > 0) {
-      selectedContacts = GroupService().selecteContactList;
-    } else
-      selectedContacts = [];
+    // if (GroupService().selecteContactList.length > 0) {
+    //   selectedContacts = GroupService().selecteContactList;
+    // } else
+    //   selectedContacts = [];
   }
 
   createGroup() async {

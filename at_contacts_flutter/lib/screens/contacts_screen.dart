@@ -161,6 +161,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                   }
                                 });
                               }
+
                               if (contactsForAlphabet.isEmpty) {
                                 return Container();
                               }
