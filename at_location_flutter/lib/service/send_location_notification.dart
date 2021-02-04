@@ -22,6 +22,7 @@ class SendLocationNotification {
     //Location().changeSettings(interval: 10);
     print('receivingAtsigns length - ${receivingAtsigns.length}');
     updateMyLocation2();
+    // manualLocationSend();
   }
 
   updateMyLocation() async {
@@ -91,54 +92,83 @@ class SendLocationNotification {
     });
   }
 
-  manualLocationSend(double lat, double long) {
-    LatLng myLocation = LatLng(lat, long);
-
-    receivingAtsigns.forEach((notification) async {
-      if (true) {
-        notification.lat = myLocation.latitude;
-        notification.long = myLocation.longitude;
-        String atkeyMicrosecondId =
-            notification.key.split('-')[1].split('@')[0];
-        AtKey atKey = newAtKey(
-            -1, "locationNotify-$atkeyMicrosecondId", notification.receiver);
-        try {
-          var result = await atClient.put(
-              atKey,
-              LocationNotificationModel.convertLocationNotificationToJson(
-                  notification));
-        } catch (e) {
-          print('error in sending location: $e');
-        }
+  manualLocationSend() {
+    // LatLng myLocation = LatLng(lat, long);
+    LatLng myLocation;
+    if (myLocation == null)
+      switch (atClient.currentAtSign) {
+        case '@ashish🛠':
+          {
+            myLocation = LatLng(38, -122.406417);
+            break;
+          }
+        case '@colin🛠':
+          {
+            myLocation = LatLng(39, -122.406417);
+            break;
+          }
+        case '@bob🛠':
+          {
+            myLocation = LatLng(40, -122.406417);
+            break;
+          }
       }
+    // Timer timer =
+    Timer.periodic(Duration(seconds: 5), (Timer t) async {
+      receivingAtsigns.forEach((notification) async {
+        if (true) {
+          notification.lat = myLocation.latitude;
+          notification.long = myLocation.longitude;
+          String atkeyMicrosecondId =
+              notification.key.split('-')[1].split('@')[0];
+          AtKey atKey = newAtKey(5000, "locationNotify-$atkeyMicrosecondId",
+              notification.receiver);
+          try {
+            // var result = await
+            atClient.put(
+                atKey,
+                LocationNotificationModel.convertLocationNotificationToJson(
+                    notification));
+          } catch (e) {
+            print('error in sending location: $e');
+          }
+        }
+      });
+      myLocation.latitude = myLocation.latitude + 0.01;
     });
+    // timer.cancel();
   }
 
   sendNull(LocationNotificationModel locationNotificationModel) async {
+    var result = false;
     locationNotificationModel.lat = 0;
     locationNotificationModel.long = 0;
     String atkeyMicrosecondId =
         locationNotificationModel.key.split('-')[1].split('@')[0];
     AtKey atKey = newAtKey(-1, "locationNotify-$atkeyMicrosecondId",
         locationNotificationModel.receiver);
-    try {
-      var result = await atClient.put(
-          atKey,
-          LocationNotificationModel.convertLocationNotificationToJson(
-              locationNotificationModel));
-      return result;
-    } catch (e) {
-      return false;
+    while (!result) {
+      try {
+        result = await atClient.put(
+            atKey,
+            LocationNotificationModel.convertLocationNotificationToJson(
+                locationNotificationModel));
+        return result;
+      } catch (e) {
+        return false;
+      }
     }
   }
 
   AtKey newAtKey(int ttr, String key, String sharedWith) {
     AtKey atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata.ttr = -1
+      ..metadata.ttr = ttr
       ..key = key
       ..sharedWith = sharedWith
       ..sharedBy = atClient.currentAtSign;
     return atKey;
   }
 }
+
+enum ATSIGNS { COLIN, ASHISH, BOB }

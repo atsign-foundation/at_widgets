@@ -467,24 +467,26 @@ class _CollapsedContentState extends State<CollapsedContent> {
                             )
                           : SizedBox(),
                       amICreator ? Divider() : SizedBox(),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () async {
-                            print(LocationService().onRemove.toString());
-                            var result = await LocationService()
-                                .onRemove(widget.userListenerKeyword);
-                            if (result) {
-                              SendLocationNotification()
-                                  .sendNull(widget.userListenerKeyword);
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Text(
-                            'Remove Person',
-                            style: CustomTextStyles().orange16,
-                          ),
-                        ),
-                      ),
+                      amICreator
+                          ? Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  print(LocationService().onRemove.toString());
+                                  var result = await LocationService()
+                                      .onRemove(widget.userListenerKeyword);
+                                  if (result) {
+                                    SendLocationNotification()
+                                        .sendNull(widget.userListenerKeyword);
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: Text(
+                                  'Remove Person',
+                                  style: CustomTextStyles().orange16,
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 )
