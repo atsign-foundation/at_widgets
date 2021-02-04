@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math' as math;
+import 'package:atsign_location/utils/constants/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong/latlong.dart';
 import 'package:crypto/crypto.dart';
@@ -70,17 +71,12 @@ class DistanceCalculate {
   //   print(response);
   // }
 
-  var bearerToken =
-      "eyJhbGciOiJSUzUxMiIsImN0eSI6IkpXVCIsImlzcyI6IkhFUkUiLCJhaWQiOiJNejdBcWJxakp1aGlMaFV2Q1hUOCIsImlhdCI6MTYxMTIzNjQ5MCwiZXhwIjoxNjExMzIyODkwLCJraWQiOiJqMSJ9.ZXlKaGJHY2lPaUprYVhJaUxDSmxibU1pT2lKQk1qVTJRMEpETFVoVE5URXlJbjAuLjlxb0Z0WFNsWlQteFV5dmdGQ3V0N2cuOC11UXp4a3VVbWZqV25HZGxmaC1XSHlxOFRMZkd5ekdNZThtdHZNalM4M3YzSVc4R1ptc0k2VDZJTUNiZTdWdXZ6Rm4talZEYnhyc0ZxTGxqaWtfbFJudE5nMndiY2hXNnYzeVY4bV9tQzRxVW1GSnRwMXhuRkFtWVBhbTI5NE9JcTA4MGtySHNGcnBtLTJNN2c5NjlBLm5pMm1NVkhsaWJPbFJ6RmtZUXJwM1hUVFRoM3k3SGNJc2pGenRaRlZWNnM.MOITgO01le_3DyEF-1Vk9bn_ZQbc8lWM1g2n_7p9Qkhi8Us0_0l-r-P-KsxNcDywPPbGipaFsXsqyXtnyGO44X7gDUOdk-3ztRMjeLx_eOt8CD-ULlF-0zW5WyBUkySfD08Kau33UhOKBgRr2x6leHFCsDvYHrfQRWPpbOdWOrMji40lfmWsS43YHeflyFlVwNUNVNQmjAODPTFlG_KNRx_thJ8QVukp95BeVW1nDKFpxwjyGWZpRk99-Njsydph1N2jtq_wxrxoWN41UiVxShu5cifIrgXRDmdeLaPXzJnKIWbgTF3q9RtpH_BbXm4MzIk7SZAGFSWK8NLVTvZjdg";
-
-  // the url gives { "message": "Invalid coordinate value.", "code": "InvalidValue"} if any point is greater than 90
-  // but here last urls value is stored somehow
   Future<String> caculateETA(LatLng origin, LatLng destination) async {
     try {
       var url =
           'https://router.hereapi.com/v8/routes?transportMode=car&origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&return=summary';
       var response = await ApiService().getRequest("$url", {
-        "Authorization": "Bearer $bearerToken",
+        "Authorization": "Bearer ${MixedConstants.BEARER_TOKEN}",
         "Content-Type": "application/json"
       });
       var data = response;

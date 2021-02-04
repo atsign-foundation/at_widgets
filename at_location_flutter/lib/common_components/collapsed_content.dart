@@ -274,8 +274,13 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                         keyType: widget.isAdmin
                                             ? ATKEY_TYPE_ENUM.CREATEEVENT
                                             : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT);
-                                if (result is bool) {
-                                  if (result) onLocationOff(value);
+                                if (result == true) {
+                                  onLocationOff(value);
+
+                                  if (widget.isAdmin) {
+                                    LocationService().onEventUpdate(
+                                        widget.eventListenerKeyword);
+                                  }
                                 } else
                                   CustomToast().show(
                                       'somehting went wrong , please try again.',
@@ -377,22 +382,18 @@ class _CollapsedContentState extends State<CollapsedContent> {
               ),
               Transform.rotate(
                 angle: 5.8,
-                child: InkWell(
-                  // onTap: () => bottomSheet(
-                  //     context, bottomSheetContent(context), 157),
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: AllColors().ORANGE,
-                    ),
-                    child: Icon(
-                      Icons.send_outlined,
-                      color: AllColors().WHITE,
-                      size: 25,
-                    ),
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: AllColors().ORANGE,
+                  ),
+                  child: Icon(
+                    Icons.send_outlined,
+                    color: AllColors().WHITE,
+                    size: 25,
                   ),
                 ),
               )
@@ -435,8 +436,10 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                       }
                                       print('result $result');
                                       if (result) {
-                                        SendLocationNotification().sendNull(
-                                            widget.userListenerKeyword);
+                                        if (!value) {
+                                          SendLocationNotification().sendNull(
+                                              widget.userListenerKeyword);
+                                        }
                                         setState(() {
                                           isSharing = value;
                                         });

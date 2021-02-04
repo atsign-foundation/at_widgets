@@ -52,7 +52,7 @@ Widget buildPopup(HybridModel user) {
                         radius: 20,
                         child: user.image != null
                             ? CustomCircleAvatar(
-                                image: 'assets/images/person1.png', size: 30)
+                                byteImage: user.image, nonAsset: true, size: 30)
                             : ContactInitial(
                                 initials: user.displayName.substring(1, 3),
                                 size: 60,

@@ -1,5 +1,6 @@
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
+import 'package:atsign_location/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 
@@ -45,8 +46,7 @@ class _ShowLocationState extends State<ShowLocation> {
             maxNativeZoom: 18,
             minZoom: 2,
             urlTemplate:
-                //"https://api.maptiler.com/maps/streets/static/37,-112,2/300x400"".png?key=B3Wus46C2WZFhwZKQkEx"
-                "https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=B3Wus46C2WZFhwZKQkEx",
+                "https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MixedConstants.MAP_KEY}",
           ),
           MarkerClusterLayerOptions(
             maxClusterRadius: 190,

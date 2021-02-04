@@ -11,16 +11,14 @@ class SendLocationNotification {
   SendLocationNotification._();
   static SendLocationNotification _instance = SendLocationNotification._();
   factory SendLocationNotification() => _instance;
-  int count;
+
   List<LocationNotificationModel> receivingAtsigns;
 
   AtClientImpl atClient;
 
   init(List<LocationNotificationModel> atsigns, AtClientImpl newAtClient) {
-    count = 0;
     receivingAtsigns = atsigns;
     atClient = newAtClient;
-    print('inside location package init');
     //Location().changeSettings(interval: 10);
     print('receivingAtsigns length - ${receivingAtsigns.length}');
     updateMyLocation2();
@@ -35,20 +33,6 @@ class SendLocationNotification {
             (notification.to.difference(DateTime.now()) >
                 Duration(seconds: 0))) {
           print('inside forEach');
-          // String atkeyMicrosecondId =
-          //     notification.key.split('sharelocation-')[1].split('@')[0];
-          // AtKey atKey = newAtKey(-1, "sharelocation-$atkeyMicrosecondId",
-          //     notification.receiver);
-          // LocationNotificationModel myLocationNotificationModel =
-          //     LocationNotificationModel()
-          //       ..atsignCreator = atClient.currentAtSign
-          //       ..receiver = notification.receiver
-          //       ..key = atKey.key
-          //       ..lat = snapshot.data.latitude
-          //       ..long = snapshot.data.longitude
-          //       ..isAcknowledgment = true
-          //       ..isAccepted = true
-          //       ..updateMap = true;
 
           notification.lat = event.latitude;
           notification.long = event.longitude;
@@ -75,7 +59,7 @@ class SendLocationNotification {
     LatLng myLocation = await MyLocation().myLocation();
     // LatLng myLocation = LatLng(lat, long);
 
-    Timer.periodic(Duration(seconds: 3), (Timer t) async {
+    Timer.periodic(Duration(seconds: 5), (Timer t) async {
       receivingAtsigns.forEach((notification) async {
         bool isSend = false;
 
@@ -97,11 +81,8 @@ class SendLocationNotification {
                 atKey,
                 LocationNotificationModel.convertLocationNotificationToJson(
                     notification));
-            // print('location sent:${result}');
-            if (result) count++;
-            // print('count $count');
           } catch (e) {
-            // print('error in sending location: $e');
+            print('error in sending location: $e');
           }
         }
       });
@@ -115,8 +96,6 @@ class SendLocationNotification {
 
     receivingAtsigns.forEach((notification) async {
       if (true) {
-        print('inside forEach');
-
         notification.lat = myLocation.latitude;
         notification.long = myLocation.longitude;
         String atkeyMicrosecondId =
@@ -128,11 +107,8 @@ class SendLocationNotification {
               atKey,
               LocationNotificationModel.convertLocationNotificationToJson(
                   notification));
-          // print('location sent:${result}');
-          if (result) count++;
-          // print('count $count');
         } catch (e) {
-          // print('error in sending location: $e');
+          print('error in sending location: $e');
         }
       }
     });
@@ -150,7 +126,10 @@ class SendLocationNotification {
           atKey,
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel));
-    } catch (e) {}
+      return result;
+    } catch (e) {
+      return false;
+    }
   }
 
   AtKey newAtKey(int ttr, String key, String sharedWith) {

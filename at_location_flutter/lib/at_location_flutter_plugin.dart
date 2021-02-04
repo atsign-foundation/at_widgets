@@ -1,12 +1,10 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_chat_flutter/screens/chat_screen.dart';
 import 'package:at_chat_flutter/utils/init_chat_service.dart';
-import 'package:at_events_flutter/common_components/bottom_sheet.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/location_service.dart';
-import 'package:at_location_flutter/service/pan_boundaries.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +16,6 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/m
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_controller.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_snap.dart';
 import 'package:latlong/latlong.dart';
-import 'package:location/location.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'common_components/collapsed_content.dart';
 import 'common_components/floating_icon.dart';
@@ -133,10 +130,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         List<Marker> markers =
                             users.map((user) => user.marker).toList();
                         points = users.map((user) => user.latLng).toList();
-                        // LatLng nePanBoundary = calculateNEPanBoundary(points);
-                        // LatLng swPanBoundary = calculateSWPanBoundary(points);
-                        // print('nePanBoundary $nePanBoundary');
-                        // print('swPanBoundary $swPanBoundary');
                         print('markers length = ${markers.length}');
                         users.forEach((element) {
                           print('displayanme - ${element.displayName}');
@@ -148,8 +141,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         return FlutterMap(
                           mapController: mapController,
                           options: MapOptions(
-                            // swPanBoundary: swPanBoundary,
-                            // nePanBoundary: nePanBoundary,
                             boundsOptions: FitBoundsOptions(
                                 padding: EdgeInsets.fromLTRB(
                               widget.left ?? 20,
@@ -157,7 +148,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                               widget.right ?? 20,
                               widget.bottom ?? 20,
                             )),
-                            // bounds: LatLngBounds.fromPoints(points),
                             center: widget.eventListenerKeyword != null
                                 ? LocationService().eventData.latLng
                                 : LocationService().myData.latLng,
@@ -174,8 +164,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                               maxNativeZoom: 18,
                               minZoom: 2,
                               urlTemplate:
-                                  //"https://api.maptiler.com/maps/streets/static/37,-112,2/300x400"".png?key=B3Wus46C2WZFhwZKQkEx"
-                                  "https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=B3Wus46C2WZFhwZKQkEx",
+                                  "https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MixedConstants.MAP_KEY}",
                             ),
                             MarkerClusterLayerOptions(
                               maxClusterRadius: 190,
@@ -198,7 +187,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                                   popupSnap: PopupSnap.top,
                                   popupController: _popupController,
                                   popupBuilder: (_, marker) {
-                                    // mapController.move(marker.point, 10);
                                     return _popupController
                                             .streamController.isClosed
                                         ? Text('Closed')
@@ -206,7 +194,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                                             .data[markers.indexOf(marker)]);
                                   }),
                               builder: (context, markers) {
-                                // return Text('marker');
                                 return widget.eventListenerKeyword != null
                                     ? buildMarkerCluster(markers,
                                         eventData: LocationService().eventData)

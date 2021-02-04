@@ -38,11 +38,15 @@ class _DisplayTileState extends State<DisplayTile> {
 
   getEventCreator() async {
     atContact = await AtContactsImpl.getInstance(LocationService().getAtSign());
-    contact = await atContact.get('@alice🛠');
+    contact = await atContact.get(widget.atsignCreator);
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
         List<int> intList = contact.tags['image'].cast<int>();
-        image = Uint8List.fromList(intList);
+        if (Uint8List.fromList(intList) != null) {
+          setState(() {
+            image = Uint8List.fromList(intList);
+          });
+        }
       }
     }
   }
@@ -56,7 +60,8 @@ class _DisplayTileState extends State<DisplayTile> {
           Stack(
             children: [
               (image != null)
-                  ? SizedBox()
+                  ? CustomCircleAvatar(
+                      byteImage: image, nonAsset: true, size: 30)
                   : widget.atsignCreator != null
                       ? ContactInitial(
                           initials: widget.atsignCreator.substring(1, 3))

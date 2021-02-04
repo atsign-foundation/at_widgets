@@ -33,7 +33,6 @@ class LocationService {
       onShareToggle,
       onRequest,
       onRemove;
-  // ValueChanged<LocationNotificationModel> onRemove;
 
   HybridModel eventData;
   HybridModel myData;
@@ -125,11 +124,11 @@ class LocationService {
 
   addEventDetailsToHybridUsersList() async {
     HybridModel eventHybridModel = HybridModel(
-        displayName: eventListenerKeyword.title,
-        latLng: LatLng(eventListenerKeyword.venue.latitude,
-            eventListenerKeyword.venue.longitude),
-        eta: '?',
-        image: 'assets/images/person2.png');
+      displayName: eventListenerKeyword.title,
+      latLng: LatLng(eventListenerKeyword.venue.latitude,
+          eventListenerKeyword.venue.longitude),
+      eta: '?',
+    );
     eventHybridModel.marker = buildMarker(eventHybridModel);
     hybridUsersList.add(eventHybridModel);
     eventData = eventHybridModel;
@@ -139,6 +138,7 @@ class LocationService {
     print('updateEventLocation called ');
   }
 
+  // called for the first time pckage is entered from main app
   updateHybridList() async {
     if (userListenerKeyword != null) {
       allUsersList.forEach((user) async {
@@ -155,6 +155,7 @@ class LocationService {
     _atHybridUsersController.add(hybridUsersList);
   }
 
+  // called when any new/updated data is received in the main app
   newList(List<HybridModel> allUsersFromMainApp) {
     if (userListenerKeyword != null) {
       allUsersFromMainApp.forEach((user) async {
@@ -171,6 +172,7 @@ class LocationService {
     }
   }
 
+  // called when a user stops sharing his location
   removeUser(String atsign) {
     if (userListenerKeyword != null) {
       hybridUsersList.removeWhere((element) => element.displayName == atsign);
@@ -181,6 +183,7 @@ class LocationService {
     }
   }
 
+  // called to get the new details marker & eta
   updateDetails(HybridModel user) async {
     bool contains = false;
     int index;
@@ -197,6 +200,7 @@ class LocationService {
       await addDetails(user);
   }
 
+  // returns new marker and eta
   addDetails(HybridModel user, {int index}) async {
     user.marker = buildMarker(user);
     // await _calculateEta(user);
@@ -223,24 +227,6 @@ class LocationService {
         user.eta = _res;
         myData.eta = user.eta; // because, user's eta & myData.eta will be same
       }
-    }
-  }
-
-  Future<dynamic> getImageOfAtsign(String atsign) async {
-    try {
-      var metadata = Metadata();
-      metadata.isPublic = true;
-      metadata.namespaceAware = false;
-      AtKey key = AtKey();
-      key.sharedBy = atsign;
-      key.metadata = metadata;
-      key.metadata.isBinary = true;
-      key.key = 'image.persona';
-      var result = await atClientInstance.get(key);
-      var _image = result.value;
-      return _image;
-    } catch (e) {
-      return null;
     }
   }
 
