@@ -44,7 +44,7 @@ class CustomBottomSheet extends StatelessWidget {
                     buttonText: 'Done',
                     width: 120.toWidth,
                     height: 40.toHeight,
-                    isInverted: true,
+                    buttonColor: Colors.white,
                     onPressed: () {
                       onPressed();
                       selectedList(snapshot.data);

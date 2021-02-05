@@ -1,10 +1,11 @@
 /// A popup to ask the [AtSign] which is to be added
 
 import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_contacts_flutter/utils/text_strings.dart' as contactStrings;
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
-import 'package:at_contacts_flutter/utils/text_strings.dart';
-import 'package:at_contacts_flutter/utils/text_styles.dart';
+import 'package:at_contacts_flutter/utils/text_styles.dart'
+    as contactTextStyles;
 import 'package:flutter/material.dart';
 
 class AddContactDialog extends StatefulWidget {
@@ -45,9 +46,9 @@ class _AddContactDialogState extends State<AddContactDialog> {
             children: [
               Expanded(
                 child: Text(
-                  TextStrings().addContact,
+                  contactStrings.TextStrings().addContact,
                   textAlign: TextAlign.center,
-                  style: CustomTextStyles.primaryBold18,
+                  style: contactTextStyles.CustomTextStyles.primaryBold18,
                 ),
               )
             ],
@@ -99,7 +100,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
                         ? CircularProgressIndicator()
                         : CustomButton(
                             height: 50.toHeight * deviceTextFactor,
-                            buttonText: TextStrings().addtoContact,
+                            buttonText:
+                                contactStrings.TextStrings().addtoContact,
                             onPressed: () async {
                               setState(() {
                                 isLoading = true;
@@ -125,8 +127,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   children: [
                     CustomButton(
                         height: 50.toHeight * deviceTextFactor,
-                        isInverted: true,
-                        buttonText: TextStrings().buttonCancel,
+                        buttonText: contactStrings.TextStrings().buttonCancel,
                         buttonColor: Colors.white,
                         onPressed: () {
                           _contactService.getAtSignError = '';
