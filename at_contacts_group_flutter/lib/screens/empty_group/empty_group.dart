@@ -63,27 +63,27 @@ class _EmptyGroupState extends State<EmptyGroup> {
                       context: context,
                       selectedList: (selectedList) {
                         print('in selectedList => selectedList');
-                        // selectedContactList = selectedList;
+                        selectedContactList = selectedList;
 
-                        // if (selectedContactList?.length > 0) {
-                        //   GroupService()
-                        //       .setSelectedContacts(selectedContactList);
+                        if (selectedContactList.length > 0) {
+                          GroupService()
+                              .setSelectedContacts(selectedContactList);
 
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => NewGroup(),
-                        //     ),
-                        //   );
-                        // }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NewGroup(),
+                            ),
+                          );
+                        }
                       },
                     ),
                   ),
                 );
               },
-              isInverted: Theme.of(context).primaryColor == Color(0xFF000000)
-                  ? false
-                  : true,
+              // isInverted: Theme.of(context).primaryColor == Color(0xFF000000)
+              //     ? false
+              //     : true,
             )
           ],
         ),

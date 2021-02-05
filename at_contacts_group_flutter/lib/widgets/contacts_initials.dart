@@ -3,7 +3,8 @@
 /// @param [initials] as String and display those initials in a circular avatar with random colors
 
 import 'dart:math';
-import 'package:at_common_flutter/utils/text_styles.dart';
+
+import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 

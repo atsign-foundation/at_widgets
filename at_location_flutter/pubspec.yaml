@@ -25,14 +25,20 @@ dependencies:
   location: ^3.0.0
   sliding_up_panel: ^1.0.2
 
-  at_client_mobile: 
-  at_lookup: 
-  at_events_flutter: 
+  at_client_mobile:
+  at_lookup:
+  at_events_flutter:
     path: ../at_events_flutter
   at_commons:
-  at_contact: 
+  at_contact:
+  # at_common_flutter:
   at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_common_flutter
+      ref: dev_env
   at_chat_flutter:
+    path: ../at_chat_flutter
 
 dev_dependencies:
   flutter_test:

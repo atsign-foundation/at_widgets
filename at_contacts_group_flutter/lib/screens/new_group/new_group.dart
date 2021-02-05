@@ -28,13 +28,14 @@ class _NewGroupState extends State<NewGroup> {
   }
 
   getContacts() {
-    // if (GroupService().selecteContactList.length > 0) {
-    //   selectedContacts = GroupService().selecteContactList;
-    // } else
-    //   selectedContacts = [];
+    if (GroupService().selecteContactList.length > 0) {
+      selectedContacts = GroupService().selecteContactList;
+    } else
+      selectedContacts = [];
   }
 
   createGroup() async {
+    print('object');
     if (groupName != null) {
       if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
         CustomToast().show(TextConstants().INVALID_NAME, context);

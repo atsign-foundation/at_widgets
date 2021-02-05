@@ -11,6 +11,7 @@ class GroupService {
   static GroupService _instance = GroupService._();
   factory GroupService() => _instance;
   String _atsign;
+  List<AtContact> selecteContactList;
   List<GroupContactsModel> allContacts, selectedGroupContacts = [];
   AtGroup selectedGroup;
   AtContactsImpl atContactImpl;
@@ -46,11 +47,11 @@ class GroupService {
 
   get currentSelectedGroup => selectedGroup;
 
-  // setSelectedContacts(List<AtContact> list) {
-  //   selecteContactList = list;
-  // }
+  setSelectedContacts(List<AtContact> list) {
+    selecteContactList = list;
+  }
 
-  // List<AtContact> get selectedContactList => selecteContactList;
+  List<AtContact> get selectedContactList => selecteContactList;
 
   init(String atSign) async {
     _atsign = atSign;

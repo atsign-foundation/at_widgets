@@ -14,13 +14,18 @@ dependencies:
   latlong: ^0.6.1
   toast: ^0.1.5
 
+  # at_common_flutter:
   at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_common_flutter
+      ref: dev_env
   at_location_flutter:
     path: ../at_location_flutter
   at_contacts_flutter:
     path: ../at_contacts_flutter
-  at_commons: 
-  at_client_mobile: 
+  at_commons:
+  at_client_mobile:
 
 dev_dependencies:
   flutter_test:

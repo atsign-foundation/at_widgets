@@ -45,7 +45,7 @@ class ContactSelectionBottomSheet extends StatelessWidget {
                     buttonText: 'Done',
                     width: 120.toWidth,
                     height: 40.toHeight,
-                    isInverted: true,
+                    // isInverted: true,
                     onPressed: () {
                       onPressed();
                       selectedList(_groupService.selectedGroupContacts);

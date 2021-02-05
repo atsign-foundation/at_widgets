@@ -153,7 +153,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   ),
                   CustomButton(
                     width: 230.toWidth,
-                    isInverted: true,
+                    // isInverted: true,
                     buttonText: TextStrings().buttonContinue,
                     onPressed: () async {
                       await Navigator.pushReplacement(

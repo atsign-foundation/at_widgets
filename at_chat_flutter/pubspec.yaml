@@ -11,7 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
   at_contact: ^1.0.0
-  at_common_flutter: ^0.0.2
+  # at_common_flutter: ^0.0.2
+  at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_common_flutter
+      ref: dev_env
   at_commons: ^1.0.1+4
   at_client_mobile: ^1.0.0+5
   at_lookup: ^1.0.0+4
