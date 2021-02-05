@@ -203,7 +203,7 @@ class LocationService {
   // returns new marker and eta
   addDetails(HybridModel user, {int index}) async {
     user.marker = buildMarker(user);
-    // await _calculateEta(user);
+    await _calculateEta(user);
     if (index != null)
       hybridUsersList[index] = user;
     else
