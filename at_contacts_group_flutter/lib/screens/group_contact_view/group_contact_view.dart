@@ -23,7 +23,7 @@ class GroupContactView extends StatefulWidget {
       this.showContacts = false,
       this.showGroups = false,
       this.singleSelection = false,
-      this.asSelectionScreen = false,
+      this.asSelectionScreen = true,
       this.selectedList})
       : super(key: key);
   @override

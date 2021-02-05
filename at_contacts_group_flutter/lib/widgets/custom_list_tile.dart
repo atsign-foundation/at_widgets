@@ -118,6 +118,7 @@ class _CustomListTileState extends State<CustomListTile> {
             onTap: () {
               if (widget.asSelectionTile) {
                 if (widget.selectSingle) {
+                  _groupService.selectedGroupContacts = [];
                   _groupService.addGroupContact(widget.item);
                   widget.selectedList([widget.item]);
                   // if (widget.item.contactType == ContactsType.CONTACT) {
