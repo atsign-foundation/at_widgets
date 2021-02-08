@@ -50,7 +50,13 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 15.toHeight),
-              ContactInitial(initials: widget.title.substring(1, 3), size: 60),
+              widget.title.length > 2
+                  ? ContactInitial(
+                      initials: widget.title.substring(1, 3), size: 60)
+                  : ContactInitial(
+                      initials: widget.title
+                          .substring(0, widget.title.length >= 1 ? 1 : 0),
+                      size: 60),
               // CustomCircleAvatar(
               //   image: AllImages().PERSON2,
               //   size: 74,
