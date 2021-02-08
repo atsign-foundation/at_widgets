@@ -78,7 +78,7 @@ class GroupService {
     try {
       List<String> groupNames = await atContactImpl.listGroupNames();
       List<AtGroup> groupList = [];
-      allContacts = [];
+      // allContacts = [];
 
       for (int i = 0; i < groupNames.length; i++) {
         AtGroup groupDetail = await getGroupDetail(groupNames[i]);
@@ -194,11 +194,13 @@ class GroupService {
     try {
       allContacts = [];
       List<AtContact> contactList = await fetchContacts();
+      print('CONT====>$contactList');
       contactList.forEach((AtContact contact) {
         allContacts.add(GroupContactsModel(
             contact: contact, contactType: ContactsType.CONTACT));
       });
       await getAllGroupsDetails();
+      print('ALL CONTACTS====>${allContacts.length}');
       _allContactsStreamController.add(allContacts);
     } catch (e) {}
   }
