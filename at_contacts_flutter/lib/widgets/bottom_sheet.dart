@@ -44,11 +44,12 @@ class CustomBottomSheet extends StatelessWidget {
                     buttonText: 'Done',
                     width: 120.toWidth,
                     height: 40.toHeight,
-                    buttonColor: Colors.white,
                     onPressed: () {
                       onPressed();
                       selectedList(snapshot.data);
                     },
+                    buttonColor: Colors.white,
+                    fontColor: Colors.black,
                   )
                 ],
               ),
