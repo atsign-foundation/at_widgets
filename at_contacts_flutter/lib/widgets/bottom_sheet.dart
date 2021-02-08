@@ -48,8 +48,8 @@ class CustomBottomSheet extends StatelessWidget {
                       onPressed();
                       selectedList(snapshot.data);
                     },
-                    buttonColor: Colors.white,
-                    fontColor: Colors.black,
+                    buttonColor: Colors.black,
+                    fontColor: Colors.white,
                   )
                 ],
               ),
