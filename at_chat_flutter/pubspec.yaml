@@ -1,6 +1,6 @@
 name: at_chat_flutter
 description: A flutter plugin project to provide chat feature.
-version: 0.0.2
+version: 0.0.3
 homepage: https://atsign.com/
 
 environment:
