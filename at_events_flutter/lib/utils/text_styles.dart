@@ -46,6 +46,12 @@ class CustomTextStyles {
     fontWeight: FontWeight.w700,
   );
 
+  TextStyle white18 = TextStyle(
+    color: AllColors().WHITE,
+    fontSize: 18.toFont,
+    fontWeight: FontWeight.w700,
+  );
+
   TextStyle black10 = TextStyle(
     color: AllColors().Black,
     fontSize: 10.toFont,

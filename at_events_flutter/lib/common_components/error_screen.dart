@@ -1,4 +1,5 @@
 import 'package:at_common_flutter/widgets/custom_button.dart';
+import 'package:at_events_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
@@ -18,8 +19,12 @@ class ErrorScreen extends StatelessWidget {
             buttonText: 'Retry',
             width: 120.toWidth,
             height: 40.toHeight,
-            buttonColor: Theme.of(context).primaryColor,
-            fontColor: Theme.of(context).scaffoldBackgroundColor,
+            buttonColor: Theme.of(context).brightness == Brightness.light
+                ? AllColors().Black
+                : AllColors().WHITE,
+            fontColor: Theme.of(context).brightness == Brightness.light
+                ? AllColors().WHITE
+                : AllColors().Black,
             onPressed: () async {
               if (this.onPressed != null) {
                 onPressed();

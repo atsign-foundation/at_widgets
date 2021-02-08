@@ -12,7 +12,7 @@ class GroupService {
   factory GroupService() => _instance;
   String _atsign;
   List<AtContact> selecteContactList;
-  List<GroupContactsModel> allContacts, selectedGroupContacts = [];
+  List<GroupContactsModel> allContacts = [], selectedGroupContacts = [];
   AtGroup selectedGroup;
   AtContactsImpl atContactImpl;
   int length = 0;
@@ -78,6 +78,7 @@ class GroupService {
     try {
       List<String> groupNames = await atContactImpl.listGroupNames();
       List<AtGroup> groupList = [];
+      allContacts = [];
 
       for (int i = 0; i < groupNames.length; i++) {
         AtGroup groupDetail = await getGroupDetail(groupNames[i]);

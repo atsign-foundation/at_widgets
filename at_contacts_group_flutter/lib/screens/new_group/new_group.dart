@@ -80,6 +80,9 @@ class _NewGroupState extends State<NewGroup> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).brightness == Brightness.light
+            ? AllColors().WHITE
+            : AllColors().Black,
         bottomSheet: GroupBottomSheet(
           onPressed: createGroup,
           message: '${selectedContacts.length} Contacts Selected',

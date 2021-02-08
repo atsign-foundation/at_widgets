@@ -1,4 +1,6 @@
 import 'package:at_common_flutter/widgets/custom_button.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
@@ -33,7 +35,9 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
           borderRadius: BorderRadius.circular(10.toWidth)),
       content: Container(
         height: 300.toHeight,
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Theme.of(context).brightness == Brightness.light
+            ? AllColors().WHITE
+            : AllColors().Black,
         child: Container(
           // padding: EdgeInsets.fromLTRB(24, 20, 24, 24),
           child: Column(
@@ -42,7 +46,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             children: [
               Text(
                 widget.heading,
-                style: Theme.of(context).textTheme.headline3,
+                style: CustomTextStyles().grey16,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 15.toHeight),
@@ -54,12 +58,12 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               SizedBox(height: 15.toHeight),
               Text(
                 widget.title,
-                style: Theme.of(context).textTheme.headline3,
+                style: CustomTextStyles().grey16,
               ),
               widget.subtitle != null
                   ? Text(
                       widget.subtitle,
-                      style: Theme.of(context).textTheme.headline3,
+                      style: CustomTextStyles().grey16,
                     )
                   : SizedBox(),
               SizedBox(height: 20.toHeight),
@@ -87,6 +91,14 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                       //     Theme.of(context).primaryColor == Color(0xFF000000)
                       //         ? false
                       //         : true,
+                      buttonColor:
+                          Theme.of(context).brightness == Brightness.light
+                              ? AllColors().Black
+                              : AllColors().WHITE,
+                      fontColor:
+                          Theme.of(context).brightness == Brightness.light
+                              ? AllColors().WHITE
+                              : AllColors().Black,
                     ),
               SizedBox(height: 5.toHeight),
               InkWell(
@@ -96,7 +108,10 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                           'No',
                           style: TextStyle(
                               fontSize: 14.toFont,
-                              color: Theme.of(context).primaryColor),
+                              color: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? AllColors().Black
+                                  : AllColors().WHITE),
                         )
                       : SizedBox())
             ],

@@ -14,6 +14,7 @@ import 'package:at_events_flutter/screens/recurring_event.dart';
 import 'package:at_events_flutter/common_components/custom_heading.dart';
 import 'package:at_events_flutter/screens/select_location.dart';
 import 'package:at_events_flutter/services/event_services.dart';
+import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
@@ -356,8 +357,14 @@ class _CreateEventState extends State<CreateEvent> {
                         onPressed: onCreateEvent,
                         width: 160,
                         height: 48,
-                        buttonColor: Theme.of(context).primaryColor,
-                        fontColor: Theme.of(context).scaffoldBackgroundColor,
+                        buttonColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? AllColors().Black
+                                : AllColors().WHITE,
+                        fontColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? AllColors().WHITE
+                                : AllColors().Black,
                       ),
               ),
             ],
