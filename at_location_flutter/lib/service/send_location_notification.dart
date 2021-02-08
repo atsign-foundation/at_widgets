@@ -24,8 +24,8 @@ class SendLocationNotification {
     atClient = newAtClient;
     //Location().changeSettings(interval: 10);
     print('receivingAtsigns length - ${receivingAtsigns.length}');
-    // updateMyLocation2();
-    manualLocationSend();
+    updateMyLocation2();
+    // manualLocationSend();
   }
 
   updateMyLocation() async {
@@ -63,7 +63,7 @@ class SendLocationNotification {
     LatLng myLocation = await MyLocation().myLocation();
     // LatLng myLocation = LatLng(lat, long);
     if (receivingAtsigns.length > 0)
-      timer = Timer.periodic(Duration(seconds: 5), (Timer t) async {
+      timer = Timer.periodic(Duration(seconds: 10), (Timer t) async {
         receivingAtsigns.forEach((notification) async {
           bool isSend = false;
 
