@@ -114,6 +114,7 @@ class ChatService {
         });
         chatSink.add(chatHistory);
       } else {
+        chatHistoryMessages = [];
         chatSink.add(chatHistory);
       }
       String referenceKey = chatKey +
