@@ -218,10 +218,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                       ? timeOfDayToString(eventData.event.endTime)
                       : '',
                   onTap: () async {
-                    if (eventData.event.startTime == null) {
-                      CustomToast().show('select start time first', context);
-                      return;
-                    }
                     final TimeOfDay timePicked = await showTimePicker(
                       context: context,
                       initialTime: eventData.event.endTime != null
@@ -230,14 +226,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                     );
 
                     if (timePicked != null) {
-                      if (timePicked != null) if (timePicked.hour +
-                              timePicked.minute / 60.0 >
-                          eventData.event.startTime.hour +
-                              eventData.event.startTime.minute / 60.0)
-                        eventData.event.endTime = timePicked;
-                      else
-                        CustomToast().show(
-                            'stop time must be after start time', context);
+                      eventData.event.endTime = timePicked;
                       setState(() {});
                     }
                   },

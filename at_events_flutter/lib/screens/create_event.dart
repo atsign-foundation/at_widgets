@@ -18,6 +18,8 @@ import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
+import '../at_events_flutter.dart';
+
 class CreateEvent extends StatefulWidget {
   final AtClientImpl atClientInstance;
   final EventNotificationModel eventData;
@@ -48,6 +50,10 @@ class _CreateEventState extends State<CreateEvent> {
         widget.eventData != null ? widget.eventData : null);
     if (widget.createdEvents != null) {
       EventService().createdEvents = widget.createdEvents;
+    }
+
+    if (widget.onEventSaved != null) {
+      EventService().onEventSaved = widget.onEventSaved;
     }
   }
 
@@ -394,9 +400,6 @@ class _CreateEventState extends State<CreateEvent> {
       setState(() {
         isLoading = false;
       });
-      if (widget.onEventSaved != null) {
-        widget.onEventSaved(EventService().eventNotificationModel);
-      }
       Navigator.of(context).pop();
     } else {
       CustomToast().show('some thing went wrong , try again.', context);

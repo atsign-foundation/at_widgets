@@ -3,8 +3,8 @@
 /// @param [initials] as String and display those initials in a circular avatar with random colors
 
 import 'dart:math';
-
-import 'package:at_contacts_flutter/utils/text_styles.dart';
+import 'package:at_common_flutter/utils/text_styles.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -29,7 +29,7 @@ class ContactInitial extends StatelessWidget {
       child: Center(
         child: Text(
           initials.toUpperCase(),
-          style: CustomTextStyles.whiteBold16,
+          style: CustomTextStyles.primaryBold16(AllColors().WHITE),
         ),
       ),
     );

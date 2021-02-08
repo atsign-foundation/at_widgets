@@ -19,7 +19,7 @@ class MyLocation {
         return LatLng(0, 0);
       }
     }
-
+    print('_serviceEnabled $_serviceEnabled');
     _permissionGranted = await _location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await _location.requestPermission();
@@ -27,9 +27,13 @@ class MyLocation {
         return LatLng(0, 0);
       }
     }
+    print('_permissionGranted $_permissionGranted');
 
-    _locationData = await _location.getLocation();
+    return LatLng(37.785834, -122.406417);
 
-    return LatLng(_locationData.latitude, _locationData.longitude);
+    // _locationData = await _location.getLocation();
+    // print('_locationData $_locationData');
+
+    // return LatLng(_locationData.latitude, _locationData.longitude);
   }
 }

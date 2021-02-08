@@ -20,6 +20,7 @@ class EventService {
   AtClientImpl atClientInstance;
   List<AtContact> selectedContacts;
   List<HybridNotificationModel> createdEvents;
+  Function onEventSaved;
 
   // ignore: close_sinks
   final _atEventNotificationController =
@@ -81,10 +82,11 @@ class EventService {
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel);
       var result = await atClientInstance.put(atKey, eventData);
-      print('event edit:$result');
+      if (onEventSaved != null) {
+        onEventSaved(eventNotificationModel);
+      }
       return result;
     } catch (e) {
-      print('error in event update:$e');
       return e;
     }
   }
@@ -110,6 +112,10 @@ class EventService {
     print(
         'notification data:${atKey.key}, sharedWith:${eventNotification.group.members.elementAt(0).atSign} ,notify key: ${notification}');
     var result = await atClientInstance.put(atKey, notification);
+    eventNotificationModel = eventNotification;
+    if (onEventSaved != null) {
+      onEventSaved(eventNotification);
+    }
     print('send event:$result');
     return result;
   }

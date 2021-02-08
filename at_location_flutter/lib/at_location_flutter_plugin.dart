@@ -249,8 +249,13 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
               ),
               SlidingUpPanel(
                 controller: pc,
-                minHeight: widget.userListenerKeyword != null ? 119 : 205,
-                maxHeight: widget.userListenerKeyword != null ? 291 : 431,
+                minHeight: widget.userListenerKeyword != null ? 123 : 205,
+                maxHeight: widget.userListenerKeyword != null
+                    ? ((widget.userListenerKeyword.atsignCreator ==
+                            LocationService().getAtSign())
+                        ? 291
+                        : 123)
+                    : 431,
                 // collapsed: CollapsedContent(UniqueKey(), false,
                 //     eventListenerKeyword: widget.eventListenerKeyword,
                 //     userListenerKeyword: widget.userListenerKeyword),
