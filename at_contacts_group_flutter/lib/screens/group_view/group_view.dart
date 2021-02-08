@@ -227,10 +227,13 @@ class _GroupViewState extends State<GroupView> {
                                         CustomToast().show(
                                             TextConstants().SERVICE_ERROR,
                                             context);
-                                      } else {
+                                      } else if (result) {
+                                        CustomToast().show(
+                                            TextConstants().MEMBER_ADDED,
+                                            context);
+                                      } else
                                         CustomToast()
                                             .show(result.toString(), context);
-                                      }
                                     }
                                   },
                                 ),

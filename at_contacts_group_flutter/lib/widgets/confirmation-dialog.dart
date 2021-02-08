@@ -30,7 +30,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      // contentPadding: EdgeInsets.only(top: 0),
+      contentPadding: EdgeInsets.only(top: 0),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.toWidth)),
       content: Container(
@@ -39,7 +39,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             ? AllColors().WHITE
             : AllColors().Black,
         child: Container(
-          // padding: EdgeInsets.fromLTRB(24, 20, 24, 24),
+          padding: EdgeInsets.fromLTRB(24, 20, 24, 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
