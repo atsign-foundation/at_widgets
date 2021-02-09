@@ -38,4 +38,8 @@ class CustomTextStyles {
     fontSize: 14.toFont,
     fontWeight: FontWeight.w500,
   );
+
+  TextStyle grey16 = TextStyle(color: AllColors().GREY, fontSize: 16);
+
+  TextStyle grey14 = TextStyle(color: AllColors().GREY, fontSize: 14);
 }

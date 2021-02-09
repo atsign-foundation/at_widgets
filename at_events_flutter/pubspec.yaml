@@ -14,13 +14,13 @@ dependencies:
   latlong: ^0.6.1
   toast: ^0.1.5
 
-  at_common_flutter:
+  at_common_flutter: ^0.0.2
   at_location_flutter:
     path: ../at_location_flutter
   at_contacts_flutter:
     path: ../at_contacts_flutter
-  at_commons: 
-  at_client_mobile: 
+  at_commons: ^1.0.1+3
+  at_client_mobile: ^1.0.0+3
 
 dev_dependencies:
   flutter_test:

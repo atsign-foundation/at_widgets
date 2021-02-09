@@ -218,10 +218,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                       ? timeOfDayToString(eventData.event.endTime)
                       : '',
                   onTap: () async {
-                    if (eventData.event.startTime == null) {
-                      CustomToast().show('select start time first', context);
-                      return;
-                    }
                     final TimeOfDay timePicked = await showTimePicker(
                       context: context,
                       initialTime: eventData.event.endTime != null
@@ -230,14 +226,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                     );
 
                     if (timePicked != null) {
-                      if (timePicked != null) if (timePicked.hour +
-                              timePicked.minute / 60.0 >
-                          eventData.event.startTime.hour +
-                              eventData.event.startTime.minute / 60.0)
-                        eventData.event.endTime = timePicked;
-                      else
-                        CustomToast().show(
-                            'stop time must be after start time', context);
+                      eventData.event.endTime = timePicked;
                       setState(() {});
                     }
                   },
@@ -250,8 +239,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('Never',
-                    style: Theme.of(context).primaryTextTheme.headline3),
+                Text('Never', style: CustomTextStyles().grey16),
                 Radio(
                   groupValue: eventData.event.endsOn,
                   toggleable: true,
@@ -267,7 +255,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('On', style: Theme.of(context).primaryTextTheme.headline3),
+                Text('On', style: CustomTextStyles().grey16),
                 Radio(
                   groupValue: eventData.event.endsOn,
                   toggleable: true,
@@ -311,8 +299,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('After',
-                    style: Theme.of(context).primaryTextTheme.headline3),
+                Text('After', style: CustomTextStyles().grey16),
                 Radio(
                   groupValue: eventData.event.endsOn,
                   toggleable: true,
@@ -357,8 +344,12 @@ class _RecurringEventState extends State<RecurringEvent> {
                 buttonText: 'Done',
                 width: 164.toWidth,
                 height: 48.toHeight,
-                buttonColor: Theme.of(context).primaryColor,
-                fontColor: Theme.of(context).scaffoldBackgroundColor,
+                buttonColor: Theme.of(context).brightness == Brightness.light
+                    ? AllColors().Black
+                    : AllColors().WHITE,
+                fontColor: Theme.of(context).brightness == Brightness.light
+                    ? AllColors().WHITE
+                    : AllColors().Black,
               ),
             )
           ],

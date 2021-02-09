@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:math' as math;
-import 'package:atsign_location/utils/constants/constants.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong/latlong.dart';
 import 'package:crypto/crypto.dart';

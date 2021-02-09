@@ -1,3 +1,4 @@
+import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class CustomHeading extends StatelessWidget {
@@ -10,10 +11,13 @@ class CustomHeading extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         heading != null
-            ? Text(heading, style: Theme.of(context).textTheme.headline1)
+            ? Text(heading,
+                style: Theme.of(context).brightness == Brightness.light
+                    ? CustomTextStyles().black18
+                    : CustomTextStyles().white18)
             : SizedBox(),
         action != null
-            ? Text(action, style: Theme.of(context).textTheme.headline2)
+            ? Text(action, style: CustomTextStyles().orange18)
             : SizedBox()
       ],
     );

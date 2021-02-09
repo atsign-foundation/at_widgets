@@ -7,6 +7,7 @@ import 'package:at_events_flutter/common_components/custom_heading.dart';
 import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_services.dart';
+import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -109,12 +110,6 @@ class _OneDayEventState extends State<OneDayEvent> {
                                 ? timeOfDayToString(eventData.event.endTime)
                                 : '',
                             onTap: () async {
-                              if (eventData.event.startTime == null) {
-                                CustomToast()
-                                    .show('select start time first', context);
-                                return;
-                              }
-
                               final TimeOfDay timePicked = await showTimePicker(
                                 context: context,
                                 initialTime: eventData.event.endTime != null
@@ -122,15 +117,8 @@ class _OneDayEventState extends State<OneDayEvent> {
                                     : TimeOfDay.now(),
                               );
 
-                              if (timePicked != null) if (timePicked.hour +
-                                      timePicked.minute / 60.0 >
-                                  eventData.event.startTime.hour +
-                                      eventData.event.startTime.minute / 60.0)
+                              if (timePicked != null)
                                 eventData.event.endTime = timePicked;
-                              else
-                                CustomToast().show(
-                                    'stop time must be after start time',
-                                    context);
                               setState(() {});
                             }),
                       ],
@@ -151,8 +139,12 @@ class _OneDayEventState extends State<OneDayEvent> {
                     Navigator.of(context).pop();
                   },
                   buttonText: 'Done',
-                  buttonColor: Theme.of(context).primaryColor,
-                  fontColor: Theme.of(context).scaffoldBackgroundColor,
+                  buttonColor: Theme.of(context).brightness == Brightness.light
+                      ? AllColors().Black
+                      : AllColors().WHITE,
+                  fontColor: Theme.of(context).brightness == Brightness.light
+                      ? AllColors().WHITE
+                      : AllColors().Black,
                   width: 164.toWidth,
                   height: 48.toHeight,
                 ),

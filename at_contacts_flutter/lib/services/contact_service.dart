@@ -75,6 +75,7 @@ class ContactService {
       contactList.sort(
           (a, b) => a.atSign.substring(1).compareTo(b.atSign.substring(1)));
       contactSink.add(contactList);
+      return contactList;
     } catch (e) {
       print("error here => $e");
     }

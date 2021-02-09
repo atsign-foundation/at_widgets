@@ -1,4 +1,6 @@
 import 'package:at_common_flutter/widgets/custom_button.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
@@ -28,38 +30,42 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      // contentPadding: EdgeInsets.only(top: 0),
+      contentPadding: EdgeInsets.only(top: 0),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.toWidth)),
       content: Container(
-        height: 300.toHeight,
-        color: Theme.of(context).scaffoldBackgroundColor,
+        height: 350,
+        color: Theme.of(context).brightness == Brightness.light
+            ? AllColors().WHITE
+            : AllColors().Black,
         child: Container(
-          // padding: EdgeInsets.fromLTRB(24, 20, 24, 24),
+          padding: EdgeInsets.fromLTRB(24, 20, 24, 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 widget.heading,
-                style: Theme.of(context).textTheme.headline3,
+                style: CustomTextStyles().grey16,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 15.toHeight),
-              ContactInitial(initials: widget.title.substring(1, 3), size: 60),
-              // CustomCircleAvatar(
-              //   image: AllImages().PERSON2,
-              //   size: 74,
-              // ),
+              widget.title.length > 2
+                  ? ContactInitial(
+                      initials: widget.title.substring(1, 3), size: 60)
+                  : ContactInitial(
+                      initials: widget.title
+                          .substring(0, widget.title.length >= 1 ? 1 : 0),
+                      size: 60),
               SizedBox(height: 15.toHeight),
               Text(
                 widget.title,
-                style: Theme.of(context).textTheme.headline3,
+                style: CustomTextStyles().grey16,
               ),
               widget.subtitle != null
                   ? Text(
                       widget.subtitle,
-                      style: Theme.of(context).textTheme.headline3,
+                      style: CustomTextStyles().grey16,
                     )
                   : SizedBox(),
               SizedBox(height: 20.toHeight),
@@ -83,10 +89,18 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                           });
                         }
                       },
-                      isInverted:
-                          Theme.of(context).primaryColor == Color(0xFF000000)
-                              ? false
-                              : true,
+                      // isInverted:
+                      //     Theme.of(context).primaryColor == Color(0xFF000000)
+                      //         ? false
+                      //         : true,
+                      buttonColor:
+                          Theme.of(context).brightness == Brightness.light
+                              ? AllColors().Black
+                              : AllColors().WHITE,
+                      fontColor:
+                          Theme.of(context).brightness == Brightness.light
+                              ? AllColors().WHITE
+                              : AllColors().Black,
                     ),
               SizedBox(height: 5.toHeight),
               InkWell(
@@ -96,7 +110,10 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                           'No',
                           style: TextStyle(
                               fontSize: 14.toFont,
-                              color: Theme.of(context).primaryColor),
+                              color: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? AllColors().Black
+                                  : AllColors().WHITE),
                         )
                       : SizedBox())
             ],

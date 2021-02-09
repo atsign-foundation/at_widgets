@@ -51,7 +51,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: Theme.of(context).brightness == Brightness.light
+              ? AllColors().WHITE
+              : AllColors().Black,
           boxShadow: [
             BoxShadow(
               color: AllColors().DARK_GREY,
@@ -109,8 +111,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           children: [
                             Text(
                               snapshot.data.title ?? 'Event Location',
-                              style:
-                                  Theme.of(context).primaryTextTheme.headline1,
+                              style: CustomTextStyles().black18,
                             ),
                             widget.isAdmin
                                 ? InkWell(
@@ -294,15 +295,25 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           : Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  await LocationService().onEventExit(
-                                      isExited: true,
-                                      keyType: widget.isAdmin
-                                          ? ATKEY_TYPE_ENUM.CREATEEVENT
-                                          : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT);
-                                  Navigator.of(context).pop();
+                                  if (widget.eventListenerKeyword.group.members
+                                          .elementAt(0)
+                                          .tags['isExited'] ==
+                                      false) {
+                                    await LocationService().onEventExit(
+                                        isExited: true,
+                                        keyType: widget.isAdmin
+                                            ? ATKEY_TYPE_ENUM.CREATEEVENT
+                                            : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT);
+                                    Navigator.of(context).pop();
+                                  }
                                 },
                                 child: Text(
-                                  'Exit Event',
+                                  widget.eventListenerKeyword.group.members
+                                              .elementAt(0)
+                                              .tags['isExited'] ==
+                                          true
+                                      ? 'Exited'
+                                      : 'Exit Event',
                                   style: CustomTextStyles().orange16,
                                 ),
                               ),
@@ -312,11 +323,17 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           ? Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  await LocationService().onEventCancel();
-                                  Navigator.of(context).pop();
+                                  if (!widget
+                                      .eventListenerKeyword.isCancelled) {
+                                    var result =
+                                        await LocationService().onEventCancel();
+                                    Navigator.of(context).pop();
+                                  }
                                 },
                                 child: Text(
-                                  'Cancel Event',
+                                  widget.eventListenerKeyword.isCancelled
+                                      ? 'Event Cancelled'
+                                      : 'Cancel Event',
                                   style: CustomTextStyles().orange16,
                                 ),
                               ),
@@ -467,24 +484,26 @@ class _CollapsedContentState extends State<CollapsedContent> {
                             )
                           : SizedBox(),
                       amICreator ? Divider() : SizedBox(),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () async {
-                            print(LocationService().onRemove.toString());
-                            var result = await LocationService()
-                                .onRemove(widget.userListenerKeyword);
-                            if (result) {
-                              SendLocationNotification()
-                                  .sendNull(widget.userListenerKeyword);
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Text(
-                            'Remove Person',
-                            style: CustomTextStyles().orange16,
-                          ),
-                        ),
-                      ),
+                      amICreator
+                          ? Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  print(LocationService().onRemove.toString());
+                                  var result = await LocationService()
+                                      .onRemove(widget.userListenerKeyword);
+                                  if (result) {
+                                    SendLocationNotification()
+                                        .sendNull(widget.userListenerKeyword);
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: Text(
+                                  'Remove Person',
+                                  style: CustomTextStyles().orange16,
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 )

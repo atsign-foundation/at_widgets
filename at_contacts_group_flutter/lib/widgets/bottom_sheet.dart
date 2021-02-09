@@ -1,5 +1,6 @@
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -45,7 +46,7 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
                   buttonText: widget.buttontext,
                   width: 120.toWidth,
                   height: 40.toHeight,
-                  isInverted: false,
+                  // isInverted: false,
                   onPressed: () async {
                     setState(() {
                       isLoading = true;
@@ -59,6 +60,12 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
                       });
                     }
                   },
+                  buttonColor: Theme.of(context).brightness == Brightness.light
+                      ? AllColors().Black
+                      : AllColors().WHITE,
+                  fontColor: Theme.of(context).brightness == Brightness.light
+                      ? AllColors().WHITE
+                      : AllColors().Black,
                 )
         ],
       ),

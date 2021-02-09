@@ -80,8 +80,14 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                           buttonText: 'Yes! Create another',
                           width: 278,
                           height: 48.toHeight,
-                          buttonColor: Theme.of(context).primaryColor,
-                          fontColor: Theme.of(context).scaffoldBackgroundColor,
+                          buttonColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? AllColors().Black
+                                  : AllColors().WHITE,
+                          fontColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? AllColors().WHITE
+                                  : AllColors().Black,
                         )
                       : CircularProgressIndicator(),
                   SizedBox(height: 10),

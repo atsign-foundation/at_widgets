@@ -14,9 +14,12 @@ import 'package:at_events_flutter/screens/recurring_event.dart';
 import 'package:at_events_flutter/common_components/custom_heading.dart';
 import 'package:at_events_flutter/screens/select_location.dart';
 import 'package:at_events_flutter/services/event_services.dart';
+import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
+
+import '../at_events_flutter.dart';
 
 class CreateEvent extends StatefulWidget {
   final AtClientImpl atClientInstance;
@@ -48,6 +51,10 @@ class _CreateEventState extends State<CreateEvent> {
         widget.eventData != null ? widget.eventData : null);
     if (widget.createdEvents != null) {
       EventService().createdEvents = widget.createdEvents;
+    }
+
+    if (widget.onEventSaved != null) {
+      EventService().onEventSaved = widget.onEventSaved;
     }
   }
 
@@ -350,8 +357,14 @@ class _CreateEventState extends State<CreateEvent> {
                         onPressed: onCreateEvent,
                         width: 160,
                         height: 48,
-                        buttonColor: Theme.of(context).primaryColor,
-                        fontColor: Theme.of(context).scaffoldBackgroundColor,
+                        buttonColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? AllColors().Black
+                                : AllColors().WHITE,
+                        fontColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? AllColors().WHITE
+                                : AllColors().Black,
                       ),
               ),
             ],
@@ -394,9 +407,6 @@ class _CreateEventState extends State<CreateEvent> {
       setState(() {
         isLoading = false;
       });
-      if (widget.onEventSaved != null) {
-        widget.onEventSaved(EventService().eventNotificationModel);
-      }
       Navigator.of(context).pop();
     } else {
       CustomToast().show('some thing went wrong , try again.', context);

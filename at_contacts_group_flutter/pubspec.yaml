@@ -13,18 +13,11 @@ dependencies:
 
   toast: ^0.1.5
   file_picker: ^2.1.4
-  at_common_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_common_flutter
-      ref: dev_env
-  at_contacts_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_contacts_flutter
-      ref: dev_env
+  at_common_flutter: ^0.0.2
+  at_contacts_flutter: 
+    path: ../at_contacts_flutter
   at_contact: ^1.0.0
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -48,7 +41,7 @@ flutter:
 
   # To add assets to your plugin package, add an assets section, like this:
   assets:
-      - assets/images/
+    - assets/images/
     # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   #
