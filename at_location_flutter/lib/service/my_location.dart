@@ -29,11 +29,11 @@ class MyLocation {
     }
     print('_permissionGranted $_permissionGranted');
 
-    return LatLng(37.785834, -122.406417);
+    // return LatLng(37.785834, -122.406417);
 
-    // _locationData = await _location.getLocation();
-    // print('_locationData $_locationData');
+    _locationData = await _location.getLocation();
+    print('_locationData $_locationData');
 
-    // return LatLng(_locationData.latitude, _locationData.longitude);
+    return LatLng(_locationData.latitude, _locationData.longitude);
   }
 }

@@ -157,14 +157,14 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           height: 3,
                         ),
                         Text(
-                          snapshot.data.event.date.toString() ?? '',
+                          dateToString(snapshot.data.event.date) ?? '',
                           style: CustomTextStyles().darkGrey14,
                         ),
                         SizedBox(
                           height: 3,
                         ),
                         Text(
-                          '${snapshot.data.event.startTime} - ${snapshot.data.event.endTime}' ??
+                          '${timeOfDayToString(snapshot.data.event.startTime)} - ${timeOfDayToString(snapshot.data.event.endTime)}' ??
                               'Event timings',
                           style: CustomTextStyles().darkGrey14,
                         ),
@@ -175,10 +175,10 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                     'Event participants',
                             atsignCreator: snapshot.data.atsignCreator,
                             semiTitle:
-                                '${snapshot.data.group.members.length} poeple' ??
+                                '${snapshot.data.group.members.length} people' ??
                                     'No of people',
                             subTitle:
-                                'Share my location from ${snapshot.data.event.startTime} on ${snapshot.data.event.date}',
+                                'Share my location from ${timeOfDayToString(snapshot.data.event.startTime)} on ${dateToString(snapshot.data.event.date)}',
                             action: Transform.rotate(
                               angle: 5.8,
                               child: Container(
