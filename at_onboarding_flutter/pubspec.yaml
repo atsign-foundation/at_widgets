@@ -22,12 +22,12 @@ dependencies:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git
       path: at_backupkey_flutter
-      ref: dev_env
+      ref: dev_env_staging
   at_server_status:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: at_server_status
-      ref: dev_env
+      ref: dev_env_staging
 
 dev_dependencies:
   flutter_test:
