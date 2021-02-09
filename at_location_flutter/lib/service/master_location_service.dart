@@ -21,7 +21,7 @@ class MasterLocationService {
   String currentAtSign;
   List<HybridModel> allReceivedUsersList;
   List<KeyModel> allLocationNotifications = [];
-  final String locationKey = 'locationNotify';
+  final String locationKey = 'locationnotify';
   StreamController _allReceivedUsersController;
   Stream<List<HybridModel>> get allReceivedUsersStream =>
       _allReceivedUsersController.stream;
@@ -37,7 +37,7 @@ class MasterLocationService {
     allReceivedUsersList = [];
     _allReceivedUsersController =
         StreamController<List<HybridModel>>.broadcast();
-    // get all 'locationNotify' data shared with us
+    // get all 'locationnotify' data shared with us
     getAllLocationData();
   }
 
@@ -50,12 +50,12 @@ class MasterLocationService {
     }
 
     response.forEach((key) {
-      KeyModel tempKeyModel = KeyModel(key: key);
-      allLocationNotifications.add(tempKeyModel);
-      // if ('@${key.split(':')[1]}'.contains(currentAtSign)) {
-      //   KeyModel tempKeyModel = KeyModel(key: key);
-      //   allLocationNotifications.add(tempKeyModel);
-      // }
+      // KeyModel tempKeyModel = KeyModel(key: key);
+      // allLocationNotifications.add(tempKeyModel);
+      if ('@${key.split('-')[0]}'.contains(currentAtSign)) {
+        KeyModel tempKeyModel = KeyModel(key: key);
+        allLocationNotifications.add(tempKeyModel);
+      }
     });
     print('allLocationNotifications KeyModel $allLocationNotifications');
 

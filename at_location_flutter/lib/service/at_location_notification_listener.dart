@@ -8,7 +8,7 @@ class AtLocationNotificationListener {
   AtLocationNotificationListener._();
   static final _instance = AtLocationNotificationListener._();
   factory AtLocationNotificationListener() => _instance;
-  final String locationKey = 'locationNotify';
+  final String locationKey = 'locationnotify';
   AtClientImpl atClientInstance;
   String currentAtSign;
 
