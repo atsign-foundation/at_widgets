@@ -34,7 +34,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.toWidth)),
       content: Container(
-        height: 300.toHeight,
+        height: 350,
         color: Theme.of(context).brightness == Brightness.light
             ? AllColors().WHITE
             : AllColors().Black,
@@ -50,11 +50,13 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 15.toHeight),
-              ContactInitial(initials: widget.title.substring(1, 3), size: 60),
-              // CustomCircleAvatar(
-              //   image: AllImages().PERSON2,
-              //   size: 74,
-              // ),
+              widget.title.length > 2
+                  ? ContactInitial(
+                      initials: widget.title.substring(1, 3), size: 60)
+                  : ContactInitial(
+                      initials: widget.title
+                          .substring(0, widget.title.length >= 1 ? 1 : 0),
+                      size: 60),
               SizedBox(height: 15.toHeight),
               Text(
                 widget.title,

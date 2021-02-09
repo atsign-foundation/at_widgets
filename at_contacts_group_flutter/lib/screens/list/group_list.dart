@@ -155,7 +155,7 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
     barrierDismissible: true,
     builder: (BuildContext context) {
       return ConfirmationDialog(
-        title: group.name,
+        title: ' ${group.displayName}',
         heading: 'Are you sure you want to delete this group?',
         onYesPressed: () async {
           var result = await GroupService().deleteGroup(group);

@@ -38,12 +38,13 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(30)),
                       child: Image.memory(
                         image,
-                        width: 60,
-                        height: 60,
+                        width: 50,
+                        height: 50,
                         fit: BoxFit.fill,
                       ),
                     )
-                  : ContactInitial(initials: title.substring(0, 2)),
+                  : ContactInitial(
+                      initials: title.substring(0, title.length >= 1 ? 1 : 0)),
               icon != null
                   ? Positioned(
                       top: isTopRight ? 0 : null,

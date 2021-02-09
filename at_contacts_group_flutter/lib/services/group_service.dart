@@ -78,7 +78,6 @@ class GroupService {
     try {
       List<String> groupNames = await atContactImpl.listGroupNames();
       List<AtGroup> groupList = [];
-      allContacts = [];
 
       for (int i = 0; i < groupNames.length; i++) {
         AtGroup groupDetail = await getGroupDetail(groupNames[i]);

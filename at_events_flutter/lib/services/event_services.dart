@@ -68,6 +68,7 @@ class EventService {
       return result;
     } else {
       result = await sendEventNotification();
+      // if (result) EventService().onEventSaved(eventNotificationModel);
       if (result && isEventOverlap) {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
