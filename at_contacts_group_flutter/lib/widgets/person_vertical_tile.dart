@@ -1,3 +1,4 @@
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
@@ -44,27 +45,18 @@ class CustomPersonVerticalTile extends StatelessWidget {
                       child: GestureDetector(
                         onTap: onCrossPressed,
                         child: Container(
-                          height: 12.toHeight,
-                          width: 12.toHeight,
+                          height: 12,
+                          width: 12,
                           decoration: BoxDecoration(
                               color: Colors.black, shape: BoxShape.circle),
                           child: Icon(
                             Icons.close,
-                            size: 10.toHeight,
+                            size: 10,
                             color: Colors.white,
                           ),
                         ),
                       ),
                     )
-                  // Positioned(
-                  //     top: isTopRight ? 0 : null,
-                  //     bottom: !isTopRight ? 0 : null,
-                  //     right: 0,
-                  //     child: Icon(
-                  //       icon,
-                  //       color: Theme.of(context).iconTheme.color,
-                  //     ),
-                  //   )
                   : SizedBox(),
             ],
           ),
@@ -72,7 +64,7 @@ class CustomPersonVerticalTile extends StatelessWidget {
           title != null
               ? Text(
                   title,
-                  style: Theme.of(context).textTheme.headline3,
+                  style: CustomTextStyles().grey16,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -82,7 +74,7 @@ class CustomPersonVerticalTile extends StatelessWidget {
           subTitle != null
               ? Text(
                   subTitle,
-                  style: Theme.of(context).textTheme.headline4,
+                  style: CustomTextStyles().grey14,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,

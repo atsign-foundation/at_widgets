@@ -4,24 +4,25 @@
 /// @param [selectedList] is a [ValueChanged] function which return the selected contacts
 /// to be used outside of package.
 
-import 'package:at_contact/at_contact.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
+import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
-class CustomBottomSheet extends StatelessWidget {
+class ContactSelectionBottomSheet extends StatelessWidget {
   final Function onPressed;
-  final ValueChanged<List<AtContact>> selectedList;
-  const CustomBottomSheet({Key key, this.onPressed, this.selectedList})
+  final ValueChanged<List<GroupContactsModel>> selectedList;
+  const ContactSelectionBottomSheet(
+      {Key key, this.onPressed, this.selectedList})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    ContactService _contactServive = ContactService();
-    return StreamBuilder<List<AtContact>>(
-      stream: _contactServive.selectedContactStream,
-      initialData: _contactServive.selectedContacts,
+    GroupService _groupService = GroupService();
+    return StreamBuilder<List<GroupContactsModel>>(
+      stream: _groupService.selectedContactsStream,
+      initialData: _groupService.selectedGroupContacts,
       builder: (context, snapshot) => (snapshot.data.isEmpty)
           ? Container(
               height: 0,
@@ -34,8 +35,8 @@ class CustomBottomSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      (snapshot.data.length != 25)
-                          ? '${snapshot.data.length} Contacts Selected'
+                      (_groupService.length != 25)
+                          ? '${_groupService.length} Contacts Selected'
                           : '25 of 25 Contact Selected',
                       style: CustomTextStyles.primaryMedium14,
                     ),
@@ -44,6 +45,10 @@ class CustomBottomSheet extends StatelessWidget {
                     buttonText: 'Done',
                     width: 120.toWidth,
                     height: 40.toHeight,
+                    onPressed: () {
+                      onPressed();
+                      selectedList(_groupService.selectedGroupContacts);
+                    },
                     buttonColor:
                         Theme.of(context).brightness == Brightness.light
                             ? Colors.black
@@ -51,10 +56,6 @@ class CustomBottomSheet extends StatelessWidget {
                     fontColor: Theme.of(context).brightness == Brightness.light
                         ? Colors.white
                         : Colors.black,
-                    onPressed: () {
-                      onPressed();
-                      selectedList(snapshot.data);
-                    },
                   )
                 ],
               ),

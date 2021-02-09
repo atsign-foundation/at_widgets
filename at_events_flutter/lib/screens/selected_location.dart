@@ -170,8 +170,14 @@ class _SelectedLocationState extends State<SelectedLocation> {
                           },
                           width: 165.toWidth,
                           height: 48.toHeight,
-                          buttonColor: Theme.of(context).primaryColor,
-                          fontColor: Theme.of(context).scaffoldBackgroundColor,
+                          buttonColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? AllColors().Black
+                                  : AllColors().WHITE,
+                          fontColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? AllColors().WHITE
+                                  : AllColors().Black,
                         ),
                       ),
                     ),

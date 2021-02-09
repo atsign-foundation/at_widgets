@@ -7,6 +7,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
@@ -34,6 +35,9 @@ class _GroupViewState extends State<GroupView> {
     SizeConfig().init(context);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).brightness == Brightness.light
+            ? AllColors().WHITE
+            : AllColors().Black,
         body: SingleChildScrollView(
           child: Stack(
             children: [
@@ -102,8 +106,8 @@ class _GroupViewState extends State<GroupView> {
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   crossAxisCount: 4,
-                                  mainAxisSpacing: 10.toHeight,
-                                  childAspectRatio: (85 / 100),
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: (70 / 100),
                                   children: List.generate(
                                       groupData.members.length, (index) {
                                     return InkWell(
@@ -156,7 +160,9 @@ class _GroupViewState extends State<GroupView> {
                         horizontal: 15.toWidth, vertical: 10.toHeight),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
-                      color: Theme.of(context).scaffoldBackgroundColor,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AllColors().WHITE
+                          : AllColors().Black,
                       boxShadow: [
                         BoxShadow(
                           color: AllColors().DARK_GREY,
@@ -187,15 +193,11 @@ class _GroupViewState extends State<GroupView> {
                                       children: [
                                         Text(
                                           groupData.displayName,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline3,
+                                          style: CustomTextStyles().grey16,
                                         ),
                                         Text(
                                           '${groupData.members.length} members',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4,
+                                          style: CustomTextStyles().grey14,
                                         ),
                                       ],
                                     );
@@ -225,10 +227,13 @@ class _GroupViewState extends State<GroupView> {
                                         CustomToast().show(
                                             TextConstants().SERVICE_ERROR,
                                             context);
-                                      } else {
+                                      } else if (result) {
+                                        CustomToast().show(
+                                            TextConstants().MEMBER_ADDED,
+                                            context);
+                                      } else
                                         CustomToast()
                                             .show(result.toString(), context);
-                                      }
                                     }
                                   },
                                 ),

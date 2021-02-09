@@ -51,7 +51,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: Theme.of(context).brightness == Brightness.light
+              ? AllColors().WHITE
+              : AllColors().Black,
           boxShadow: [
             BoxShadow(
               color: AllColors().DARK_GREY,
@@ -109,8 +111,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           children: [
                             Text(
                               snapshot.data.title ?? 'Event Location',
-                              style:
-                                  Theme.of(context).primaryTextTheme.headline1,
+                              style: CustomTextStyles().black18,
                             ),
                             widget.isAdmin
                                 ? InkWell(

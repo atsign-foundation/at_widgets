@@ -2,7 +2,7 @@
 /// takes in a function @param [onTap] to define what happens on tap of the tile
 /// @param [onTrailingPresses] to set the behaviour for trailing icon
 /// @param [asSelectionTile] to toggle whether the tile is selectable to select contacts
-/// @param [contact] for details of the contact
+/// @param [groupContact] for details of the contact
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
 import 'dart:typed_data';

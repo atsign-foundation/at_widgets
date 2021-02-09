@@ -47,6 +47,9 @@ class _GroupListState extends State<GroupList> {
     SizeConfig().init(context);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).brightness == Brightness.light
+            ? AllColors().WHITE
+            : AllColors().Black,
         appBar: CustomAppBar(
           showBackButton: true,
           showLeadingIcon: true,
@@ -152,7 +155,7 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
     barrierDismissible: true,
     builder: (BuildContext context) {
       return ConfirmationDialog(
-        title: group.name,
+        title: ' ${group.displayName}',
         heading: 'Are you sure you want to delete this group?',
         onYesPressed: () async {
           var result = await GroupService().deleteGroup(group);

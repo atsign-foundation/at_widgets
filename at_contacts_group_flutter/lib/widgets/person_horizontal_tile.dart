@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
@@ -37,12 +38,13 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(30)),
                       child: Image.memory(
                         image,
-                        width: 60,
-                        height: 60,
+                        width: 50,
+                        height: 50,
                         fit: BoxFit.fill,
                       ),
                     )
-                  : ContactInitial(initials: title.substring(0, 2)),
+                  : ContactInitial(
+                      initials: title.substring(0, title.length >= 1 ? 1 : 0)),
               icon != null
                   ? Positioned(
                       top: isTopRight ? 0 : null,
@@ -63,7 +65,7 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                   child: title != null
                       ? Text(
                           title,
-                          style: Theme.of(context).textTheme.headline3,
+                          style: CustomTextStyles().grey16,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
@@ -73,7 +75,7 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                 subTitle != null
                     ? Text(
                         subTitle,
-                        style: Theme.of(context).textTheme.headline4,
+                        style: CustomTextStyles().grey14,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )

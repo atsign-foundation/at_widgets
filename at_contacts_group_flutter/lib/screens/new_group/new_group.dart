@@ -35,6 +35,7 @@ class _NewGroupState extends State<NewGroup> {
   }
 
   createGroup() async {
+    print('object');
     if (groupName != null) {
       if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
         CustomToast().show(TextConstants().INVALID_NAME, context);
@@ -79,6 +80,9 @@ class _NewGroupState extends State<NewGroup> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).brightness == Brightness.light
+            ? AllColors().WHITE
+            : AllColors().Black,
         bottomSheet: GroupBottomSheet(
           onPressed: createGroup,
           message: '${selectedContacts.length} Contacts Selected',
