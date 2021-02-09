@@ -1,10 +1,8 @@
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_chat_flutter/screens/chat_screen.dart';
 import 'package:at_chat_flutter/utils/init_chat_service.dart';
-import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
-import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/location_service.dart';
+import 'package:at_location_flutter/show_location.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
@@ -17,40 +15,24 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/pop
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_snap.dart';
 import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'common_components/collapsed_content.dart';
 import 'common_components/floating_icon.dart';
 import 'common_components/marker_cluster.dart';
 import 'common_components/popup.dart';
 
 class AtLocationFlutterPlugin extends StatefulWidget {
-  List<LatLng> positions;
-  LocationNotificationModel userListenerKeyword;
-  EventNotificationModel eventListenerKeyword;
-  final AtClientImpl atClientInstance;
+  final List<String> atsignsToTrack;
   double left, right, top, bottom;
-  final ValueChanged<EventNotificationModel> onEventUpdate;
-  final Function onEventCancel, onEventExit, onShareToggle, onRemove, onRequest;
-  List<HybridModel> allUsersList;
-
-  AtLocationFlutterPlugin(this.atClientInstance,
-      {@required this.allUsersList,
-      this.onEventCancel,
-      this.onEventExit,
-      this.userListenerKeyword,
-      this.eventListenerKeyword,
-      this.left,
-      this.right,
-      this.top,
-      this.bottom,
-      this.onEventUpdate,
-      this.onRemove,
-      this.onRequest,
-      this.onShareToggle});
+  AtLocationFlutterPlugin(
+    this.atsignsToTrack, {
+    this.left,
+    this.right,
+    this.top,
+    this.bottom,
+  });
   @override
   _AtLocationFlutterPluginState createState() =>
       _AtLocationFlutterPluginState();
 }
-//
 
 class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   final PanelController pc = PanelController();
@@ -65,43 +47,13 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   void initState() {
     super.initState();
     showMarker = true;
-    print('widget.onRemove ${widget.onRemove}');
-    LocationService().init(widget.atClientInstance, widget.allUsersList,
-        newUserListenerKeyword: widget.userListenerKeyword ?? null,
-        newEventListenerKeyword: widget.eventListenerKeyword ?? null,
-        eventCancel: widget.onEventCancel != null ? widget.onEventCancel : null,
-        eventExit: widget.onEventExit ?? null,
-        newOnRemove: widget.onRemove,
-        newOnRequest: widget.onRequest,
-        newOnShareToggle: widget.onShareToggle);
-
-    if (widget.eventListenerKeyword != null) {
-      if (widget.atClientInstance.currentAtSign ==
-          widget.eventListenerKeyword.atsignCreator) {
-        isEventAdmin = true;
-      }
-    }
-
-    if (widget.onEventUpdate != null) {
-      LocationService().onEventUpdate = widget.onEventUpdate;
-    }
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.eventListenerKeyword != null) {
-        LocationService().eventSink.add(widget.eventListenerKeyword);
-      }
-    });
-
-    scaffoldKey = GlobalKey<ScaffoldState>();
-
-    getAtSignAndInitializeChat();
-    setAtsignToChatWith();
+    LocationService().init(widget.atsignsToTrack);
   }
 
   void dispose() {
     super.dispose();
     LocationService().dispose();
-    _popupController.streamController.close();
+    _popupController?.streamController?.close();
   }
 
   @override
@@ -148,9 +100,9 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                               widget.right ?? 20,
                               widget.bottom ?? 20,
                             )),
-                            center: widget.eventListenerKeyword != null
-                                ? LocationService().eventData.latLng
-                                : LocationService().myData.latLng,
+                            center: ((users != null) && (users.length != 0))
+                                ? users[0].latLng
+                                : LatLng(45, 45),
                             zoom: 8,
                             plugins: [MarkerClusterPlugin(UniqueKey())],
                             onTap: (_) => _popupController
@@ -194,7 +146,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                                             .data[markers.indexOf(marker)]);
                                   }),
                               builder: (context, markers) {
-                                return widget.eventListenerKeyword != null
+                                return (false)
                                     ? buildMarkerCluster(markers,
                                         eventData: LocationService().eventData)
                                     : buildMarkerCluster(markers);
@@ -204,66 +156,9 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         );
                       }
                     } else {
-                      return Center(child: CircularProgressIndicator());
+                      return ShowLocation();
                     }
                   }),
-              Positioned(
-                top: 0,
-                left: 0,
-                child: FloatingIcon(
-                  bgColor: Theme.of(context).scaffoldBackgroundColor,
-                  icon: Icons.arrow_back,
-                  iconColor: Theme.of(context).primaryColor,
-                  isTopLeft: true,
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: FloatingIcon(
-                    bgColor: Theme.of(context).primaryColor,
-                    icon: Icons.message_outlined,
-                    iconColor: Theme.of(context).scaffoldBackgroundColor,
-                    onPressed: () =>
-                        // bottomSheet(context, ChatScreen(), 743),
-                        scaffoldKey.currentState
-                            .showBottomSheet((context) => ChatScreen())),
-              ),
-              Positioned(
-                top: 100,
-                right: 0,
-                child: FloatingIcon(
-                    bgColor: Theme.of(context).accentColor,
-                    icon: Icons.all_inclusive,
-                    iconColor: AllColors().Black,
-                    onPressed: () {
-                      _popupController.hidePopup();
-                      LocationService().hybridUsersList.length > 0
-                          ? mapController.move(
-                              LocationService().hybridUsersList[0].latLng, 4)
-                          // mapController.move(
-                          //     LocationService().hybridUsersList[0].latLng, 3)
-                          : null;
-                    }),
-              ),
-              SlidingUpPanel(
-                controller: pc,
-                minHeight: widget.userListenerKeyword != null ? 123 : 205,
-                maxHeight: widget.userListenerKeyword != null
-                    ? ((widget.userListenerKeyword.atsignCreator ==
-                            LocationService().getAtSign())
-                        ? 291
-                        : 123)
-                    : 431,
-                // collapsed: CollapsedContent(UniqueKey(), false,
-                //     eventListenerKeyword: widget.eventListenerKeyword,
-                //     userListenerKeyword: widget.userListenerKeyword),
-                panel: CollapsedContent(UniqueKey(), true, this.isEventAdmin,
-                    widget.atClientInstance,
-                    eventListenerKeyword: widget.eventListenerKeyword,
-                    userListenerKeyword: widget.userListenerKeyword),
-              )
             ],
           )),
     );
@@ -282,27 +177,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
       setState(() {
         showMarker = false;
       });
-    }
-  }
-
-  getAtSignAndInitializeChat() async {
-    initializeChatService(
-        widget.atClientInstance, widget.atClientInstance.currentAtSign,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
-  }
-
-  setAtsignToChatWith() {
-    String chatWith;
-    if (LocationService().eventListenerKeyword != null) {
-      if (LocationService().eventListenerKeyword.atsignCreator ==
-          widget.atClientInstance.currentAtSign) {
-        chatWith =
-            widget.eventListenerKeyword.group.members.elementAt(0).atSign;
-      } else
-        chatWith = widget.eventListenerKeyword.atsignCreator;
-    }
-    if (widget.eventListenerKeyword != null) {
-      setChatWithAtSign(chatWith);
     }
   }
 }
