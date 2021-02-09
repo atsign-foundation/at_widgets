@@ -405,7 +405,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                         height: 100.toHeight,
                       ),
                       Text(
-                        'Text....',
+                        Strings.backupKeyDescription,
                       ),
                       SizedBox(
                         height: 25.toHeight,

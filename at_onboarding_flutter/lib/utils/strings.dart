@@ -18,11 +18,13 @@ class Strings {
   static const String scanQrMessage = 'Just scan the QR code displayed at ';
   static const String pairAtsignTitle = 'Pair your @sign';
   static const String uploadQRTitle = 'Upload activation QR code';
-  static const String uploadZipTitle = 'Upload backup zip file';
   static const String recurr_server_check =
       'Trying to reach server to perform authentication. Click to stop rigorous server check';
   static const String stopButtonTitle = 'stop';
   //backuzip file save texts
+  static const String backupKeyDescription =
+      'Upload your backup key file from stored location which was generated during the pairing process of your @sign.';
+  static const String uploadZipTitle = 'Upload backup keys file';
   static const String saveBackupZipTitle = 'Save your Backup zip file';
   static const String saveImportantTitle = 'IMPORTANT!';
   static const String saveBackupDescription =
