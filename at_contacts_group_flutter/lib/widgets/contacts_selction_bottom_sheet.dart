@@ -45,11 +45,17 @@ class ContactSelectionBottomSheet extends StatelessWidget {
                     buttonText: 'Done',
                     width: 120.toWidth,
                     height: 40.toHeight,
-                    // isInverted: true,
                     onPressed: () {
                       onPressed();
                       selectedList(_groupService.selectedGroupContacts);
                     },
+                    buttonColor:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
+                    fontColor: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Colors.black,
                   )
                 ],
               ),
