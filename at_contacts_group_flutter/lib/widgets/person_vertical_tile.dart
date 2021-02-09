@@ -45,13 +45,13 @@ class CustomPersonVerticalTile extends StatelessWidget {
                       child: GestureDetector(
                         onTap: onCrossPressed,
                         child: Container(
-                          height: 12.toHeight,
-                          width: 12.toHeight,
+                          height: 12,
+                          width: 12,
                           decoration: BoxDecoration(
                               color: Colors.black, shape: BoxShape.circle),
                           child: Icon(
                             Icons.close,
-                            size: 10.toHeight,
+                            size: 10,
                             color: Colors.white,
                           ),
                         ),
