@@ -22,7 +22,7 @@ dependencies:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git
       path: at_backupkey_flutter
-      ref: onboarding_flutter
+      ref: dev_env
   at_server_status:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git

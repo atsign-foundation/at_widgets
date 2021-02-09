@@ -402,11 +402,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                     if (_isQR) ..._getQRWidget(deviceTextFactor),
                     if (_isBackup) ...[
                       SizedBox(
-                        height: 100.toHeight,
+                        height: 120.toHeight,
                       ),
-                      Text(
-                        Strings.backupKeyDescription,
-                      ),
+                      Text(Strings.backupKeyDescription,
+                          style: CustomTextStyles.fontR16primary,
+                          textAlign: TextAlign.center),
                       SizedBox(
                         height: 25.toHeight,
                       ),
