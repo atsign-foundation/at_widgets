@@ -38,8 +38,8 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(30)),
                       child: Image.memory(
                         image,
-                        width: 60,
-                        height: 60,
+                        width: 50,
+                        height: 50,
                         fit: BoxFit.fill,
                       ),
                     )
