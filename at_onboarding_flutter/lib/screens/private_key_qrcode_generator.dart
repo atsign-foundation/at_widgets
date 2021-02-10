@@ -17,7 +17,6 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_utils/at_logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share/share.dart';
-import 'package:archive/archive_io.dart';
 
 class PrivateKeyQRCodeGenScreen extends StatefulWidget {
   PrivateKeyQRCodeGenScreen({Key key}) : super(key: key);
@@ -64,15 +63,15 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
           backgroundColor: ColorConstants.light,
           key: _scaffoldKey,
           appBar: CustomAppBar(
-            title: Strings.saveBackupZipTitle,
+            title: Strings.saveBackupKeyTitle,
             showBackButton: false,
           ),
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.toFont),
             child: ListView(
               children: [
                 SizedBox(
-                  height: 10,
+                  height: 10.toHeight,
                 ),
                 Text(
                   Strings.saveImportantTitle,
@@ -80,7 +79,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   style: CustomTextStyles.fontBold18primary,
                 ),
                 SizedBox(
-                  height: 5,
+                  height: 10.toHeight,
                 ),
                 Text(
                   Strings.saveBackupDescription,
@@ -93,6 +92,9 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                 Center(
                     child: Image.asset(
                   Images.backupZip,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  fit: BoxFit.fill,
                   package: AppConstants.package,
                 )),
                 SizedBox(
@@ -120,11 +122,17 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   isInverted: true,
                   buttonText: Strings.coninueButtonTitle,
                   onPressed: () async {
-                    await Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                OnboardingService.getInstance().nextScreen));
+                    if (OnboardingService.getInstance().fistTimeAuthScreen !=
+                        null) {
+                      await Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  OnboardingService.getInstance()
+                                      .fistTimeAuthScreen));
+                    } else {
+                      Navigator.pop(context);
+                    }
                   },
                 )
               ],

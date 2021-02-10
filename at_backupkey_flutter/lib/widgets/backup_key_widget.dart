@@ -67,12 +67,12 @@ class BackupKeyWidget extends StatelessWidget {
               ),
             ),
           )
-        : IconButton(
-            icon: Icon(
+        : GestureDetector(
+            child: Icon(
               Icons.file_copy,
               color: this.iconColor,
             ),
-            onPressed: () {
+            onTap: () {
               _showDialog(context);
             },
           );
@@ -102,8 +102,8 @@ class BackupKeyWidget extends StatelessWidget {
                     FlatButton(
                         child: Text(Strings.backButtonTitle,
                             style: TextStyle(
-                              color: Colors.black,
-                            )),
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
                         onPressed: () async {
                           await _onBackup(context);
                         }),
@@ -134,21 +134,11 @@ class BackupKeyWidget extends StatelessWidget {
       }
       directory = await path_provider.getApplicationSupportDirectory();
       path = directory.path.toString() + '/';
-      // var aesKey = await _onboardingService.getAESKey(atsign);
-      // final String imageData = '$atsign:$aesKey';
       final encryptedKeysFile =
           await File('$path' + '$atsign${Strings.backupKeyName}').create();
       var keyString = jsonEncode(aesEncryptedKeys);
-      // keyString = keyString + imageData;
       encryptedKeysFile.writeAsStringSync(keyString);
-      // var encoder = ZipFileEncoder();
-      // encoder.create('$path' + '${atsign + AppConstants.backupZipExtension}');
-      // encoder.addFile(encryptedKeysFile);
-      // encoder.close();
-      // encryptedKeysFile.deleteSync();
       await Share.shareFiles([encryptedKeysFile.path],
-          text: 'encryptATKey',
-          // subject: '$atsign' + '_key',
           sharePositionOrigin:
               Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
     } on Exception catch (ex) {
