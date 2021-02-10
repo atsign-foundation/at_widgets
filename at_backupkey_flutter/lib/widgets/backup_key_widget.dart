@@ -67,12 +67,12 @@ class BackupKeyWidget extends StatelessWidget {
               ),
             ),
           )
-        : GestureDetector(
-            child: Icon(
+        : IconButton(
+            icon: Icon(
               Icons.file_copy,
               color: this.iconColor,
             ),
-            onTap: () {
+            onPressed: () {
               _showDialog(context);
             },
           );
