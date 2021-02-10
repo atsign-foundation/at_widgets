@@ -24,8 +24,8 @@ class SendLocationNotification {
     atClient = newAtClient;
     //Location().changeSettings(interval: 10);
     print('receivingAtsigns length - ${receivingAtsigns.length}');
-    updateMyLocation2();
-    // manualLocationSend();
+    // updateMyLocation2();
+    manualLocationSend();
   }
 
   updateMyLocation() async {
@@ -80,6 +80,7 @@ class SendLocationNotification {
                 notification.key.split('-')[1].split('@')[0];
             AtKey atKey = newAtKey(5000, "locationnotify-$atkeyMicrosecondId",
                 notification.receiver);
+            notification.key = "locationnotify-$atkeyMicrosecondId";
             try {
               var result = await atClient.put(
                   atKey,
@@ -143,25 +144,25 @@ class SendLocationNotification {
   }
 
   sendNull(LocationNotificationModel locationNotificationModel) async {
-    var result = false;
-    locationNotificationModel.lat = 0;
-    locationNotificationModel.long = 0;
-    String atkeyMicrosecondId =
-        locationNotificationModel.key.split('-')[1].split('@')[0];
-    AtKey atKey = newAtKey(-1, "locationnotify-$atkeyMicrosecondId",
-        locationNotificationModel.receiver);
-    while (!result) {
-      try {
-        result = await atClient.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel));
-      } catch (e) {
-        print('error in sending nul $e');
-        // return false;
-      }
-    }
-    return result;
+    // var result = false;
+    // locationNotificationModel.lat = 0;
+    // locationNotificationModel.long = 0;
+    // String atkeyMicrosecondId =
+    //     locationNotificationModel.key.split('-')[1].split('@')[0];
+    // AtKey atKey = newAtKey(-1, "locationnotify-$atkeyMicrosecondId",
+    //     locationNotificationModel.receiver);
+    // while (!result) {
+    //   try {
+    //     result = await atClient.put(
+    //         atKey,
+    //         LocationNotificationModel.convertLocationNotificationToJson(
+    //             locationNotificationModel));
+    //   } catch (e) {
+    //     print('error in sending nul $e');
+    //     // return false;
+    //   }
+    // }
+    // return result;
   }
 
   AtKey newAtKey(int ttr, String key, String sharedWith) {

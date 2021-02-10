@@ -37,7 +37,7 @@ class _DisplayTileState extends State<DisplayTile> {
   }
 
   getEventCreator() async {
-    atContact = await AtContactsImpl.getInstance(LocationService().getAtSign());
+    // atContact = await AtContactsImpl.getInstance(LocationService().getAtSign());
     contact = await atContact.get(widget.atsignCreator);
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {

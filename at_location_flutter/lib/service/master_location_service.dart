@@ -38,39 +38,33 @@ class MasterLocationService {
     _allReceivedUsersController =
         StreamController<List<HybridModel>>.broadcast();
     // get all 'locationnotify' data shared with us
-    getAllLocationData();
+    // getAllLocationData();
   }
 
   getAllLocationData() async {
     List<String> response = await atClientInstance.getKeys(
-        regex: '$locationKey', sharedBy: '@bob🛠');
+      regex: '$locationKey',
+      //  sharedBy: '@bob🛠'
+    );
     print('response $response');
     if (response.length == 0) {
       return;
     }
 
-    response.forEach((key) {
-      // KeyModel tempKeyModel = KeyModel(key: key);
-      // allLocationNotifications.add(tempKeyModel);
-      if ('@${key.split('-')[0]}'.contains(currentAtSign)) {
-        KeyModel tempKeyModel = KeyModel(key: key);
-        allLocationNotifications.add(tempKeyModel);
+    response.forEach((key) async {
+      if ('@$key'.contains('cached')) {
+        print('cached key $key');
+        AtKey atKey = AtKey.fromString(key);
+        AtValue value = await getAtValue(atKey);
+        if (value != null) {
+          print('at value location $value');
+          KeyModel tempKeyModel =
+              KeyModel(key: key, atKey: atKey, atValue: value);
+          allLocationNotifications.add(tempKeyModel);
+        }
       }
     });
-    print('allLocationNotifications KeyModel $allLocationNotifications');
 
-    allLocationNotifications.forEach((notification) {
-      AtKey atKey = AtKey.fromString(notification.key);
-      notification.atKey = atKey;
-    });
-    print('allLocationNotifications AtKey $allLocationNotifications');
-    for (int i = 0; i < allLocationNotifications.length; i++) {
-      AtValue value = await getAtValue(allLocationNotifications[i].atKey);
-      if (value != null) {
-        print('at value event $value');
-        allLocationNotifications[i].atValue = value;
-      }
-    }
     print('allLocationNotifications AtValue $allLocationNotifications');
     convertJsonToLocationModel();
     filterData();

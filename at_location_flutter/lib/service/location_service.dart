@@ -30,7 +30,6 @@ class LocationService {
   HybridModel myData;
 
   List<HybridModel> hybridUsersList;
-  List<HybridModel> allUsersList;
 
   StreamController _atHybridUsersController;
   Stream<List<HybridModel>> get atHybridUsersStream =>
@@ -56,11 +55,23 @@ class LocationService {
 
   // called for the first time pckage is entered from main app
   updateHybridList() async {
+    print('updateHybridList location_service');
     MasterLocationService().allReceivedUsersList.forEach((user) async {
+      print('MasterLocationService().allReceivedUsersList ${user.displayName}');
+      print(
+          'atsignsToTrack.contains(user.displayName) ${atsignsToTrack.contains(user.displayName)}');
       if (atsignsToTrack.contains(user.displayName)) await updateDetails(user);
     });
-
-    _atHybridUsersController.add(hybridUsersList);
+    print('hybridUsersList $hybridUsersList');
+    hybridUsersList.forEach((element) {
+      print('added in updateHybridList: ${element.displayName}');
+      print('added in updateHybridList: ${element.latLng}');
+    });
+    if (_atHybridUsersController.hasListener)
+      _atHybridUsersController.add(hybridUsersList);
+    else
+      Future.delayed(const Duration(seconds: 2),
+          () => _atHybridUsersController.add(hybridUsersList));
   }
 
   // called when any new/updated data is received in the main app
@@ -73,7 +84,8 @@ class LocationService {
       hybridUsersList.forEach((element) {
         print('added in location_service: ${element.displayName}');
       });
-      _atHybridUsersController.add(hybridUsersList);
+      if (!_atHybridUsersController.isClosed)
+        _atHybridUsersController.add(hybridUsersList);
     }
   }
 
@@ -81,7 +93,8 @@ class LocationService {
   removeUser(String atsign) {
     if (atsignsToTrack != null) {
       hybridUsersList.removeWhere((element) => element.displayName == atsign);
-      _atHybridUsersController.add(hybridUsersList);
+      if (!_atHybridUsersController.isClosed)
+        _atHybridUsersController.add(hybridUsersList);
     }
   }
 
@@ -105,11 +118,12 @@ class LocationService {
   // returns new marker and eta
   addDetails(HybridModel user, {int index}) async {
     user.marker = buildMarker(user);
-    await _calculateEta(user);
+    // await _calculateEta(user);
     if (index != null)
       hybridUsersList[index] = user;
     else
       hybridUsersList.add(user);
+    print('hybridUsersList from addDetails $hybridUsersList');
   }
 
   _calculateEta(HybridModel user) async {}

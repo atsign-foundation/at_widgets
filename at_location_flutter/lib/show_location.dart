@@ -24,9 +24,15 @@ class _ShowLocationState extends State<ShowLocation> {
   void initState() {
     super.initState();
     showMarker = true;
+    print('widget.location ${widget.location}');
     if (widget.location != null)
       marker = buildMarker(new HybridModel(latLng: widget.location),
           singleMarker: true);
+    else {
+      marker = buildMarker(new HybridModel(latLng: LatLng(45, 45)),
+          singleMarker: true);
+      showMarker = false;
+    }
   }
 
   @override
@@ -36,7 +42,7 @@ class _ShowLocationState extends State<ShowLocation> {
           body: FlutterMap(
         mapController: mapController,
         options: MapOptions(
-          center: widget.location ?? LatLng(45, 45),
+          center: (widget.location != null) ? widget.location : LatLng(45, 45),
           zoom: (widget.location != null) ? 8 : 2,
           plugins: [MarkerClusterPlugin(UniqueKey())],
         ),
@@ -57,8 +63,7 @@ class _ShowLocationState extends State<ShowLocation> {
             fitBoundsOptions: FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
-            markers:
-                ((widget.location != null) ? (showMarker ? [marker] : []) : []),
+            markers: showMarker ? [marker] : [],
             builder: (context, markers) {},
           ),
         ],

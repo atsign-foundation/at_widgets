@@ -19,8 +19,7 @@ Widget buildPopup(HybridModel user) {
           height: 76,
           child: Row(
             children: [
-              (LocationService().eventListenerKeyword != null) &&
-                      (user == LocationService().eventData)
+              (true)
                   ? SizedBox()
                   : Container(
                       padding: EdgeInsets.all(10),
