@@ -44,6 +44,12 @@ class AtLocationNotificationListener {
         '_notificationCallback :$notification , notification key: $notificationKey');
     var fromAtSign = responseJson['from'];
     var atKey = notificationKey.split(':')[1];
+    var operation = responseJson['operation'];
+    print('_notificationCallback opeartion $operation');
+    if (operation == 'delete') {
+      print('$notificationKey deleted');
+      return;
+    }
     var decryptedMessage = await atClientInstance.encryptionService
         .decrypt(value, fromAtSign)
         .catchError((e) =>

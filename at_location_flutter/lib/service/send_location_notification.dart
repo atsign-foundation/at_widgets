@@ -80,7 +80,8 @@ class SendLocationNotification {
                 notification.key.split('-')[1].split('@')[0];
             AtKey atKey = newAtKey(5000, "locationnotify-$atkeyMicrosecondId",
                 notification.receiver);
-            notification.key = "locationnotify-$atkeyMicrosecondId";
+            // notification.key = "locationnotify-$atkeyMicrosecondId";
+            // we should add key, but changes the original data
             try {
               var result = await atClient.put(
                   atKey,
@@ -128,6 +129,8 @@ class SendLocationNotification {
                 notification.key.split('-')[1].split('@')[0];
             AtKey atKey = newAtKey(5000, "locationnotify-$atkeyMicrosecondId",
                 notification.receiver);
+            // notification.key = "locationnotify-$atkeyMicrosecondId";
+            // we should add key, but changes the original data
             try {
               // var result = await
               atClient.put(
@@ -144,6 +147,14 @@ class SendLocationNotification {
   }
 
   sendNull(LocationNotificationModel locationNotificationModel) async {
+    // String atkeyMicrosecondId =
+    //     locationNotificationModel.key.split('-')[1].split('@')[0];
+    // AtKey atKey = newAtKey(5000, "locationnotify-$atkeyMicrosecondId",
+    //     locationNotificationModel.receiver);
+    // var result = await atClient.delete(atKey);
+    // print('$atKey delete operation $result');
+
+    // TODO:TO SEND ZERO
     // var result = false;
     // locationNotificationModel.lat = 0;
     // locationNotificationModel.long = 0;
@@ -169,6 +180,7 @@ class SendLocationNotification {
     AtKey atKey = AtKey()
       ..metadata = Metadata()
       ..metadata.ttr = ttr
+      ..metadata.ccd = true
       ..key = key
       ..sharedWith = sharedWith
       ..sharedBy = atClient.currentAtSign;
