@@ -25,7 +25,7 @@ class Strings {
   static const String backupKeyDescription =
       'Upload your backup key file from stored location which was generated during the pairing process of your @sign.';
   static const String uploadZipTitle = 'Upload backup keys file';
-  static const String saveBackupZipTitle = 'Save your Backup zip file';
+  static const String saveBackupKeyTitle = 'Save your Backup key file';
   static const String saveImportantTitle = 'IMPORTANT!';
   static const String saveBackupDescription =
       'Please save your private key. For security reasons, it\'s highly recommended to save it in GDrive/iCloudDrive.';

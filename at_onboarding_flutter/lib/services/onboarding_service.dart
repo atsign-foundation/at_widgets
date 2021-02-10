@@ -51,6 +51,8 @@ class OnboardingService {
     _nextScreen = nextScreen;
   }
 
+  Widget fistTimeAuthScreen;
+
   Widget get nextScreen => _nextScreen;
   // final String authSuccess = "Authentication successful";
 

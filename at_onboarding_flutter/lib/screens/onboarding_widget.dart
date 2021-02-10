@@ -40,6 +40,9 @@ class Onboarding {
   ///after successful onboarding will gets redirected to this screen if it is not null.
   final Widget nextScreen;
 
+  ///after first time succesful onboarding it will get redirected to this screen if not null.
+  final Widget fistTimeAuthNextScreen;
+
   final AtSignLogger _logger = AtSignLogger('At Onboarding Flutter');
 
   Onboarding(
@@ -49,6 +52,7 @@ class Onboarding {
       @required this.onboard,
       @required this.onError,
       this.nextScreen,
+      this.fistTimeAuthNextScreen,
       @required this.atClientPreference,
       this.appColor,
       this.logo,
@@ -65,6 +69,7 @@ class Onboarding {
               onboard: this.onboard,
               onError: this.onError,
               nextScreen: this.nextScreen,
+              fistTimeAuthNextScreen: this.fistTimeAuthNextScreen,
               atClientPreference: this.atClientPreference,
               appColor: this.appColor,
               logo: this.logo,
@@ -104,12 +109,16 @@ class OnboardingWidget extends StatefulWidget {
   ///after successful onboarding will gets redirected to this screen if it is not null.
   final Widget nextScreen;
 
+  ///after first time succesful onboarding it will get redirected to this screen if not null.
+  final Widget fistTimeAuthNextScreen;
+
   OnboardingWidget(
       {Key key,
       this.atsign,
       @required this.onboard,
       @required this.onError,
       this.nextScreen,
+      this.fistTimeAuthNextScreen,
       @required this.atClientPreference,
       this.appColor,
       this.logo,
@@ -128,6 +137,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
     AppConstants.rootDomain = widget.domain;
     _onboardingService.setLogo = widget.logo;
     _onboardingService.setNextScreen = widget.nextScreen;
+    _onboardingService.fistTimeAuthScreen = widget.fistTimeAuthNextScreen;
     _onboardingService.onboardFunc = widget.onboard;
     ColorConstants.setAppColor = widget.appColor;
     _onboardingService.setAtClientPreference = widget.atClientPreference;
