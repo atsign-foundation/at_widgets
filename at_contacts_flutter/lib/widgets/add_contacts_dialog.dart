@@ -102,6 +102,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                             height: 50.toHeight * deviceTextFactor,
                             buttonText:
                                 contactStrings.TextStrings().addtoContact,
+                            fontColor: Colors.white,
                             onPressed: () async {
                               setState(() {
                                 isLoading = true;
