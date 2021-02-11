@@ -175,7 +175,7 @@ class CustomDialog extends StatelessWidget {
                 : 'Please provide a valid QRcode available on ${AppConstants.website} website to authenticate.';
           }
         } else if (error == ResponseStatus.TIME_OUT) {
-          return 'server response timed out!.';
+          return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AppConstants.contactAddress} if the issue still persists.';
         } else {
           return '';
         }
@@ -205,18 +205,21 @@ class CustomDialog extends StatelessWidget {
   }
 
   Widget _getMessage(var message, bool isErrorDialog) {
+    String highLightText = message == ResponseStatus.TIME_OUT
+        ? '${AppConstants.contactAddress}'
+        : AppConstants.website;
     if (message == null) {
       return null;
     }
     if (isErrorDialog) {
       message = _getErrorMessage(this.message);
     }
-    if (!message.contains(AppConstants.website)) {
+    if (!message.contains(highLightText)) {
       return Text(message, style: CustomTextStyles.fontR16primary);
     }
-    int startIndex = message.indexOf(AppConstants.website);
+    int startIndex = message.indexOf(highLightText);
     var text1 = message.substring(0, startIndex),
-        text3 = message.substring(startIndex + AppConstants.website.length);
+        text3 = message.substring(startIndex + highLightText.length);
 
     return RichText(
       // textAlign: TextAlign.center,
@@ -225,7 +228,7 @@ class CustomDialog extends StatelessWidget {
           text: text1,
         ),
         TextSpan(
-            text: AppConstants.website,
+            text: highLightText,
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -233,7 +236,15 @@ class CustomDialog extends StatelessWidget {
                 decoration: TextDecoration.underline),
             recognizer: new TapGestureRecognizer()
               ..onTap = () async {
-                var url = AppConstants.website;
+                final Uri params = Uri(
+                  scheme: 'mailto',
+                  path: '${AppConstants.contactAddress}',
+                  query:
+                      'subject=Issue from @persona app', //add subject and body here
+                );
+                var url = highLightText == AppConstants.contactAddress
+                    ? params.toString()
+                    : highLightText;
                 String errorMessage = 'Cannot launch $url';
                 if (await canLaunch(url)) {
                   await launch(url);
@@ -247,6 +258,7 @@ class CustomDialog extends StatelessWidget {
                           showClose: true,
                           context: context,
                           message: errorMessage,
+                          onClose: () {},
                         );
                       });
                 }
