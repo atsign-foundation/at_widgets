@@ -7,6 +7,7 @@ class AppConstants {
   static String encryptKeys = '_encrypt_keys';
   static String backupFileExtension = '.atKeys';
   static String backupZipExtension = '_atKeys.zip';
+  static int responseTimeLimit = 30;
 
   static get serverDomain => _rootDomain;
 

@@ -11,7 +11,6 @@ class Strings {
       'Your @sign is not registered yet. Try with the registered one or get a new @sign at ${AppConstants.website} website';
   static String atsignNull =
       'Your @sign and the server is unreachable. Please check your dashboard on ${AppConstants.website} website for the @sign status or contact support@atsign.com';
-
   static const String scanQr = '';
 
   //Qrscan texts
@@ -24,13 +23,13 @@ class Strings {
   //backuzip file save texts
   static const String backupKeyDescription =
       'Upload your backup key file from stored location which was generated during the pairing process of your @sign.';
-  static const String uploadZipTitle = 'Upload backup keys file';
+  static const String uploadZipTitle = 'Upload backup key file';
   static const String saveBackupKeyTitle = 'Save your Backup key file';
   static const String saveImportantTitle = 'IMPORTANT!';
   static const String saveBackupDescription =
       'Please save your private key. For security reasons, it\'s highly recommended to save it in GDrive/iCloudDrive.';
   static const String saveButtonTitle = 'SAVE';
-  static const String declaration = 'Yes I\'ve saved my backupzip file';
+  static const String declaration = 'Yes I\'ve saved my backupkey file';
   static const String coninueButtonTitle = 'CONTINUE';
 
   //custom dialog texts

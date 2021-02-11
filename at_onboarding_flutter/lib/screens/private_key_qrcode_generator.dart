@@ -130,6 +130,13 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                               builder: (context) =>
                                   OnboardingService.getInstance()
                                       .fistTimeAuthScreen));
+                    } else if (OnboardingService.getInstance().nextScreen !=
+                        null) {
+                      await Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  OnboardingService.getInstance().nextScreen));
                     } else {
                       Navigator.pop(context);
                     }

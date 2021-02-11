@@ -31,7 +31,7 @@ class CustomDialog extends StatelessWidget {
   final String title;
 
   ///Returns a valid atsign if atsignForm is made true.
-  final Function onAtsign;
+  final Function onSubmit;
 
   ///The context to open this widget.
   final context;
@@ -45,7 +45,7 @@ class CustomDialog extends StatelessWidget {
       this.title,
       this.isAtsignForm = false,
       this.showClose = false,
-      this.onAtsign,
+      this.onSubmit,
       this.onClose,
       this.context});
   @override
@@ -60,7 +60,9 @@ class CustomDialog extends StatelessWidget {
                   title ?? Strings.errorTitle,
                   style: CustomTextStyles.fontR16primary,
                 ),
-                Icon(Icons.sentiment_dissatisfied)
+                this.message == ResponseStatus.TIME_OUT
+                    ? Icon(Icons.access_time)
+                    : Icon(Icons.sentiment_dissatisfied)
               ],
             )
           : isAtsignForm
@@ -113,11 +115,7 @@ class CustomDialog extends StatelessWidget {
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 Navigator.pop(context);
-                var isExisting = await OnboardingService.getInstance()
-                    .isExistingAtsign(_atsignController.text);
-                var atsignStatus = await OnboardingService.getInstance()
-                    .checkAtsignStatus(atsign: _atsignController.text);
-                this.onAtsign(atsignStatus, isExisting, _atsignController.text);
+                this.onSubmit(_atsignController.text);
               }
             },
             child: Text(
@@ -170,12 +168,14 @@ class CustomDialog extends StatelessWidget {
       case ResponseStatus:
         if (error == ResponseStatus.AUTH_FAILED) {
           if (_onboardingService.isPkam) {
-            return 'Please provide valid backup zip file to continue.';
+            return 'Please provide valid backupkey file to continue.';
           } else {
             return _onboardingService.serverStatus == ServerStatus.activated
-                ? 'Please provide a relevant backupzip file to authenticate.'
+                ? 'Please provide a relevant backupkey file to authenticate.'
                 : 'Please provide a valid QRcode available on ${AppConstants.website} website to authenticate.';
           }
+        } else if (error == ResponseStatus.TIME_OUT) {
+          return 'server response timed out!.';
         } else {
           return '';
         }

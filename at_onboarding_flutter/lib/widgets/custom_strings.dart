@@ -19,4 +19,12 @@ class CustomStrings {
 
   String pairedAtsign(String atsign) =>
       '$atsign was already paired with this device. First delete/reset this @sign from device to add.';
+
+  String atsignMismatch(String givenAtsign, {bool isQr = false}) {
+    if (isQr) {
+      return '@sign mismatches. Please provide the QRcode of $givenAtsign @sign to pair';
+    } else {
+      return '@sign mismatches. Please provide the backup key file of $givenAtsign @sign to pair';
+    }
+  }
 }
