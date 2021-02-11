@@ -14,6 +14,7 @@ class SendLocationNotification {
   Timer timer;
 
   List<LocationNotificationModel> receivingAtsigns;
+  final String locationKey = 'locationnotify';
 
   AtClientImpl atClient;
 
@@ -183,6 +184,20 @@ class SendLocationNotification {
     print('$atKey delete operation $result');
   }
 
+  deleteAllLocationKey() async {
+    List<String> response = await atClient.getKeys(
+      regex: '$locationKey',
+    );
+    response.forEach((key) async {
+      if (!'@$key'.contains('cached')) {
+        // the keys i have created
+        AtKey atKey = AtKey.fromString(key);
+        var result = await atClient.delete(atKey);
+        print('$key is deleted ? $result');
+      }
+    });
+  }
+
   AtKey newAtKey(int ttr, String key, String sharedWith, {int ttl}) {
     AtKey atKey = AtKey()
       ..metadata = Metadata()
@@ -191,7 +206,7 @@ class SendLocationNotification {
       ..key = key
       ..sharedWith = sharedWith
       ..sharedBy = atClient.currentAtSign;
-    // if (ttl != null) atKey.metadata.ttl = ttl;
+    if (ttl != null) atKey.metadata.ttl = ttl;
     return atKey;
   }
 }

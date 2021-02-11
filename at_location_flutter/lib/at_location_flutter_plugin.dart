@@ -156,7 +156,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                   }
                 } else {
                   print('map not active');
-                  return ShowLocation();
+                  return ShowLocation(UniqueKey());
                 }
               }),
           Positioned(
