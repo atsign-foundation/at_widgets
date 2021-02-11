@@ -176,6 +176,13 @@ class MasterLocationService {
     });
   }
 
+  deleteReceivedData(String atsign) {
+    allReceivedUsersList
+        .removeWhere((element) => element.displayName == atsign);
+    LocationService().removeUser(atsign);
+    allReceivedUsersSink.add(allReceivedUsersList);
+  }
+
   getImageOfAtsignNew(String atsign) async {
     try {
       AtContact contact;

@@ -48,6 +48,7 @@ class AtLocationNotificationListener {
     print('_notificationCallback opeartion $operation');
     if (operation == 'delete') {
       print('$notificationKey deleted');
+      MasterLocationService().deleteReceivedData(fromAtSign);
       return;
     }
     var decryptedMessage = await atClientInstance.encryptionService
@@ -57,6 +58,7 @@ class AtLocationNotificationListener {
     if (atKey.toString().contains(locationKey)) {
       LocationNotificationModel msg =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      print('_notificationCallback LocationNotificationModel $msg');
       MasterLocationService().updateHybridList(msg);
     }
   }

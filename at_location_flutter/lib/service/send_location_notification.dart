@@ -147,12 +147,12 @@ class SendLocationNotification {
   }
 
   sendNull(LocationNotificationModel locationNotificationModel) async {
-    // String atkeyMicrosecondId =
-    //     locationNotificationModel.key.split('-')[1].split('@')[0];
-    // AtKey atKey = newAtKey(5000, "locationnotify-$atkeyMicrosecondId",
-    //     locationNotificationModel.receiver);
-    // var result = await atClient.delete(atKey);
-    // print('$atKey delete operation $result');
+    String atkeyMicrosecondId =
+        locationNotificationModel.key.split('-')[1].split('@')[0];
+    AtKey atKey = newAtKey(5000, "locationnotify-$atkeyMicrosecondId",
+        locationNotificationModel.receiver);
+    var result = await atClient.delete(atKey);
+    print('$atKey delete operation $result');
 
     // TODO:TO SEND ZERO
     // var result = false;
