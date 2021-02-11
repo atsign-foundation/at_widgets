@@ -60,7 +60,9 @@ class CustomDialog extends StatelessWidget {
                   title ?? Strings.errorTitle,
                   style: CustomTextStyles.fontR16primary,
                 ),
-                Icon(Icons.sentiment_dissatisfied)
+                this.message == ResponseStatus.TIME_OUT
+                    ? Icon(Icons.access_time)
+                    : Icon(Icons.sentiment_dissatisfied)
               ],
             )
           : isAtsignForm
@@ -170,12 +172,14 @@ class CustomDialog extends StatelessWidget {
       case ResponseStatus:
         if (error == ResponseStatus.AUTH_FAILED) {
           if (_onboardingService.isPkam) {
-            return 'Please provide valid backup zip file to continue.';
+            return 'Please provide valid backupkey file to continue.';
           } else {
             return _onboardingService.serverStatus == ServerStatus.activated
-                ? 'Please provide a relevant backupzip file to authenticate.'
+                ? 'Please provide a relevant backupkey file to authenticate.'
                 : 'Please provide a valid QRcode available on ${AppConstants.website} website to authenticate.';
           }
+        } else if (error == ResponseStatus.TIME_OUT) {
+          return 'server response timed out!.';
         } else {
           return '';
         }

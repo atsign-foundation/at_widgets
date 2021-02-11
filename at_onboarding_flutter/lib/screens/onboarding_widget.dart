@@ -109,7 +109,8 @@ class OnboardingWidget extends StatefulWidget {
   ///after successful onboarding will gets redirected to this screen if it is not null.
   final Widget nextScreen;
 
-  ///after first time succesful onboarding it will get redirected to this screen if not null.
+  ///after first time succesful onboarding it will get redirected to this screen if not null
+  ///else it redirects to nextScreen.
   final Widget fistTimeAuthNextScreen;
 
   OnboardingWidget(

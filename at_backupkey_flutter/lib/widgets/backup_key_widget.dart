@@ -106,6 +106,7 @@ class BackupKeyWidget extends StatelessWidget {
                                 fontWeight: FontWeight.bold)),
                         onPressed: () async {
                           await _onBackup(context);
+                          Navigator.pop(context);
                         }),
                     Spacer(),
                     FlatButton(

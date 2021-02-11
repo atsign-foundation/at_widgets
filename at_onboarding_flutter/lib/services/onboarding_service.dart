@@ -121,8 +121,11 @@ class OnboardingService {
       if (cramSecret != null) {
         _atClientPreference..privateKey = null;
       }
-      await atClientService.authenticate(atsign, _atClientPreference,
-          jsonData: jsonData, decryptKey: decryptKey, status: status);
+      await atClientService
+          .authenticate(atsign, _atClientPreference,
+              jsonData: jsonData, decryptKey: decryptKey, status: status)
+          .timeout(Duration(seconds: AppConstants.responseTimeLimit),
+              onTimeout: _onTimeout(c));
       _atsign = atsign;
       atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
       onboardFunc(this.atClientServiceMap, atsign);
@@ -131,7 +134,7 @@ class OnboardingService {
       // return result;
     } catch (e) {
       print("error in authenticating =>  ${e.toString()}");
-      c.complete(
+      c.completeError(
           e.runtimeType == OnboardingStatus ? e : ResponseStatus.AUTH_FAILED);
       print(e);
     }
@@ -175,7 +178,9 @@ class OnboardingService {
     }
     atsign = this.formatAtSign(atsign);
     var atSignsList = await getAtsignList();
-    var status = await _checkAtSignServerStatus(atsign);
+    var status = await _checkAtSignServerStatus(atsign).timeout(
+        Duration(seconds: AppConstants.responseTimeLimit),
+        onTimeout: () => throw ResponseStatus.TIME_OUT);
     var isExist = atSignsList != null ? atSignsList.contains(atsign) : false;
     if (status == ServerStatus.teapot) {
       isExist = false;
@@ -209,5 +214,9 @@ class OnboardingService {
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
       await _getAtClientForAtsign().getSyncManager().sync();
     }
+  }
+
+  _onTimeout(Completer c) {
+    c.completeError(ResponseStatus.TIME_OUT);
   }
 }
