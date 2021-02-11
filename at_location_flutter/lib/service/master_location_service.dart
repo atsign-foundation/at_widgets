@@ -17,6 +17,8 @@ class MasterLocationService {
   static final MasterLocationService _instance = MasterLocationService._();
   factory MasterLocationService() => _instance;
   AtClientImpl atClientInstance;
+  // TODO: dont use this atValue, use the one in this file
+  Function getAtValueFromMainApp;
 
   String currentAtSign;
   List<HybridModel> allReceivedUsersList;
@@ -28,17 +30,17 @@ class MasterLocationService {
   StreamSink<List<HybridModel>> get allReceivedUsersSink =>
       _allReceivedUsersController.sink;
 
-  init(
-    String currentAtSignFromApp,
-    AtClientImpl atClientInstanceFromApp,
-  ) {
+  init(String currentAtSignFromApp, AtClientImpl atClientInstanceFromApp,
+      {Function newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     allReceivedUsersList = [];
     _allReceivedUsersController =
         StreamController<List<HybridModel>>.broadcast();
+    if (newGetAtValueFromMainApp != null)
+      getAtValueFromMainApp = newGetAtValueFromMainApp;
     // get all 'locationnotify' data shared with us
-    // getAllLocationData();
+    getAllLocationData();
   }
 
   getAllLocationData() async {
@@ -51,11 +53,13 @@ class MasterLocationService {
       return;
     }
 
-    response.forEach((key) async {
+    await Future.forEach(response, (key) async {
       if ('@$key'.contains('cached')) {
         print('cached key $key');
         AtKey atKey = AtKey.fromString(key);
-        AtValue value = await getAtValue(atKey);
+        print('getAllLocationData atkey $atKey');
+        // AtValue value = await getAtValue(atKey);
+        AtValue value = await getAtValueFromMainApp(atKey);
         if (value != null) {
           print('at value location $value');
           KeyModel tempKeyModel =
@@ -105,11 +109,15 @@ class MasterLocationService {
           (allLocationNotifications[i].locationNotificationModel == null))
         tempArray.add(allLocationNotifications[i]);
     }
+    tempArray.forEach((element) {
+      print('removed ${element.locationNotificationModel.atsignCreator}');
+    });
     allLocationNotifications
         .removeWhere((element) => tempArray.contains(element));
   }
 
   createHybridFromKeyModel() {
+    print('inside createHybridFromKeyModel');
     allLocationNotifications.forEach((keyModel) async {
       var _image = await getImageOfAtsignNew(
           keyModel.locationNotificationModel.atsignCreator);
@@ -118,9 +126,11 @@ class MasterLocationService {
           latLng: keyModel.locationNotificationModel.getLatLng,
           image: _image,
           eta: '?');
+      print('HybridModel named ${user.displayName}');
       allReceivedUsersList.add(user);
     });
     allReceivedUsersSink.add(allReceivedUsersList);
+    // TODO: this print statement doesnt print but the user's location is retrieved if no exception is thrown in getAtValue
     allReceivedUsersList.forEach((element) {
       print("user retrieved - ${element.displayName}");
     });
@@ -203,16 +213,17 @@ class MasterLocationService {
   }
 
   Future<dynamic> getAtValue(AtKey key) async {
+    print(atClientInstance.currentAtSign);
     try {
       AtValue atvalue = await atClientInstance.get(key).catchError(
-          (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+          (e) => print("error in getAtValue in master location service : $e"));
 
       if (atvalue != null)
         return atvalue;
       else
         return null;
     } catch (e) {
-      print('getAtValue:$e');
+      print('getAtValue in master location service:$e');
       return null;
     }
   }

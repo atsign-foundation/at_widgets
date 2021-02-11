@@ -12,13 +12,12 @@ class AtLocationNotificationListener {
   AtClientImpl atClientInstance;
   String currentAtSign;
 
-  init(
-    AtClientImpl atClientInstanceFromApp,
-    String currentAtSignFromApp,
-  ) {
+  init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
+      {Function newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
-    MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp);
+    MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
+        newGetAtValueFromMainApp: newGetAtValueFromMainApp);
     startMonitor();
   }
 
