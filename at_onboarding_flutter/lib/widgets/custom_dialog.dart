@@ -31,7 +31,7 @@ class CustomDialog extends StatelessWidget {
   final String title;
 
   ///Returns a valid atsign if atsignForm is made true.
-  final Function onAtsign;
+  final Function onSubmit;
 
   ///The context to open this widget.
   final context;
@@ -45,7 +45,7 @@ class CustomDialog extends StatelessWidget {
       this.title,
       this.isAtsignForm = false,
       this.showClose = false,
-      this.onAtsign,
+      this.onSubmit,
       this.onClose,
       this.context});
   @override
@@ -115,11 +115,7 @@ class CustomDialog extends StatelessWidget {
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 Navigator.pop(context);
-                var isExisting = await OnboardingService.getInstance()
-                    .isExistingAtsign(_atsignController.text);
-                var atsignStatus = await OnboardingService.getInstance()
-                    .checkAtsignStatus(atsign: _atsignController.text);
-                this.onAtsign(atsignStatus, isExisting, _atsignController.text);
+                this.onSubmit(_atsignController.text);
               }
             },
             child: Text(

@@ -43,6 +43,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   bool _isServerCheck = false;
   bool _isContinue = true;
+  String _pairingAtsign;
 
   bool cameraPermissionGrated = false;
   bool scanCompleted = false;
@@ -151,6 +152,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       List params = data.split(':');
       if (params[1].length < 128) {
         _showAlertDialog(CustomStrings().invalidCram(params[0]));
+      } else if (OnboardingService.getInstance().formatAtSign(params[0]) !=
+          _pairingAtsign) {
+        _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
       } else if (params[1].length == 128) {
         message = await this._processSharedSecret(params[0], params[1]);
       } else {
@@ -212,6 +216,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         List params = cramKey.split(':');
         if (params[1].length < 128) {
           _showAlertDialog(CustomStrings().invalidCram(params[0]));
+        } else if (OnboardingService.getInstance().formatAtSign(params[0]) !=
+            _pairingAtsign) {
+          _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
         } else if (params[1].length == 128) {
           await this._processSharedSecret(params[0], params[1]);
         } else {
@@ -256,10 +263,14 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       var authResponse = await _onboardingService.authenticate(atsign,
           jsonData: contents, decryptKey: aesKey);
       if (authResponse == ResponseStatus.AUTH_SUCCESS) {
-        await Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => _onboardingService.nextScreen));
+        if (_onboardingService.nextScreen == null) {
+          Navigator.pop(context);
+        } else {
+          await Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => _onboardingService.nextScreen));
+        }
       }
     } on Error catch (e) {
       if (e == ResponseStatus.SERVER_NOT_REACHED && _isContinue) {
@@ -324,14 +335,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           List<String> params = result.split(':');
           atsign = params[0];
           aesKey = params[1];
-        }
-        // else if(){
-        // var result1 = selectedFile.readAsBytesSync();
-        // fileContents = String.fromCharCodes(result1);
-        // var result = _validatePickedFileContents(fileContents);
-        // print('result after extracting data is......$result');
-        // }
-        else {
+        } else {
           var result1 = selectedFile.readAsBytesSync();
           fileContents = String.fromCharCodes(result1);
           var result = _validatePickedFileContents(fileContents);
@@ -356,6 +360,17 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
       if (fileContents == null || (aesKey == null && atsign == null)) {
         _showAlertDialog(_incorrectKeyFile);
+        setState(() {
+          loading = false;
+        });
+        return;
+      } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
+          _pairingAtsign) {
+        _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
+        setState(() {
+          loading = false;
+        });
+        return;
       }
       await _processAESKey(atsign, aesKey, fileContents);
       setState(() {
@@ -414,7 +429,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                     if (_isQR) ..._getQRWidget(deviceTextFactor),
                     if (_isBackup) ...[
                       SizedBox(
-                        height: 120.toHeight,
+                        height: SizeConfig().screenHeight * 0.25,
                       ),
                       Text(Strings.backupKeyDescription,
                           style: CustomTextStyles.fontR16primary,
@@ -491,7 +506,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                             ),
                           )
                         : SizedBox(
-                            height: SizeConfig().screenHeight,
+                            height: SizeConfig().screenHeight * 0.6,
                             width: SizeConfig().screenWidth,
                             child: Center(
                               child: CircularProgressIndicator(
@@ -589,7 +604,16 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           },
           child: CustomDialog(
             isAtsignForm: true,
-            onAtsign: (atsignStatus, isExist, atsign) {
+            onSubmit: (atsign) async {
+              var isExist = await OnboardingService.getInstance()
+                  .isExistingAtsign(atsign)
+                  .catchError((error) {
+                _showAlertDialog(error);
+              });
+              var atsignStatus = await OnboardingService.getInstance()
+                  .checkAtsignStatus(atsign: atsign);
+              _pairingAtsign =
+                  OnboardingService.getInstance().formatAtSign(atsign);
               _atsignStatus = atsignStatus ?? AtSignStatus.error;
               switch (_atsignStatus) {
                 case AtSignStatus.teapot:

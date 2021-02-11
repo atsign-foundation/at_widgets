@@ -124,13 +124,16 @@ class OnboardingService {
       await atClientService
           .authenticate(atsign, _atClientPreference,
               jsonData: jsonData, decryptKey: decryptKey, status: status)
-          .timeout(Duration(seconds: AppConstants.responseTimeLimit),
-              onTimeout: _onTimeout(c));
-      _atsign = atsign;
-      atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
-      onboardFunc(this.atClientServiceMap, atsign);
-      c.complete(ResponseStatus.AUTH_SUCCESS);
-      await _sync();
+          .then((value) async {
+        _atsign = atsign;
+        atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
+        onboardFunc(this.atClientServiceMap, atsign);
+        c.complete(ResponseStatus.AUTH_SUCCESS);
+        await _sync();
+      }).timeout(Duration(seconds: AppConstants.responseTimeLimit),
+              onTimeout: () {
+        throw (ResponseStatus.TIME_OUT);
+      });
       // return result;
     } catch (e) {
       print("error in authenticating =>  ${e.toString()}");
