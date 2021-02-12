@@ -127,6 +127,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         }
       }
     } catch (e) {
+      setState(() {
+        loading = false;
+      });
       if (e == ResponseStatus.AUTH_FAILED) {
         _logger.severe('Error in authenticateWith cram secret');
         _showAlertDialog(e, title: 'Auth Failed');
@@ -136,9 +139,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       } else if (e == ResponseStatus.TIME_OUT) {
         _showAlertDialog(e, title: 'Response Time out');
       }
-      setState(() {
-        loading = false;
-      });
     }
     return authResponse;
   }
@@ -272,6 +272,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         }
       }
     } catch (e) {
+      setState(() {
+        loading = false;
+      });
       if (e == ResponseStatus.SERVER_NOT_REACHED && _isContinue) {
         _isServerCheck = _isContinue;
         await _processAESKey(atsign, aesKey, contents);
@@ -281,9 +284,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       } else if (e == ResponseStatus.TIME_OUT) {
         _showAlertDialog(e, title: 'Response Time out');
       }
-      setState(() {
-        loading = false;
-      });
     }
   }
 
