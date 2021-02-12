@@ -130,7 +130,8 @@ class OnboardingService {
         onboardFunc(this.atClientServiceMap, atsign);
         c.complete(ResponseStatus.AUTH_SUCCESS);
         await _sync();
-      }).timeout(Duration(seconds: 2), onTimeout: () {
+      }).timeout(Duration(seconds: AppConstants.responseTimeLimit),
+              onTimeout: () {
         throw (ResponseStatus.TIME_OUT);
       });
       // return result;
