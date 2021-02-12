@@ -136,6 +136,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       } else if (e == ResponseStatus.TIME_OUT) {
         _showAlertDialog(e, title: 'Response Time out');
       }
+      setState(() {
+        loading = false;
+      });
     }
     return authResponse;
   }
@@ -153,7 +156,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       if (params[1].length < 128) {
         _showAlertDialog(CustomStrings().invalidCram(params[0]));
       } else if (OnboardingService.getInstance().formatAtSign(params[0]) !=
-          _pairingAtsign) {
+              _pairingAtsign &&
+          _pairingAtsign != null) {
         _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
       } else if (params[1].length == 128) {
         message = await this._processSharedSecret(params[0], params[1]);
@@ -217,7 +221,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         if (params[1].length < 128) {
           _showAlertDialog(CustomStrings().invalidCram(params[0]));
         } else if (OnboardingService.getInstance().formatAtSign(params[0]) !=
-            _pairingAtsign) {
+                _pairingAtsign &&
+            _pairingAtsign != null) {
           _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
         } else if (params[1].length == 128) {
           await this._processSharedSecret(params[0], params[1]);
@@ -276,6 +281,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       } else if (e == ResponseStatus.TIME_OUT) {
         _showAlertDialog(e, title: 'Response Time out');
       }
+      setState(() {
+        loading = false;
+      });
     }
   }
 
@@ -359,7 +367,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         });
         return;
       } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
-          _pairingAtsign) {
+              _pairingAtsign &&
+          _pairingAtsign != null) {
         _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
         setState(() {
           loading = false;
