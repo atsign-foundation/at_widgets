@@ -137,8 +137,13 @@ class OnboardingService {
       // return result;
     } catch (e) {
       print("error in authenticating =>  ${e.toString()}");
-      c.completeError(
-          e.runtimeType == OnboardingStatus ? e : ResponseStatus.AUTH_FAILED);
+      if (e == ResponseStatus.TIME_OUT) {
+        c.completeError(e);
+      } else {
+        c.completeError(
+            e.runtimeType == OnboardingStatus ? e : ResponseStatus.AUTH_FAILED);
+      }
+
       print(e);
     }
     return c.future;

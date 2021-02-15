@@ -126,7 +126,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           );
         }
       }
-    } on Error catch (e) {
+    } catch (e) {
+      setState(() {
+        loading = false;
+      });
       if (e == ResponseStatus.AUTH_FAILED) {
         _logger.severe('Error in authenticateWith cram secret');
         _showAlertDialog(e, title: 'Auth Failed');
@@ -134,7 +137,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         _isServerCheck = _isContinue;
         await _processSharedSecret(atsign, secret);
       } else if (e == ResponseStatus.TIME_OUT) {
-        _showAlertDialog(e, title: 'Auth Failed');
+        _showAlertDialog(e, title: 'Response Time out');
       }
     }
     return authResponse;
@@ -153,7 +156,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       if (params[1].length < 128) {
         _showAlertDialog(CustomStrings().invalidCram(params[0]));
       } else if (OnboardingService.getInstance().formatAtSign(params[0]) !=
-          _pairingAtsign) {
+              _pairingAtsign &&
+          _pairingAtsign != null) {
         _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
       } else if (params[1].length == 128) {
         message = await this._processSharedSecret(params[0], params[1]);
@@ -217,7 +221,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         if (params[1].length < 128) {
           _showAlertDialog(CustomStrings().invalidCram(params[0]));
         } else if (OnboardingService.getInstance().formatAtSign(params[0]) !=
-            _pairingAtsign) {
+                _pairingAtsign &&
+            _pairingAtsign != null) {
           _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
         } else if (params[1].length == 128) {
           await this._processSharedSecret(params[0], params[1]);
@@ -230,14 +235,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = false;
       });
-    } on Error catch (error) {
+    } catch (error) {
       _logger.severe('Uploading activation qr code throws $error');
-      setState(() {
-        loading = false;
-      });
-    } on Exception catch (ex) {
-      _logger.severe('Uploading activation qr code throws $ex');
-
       setState(() {
         loading = false;
       });
@@ -272,7 +271,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                   builder: (context) => _onboardingService.nextScreen));
         }
       }
-    } on Error catch (e) {
+    } catch (e) {
+      setState(() {
+        loading = false;
+      });
       if (e == ResponseStatus.SERVER_NOT_REACHED && _isContinue) {
         _isServerCheck = _isContinue;
         await _processAESKey(atsign, aesKey, contents);
@@ -280,7 +282,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         _logger.severe('Error in authenticateWithAESKey');
         _showAlertDialog(e, isPkam: true, title: 'Auth Failed');
       } else if (e == ResponseStatus.TIME_OUT) {
-        _showAlertDialog(e, title: 'Auth Failed');
+        _showAlertDialog(e, title: 'Response Time out');
       }
     }
   }
@@ -365,7 +367,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         });
         return;
       } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
-          _pairingAtsign) {
+              _pairingAtsign &&
+          _pairingAtsign != null) {
         _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
         setState(() {
           loading = false;
@@ -376,17 +379,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = false;
       });
-    } on Error catch (error) {
+    } catch (error) {
       setState(() {
         loading = false;
       });
       _logger.severe('Uploading backup zip file throws $error');
-      _showAlertDialog(_failedFileProcessing);
-    } on Exception catch (ex) {
-      setState(() {
-        loading = false;
-      });
-      _logger.severe('Uploading backup zip file throws $ex');
       _showAlertDialog(_failedFileProcessing);
     }
   }

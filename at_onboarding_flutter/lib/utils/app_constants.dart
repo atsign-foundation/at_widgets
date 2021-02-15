@@ -8,6 +8,7 @@ class AppConstants {
   static String backupFileExtension = '.atKeys';
   static String backupZipExtension = '_atKeys.zip';
   static int responseTimeLimit = 30;
+  static String contactAddress = 'support@atsign.com';
 
   static get serverDomain => _rootDomain;
 
