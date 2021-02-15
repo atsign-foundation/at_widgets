@@ -55,6 +55,7 @@ class SharingLocationService {
 
       return [result, locationNotificationModel];
     } catch (e) {
+      print('sending share location failed $e');
       return [false];
     }
   }
@@ -81,6 +82,7 @@ class SharingLocationService {
       print('aknowledged data sent -> ${locationNotificationModel.isAccepted}');
       return result;
     } catch (e) {
+      print('sending share awk failed $e');
       return false;
     }
   }
@@ -112,14 +114,8 @@ class SharingLocationService {
           .atClientInstance
           .put(key, notification);
       if (result) {
-        //TODO: Updated this data in your list
         KeyStreamService()
             .mapUpdatedLocationDataToWidget(locationNotificationModel);
-
-        // BackendService.getInstance().mapUpdatedDataToWidget(
-        //     BackendService.getInstance().convertEventToHybrid(
-        //         NotificationType.Location,
-        //         locationNotificationModel: locationNotificationModel));
       }
 
       print('update result - $result');
@@ -127,6 +123,8 @@ class SharingLocationService {
           'data updated ${LocationNotificationModel.convertLocationNotificationToJson(locationNotificationModel)}');
       return result;
     } catch (e) {
+      print('update share location failed $e');
+
       return false;
     }
   }
@@ -147,21 +145,47 @@ class SharingLocationService {
   }
 
   deleteKey(LocationNotificationModel locationNotificationModel) async {
-    String atkeyMicrosecondId =
-        locationNotificationModel.key.split('sharelocation-')[1].split('@')[0];
+    try {
+      String atkeyMicrosecondId = locationNotificationModel.key
+          .split('sharelocation-')[1]
+          .split('@')[0];
 
+      List<String> response =
+          await AtLocationNotificationListener().atClientInstance.getKeys(
+                regex: 'sharelocation-$atkeyMicrosecondId',
+              );
+
+      AtKey key = AtKey.fromString(response[0]);
+
+      locationNotificationModel.isAcknowledgment = true;
+
+      var result =
+          await AtLocationNotificationListener().atClientInstance.delete(key);
+      if (result) {
+        KeyStreamService().removeData(key.key);
+      }
+      return result;
+    } catch (e) {
+      print('error in deleting key $e');
+      return false;
+    }
+  }
+
+  deleteAllKey() async {
     List<String> response =
         await AtLocationNotificationListener().atClientInstance.getKeys(
-              regex: 'sharelocation-$atkeyMicrosecondId',
+              regex: '',
             );
-
-    AtKey key = AtKey.fromString(response[0]);
-
-    locationNotificationModel.isAcknowledgment = true;
-
-    var result =
-        await AtLocationNotificationListener().atClientInstance.delete(key);
-    return result;
+    response.forEach((key) async {
+      if (!'@$key'.contains('cached')) {
+        // the keys i have created
+        AtKey atKey = AtKey.fromString(key);
+        var result = await AtLocationNotificationListener()
+            .atClientInstance
+            .delete(atKey);
+        print('$key is deleted ? $result');
+      }
+    });
   }
 
   //

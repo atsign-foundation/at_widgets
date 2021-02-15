@@ -5,7 +5,9 @@ import 'package:at_location_flutter/common_components/pop_button.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
+import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
 class ShareLocationSheet extends StatefulWidget {
@@ -16,7 +18,7 @@ class ShareLocationSheet extends StatefulWidget {
 class _ShareLocationSheetState extends State<ShareLocationSheet> {
   AtContact selectedContact;
   bool isLoading;
-  String selectedOption;
+  String selectedOption, textField;
 
   @override
   void initState() {
@@ -32,7 +34,6 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,8 +50,11 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
           CustomInputField(
             width: 330.toWidth,
             height: 50,
-            isReadOnly: true,
-            hintText: 'Type @sign or search from contact',
+            hintText: 'Type @sign ',
+            initialValue: textField,
+            value: (str) {
+              textField = str;
+            },
             icon: Icons.contacts_rounded,
             onTap: () {},
           ),
@@ -81,6 +85,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               }).toList(),
               onChanged: (value) {
                 setState(() {
+                  textField = textField;
                   selectedOption = value;
                 });
               },
@@ -93,6 +98,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
                 : CustomButton(
                     buttonText: 'Share',
                     onPressed: onShareTap,
+                    fontColor: AllColors().WHITE,
                     width: 164,
                     height: 48,
                   ),
@@ -103,10 +109,19 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
   }
 
   onShareTap() async {
-    // if (selectedContact == null) {
-    //   CustomToast().show('Select a contact', context);
-    //   return;
-    // }
+    setState(() {
+      isLoading = true;
+    });
+    bool validAtSign = await checkAtsign(textField);
+
+    if (!validAtSign) {
+      setState(() {
+        isLoading = false;
+      });
+      CustomToast().show('Atsign not valid', context);
+      return;
+    }
+
     if (selectedOption == null) {
       CustomToast().show('Select time', context);
       return;
@@ -117,12 +132,9 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
         : (selectedOption == '2 hours'
             ? (2 * 60)
             : (selectedOption == '24 hours' ? (24 * 60) : null)));
-    setState(() {
-      isLoading = true;
-    });
 
     var result = await SharingLocationService()
-        .sendShareLocationEvent('@colin🛠', false, minutes: minutes);
+        .sendShareLocationEvent(textField, false, minutes: minutes);
 
     if (result[0] == true) {
       CustomToast().show('Share Location Request sent', context);
@@ -137,5 +149,16 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
         isLoading = false;
       });
     }
+  }
+
+  Future<bool> checkAtsign(String atSign) async {
+    if (atSign == null) {
+      return false;
+    } else if (!atSign.contains('@')) {
+      atSign = '@' + atSign;
+    }
+    var checkPresence = await AtLookupImpl.findSecondary(
+        atSign, MixedConstants.ROOT_DOMAIN, 64);
+    return checkPresence != null;
   }
 }

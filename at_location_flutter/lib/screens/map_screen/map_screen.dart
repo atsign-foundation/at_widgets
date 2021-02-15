@@ -1,5 +1,5 @@
 import 'package:at_location_flutter/at_location_flutter.dart';
-import 'package:at_location_flutter/common_components/collapsed_content%20copy.dart';
+import 'package:at_location_flutter/common_components/collapsed_content.dart';
 import 'package:at_location_flutter/common_components/floating_icon.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
@@ -62,12 +62,12 @@ class _MapScreenState extends State<MapScreen> {
               // ),
               SlidingUpPanel(
                 controller: pc,
-                minHeight: widget.userListenerKeyword != null ? 123 : 205,
+                minHeight: widget.userListenerKeyword != null ? 126 : 205,
                 maxHeight: widget.userListenerKeyword != null
                     ? ((widget.userListenerKeyword.atsignCreator ==
                             widget.currentAtSign)
                         ? 291
-                        : 123)
+                        : 126)
                     : 431,
                 panel: CollapsedContent(
                     true, AtLocationNotificationListener().atClientInstance,

@@ -1,6 +1,7 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_location_flutter/common_components/bottom_sheet.dart';
 import 'package:at_location_flutter/common_components/display_tile.dart';
+import 'package:at_location_flutter/common_components/floating_icon.dart';
 import 'package:at_location_flutter/common_components/tasks.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/screens/request_location/request_location_sheet.dart';
@@ -9,6 +10,8 @@ import 'package:at_location_flutter/service/at_location_notification_listener.da
 import 'package:at_location_flutter/service/home_screen_service.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/my_location.dart';
+import 'package:at_location_flutter/service/send_location_notification.dart';
+import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/show_location.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
@@ -53,6 +56,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   UniqueKey(),
                 ),
           Positioned(bottom: 264.toHeight, child: header()),
+          Positioned(
+            top: 30,
+            right: 0,
+            child: FloatingIcon(
+              bgColor: Theme.of(context).scaffoldBackgroundColor,
+              icon: Icons.remove,
+              iconColor: Theme.of(context).primaryColor,
+              isTopLeft: true,
+              onPressed: () =>
+                  SendLocationNotification().deleteAllLocationKey(),
+            ),
+          ),
           StreamBuilder(
               stream: KeyStreamService().atNotificationsStream,
               builder:

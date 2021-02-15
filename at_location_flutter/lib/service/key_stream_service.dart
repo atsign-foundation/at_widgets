@@ -6,6 +6,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 
+import 'send_location_notification.dart';
 import 'sharing_location_service.dart';
 
 class KeyStreamService {
@@ -38,6 +39,7 @@ class KeyStreamService {
     );
 
     if (allResponse.length == 0) {
+      SendLocationNotification().init(atClientInstance);
       return;
     }
 
@@ -65,9 +67,10 @@ class KeyStreamService {
     convertJsonToLocationModel();
     filterData();
 
-    // TODO: Add allLocationNotifications to stream
     notifyListeners();
     updateEventAccordingToAcknowledgedData();
+
+    SendLocationNotification().init(atClientInstance);
   }
 
   convertJsonToLocationModel() {
@@ -151,6 +154,15 @@ class KeyStreamService {
       }
     }
     notifyListeners();
+    SendLocationNotification().findAtSignsToShareLocationWith();
+  }
+
+  removeData(String key) {
+    allLocationNotifications
+        .removeWhere((notification) => notification.key == key);
+    print('allLocationNotifications after removing $allLocationNotifications');
+    notifyListeners();
+    SendLocationNotification().findAtSignsToShareLocationWith();
   }
 
   Future<KeyLocationModel> addDataToList(
@@ -182,6 +194,8 @@ class KeyStreamService {
     print('addDataToList:${allLocationNotifications}');
 
     notifyListeners();
+    SendLocationNotification().findAtSignsToShareLocationWith();
+
     return tempHyridNotificationModel;
   }
 

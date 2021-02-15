@@ -103,7 +103,8 @@ class _NotificationDialogState extends State<NotificationDialog> {
                             });
                     }(),
                     buttonText: 'Yes',
-                    buttonColor: Theme.of(context).primaryColor,
+                    buttonColor: AllColors().Black,
+                    fontColor: AllColors().WHITE,
                     width: 164.toWidth,
                     height: 48.toHeight,
                   ),
@@ -125,8 +126,9 @@ class _NotificationDialogState extends State<NotificationDialog> {
                               // Navigator.of(context).pop(),
                             });
                     }(),
-                    buttonText: 'Yes',
-                    buttonColor: Theme.of(context).primaryColor,
+                    buttonText: 'No',
+                    buttonColor: AllColors().WHITE,
+                    fontColor: AllColors().Black,
                     width: 164.toWidth,
                     height: 48.toHeight,
                   ),

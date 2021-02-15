@@ -54,28 +54,35 @@ class AtLocationNotificationListener {
     var operation = responseJson['operation'];
     print('_notificationCallback opeartion $operation');
     if (operation == 'delete') {
-      print('$notificationKey deleted');
-      MasterLocationService().deleteReceivedData(fromAtSign);
-      return;
+      if (atKey.toString().toLowerCase().contains(locationKey)) {
+        print('$notificationKey deleted');
+        MasterLocationService().deleteReceivedData(fromAtSign);
+        return;
+      } else if (atKey.toString().toLowerCase().contains('sharelocation')) {
+        KeyStreamService().removeData(atKey);
+      }
     }
     var decryptedMessage = await atClientInstance.encryptionService
         .decrypt(value, fromAtSign)
         .catchError((e) =>
             print("error in decrypting: ${e.errorCode} ${e.errorMessage}"));
-    if (atKey.toString().contains(locationKey)) {
+    if (atKey.toString().toLowerCase().contains(locationKey)) {
       LocationNotificationModel msg =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       print('_notificationCallback LocationNotificationModel $msg');
       MasterLocationService().updateHybridList(msg);
-    } else if (atKey.toString().contains('sharelocationacknowledged')) {
+    } else if (atKey
+        .toString()
+        .toLowerCase()
+        .contains('sharelocationacknowledged')) {
       LocationNotificationModel locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       print('sharelocationacknowledged ${locationData.isAccepted}');
       SharingLocationService().updateWithShareLocationAcknowledge(locationData);
-    } else if (atKey.toString().contains('sharelocation')) {
+    } else if (atKey.toString().toLowerCase().contains('sharelocation')) {
       LocationNotificationModel locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
-      print('backend service -> ${locationData.isAccepted}');
+      print('locationData service -> ${locationData.isAccepted}');
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
       } else {

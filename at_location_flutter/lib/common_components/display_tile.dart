@@ -36,18 +36,18 @@ class _DisplayTileState extends State<DisplayTile> {
   }
 
   getEventCreator() async {
-    // atContact = await AtContactsImpl.getInstance(LocationService().getAtSign());
-    contact = await atContact.get(widget.atsignCreator);
-    if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
-        if (Uint8List.fromList(intList) != null) {
-          setState(() {
-            image = Uint8List.fromList(intList);
-          });
-        }
-      }
-    }
+    // // atContact = await AtContactsImpl.getInstance(LocationService().getAtSign());
+    // contact = await atContact.get(widget.atsignCreator);
+    // if (contact != null) {
+    //   if (contact.tags != null && contact.tags['image'] != null) {
+    //     List<int> intList = contact.tags['image'].cast<int>();
+    //     if (Uint8List.fromList(intList) != null) {
+    //       setState(() {
+    //         image = Uint8List.fromList(intList);
+    //       });
+    //     }
+    //   }
+    // }
   }
 
   @override
@@ -65,10 +65,6 @@ class _DisplayTileState extends State<DisplayTile> {
                       ? ContactInitial(
                           initials: widget.atsignCreator.substring(1, 3))
                       : SizedBox(),
-              // CustomCircleAvatar(
-              //   image: widget.image,
-              //   size: 46,
-              // ),
               widget.number != null
                   ? Positioned(
                       right: 0,
@@ -98,7 +94,7 @@ class _DisplayTileState extends State<DisplayTile> {
               children: [
                 Text(
                   widget.title,
-                  style: Theme.of(context).primaryTextTheme.headline3,
+                  style: CustomTextStyles().black14,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

@@ -1,5 +1,3 @@
-import 'package:at_location_flutter/at_location_flutter_plugin.dart';
-// import 'package:at_location_flutter/at_location_flutter_plugin.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/screens/map_screen/map_screen.dart';
 import 'package:flutter/material.dart';
