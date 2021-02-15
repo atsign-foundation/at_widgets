@@ -136,7 +136,7 @@ class _NewGroupState extends State<NewGroup> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Group name'),
+                      Text('Group name', style: TextStyle(fontSize: 15.toFont)),
                       SizedBox(height: 5),
                       CustomInputField(
                         icon: Icons.emoji_emotions_outlined,
@@ -162,8 +162,10 @@ class _NewGroupState extends State<NewGroup> {
                         physics: ScrollPhysics(),
                         shrinkWrap: true,
                         crossAxisCount: 4,
-                        crossAxisSpacing: 15.toWidth,
-                        childAspectRatio: (85 / 120),
+                        // crossAxisSpacing: 15.toWidth,
+                        childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
+                            (SizeConfig().screenHeight * 0.2)),
+                        // childAspectRatio: (85 / 120),
                         children:
                             List.generate(selectedContacts.length, (index) {
                           return CustomPersonVerticalTile(

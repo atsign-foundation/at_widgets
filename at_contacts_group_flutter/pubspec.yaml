@@ -13,7 +13,8 @@ dependencies:
 
   toast: ^0.1.5
   file_picker: ^2.1.4
-  at_common_flutter: ^0.0.2
+  at_common_flutter: 
+    path: ../at_common_flutter
   at_contacts_flutter: 
     path: ../at_contacts_flutter
   at_contact: ^1.0.0
