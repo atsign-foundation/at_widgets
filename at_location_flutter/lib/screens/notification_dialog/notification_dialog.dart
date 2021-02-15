@@ -5,6 +5,7 @@ import 'package:at_location_flutter/common_components/bottom_sheet.dart';
 import 'package:at_location_flutter/common_components/contacts_initial.dart';
 import 'package:at_location_flutter/common_components/text_tile_repeater.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
@@ -41,7 +42,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                      ((widget.locationData != null)
+                      ((!widget.locationData.isRequest)
                           ? '${widget.userName} wants to share their location with you. Are you sure you want to accept their location?'
                           : '${widget.userName} wants you to share your location? Are you sure you want to share?'),
                       style: CustomTextStyles().grey16,
@@ -120,10 +121,10 @@ class _NotificationDialogState extends State<NotificationDialog> {
                               Navigator.of(context).pop(),
                             }
                           : {
-                              // RequestLocationService()
-                              //     .requestLocationAcknowledgment(
-                              //         widget.locationData, false),
-                              // Navigator.of(context).pop(),
+                              RequestLocationService()
+                                  .requestLocationAcknowledgment(
+                                      widget.locationData, false),
+                              Navigator.of(context).pop(),
                             });
                     }(),
                     buttonText: 'No',
@@ -159,10 +160,10 @@ class _NotificationDialogState extends State<NotificationDialog> {
           },
         ),
         350, onSheetCLosed: () {
-      // RequestLocationService().requestLocationAcknowledgment(
-      //     widget.locationData, true,
-      //     minutes: result);
-      // return result;
+      RequestLocationService().requestLocationAcknowledgment(
+          widget.locationData, true,
+          minutes: result);
+      return result;
     });
   }
 }

@@ -7,6 +7,7 @@ import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:flutter/material.dart';
 
+import 'request_location_service.dart';
 import 'sharing_location_service.dart';
 
 class AtLocationNotificationListener {
@@ -67,6 +68,7 @@ class AtLocationNotificationListener {
         .decrypt(value, fromAtSign)
         .catchError((e) =>
             print("error in decrypting: ${e.errorCode} ${e.errorMessage}"));
+
     if (atKey.toString().toLowerCase().contains(locationKey)) {
       LocationNotificationModel msg =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
@@ -89,7 +91,24 @@ class AtLocationNotificationListener {
       } else {
         print('add this to our list else');
         KeyStreamService().addDataToList(locationData);
-
+        showMyDialog(fromAtSign, locationData);
+      }
+    } else if (atKey
+        .toString()
+        .toLowerCase()
+        .contains('requestlocationacknowledged')) {
+      LocationNotificationModel locationData =
+          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      print('sharelocationacknowledged ${locationData.isAccepted}');
+      RequestLocationService()
+          .updateWithRequestLocationAcknowledge(locationData);
+    } else if (atKey.toString().toLowerCase().contains('requestlocation')) {
+      LocationNotificationModel locationData =
+          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      if (locationData.isAcknowledgment == true) {
+        KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
+      } else {
+        KeyStreamService().addDataToList(locationData);
         showMyDialog(fromAtSign, locationData);
       }
     }

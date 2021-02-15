@@ -5,6 +5,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/service/request_location_service.dart';
 
 import 'send_location_notification.dart';
 import 'sharing_location_service.dart';
@@ -37,6 +38,12 @@ class KeyStreamService {
     List<String> allResponse = await atClientInstance.getKeys(
       regex: 'sharelocation-',
     );
+
+    List<String> allRequestResponse = await atClientInstance.getKeys(
+      regex: 'requestlocation-',
+    );
+
+    allResponse = [...allResponse, ...allRequestResponse];
 
     if (allResponse.length == 0) {
       SendLocationNotification().init(atClientInstance);
@@ -111,42 +118,76 @@ class KeyStreamService {
   }
 
   updateEventAccordingToAcknowledgedData() async {
-    // from all the notifications check whose isAcknowledgment is false
-    // check for sharelocationacknowledged notification with same keyID, if present then update
-
     allLocationNotifications.forEach((notification) async {
-      if ((notification.locationNotificationModel.atsignCreator ==
-              currentAtSign) &&
-          (!notification.locationNotificationModel.isAcknowledgment)) {
-        String atkeyMicrosecondId =
-            notification.key.split('sharelocation-')[1].split('@')[0];
-        print('atkeyMicrosecondId $atkeyMicrosecondId');
-        String acknowledgedKeyId =
-            'sharelocationacknowledged-$atkeyMicrosecondId';
-
-        List<String> allRegexResponses =
-            await atClientInstance.getKeys(regex: acknowledgedKeyId);
-        print('lenhtg ${allRegexResponses.length}');
-        if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
-          AtKey acknowledgedAtKey = AtKey.fromString(allRegexResponses[0]);
-
-          AtValue result = await atClientInstance
-              .get(acknowledgedAtKey)
-              .catchError((e) =>
-                  print("error in get ${e.errorCode} ${e.errorMessage}"));
-
-          LocationNotificationModel acknowledgedEvent =
-              LocationNotificationModel.fromJson(jsonDecode(result.value));
-          SharingLocationService()
-              .updateWithShareLocationAcknowledge(acknowledgedEvent);
+      if (notification.key.contains('sharelocation')) {
+        if ((notification.locationNotificationModel.atsignCreator ==
+                currentAtSign) &&
+            (!notification.locationNotificationModel.isAcknowledgment)) {
+          forShareLocation(notification);
+        }
+      } else if (notification.key.contains('requestlocation')) {
+        if ((notification.locationNotificationModel.atsignCreator ==
+                currentAtSign) &&
+            (!notification.locationNotificationModel.isAcknowledgment)) {
+          forRequestLocation(notification);
         }
       }
     });
   }
 
+  forShareLocation(KeyLocationModel notification) async {
+    String atkeyMicrosecondId =
+        notification.key.split('sharelocation-')[1].split('@')[0];
+    print('atkeyMicrosecondId $atkeyMicrosecondId');
+    String acknowledgedKeyId = 'sharelocationacknowledged-$atkeyMicrosecondId';
+
+    List<String> allRegexResponses =
+        await atClientInstance.getKeys(regex: acknowledgedKeyId);
+    print('lenhtg ${allRegexResponses.length}');
+    if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
+      AtKey acknowledgedAtKey = AtKey.fromString(allRegexResponses[0]);
+
+      AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
+          (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+
+      LocationNotificationModel acknowledgedEvent =
+          LocationNotificationModel.fromJson(jsonDecode(result.value));
+      SharingLocationService()
+          .updateWithShareLocationAcknowledge(acknowledgedEvent);
+    }
+  }
+
+  forRequestLocation(KeyLocationModel notification) async {
+    String atkeyMicrosecondId =
+        notification.key.split('requestlocation-')[1].split('@')[0];
+    print('atkeyMicrosecondId $atkeyMicrosecondId');
+    String acknowledgedKeyId =
+        'requestlocationacknowledged-$atkeyMicrosecondId';
+
+    List<String> allRegexResponses =
+        await atClientInstance.getKeys(regex: acknowledgedKeyId);
+    print('lenhtg ${allRegexResponses.length}');
+    if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
+      AtKey acknowledgedAtKey = AtKey.fromString(allRegexResponses[0]);
+
+      AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
+          (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+
+      LocationNotificationModel acknowledgedEvent =
+          LocationNotificationModel.fromJson(jsonDecode(result.value));
+      RequestLocationService()
+          .updateWithRequestLocationAcknowledge(acknowledgedEvent);
+    }
+  }
+
   mapUpdatedLocationDataToWidget(LocationNotificationModel locationData) {
-    String newLocationDataKeyId =
-        locationData.key.split('sharelocation-')[1].split('@')[0];
+    String newLocationDataKeyId;
+    if (locationData.key.contains('sharelocation'))
+      newLocationDataKeyId =
+          locationData.key.split('sharelocation-')[1].split('@')[0];
+    else
+      newLocationDataKeyId =
+          locationData.key.split('requestlocation-')[1].split('@')[0];
 
     for (int i = 0; i < allLocationNotifications.length; i++) {
       if (allLocationNotifications[i].key.contains(newLocationDataKeyId)) {
@@ -167,9 +208,20 @@ class KeyStreamService {
 
   Future<KeyLocationModel> addDataToList(
       LocationNotificationModel locationNotificationModel) async {
-    String newLocationDataKeyId =
-        locationNotificationModel.key.split('sharelocation-')[1].split('@')[0];
-    String tempKey = 'sharelocation-$newLocationDataKeyId';
+    String newLocationDataKeyId;
+    String tempKey;
+    if (locationNotificationModel.key.contains('sharelocation')) {
+      newLocationDataKeyId = locationNotificationModel.key
+          .split('sharelocation-')[1]
+          .split('@')[0];
+      tempKey = 'sharelocation-$newLocationDataKeyId';
+    } else {
+      newLocationDataKeyId = locationNotificationModel.key
+          .split('requestlocation-')[1]
+          .split('@')[0];
+      tempKey = 'requestlocation-$newLocationDataKeyId';
+    }
+
     List<String> key = [];
     if (locationNotificationModel.atsignCreator == currentAtSign) {
       key = await atClientInstance.getKeys(
