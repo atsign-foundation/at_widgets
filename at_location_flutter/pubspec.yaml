@@ -31,7 +31,9 @@ dependencies:
     path: ../at_events_flutter
   at_commons: ^1.0.1+3
   at_contact: ^1.0.0
-  at_common_flutter: ^0.0.2
+  
+  at_common_flutter: 
+    path: ../at_common_flutter
   at_chat_flutter:
     path: ../at_chat_flutter
 
