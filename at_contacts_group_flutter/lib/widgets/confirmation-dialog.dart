@@ -34,7 +34,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.toWidth)),
       content: Container(
-        height: 350,
+        height: 410.toHeight,
+        width: 200.toWidth,
         color: Theme.of(context).brightness == Brightness.light
             ? AllColors().WHITE
             : AllColors().Black,
@@ -72,7 +73,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               isLoading
                   ? CircularProgressIndicator()
                   : CustomButton(
-                      height: 60,
+                      height: 60.toHeight,
                       width: double.infinity,
                       buttonText: 'Yes',
                       onPressed: () async {
@@ -102,7 +103,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                               ? AllColors().WHITE
                               : AllColors().Black,
                     ),
-              SizedBox(height: 5.toHeight),
+              SizedBox(height: 10.toHeight),
               InkWell(
                   onTap: () => Navigator.of(context).pop(),
                   child: !isLoading

@@ -152,7 +152,7 @@ class _GroupViewState extends State<GroupView> {
               Positioned(
                   top: 240.toHeight,
                   child: Container(
-                    height: 64,
+                    height: 80.toHeight,
                     width: 343.toWidth,
                     margin: EdgeInsets.symmetric(
                         horizontal: 15.toWidth, vertical: 0.toHeight),
