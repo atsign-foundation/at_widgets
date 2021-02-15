@@ -40,6 +40,9 @@ class MasterLocationService {
         StreamController<List<HybridModel>>.broadcast();
     if (newGetAtValueFromMainApp != null)
       getAtValueFromMainApp = newGetAtValueFromMainApp;
+    //TODO: look at this logic later
+    getAtValueFromMainApp = getAtValue;
+
     // get all 'locationnotify' data shared with us
     getAllLocationData();
   }

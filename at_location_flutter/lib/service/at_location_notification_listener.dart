@@ -60,6 +60,7 @@ class AtLocationNotificationListener {
         return;
       } else if (atKey.toString().toLowerCase().contains('sharelocation')) {
         KeyStreamService().removeData(atKey);
+        return;
       }
     }
     var decryptedMessage = await atClientInstance.encryptionService
