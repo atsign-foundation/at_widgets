@@ -1,5 +1,3 @@
-import 'package:at_chat_flutter/screens/chat_screen.dart';
-import 'package:at_chat_flutter/utils/init_chat_service.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/show_location.dart';

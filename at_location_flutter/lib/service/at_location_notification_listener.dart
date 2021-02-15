@@ -2,7 +2,12 @@ import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/screens/notification_dialog/notification_dialog.dart';
+import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:flutter/material.dart';
+
+import 'sharing_location_service.dart';
 
 class AtLocationNotificationListener {
   AtLocationNotificationListener._();
@@ -11,11 +16,14 @@ class AtLocationNotificationListener {
   final String locationKey = 'locationnotify';
   AtClientImpl atClientInstance;
   String currentAtSign;
+  GlobalKey<NavigatorState> navKey;
 
   init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
+      GlobalKey<NavigatorState> navKeyFromMainApp,
       {Function newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
+    navKey = navKeyFromMainApp;
     MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
         newGetAtValueFromMainApp: newGetAtValueFromMainApp);
     startMonitor();
@@ -59,6 +67,37 @@ class AtLocationNotificationListener {
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       print('_notificationCallback LocationNotificationModel $msg');
       MasterLocationService().updateHybridList(msg);
+    } else if (atKey.toString().contains('sharelocationacknowledged')) {
+      LocationNotificationModel locationData =
+          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      print('sharelocationacknowledged ${locationData.isAccepted}');
+      SharingLocationService().updateWithShareLocationAcknowledge(locationData);
+    } else if (atKey.toString().contains('sharelocation')) {
+      LocationNotificationModel locationData =
+          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      print('backend service -> ${locationData.isAccepted}');
+      if (locationData.isAcknowledgment == true) {
+        KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
+      } else {
+        print('add this to our list else');
+        KeyStreamService().addDataToList(locationData);
+
+        showMyDialog(fromAtSign, locationData);
+      }
     }
+  }
+
+  Future<void> showMyDialog(
+      String fromAtSign, LocationNotificationModel locationData) async {
+    return showDialog<void>(
+      context: navKey.currentContext,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return NotificationDialog(
+          userName: fromAtSign,
+          locationData: locationData,
+        );
+      },
+    );
   }
 }

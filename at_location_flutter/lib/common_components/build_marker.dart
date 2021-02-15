@@ -1,11 +1,11 @@
-import 'package:at_chat_flutter/widgets/contacts_initials.dart';
-import 'package:at_chat_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/layer/marker_layer.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 import 'circle_marker_painter.dart';
+import 'contacts_initial.dart';
+import 'custom_circle_avatar.dart';
 import 'pointed_bottom.dart';
 
 Marker buildMarker(HybridModel user, {bool singleMarker = false}) {

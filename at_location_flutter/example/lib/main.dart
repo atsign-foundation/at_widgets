@@ -24,6 +24,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light(),
+      navigatorKey: NavService.navKey,
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Plugin example app'),
@@ -71,4 +72,8 @@ class _MyAppState extends State<MyApp> {
           )),
     );
   }
+}
+
+class NavService {
+  static GlobalKey<NavigatorState> navKey = GlobalKey();
 }

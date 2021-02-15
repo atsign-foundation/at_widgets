@@ -7,6 +7,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
+import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:latlong/latlong.dart';
 
@@ -22,7 +23,7 @@ class MasterLocationService {
 
   String currentAtSign;
   List<HybridModel> allReceivedUsersList;
-  List<KeyModel> allLocationNotifications = [];
+  List<KeyLocationModel> allLocationNotifications = [];
   final String locationKey = 'locationnotify';
   StreamController _allReceivedUsersController;
   Stream<List<HybridModel>> get allReceivedUsersStream =>
@@ -62,9 +63,9 @@ class MasterLocationService {
         AtValue value = await getAtValueFromMainApp(atKey);
         if (value != null) {
           print('at value location $value');
-          KeyModel tempKeyModel =
-              KeyModel(key: key, atKey: atKey, atValue: value);
-          allLocationNotifications.add(tempKeyModel);
+          KeyLocationModel tempKeyLocationModel =
+              KeyLocationModel(key: key, atKey: atKey, atValue: value);
+          allLocationNotifications.add(tempKeyLocationModel);
         }
       }
     });
@@ -73,7 +74,7 @@ class MasterLocationService {
     convertJsonToLocationModel();
     filterData();
 
-    createHybridFromKeyModel();
+    createHybridFromKeyLocationModel();
     allReceivedUsersList.forEach((notification) {
       print('LocationNotificationModel ${notification.displayName}');
     });
@@ -103,7 +104,7 @@ class MasterLocationService {
   }
 
   filterData() {
-    List<KeyModel> tempArray = [];
+    List<KeyLocationModel> tempArray = [];
     for (int i = 0; i < allLocationNotifications.length; i++) {
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
           (allLocationNotifications[i].locationNotificationModel == null))
@@ -116,14 +117,14 @@ class MasterLocationService {
         .removeWhere((element) => tempArray.contains(element));
   }
 
-  createHybridFromKeyModel() {
-    print('inside createHybridFromKeyModel');
-    allLocationNotifications.forEach((keyModel) async {
+  createHybridFromKeyLocationModel() {
+    print('inside createHybridFromKeyLocationModel');
+    allLocationNotifications.forEach((KeyLocationModel) async {
       var _image = await getImageOfAtsignNew(
-          keyModel.locationNotificationModel.atsignCreator);
+          KeyLocationModel.locationNotificationModel.atsignCreator);
       HybridModel user = HybridModel(
-          displayName: keyModel.locationNotificationModel.atsignCreator,
-          latLng: keyModel.locationNotificationModel.getLatLng,
+          displayName: KeyLocationModel.locationNotificationModel.atsignCreator,
+          latLng: KeyLocationModel.locationNotificationModel.getLatLng,
           image: _image,
           eta: '?');
       print('HybridModel named ${user.displayName}');
@@ -227,13 +228,4 @@ class MasterLocationService {
       return null;
     }
   }
-}
-
-class KeyModel {
-  String key;
-  AtKey atKey;
-  AtValue atValue;
-  LocationNotificationModel locationNotificationModel;
-  KeyModel(
-      {this.key, this.atKey, this.atValue, this.locationNotificationModel});
 }

@@ -1,4 +1,5 @@
 import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
@@ -12,10 +13,11 @@ class Tasks extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        height: 44.toHeight,
-        //width: 70.toWidth,
+        height: 54.toHeight,
+        width: 70.toWidth,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
               icon,
@@ -25,7 +27,8 @@ class Tasks extends StatelessWidget {
             Flexible(
               child: Text(
                 task,
-                style: Theme.of(context).primaryTextTheme.headline3,
+                style: CustomTextStyles().black12,
+                textAlign: TextAlign.center,
               ),
             )
           ],

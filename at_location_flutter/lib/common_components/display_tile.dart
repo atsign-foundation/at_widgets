@@ -1,13 +1,11 @@
 import 'dart:typed_data';
-
 import 'package:at_contact/at_contact.dart';
-import 'package:at_chat_flutter/widgets/contacts_initials.dart';
-import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 
 import 'package:flutter/material.dart';
 
+import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 
 class DisplayTile extends StatefulWidget {

@@ -1,9 +1,10 @@
-import 'package:at_chat_flutter/widgets/contacts_initials.dart';
-import 'package:at_chat_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_location_flutter/common_components/pointed_bottom.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:flutter/material.dart';
+
+import 'contacts_initial.dart';
+import 'custom_circle_avatar.dart';
 
 Widget buildPopup(HybridModel user) {
   print('popup builder called');

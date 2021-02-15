@@ -1,10 +1,12 @@
-import 'package:at_contacts_flutter/at_contacts_flutter.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
-import 'package:at_location_flutter_example/constants.dart';
+// import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+// import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_location_flutter/screens/home/home_screen.dart';
+import 'package:at_location_flutter/service/at_location_notification_listener.dart';
+import 'package:at_location_flutter_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter_example/client_sdk_service.dart';
-import 'package:at_contacts_flutter/screens/contacts_screen.dart';
-import 'package:at_contacts_flutter/screens/blocked_screen.dart';
+// import 'package:at_contacts_flutter/screens/contacts_screen.dart';
+// import 'package:at_contacts_flutter/screens/blocked_screen.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -16,13 +18,17 @@ class _SecondScreenState extends State<SecondScreen> {
   String activeAtSign;
   @override
   void initState() {
-    getAtSignAndInitializeContacts();
     super.initState();
+    activeAtSign =
+        clientSdkService.atClientServiceInstance.atClient.currentAtSign;
+    AtLocationNotificationListener().init(
+        clientSdkService.atClientServiceInstance.atClient,
+        clientSdkService.atClientServiceInstance.atClient.currentAtSign,
+        NavService.navKey);
   }
 
   @override
   void dispose() {
-    disposeContactsControllers();
     super.dispose();
   }
 
@@ -46,33 +52,18 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ContactsScreen(),
+                  builder: (BuildContext context) => HomeScreen(),
                 ));
               },
-              child: Text('Show contacts'),
+              child: Text('Show maps'),
             ),
             ElevatedButton(
-              onPressed: () {
-                // any logic
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => BlockedScreen(),
-                ));
-              },
+              onPressed: () {},
               child: Text('Show blocked contacts'),
             ),
           ],
         ),
       ),
     );
-  }
-
-  getAtSignAndInitializeContacts() async {
-    String currentAtSign = await clientSdkService.getAtSign();
-    setState(() {
-      activeAtSign = currentAtSign;
-    });
-    initializeContactsService(
-        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }

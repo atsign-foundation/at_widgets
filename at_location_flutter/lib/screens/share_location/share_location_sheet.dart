@@ -1,5 +1,9 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_contact/at_contact.dart';
+import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/pop_button.dart';
+import 'package:at_location_flutter/service/key_stream_service.dart';
+import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +14,7 @@ class ShareLocationSheet extends StatefulWidget {
 }
 
 class _ShareLocationSheetState extends State<ShareLocationSheet> {
+  AtContact selectedContact;
   bool isLoading;
   String selectedOption;
 
@@ -97,5 +102,40 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     );
   }
 
-  onShareTap() async {}
+  onShareTap() async {
+    // if (selectedContact == null) {
+    //   CustomToast().show('Select a contact', context);
+    //   return;
+    // }
+    if (selectedOption == null) {
+      CustomToast().show('Select time', context);
+      return;
+    }
+
+    int minutes = (selectedOption == '30 mins'
+        ? 30
+        : (selectedOption == '2 hours'
+            ? (2 * 60)
+            : (selectedOption == '24 hours' ? (24 * 60) : null)));
+    setState(() {
+      isLoading = true;
+    });
+
+    var result = await SharingLocationService()
+        .sendShareLocationEvent('@colin🛠', false, minutes: minutes);
+
+    if (result[0] == true) {
+      CustomToast().show('Share Location Request sent', context);
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.of(context).pop();
+      KeyStreamService().addDataToList(result[1]);
+    } else {
+      CustomToast().show('some thing went wrong , try again.', context);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 }
