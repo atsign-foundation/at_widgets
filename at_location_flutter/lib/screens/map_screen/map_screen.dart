@@ -43,9 +43,7 @@ class _MapScreenState extends State<MapScreen> {
                 top: 0,
                 left: 0,
                 child: FloatingIcon(
-                  bgColor: Theme.of(context).scaffoldBackgroundColor,
                   icon: Icons.arrow_back,
-                  iconColor: Theme.of(context).primaryColor,
                   isTopLeft: true,
                   onPressed: () => Navigator.pop(context),
                 ),

@@ -160,11 +160,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
           Positioned(
             top: 100,
             right: 0,
-            child: FloatingIcon(
-                bgColor: Theme.of(context).accentColor,
-                icon: Icons.all_inclusive,
-                iconColor: AllColors().Black,
-                onPressed: zoomOutFn),
+            child:
+                FloatingIcon(icon: Icons.all_inclusive, onPressed: zoomOutFn),
           ),
         ],
       )),

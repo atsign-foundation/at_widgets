@@ -11,7 +11,6 @@ import 'package:at_location_flutter/service/home_screen_service.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
-import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/show_location.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
@@ -61,10 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
             top: 30,
             right: 0,
             child: FloatingIcon(
-              bgColor: Theme.of(context).scaffoldBackgroundColor,
               icon: Icons.remove,
-              iconColor: Theme.of(context).primaryColor,
-              isTopLeft: true,
+              isTopLeft: false,
               onPressed: () =>
                   SendLocationNotification().deleteAllLocationKey(),
             ),
