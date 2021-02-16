@@ -89,13 +89,12 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     var result =
         await RequestLocationService().sendRequestLocationEvent(textField);
 
-    if (result[0] == true) {
+    if (result == true) {
       CustomToast().show('Request Location sent', context);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
-      KeyStreamService().addDataToList(result[1]);
     } else {
       CustomToast().show('some thing went wrong , try again.', context);
       setState(() {

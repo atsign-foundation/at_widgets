@@ -32,6 +32,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Container(
       child: AlertDialog(
         contentPadding: EdgeInsets.fromLTRB(10, 20, 5, 10),

@@ -13,7 +13,7 @@ class SharingLocationService {
     return _singleton;
   }
 
-  sendShareLocationEvent(String atsign, bool isAcknowledgment,
+  Future<bool> sendShareLocationEvent(String atsign, bool isAcknowledgment,
       {int minutes}) async {
     try {
       AtKey atKey;
@@ -52,11 +52,13 @@ class SharingLocationService {
       print('sendLocationNotification:$result');
       print(
           "data sent: ${LocationNotificationModel.convertLocationNotificationToJson(locationNotificationModel)}");
-
-      return [result, locationNotificationModel];
+      if (result) {
+        KeyStreamService().addDataToList(locationNotificationModel);
+      }
+      return result;
     } catch (e) {
       print('sending share location failed $e');
-      return [false];
+      return false;
     }
   }
 

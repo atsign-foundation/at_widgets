@@ -14,7 +14,7 @@ class RequestLocationService {
     return _singleton;
   }
 
-  sendRequestLocationEvent(String atsign) async {
+  Future<bool> sendRequestLocationEvent(String atsign) async {
     try {
       AtKey atKey = newAtKey(60000,
           "requestlocation-${DateTime.now().microsecondsSinceEpoch}", atsign);
@@ -34,10 +34,12 @@ class RequestLocationService {
       print('requestLocationNotification:$result');
       print(
           "data sent: ${LocationNotificationModel.convertLocationNotificationToJson(locationNotificationModel)}");
-
-      return [result, locationNotificationModel];
+      if (result) {
+        KeyStreamService().addDataToList(locationNotificationModel);
+      }
+      return result;
     } catch (e) {
-      return [false];
+      return false;
     }
   }
 

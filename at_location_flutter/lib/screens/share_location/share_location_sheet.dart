@@ -136,13 +136,12 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     var result = await SharingLocationService()
         .sendShareLocationEvent(textField, false, minutes: minutes);
 
-    if (result[0] == true) {
+    if (result == true) {
       CustomToast().show('Share Location Request sent', context);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
-      KeyStreamService().addDataToList(result[1]);
     } else {
       CustomToast().show('some thing went wrong , try again.', context);
       setState(() {

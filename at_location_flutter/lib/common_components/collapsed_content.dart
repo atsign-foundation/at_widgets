@@ -181,11 +181,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                   var result = await RequestLocationService()
                                       .sendRequestLocationEvent(
                                           widget.userListenerKeyword.receiver);
-                                  if (result[0] == true) {
+                                  if (result == true) {
                                     CustomToast()
                                         .show('Request Location sent', context);
-
-                                    KeyStreamService().addDataToList(result[1]);
                                   } else {
                                     CustomToast().show(
                                         'Something went wrong, try again.',
