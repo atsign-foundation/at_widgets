@@ -135,7 +135,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
   var error;
   @override
   void initState() {
-    AppConstants.rootDomain = widget.domain;
+    AppConstants.rootDomain = widget.domain ?? '';
     _onboardingService.setLogo = widget.logo;
     _onboardingService.setNextScreen = widget.nextScreen;
     _onboardingService.fistTimeAuthScreen = widget.fistTimeAuthNextScreen;
@@ -163,34 +163,45 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            CustomNav().pop(context);
+            if (widget.nextScreen == null) {
+              CustomNav().pop(context);
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                widget.onboard(_onboardingService.atClientServiceMap,
+                    _onboardingService.currentAtsign);
+              });
+            }
             if (widget.nextScreen != null) {
               CustomNav().push(widget.nextScreen, context);
             }
+            return Center();
           } else if (snapshot.hasError) {
-            if (widget.nextScreen == null) {
-              CustomNav().pop(context);
-              Future.delayed((Duration(milliseconds: 200)), () {
-                widget.onError(snapshot.error);
-              });
-            }
-            if (snapshot.error == OnboardingStatus.ACTIVATE ||
+            if (snapshot.error == OnboardingStatus.ATSIGN_NOT_FOUND) {
+              return PairAtsignWidget(
+                getAtSign: true,
+              );
+            } else if (snapshot.error == OnboardingStatus.ACTIVATE ||
                 snapshot.error == OnboardingStatus.RESTORE) {
               return PairAtsignWidget(
                 onboardStatus: snapshot.error,
               );
-            } else if (snapshot.error == OnboardingStatus.ATSIGN_NOT_FOUND) {
-              return PairAtsignWidget(
-                getAtSign: true,
-              );
-            } else {
+            }
+            // if (widget.nextScreen == null) {
+            //   CustomNav().pop(context);
+            //   Future.delayed((Duration(milliseconds: 200)), () {
+            //     widget.onError(snapshot.error);
+            //   });
+            //   return Center();
+            // }
+            else {
               CustomNav().pop(context);
               Future.delayed((Duration(milliseconds: 200)), () {
                 widget.onError(snapshot.error);
               });
+              return Center();
             }
+          } else {
+            return Center(child: CircularProgressIndicator());
           }
-          return Center(child: CircularProgressIndicator());
         });
   }
 }

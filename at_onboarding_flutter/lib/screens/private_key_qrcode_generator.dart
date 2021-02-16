@@ -31,7 +31,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
   String atsign;
   var aesKey;
   var _size;
-
+  var _onboardingService = OnboardingService.getInstance();
   @override
   void initState() {
     super.initState();
@@ -124,6 +124,9 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   onPressed: () async {
                     if (OnboardingService.getInstance().fistTimeAuthScreen !=
                         null) {
+                      _onboardingService.onboardFunc(
+                          _onboardingService.atClientServiceMap,
+                          _onboardingService.currentAtsign);
                       await Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -132,6 +135,9 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                                       .fistTimeAuthScreen));
                     } else if (OnboardingService.getInstance().nextScreen !=
                         null) {
+                      _onboardingService.onboardFunc(
+                          _onboardingService.atClientServiceMap,
+                          _onboardingService.currentAtsign);
                       await Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -139,6 +145,9 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                                   OnboardingService.getInstance().nextScreen));
                     } else {
                       Navigator.pop(context);
+                      _onboardingService.onboardFunc(
+                          _onboardingService.atClientServiceMap,
+                          _onboardingService.currentAtsign);
                     }
                   },
                 )

@@ -86,9 +86,6 @@ class OnboardingService {
         atClientPreference: _atClientPreference, atsign: atsign);
     _atsign = atsign == null ? await this.getAtSign() : atsign;
     atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
-    // Future.delayed((Duration(milliseconds: 500)), () {
-    onboardFunc(this.atClientServiceMap, _atsign);
-    // });
     _sync();
     return result;
   }
@@ -127,7 +124,6 @@ class OnboardingService {
           .then((value) async {
         _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
-        onboardFunc(this.atClientServiceMap, atsign);
         c.complete(ResponseStatus.AUTH_SUCCESS);
         await _sync();
       }).timeout(Duration(seconds: AppConstants.responseTimeLimit),

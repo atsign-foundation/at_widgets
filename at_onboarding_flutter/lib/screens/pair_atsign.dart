@@ -113,6 +113,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             widget.onboardStatus == OnboardingStatus.RESTORE) {
           if (_onboardingService.nextScreen == null) {
             Navigator.pop(context);
+            _onboardingService.onboardFunc(
+                _onboardingService.atClientServiceMap,
+                _onboardingService.currentAtsign);
+            return;
           }
           await Navigator.pushReplacement(
               context,
@@ -264,7 +268,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       if (authResponse == ResponseStatus.AUTH_SUCCESS) {
         if (_onboardingService.nextScreen == null) {
           Navigator.pop(context);
+          _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
+              _onboardingService.currentAtsign);
         } else {
+          _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
+              _onboardingService.currentAtsign);
           await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
