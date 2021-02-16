@@ -10,7 +10,7 @@ This plugin can be added to the project as git dependency in pubspec.yaml
 dependencies:
   at_onboarding_flutter:
     git:
-      url: git@github.com:atsign-foundation/at_widgets.git
+      url: https://github.com/atsign-foundation//at_widgets.git
       path: at_onboarding_flutter
       ref: dev_env
 ```
@@ -92,8 +92,8 @@ The user have to enter the @sign to pair. Based on the @sign status user can eit
 1. Pair with QRcode
 The user can scan a QR code using the camera or upload the image file of the QR code
 
-2. Pair with Backup Zip file
-Click on `Upload backup zip file` to upload a zip file of the restore keys or providing both the backup files of AtKeys (multiple select) will work.
+2. Pair with Backup Key file
+Click on `Upload backup key file` to upload a zip file of the restore keys or providing both the backup files of AtKeys (multiple select) will work.
 
 #### Screen to save keys
 This screen will help to save the restore keys generated after a successful CRAM authentication in a zip format. The continue option navigates to the screen provided in the `nextScreen` parameter.
@@ -107,18 +107,19 @@ FlatButton(
   onPressed: () async {
     Onboarding(
       context: context,
-                                logo: Icon(Icons.ac_unit),
-                                atClientPreference: atClientPrefernce,
-                                domain: AppConstants.rootDomain,
-                                appColor: Color.fromARGB(255, 240, 94, 62),
-                                onboard: (value) {
-                                    //assign this value to the app service for atclientServiceInstance.
-                                },
-                                onError: (value) {
-                                  //handle the error
-                                },
-                                nextScreen: DashBoard(),
-                              )
+      logo: Icon(Icons.ac_unit),
+      atClientPreference: atClientPrefernce,
+      domain: AppConstants.rootDomain,
+      appColor: Color.fromARGB(255, 240, 94, 62),
+      onboard: (atClientServiceMap, atsign) {
+      //assign this atClientServiceMap in the app.
+      },
+      onError: (error) {
+       //handle the error
+      },
+      nextScreen: DashBoard(),
+      fistTimeAuthNextScreen: Details()
+    )
   },
   child: Text('Onboard my @sign'))
 ```

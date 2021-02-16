@@ -15,8 +15,6 @@ class CustomNav {
   }
 
   pop(context) {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
     Navigator.pop(context);
-    // });
   }
 }

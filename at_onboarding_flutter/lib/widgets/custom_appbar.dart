@@ -8,14 +8,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
   final double elevation;
   final bool showBackButton;
-  // final bool showLeadingIcon;
-  // final Widget leadingButton;
 
   CustomAppBar({
     this.title,
     this.elevation = 0.0,
     this.showBackButton = false,
-    // this.showLeadingIcon = false
   });
   @override
   Widget build(BuildContext context) {

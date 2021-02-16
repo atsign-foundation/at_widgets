@@ -75,13 +75,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
-  showSnackBar(BuildContext context, messageText) {
-    final snackBar = SnackBar(content: Text(messageText));
-
-// Find the Scaffold in the widget tree and use it to show a SnackBar.
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
-
   bool _isCram(String data) {
     if (data == null || data == '' || !data.contains('@')) {
       return false;
@@ -180,7 +173,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   askCameraPermission() async {
     var status = await Permission.camera.status;
-    print("camera status => $status");
+    _logger.info("camera status => $status");
     if (status.isUndetermined) {
       // We didn't ask for permission yet.
       await [
@@ -341,7 +334,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           var result1 = selectedFile.readAsBytesSync();
           fileContents = String.fromCharCodes(result1);
           var result = _validatePickedFileContents(fileContents);
-          print('result after extracting data is......$result');
+          _logger.finer('result after extracting data is......$result');
           if (!result) {
             _showAlertDialog(_incorrectKeyFile);
             setState(() {
@@ -401,8 +394,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               message: errorMessage,
               title: title,
               onClose: getClose == true ? onClose : () {});
-          // return AtErrorDialog.getAlertDialog(errorMessage, context,
-          //     errorTitle: title, isPkam: isPkam ?? false);
         });
   }
 
@@ -567,7 +558,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       CustomButton(
         width: 230.toWidth,
         height: 50.toHeight * deviceTextFactor,
-        // isInverted: true,
         buttonText: Strings.uploadQRTitle,
         onPressed: _uploadCramKeyFile,
       ),
