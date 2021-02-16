@@ -21,16 +21,17 @@ class CustomPersonVerticalTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: 10),
       child: Column(
         children: <Widget>[
           Stack(
             children: <Widget>[
               SizedBox(
-                height: 60,
-                width: 60,
+                height: 60.toHeight,
+                width: 60.toHeight,
                 child: imageLocation != null
                     ? CustomCircleAvatar(
-                        size: 60,
+                        size: 60.toHeight,
                         image: imageLocation,
                       )
                     : ContactInitial(
@@ -80,6 +81,7 @@ class CustomPersonVerticalTile extends StatelessWidget {
                   textAlign: TextAlign.center,
                 )
               : SizedBox(),
+          SizedBox(height: 2),
         ],
       ),
     );

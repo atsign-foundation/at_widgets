@@ -106,8 +106,10 @@ class _GroupViewState extends State<GroupView> {
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   crossAxisCount: 4,
-                                  mainAxisSpacing: 10,
-                                  childAspectRatio: (70 / 100),
+                                  // mainAxisSpacing: 10,
+                                  childAspectRatio:
+                                      ((SizeConfig().screenWidth * 0.25) /
+                                          (SizeConfig().screenHeight * 0.2)),
                                   children: List.generate(
                                       groupData.members.length, (index) {
                                     return InkWell(
@@ -152,7 +154,7 @@ class _GroupViewState extends State<GroupView> {
               Positioned(
                   top: 240.toHeight,
                   child: Container(
-                    height: 64,
+                    height: 80.toHeight,
                     width: 343.toWidth,
                     margin: EdgeInsets.symmetric(
                         horizontal: 15.toWidth, vertical: 0.toHeight),

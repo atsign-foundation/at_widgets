@@ -5,7 +5,7 @@ class CustomInputField extends StatelessWidget {
   final String hintText, initialValue;
   final double width, height;
   final IconData icon;
-  final Function onTap, onSubmitted;
+  final Function onTap, onIconTap, onSubmitted;
   final Color iconColor;
   final ValueChanged<String> value;
   final bool isReadOnly;
@@ -19,6 +19,7 @@ class CustomInputField extends StatelessWidget {
       this.iconColor,
       this.icon,
       this.onTap,
+      this.onIconTap,
       this.value,
       this.initialValue = '',
       this.onSubmitted,
@@ -59,9 +60,12 @@ class CustomInputField extends StatelessWidget {
             ),
           ),
           icon != null
-              ? Icon(
-                  icon,
-                  color: iconColor ?? ColorConstants.darkGrey,
+              ? InkWell(
+                  onTap: onIconTap ?? onTap,
+                  child: Icon(
+                    icon,
+                    color: iconColor ?? ColorConstants.darkGrey,
+                  ),
                 )
               : SizedBox()
         ],

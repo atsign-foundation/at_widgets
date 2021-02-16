@@ -14,7 +14,9 @@ dependencies:
   latlong: ^0.6.1
   toast: ^0.1.5
 
-  at_common_flutter: ^0.0.2
+  # at_common_flutter: ^0.0.2
+  at_common_flutter: 
+    path: ../at_common_flutter
   at_location_flutter:
     path: ../at_location_flutter
   at_contacts_flutter:

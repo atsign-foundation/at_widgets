@@ -48,9 +48,24 @@ class _MyAppState extends State<MyApp> {
                                   builder: (context) => ScanQrScreen(
                                       atClientServiceInstance: clientSdkService
                                           .atClientServiceInstance,
+                                      atClientPreference: clientSdkService
+                                          .atClientPreference,
                                       nextScreen: SecondScreen())));
                         },
                         child: Text('Show QR scanner screen'))),
+                SizedBox(
+                  height: 25,
+                ),
+                Center(
+                    child: FlatButton(
+                        color: Colors.black12,
+                        onPressed: () async {
+                          await Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SecondScreen()));
+                        },
+                        child: Text('Already authenticated'))),
               ],
             ),
           )),

@@ -2,7 +2,7 @@
 /// takes in a function @param [onTap] to define what happens on tap of the tile
 /// @param [onTrailingPresses] to set the behaviour for trailing icon
 /// @param [asSelectionTile] to toggle whether the tile is selectable to select contacts
-/// @param [groupContact] for details of the contact
+/// @param [contact] for details of the contact
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
 import 'dart:typed_data';
@@ -19,16 +19,20 @@ class CustomListTile extends StatefulWidget {
   final Function onTap;
   final Function onTrailingPressed;
   final bool asSelectionTile;
+  final bool asSingleSelectionTile;
   final AtContact contact;
   final ContactService contactService;
+  final ValueChanged<List<AtContact>> selectedList;
 
   const CustomListTile(
       {Key key,
       this.onTap,
       this.onTrailingPressed,
       this.asSelectionTile = false,
+      this.asSingleSelectionTile = false,
       this.contact,
-      this.contactService})
+      this.contactService,
+      this.selectedList})
       : super(key: key);
   @override
   _CustomListTileState createState() => _CustomListTileState();
@@ -51,58 +55,83 @@ class _CustomListTileState extends State<CustomListTile> {
         initials: widget.contact.atSign.substring(1, 3),
       );
     }
-    return ListTile(
-      onTap: () {
-        if (widget.asSelectionTile ?? false) {
-          setState(() {
-            if (isSelected) {
-              widget.contactService.removeSelectedAtSign(widget.contact);
+    return StreamBuilder<List<AtContact>>(
+        initialData: widget.contactService.selectedContacts,
+        stream: widget.contactService.selectedContactStream,
+        builder: (context, snapshot) {
+          for (AtContact contact in widget.contactService.selectedContacts) {
+            if (contact == widget.contact ||
+                contact.atSign == widget.contact.atSign) {
+              isSelected = true;
+              break;
             } else {
-              widget.contactService.selectAtSign(widget.contact);
+              isSelected = false;
             }
-          });
-          isSelected = !isSelected;
-        } else {
-          widget?.onTap();
-        }
-      },
-      title: Text(
-        widget.contact.tags != null && widget.contact.tags['name'] != null
-            ? widget.contact.tags['name']
-            : widget.contact.atSign.substring(1),
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 14.toFont,
-        ),
-      ),
-      subtitle: Text(
-        widget.contact.atSign,
-        style: TextStyle(
-          color: ColorConstants.fadedText,
-          fontSize: 14.toFont,
-        ),
-      ),
-      leading: Container(
-          height: 40.toWidth,
-          width: 40.toWidth,
-          decoration: BoxDecoration(
-            color: Colors.black,
-            shape: BoxShape.circle,
-          ),
-          child: contactImage),
-      trailing: IconButton(
-        onPressed: widget?.onTrailingPressed,
-        icon: (widget.asSelectionTile ?? false)
-            ? (isSelected)
-                ? Icon(Icons.close)
-                : Icon(Icons.add)
-            : Image.asset(
-                ImageConstants.sendIcon,
-                width: 21.toWidth,
-                height: 18.toHeight,
-                package: 'at_contacts_flutter',
+          }
+          if (widget.contactService.selectedContacts.isEmpty) {
+            isSelected = false;
+          }
+          return ListTile(
+            onTap: () {
+              if (widget.asSelectionTile ?? false) {
+                setState(() {
+                  if (isSelected) {
+                    widget.contactService.removeSelectedAtSign(widget.contact);
+                  } else {
+                    if (widget.asSingleSelectionTile) {
+                      widget.contactService.clearAtSigns();
+                      Navigator.pop(context);
+                    }
+                    widget.contactService.selectAtSign(widget.contact);
+                  }
+                  isSelected = !isSelected;
+                });
+
+                widget.selectedList(widget.contactService.selectedContacts);
+              } else {
+                widget?.onTap();
+              }
+            },
+            title: Text(
+              widget.contact.tags != null && widget.contact.tags['name'] != null
+                  ? widget.contact.tags['name']
+                  : widget.contact.atSign.substring(1),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14.toFont,
               ),
-      ),
-    );
+            ),
+            subtitle: Text(
+              widget.contact.atSign,
+              style: TextStyle(
+                color: ColorConstants.fadedText,
+                fontSize: 14.toFont,
+              ),
+            ),
+            leading: Container(
+                height: 40.toWidth,
+                width: 40.toWidth,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  shape: BoxShape.circle,
+                ),
+                child: contactImage),
+            trailing: IconButton(
+              onPressed: selectRemoveContact(),
+              icon: (widget.asSelectionTile ?? false)
+                  ? (isSelected)
+                      ? Icon(Icons.close)
+                      : Icon(Icons.add)
+                  : Image.asset(
+                      ImageConstants.sendIcon,
+                      width: 21.toWidth,
+                      height: 18.toHeight,
+                      package: 'at_contacts_flutter',
+                    ),
+            ),
+          );
+        });
   }
+
+  selectRemoveContact() {}
 }
