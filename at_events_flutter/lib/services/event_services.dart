@@ -30,8 +30,8 @@ class EventService {
   StreamSink<EventNotificationModel> get eventSink =>
       _atEventNotificationController.sink;
 
-  init(AtClientImpl _atClientInstance, bool isUpdate,
-      EventNotificationModel eventData) {
+  init(AtClientImpl _atClientInstance,
+      {bool isUpdate, EventNotificationModel eventData}) {
     if (eventData != null) {
       EventService().eventNotificationModel = EventNotificationModel.fromJson(
           jsonDecode(EventNotificationModel.convertEventNotificationToJson(
@@ -51,6 +51,10 @@ class EventService {
     Future.delayed(Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });
+  }
+
+  initializeAtContactImpl(AtClientImpl _atClientInstance) {
+    atClientInstance = _atClientInstance;
   }
 
   update({EventNotificationModel eventData}) {

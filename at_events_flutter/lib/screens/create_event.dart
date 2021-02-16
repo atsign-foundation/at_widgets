@@ -45,10 +45,9 @@ class _CreateEventState extends State<CreateEvent> {
     // TODO: implement initState
     super.initState();
     isLoading = false;
-    EventService().init(
-        widget.atClientInstance,
-        widget.isUpdate != null ? widget.isUpdate : false,
-        widget.eventData != null ? widget.eventData : null);
+    EventService().init(widget.atClientInstance,
+        isUpdate: widget.isUpdate != null ? widget.isUpdate : false,
+        eventData: widget.eventData != null ? widget.eventData : null);
     if (widget.createdEvents != null) {
       EventService().createdEvents = widget.createdEvents;
     }
@@ -87,7 +86,9 @@ class _CreateEventState extends State<CreateEvent> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   CustomHeading(
-                                      heading: 'Create an event',
+                                      heading: EventService().isEventUpdate
+                                          ? 'Edit event'
+                                          : 'Create an event',
                                       action: 'Cancel'),
                                   SizedBox(height: 25),
                                   Text('Send To',
@@ -333,10 +334,10 @@ class _CreateEventState extends State<CreateEvent> {
                               child: ErrorScreen(
                                 onPressed: EventService().init(
                                     widget.atClientInstance,
-                                    widget.isUpdate != null
+                                    isUpdate: widget.isUpdate != null
                                         ? widget.isUpdate
                                         : false,
-                                    widget.eventData != null
+                                    eventData: widget.eventData != null
                                         ? widget.eventData
                                         : null),
                               ),
