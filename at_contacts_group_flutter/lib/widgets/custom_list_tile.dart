@@ -84,7 +84,7 @@ class _CustomListTileState extends State<CustomListTile> {
     Widget contactImage;
     if ((widget?.item?.contact?.tags != null &&
         widget?.item?.contact?.tags['image'] != null)) {
-      List<int> intList = localContact?.tags['image'].cast<int>();
+      List<int> intList = widget?.item?.contact?.tags['image'].cast<int>();
       Uint8List image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
