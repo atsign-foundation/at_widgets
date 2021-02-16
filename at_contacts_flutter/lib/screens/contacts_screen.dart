@@ -136,6 +136,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             child: Text(TextStrings().noContacts),
                           )
                         : ListView.builder(
+                            padding: EdgeInsets.only(bottom: 80.toHeight),
                             itemCount: 27,
                             shrinkWrap: true,
                             physics: AlwaysScrollableScrollPhysics(),
