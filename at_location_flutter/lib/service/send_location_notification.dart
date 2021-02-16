@@ -100,6 +100,7 @@ class SendLocationNotification {
         locationNotificationModel.receiver);
     var result = await atClient.delete(atKey);
     print('$atKey delete operation $result');
+    return result;
   }
 
   deleteAllLocationKey() async {

@@ -20,6 +20,8 @@ import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomeScreen extends StatefulWidget {
+  final bool showList;
+  HomeScreen({this.showList = true});
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -55,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
               : ShowLocation(
                   UniqueKey(),
                 ),
-          Positioned(bottom: 264.toHeight, child: header()),
           Positioned(
             top: 30,
             right: 0,
@@ -68,47 +69,51 @@ class _HomeScreenState extends State<HomeScreen> {
                   SendLocationNotification().deleteAllLocationKey(),
             ),
           ),
-          StreamBuilder(
-              stream: KeyStreamService().atNotificationsStream,
-              builder:
-                  (context, AsyncSnapshot<List<KeyLocationModel>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  if (snapshot.hasError) {
-                    return SlidingUpPanel(
+          widget.showList
+              ? Positioned(bottom: 264.toHeight, child: header())
+              : SizedBox(),
+          widget.showList
+              ? StreamBuilder(
+                  stream: KeyStreamService().atNotificationsStream,
+                  builder: (context,
+                      AsyncSnapshot<List<KeyLocationModel>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      if (snapshot.hasError) {
+                        return SlidingUpPanel(
+                            controller: pc,
+                            minHeight: 267.toHeight,
+                            maxHeight: 530.toHeight,
+                            panelBuilder: (scrollController) =>
+                                collapsedContent(false, scrollController,
+                                    emptyWidget('Something went wrong!!')));
+                      } else {
+                        return SlidingUpPanel(
+                          controller: pc,
+                          minHeight: 267.toHeight,
+                          maxHeight: 530.toHeight,
+                          panelBuilder: (scrollController) {
+                            if (snapshot.data.length > 0)
+                              return collapsedContent(false, scrollController,
+                                  getListView(snapshot.data, scrollController));
+                            else
+                              return collapsedContent(false, scrollController,
+                                  emptyWidget('No Data Found!!'));
+                          },
+                        );
+                      }
+                    } else {
+                      return SlidingUpPanel(
                         controller: pc,
                         minHeight: 267.toHeight,
                         maxHeight: 530.toHeight,
-                        panelBuilder: (scrollController) => collapsedContent(
-                            false,
-                            scrollController,
-                            emptyWidget('Something went wrong!!')));
-                  } else {
-                    return SlidingUpPanel(
-                      controller: pc,
-                      minHeight: 267.toHeight,
-                      maxHeight: 530.toHeight,
-                      panelBuilder: (scrollController) {
-                        if (snapshot.data.length > 0)
-                          return collapsedContent(false, scrollController,
-                              getListView(snapshot.data, scrollController));
-                        else
+                        panelBuilder: (scrollController) {
                           return collapsedContent(false, scrollController,
                               emptyWidget('No Data Found!!'));
-                      },
-                    );
-                  }
-                } else {
-                  return SlidingUpPanel(
-                    controller: pc,
-                    minHeight: 267.toHeight,
-                    maxHeight: 530.toHeight,
-                    panelBuilder: (scrollController) {
-                      return collapsedContent(false, scrollController,
-                          emptyWidget('No Data Found!!'));
-                    },
-                  );
-                }
-              }),
+                        },
+                      );
+                    }
+                  })
+              : SizedBox(),
         ],
       )),
     );
