@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
             top: 30,
             right: 0,
             child: FloatingIcon(
-              icon: Icons.remove,
+              icon: Icons.location_off,
               isTopLeft: false,
               onPressed: () =>
                   SendLocationNotification().deleteAllLocationKey(),
