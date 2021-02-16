@@ -1,6 +1,8 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/home_screen_service.dart';
+import 'package:at_location_flutter/service/key_stream_service.dart';
+import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
@@ -148,11 +150,11 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                 isSharing: value);
                                       } else if (widget.userListenerKeyword.key
                                           .contains("requestlocation")) {
-                                        // result = await RequestLocationService()
-                                        //     .requestLocationAcknowledgment(
-                                        //         widget.userListenerKeyword,
-                                        //         true,
-                                        //         isSharing: value);
+                                        result = await RequestLocationService()
+                                            .requestLocationAcknowledgment(
+                                                widget.userListenerKeyword,
+                                                true,
+                                                isSharing: value);
                                       }
                                       if (result) {
                                         if (!value) {
@@ -164,7 +166,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                         });
                                       } else {
                                         CustomToast().show(
-                                            'some thing went wrong , try again.',
+                                            'Something went wrong, try again.',
                                             context);
                                       }
                                     })
@@ -176,30 +178,19 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           ? Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  // var result = await RequestLocationService()
-                                  //     .sendRequestLocationEvent(
-                                  //         widget.userListenerKeyword.receiver);
-                                  // if (result[0] == true) {
-                                  //   CustomToast().show(
-                                  //       'Share Location Request sent', context);
-                                  //   providerCallback<HybridProvider>(
-                                  //       NavService.navKey.currentContext,
-                                  //       task: (provider) =>
-                                  //           provider.addNewEvent(BackendService
-                                  //                   .getInstance()
-                                  //               .convertEventToHybrid(
-                                  //                   NotificationType.Location,
-                                  //                   locationNotificationModel:
-                                  //                       result[1])),
-                                  //       taskName: (provider) =>
-                                  //           provider.HYBRID_ADD_EVENT,
-                                  //       showLoader: false,
-                                  //       onSuccess: (provider) {});
-                                  // } else {
-                                  //   CustomToast().show(
-                                  //       'some thing went wrong , try again.',
-                                  //       context);
-                                  // }
+                                  var result = await RequestLocationService()
+                                      .sendRequestLocationEvent(
+                                          widget.userListenerKeyword.receiver);
+                                  if (result[0] == true) {
+                                    CustomToast()
+                                        .show('Request Location sent', context);
+
+                                    KeyStreamService().addDataToList(result[1]);
+                                  } else {
+                                    CustomToast().show(
+                                        'Something went wrong, try again.',
+                                        context);
+                                  }
                                 },
                                 child: Text(
                                   'Request Location',
@@ -223,6 +214,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                     // result = await RequestLocationService()
                                     //     .removePerson(
                                     //         widget.userListenerKeyword);
+                                    result = false; // TODO: Remove this
                                   }
                                   if (result) {
                                     SendLocationNotification()
@@ -230,7 +222,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                     Navigator.pop(context);
                                   } else {
                                     CustomToast().show(
-                                        'some thing went wrong , try again.',
+                                        'Something went wrong, try again.',
                                         context);
                                   }
                                 },

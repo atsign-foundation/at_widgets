@@ -4,6 +4,7 @@ import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/pop_button.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
+import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:at_lookup/at_lookup.dart';
@@ -61,6 +62,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
             child: CustomButton(
               buttonText: 'Request',
               onPressed: onRequestTap,
+              fontColor: AllColors().WHITE,
               width: 164,
               height: 48,
             ),

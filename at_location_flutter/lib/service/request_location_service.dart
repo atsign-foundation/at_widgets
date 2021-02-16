@@ -1,5 +1,6 @@
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/service/send_location_notification.dart';
 
 import 'at_location_notification_listener.dart';
 import 'key_stream_service.dart';
@@ -78,6 +79,8 @@ class RequestLocationService {
       if ((result) && (!isSharing)) {
         KeyStreamService().removeData(atKey.key);
       }
+      SendLocationNotification().findAtSignsToShareLocationWith();
+
       return result;
     } catch (e) {
       return false;

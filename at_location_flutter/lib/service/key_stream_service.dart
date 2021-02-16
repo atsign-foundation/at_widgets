@@ -223,15 +223,23 @@ class KeyStreamService {
     }
 
     List<String> key = [];
-    if (locationNotificationModel.atsignCreator == currentAtSign) {
+    if (key.length == 0) {
       key = await atClientInstance.getKeys(
         regex: tempKey,
-        // sharedWith: locationNotificationModel.receiver,
       );
-    } else {
+    }
+    if (key.length == 0) {
       key = await atClientInstance.getKeys(
         regex: tempKey,
-        sharedBy: locationNotificationModel.atsignCreator,
+        sharedWith: locationNotificationModel.receiver,
+      );
+    }
+    if (key.length == 0) {
+      key = await atClientInstance.getKeys(
+        regex: tempKey,
+        sharedBy: locationNotificationModel.key.contains('share')
+            ? locationNotificationModel.atsignCreator
+            : locationNotificationModel.receiver,
       );
     }
 
