@@ -60,7 +60,7 @@ class AtLocationNotificationListener {
         MasterLocationService().deleteReceivedData(fromAtSign);
         return;
       } else if (atKey.toString().toLowerCase().contains('sharelocation')) {
-        KeyStreamService().removeData(atKey);
+        KeyStreamService().removeData(atKey.toString());
         return;
       }
     }

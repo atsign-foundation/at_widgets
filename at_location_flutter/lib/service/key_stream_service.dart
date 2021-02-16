@@ -200,8 +200,7 @@ class KeyStreamService {
 
   removeData(String key) {
     allLocationNotifications
-        .removeWhere((notification) => notification.key == key);
-    print('allLocationNotifications after removing $allLocationNotifications');
+        .removeWhere((notification) => key.contains(notification.atKey.key));
     notifyListeners();
     SendLocationNotification().findAtSignsToShareLocationWith();
   }

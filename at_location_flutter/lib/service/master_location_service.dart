@@ -114,7 +114,7 @@ class MasterLocationService {
         tempArray.add(allLocationNotifications[i]);
     }
     tempArray.forEach((element) {
-      print('removed ${element.locationNotificationModel.atsignCreator}');
+      print('removed ${element.key}');
     });
     allLocationNotifications
         .removeWhere((element) => tempArray.contains(element));
