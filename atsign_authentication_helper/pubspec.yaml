@@ -15,7 +15,7 @@ dependencies:
   archive: ^2.0.13
   file_picker: ^2.0.10
   flutter_qr_reader: ^1.0.3
-  permission_handler: ^5.0.1+1
+  permission_handler: 5.0.1+2
   share: ^0.6.5+2
   webview_flutter: ^1.0.0
   qr_flutter: ^3.2.0

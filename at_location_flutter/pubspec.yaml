@@ -1,8 +1,7 @@
 name: at_location_flutter
-description: A new flutter plugin project.
+description: A flutter plugin project to share location.
 version: 0.0.1
-author:
-homepage:
+homepage: https://atsign.com/
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -25,6 +24,8 @@ dependencies:
   location: ^3.0.0
   toast: ^0.1.5
   sliding_up_panel: ^1.0.2
+  http: ^0.12.2
+  crypto: ^2.1.5
 
   at_client_mobile: ^1.0.0+3
   at_lookup: ^1.0.0+3
