@@ -9,8 +9,9 @@ import 'map_content/flutter_map_marker_cluster/src/marker_cluster_layer_options.
 import 'map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
 
 class ShowLocation extends StatefulWidget {
+  Key key;
   final LatLng location;
-  ShowLocation(this.location);
+  ShowLocation(this.key, {this.location});
 
   @override
   _ShowLocationState createState() => _ShowLocationState();
@@ -24,8 +25,15 @@ class _ShowLocationState extends State<ShowLocation> {
   void initState() {
     super.initState();
     showMarker = true;
-    marker = buildMarker(new HybridModel(latLng: widget.location),
-        singleMarker: true);
+    print('widget.location ${widget.location}');
+    if (widget.location != null)
+      marker = buildMarker(new HybridModel(latLng: widget.location),
+          singleMarker: true);
+    else {
+      // marker = buildMarker(new HybridModel(latLng: LatLng(45, 45)),
+      //     singleMarker: true);
+      showMarker = false;
+    }
   }
 
   @override
@@ -35,8 +43,8 @@ class _ShowLocationState extends State<ShowLocation> {
           body: FlutterMap(
         mapController: mapController,
         options: MapOptions(
-          center: widget.location,
-          zoom: 8,
+          center: (widget.location != null) ? widget.location : LatLng(45, 45),
+          zoom: (widget.location != null) ? 8 : 2,
           plugins: [MarkerClusterPlugin(UniqueKey())],
         ),
         layers: [
