@@ -9,9 +9,6 @@ class CustomStrings {
   factory CustomStrings() {
     return _singleton;
   }
-  // String getMessage(String atsign) {
-  //   return '$_atsign was already paired with this device. First delete/reset this @sign from device to add.';
-  // }
   String get invalidData =>
       'Received content is invalid. Please scan or upload relevant files to pair your atsign';
   String invalidCram(String atsign) =>
