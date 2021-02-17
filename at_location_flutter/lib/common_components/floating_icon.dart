@@ -1,3 +1,4 @@
+import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -24,7 +25,7 @@ class FloatingIcon extends StatelessWidget {
           bottomLeft: !isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
           bottomRight: isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
         ),
-        color: bgColor != null ? bgColor : Theme.of(context).primaryColor,
+        color: bgColor != null ? bgColor : AllColors().Black,
         boxShadow: [
           BoxShadow(
             color: iconColor != null ? iconColor : Color(0xFF868A92),
@@ -39,9 +40,7 @@ class FloatingIcon extends StatelessWidget {
           //iconSize: 20.toHeight,
           icon: Icon(
             icon != null ? icon : Icons.table_rows,
-            color: iconColor != null
-                ? iconColor
-                : Theme.of(context).scaffoldBackgroundColor,
+            color: iconColor != null ? iconColor : AllColors().WHITE,
             size: 27.toFont,
           ),
           onPressed: onPressed ?? () => Scaffold.of(context).openEndDrawer()),

@@ -18,8 +18,8 @@ class ContactInitial extends StatelessWidget {
   Widget build(BuildContext context) {
     Random r = Random();
     return Container(
-      height: size.toFont,
-      width: size.toFont,
+      height: size.toWidth,
+      width: size.toWidth,
       decoration: BoxDecoration(
         color:
             Color.fromARGB(255, r.nextInt(255), r.nextInt(255), r.nextInt(255)),

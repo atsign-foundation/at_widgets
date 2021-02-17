@@ -68,6 +68,7 @@ class EventService {
       return result;
     } else {
       result = await sendEventNotification();
+      // if (result) EventService().onEventSaved(eventNotificationModel);
       if (result && isEventOverlap) {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -114,6 +115,9 @@ class EventService {
     var result = await atClientInstance.put(atKey, notification);
     eventNotificationModel = eventNotification;
     if (onEventSaved != null) {
+      // String key =
+      //     '${atKey.sharedWith}:${eventNotification.key}:${atKey.sharedBy}';
+      // eventNotification.key = key;
       onEventSaved(eventNotification);
     }
     print('send event:$result');

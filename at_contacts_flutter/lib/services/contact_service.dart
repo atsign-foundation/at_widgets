@@ -153,7 +153,14 @@ class ContactService {
 
   removeSelectedAtSign(AtContact contact) {
     try {
-      selectedContacts.remove(contact);
+      for (AtContact atContact in selectedContacts) {
+        if (contact == atContact || atContact.atSign == contact.atSign) {
+          int index = selectedContacts.indexOf(contact);
+          print("index is $index");
+          selectedContacts.removeAt(index);
+          break;
+        }
+      }
       if (selectedContacts.length <= 25) {
         limitReached = false;
       } else {

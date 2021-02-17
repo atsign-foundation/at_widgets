@@ -33,10 +33,14 @@ class GroupContactView extends StatefulWidget {
 class _GroupContactViewState extends State<GroupContactView> {
   GroupService _groupService;
   String searchText = '';
+  List<GroupContactsModel> unmodifiedSelectedGroupContacts = [];
   @override
   void initState() {
     _groupService = GroupService();
     _groupService.fetchGroupsAndContacts();
+    unmodifiedSelectedGroupContacts =
+        List.from(_groupService.selectedGroupContacts);
+    // print("unmodified list ---> $unmodifiedSelectedGroupContacts");
 
     super.initState();
   }
@@ -65,8 +69,8 @@ class _GroupContactViewState extends State<GroupContactView> {
         showTitle: true,
         titleText: 'Contacts',
         onLeadingIconPressed: () {
-          _groupService.selectedGroupContacts = [];
-          _groupService.length = 0;
+          _groupService.selectedGroupContacts = unmodifiedSelectedGroupContacts;
+          widget.selectedList(unmodifiedSelectedGroupContacts);
         },
         showBackButton: true,
         showLeadingIcon: true,
@@ -104,6 +108,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                             child: Text(TextStrings().noContacts),
                           )
                         : ListView.builder(
+                            padding: EdgeInsets.only(bottom: 80.toHeight),
                             itemCount: 27,
                             shrinkWrap: true,
                             physics: AlwaysScrollableScrollPhysics(),

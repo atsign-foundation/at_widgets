@@ -8,7 +8,7 @@ import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
-import 'package:at_contacts_group_flutter/utils/colors.dart';
+
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -46,18 +46,17 @@ class ContactSelectionBottomSheet extends StatelessWidget {
                     buttonText: 'Done',
                     width: 120.toWidth,
                     height: 40.toHeight,
-                    // isInverted: true,
                     onPressed: () {
                       onPressed();
                       selectedList(_groupService.selectedGroupContacts);
                     },
                     buttonColor:
                         Theme.of(context).brightness == Brightness.light
-                            ? AllColors().Black
-                            : AllColors().WHITE,
+                            ? Colors.black
+                            : Colors.white,
                     fontColor: Theme.of(context).brightness == Brightness.light
-                        ? AllColors().WHITE
-                        : AllColors().Black,
+                        ? Colors.white
+                        : Colors.black,
                   )
                 ],
               ),

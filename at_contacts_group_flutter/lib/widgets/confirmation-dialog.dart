@@ -34,7 +34,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.toWidth)),
       content: Container(
-        height: 300.toHeight,
+        height: 410.toHeight,
+        width: 200.toWidth,
         color: Theme.of(context).brightness == Brightness.light
             ? AllColors().WHITE
             : AllColors().Black,
@@ -50,11 +51,13 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 15.toHeight),
-              ContactInitial(initials: widget.title.substring(1, 3), size: 60),
-              // CustomCircleAvatar(
-              //   image: AllImages().PERSON2,
-              //   size: 74,
-              // ),
+              widget.title.length > 2
+                  ? ContactInitial(
+                      initials: widget.title.substring(1, 3), size: 60)
+                  : ContactInitial(
+                      initials: widget.title
+                          .substring(0, widget.title.length >= 1 ? 1 : 0),
+                      size: 60),
               SizedBox(height: 15.toHeight),
               Text(
                 widget.title,
@@ -70,7 +73,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               isLoading
                   ? CircularProgressIndicator()
                   : CustomButton(
-                      height: 60,
+                      height: 60.toHeight,
                       width: double.infinity,
                       buttonText: 'Yes',
                       onPressed: () async {
@@ -100,7 +103,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                               ? AllColors().WHITE
                               : AllColors().Black,
                     ),
-              SizedBox(height: 5.toHeight),
+              SizedBox(height: 10.toHeight),
               InkWell(
                   onTap: () => Navigator.of(context).pop(),
                   child: !isLoading

@@ -294,12 +294,12 @@ String getWeekString(Week weekday) {
 }
 
 String timeOfDayToString(TimeOfDay time) {
-  String hhmm = '${time.hour}: ${time.minute}';
+  String hhmm = '${time.hour}:${time.minute}';
   return hhmm;
 }
 
 String dateToString(DateTime date) {
-  String dateString = '${date.day}:${date.month}:${date.year}';
+  String dateString = '${date.day}/${date.month}/${date.year}';
   return dateString;
 }
 

@@ -102,29 +102,21 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   void _uploadCramKeyFile() async {
     try {
       String cramKey;
-      // FilePickerResult result = await FilePicker.platform
-      //     .pickFiles(type: FileType.any, allowMultiple: false);
-      // setState(() {
-      //   loading = true;
-      // });
-      // for (var file in result.files) {
-      //   if (cramKey == null) {
-      //     String result = await FlutterQrReader.imgScan(File(file.path));
-      //     if (result.contains('@')) {
-      //       cramKey = result;
-      //       break;
-      //     } //read scan QRcode and extract atsign,aeskey
-      //   }
-      // }
-      // iphone 11
-      cramKey =
-          '@colin🛠:540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba';
-      // iphone 11 pro
-      // cramKey =
-      //     '@ashish🛠:feacb0894de2d9476e903be2164b01194dcce1490acf6d588400ef469cdd6eb1027e2baae02acd820c3a4727905f3e4866572714fe554aa2284ec8bdced0d767';
-      // iphone 11 pro max
-      // cramKey =
-      //     '@bob🛠:33c2df30b79743ff880fc1c832a5c69170974dd736231b84ee360df89a0faff1f6efe0e83064144a7b4e5029334ad1daedc49bf82c0be1f763f590c28e33ba0a';
+      FilePickerResult result = await FilePicker.platform
+          .pickFiles(type: FileType.any, allowMultiple: false);
+      setState(() {
+        loading = true;
+      });
+      for (var file in result.files) {
+        if (cramKey == null) {
+          String result = await FlutterQrReader.imgScan(File(file.path));
+          if (result.contains('@')) {
+            cramKey = result;
+            break;
+          } //read scan QRcode and extract atsign,aeskey
+        }
+      }
+      
       if (cramKey == null) {
         // _showAlertDialog(_incorrectKeyFile);
         showSnackBar(context, "File content error");
@@ -151,50 +143,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       });
     }
   }
-
-  // void _uploadCramKeyFile() async {
-  //   try {
-  //     String cramKey;
-  //     FilePickerResult result = await FilePicker.platform
-  //         .pickFiles(type: FileType.any, allowMultiple: false);
-  //     setState(() {
-  //       loading = true;
-  //     });
-  //     for (var file in result.files) {
-  //       if (cramKey == null) {
-  //         String result = await FlutterQrReader.imgScan(File(file.path));
-  //         if (result.contains('@')) {
-  //           cramKey = result;
-  //           break;
-  //         } //read scan QRcode and extract atsign,aeskey
-  //       }
-  //     }
-  //     if (cramKey == null) {
-  //       // _showAlertDialog(_incorrectKeyFile);
-  //       showSnackBar(context, "File content error");
-  //       setState(() {
-  //         loading = true;
-  //       });
-  //     } else {
-  //       String authenticateMessage =
-  //           await authenticationService.authenticate(cramKey, context);
-
-  //       _showAlertDialog(authenticateMessage);
-  //       setState(() {
-  //         loading = false;
-  //       });
-  //     }
-  //     // await _processAESKey(atsign, aesKey, fileContents);
-  //   } on Error catch (error) {
-  //     setState(() {
-  //       loading = false;
-  //     });
-  //   } on Exception catch (ex) {
-  //     setState(() {
-  //       loading = false;
-  //     });
-  //   }
-  // }
 
   void _uploadKeyFile() async {
     try {

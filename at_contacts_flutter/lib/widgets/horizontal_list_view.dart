@@ -18,7 +18,7 @@ class HorizontalCircularList extends StatelessWidget {
         builder: (context, snapshot) {
           List<AtContact> selectedContacts = snapshot.data;
           return Container(
-            height: (selectedContacts.isEmpty) ? 0 : 140.toHeight,
+            height: (selectedContacts.isEmpty) ? 0 : 150.toHeight,
             child: ListView.builder(
               itemCount: selectedContacts.length,
               scrollDirection: Axis.horizontal,

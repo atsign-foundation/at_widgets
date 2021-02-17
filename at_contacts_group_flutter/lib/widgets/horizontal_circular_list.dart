@@ -31,7 +31,7 @@ class _HorizontalCircularListState extends State<HorizontalCircularList> {
           List<GroupContactsModel> selectedContacts = snapshot.data;
 
           return Container(
-            height: (selectedContacts.isEmpty) ? 0 : 140.toHeight,
+            height: (selectedContacts.isEmpty) ? 0 : 150.toHeight,
             child: ListView.builder(
               itemCount: selectedContacts.length,
               scrollDirection: Axis.horizontal,

@@ -63,22 +63,25 @@ class _GroupListState extends State<GroupList> {
           onTrailingIconPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ContactsScreen(
-                    context: context,
-                    asSelectionScreen: true,
-                    selectedList: (selectedList) {
-                      selectedContactList = selectedList;
-                      if (selectedContactList.length > 0) {
-                        GroupService().setSelectedContacts(selectedContactList);
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NewGroup(),
-                          ),
-                        );
-                      }
-                    })),
+              builder: (context) => ContactsScreen(
+                context: context,
+                asSelectionScreen: true,
+                selectedList: (selectedList) {
+                  selectedContactList = selectedList;
+                  if (selectedContactList.length > 0) {
+                    GroupService().setSelectedContacts(selectedContactList);
+                  }
+                },
+                saveGroup: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewGroup(),
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
         ),
         body: StreamBuilder(
@@ -155,7 +158,7 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
     barrierDismissible: true,
     builder: (BuildContext context) {
       return ConfirmationDialog(
-        title: group.name,
+        title: ' ${group.displayName}',
         heading: 'Are you sure you want to delete this group?',
         onYesPressed: () async {
           var result = await GroupService().deleteGroup(group);

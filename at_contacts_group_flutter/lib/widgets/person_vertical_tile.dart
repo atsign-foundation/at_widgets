@@ -21,16 +21,17 @@ class CustomPersonVerticalTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: 10),
       child: Column(
         children: <Widget>[
           Stack(
             children: <Widget>[
               SizedBox(
-                height: 60,
-                width: 60,
+                height: 60.toHeight,
+                width: 60.toHeight,
                 child: imageLocation != null
                     ? CustomCircleAvatar(
-                        size: 60,
+                        size: 60.toHeight,
                         image: imageLocation,
                       )
                     : ContactInitial(
@@ -45,13 +46,13 @@ class CustomPersonVerticalTile extends StatelessWidget {
                       child: GestureDetector(
                         onTap: onCrossPressed,
                         child: Container(
-                          height: 12.toHeight,
-                          width: 12.toHeight,
+                          height: 12,
+                          width: 12,
                           decoration: BoxDecoration(
                               color: Colors.black, shape: BoxShape.circle),
                           child: Icon(
                             Icons.close,
-                            size: 10.toHeight,
+                            size: 10,
                             color: Colors.white,
                           ),
                         ),
@@ -80,6 +81,7 @@ class CustomPersonVerticalTile extends StatelessWidget {
                   textAlign: TextAlign.center,
                 )
               : SizedBox(),
+          SizedBox(height: 2),
         ],
       ),
     );

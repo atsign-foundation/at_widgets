@@ -23,13 +23,17 @@ class ContactsScreen extends StatefulWidget {
 
   final ValueChanged<List<AtContact>> selectedList;
   final bool asSelectionScreen;
+  final bool asSingleSelectionScreen;
+  final Function saveGroup;
 
-  const ContactsScreen(
-      {Key key,
-      this.selectedList,
-      this.context,
-      this.asSelectionScreen = false})
-      : super(key: key);
+  const ContactsScreen({
+    Key key,
+    this.selectedList,
+    this.context,
+    this.asSelectionScreen = false,
+    this.asSingleSelectionScreen = false,
+    this.saveGroup,
+  }) : super(key: key);
   @override
   _ContactsScreenState createState() => _ContactsScreenState();
 }
@@ -55,15 +59,20 @@ class _ContactsScreenState extends State<ContactsScreen> {
     SizeConfig().init(context);
     return Scaffold(
       bottomSheet: (widget.asSelectionScreen ?? false)
-          ? CustomBottomSheet(
-              onPressed: () {
-                Navigator.pop(widget.context);
-              },
-              selectedList: (s) {
-                selectedList = s;
-                widget.selectedList(selectedList);
-              },
-            )
+          ? (widget.asSingleSelectionScreen ?? false)
+              ? Container(height: 0)
+              : CustomBottomSheet(
+                  onPressed: () {
+                    Navigator.pop(widget.context);
+                    if (widget.saveGroup != null) {
+                      widget.saveGroup();
+                    }
+                  },
+                  selectedList: (s) {
+                    selectedList = s;
+                    widget.selectedList(selectedList);
+                  },
+                )
           : Container(
               height: 0,
             ),
@@ -114,7 +123,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
               height: 15.toHeight,
             ),
             (widget.asSelectionScreen ?? false)
-                ? HorizontalCircularList()
+                ? (widget.asSingleSelectionScreen ?? false)
+                    ? Container()
+                    : HorizontalCircularList()
                 : Container(),
             Expanded(
                 child: StreamBuilder<List<AtContact>>(
@@ -130,6 +141,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             child: Text(TextStrings().noContacts),
                           )
                         : ListView.builder(
+                            padding: EdgeInsets.only(bottom: 80.toHeight),
                             itemCount: 27,
                             shrinkWrap: true,
                             physics: AlwaysScrollableScrollPhysics(),
@@ -291,8 +303,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                   onTap: () {},
                                                   asSelectionTile:
                                                       widget.asSelectionScreen,
+                                                  asSingleSelectionTile: widget
+                                                      .asSingleSelectionScreen,
                                                   contact: contactsForAlphabet[
                                                       index],
+                                                  selectedList: (s) {
+                                                    selectedList = s;
+                                                    widget.selectedList(
+                                                        selectedList);
+                                                  },
                                                   onTrailingPressed: () {},
                                                 ),
                                               ),

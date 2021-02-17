@@ -116,8 +116,14 @@ class _AddContactDialogState extends State<AddContactDialog> {
                                 Navigator.pop(context);
                               }
                             },
-                            buttonColor: Colors.black,
-                            fontColor: Colors.white,
+                            buttonColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                            fontColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.white
+                                    : Colors.black,
                           )
                   ],
                 ),
