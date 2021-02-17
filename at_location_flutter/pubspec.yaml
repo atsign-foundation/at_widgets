@@ -59,6 +59,9 @@ flutter:
         pluginClass: AtLocationFlutterPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
+  assets:
+    - packages/at_location_flutter/assets/images/empty_group.png
+
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
