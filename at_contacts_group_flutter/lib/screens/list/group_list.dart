@@ -63,22 +63,25 @@ class _GroupListState extends State<GroupList> {
           onTrailingIconPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ContactsScreen(
-                    context: context,
-                    asSelectionScreen: true,
-                    selectedList: (selectedList) {
-                      selectedContactList = selectedList;
-                      if (selectedContactList.length > 0) {
-                        GroupService().setSelectedContacts(selectedContactList);
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NewGroup(),
-                          ),
-                        );
-                      }
-                    })),
+              builder: (context) => ContactsScreen(
+                context: context,
+                asSelectionScreen: true,
+                selectedList: (selectedList) {
+                  selectedContactList = selectedList;
+                  if (selectedContactList.length > 0) {
+                    GroupService().setSelectedContacts(selectedContactList);
+                  }
+                },
+                saveGroup: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewGroup(),
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
         ),
         body: StreamBuilder(
