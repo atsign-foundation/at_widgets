@@ -116,6 +116,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           } //read scan QRcode and extract atsign,aeskey
         }
       }
+      
       if (cramKey == null) {
         // _showAlertDialog(_incorrectKeyFile);
         showSnackBar(context, "File content error");

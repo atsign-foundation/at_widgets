@@ -1,13 +1,12 @@
 import 'dart:typed_data';
-
 import 'package:at_contact/at_contact.dart';
-import 'package:at_chat_flutter/widgets/contacts_initials.dart';
-import 'package:at_events_flutter/common_components/custom_circle_avatar.dart';
-import 'package:at_events_flutter/utils/colors.dart';
-import 'package:at_events_flutter/utils/text_styles.dart';
-import 'package:at_location_flutter/service/location_service.dart';
+import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/text_styles.dart';
 
 import 'package:flutter/material.dart';
+
+import 'contacts_initial.dart';
+import 'custom_circle_avatar.dart';
 
 class DisplayTile extends StatefulWidget {
   final String title, semiTitle, subTitle, atsignCreator, invitedBy;
@@ -37,18 +36,18 @@ class _DisplayTileState extends State<DisplayTile> {
   }
 
   getEventCreator() async {
-    atContact = await AtContactsImpl.getInstance(LocationService().getAtSign());
-    contact = await atContact.get(widget.atsignCreator);
-    if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
-        if (Uint8List.fromList(intList) != null) {
-          setState(() {
-            image = Uint8List.fromList(intList);
-          });
-        }
-      }
-    }
+    // // atContact = await AtContactsImpl.getInstance(LocationService().getAtSign());
+    // contact = await atContact.get(widget.atsignCreator);
+    // if (contact != null) {
+    //   if (contact.tags != null && contact.tags['image'] != null) {
+    //     List<int> intList = contact.tags['image'].cast<int>();
+    //     if (Uint8List.fromList(intList) != null) {
+    //       setState(() {
+    //         image = Uint8List.fromList(intList);
+    //       });
+    //     }
+    //   }
+    // }
   }
 
   @override
@@ -66,10 +65,6 @@ class _DisplayTileState extends State<DisplayTile> {
                       ? ContactInitial(
                           initials: widget.atsignCreator.substring(1, 3))
                       : SizedBox(),
-              // CustomCircleAvatar(
-              //   image: widget.image,
-              //   size: 46,
-              // ),
               widget.number != null
                   ? Positioned(
                       right: 0,
@@ -99,7 +94,7 @@ class _DisplayTileState extends State<DisplayTile> {
               children: [
                 Text(
                   widget.title,
-                  style: Theme.of(context).primaryTextTheme.headline3,
+                  style: CustomTextStyles().black14,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

@@ -1,3 +1,3 @@
-## 0.0.1
+## [0.0.1] - 02/16/2021
 
-* TODO: Describe initial release.
+* The initial release consists of sharing and requesting for location between two atsigns

@@ -1,4 +1,4 @@
-import 'package:at_events_flutter/utils/colors.dart';
+import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
