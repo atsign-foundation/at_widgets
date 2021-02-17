@@ -57,7 +57,7 @@ class LocationService {
     });
     if (_atHybridUsersController.hasListener)
       _atHybridUsersController.add(hybridUsersList);
-    else
+    else if (hybridUsersList.length != 0)
       Future.delayed(const Duration(seconds: 2),
           () => _atHybridUsersController.add(hybridUsersList));
   }

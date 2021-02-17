@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getMyLocation() async {
     LatLng newMyLatLng = await MyLocation().myLocation();
-    if ((newMyLatLng != null) || (newMyLatLng != LatLng(0, 0)))
+    if (newMyLatLng != null)
       setState(() {
         myLatLng = newMyLatLng;
       });
