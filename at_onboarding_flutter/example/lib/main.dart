@@ -5,6 +5,7 @@ import 'package:at_onboarding_flutter_example/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_utils/at_logger.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,6 +18,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var atClientPrefernce;
+  var _logger = AtSignLogger('Plugin example app');
   @override
   void initState() {
     AtService.getInstance()
@@ -43,10 +45,10 @@ class _MyAppState extends State<MyApp> {
                     appColor: Color.fromARGB(255, 240, 94, 62),
                     onboard: (value, atsign) {
                       AtService.getInstance().atClientServiceMap = value;
-                      print('value  in example is $value');
+                      _logger.finer('Successfully onboarded $atsign');
                     },
                     onError: (error) {
-                      print('Onboarding has encountered with an error $error');
+                      _logger.severe('Onboarding throws $error error');
                     },
                     nextScreen: DashBoard(),
                   );
