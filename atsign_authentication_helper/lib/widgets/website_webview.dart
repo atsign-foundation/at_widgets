@@ -49,7 +49,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
           initialUrl: widget.url,
           javascriptMode: JavascriptMode.unrestricted,
           onPageFinished: (test1) {
-            this.setState(() {
+            setState(() {
               loading = false;
             });
           },

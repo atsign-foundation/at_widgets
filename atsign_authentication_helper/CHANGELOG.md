@@ -1,3 +1,7 @@
+## [0.0.4] - 02/17/2021
+
+* The referenced packages updated
+
 ## [0.0.3] - 02/03/2021
 
 * The referenced packages from client sdk updated
