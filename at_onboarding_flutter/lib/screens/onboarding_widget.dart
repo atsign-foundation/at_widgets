@@ -31,11 +31,11 @@ class Onboarding {
   ///if logo is not null then displays the widget in the left side of appbar else displays nothing.
   final Widget logo;
 
-  ///Function returns atClientServiceMap on successful onboarding.
-  final Function onboard;
+  ///Function returns atClientServiceMap on successful onboarding along with onboarded @sign.
+  final Function(Map<String, AtClientService>, String) onboard;
 
   ///Function returns error when failed in onboarding the existing or given atsign if [nextScreen] is null;
-  final Function onError;
+  final Function(Object) onError;
 
   ///after successful onboarding will gets redirected to this screen if it is not null.
   final Widget nextScreen;
@@ -100,11 +100,11 @@ class OnboardingWidget extends StatefulWidget {
   ///if logo is not null then displays the widget in the left side of appbar else displays nothing.
   final Widget logo;
 
-  ///Function returns atClientServiceMap on successful onboarding.
-  final Function onboard;
+  ///Function returns atClientServiceMap on successful onboarding along with onboarded @sign.
+  final Function(Map<String, AtClientService>, String) onboard;
 
   ///Function returns error when failed in onboarding the existing or given atsign if [nextScreen] is null;
-  final Function onError;
+  final Function(Object) onError;
 
   ///after successful onboarding will gets redirected to this screen if it is not null.
   final Widget nextScreen;
