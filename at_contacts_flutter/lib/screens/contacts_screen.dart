@@ -24,6 +24,7 @@ class ContactsScreen extends StatefulWidget {
   final ValueChanged<List<AtContact>> selectedList;
   final bool asSelectionScreen;
   final bool asSingleSelectionScreen;
+  final Function saveGroup;
 
   const ContactsScreen({
     Key key,
@@ -31,6 +32,7 @@ class ContactsScreen extends StatefulWidget {
     this.context,
     this.asSelectionScreen = false,
     this.asSingleSelectionScreen = false,
+    this.saveGroup,
   }) : super(key: key);
   @override
   _ContactsScreenState createState() => _ContactsScreenState();
@@ -62,6 +64,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
               : CustomBottomSheet(
                   onPressed: () {
                     Navigator.pop(widget.context);
+                    if (widget.saveGroup != null) {
+                      widget.saveGroup();
+                    }
                   },
                   selectedList: (s) {
                     selectedList = s;
