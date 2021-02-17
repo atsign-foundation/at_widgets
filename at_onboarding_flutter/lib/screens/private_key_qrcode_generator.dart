@@ -1,0 +1,147 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
+import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
+import 'package:at_onboarding_flutter/services/size_config.dart';
+import 'package:at_onboarding_flutter/utils/app_constants.dart';
+import 'package:at_onboarding_flutter/utils/color_constants.dart';
+import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
+import 'package:at_onboarding_flutter/utils/images.dart';
+import 'package:at_onboarding_flutter/utils/strings.dart';
+import 'package:at_onboarding_flutter/widgets/custom_appbar.dart';
+import 'package:at_onboarding_flutter/widgets/custom_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:at_utils/at_logger.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:share/share.dart';
+
+class PrivateKeyQRCodeGenScreen extends StatefulWidget {
+  PrivateKeyQRCodeGenScreen({Key key}) : super(key: key);
+
+  @override
+  _PrivateKeyQRCodeGenScreenState createState() =>
+      _PrivateKeyQRCodeGenScreenState();
+}
+
+class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
+  var _logger = AtSignLogger('AtPrivateKeyQRCodeGeneration');
+  String atsign;
+  var aesKey;
+  var _size;
+
+  @override
+  void initState() {
+    super.initState();
+    atsign = OnboardingService.getInstance().currentAtsign;
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  GlobalKey globalKey = new GlobalKey();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  var _loading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    if (atsign == null) {
+      return Text('An @sign is required.');
+    }
+    _size = MediaQuery.of(context).size;
+    return Opacity(
+      opacity: _loading ? 0.2 : 1,
+      child: AbsorbPointer(
+        absorbing: _loading,
+        child: Scaffold(
+          backgroundColor: ColorConstants.light,
+          key: _scaffoldKey,
+          appBar: CustomAppBar(
+            title: Strings.saveBackupKeyTitle,
+            showBackButton: false,
+          ),
+          body: Padding(
+            padding: EdgeInsets.all(16.0.toFont),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: 10.toHeight,
+                ),
+                Text(
+                  Strings.saveImportantTitle,
+                  textAlign: TextAlign.center,
+                  style: CustomTextStyles.fontBold18primary,
+                ),
+                SizedBox(
+                  height: 10.toHeight,
+                ),
+                Text(
+                  Strings.saveBackupDescription,
+                  textAlign: TextAlign.center,
+                  style: CustomTextStyles.fontR16primary,
+                ),
+                SizedBox(
+                  height: 40.toHeight,
+                ),
+                Center(
+                    child: Image.asset(
+                  Images.backupZip,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  fit: BoxFit.fill,
+                  package: AppConstants.package,
+                )),
+                SizedBox(
+                  height: 30.toHeight,
+                ),
+                BackupKeyWidget(
+                  atClientService: OnboardingService.getInstance()
+                      .atClientServiceMap[atsign],
+                  isButton: true,
+                  buttonWidth: 230.toWidth,
+                  atsign: atsign,
+                  buttonColor: ColorConstants.appColor,
+                  buttonText: Strings.saveButtonTitle,
+                ),
+                SizedBox(
+                  height: 10.toHeight,
+                ),
+                CustomButton(
+                  width: 230.toWidth,
+                  isInverted: true,
+                  buttonText: Strings.coninueButtonTitle,
+                  onPressed: () async {
+                    if (OnboardingService.getInstance().fistTimeAuthScreen !=
+                        null) {
+                      await Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  OnboardingService.getInstance()
+                                      .fistTimeAuthScreen));
+                    } else if (OnboardingService.getInstance().nextScreen !=
+                        null) {
+                      await Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  OnboardingService.getInstance().nextScreen));
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
