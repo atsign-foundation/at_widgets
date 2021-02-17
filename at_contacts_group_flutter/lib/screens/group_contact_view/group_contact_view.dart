@@ -2,10 +2,12 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
+
 import 'package:at_contacts_flutter/widgets/custom_search_field.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/widgets/add_contacts_group_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_selction_bottom_sheet.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_list_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/horizontal_circular_list.dart';
@@ -74,6 +76,14 @@ class _GroupContactViewState extends State<GroupContactView> {
         },
         showBackButton: true,
         showLeadingIcon: true,
+        showTrailingIcon: true,
+        trailingIcon: Icon(Icons.add),
+        onTrailingIconPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AddContactDialog(),
+          );
+        },
       ),
       body: Container(
         padding: EdgeInsets.all(16.toHeight),
