@@ -38,7 +38,8 @@ class _GroupContactViewState extends State<GroupContactView> {
   void initState() {
     _groupService = GroupService();
     _groupService.fetchGroupsAndContacts();
-    unmodifiedSelectedGroupContacts = _groupService.selectedGroupContacts;
+    unmodifiedSelectedGroupContacts =
+        List.from(_groupService.selectedGroupContacts);
     // print("unmodified list ---> $unmodifiedSelectedGroupContacts");
 
     super.initState();
@@ -68,14 +69,8 @@ class _GroupContactViewState extends State<GroupContactView> {
         showTitle: true,
         titleText: 'Contacts',
         onLeadingIconPressed: () {
-          // print("list if ---> $unmodifiedSelectedGroupContacts");
-          // _groupService.selectedGroupContacts = unmodifiedSelectedGroupContacts;
-          _groupService.selectedContactsSink
-              .add(unmodifiedSelectedGroupContacts);
+          _groupService.selectedGroupContacts = unmodifiedSelectedGroupContacts;
           widget.selectedList(unmodifiedSelectedGroupContacts);
-          // print("list is ===> ${_groupService.temporaryList}");
-          // _groupService.selectedGroupContacts = [];
-          // _groupService.length = 0;
         },
         showBackButton: true,
         showLeadingIcon: true,
