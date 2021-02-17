@@ -218,6 +218,9 @@ class EventService {
     var result = await atClientInstance.put(atKey, notification);
     eventNotificationModel = eventNotification;
     if (onEventSaved != null) {
+      // String key =
+      //     '${atKey.sharedWith}:${eventNotification.key}:${atKey.sharedBy}';
+      // eventNotification.key = key;
       onEventSaved(eventNotification);
     }
     print('send event:$result');

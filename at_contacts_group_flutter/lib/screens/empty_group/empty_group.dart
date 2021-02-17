@@ -69,14 +69,15 @@ class _EmptyGroupState extends State<EmptyGroup> {
                         if (selectedContactList.length > 0) {
                           GroupService()
                               .setSelectedContacts(selectedContactList);
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NewGroup(),
-                            ),
-                          );
                         }
+                      },
+                      saveGroup: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NewGroup(),
+                          ),
+                        );
                       },
                     ),
                   ),
