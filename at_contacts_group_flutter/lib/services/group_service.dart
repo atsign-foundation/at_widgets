@@ -193,11 +193,13 @@ class GroupService {
     try {
       allContacts = [];
       List<AtContact> contactList = await fetchContacts();
+      print('CONT====>$contactList');
       contactList.forEach((AtContact contact) {
         allContacts.add(GroupContactsModel(
             contact: contact, contactType: ContactsType.CONTACT));
       });
       await getAllGroupsDetails();
+      print('ALL CONTACTS====>${allContacts.length}');
       _allContactsStreamController.add(allContacts);
     } catch (e) {}
   }

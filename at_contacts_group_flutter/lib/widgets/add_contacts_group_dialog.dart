@@ -6,6 +6,7 @@ import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart'
     as contactTextStyles;
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:flutter/material.dart';
 
 class AddContactDialog extends StatefulWidget {
@@ -108,7 +109,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               });
                               await _contactService.addAtSign(context,
                                   atSign: atsignName);
-
+                              GroupService _groupService = GroupService();
+                              await _groupService.fetchGroupsAndContacts();
                               setState(() {
                                 isLoading = false;
                               });
