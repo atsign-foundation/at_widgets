@@ -4,6 +4,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_services.dart';
+import 'package:flutter/cupertino.dart';
 
 initialiseEventService(AtClientImpl atClientInstance,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
@@ -81,7 +82,10 @@ Future<bool> deleteEvent(String key) async {
   try {
     AtKey atKey = AtKey.fromString(regexKey);
     var result = await EventService().atClientInstance.delete(atKey);
-    print('event deleted:${result}');
+    if (result != null && result) {
+      EventService().allEvents.removeWhere((element) => element.key == key);
+      EventService().eventListSink.add(EventService().allEvents);
+    }
     return result;
   } catch (e) {
     return false;
@@ -131,6 +135,11 @@ Future<List<EventNotificationModel>> getEvents() async {
         allEvents.add(event);
       }
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      EventService().allEvents = allEvents;
+      EventService().eventListSink.add(allEvents);
+    });
     return allEvents;
   } catch (e) {
     print(e);

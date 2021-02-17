@@ -23,6 +23,7 @@ class EventService {
   List<HybridNotificationModel> createdEvents;
   Function onEventSaved;
   String currentAtSign, rootDomain;
+  List<EventNotificationModel> allEvents = [];
 
   // ignore: close_sinks
   final _atEventNotificationController =
@@ -31,6 +32,14 @@ class EventService {
       _atEventNotificationController.stream;
   StreamSink<EventNotificationModel> get eventSink =>
       _atEventNotificationController.sink;
+
+  // ignore: close_sinks
+  final eventListController =
+      StreamController<List<EventNotificationModel>>.broadcast();
+  Stream<List<EventNotificationModel>> get eventListStream =>
+      eventListController.stream;
+  StreamSink<List<EventNotificationModel>> get eventListSink =>
+      eventListController.sink;
 
   init(AtClientImpl _atClientInstance,
       {bool isUpdate, EventNotificationModel eventData, rootDomain}) {
@@ -86,6 +95,13 @@ class EventService {
     var atKey = notificationKey.split(':')[1];
     var operation = responseJson['operation'];
     print('_notificationCallback opeartion $operation');
+    if ((operation == 'delete') &&
+        atKey.toString().toLowerCase().contains('createevent')) {
+      // print('$notificationKey deleted');
+      // print('atKey deleted:${atKey}');
+      removeDeletedEventFromList(notificationKey);
+      return;
+    }
 
     var decryptedMessage = await atClientInstance.encryptionService
         .decrypt(value, fromAtSign)
@@ -98,10 +114,11 @@ class EventService {
         // new event received
         // show dialog
         // add in event list
-
+        addNewEventInEventList(eventData);
       } else if (eventData.isUpdate) {
         // event updated received
         // update event list
+        onUpdatedEventReceived(eventData);
       }
     } else if (atKey.toString().contains('eventacknowledged')) {
       EventNotificationModel msg =
@@ -147,6 +164,33 @@ class EventService {
         EventNotificationModel.convertEventNotificationToJson(presentEventData);
     var result = await atClientInstance.put(atKey, notification);
     print('event updated:${result}');
+  }
+
+  removeDeletedEventFromList(String regexKey) {
+    String key = regexKey.split('createevent-')[1].split('@')[0];
+
+    EventService()
+        .allEvents
+        .removeWhere((element) => element.key.contains(key));
+    print('removeDeletedEventFromList after: ${EventService().allEvents}');
+    EventService().eventListSink.add(EventService().allEvents);
+  }
+
+  addNewEventInEventList(EventNotificationModel newEvent) {
+    if (EventService().allEvents == null) EventService().allEvents = [];
+    EventService().allEvents.add(newEvent);
+    EventService().eventListSink.add(EventService().allEvents);
+  }
+
+  onUpdatedEventReceived(EventNotificationModel newEvent) {
+    int eventIndex = EventService()
+        .allEvents
+        .indexWhere((element) => element.key.contains(newEvent.key));
+
+    if (eventIndex > -1) {
+      EventService().allEvents[eventIndex] = newEvent;
+      EventService().eventListSink.add(EventService().allEvents);
+    }
   }
 
   update({EventNotificationModel eventData}) {

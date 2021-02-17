@@ -49,97 +49,174 @@ class _EventListState extends State<EventList> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           !isEventAvailable
-              ? Center(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text('No event found!!'),
-                  ),
-                )
+              ? Center(child: CircularProgressIndicator())
               : Expanded(
                   child: Container(
-                    padding: EdgeInsets.all(15),
-                    child: ListView.separated(
-                        itemBuilder: (BuildContext context, int index) {
-                          print('list view build');
-                          return InkWell(
-                            onLongPress: () {
-                              deleteEvent(events[index].key);
-                            },
-                            onTap: () {
-                              print(
-                                  'event tapped:${events[index].title}, ${events[index].key}, ${events[index].group}');
-                              if (events[index].atsignCreator ==
-                                  EventService().atClientInstance.currentAtSign)
-                                bottomSheet(
-                                    context,
-                                    CreateEvent(EventService().atClientInstance,
-                                        isUpdate: true,
-                                        eventData: events[index],
-                                        onEventSaved: (event) {
-                                      setState(() {
-                                        events[events.indexWhere((element) =>
-                                            element.key
-                                                .contains(event.key))] = event;
-                                      });
-                                    }),
-                                    MediaQuery.of(context).size.height * 0.9);
-                              else
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return alertDialog(events[index]);
+                      padding: EdgeInsets.all(15),
+                      child: StreamBuilder(
+                        stream: EventService().eventListStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.active) {
+                            if (snapshot.hasData) {
+                              events = snapshot.data;
+                              return ListView.separated(
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return InkWell(
+                                      onLongPress: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return alertDialog(
+                                                events[index], 'Delete event??',
+                                                isDelete: true);
+                                          },
+                                        );
+                                      },
+                                      onTap: () {
+                                        if (events[index].atsignCreator ==
+                                            EventService()
+                                                .atClientInstance
+                                                .currentAtSign)
+                                          bottomSheet(
+                                              context,
+                                              CreateEvent(
+                                                  EventService()
+                                                      .atClientInstance,
+                                                  isUpdate: true,
+                                                  eventData: events[index],
+                                                  onEventSaved: (event) {
+                                                setState(() {
+                                                  events[events.indexWhere(
+                                                          (element) => element
+                                                              .key
+                                                              .contains(
+                                                                  event.key))] =
+                                                      event;
+                                                });
+                                              }),
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.9);
+                                        else
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return alertDialog(events[index],
+                                                  'Accept event invite??');
+                                            },
+                                          );
+                                      },
+                                      child: Container(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('${events[index].title}'),
+                                            SizedBox(height: 10),
+                                            EventService().currentAtSign ==
+                                                    events[index].atsignCreator
+                                                ? SizedBox()
+                                                : getActionString(events[index])
+                                                            .length >
+                                                        0
+                                                    ? Text(
+                                                        '${getActionString(events[index])}',
+                                                        style: TextStyle(
+                                                            color: Colors.red),
+                                                      )
+                                                    : SizedBox(),
+                                            SizedBox(height: 10),
+                                            Text(
+                                                'created by${events[index].atsignCreator}'),
+                                          ],
+                                        ),
+                                      ),
+                                    );
                                   },
-                                );
-                            },
-                            child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('${events[index].title}'),
-                                  SizedBox(height: 10),
-                                  EventService().currentAtSign ==
-                                          events[index].atsignCreator
-                                      ? SizedBox()
-                                      : Text('${events[index].title}'),
-                                  SizedBox(height: 10),
-                                  Text(
-                                      'created by${events[index].atsignCreator}'),
-                                ],
-                              ),
-                            ),
-                          );
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return Divider();
+                                  },
+                                  itemCount: events.length);
+                            } else {
+                              return Center(
+                                child: Text('something went wrong'),
+                              );
+                            }
+                          } else {
+                            return SizedBox();
+                          }
                         },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Divider();
-                        },
-                        itemCount: events.length),
-                  ),
+                      )),
                 )
         ],
       ),
     );
   }
 
-  Widget alertDialog(EventNotificationModel eventData) {
+  Widget alertDialog(EventNotificationModel eventData, String heading,
+      {bool isDelete = false}) {
     return AlertDialog(
       title: Text(eventData.title),
-      content: Text("Accept event invite??"),
+      content: Text(heading),
       actions: [
         FlatButton(
           child: Text("No"),
-          onPressed: () {
-            sendEventAcknowledgement(eventData,
-                isAccepted: false, isSharing: false, isExited: false);
+          onPressed: () async {
+            if (!isDelete) {
+              var result = await sendEventAcknowledgement(eventData,
+                  isAccepted: false, isSharing: false, isExited: false);
+              if (result != null && result) {
+                Navigator.of(context).pop();
+              }
+            } else
+              Navigator.of(context).pop();
           },
         ),
         FlatButton(
           child: Text("Yes"),
-          onPressed: () {
-            sendEventAcknowledgement(eventData,
-                isAccepted: true, isSharing: true, isExited: false);
+          onPressed: () async {
+            if (isDelete) {
+              bool result = await deleteEvent(eventData.key);
+              if (result != null && result) {
+                Navigator.of(context).pop();
+              }
+            } else {
+              var result = await sendEventAcknowledgement(eventData,
+                  isAccepted: true, isSharing: true, isExited: false);
+              if (result != null && result) {
+                Navigator.of(context).pop();
+              }
+            }
           },
         ),
       ],
     );
+  }
+
+  String getActionString(EventNotificationModel event) {
+    String label = 'Action required';
+    String currentAtsign = EventService().currentAtSign;
+
+    if (event.group.members.length < 1) return '';
+
+    event.group.members.forEach((member) {
+      if (member.tags['isAccepted'] != null &&
+          member.tags['isAccepted'] == true &&
+          member.atSign == currentAtsign) {
+        label = '';
+      }
+
+      if (member.tags['isExited'] != null &&
+          member.tags['isExited'] == true &&
+          member.atSign == currentAtsign) {
+        label = 'Exited';
+      }
+    });
+
+    return label;
   }
 }
