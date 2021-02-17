@@ -6,6 +6,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_events_flutter/common_components/concurrent_event_request_dialog.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/models/hybrid_notifiation_model.dart';
+import 'package:at_events_flutter/utils/init_events_service.dart';
 import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
@@ -21,6 +22,7 @@ class EventService {
   List<AtContact> selectedContacts;
   List<HybridNotificationModel> createdEvents;
   Function onEventSaved;
+  String currentAtSign, rootDomain;
 
   // ignore: close_sinks
   final _atEventNotificationController =
@@ -31,7 +33,7 @@ class EventService {
       _atEventNotificationController.sink;
 
   init(AtClientImpl _atClientInstance,
-      {bool isUpdate, EventNotificationModel eventData}) {
+      {bool isUpdate, EventNotificationModel eventData, rootDomain}) {
     if (eventData != null) {
       EventService().eventNotificationModel = EventNotificationModel.fromJson(
           jsonDecode(EventNotificationModel.convertEventNotificationToJson(
@@ -46,15 +48,105 @@ class EventService {
       selectedContacts = [];
     }
     isEventUpdate = isUpdate;
-    print('isEventUpdate:$isEventUpdate');
     atClientInstance = _atClientInstance;
+    currentAtSign = atClientInstance.currentAtSign;
     Future.delayed(Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });
+
+    if (rootDomain != null) this.rootDomain = rootDomain;
+    startMonitor();
   }
 
   initializeAtContactImpl(AtClientImpl _atClientInstance) {
     atClientInstance = _atClientInstance;
+  }
+
+  // startMonitor needs to be called at the beginning of session
+  // called again if outbound connection is dropped
+  Future<bool> startMonitor() async {
+    String privateKey = await getPrivateKey(currentAtSign);
+    atClientInstance.startMonitor(privateKey, _notificationCallback);
+    print("Monitor started");
+    return true;
+  }
+
+  ///Fetches privatekey for [atsign] from device keychain.
+  Future<String> getPrivateKey(String atsign) async {
+    return await atClientInstance.getPrivateKey(atsign);
+  }
+
+  void _notificationCallback(dynamic response) async {
+    print('fnCallBack called in event service');
+    response = response.replaceFirst('notification:', '');
+    var responseJson = jsonDecode(response);
+    var value = responseJson['value'];
+    var notificationKey = responseJson['key'];
+    var fromAtSign = responseJson['from'];
+    var atKey = notificationKey.split(':')[1];
+    var operation = responseJson['operation'];
+    print('_notificationCallback opeartion $operation');
+
+    var decryptedMessage = await atClientInstance.encryptionService
+        .decrypt(value, fromAtSign)
+        .catchError((e) =>
+            print("error in decrypting: ${e.errorCode} ${e.errorMessage}"));
+    if (atKey.toString().contains('createevent')) {
+      EventNotificationModel eventData =
+          EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      if (eventData.isUpdate != null && eventData.isUpdate == false) {
+        // new event received
+        // show dialog
+        // add in event list
+
+      } else if (eventData.isUpdate) {
+        // event updated received
+        // update event list
+      }
+    } else if (atKey.toString().contains('eventacknowledged')) {
+      EventNotificationModel msg =
+          EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      print('event acknowledge received:${msg.group} , ${msg.title}');
+      createEventAcknowledged(msg, fromAtSign);
+    }
+  }
+
+  createEventAcknowledged(
+      EventNotificationModel acknowledgedEvent, String fromAtSign) async {
+    print('event ack:${acknowledgedEvent.key}');
+    String regexKey,
+        eventId =
+            acknowledgedEvent.key.split('eventacknowledged-')[1].split('@')[0];
+    AtKey atKey;
+    EventNotificationModel presentEventData =
+        await getEventDetails('createevent-$eventId');
+    print(
+        'present event data:${presentEventData.title}, key:${presentEventData.key}');
+
+    presentEventData.group.members.forEach((presentGroupMember) {
+      acknowledgedEvent.group.members.forEach((acknowledgedGroupMember) {
+        if (acknowledgedGroupMember.atSign == presentGroupMember.atSign &&
+            acknowledgedGroupMember.atSign == fromAtSign) {
+          presentGroupMember.tags = acknowledgedGroupMember.tags;
+        }
+      });
+    });
+    presentEventData.isUpdate = true;
+
+    print(
+        'present event data after update:${presentEventData.title}, key:${presentEventData.key}');
+
+    regexKey = await getRegexKeyFromKey('createevent-$eventId');
+    if (regexKey != null) {
+      atKey = AtKey.fromString(regexKey);
+    } else {
+      print('event key not found....');
+    }
+
+    var notification =
+        EventNotificationModel.convertEventNotificationToJson(presentEventData);
+    var result = await atClientInstance.put(atKey, notification);
+    print('event updated:${result}');
   }
 
   update({EventNotificationModel eventData}) {
@@ -83,11 +175,17 @@ class EventService {
 
   Future<dynamic> editEvent() async {
     try {
-      AtKey atKey = AtKey.fromString(eventNotificationModel.key);
-      var eventData = EventNotificationModel.convertEventNotificationToJson(
-          EventService().eventNotificationModel);
-      var result = await atClientInstance.put(atKey, eventData);
-      if (onEventSaved != null) {
+      // AtKey atKey = AtKey.fromString(eventNotificationModel.key);
+      // var eventData = EventNotificationModel.convertEventNotificationToJson(
+      //     EventService().eventNotificationModel);
+      // var result = await atClientInstance.put(atKey, eventData);
+      // if (onEventSaved != null) {
+      //   onEventSaved(eventNotificationModel);
+      // }
+      // return result;
+      var result =
+          await updateEvent(eventNotificationModel, eventNotificationModel.key);
+      if (onEventSaved != null && result) {
         onEventSaved(eventNotificationModel);
       }
       return result;
@@ -109,6 +207,7 @@ class EventService {
 
     AtKey atKey = AtKey()
       ..metadata = Metadata()
+      ..metadata.ccd = true
       ..metadata.ttr = -1
       ..key = eventNotification.key
       ..sharedWith = eventNotification.group.members.elementAt(0).atSign

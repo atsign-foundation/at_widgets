@@ -1,8 +1,14 @@
 import 'dart:convert';
 
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_services.dart';
+
+initialiseEventService(AtClientImpl atClientInstance,
+    {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
+  EventService().init(atClientInstance, rootDomain: rootDomain);
+}
 
 Future<bool> createEvent(EventNotificationModel eventData) async {
   if (eventData == null) {
@@ -67,6 +73,7 @@ Future<bool> deleteEvent(String key) async {
     throw Exception('Event key not found');
   }
   eventData = await getValue(regexKey);
+  print('eventData to delete:${eventData}');
 
   if (eventData.atsignCreator != currentAtsign)
     throw Exception('Only creator can delete the event');
@@ -74,6 +81,7 @@ Future<bool> deleteEvent(String key) async {
   try {
     AtKey atKey = AtKey.fromString(regexKey);
     var result = await EventService().atClientInstance.delete(atKey);
+    print('event deleted:${result}');
     return result;
   } catch (e) {
     return false;
@@ -162,4 +170,46 @@ Future<String> getRegexKeyFromKey(String key) async {
   } else {
     return null;
   }
+}
+
+sendEventAcknowledgement(EventNotificationModel acknowledgedEvent,
+    {bool isAccepted, bool isSharing, bool isExited}) async {
+  EventNotificationModel eventData = EventNotificationModel.fromJson(jsonDecode(
+      EventNotificationModel.convertEventNotificationToJson(
+          acknowledgedEvent)));
+  String regexKey,
+      atkeyMicrosecondId,
+      currentAtsign = EventService().atClientInstance.currentAtSign;
+  atkeyMicrosecondId = eventData.key.split('createevent-')[1].split('@')[0];
+
+  eventData.group.members.forEach((member) {
+    if (member.atSign == currentAtsign) {
+      member.tags['isAccepted'] =
+          isAccepted != null ? isAccepted : member.tags['isAccepted'];
+      member.tags['isSharing'] =
+          isSharing != null ? isSharing : member.tags['isSharing'];
+      member.tags['isExited'] =
+          isExited != null ? isExited : member.tags['isExited'];
+    }
+  });
+
+  // regexKey = await getRegexKeyFromKey(eventData.key);
+  // atKey = AtKey.fromString(regexKey);
+
+  AtKey atKey = AtKey()
+    ..metadata = Metadata()
+    ..metadata.ttr = -1
+    ..sharedWith = eventData.atsignCreator
+    ..sharedBy = currentAtsign;
+  atKey.key = 'eventacknowledged-$atkeyMicrosecondId';
+  eventData.key = atKey.key;
+
+  var notification =
+      EventNotificationModel.convertEventNotificationToJson(eventData);
+  print('in ack :${notification}');
+  print('in ack atkey : ${atKey}');
+
+  var result = await EventService().atClientInstance.put(atKey, notification);
+  print('acknowledgement sent:$result');
+  return result;
 }

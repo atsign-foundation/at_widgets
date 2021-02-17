@@ -3,6 +3,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/common_components/bottom_sheet.dart';
 import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/common_components/error_screen.dart';
@@ -55,6 +56,13 @@ class _CreateEventState extends State<CreateEvent> {
     if (widget.onEventSaved != null) {
       EventService().onEventSaved = widget.onEventSaved;
     }
+    initContactPlugin();
+  }
+
+  initContactPlugin() {
+    initializeContactsService(EventService().atClientInstance,
+        EventService().atClientInstance.currentAtSign,
+        rootDomain: EventService().rootDomain);
   }
 
   @override
@@ -410,7 +418,7 @@ class _CreateEventState extends State<CreateEvent> {
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show('some thing went wrong , try again.', context);
+      CustomToast().show('something went wrong , try again.', context);
       setState(() {
         isLoading = false;
       });
