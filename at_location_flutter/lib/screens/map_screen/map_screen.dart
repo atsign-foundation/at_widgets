@@ -57,12 +57,12 @@ class _MapScreenState extends State<MapScreen> {
               ),
               SlidingUpPanel(
                 controller: pc,
-                minHeight: widget.userListenerKeyword != null ? 126 : 205,
+                minHeight: widget.userListenerKeyword != null ? 130 : 205,
                 maxHeight: widget.userListenerKeyword != null
                     ? ((widget.userListenerKeyword.atsignCreator ==
                             widget.currentAtSign)
                         ? 291
-                        : 126)
+                        : 130)
                     : 431,
                 panel: CollapsedContent(
                     true, AtLocationNotificationListener().atClientInstance,

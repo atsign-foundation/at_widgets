@@ -27,26 +27,26 @@ class MyLocation {
         return null;
       }
     }
-    LatLng myLocation;
-    switch (AtLocationNotificationListener().currentAtSign) {
-      case '@ashish🛠':
-        {
-          myLocation = LatLng(38, -122.406417);
-          break;
-        }
-      case '@colin🛠':
-        {
-          myLocation = LatLng(39, -122.406417);
-          break;
-        }
-      case '@bob🛠':
-        {
-          myLocation = LatLng(40, -122.406417);
-          break;
-        }
-    }
+    // LatLng myLocation;
+    // switch (AtLocationNotificationListener().currentAtSign) {
+    //   case '@ashish🛠':
+    //     {
+    //       myLocation = LatLng(38, -122.406417);
+    //       break;
+    //     }
+    //   case '@colin🛠':
+    //     {
+    //       myLocation = LatLng(39, -122.406417);
+    //       break;
+    //     }
+    //   case '@bob🛠':
+    //     {
+    //       myLocation = LatLng(40, -122.406417);
+    //       break;
+    //     }
+    // }
 
-    return myLocation;
+    // return myLocation;
     _locationData = await _location.getLocation();
 
     return LatLng(_locationData.latitude, _locationData.longitude);
