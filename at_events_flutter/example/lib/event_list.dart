@@ -39,11 +39,13 @@ class _EventListState extends State<EventList> {
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          title: Text('Event list'),
-          automaticallyImplyLeading: true,
-          leading: Center(
-            child: Icon(Icons.arrow_back),
-          )),
+        title: Text('Event list'),
+        automaticallyImplyLeading: true,
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
