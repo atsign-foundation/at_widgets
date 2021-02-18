@@ -41,6 +41,7 @@ class _MapScreenState extends State<MapScreen> {
             children: [
               AtLocationFlutterPlugin(
                 atsignsToTrack,
+                addCurrentUserMarker: true,
               ),
               Positioned(
                 top: 0,

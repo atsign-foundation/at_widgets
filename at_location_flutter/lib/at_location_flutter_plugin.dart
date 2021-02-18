@@ -20,13 +20,14 @@ class AtLocationFlutterPlugin extends StatefulWidget {
   final List<String> atsignsToTrack;
   double left, right, top, bottom;
   LatLng etaFrom;
-  bool calculateETA;
+  bool calculateETA, addCurrentUserMarker;
   AtLocationFlutterPlugin(this.atsignsToTrack,
       {this.left,
       this.right,
       this.top,
       this.bottom,
       this.calculateETA = false,
+      this.addCurrentUserMarker = false,
       this.etaFrom});
   @override
   _AtLocationFlutterPluginState createState() =>
@@ -47,7 +48,13 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     showMarker = true;
     mapController = MapController();
     LocationService().init(widget.atsignsToTrack,
-        etaFrom: widget.etaFrom, calculateETA: widget.calculateETA);
+        etaFrom: widget.etaFrom,
+        calculateETA: widget.calculateETA,
+        addCurrentUserMarker: widget.addCurrentUserMarker);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      LocationService().mapInitialized();
+      LocationService().notifyListeners();
+    });
   }
 
   @override

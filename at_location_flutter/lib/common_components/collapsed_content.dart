@@ -71,7 +71,11 @@ class _CollapsedContentState extends State<CollapsedContent> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          DraggableSymbol(),
+          amICreator
+              ? DraggableSymbol()
+              : SizedBox(
+                  height: 10,
+                ),
           SizedBox(
             height: 3,
           ),

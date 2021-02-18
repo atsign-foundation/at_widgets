@@ -22,7 +22,7 @@ class LocationService {
   HybridModel eventData;
   HybridModel myData;
   LatLng etaFrom;
-  bool calculateETA;
+  bool calculateETA, addCurrentUserMarker, isMapInitialized = false;
 
   List<HybridModel> hybridUsersList;
 
@@ -33,12 +33,13 @@ class LocationService {
       _atHybridUsersController.sink;
 
   init(List<String> atsignsToTrackFromApp,
-      {LatLng etaFrom, bool calculateETA}) async {
+      {LatLng etaFrom, bool calculateETA, bool addCurrentUserMarker}) async {
     hybridUsersList = [];
     _atHybridUsersController = StreamController<List<HybridModel>>.broadcast();
     atsignsToTrack = atsignsToTrackFromApp;
     this.etaFrom = etaFrom;
     this.calculateETA = calculateETA;
+    this.addCurrentUserMarker = addCurrentUserMarker;
     print('atsignsTotrack $atsignsToTrack');
     await addMyDetailsToHybridUsersList();
 
@@ -47,6 +48,11 @@ class LocationService {
 
   void dispose() {
     _atHybridUsersController.close();
+    isMapInitialized = false;
+  }
+
+  mapInitialized() {
+    isMapInitialized = true;
   }
 
   addMyDetailsToHybridUsersList() async {
@@ -60,12 +66,10 @@ class LocationService {
 
     myData = _myData;
 
-    // // TODO: Uncomment this when we need to show the currentUsers location in map
-    // // hybridUsersList.add(myData);
-    // // _atHybridUsersController.add(hybridUsersList);
+    if (addCurrentUserMarker) {
+      hybridUsersList.add(myData);
+    }
   }
-
-  addEventDetailsToHybridUsersList() async {}
 
   // called for the first time pckage is entered from main app
   updateHybridList() async {
@@ -84,12 +88,11 @@ class LocationService {
       print('added in updateHybridList: ${element.displayName}');
       print('added in updateHybridList: ${element.latLng}');
     });
-    // if (_atHybridUsersController.hasListener)
-    //   _atHybridUsersController.add(hybridUsersList);
-    // else
+
     if (hybridUsersList.length != 0)
       Future.delayed(const Duration(seconds: 2),
           () => _atHybridUsersController.add(hybridUsersList));
+    // if (isMapInitialized) notifyListeners();
   }
 
   // called when any new/updated data is received in the main app
@@ -165,5 +168,10 @@ class LocationService {
       print('Error in _calculateEta $e');
       return '?';
     }
+  }
+
+  notifyListeners() {
+    if (hybridUsersList.length > 0)
+      _atHybridUsersController.add(hybridUsersList);
   }
 }
