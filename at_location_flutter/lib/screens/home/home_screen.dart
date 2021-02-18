@@ -38,10 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getMyLocation() async {
     LatLng newMyLatLng = await MyLocation().myLocation();
-    if ((newMyLatLng != null) || (newMyLatLng != LatLng(0, 0)))
-      setState(() {
-        myLatLng = newMyLatLng;
-      });
+    if (newMyLatLng != null) {
+      if (mounted)
+        setState(() {
+          myLatLng = newMyLatLng;
+        });
+    }
   }
 
   @override
@@ -215,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         Image.asset(
-          'assets/images/empty_group.png',
+          'packages/at_location_flutter/assets/images/empty_group.png',
           width: 181.toWidth,
           height: 181.toWidth,
           fit: BoxFit.cover,

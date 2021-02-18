@@ -31,6 +31,7 @@ Marker buildMarker(HybridModel user, {bool singleMarker = false}) {
                     : ContactInitial(
                         initials: user.displayName.substring(1, 3),
                         size: 60,
+                        color: AllColors().ORANGE,
                       ),
               ),
               SizedBox(

@@ -468,6 +468,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    // print('_TileLayerState dispose called');
     _removeAllTiles();
     _moveSub?.cancel();
     options.tileProvider.dispose();
