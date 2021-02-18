@@ -4,7 +4,6 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/create_event.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
 import 'package:flutter/material.dart';
-import 'client_sdk_service.dart';
 
 class EventList extends StatefulWidget {
   @override
@@ -49,7 +48,11 @@ class _EventListState extends State<EventList> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           !isEventAvailable
-              ? Center(child: CircularProgressIndicator())
+              ? Center(
+                  child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: CircularProgressIndicator(),
+                ))
               : Expanded(
                   child: Container(
                       padding: EdgeInsets.all(15),
@@ -82,20 +85,17 @@ class _EventListState extends State<EventList> {
                                           bottomSheet(
                                               context,
                                               CreateEvent(
+                                                EventService().atClientInstance,
+                                                isUpdate: true,
+                                                eventData: events[index],
+                                                onEventSaved:
+                                                    (EventNotificationModel
+                                                        event) {
                                                   EventService()
-                                                      .atClientInstance,
-                                                  isUpdate: true,
-                                                  eventData: events[index],
-                                                  onEventSaved: (event) {
-                                                setState(() {
-                                                  events[events.indexWhere(
-                                                          (element) => element
-                                                              .key
-                                                              .contains(
-                                                                  event.key))] =
-                                                      event;
-                                                });
-                                              }),
+                                                      .onUpdatedEventReceived(
+                                                          event);
+                                                },
+                                              ),
                                               MediaQuery.of(context)
                                                       .size
                                                       .height *
@@ -110,12 +110,12 @@ class _EventListState extends State<EventList> {
                                           );
                                       },
                                       child: Container(
+                                        padding: EdgeInsets.all(10),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text('${events[index].title}'),
-                                            SizedBox(height: 10),
                                             EventService().currentAtSign ==
                                                     events[index].atsignCreator
                                                 ? SizedBox()
@@ -128,9 +128,9 @@ class _EventListState extends State<EventList> {
                                                             color: Colors.red),
                                                       )
                                                     : SizedBox(),
-                                            SizedBox(height: 10),
+                                            SizedBox(height: 5),
                                             Text(
-                                                'created by${events[index].atsignCreator}'),
+                                                'creator:${events[index].atsignCreator}'),
                                           ],
                                         ),
                                       ),
@@ -138,7 +138,9 @@ class _EventListState extends State<EventList> {
                                   },
                                   separatorBuilder:
                                       (BuildContext context, int index) {
-                                    return Divider();
+                                    return Divider(
+                                      color: Colors.grey,
+                                    );
                                   },
                                   itemCount: events.length);
                             } else {
@@ -168,7 +170,7 @@ class _EventListState extends State<EventList> {
           onPressed: () async {
             if (!isDelete) {
               var result = await sendEventAcknowledgement(eventData,
-                  isAccepted: false, isSharing: false, isExited: false);
+                  isAccepted: false, isSharing: false, isExited: true);
               if (result != null && result) {
                 Navigator.of(context).pop();
               }
@@ -207,13 +209,13 @@ class _EventListState extends State<EventList> {
       if (member.tags['isAccepted'] != null &&
           member.tags['isAccepted'] == true &&
           member.atSign == currentAtsign) {
-        label = '';
+        label = 'Accepted';
       }
 
       if (member.tags['isExited'] != null &&
           member.tags['isExited'] == true &&
           member.atSign == currentAtsign) {
-        label = 'Exited';
+        label = 'Declined';
       }
     });
 

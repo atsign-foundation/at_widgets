@@ -123,8 +123,6 @@ Future<List<EventNotificationModel>> getEvents() async {
     return [];
   }
 
-  print('regx keys:${regexList}');
-
   try {
     for (int i = 0; i < regexList.length; i++) {
       AtKey atkey = AtKey.fromString(regexList[i]);
@@ -208,6 +206,7 @@ sendEventAcknowledgement(EventNotificationModel acknowledgedEvent,
   AtKey atKey = AtKey()
     ..metadata = Metadata()
     ..metadata.ttr = -1
+    ..metadata.ccd = true
     ..sharedWith = eventData.atsignCreator
     ..sharedBy = currentAtsign;
   atKey.key = 'eventacknowledged-$atkeyMicrosecondId';
@@ -215,10 +214,7 @@ sendEventAcknowledgement(EventNotificationModel acknowledgedEvent,
 
   var notification =
       EventNotificationModel.convertEventNotificationToJson(eventData);
-  print('in ack :${notification}');
-  print('in ack atkey : ${atKey}');
 
   var result = await EventService().atClientInstance.put(atKey, notification);
-  print('acknowledgement sent:$result');
   return result;
 }

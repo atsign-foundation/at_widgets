@@ -97,8 +97,6 @@ class EventService {
     print('_notificationCallback opeartion $operation');
     if ((operation == 'delete') &&
         atKey.toString().toLowerCase().contains('createevent')) {
-      // print('$notificationKey deleted');
-      // print('atKey deleted:${atKey}');
       removeDeletedEventFromList(notificationKey);
       return;
     }
@@ -130,15 +128,12 @@ class EventService {
 
   createEventAcknowledged(
       EventNotificationModel acknowledgedEvent, String fromAtSign) async {
-    print('event ack:${acknowledgedEvent.key}');
     String regexKey,
         eventId =
             acknowledgedEvent.key.split('eventacknowledged-')[1].split('@')[0];
     AtKey atKey;
     EventNotificationModel presentEventData =
         await getEventDetails('createevent-$eventId');
-    print(
-        'present event data:${presentEventData.title}, key:${presentEventData.key}');
 
     presentEventData.group.members.forEach((presentGroupMember) {
       acknowledgedEvent.group.members.forEach((acknowledgedGroupMember) {
@@ -150,20 +145,19 @@ class EventService {
     });
     presentEventData.isUpdate = true;
 
-    print(
-        'present event data after update:${presentEventData.title}, key:${presentEventData.key}');
-
     regexKey = await getRegexKeyFromKey('createevent-$eventId');
     if (regexKey != null) {
       atKey = AtKey.fromString(regexKey);
     } else {
-      print('event key not found....');
+      return false;
     }
 
     var notification =
         EventNotificationModel.convertEventNotificationToJson(presentEventData);
     var result = await atClientInstance.put(atKey, notification);
-    print('event updated:${result}');
+    if (result != null && result) {
+      onUpdatedEventReceived(presentEventData);
+    }
   }
 
   removeDeletedEventFromList(String regexKey) {
@@ -172,7 +166,7 @@ class EventService {
     EventService()
         .allEvents
         .removeWhere((element) => element.key.contains(key));
-    print('removeDeletedEventFromList after: ${EventService().allEvents}');
+
     EventService().eventListSink.add(EventService().allEvents);
   }
 
@@ -257,8 +251,6 @@ class EventService {
       ..sharedWith = eventNotification.group.members.elementAt(0).atSign
       ..sharedBy = eventNotification.atsignCreator;
 
-    print(
-        'notification data:${atKey.key}, sharedWith:${eventNotification.group.members.elementAt(0).atSign} ,notify key: ${notification}');
     var result = await atClientInstance.put(atKey, notification);
     eventNotificationModel = eventNotification;
     if (onEventSaved != null) {
