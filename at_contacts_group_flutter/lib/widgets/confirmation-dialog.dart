@@ -90,10 +90,6 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                           });
                         }
                       },
-                      // isInverted:
-                      //     Theme.of(context).primaryColor == Color(0xFF000000)
-                      //         ? false
-                      //         : true,
                       buttonColor:
                           Theme.of(context).brightness == Brightness.light
                               ? AllColors().Black
@@ -103,7 +99,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                               ? AllColors().WHITE
                               : AllColors().Black,
                     ),
-              SizedBox(height: 10.toHeight),
+              SizedBox(height: 15.toHeight),
               InkWell(
                   onTap: () => Navigator.of(context).pop(),
                   child: !isLoading

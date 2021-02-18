@@ -158,42 +158,29 @@ class _NewGroupState extends State<NewGroup> {
               child: Container(
                 width: double.infinity,
                 child: SingleChildScrollView(
-                    child: GridView.count(
-                        physics: ScrollPhysics(),
-                        shrinkWrap: true,
-                        crossAxisCount: 4,
-                        // crossAxisSpacing: 15.toWidth,
-                        childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
-                            (SizeConfig().screenHeight * 0.2)),
-                        // childAspectRatio: (85 / 120),
-                        children:
-                            List.generate(selectedContacts.length, (index) {
-                          return CustomPersonVerticalTile(
-                            imageLocation: null,
-                            title: selectedContacts[index].atSign,
-                            subTitle: selectedContacts[index].atSign,
-                            icon: Icons.close,
-                            isTopRight: true,
-                            onCrossPressed: () {
-                              setState(() {
-                                selectedContacts.removeAt(index);
-                              });
-                            },
-                          );
-                        })
-                        // List(
-                        //   5,
-                        //   (index) {
-                        //     return CustomPersonVerticalTile(
-                        //       imageLocation: AllImages().PERSON1,
-                        //       title: 'Thomas',
-                        //       subTitle: '@thomas',
-                        //       icon: Icons.highlight_off,
-                        //       isTopRight: true,
-                        //     );
-                        //   },
-                        // ),
-                        )),
+                  child: GridView.count(
+                    physics: ScrollPhysics(),
+                    shrinkWrap: true,
+                    crossAxisCount: 4,
+                    childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
+                        (SizeConfig().screenHeight * 0.2)),
+                    children: List.generate(selectedContacts.length, (index) {
+                      return CustomPersonVerticalTile(
+                        imageLocation: null,
+                        title: selectedContacts[index].atSign,
+                        subTitle: selectedContacts[index].atSign,
+                        icon: Icons.close,
+                        isTopRight: true,
+                        atsign: selectedContacts[index].atSign,
+                        onCrossPressed: () {
+                          setState(() {
+                            selectedContacts.removeAt(index);
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                ),
               ),
             )
           ],
