@@ -24,7 +24,6 @@ class _EventListState extends State<EventList> {
 
   getAllEvent() async {
     events = await getEvents();
-    print('events:${events}');
     if (events.length > 0) {
       setState(() {
         isEventAvailable = true;
@@ -40,7 +39,6 @@ class _EventListState extends State<EventList> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Event list'),
-        automaticallyImplyLeading: true,
         leading: new IconButton(
           icon: new Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
