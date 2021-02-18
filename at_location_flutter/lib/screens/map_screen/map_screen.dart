@@ -41,7 +41,10 @@ class _MapScreenState extends State<MapScreen> {
             children: [
               AtLocationFlutterPlugin(
                 atsignsToTrack,
+                calculateETA: true,
                 addCurrentUserMarker: true,
+                // etaFrom: LatLng(44, -112),
+                // textForCenter: 'Final',
               ),
               Positioned(
                 top: 0,

@@ -8,12 +8,19 @@ import 'custom_circle_avatar.dart';
 
 Widget buildPopup(HybridModel user) {
   print('popup builder called');
+  bool showEtaSection = true;
+  if (LocationService().etaFrom != null) {
+    if (user.latLng == LocationService().etaFrom) showEtaSection = false;
+  } else if (user.latLng == LocationService().myData.latLng)
+    showEtaSection = false;
+
   return Stack(
     alignment: Alignment.center,
     children: [
       Positioned(bottom: 0, child: pointedBottom()),
       Container(
-        width: LocationService().calculateETA ? 200 : 140,
+        width:
+            ((LocationService().calculateETA) && (showEtaSection)) ? 200 : 140,
         height: 82,
         alignment: Alignment.topCenter,
         child: ClipRRect(
@@ -22,11 +29,12 @@ Widget buildPopup(HybridModel user) {
             color: Colors.white,
             height: 76,
             child: Row(
-              mainAxisAlignment: LocationService().calculateETA
-                  ? MainAxisAlignment.start
-                  : MainAxisAlignment.center,
+              mainAxisAlignment:
+                  ((LocationService().calculateETA) && (showEtaSection))
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.center,
               children: [
-                (LocationService().calculateETA)
+                ((LocationService().calculateETA) && (showEtaSection))
                     ? Expanded(
                         child: Container(
                           padding: EdgeInsets.all(10),
