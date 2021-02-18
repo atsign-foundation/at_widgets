@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 
 initialiseEventService(AtClientImpl atClientInstance,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
-  EventService().init(atClientInstance, rootDomain: rootDomain);
+  EventService().initializeAtContactImpl(atClientInstance, rootDomain);
 }
 
 Future<bool> createEvent(EventNotificationModel eventData) async {

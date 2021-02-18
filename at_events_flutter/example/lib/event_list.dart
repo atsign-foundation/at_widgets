@@ -85,7 +85,6 @@ class _EventListState extends State<EventList> {
                                           bottomSheet(
                                               context,
                                               CreateEvent(
-                                                EventService().atClientInstance,
                                                 isUpdate: true,
                                                 eventData: events[index],
                                                 onEventSaved:

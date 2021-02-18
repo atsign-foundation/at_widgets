@@ -41,8 +41,7 @@ class EventService {
   StreamSink<List<EventNotificationModel>> get eventListSink =>
       eventListController.sink;
 
-  init(AtClientImpl _atClientInstance,
-      {bool isUpdate, EventNotificationModel eventData, rootDomain}) {
+  init({bool isUpdate, EventNotificationModel eventData, rootDomain}) {
     if (eventData != null) {
       EventService().eventNotificationModel = EventNotificationModel.fromJson(
           jsonDecode(EventNotificationModel.convertEventNotificationToJson(
@@ -57,18 +56,17 @@ class EventService {
       selectedContacts = [];
     }
     isEventUpdate = isUpdate;
-    atClientInstance = _atClientInstance;
-    currentAtSign = atClientInstance.currentAtSign;
+
     Future.delayed(Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });
-
-    if (rootDomain != null) this.rootDomain = rootDomain;
-    startMonitor();
   }
 
-  initializeAtContactImpl(AtClientImpl _atClientInstance) {
+  initializeAtContactImpl(AtClientImpl _atClientInstance, String rootDomain) {
     atClientInstance = _atClientInstance;
+    currentAtSign = atClientInstance.currentAtSign;
+    this.rootDomain = rootDomain;
+    startMonitor();
   }
 
   // startMonitor needs to be called at the beginning of session

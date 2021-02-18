@@ -52,9 +52,7 @@ class _SecondScreenState extends State<SecondScreen> {
           FlatButton(
             onPressed: () {
               bottomSheet(
-                  CreateEvent(
-                      clientSdkService.atClientServiceInstance.atClient),
-                  MediaQuery.of(context).size.height * 0.9);
+                  CreateEvent(), MediaQuery.of(context).size.height * 0.9);
             },
             child: Container(
               height: 40,
