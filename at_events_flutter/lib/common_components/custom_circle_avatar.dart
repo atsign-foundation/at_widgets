@@ -28,12 +28,21 @@ class CustomCircleAvatar extends StatelessWidget {
         borderRadius: BorderRadius.circular(size.toWidth),
       ),
       // border: Border.all(width: 0.5, color: ColorConstants.fontSecondary)),
-      child: CircleAvatar(
-        radius: (size - 5).toFont,
-        backgroundColor: Colors.transparent,
-        backgroundImage:
-            nonAsset ? Image.memory(byteImage).image : AssetImage(image),
-      ),
+      child: nonAsset
+          ? ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              child: Image.memory(
+                byteImage,
+                width: 50,
+                height: 50,
+                fit: BoxFit.fill,
+              ),
+            )
+          : CircleAvatar(
+              radius: (size - 5).toFont,
+              backgroundColor: Colors.transparent,
+              backgroundImage: AssetImage(image),
+            ),
     );
   }
 }
