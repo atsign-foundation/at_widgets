@@ -1,3 +1,4 @@
+import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
 
@@ -26,9 +27,27 @@ class MyLocation {
         return null;
       }
     }
+    LatLng myLocation;
+    switch (AtLocationNotificationListener().currentAtSign) {
+      case '@ashish🛠':
+        {
+          myLocation = LatLng(38, -122.406417);
+          break;
+        }
+      case '@colin🛠':
+        {
+          myLocation = LatLng(39, -122.406417);
+          break;
+        }
+      case '@bob🛠':
+        {
+          myLocation = LatLng(40, -122.406417);
+          break;
+        }
+    }
 
+    return myLocation;
     _locationData = await _location.getLocation();
-    // return LatLng(37, -112);
 
     return LatLng(_locationData.latitude, _locationData.longitude);
   }

@@ -4,6 +4,11 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:latlong/latlong.dart';
+
+import 'at_location_notification_listener.dart';
+import 'distance_calculate.dart';
+import 'my_location.dart';
 
 class LocationService {
   LocationService._();
@@ -16,6 +21,8 @@ class LocationService {
 
   HybridModel eventData;
   HybridModel myData;
+  LatLng etaFrom;
+  bool calculateETA;
 
   List<HybridModel> hybridUsersList;
 
@@ -25,11 +32,16 @@ class LocationService {
   StreamSink<List<HybridModel>> get atHybridUsersSink =>
       _atHybridUsersController.sink;
 
-  init(List<String> atsignsToTrackFromApp) {
+  init(List<String> atsignsToTrackFromApp,
+      {LatLng etaFrom, bool calculateETA}) async {
     hybridUsersList = [];
     _atHybridUsersController = StreamController<List<HybridModel>>.broadcast();
     atsignsToTrack = atsignsToTrackFromApp;
+    this.etaFrom = etaFrom;
+    this.calculateETA = calculateETA;
     print('atsignsTotrack $atsignsToTrack');
+    await addMyDetailsToHybridUsersList();
+
     updateHybridList();
   }
 
@@ -37,14 +49,36 @@ class LocationService {
     _atHybridUsersController.close();
   }
 
-  addMyDetailsToHybridUsersList() async {}
+  addMyDetailsToHybridUsersList() async {
+    String _atsign = AtLocationNotificationListener().currentAtSign;
+    LatLng mylatlng = await MyLocation().myLocation();
+    var _image = await MasterLocationService().getImageOfAtsignNew(_atsign);
+
+    HybridModel _myData = HybridModel(
+        displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
+    _myData.marker = buildMarker(_myData);
+
+    myData = _myData;
+
+    // // TODO: Uncomment this when we need to show the currentUsers location in map
+    // // hybridUsersList.add(myData);
+    // // _atHybridUsersController.add(hybridUsersList);
+  }
 
   addEventDetailsToHybridUsersList() async {}
 
   // called for the first time pckage is entered from main app
   updateHybridList() async {
     print('updateHybridList location_service');
-    MasterLocationService().allReceivedUsersList.forEach((user) async {
+    // MasterLocationService().allReceivedUsersList.forEach((user) async {
+    //   print('MasterLocationService().allReceivedUsersList ${user.displayName}');
+    //   print(
+    //       'atsignsToTrack.contains(user.displayName) ${atsignsToTrack.contains(user.displayName)}');
+    //   if (atsignsToTrack.contains(user.displayName)) await updateDetails(user);
+    // });
+
+    await Future.forEach(MasterLocationService().allReceivedUsersList,
+        (user) async {
       print('MasterLocationService().allReceivedUsersList ${user.displayName}');
       print(
           'atsignsToTrack.contains(user.displayName) ${atsignsToTrack.contains(user.displayName)}');
@@ -55,17 +89,30 @@ class LocationService {
       print('added in updateHybridList: ${element.displayName}');
       print('added in updateHybridList: ${element.latLng}');
     });
-    if (_atHybridUsersController.hasListener)
-      _atHybridUsersController.add(hybridUsersList);
-    else if (hybridUsersList.length != 0)
+    // if (_atHybridUsersController.hasListener)
+    //   _atHybridUsersController.add(hybridUsersList);
+    // else
+    if (hybridUsersList.length != 0)
       Future.delayed(const Duration(seconds: 2),
           () => _atHybridUsersController.add(hybridUsersList));
   }
 
   // called when any new/updated data is received in the main app
-  newList() {
+  newList() async {
+    print('inside newList location_service');
     if (atsignsToTrack != null) {
-      MasterLocationService().allReceivedUsersList.forEach((user) async {
+      // MasterLocationService().allReceivedUsersList.forEach((user) async {
+      //   if (atsignsToTrack.contains(user.displayName))
+      //     await updateDetails(user);
+      // });
+
+      await Future.forEach(MasterLocationService().allReceivedUsersList,
+          (user) async {
+        print(
+            'MasterLocationService().allReceivedUsersList newList ${user.displayName}');
+        print(
+            'atsignsToTrack.contains(user.displayName) newList ${atsignsToTrack.contains(user.displayName)}');
+
         if (atsignsToTrack.contains(user.displayName))
           await updateDetails(user);
       });
@@ -79,7 +126,7 @@ class LocationService {
 
   // called when a user stops sharing his location
   removeUser(String atsign) {
-    if (atsignsToTrack != null) {
+    if ((atsignsToTrack != null) && (hybridUsersList.length != 0)) {
       hybridUsersList.removeWhere((element) => element.displayName == atsign);
       if (!_atHybridUsersController.isClosed)
         _atHybridUsersController.add(hybridUsersList);
@@ -106,7 +153,8 @@ class LocationService {
   // returns new marker and eta
   addDetails(HybridModel user, {int index}) async {
     user.marker = buildMarker(user);
-    // await _calculateEta(user);
+    user.eta = await _calculateEta(user);
+    // user.eta = '?';
     if (index != null)
       hybridUsersList[index] = user;
     else
@@ -114,5 +162,16 @@ class LocationService {
     print('hybridUsersList from addDetails $hybridUsersList');
   }
 
-  _calculateEta(HybridModel user) async {}
+  _calculateEta(HybridModel user) async {
+    try {
+      LatLng from = await MyLocation().myLocation();
+      // LatLng from = LatLng(38, -112);
+      var _res =
+          await DistanceCalculate().caculateETA(myData.latLng, user.latLng);
+      return _res;
+    } catch (e) {
+      print('Error in _calculateEta $e');
+      return '?';
+    }
+  }
 }

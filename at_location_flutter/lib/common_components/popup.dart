@@ -11,72 +11,79 @@ Widget buildPopup(HybridModel user) {
   return Stack(
     alignment: Alignment.center,
     children: [
-      Container(
-        width: 200,
-        height: 82,
-        alignment: Alignment.topCenter,
+      Positioned(bottom: 0, child: pointedBottom()),
+      ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
         child: Container(
-          color: Colors.white,
-          height: 76,
-          child: Row(
-            children: [
-              (true)
-                  ? SizedBox()
-                  : Container(
-                      padding: EdgeInsets.all(10),
-                      color: Colors.blue[100],
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.car_rental,
-                            color: Colors.grey[600],
-                            size: 32,
-                          ),
-                          Text(
-                            // eta.length > index ? eta[index] : '?',
-                            user.eta ?? '?',
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.grey[600]),
-                          )
-                        ],
-                      ),
-                    ),
-              Flexible(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        child: user.image != null
-                            ? CustomCircleAvatar(
-                                byteImage: user.image, nonAsset: true, size: 30)
-                            : ContactInitial(
-                                initials: user.displayName.substring(1, 3),
-                                size: 60,
+          width: 200,
+          height: 82,
+          alignment: Alignment.topCenter,
+          child: Container(
+            color: Colors.white,
+            height: 76,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                (LocationService().calculateETA)
+                    ? Expanded(
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          color: Colors.blue[100],
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(
+                                Icons.car_rental,
+                                color: Colors.grey[600],
+                                size: 32,
                               ),
-                      ),
-                      Text(
-                        user.displayName ??
-                            'AnthonyAnthonyAnthonyAnthonyAnthony',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
+                              Text(
+                                user.eta ?? '?',
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.grey[600]),
+                              )
+                            ],
+                          ),
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       )
-                    ],
+                    : SizedBox(),
+                Flexible(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          child: user.image != null
+                              ? CustomCircleAvatar(
+                                  byteImage: user.image,
+                                  nonAsset: true,
+                                  size: 30)
+                              : ContactInitial(
+                                  initials: user.displayName.substring(1, 3),
+                                  size: 60,
+                                ),
+                        ),
+                        Text(
+                          user.displayName ?? '...',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
-      Positioned(bottom: 0, child: pointedBottom())
     ],
   );
 }

@@ -20,22 +20,24 @@ import 'common_components/popup.dart';
 class AtLocationFlutterPlugin extends StatefulWidget {
   final List<String> atsignsToTrack;
   double left, right, top, bottom;
-  AtLocationFlutterPlugin(
-    this.atsignsToTrack, {
-    this.left,
-    this.right,
-    this.top,
-    this.bottom,
-  });
+  LatLng etaFrom;
+  bool calculateETA;
+  AtLocationFlutterPlugin(this.atsignsToTrack,
+      {this.left,
+      this.right,
+      this.top,
+      this.bottom,
+      this.calculateETA = true,
+      this.etaFrom});
   @override
   _AtLocationFlutterPluginState createState() =>
       _AtLocationFlutterPluginState();
 }
 
 class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
-  final PanelController pc = PanelController();
+  PanelController pc = PanelController();
   PopupController _popupController = PopupController();
-  MapController mapController = MapController();
+  MapController mapController;
   List<LatLng> points;
   bool isEventAdmin = false;
   bool showMarker;
@@ -45,20 +47,22 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   void initState() {
     super.initState();
     showMarker = true;
-    LocationService().init(widget.atsignsToTrack);
+    mapController = MapController();
+    LocationService().init(widget.atsignsToTrack,
+        etaFrom: widget.etaFrom, calculateETA: widget.calculateETA);
   }
 
+  @override
   void dispose() {
-    super.dispose();
     LocationService().dispose();
     _popupController?.streamController?.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          // key: scaffoldKey,
           body: Stack(
         children: [
           StreamBuilder(
@@ -101,7 +105,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         center: ((users != null) && (users.length != 0))
                             ? users[0].latLng
                             : LatLng(45, 45),
-                        zoom: 8,
+                        zoom: markers.length != 0 ? 8 : 2,
                         plugins: [MarkerClusterPlugin(UniqueKey())],
                         onTap: (_) => _popupController
                             .hidePopup(), // Hide popup when the map is tapped.
@@ -155,6 +159,12 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                 } else {
                   print('map not active');
                   return ShowLocation(UniqueKey());
+                  // return Center(
+                  //   child: Text(
+                  //     'map not active',
+                  //     style: TextStyle(fontSize: 24),
+                  //   ),
+                  // );
                 }
               }),
           Positioned(

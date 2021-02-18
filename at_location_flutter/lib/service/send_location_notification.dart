@@ -48,6 +48,7 @@ class SendLocationNotification {
     LatLng myLocation = await MyLocation().myLocation();
     if (atsignsToShareLocationWith.length > 0) {
       // Location().onLocationChanged.listen((event) {});
+
       if (myLocation != null)
         atsignsToShareLocationWith.forEach((notification) async {
           bool isSend = false;

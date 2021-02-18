@@ -39,6 +39,11 @@ class _ShowLocationState extends State<ShowLocation> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
