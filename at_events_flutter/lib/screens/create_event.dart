@@ -72,7 +72,7 @@ class _CreateEventState extends State<CreateEvent> {
       padding: EdgeInsets.fromLTRB(25, 25, 25, 10),
       child: SingleChildScrollView(
         child: Container(
-          height: SizeConfig().screenHeight * 0.85,
+          height: SizeConfig().screenHeight * 0.83,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
