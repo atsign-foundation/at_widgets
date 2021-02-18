@@ -1,3 +1,16 @@
+/// This is a custom input field
+/// @param [hintText] is a [String] to display if the input field is empty
+/// @param [initialValue] is a [String] to pre-populate the input field
+/// @param [height] in [double] sets the height of the input field
+/// @param [width] in [double] sets the width of the input field
+/// @param [icon] is the trailing icon on the input field and calls the [onIconTap] or [onTap] when tapped
+/// @param [onTap] defines what to execute on tap on the input field
+/// @param [onIconTap] defines what to execute on tap on the [icon]
+/// @param [onSubmitted] defines what to execute on submit in the input field
+/// @param [iconColor] is the color to fill the [icon]
+/// @param [value] defines the observable value of the input field
+/// @param [isReadOnly] toggles the input field to be read only
+
 import 'package:at_common_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 

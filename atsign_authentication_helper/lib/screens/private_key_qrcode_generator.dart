@@ -7,8 +7,7 @@ import 'package:atsign_authentication_helper/services/authentication_service.dar
 import 'package:atsign_authentication_helper/services/size_config.dart';
 import 'package:atsign_authentication_helper/utils/text_strings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';  
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:at_utils/at_logger.dart';
@@ -25,7 +24,7 @@ class PrivateKeyQRCodeGenScreen extends StatefulWidget {
 }
 
 class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
-  var _logger = AtSignLogger('AtPrivateKeyQRCodeGeneration');
+  final _logger = AtSignLogger('AtPrivateKeyQRCodeGeneration');
   String atsign;
   var aesKey;
 
@@ -36,9 +35,8 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     atsign = AuthenticationService.getInstance().currentAtsign;
   }
 
-  GlobalKey globalKey = new GlobalKey();
+  GlobalKey globalKey = GlobalKey();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  var _loading = false;
   Uint8List _pngBytes;
   var fileLocation;
 
@@ -49,7 +47,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
           globalKey.currentContext.findRenderObject();
       var image = await boundary.toImage();
 
-      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+      var byteData = await image.toByteData(format: ImageByteFormat.png);
       _pngBytes = byteData.buffer.asUint8List();
       var directory;
       if (fileLocation == null) {
@@ -83,11 +81,11 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     if (aesKey == null) {
       _generateAESKey();
       return Scaffold();
-    } else
+    } else {
       return Opacity(
-        opacity: _loading ? 0.2 : 1,
+        opacity: 1,
         child: AbsorbPointer(
-          absorbing: _loading,
+          absorbing: false,
           child: Scaffold(
             // backgroundColor: Colors.white,
             key: _scaffoldKey,
@@ -170,9 +168,10 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
           ),
         ),
       );
+    }
   }
 
-  _generateAESKey() async {
+  void _generateAESKey() async {
     var aesEncryptedKeys =
         await AuthenticationService.getInstance().getEncryptedKeys(atsign);
     var directory;

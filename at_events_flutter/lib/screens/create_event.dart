@@ -3,6 +3,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/common_components/bottom_sheet.dart';
 import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/common_components/error_screen.dart';
@@ -22,12 +23,11 @@ import 'package:at_contact/at_contact.dart';
 import '../at_events_flutter.dart';
 
 class CreateEvent extends StatefulWidget {
-  final AtClientImpl atClientInstance;
   final EventNotificationModel eventData;
   final ValueChanged<EventNotificationModel> onEventSaved;
   final List<HybridNotificationModel> createdEvents;
   final isUpdate;
-  CreateEvent(this.atClientInstance,
+  CreateEvent(
       {this.isUpdate = false,
       this.eventData,
       this.onEventSaved,
@@ -46,9 +46,8 @@ class _CreateEventState extends State<CreateEvent> {
     super.initState();
     isLoading = false;
     EventService().init(
-        widget.atClientInstance,
-        widget.isUpdate != null ? widget.isUpdate : false,
-        widget.eventData != null ? widget.eventData : null);
+        isUpdate: widget.isUpdate != null ? widget.isUpdate : false,
+        eventData: widget.eventData != null ? widget.eventData : null);
     if (widget.createdEvents != null) {
       EventService().createdEvents = widget.createdEvents;
     }
@@ -56,6 +55,13 @@ class _CreateEventState extends State<CreateEvent> {
     if (widget.onEventSaved != null) {
       EventService().onEventSaved = widget.onEventSaved;
     }
+    initContactPlugin();
+  }
+
+  initContactPlugin() {
+    initializeContactsService(EventService().atClientInstance,
+        EventService().atClientInstance.currentAtSign,
+        rootDomain: EventService().rootDomain);
   }
 
   @override
@@ -66,7 +72,7 @@ class _CreateEventState extends State<CreateEvent> {
       padding: EdgeInsets.fromLTRB(25, 25, 25, 10),
       child: SingleChildScrollView(
         child: Container(
-          height: SizeConfig().screenHeight * 0.85,
+          height: SizeConfig().screenHeight * 0.83,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +93,9 @@ class _CreateEventState extends State<CreateEvent> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   CustomHeading(
-                                      heading: 'Create an event',
+                                      heading: EventService().isEventUpdate
+                                          ? 'Edit event'
+                                          : 'Create an event',
                                       action: 'Cancel'),
                                   SizedBox(height: 25),
                                   Text('Send To',
@@ -332,11 +340,10 @@ class _CreateEventState extends State<CreateEvent> {
                             return Center(
                               child: ErrorScreen(
                                 onPressed: EventService().init(
-                                    widget.atClientInstance,
-                                    widget.isUpdate != null
+                                    isUpdate: widget.isUpdate != null
                                         ? widget.isUpdate
                                         : false,
-                                    widget.eventData != null
+                                    eventData: widget.eventData != null
                                         ? widget.eventData
                                         : null),
                               ),
@@ -409,7 +416,7 @@ class _CreateEventState extends State<CreateEvent> {
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show('some thing went wrong , try again.', context);
+      CustomToast().show('something went wrong , try again.', context);
       setState(() {
         isLoading = false;
       });

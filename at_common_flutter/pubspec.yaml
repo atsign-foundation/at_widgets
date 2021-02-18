@@ -1,6 +1,6 @@
 name: at_common_flutter
-description: A new Flutter package project.
-version: 0.0.2
+description: A flutter package to provide common widgets used by other atsign flutter packages.
+version: 0.0.3
 homepage: https://atsign.com/
 
 environment:

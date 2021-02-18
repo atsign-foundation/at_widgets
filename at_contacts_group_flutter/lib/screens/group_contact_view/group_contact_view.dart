@@ -2,10 +2,12 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
+
 import 'package:at_contacts_flutter/widgets/custom_search_field.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/widgets/add_contacts_group_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_selction_bottom_sheet.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_list_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/horizontal_circular_list.dart';
@@ -38,7 +40,8 @@ class _GroupContactViewState extends State<GroupContactView> {
   void initState() {
     _groupService = GroupService();
     _groupService.fetchGroupsAndContacts();
-    unmodifiedSelectedGroupContacts = _groupService.selectedGroupContacts;
+    unmodifiedSelectedGroupContacts =
+        List.from(_groupService.selectedGroupContacts);
     // print("unmodified list ---> $unmodifiedSelectedGroupContacts");
 
     super.initState();
@@ -68,17 +71,22 @@ class _GroupContactViewState extends State<GroupContactView> {
         showTitle: true,
         titleText: 'Contacts',
         onLeadingIconPressed: () {
-          // print("list if ---> $unmodifiedSelectedGroupContacts");
-          // _groupService.selectedGroupContacts = unmodifiedSelectedGroupContacts;
-          _groupService.selectedContactsSink
-              .add(unmodifiedSelectedGroupContacts);
+          _groupService.selectedGroupContacts = unmodifiedSelectedGroupContacts;
           widget.selectedList(unmodifiedSelectedGroupContacts);
-          // print("list is ===> ${_groupService.temporaryList}");
-          // _groupService.selectedGroupContacts = [];
-          // _groupService.length = 0;
         },
         showBackButton: true,
         showLeadingIcon: true,
+        showTrailingIcon: widget.asSelectionScreen == null ||
+                widget.asSelectionScreen == false
+            ? true
+            : false,
+        trailingIcon: Icon(Icons.add),
+        onTrailingIconPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AddContactDialog(),
+          );
+        },
       ),
       body: Container(
         padding: EdgeInsets.all(16.toHeight),
