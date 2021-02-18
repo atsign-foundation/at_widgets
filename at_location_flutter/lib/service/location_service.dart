@@ -70,12 +70,6 @@ class LocationService {
   // called for the first time pckage is entered from main app
   updateHybridList() async {
     print('updateHybridList location_service');
-    // MasterLocationService().allReceivedUsersList.forEach((user) async {
-    //   print('MasterLocationService().allReceivedUsersList ${user.displayName}');
-    //   print(
-    //       'atsignsToTrack.contains(user.displayName) ${atsignsToTrack.contains(user.displayName)}');
-    //   if (atsignsToTrack.contains(user.displayName)) await updateDetails(user);
-    // });
 
     await Future.forEach(MasterLocationService().allReceivedUsersList,
         (user) async {
@@ -84,6 +78,7 @@ class LocationService {
           'atsignsToTrack.contains(user.displayName) ${atsignsToTrack.contains(user.displayName)}');
       if (atsignsToTrack.contains(user.displayName)) await updateDetails(user);
     });
+
     print('hybridUsersList $hybridUsersList');
     hybridUsersList.forEach((element) {
       print('added in updateHybridList: ${element.displayName}');
@@ -101,11 +96,6 @@ class LocationService {
   newList() async {
     print('inside newList location_service');
     if (atsignsToTrack != null) {
-      // MasterLocationService().allReceivedUsersList.forEach((user) async {
-      //   if (atsignsToTrack.contains(user.displayName))
-      //     await updateDetails(user);
-      // });
-
       await Future.forEach(MasterLocationService().allReceivedUsersList,
           (user) async {
         print(
@@ -164,10 +154,12 @@ class LocationService {
 
   _calculateEta(HybridModel user) async {
     try {
-      LatLng from = await MyLocation().myLocation();
-      // LatLng from = LatLng(38, -112);
-      var _res =
-          await DistanceCalculate().caculateETA(myData.latLng, user.latLng);
+      var _res;
+      if (etaFrom != null)
+        _res = await DistanceCalculate().caculateETA(etaFrom, user.latLng);
+      else
+        _res =
+            await DistanceCalculate().caculateETA(myData.latLng, user.latLng);
       return _res;
     } catch (e) {
       print('Error in _calculateEta $e');

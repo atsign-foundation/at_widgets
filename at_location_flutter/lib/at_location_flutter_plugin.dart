@@ -1,7 +1,6 @@
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/show_location.dart';
-import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
@@ -27,7 +26,7 @@ class AtLocationFlutterPlugin extends StatefulWidget {
       this.right,
       this.top,
       this.bottom,
-      this.calculateETA = true,
+      this.calculateETA = false,
       this.etaFrom});
   @override
   _AtLocationFlutterPluginState createState() =>
@@ -41,7 +40,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   List<LatLng> points;
   bool isEventAdmin = false;
   bool showMarker;
-  // GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   void initState() {
@@ -159,12 +157,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                 } else {
                   print('map not active');
                   return ShowLocation(UniqueKey());
-                  // return Center(
-                  //   child: Text(
-                  //     'map not active',
-                  //     style: TextStyle(fontSize: 24),
-                  //   ),
-                  // );
                 }
               }),
           Positioned(

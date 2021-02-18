@@ -12,17 +12,19 @@ Widget buildPopup(HybridModel user) {
     alignment: Alignment.center,
     children: [
       Positioned(bottom: 0, child: pointedBottom()),
-      ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        child: Container(
-          width: 200,
-          height: 82,
-          alignment: Alignment.topCenter,
+      Container(
+        width: LocationService().calculateETA ? 200 : 140,
+        height: 82,
+        alignment: Alignment.topCenter,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
           child: Container(
             color: Colors.white,
             height: 76,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: LocationService().calculateETA
+                  ? MainAxisAlignment.start
+                  : MainAxisAlignment.center,
               children: [
                 (LocationService().calculateETA)
                     ? Expanded(
@@ -37,10 +39,14 @@ Widget buildPopup(HybridModel user) {
                                 color: Colors.grey[600],
                                 size: 32,
                               ),
-                              Text(
-                                user.eta ?? '?',
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.grey[600]),
+                              Flexible(
+                                child: Text(
+                                  user.eta ?? '?',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.grey[600]),
+                                ),
                               )
                             ],
                           ),
