@@ -34,7 +34,7 @@ class _OneDayEventState extends State<OneDayEvent> {
       padding: EdgeInsets.all(25),
       child: SingleChildScrollView(
         child: Container(
-          height: SizeConfig().screenHeight * 0.8,
+          height: SizeConfig().screenHeight * 0.83,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

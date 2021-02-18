@@ -63,7 +63,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
             //   },
             // ),
             // AtLocationFlutterPlugin(),
-            ShowLocation(LatLng(20, 30)),
+            ShowLocation(UniqueKey(), location: LatLng(20, 30)),
             Positioned(
               top: 0,
               left: 0,
