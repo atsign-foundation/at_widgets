@@ -45,7 +45,7 @@ class _SecondScreenState extends State<SecondScreen> {
           SizedBox(
             height: 20.0,
           ),
-          Text("Enter an atsign to chat with"),
+          Text('Enter an atsign to chat with'),
           SizedBox(
             height: 10.0,
           ),
@@ -145,8 +145,8 @@ class _SecondScreenState extends State<SecondScreen> {
     );
   }
 
-  getAtSignAndInitializeChat() async {
-    String currentAtSign = await clientSdkService.getAtSign();
+  void getAtSignAndInitializeChat() async {
+    var currentAtSign = await clientSdkService.getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
@@ -155,7 +155,7 @@ class _SecondScreenState extends State<SecondScreen> {
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
-  setAtsignToChatWith() {
+  void setAtsignToChatWith() {
     setChatWithAtSign(chatWithAtSign);
   }
 }

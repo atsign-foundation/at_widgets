@@ -60,6 +60,7 @@ class AtLocationNotificationListener {
         MasterLocationService().deleteReceivedData(fromAtSign);
         return;
       } else if (atKey.toString().toLowerCase().contains('sharelocation')) {
+        print('$notificationKey containing sharelocation deleted');
         KeyStreamService().removeData(atKey.toString());
         return;
       }

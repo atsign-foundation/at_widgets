@@ -4,6 +4,7 @@ import 'package:at_location_flutter/common_components/floating_icon.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class MapScreen extends StatefulWidget {
@@ -38,7 +39,13 @@ class _MapScreenState extends State<MapScreen> {
           key: scaffoldKey,
           body: Stack(
             children: [
-              AtLocationFlutterPlugin(atsignsToTrack),
+              AtLocationFlutterPlugin(
+                atsignsToTrack,
+                calculateETA: true,
+                addCurrentUserMarker: true,
+                // etaFrom: LatLng(44, -112),
+                // textForCenter: 'Final',
+              ),
               Positioned(
                 top: 0,
                 left: 0,
@@ -48,24 +55,14 @@ class _MapScreenState extends State<MapScreen> {
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
-              // Positioned(
-              //   top: 0,
-              //   right: 0,
-              //   child: FloatingIcon(
-              //       bgColor: Theme.of(context).primaryColor,
-              //       icon: Icons.message_outlined,
-              //       iconColor: Theme.of(context).scaffoldBackgroundColor,
-              //       onPressed: () => scaffoldKey.currentState
-              //           .showBottomSheet((context) => ChatScreen())),
-              // ),
               SlidingUpPanel(
                 controller: pc,
-                minHeight: widget.userListenerKeyword != null ? 126 : 205,
+                minHeight: widget.userListenerKeyword != null ? 130 : 205,
                 maxHeight: widget.userListenerKeyword != null
                     ? ((widget.userListenerKeyword.atsignCreator ==
                             widget.currentAtSign)
                         ? 291
-                        : 126)
+                        : 130)
                     : 431,
                 panel: CollapsedContent(
                     true, AtLocationNotificationListener().atClientInstance,

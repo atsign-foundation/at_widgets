@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SizeConfig {
   SizeConfig._();
 
-  static SizeConfig _instance = SizeConfig._();
+  static final SizeConfig _instance = SizeConfig._();
 
   factory SizeConfig() => _instance;
   MediaQueryData _mediaQueryData;
@@ -57,22 +57,22 @@ class SizeConfig {
   }
 
   double getWidthRatio(double val) {
-    double res = (val / refWidth) * 100;
-    double temp = res * blockSizeHorizontal;
+    var res = (val / refWidth) * 100;
+    var temp = res * blockSizeHorizontal;
     // print("width$temp");
 
     return temp;
   }
 
   double getHeightRatio(double val) {
-    double res = (val / refHeight) * 100;
-    double temp = res * blockSizeVertical;
+    var res = (val / refHeight) * 100;
+    var temp = res * blockSizeVertical;
     return temp;
   }
 
   double getFontRatio(double val) {
-    double res = (val / refWidth) * 100;
-    double temp = 0.0;
+    var res = (val / refWidth) * 100;
+    var temp = 0.0;
     if (screenWidth < screenHeight) {
       temp = res * safeBlockHorizontal;
     } else {

@@ -1,6 +1,6 @@
 name: at_chat_flutter
-description: A flutter plugin project to provide chat feature.
-version: 0.0.2
+description: A flutter plugin project to provide chat feature using atsigns and atprotocol.
+version: 0.0.4
 homepage: https://atsign.com/
 
 environment:
@@ -11,8 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   at_contact: ^1.0.0
-  at_common_flutter: 
-    path: ../at_common_flutter
+  at_common_flutter: ^0.0.3
   at_commons: ^1.0.1+4
   at_client_mobile: ^1.0.0+5
   at_lookup: ^1.0.0+4

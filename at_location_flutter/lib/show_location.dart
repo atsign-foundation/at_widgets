@@ -1,12 +1,12 @@
-import 'package:at_location_flutter/common_components/build_marker.dart';
-import 'package:at_location_flutter/location_modal/hybrid_model.dart';
-import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 
+import 'common_components/build_marker.dart';
+import 'location_modal/hybrid_model.dart';
 import 'map_content/flutter_map/flutter_map.dart';
 import 'map_content/flutter_map_marker_cluster/src/marker_cluster_layer_options.dart';
 import 'map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
+import 'utils/constants/constants.dart';
 
 class ShowLocation extends StatefulWidget {
   Key key;
@@ -19,21 +19,28 @@ class ShowLocation extends StatefulWidget {
 
 class _ShowLocationState extends State<ShowLocation> {
   final MapController mapController = MapController();
-  bool showMarker;
+  bool showMarker, noPointReceived;
   Marker marker;
   @override
   void initState() {
     super.initState();
     showMarker = true;
+    noPointReceived = false;
     print('widget.location ${widget.location}');
     if (widget.location != null)
       marker = buildMarker(new HybridModel(latLng: widget.location),
           singleMarker: true);
     else {
-      // marker = buildMarker(new HybridModel(latLng: LatLng(45, 45)),
-      //     singleMarker: true);
+      noPointReceived = true;
+      marker = buildMarker(new HybridModel(latLng: LatLng(45, 45)),
+          singleMarker: true);
       showMarker = false;
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -73,6 +80,7 @@ class _ShowLocationState extends State<ShowLocation> {
   }
 
   fnWhenZoomChanges(double zoom) {
+    if (noPointReceived) return;
     if ((zoom > 2) && (!showMarker)) {
       setState(() {
         showMarker = true;

@@ -4,8 +4,8 @@ import 'package:at_client/at_client.dart';
 import 'package:at_commons/at_commons.dart';
 
 class AtErrorDialog {
-  static getAlertDialog(var error, BuildContext context) {
-    String errorMessage = _getErrorMessage(error);
+  static Widget getAlertDialog(var error, BuildContext context) {
+    var errorMessage = _getErrorMessage(error);
     var title = 'Error';
     return AlertDialog(
       title: Row(

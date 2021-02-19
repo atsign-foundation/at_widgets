@@ -1,7 +1,6 @@
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/show_location.dart';
-import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
@@ -20,45 +19,58 @@ import 'common_components/popup.dart';
 class AtLocationFlutterPlugin extends StatefulWidget {
   final List<String> atsignsToTrack;
   double left, right, top, bottom;
-  AtLocationFlutterPlugin(
-    this.atsignsToTrack, {
-    this.left,
-    this.right,
-    this.top,
-    this.bottom,
-  });
+  LatLng etaFrom;
+  String textForCenter;
+  bool calculateETA, addCurrentUserMarker;
+  AtLocationFlutterPlugin(this.atsignsToTrack,
+      {this.left,
+      this.right,
+      this.top,
+      this.bottom,
+      this.calculateETA = false,
+      this.addCurrentUserMarker = false,
+      this.textForCenter = 'Centre',
+      this.etaFrom});
   @override
   _AtLocationFlutterPluginState createState() =>
       _AtLocationFlutterPluginState();
 }
 
 class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
-  final PanelController pc = PanelController();
+  PanelController pc = PanelController();
   PopupController _popupController = PopupController();
-  MapController mapController = MapController();
+  MapController mapController;
   List<LatLng> points;
   bool isEventAdmin = false;
   bool showMarker;
-  // GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   void initState() {
     super.initState();
     showMarker = true;
-    LocationService().init(widget.atsignsToTrack);
+    mapController = MapController();
+    LocationService().init(widget.atsignsToTrack,
+        etaFrom: widget.etaFrom,
+        calculateETA: widget.calculateETA,
+        addCurrentUserMarker: widget.addCurrentUserMarker,
+        textForCenter: widget.textForCenter);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      LocationService().mapInitialized();
+      LocationService().notifyListeners();
+    });
   }
 
+  @override
   void dispose() {
-    super.dispose();
     LocationService().dispose();
     _popupController?.streamController?.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          // key: scaffoldKey,
           body: Stack(
         children: [
           StreamBuilder(
@@ -101,7 +113,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         center: ((users != null) && (users.length != 0))
                             ? users[0].latLng
                             : LatLng(45, 45),
-                        zoom: 8,
+                        zoom: markers.length != 0 ? 8 : 2,
                         plugins: [MarkerClusterPlugin(UniqueKey())],
                         onTap: (_) => _popupController
                             .hidePopup(), // Hide popup when the map is tapped.
