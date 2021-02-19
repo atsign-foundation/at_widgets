@@ -24,7 +24,6 @@ class _EventListState extends State<EventList> {
 
   getAllEvent() async {
     events = await getEvents();
-    print('events:${events}');
     if (events.length > 0) {
       setState(() {
         isEventAvailable = true;
@@ -39,11 +38,12 @@ class _EventListState extends State<EventList> {
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          title: Text('Event list'),
-          automaticallyImplyLeading: true,
-          leading: Center(
-            child: Icon(Icons.arrow_back),
-          )),
+        title: Text('Event list'),
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
