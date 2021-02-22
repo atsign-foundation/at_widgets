@@ -32,62 +32,66 @@ packages:
   at_client:
     dependency: transitive
     description:
-      path: "../../../../at_foundation/at_client_sdk/at_client"
-      relative: true
-    source: path
-    version: "1.0.1+3"
+      path: at_client
+      ref: dev_env
+      resolved-ref: e15155756f160fc03afd11ec01302876e3f597c7
+      url: "https://github.com/atsign-foundation/at_client_sdk.git"
+    source: git
+    version: "1.0.1+5"
   at_client_mobile:
     dependency: transitive
     description:
-      path: "/Users/apple/Documents/shris/@company/at_foundation/at_client_sdk/at_client_mobile"
-      relative: false
-    source: path
-    version: "1.0.0+3"
+      path: at_client_mobile
+      ref: dev_env
+      resolved-ref: e15155756f160fc03afd11ec01302876e3f597c7
+      url: "https://github.com/atsign-foundation/at_client_sdk.git"
+    source: git
+    version: "1.0.0+5"
   at_commons:
     dependency: transitive
     description:
       path: at_commons
       ref: dev_env
-      resolved-ref: "6470921c2cda02ec3fd91d5eb78d10a05e0ce9ff"
+      resolved-ref: "3da13624418c5f270af323dc0640f1dc91145b92"
       url: "https://github.com/atsign-foundation/at_tools.git"
     source: git
-    version: "1.0.1+3"
+    version: "1.0.1+4"
   at_lookup:
     dependency: transitive
     description:
       path: at_lookup
       ref: dev_env
-      resolved-ref: "04c1662eb2b0f4ea2fc40864ad097b7b981ca2e8"
+      resolved-ref: "8677afccafa7c289b45bc0eea5c60ccc872f8c07"
       url: "https://github.com/atsign-foundation/at_libraries.git"
     source: git
-    version: "1.0.0"
+    version: "1.0.0+4"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       path: "at_secondary/at_persistence_secondary_server"
       ref: dev_env
-      resolved-ref: "030138fab85bed3fa9c51c01c7668e32d462c5ac"
+      resolved-ref: "1025ea76542431cca1d36275c564733278587836"
       url: "https://github.com/atsign-foundation/at_server.git"
     source: git
-    version: "1.0.1+3"
+    version: "1.0.1+4"
   at_persistence_spec:
     dependency: transitive
     description:
       path: "at_persistence/at_persistence_spec"
       ref: dev_env
-      resolved-ref: "030138fab85bed3fa9c51c01c7668e32d462c5ac"
+      resolved-ref: "1025ea76542431cca1d36275c564733278587836"
       url: "https://github.com/atsign-foundation/at_server.git"
     source: git
-    version: "1.0.1+2"
+    version: "1.0.1+3"
   at_utils:
     dependency: transitive
     description:
       path: at_utils
       ref: dev_env
-      resolved-ref: "6470921c2cda02ec3fd91d5eb78d10a05e0ce9ff"
+      resolved-ref: "3da13624418c5f270af323dc0640f1dc91145b92"
       url: "https://github.com/atsign-foundation/at_tools.git"
     source: git
-    version: "1.0.1+3"
+    version: "1.0.1+4"
   base2e15:
     dependency: transitive
     description:
@@ -307,14 +311,14 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.1+1"
+    version: "5.1.0+2"
   permission_handler_platform_interface:
     dependency: transitive
     description:
       name: permission_handler_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   platform:
     dependency: transitive
     description:

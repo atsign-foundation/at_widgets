@@ -35,6 +35,8 @@ class Strings {
   //custom dialog texts
   static const String errorTitle = 'Error';
   static const String closeTitle = 'Close';
+  static const String mailUrlquery = 'subject=Issue from @persona app';
+  static const String mailUrlScheme = 'mailto';
 
   static String backupFileName(String atsign) {
     return atsign + '_encrypt_keys.atKeys';

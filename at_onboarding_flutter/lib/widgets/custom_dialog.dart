@@ -1,4 +1,3 @@
-// import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
@@ -222,7 +221,6 @@ class CustomDialog extends StatelessWidget {
         text3 = message.substring(startIndex + highLightText.length);
 
     return RichText(
-      // textAlign: TextAlign.center,
       text: TextSpan(style: CustomTextStyles.fontR16primary, children: [
         TextSpan(
           text: text1,
@@ -237,10 +235,9 @@ class CustomDialog extends StatelessWidget {
             recognizer: new TapGestureRecognizer()
               ..onTap = () async {
                 final Uri params = Uri(
-                  scheme: 'mailto',
+                  scheme: Strings.mailUrlScheme,
                   path: '${AppConstants.contactAddress}',
-                  query:
-                      'subject=Issue from @persona app', //add subject and body here
+                  query: Strings.mailUrlquery, //add subject and body here
                 );
                 var url = highLightText == AppConstants.contactAddress
                     ? params.toString()

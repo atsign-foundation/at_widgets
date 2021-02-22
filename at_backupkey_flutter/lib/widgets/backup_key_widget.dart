@@ -17,7 +17,6 @@ class BackupKeyWidget extends StatelessWidget {
   final bool isButton;
   final bool isIcon;
   final atClientService;
-  // final Function onPressed;
   final String buttonText;
   final Color iconColor;
   final double buttonWidth;
@@ -30,7 +29,6 @@ class BackupKeyWidget extends StatelessWidget {
       @required this.atClientService,
       this.isButton = false,
       this.isIcon,
-      // this.onPressed,
       this.buttonText,
       this.iconColor,
       this.buttonWidth,

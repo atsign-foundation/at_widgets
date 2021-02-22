@@ -109,11 +109,6 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   buttonColor: ColorConstants.appColor,
                   buttonText: Strings.saveButtonTitle,
                 ),
-                // CustomButton(
-                //   width: 230.toWidth,
-                //   buttonText: Strings.saveButtonTitle,
-                //   onPressed: _saveBackuzip,
-                // ),
                 SizedBox(
                   height: 10.toHeight,
                 ),
@@ -157,41 +152,5 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
         ),
       ),
     );
-  }
-
-  _saveBackuzip() async {
-    final _onboardingService = OnboardingService.getInstance();
-    try {
-      var aesEncryptedKeys = await _onboardingService.getEncryptedKeys(atsign);
-      var directory;
-      String path;
-      var status = await Permission.storage.status;
-      if (status.isUndetermined) {
-        await Permission.storage.request();
-      }
-      directory = await path_provider.getApplicationSupportDirectory();
-      path = directory.path.toString() + '/';
-      // var aesKey = await _onboardingService.getAESKey(atsign);
-      // final String imageData = '$atsign:$aesKey';
-      final encryptedKeysFile =
-          await File('$path${Strings.backupFileName(atsign)}').create();
-      var keyString = jsonEncode(aesEncryptedKeys);
-      // keyString = keyString + imageData;
-      encryptedKeysFile.writeAsStringSync(keyString);
-      // var encoder = ZipFileEncoder();
-      // encoder.create('$path' + '${atsign + AppConstants.backupZipExtension}');
-      // encoder.addFile(encryptedKeysFile);
-      // encoder.close();
-      // encryptedKeysFile.deleteSync();
-      await Share.shareFiles([encryptedKeysFile.path],
-          text: 'encryptATKey',
-          // subject: '$atsign' + '_key',
-          sharePositionOrigin:
-              Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
-    } on Exception catch (ex) {
-      _logger.severe('BackingUp keys throws $ex exception');
-    } on Error catch (err) {
-      _logger.severe('BackingUp keys throws $err error');
-    }
   }
 }

@@ -5,6 +5,7 @@ import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:flutter/material.dart';
+import 'package:at_utils/at_logger.dart';
 
 class OnboardingService {
   static final OnboardingService _singleton = OnboardingService._internal();
@@ -15,8 +16,7 @@ class OnboardingService {
   }
 
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
-
-  // AtClientService atClientServiceInstance;
+  AtSignLogger _logger = AtSignLogger('Onboarding Service');
 
   Map<String, AtClientService> atClientServiceMap = {};
   String _atsign;
@@ -54,7 +54,6 @@ class OnboardingService {
   Widget fistTimeAuthScreen;
 
   Widget get nextScreen => _nextScreen;
-  // final String authSuccess = "Authentication successful";
 
   AtClientService _getClientServiceForAtsign(String atsign) {
     if (atsign == null) {}
@@ -130,17 +129,14 @@ class OnboardingService {
               onTimeout: () {
         throw (ResponseStatus.TIME_OUT);
       });
-      // return result;
     } catch (e) {
-      print("error in authenticating =>  ${e.toString()}");
+      _logger.severe("error in authenticating =>  ${e.toString()}");
       if (e == ResponseStatus.TIME_OUT) {
         c.completeError(e);
       } else {
         c.completeError(
             e.runtimeType == OnboardingStatus ? e : ResponseStatus.AUTH_FAILED);
       }
-
-      print(e);
     }
     return c.future;
   }
@@ -218,9 +214,5 @@ class OnboardingService {
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
       await _getAtClientForAtsign().getSyncManager().sync();
     }
-  }
-
-  _onTimeout(Completer c) {
-    c.completeError(ResponseStatus.TIME_OUT);
   }
 }

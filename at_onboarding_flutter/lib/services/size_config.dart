@@ -31,8 +31,6 @@ class SizeConfig {
 
     deviceTextFactor = _mediaQueryData.textScaleFactor;
 
-    // print("height is::: $screenHeight");
-
     if (screenHeight < 1200) {
       blockSizeHorizontal = screenWidth / 100;
       blockSizeVertical = screenHeight / 100;
@@ -59,7 +57,6 @@ class SizeConfig {
   double getWidthRatio(double val) {
     double res = (val / refWidth) * 100;
     double temp = res * blockSizeHorizontal;
-    // print("width$temp");
 
     return temp;
   }
@@ -78,7 +75,6 @@ class SizeConfig {
     } else {
       temp = res * safeBlockVertical;
     }
-    // print('$val,$temp,$refHeight,$refWidth');
     return temp;
   }
 }

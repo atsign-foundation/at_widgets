@@ -15,7 +15,6 @@ class ColorConstants {
   static Color secondary = Colors.white;
 
   ///shade of grey
-  // static Color borderLightColor = Colors.grey[300];
   static Color fillColor = Colors.grey[300];
 
   static Color borderColor;
@@ -30,7 +29,6 @@ class ColorConstants {
   static Color backgroundColor;
 
   static Color lightBackgroundColor = Colors.grey[600];
-  // static Color _darkBackgroundColor = Color.fromARGB(255, 45, 42, 48);
 
   static set setAppColor(Color color) => _highLightColor = color;
   static get appColor => _highLightColor ?? Colors.black;
