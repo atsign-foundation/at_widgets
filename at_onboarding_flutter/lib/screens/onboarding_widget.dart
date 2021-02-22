@@ -163,13 +163,11 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (widget.nextScreen == null) {
-              CustomNav().pop(context);
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                widget.onboard(_onboardingService.atClientServiceMap,
-                    _onboardingService.currentAtsign);
-              });
-            }
+            CustomNav().pop(context);
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              widget.onboard(_onboardingService.atClientServiceMap,
+                  _onboardingService.currentAtsign);
+            });
             if (widget.nextScreen != null) {
               CustomNav().push(widget.nextScreen, context);
             }
@@ -184,15 +182,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
               return PairAtsignWidget(
                 onboardStatus: snapshot.error,
               );
-            }
-            // if (widget.nextScreen == null) {
-            //   CustomNav().pop(context);
-            //   Future.delayed((Duration(milliseconds: 200)), () {
-            //     widget.onError(snapshot.error);
-            //   });
-            //   return Center();
-            // }
-            else {
+            } else {
               CustomNav().pop(context);
               Future.delayed((Duration(milliseconds: 200)), () {
                 widget.onError(snapshot.error);

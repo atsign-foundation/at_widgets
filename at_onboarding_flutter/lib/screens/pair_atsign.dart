@@ -244,6 +244,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = false;
       });
+      _showAlertDialog(error);
     }
   }
 
