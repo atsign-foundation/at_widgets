@@ -23,9 +23,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>	
-	<string>The Location access is used to get your current Location</string>	
-	<key>NSLocationWhenInUseUsageDescription</key>	
-	<string>Because</string>
+	<string>The Location access is used to get your current location for sharing with other atsigns</string>	
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The Location access is used to get your current location for sharing with other atsigns</string>
 	<key>NSCameraUsageDescription</key>
   	<string>The camera is used to scan QR code to pair your device with your @sign</string>
 	<key>NSPhotoLibraryUsageDescription</key>

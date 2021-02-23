@@ -71,7 +71,7 @@ class DistanceCalculate {
   //   print(response);
   // }
 
-  Future<String> caculateETA(LatLng origin, LatLng destination) async {
+  Future<String> calculateETA(LatLng origin, LatLng destination) async {
     try {
       var url =
           'https://router.hereapi.com/v8/routes?transportMode=car&origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&return=summary';

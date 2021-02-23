@@ -179,10 +179,10 @@ class LocationService {
       try {
         var _res;
         if (etaFrom != null)
-          _res = await DistanceCalculate().caculateETA(etaFrom, user.latLng);
+          _res = await DistanceCalculate().calculateETA(etaFrom, user.latLng);
         else
           _res =
-              await DistanceCalculate().caculateETA(myData.latLng, user.latLng);
+              await DistanceCalculate().calculateETA(myData.latLng, user.latLng);
         return _res;
       } catch (e) {
         print('Error in _calculateEta $e');
