@@ -127,9 +127,6 @@ class OnboardingService {
         onboardFunc(this.atClientServiceMap, atsign);
         c.complete(ResponseStatus.AUTH_SUCCESS);
         await _sync();
-      }).timeout(Duration(seconds: AppConstants.responseTimeLimit),
-              onTimeout: () {
-        throw (ResponseStatus.TIME_OUT);
       });
     } catch (e) {
       _logger.severe("error in authenticating =>  ${e.toString()}");
