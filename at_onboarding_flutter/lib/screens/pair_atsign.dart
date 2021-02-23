@@ -45,7 +45,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   bool _isContinue = true;
   String _pairingAtsign;
 
-  bool cameraPermissionGrated = false;
+  bool permissionGrated = false;
   bool scanCompleted = false;
   String _incorrectKeyFile =
       'Unable to fetch the keys from chosen file. Please choose correct file';
@@ -53,7 +53,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   @override
   void initState() {
-    askCameraPermission();
+    checkPermissions();
     if (widget.getAtSign == true) {
       _getAtsignForm();
     }
@@ -171,27 +171,36 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
-  askCameraPermission() async {
-    var status = await Permission.camera.status;
-    _logger.info("camera status => $status");
-    if (status.isUndetermined) {
-      // We didn't ask for permission yet.
-      await [
-        Permission.camera,
-        Permission.storage,
-      ].request();
-      this.setState(() {
-        cameraPermissionGrated = true;
+  checkPermissions() async {
+    var cameraStatus = await Permission.camera.status;
+    var storageStatus = await Permission.storage.status;
+    _logger.info("camera status => $cameraStatus");
+    _logger.info('storage status is $storageStatus');
+
+    if (cameraStatus.isUndetermined || cameraStatus.isDenied) {
+      await askPermissions(Permission.camera);
+    } else if (storageStatus.isUndetermined || storageStatus.isDenied) {
+      await askPermissions(Permission.storage);
+    } else if (cameraStatus.isGranted && storageStatus.isGranted) {
+      setState(() {
+        permissionGrated = true;
       });
-    } else {
-      this.setState(() {
-        cameraPermissionGrated = true;
-      });
+    }
+  }
+
+  askPermissions(Permission type) async {
+    if (type == Permission.camera) {
+      await Permission.camera.request();
+    } else if (type == Permission.storage) {
+      await Permission.storage.request();
     }
   }
 
   void _uploadCramKeyFile() async {
     try {
+      if (!permissionGrated) {
+        await checkPermissions();
+      }
       _isServerCheck = false;
       _isContinue = true;
       String cramKey;
@@ -282,6 +291,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   void _uploadKeyFile() async {
     try {
+      if (!permissionGrated) {
+        await checkPermissions();
+      }
       _isServerCheck = false;
       _isContinue = true;
       var fileContents, aesKey, atsign;
@@ -530,7 +542,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           width: 300.toWidth,
           height: 350.toHeight,
           color: Colors.black,
-          child: !cameraPermissionGrated
+          child: !permissionGrated
               ? SizedBox()
               : Stack(
                   children: [
