@@ -102,7 +102,7 @@ class _SecondScreenState extends State<SecondScreen> {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 30,
             ),
             Center(
               child: Text(
@@ -131,7 +131,7 @@ class _SecondScreenState extends State<SecondScreen> {
                               child: Text(
                                 '${snapshot.data.indexOf(notification) + 1}. ${notification.key}',
                                 style: TextStyle(fontSize: 16),
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.left,
                               ),
                             );
                           }).toList());
