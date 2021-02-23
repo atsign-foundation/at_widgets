@@ -228,7 +228,7 @@ class CustomDialog extends StatelessWidget {
         TextSpan(
             text: highLightText,
             style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.toFont,
                 fontWeight: FontWeight.bold,
                 color: ColorConstants.appColor,
                 decoration: TextDecoration.underline),
