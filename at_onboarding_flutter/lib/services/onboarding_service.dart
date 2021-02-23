@@ -85,7 +85,6 @@ class OnboardingService {
         atClientPreference: _atClientPreference, atsign: atsign);
     _atsign = atsign == null ? await this.getAtSign() : atsign;
     atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
-    onboardFunc(this.atClientServiceMap, _atsign);
     _sync();
     return result;
   }
@@ -124,12 +123,8 @@ class OnboardingService {
           .then((value) async {
         _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
-        onboardFunc(this.atClientServiceMap, atsign);
         c.complete(ResponseStatus.AUTH_SUCCESS);
         await _sync();
-      }).timeout(Duration(seconds: AppConstants.responseTimeLimit),
-              onTimeout: () {
-        throw (ResponseStatus.TIME_OUT);
       });
     } catch (e) {
       _logger.severe("error in authenticating =>  ${e.toString()}");
