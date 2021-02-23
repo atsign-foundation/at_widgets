@@ -223,7 +223,8 @@ class _GroupViewState extends State<GroupView> {
                                 selectedList: (selectedList) async {
                                   GroupService().selecteContactList =
                                       selectedList;
-
+                                },
+                                saveGroup: () async {
                                   if (GroupService().selecteContactList.length >
                                       0) {
                                     CustomToast()

@@ -18,6 +18,8 @@ import 'package:at_contacts_flutter/widgets/horizontal_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../services/contact_service.dart';
+
 class ContactsScreen extends StatefulWidget {
   final BuildContext context;
 
@@ -66,6 +68,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                     Navigator.pop(widget.context);
                     if (widget.saveGroup != null) {
                       widget.saveGroup();
+                      ContactService().clearAtSigns();
                     }
                   },
                   selectedList: (s) {
