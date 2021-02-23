@@ -98,9 +98,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
-      this.setState(() {
-        scanCompleted = false;
-      });
       if (authResponse == ResponseStatus.AUTH_SUCCESS) {
         if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
             widget.onboardStatus == OnboardingStatus.RESTORE) {
@@ -140,9 +137,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     _isServerCheck = false;
     _isContinue = true;
     _controller.stopCamera();
-    this.setState(() {
-      scanCompleted = true;
-    });
     var message;
     if (_isCram(data)) {
       List params = data.split(':');
@@ -161,12 +155,15 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       _showAlertDialog(CustomStrings().invalidData);
     }
     this.setState(() {
-      scanCompleted = false;
       loading = false;
     });
     if (message != ResponseStatus.AUTH_SUCCESS) {
+      scanCompleted = false;
       await _controller.startCamera((data, offsets) {
-        onScan(data, offsets, context);
+        if (!scanCompleted) {
+          onScan(data, offsets, context);
+          scanCompleted = true;
+        }
       });
     }
   }
@@ -552,7 +549,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                       callback: (container) {
                         this._controller = container;
                         _controller.startCamera((data, offsets) {
-                          onScan(data, offsets, context);
+                          if (!scanCompleted) {
+                            onScan(data, offsets, context);
+                            scanCompleted = true;
+                          }
                         });
                       },
                     ),
