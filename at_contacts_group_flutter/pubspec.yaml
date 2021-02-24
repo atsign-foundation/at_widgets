@@ -1,5 +1,5 @@
 name: at_contacts_group_flutter
-description: A new flutter plugin project.
+description: A flutter plugin project to provide the group functionality with contacts using atprotocol.
 version: 0.0.1
 homepage: https://atsign.com/
 
@@ -13,10 +13,9 @@ dependencies:
 
   toast: ^0.1.5
   file_picker: ^2.1.4
-  at_common_flutter: 
-    path: ../at_common_flutter
-  at_contacts_flutter: 
-    path: ../at_contacts_flutter
+
+  at_common_flutter: ^0.0.3
+  at_contacts_flutter: ^0.0.3
   at_contact: ^1.0.0
 
 dev_dependencies:
@@ -42,7 +41,9 @@ flutter:
 
   # To add assets to your plugin package, add an assets section, like this:
   assets:
-    - assets/images/
+    - assets/images/empty_group.png
+    - assets/images/send.png
+    - assets/images/group_photo.png
     # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   #
