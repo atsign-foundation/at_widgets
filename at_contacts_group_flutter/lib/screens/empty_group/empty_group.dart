@@ -36,6 +36,7 @@ class _EmptyGroupState extends State<EmptyGroup> {
               width: 181.toWidth,
               height: 181.toWidth,
               fit: BoxFit.cover,
+              package: 'at_contacts_group_flutter',
             ),
             SizedBox(
               height: 15.toHeight,

@@ -1,6 +1,8 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 
 import 'package:at_contacts_flutter/widgets/custom_search_field.dart';
@@ -12,6 +14,7 @@ import 'package:at_contacts_group_flutter/widgets/contacts_selction_bottom_sheet
 import 'package:at_contacts_group_flutter/widgets/custom_list_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/horizontal_circular_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class GroupContactView extends StatefulWidget {
   final bool showContacts;
@@ -35,10 +38,14 @@ class GroupContactView extends StatefulWidget {
 class _GroupContactViewState extends State<GroupContactView> {
   GroupService _groupService;
   String searchText = '';
+  bool blockingContact = false;
   List<GroupContactsModel> unmodifiedSelectedGroupContacts = [];
+  ContactService _contactService;
+  bool deletingContact = false;
   @override
   void initState() {
     _groupService = GroupService();
+    _contactService = ContactService();
     _groupService.fetchGroupsAndContacts();
     unmodifiedSelectedGroupContacts =
         List.from(_groupService.selectedGroupContacts);
@@ -227,19 +234,157 @@ class _GroupContactViewState extends State<GroupContactView> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Container(
-                                                child: CustomListTile(
-                                                  onTap: () {},
-                                                  asSelectionTile:
-                                                      widget.asSelectionScreen,
-                                                  selectSingle:
-                                                      widget.singleSelection,
-                                                  item: contactsForAlphabet[
-                                                      index],
-                                                  selectedList: (s) {
-                                                    widget.selectedList(s);
-                                                  },
-                                                  onTrailingPressed: () {},
-                                                ),
+                                                child: (contactsForAlphabet[
+                                                                index]
+                                                            .contact !=
+                                                        null)
+                                                    ? Slidable(
+                                                        actionPane:
+                                                            SlidableDrawerActionPane(),
+                                                        actionExtentRatio: 0.25,
+                                                        secondaryActions: <
+                                                            Widget>[
+                                                          IconSlideAction(
+                                                            caption:
+                                                                TextStrings()
+                                                                    .block,
+                                                            color: ColorConstants
+                                                                .inputFieldColor,
+                                                            icon: Icons.block,
+                                                            onTap: () async {
+                                                              setState(() {
+                                                                blockingContact =
+                                                                    true;
+                                                              });
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        AlertDialog(
+                                                                  title: Center(
+                                                                    child: Text(
+                                                                        TextStrings()
+                                                                            .blockContact),
+                                                                  ),
+                                                                  content:
+                                                                      Container(
+                                                                    height: 100
+                                                                        .toHeight,
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          CircularProgressIndicator(),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                              await _contactService
+                                                                  .blockUnblockContact(
+                                                                      contact: contactsForAlphabet[
+                                                                              index]
+                                                                          .contact,
+                                                                      blockAction:
+                                                                          true);
+                                                              await _groupService
+                                                                  .fetchGroupsAndContacts();
+                                                              setState(() {
+                                                                blockingContact =
+                                                                    true;
+                                                                Navigator.pop(
+                                                                    context);
+                                                              });
+                                                            },
+                                                          ),
+                                                          IconSlideAction(
+                                                            caption:
+                                                                TextStrings()
+                                                                    .delete,
+                                                            color: Colors.red,
+                                                            icon: Icons.delete,
+                                                            onTap: () async {
+                                                              setState(() {
+                                                                deletingContact =
+                                                                    true;
+                                                              });
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        AlertDialog(
+                                                                  title: Center(
+                                                                    child: Text(
+                                                                        TextStrings()
+                                                                            .deleteContact),
+                                                                  ),
+                                                                  content:
+                                                                      Container(
+                                                                    height: 100
+                                                                        .toHeight,
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          CircularProgressIndicator(),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                              await _contactService
+                                                                  .deleteAtSign(
+                                                                      atSign: contactsForAlphabet[
+                                                                              index]
+                                                                          .contact
+                                                                          .atSign);
+                                                              await _groupService
+                                                                  .fetchGroupsAndContacts();
+                                                              setState(() {
+                                                                deletingContact =
+                                                                    false;
+                                                                Navigator.pop(
+                                                                    context);
+                                                              });
+                                                            },
+                                                          ),
+                                                        ],
+                                                        child: Container(
+                                                          child: CustomListTile(
+                                                            onTap: () {},
+                                                            asSelectionTile: widget
+                                                                .asSelectionScreen,
+                                                            selectSingle: widget
+                                                                .singleSelection,
+                                                            item:
+                                                                contactsForAlphabet[
+                                                                    index],
+                                                            selectedList: (s) {
+                                                              widget
+                                                                  .selectedList(
+                                                                      s);
+                                                            },
+                                                            onTrailingPressed:
+                                                                () {},
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : CustomListTile(
+                                                        onTap: () {},
+                                                        asSelectionTile: widget
+                                                            .asSelectionScreen,
+                                                        selectSingle: widget
+                                                            .singleSelection,
+                                                        item:
+                                                            contactsForAlphabet[
+                                                                index],
+                                                        selectedList: (s) {
+                                                          widget
+                                                              .selectedList(s);
+                                                        },
+                                                        onTrailingPressed:
+                                                            () {},
+                                                      ),
+
+                                                // child:,
                                               ));
                                         }),
                                   ],
