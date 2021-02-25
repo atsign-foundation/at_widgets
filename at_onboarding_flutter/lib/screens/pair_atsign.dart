@@ -101,11 +101,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       if (authResponse == ResponseStatus.AUTH_SUCCESS) {
         if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
             widget.onboardStatus == OnboardingStatus.RESTORE) {
+          _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
+              _onboardingService.currentAtsign);
           if (_onboardingService.nextScreen == null) {
             Navigator.pop(context);
-            _onboardingService.onboardFunc(
-                _onboardingService.atClientServiceMap,
-                _onboardingService.currentAtsign);
             return;
           }
           await Navigator.pushReplacement(
