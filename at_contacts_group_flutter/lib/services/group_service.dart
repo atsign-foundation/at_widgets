@@ -1,7 +1,8 @@
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'dart:async';
-
+import 'package:at_contacts_flutter/utils/exposed_service.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +12,10 @@ class GroupService {
   factory GroupService() => _instance;
   String _atsign;
   List<AtContact> selecteContactList;
+  List<GroupContactsModel> allContacts = [], selectedGroupContacts = [];
   AtGroup selectedGroup;
   AtContactsImpl atContactImpl;
+  int length = 0;
 
 // group list stream
   final _atGroupStreamController = StreamController<List<AtGroup>>.broadcast();
@@ -23,6 +26,22 @@ class GroupService {
   final _groupViewStreamController = StreamController<AtGroup>.broadcast();
   Stream<AtGroup> get groupViewStream => _groupViewStreamController.stream;
   StreamSink<AtGroup> get groupViewSink => _groupViewStreamController.sink;
+
+// all contacts stream
+  final _allContactsStreamController =
+      StreamController<List<GroupContactsModel>>.broadcast();
+  Stream<List<GroupContactsModel>> get allContactsStream =>
+      _allContactsStreamController.stream;
+  StreamSink<List<GroupContactsModel>> get allContactsSink =>
+      _allContactsStreamController.sink;
+
+  // selected group contact stream
+  final _selectedContactsStreamController =
+      StreamController<List<GroupContactsModel>>.broadcast();
+  Stream<List<GroupContactsModel>> get selectedContactsStream =>
+      _selectedContactsStreamController.stream;
+  StreamSink<List<GroupContactsModel>> get selectedContactsSink =>
+      _selectedContactsStreamController.sink;
 
   get currentAtsign => _atsign;
 
@@ -37,8 +56,8 @@ class GroupService {
   init(String atSign) async {
     _atsign = atSign;
     atContactImpl = await AtContactsImpl.getInstance(atSign);
-    var test = await atContactImpl.listContacts();
-    print('test => $test');
+    await atContactImpl.listContacts();
+    // print('test => $test');
     await getAllGroupsDetails();
   }
 
@@ -65,6 +84,10 @@ class GroupService {
         if (groupDetail != null) groupList.add(groupDetail);
       }
 
+      groupList.forEach((AtGroup group) {
+        allContacts.add(
+            GroupContactsModel(group: group, contactType: ContactsType.GROUP));
+      });
       atGroupSink.add(groupList);
     } catch (e) {
       print('error in getting group list: $e');
@@ -165,6 +188,89 @@ class GroupService {
     }
   }
 
+  // fetches contacts using the contacts library and groups from itself
+  fetchGroupsAndContacts() async {
+    try {
+      allContacts = [];
+      List<AtContact> contactList = await fetchContacts();
+      // print('CONT====>$contactList');
+      contactList.forEach((AtContact contact) {
+        allContacts.add(GroupContactsModel(
+            contact: contact, contactType: ContactsType.CONTACT));
+      });
+      await getAllGroupsDetails();
+      // print('ALL CONTACTS====>${allContacts.length}');
+      _allContactsStreamController.add(allContacts);
+    } catch (e) {}
+  }
+
+  removeGroupContact(GroupContactsModel item) async {
+    try {
+      length = 0;
+      if (selectedGroupContacts.isNotEmpty) {
+        selectedGroupContacts.forEach((groupContact) {
+          if (groupContact.contactType == ContactsType.CONTACT) {
+            length++;
+          } else if (groupContact.contactType == ContactsType.GROUP) {
+            length = length + groupContact.group.members.length;
+          }
+        });
+      }
+
+      for (GroupContactsModel groupContact in selectedGroupContacts) {
+        if ((groupContact.toString() == item.toString())) {
+          int index = selectedGroupContacts.indexOf(groupContact);
+          selectedGroupContacts.removeAt(index);
+          break;
+        }
+      }
+      if (item.contactType == ContactsType.CONTACT) {
+        length--;
+      } else if (item.contactType == ContactsType.GROUP) {
+        length -= item.group.members.length;
+      }
+
+      selectedContactsSink.add(selectedGroupContacts);
+    } catch (e) {}
+  }
+
+  addGroupContact(GroupContactsModel item) {
+    try {
+      bool isSelected = false;
+      length = 0;
+      if (selectedGroupContacts.isNotEmpty) {
+        selectedGroupContacts.forEach((groupContact) {
+          if (groupContact.contactType == ContactsType.CONTACT) {
+            length++;
+          } else if (groupContact.contactType == ContactsType.GROUP) {
+            length = length + groupContact.group.members.length;
+          }
+        });
+      }
+
+      for (GroupContactsModel groupContact in selectedGroupContacts) {
+        if ((item.toString() == groupContact.toString())) {
+          isSelected = true;
+          break;
+        } else {
+          isSelected = false;
+        }
+      }
+
+      if (length <= 25 && !isSelected) {
+        selectedGroupContacts.add(item);
+      }
+
+      if (item.contactType == ContactsType.CONTACT) {
+        length++;
+      } else if (item.contactType == ContactsType.GROUP) {
+        length += item.group.members.length;
+      }
+
+      selectedContactsSink.add(selectedGroupContacts);
+    } catch (e) {}
+  }
+
   // updateGroupWithoutNameChange(
   //     BuildContext context, AtGroup group, String newGroupName) async {
   //   group.name = newGroupName;
@@ -216,5 +322,7 @@ class GroupService {
   void dispose() {
     _atGroupStreamController.close();
     _groupViewStreamController.close();
+    _allContactsStreamController.close();
+    _selectedContactsStreamController.close();
   }
 }

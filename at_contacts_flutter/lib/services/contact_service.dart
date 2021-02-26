@@ -75,6 +75,7 @@ class ContactService {
       contactList.sort(
           (a, b) => a.atSign.substring(1).compareTo(b.atSign.substring(1)));
       contactSink.add(contactList);
+      return contactList;
     } catch (e) {
       print("error here => $e");
     }
@@ -152,7 +153,14 @@ class ContactService {
 
   removeSelectedAtSign(AtContact contact) {
     try {
-      selectedContacts.remove(contact);
+      for (AtContact atContact in selectedContacts) {
+        if (contact == atContact || atContact.atSign == contact.atSign) {
+          int index = selectedContacts.indexOf(contact);
+          print("index is $index");
+          selectedContacts.removeAt(index);
+          break;
+        }
+      }
       if (selectedContacts.length <= 25) {
         limitReached = false;
       } else {

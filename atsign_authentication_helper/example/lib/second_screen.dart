@@ -19,7 +19,7 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Second Screen"),
+        title: Text('Second Screen'),
       ),
       body: Center(
         child: ElevatedButton(
@@ -32,8 +32,8 @@ class _SecondScreenState extends State<SecondScreen> {
     );
   }
 
-  getAtSign() async {
-    String currentAtSign = await clientSdkService.getAtSign();
+  void getAtSign() async {
+    var currentAtSign = await clientSdkService.getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

@@ -7,6 +7,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
@@ -23,7 +24,7 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
-  List<AtContact> selectedContactList;
+  // List<AtContact> selectedContactList = GroupService().selecteContactList;
   @override
   void initState() {
     super.initState();
@@ -34,6 +35,9 @@ class _GroupViewState extends State<GroupView> {
     SizeConfig().init(context);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).brightness == Brightness.light
+            ? AllColors().WHITE
+            : AllColors().Black,
         body: SingleChildScrollView(
           child: Stack(
             children: [
@@ -102,8 +106,9 @@ class _GroupViewState extends State<GroupView> {
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   crossAxisCount: 4,
-                                  mainAxisSpacing: 10.toHeight,
-                                  childAspectRatio: (85 / 100),
+                                  childAspectRatio:
+                                      ((SizeConfig().screenWidth * 0.25) /
+                                          (SizeConfig().screenHeight * 0.2)),
                                   children: List.generate(
                                       groupData.members.length, (index) {
                                     return InkWell(
@@ -120,18 +125,23 @@ class _GroupViewState extends State<GroupView> {
                                         }
                                       },
                                       child: CustomPersonVerticalTile(
-                                          imageLocation: null,
-                                          title: groupData.members
-                                                      .elementAt(index)
-                                                      .tags !=
-                                                  null
-                                              ? groupData.members
-                                                  .elementAt(index)
-                                                  .tags['name']
-                                              : null,
-                                          subTitle: groupData.members
-                                              .elementAt(index)
-                                              .atSign),
+                                        imageLocation: null,
+                                        title: groupData.members
+                                                    .elementAt(index)
+                                                    .tags !=
+                                                null
+                                            ? groupData.members
+                                                .elementAt(index)
+                                                .tags['name']
+                                            : null,
+                                        subTitle: groupData.members
+                                            .elementAt(index)
+                                            .atSign,
+                                        isAssetImage: false,
+                                        atsign: groupData.members
+                                            .elementAt(index)
+                                            .atSign,
+                                      ),
                                     );
                                   }),
                                 );
@@ -146,103 +156,111 @@ class _GroupViewState extends State<GroupView> {
                 ],
               ),
               Positioned(
-                  top: 240.toHeight,
-                  child: Container(
-                    height: 64,
-                    width: 343.toWidth,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: 15.toWidth, vertical: 0.toHeight),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 15.toWidth, vertical: 10.toHeight),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AllColors().DARK_GREY,
-                          blurRadius: 10.0,
-                          spreadRadius: 1.0,
-                          offset: Offset(0.0, 0.0),
-                        )
-                      ],
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            StreamBuilder(
-                                stream: GroupService().groupViewStream,
-                                builder:
-                                    (context, AsyncSnapshot<AtGroup> snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.active) {
-                                    AtGroup groupData = snapshot.data;
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          groupData.displayName,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline3,
-                                        ),
-                                        Text(
-                                          '${groupData.members.length} members',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4,
-                                        ),
-                                      ],
-                                    );
-                                  } else
-                                    return SizedBox();
-                                }),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ContactsScreen(
-                                  asSelectionScreen: true,
-                                  context: context,
-                                  selectedList: (selectedList) async {
-                                    selectedContactList = selectedList;
+                top: 240.toHeight,
+                child: Container(
+                  height: 64,
+                  width: 343.toWidth,
+                  margin: EdgeInsets.symmetric(
+                      horizontal: 15.toWidth, vertical: 0.toHeight),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 15.toWidth, vertical: 10.toHeight),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? AllColors().WHITE
+                        : AllColors().Black,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AllColors().DARK_GREY,
+                        blurRadius: 10.0,
+                        spreadRadius: 1.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          StreamBuilder(
+                              stream: GroupService().groupViewStream,
+                              builder:
+                                  (context, AsyncSnapshot<AtGroup> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.active) {
+                                  AtGroup groupData = snapshot.data;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        groupData.displayName,
+                                        style: CustomTextStyles().grey16,
+                                      ),
+                                      Text(
+                                        '${groupData.members.length} members',
+                                        style: CustomTextStyles().grey14,
+                                      ),
+                                    ],
+                                  );
+                                } else
+                                  return SizedBox();
+                              }),
+                        ],
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ContactsScreen(
+                                asSelectionScreen: true,
+                                context: context,
+                                selectedList: (selectedList) async {
+                                  GroupService().selecteContactList =
+                                      selectedList;
+                                },
+                                saveGroup: () async {
+                                  if (GroupService().selecteContactList.length >
+                                      0) {
+                                    CustomToast()
+                                        .show('Adding member', context);
 
-                                    if (selectedContactList.length > 0) {
-                                      var result = await GroupService()
-                                          .addGroupMembers(
-                                              [...selectedContactList],
-                                              widget.group);
+                                    var result = await GroupService()
+                                        .addGroupMembers([
+                                      ...GroupService().selecteContactList
+                                    ], widget.group);
 
-                                      if (result == null) {
-                                        CustomToast().show(
-                                            TextConstants().SERVICE_ERROR,
-                                            context);
-                                      } else {
-                                        CustomToast()
-                                            .show(result.toString(), context);
-                                      }
-                                    }
-                                  },
-                                ),
+                                    if (result == null) {
+                                      CustomToast().show(
+                                          TextConstants().SERVICE_ERROR,
+                                          context);
+                                    } else if (result is bool && result) {
+                                      CustomToast().show(
+                                          TextConstants().MEMBER_ADDED,
+                                          context);
+                                    } else
+                                      CustomToast()
+                                          .show(result.toString(), context);
+                                  }
+                                },
                               ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.add,
-                            size: 30.toFont,
-                          ),
-                        )
-                      ],
-                    ),
-                  )),
+                            ),
+                          );
+                        },
+                        child: Icon(
+                          Icons.add,
+                          size: 30.toFont,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
               Positioned(
                   top: 30.toHeight,
                   left: 10.toWidth,
@@ -254,19 +272,20 @@ class _GroupViewState extends State<GroupView> {
                     ),
                   )),
               Positioned(
-                  top: 30.toHeight,
-                  right: 10.toWidth,
-                  child: InkWell(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GroupEdit(group: widget.group)),
-                    ),
-                    child: Icon(
-                      Icons.edit,
-                      color: AllColors().Black,
-                    ),
-                  ))
+                top: 30.toHeight,
+                right: 10.toWidth,
+                child: InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GroupEdit(group: widget.group)),
+                  ),
+                  child: Icon(
+                    Icons.edit,
+                    color: AllColors().Black,
+                  ),
+                ),
+              )
             ],
           ),
         ),

@@ -4,6 +4,7 @@
 
 import 'dart:math';
 import 'package:at_common_flutter/utils/text_styles.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -17,8 +18,8 @@ class ContactInitial extends StatelessWidget {
   Widget build(BuildContext context) {
     Random r = Random();
     return Container(
-      height: size.toFont,
-      width: size.toFont,
+      height: size.toWidth,
+      width: size.toWidth,
       decoration: BoxDecoration(
         color:
             Color.fromARGB(255, r.nextInt(255), r.nextInt(255), r.nextInt(255)),
@@ -28,7 +29,7 @@ class ContactInitial extends StatelessWidget {
       child: Center(
         child: Text(
           initials.toUpperCase(),
-          style: CustomTextStyles.whiteBold16,
+          style: CustomTextStyles.primaryBold16(AllColors().WHITE),
         ),
       ),
     );

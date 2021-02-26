@@ -2,6 +2,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_group_flutter/screens/new_group/new_group.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
@@ -35,17 +36,18 @@ class _EmptyGroupState extends State<EmptyGroup> {
               width: 181.toWidth,
               height: 181.toWidth,
               fit: BoxFit.cover,
+              package: 'at_contacts_group_flutter',
             ),
             SizedBox(
               height: 15.toHeight,
             ),
-            Text('No Groups!', style: CustomTextStyles().primaryBold18),
+            Text('No Groups!', style: CustomTextStyles().grey16),
             SizedBox(
               height: 5.toHeight,
             ),
             Text(
               'Would you like to create a group?',
-              style: CustomTextStyles().primaryMedium14,
+              style: CustomTextStyles().grey16,
             ),
             SizedBox(
               height: 20.toHeight,
@@ -63,27 +65,34 @@ class _EmptyGroupState extends State<EmptyGroup> {
                       context: context,
                       selectedList: (selectedList) {
                         print('in selectedList => selectedList');
-                        // selectedContactList = selectedList;
+                        selectedContactList = selectedList;
 
-                        // if (selectedContactList?.length > 0) {
-                        //   GroupService()
-                        //       .setSelectedContacts(selectedContactList);
-
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => NewGroup(),
-                        //     ),
-                        //   );
-                        // }
+                        if (selectedContactList.length > 0) {
+                          GroupService()
+                              .setSelectedContacts(selectedContactList);
+                        }
+                      },
+                      saveGroup: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NewGroup(),
+                          ),
+                        );
                       },
                     ),
                   ),
                 );
               },
-              isInverted: Theme.of(context).primaryColor == Color(0xFF000000)
-                  ? false
-                  : true,
+              buttonColor: Theme.of(context).brightness == Brightness.light
+                  ? AllColors().Black
+                  : AllColors().WHITE,
+              fontColor: Theme.of(context).brightness == Brightness.light
+                  ? AllColors().WHITE
+                  : AllColors().Black,
+              // isInverted: Theme.of(context).primaryColor == Color(0xFF000000)
+              //     ? false
+              //     : true,
             )
           ],
         ),

@@ -74,6 +74,7 @@ class CircularContacts extends StatelessWidget {
                   : contact.atSign.substring(1),
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 15.toFont),
             ),
           ),
           SizedBox(height: 10.toHeight),
@@ -83,6 +84,7 @@ class CircularContacts extends StatelessWidget {
               contact.atSign,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 15.toFont),
             ),
           )
         ],

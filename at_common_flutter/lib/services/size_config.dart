@@ -22,6 +22,8 @@ class SizeConfig {
   double refHeight;
   double refWidth;
 
+  double textFactor = 1.0;
+
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
@@ -54,6 +56,9 @@ class SizeConfig {
       safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 120;
       safeBlockVertical = (screenHeight - _safeAreaVertical) / 120;
     }
+    if (screenWidth > 700) {
+      textFactor = 0.8;
+    }
   }
 
   double getWidthRatio(double val) {
@@ -74,9 +79,9 @@ class SizeConfig {
     double res = (val / refWidth) * 100;
     double temp = 0.0;
     if (screenWidth < screenHeight) {
-      temp = res * safeBlockHorizontal;
+      temp = res * safeBlockHorizontal * textFactor;
     } else {
-      temp = res * safeBlockVertical;
+      temp = res * safeBlockVertical * textFactor;
     }
     // print('$val,$temp,$refHeight,$refWidth');
     return temp;

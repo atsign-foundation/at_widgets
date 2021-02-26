@@ -35,6 +35,7 @@ class _NewGroupState extends State<NewGroup> {
   }
 
   createGroup() async {
+    print('object');
     if (groupName != null) {
       if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
         CustomToast().show(TextConstants().INVALID_NAME, context);
@@ -79,6 +80,9 @@ class _NewGroupState extends State<NewGroup> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).brightness == Brightness.light
+            ? AllColors().WHITE
+            : AllColors().Black,
         bottomSheet: GroupBottomSheet(
           onPressed: createGroup,
           message: '${selectedContacts.length} Contacts Selected',
@@ -132,7 +136,7 @@ class _NewGroupState extends State<NewGroup> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Group name'),
+                      Text('Group name', style: TextStyle(fontSize: 15.toFont)),
                       SizedBox(height: 5),
                       CustomInputField(
                         icon: Icons.emoji_emotions_outlined,
@@ -154,40 +158,29 @@ class _NewGroupState extends State<NewGroup> {
               child: Container(
                 width: double.infinity,
                 child: SingleChildScrollView(
-                    child: GridView.count(
-                        physics: ScrollPhysics(),
-                        shrinkWrap: true,
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 15.toWidth,
-                        childAspectRatio: (85 / 120),
-                        children:
-                            List.generate(selectedContacts.length, (index) {
-                          return CustomPersonVerticalTile(
-                            imageLocation: null,
-                            title: selectedContacts[index].atSign,
-                            subTitle: selectedContacts[index].atSign,
-                            icon: Icons.close,
-                            isTopRight: true,
-                            onCrossPressed: () {
-                              setState(() {
-                                selectedContacts.removeAt(index);
-                              });
-                            },
-                          );
-                        })
-                        // List(
-                        //   5,
-                        //   (index) {
-                        //     return CustomPersonVerticalTile(
-                        //       imageLocation: AllImages().PERSON1,
-                        //       title: 'Thomas',
-                        //       subTitle: '@thomas',
-                        //       icon: Icons.highlight_off,
-                        //       isTopRight: true,
-                        //     );
-                        //   },
-                        // ),
-                        )),
+                  child: GridView.count(
+                    physics: ScrollPhysics(),
+                    shrinkWrap: true,
+                    crossAxisCount: 4,
+                    childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
+                        (SizeConfig().screenHeight * 0.2)),
+                    children: List.generate(selectedContacts.length, (index) {
+                      return CustomPersonVerticalTile(
+                        imageLocation: null,
+                        title: selectedContacts[index].atSign,
+                        subTitle: selectedContacts[index].atSign,
+                        icon: Icons.close,
+                        isTopRight: true,
+                        atsign: selectedContacts[index].atSign,
+                        onCrossPressed: () {
+                          setState(() {
+                            selectedContacts.removeAt(index);
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                ),
               ),
             )
           ],

@@ -47,7 +47,10 @@ class _GroupEditState extends State<GroupEdit> {
               child: Text(
                 'Cancel',
                 style: TextStyle(
-                    color: Theme.of(context).primaryColor, fontSize: 16),
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? AllColors().Black
+                        : AllColors().Black,
+                    fontSize: 16),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -62,8 +65,7 @@ class _GroupEditState extends State<GroupEdit> {
             child: isLoading
                 ? Center(child: CircularProgressIndicator())
                 : Text('Done',
-                    style: TextStyle(
-                        color: Theme.of(context).accentColor, fontSize: 18)),
+                    style: TextStyle(color: AllColors().ORANGE, fontSize: 18)),
           ),
           onTrailingIconPressed: () async {
             if (groupName != null) {
@@ -137,7 +139,7 @@ class _GroupEditState extends State<GroupEdit> {
                   horizontal: 27.toWidth, vertical: 2.toHeight),
               child: Text(
                 'Group Name',
-                style: Theme.of(context).textTheme.headline3,
+                style: CustomTextStyles().grey16,
               ),
             ),
             Padding(
@@ -167,7 +169,9 @@ class _GroupEditState extends State<GroupEdit> {
           return Container(
             height: 119.toHeight,
             decoration: new BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? AllColors().WHITE
+                  : AllColors().Black,
               borderRadius: new BorderRadius.only(
                 topLeft: const Radius.circular(12.0),
                 topRight: const Radius.circular(12.0),
@@ -190,7 +194,7 @@ class _GroupEditState extends State<GroupEdit> {
                     },
                     child: Text(
                       'Change Group Photo',
-                      style: Theme.of(context).textTheme.headline3,
+                      style: CustomTextStyles().grey16,
                     ),
                   ),
                   Divider(),
@@ -204,7 +208,7 @@ class _GroupEditState extends State<GroupEdit> {
                     },
                     child: Text(
                       'Remove Group Photo',
-                      style: Theme.of(context).textTheme.headline3,
+                      style: CustomTextStyles().grey16,
                     ),
                   )
                 ],

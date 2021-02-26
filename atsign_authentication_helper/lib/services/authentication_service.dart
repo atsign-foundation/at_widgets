@@ -24,7 +24,7 @@ class AuthenticationService {
 
   String _atsign;
   String get currentAtsign => _atsign;
-  final String AUTH_SUCCESS = "Authentication successful";
+  final String AUTH_SUCCESS = 'Authentication successful';
 
   // next route set from using app
   Widget _nextScreen;
@@ -36,10 +36,10 @@ class AuthenticationService {
 
   // QR code scan
   Future authenticate(String qrCodeString, BuildContext context) async {
-    Completer c = Completer();
+    var c = Completer();
     if (qrCodeString.contains('@')) {
       try {
-        List<String> params = qrCodeString.split(':');
+        var params = qrCodeString.split(':');
         if (params?.length == 2) {
           await authenticateWithCram(params[0], cramSecret: params[1]);
           _atsign = params[0];
@@ -50,14 +50,14 @@ class AuthenticationService {
                   builder: (context) => PrivateKeyQRCodeGenScreen()));
         }
       } catch (e) {
-        print("error in authenticating =>  ${e.toString()}");
+        print('error in authenticating =>  ${e.toString()}');
         c.complete('Failed to Authenticate');
         print(e);
       }
     } else {
       // wrong bar code
-      c.complete("incorrect QR code");
-      print("incorrect QR code");
+      c.complete('incorrect QR code');
+      print('incorrect QR code');
     }
     return c.future;
   }

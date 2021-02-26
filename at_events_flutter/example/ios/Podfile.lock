@@ -1,0 +1,73 @@
+PODS:
+  - at_chat_flutter (0.0.1):
+    - Flutter
+  - at_contacts_flutter (0.0.1):
+    - Flutter
+  - at_events_flutter (0.0.1):
+    - Flutter
+  - at_location_flutter (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - flutter_keychain (0.0.1):
+    - Flutter
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
+  - location (0.0.1):
+    - Flutter
+  - path_provider (0.0.1):
+    - Flutter
+  - sqflite (0.0.2):
+    - Flutter
+    - FMDB (>= 2.7.5)
+
+DEPENDENCIES:
+  - at_chat_flutter (from `.symlinks/plugins/at_chat_flutter/ios`)
+  - at_contacts_flutter (from `.symlinks/plugins/at_contacts_flutter/ios`)
+  - at_events_flutter (from `.symlinks/plugins/at_events_flutter/ios`)
+  - at_location_flutter (from `.symlinks/plugins/at_location_flutter/ios`)
+  - Flutter (from `Flutter`)
+  - flutter_keychain (from `.symlinks/plugins/flutter_keychain/ios`)
+  - location (from `.symlinks/plugins/location/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
+
+SPEC REPOS:
+  trunk:
+    - FMDB
+
+EXTERNAL SOURCES:
+  at_chat_flutter:
+    :path: ".symlinks/plugins/at_chat_flutter/ios"
+  at_contacts_flutter:
+    :path: ".symlinks/plugins/at_contacts_flutter/ios"
+  at_events_flutter:
+    :path: ".symlinks/plugins/at_events_flutter/ios"
+  at_location_flutter:
+    :path: ".symlinks/plugins/at_location_flutter/ios"
+  Flutter:
+    :path: Flutter
+  flutter_keychain:
+    :path: ".symlinks/plugins/flutter_keychain/ios"
+  location:
+    :path: ".symlinks/plugins/location/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
+
+SPEC CHECKSUMS:
+  at_chat_flutter: 8df1b69f14a74f0360b21916b5dd6916c9ae7130
+  at_contacts_flutter: 11ad3deb3c2a8f1e9daf302ac5962dadd48e21fb
+  at_events_flutter: 88b4a1773db9a4cb48ade0a7b9f79a1b351337b4
+  at_location_flutter: 11cdb9f57b41159f51d1ce151f78c31b9b292607
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.9.1

@@ -1,3 +1,11 @@
+/// This is a custom button
+/// @param [onPressed] defines what to execute on press of this button
+/// @param [buttonText] is a [String] to display on this button
+/// @param [height] in [double] sets the height of the button
+/// @param [width] in [double] sets the width of the button
+/// @param [buttonColor] sets the fill color of the button
+/// @param [fontColor] sets the font color for [buttonText] text
+
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/utils/colors.dart';

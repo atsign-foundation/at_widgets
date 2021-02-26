@@ -39,4 +39,15 @@ class CustomTextStyles {
     fontSize: 14.toFont,
     fontWeight: FontWeight.w500,
   );
+
+  static TextStyle secondaryRegular16 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 16.toFont,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle primaryBold16 = TextStyle(
+    color: ColorConstants.fontPrimary,
+    fontSize: 16.toFont,
+    fontWeight: FontWeight.w700,
+  );
 }

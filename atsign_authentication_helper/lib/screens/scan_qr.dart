@@ -40,9 +40,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   bool cameraPermissionGrated = false;
   bool scanCompleted = false;
 
-  String _incorrectKeyFile =
+  final _incorrectKeyFile =
       'Unable to fetch the keys from chosen file. Please choose correct file';
-  String _failedFileProcessing = 'Failed in processing files. Please try again';
+  final _failedFileProcessing = 'Failed in processing files. Please try again';
 
   @override
   void initState() {
@@ -54,26 +54,26 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     super.initState();
   }
 
-  askCameraPermission() async {
+  void askCameraPermission() async {
     var status = await Permission.camera.status;
-    print("camera status => $status");
+    print('camera status => $status');
     if (status.isUndetermined) {
       // We didn't ask for permission yet.
       await [
         Permission.camera,
         Permission.storage,
       ].request();
-      this.setState(() {
+      setState(() {
         cameraPermissionGrated = true;
       });
     } else {
-      this.setState(() {
+      setState(() {
         cameraPermissionGrated = true;
       });
     }
   }
 
-  showSnackBar(BuildContext context, messageText) {
+  void showSnackBar(BuildContext context, messageText) {
     final snackBar = SnackBar(content: Text(messageText));
 
 // Find the Scaffold in the widget tree and use it to show a SnackBar.
@@ -81,15 +81,15 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   }
 
   void onScan(String data, List<Offset> offsets, context) async {
-    _controller.stopCamera();
-    this.setState(() {
+    await _controller.stopCamera();
+    setState(() {
       scanCompleted = true;
     });
     String authenticateMessage =
         await authenticationService.authenticate(data, context);
 
     showSnackBar(context, authenticateMessage);
-    this.setState(() {
+    setState(() {
       scanCompleted = false;
     });
     if (authenticateMessage != authenticationService.AUTH_SUCCESS) {
@@ -102,23 +102,24 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   void _uploadCramKeyFile() async {
     try {
       String cramKey;
-      FilePickerResult result = await FilePicker.platform
+      var result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
       setState(() {
         loading = true;
       });
       for (var file in result.files) {
         if (cramKey == null) {
-          String result = await FlutterQrReader.imgScan(File(file.path));
+          var result = await FlutterQrReader.imgScan(File(file.path));
           if (result.contains('@')) {
             cramKey = result;
             break;
           } //read scan QRcode and extract atsign,aeskey
         }
       }
+      
       if (cramKey == null) {
         // _showAlertDialog(_incorrectKeyFile);
-        showSnackBar(context, "File content error");
+        showSnackBar(context, 'File content error');
         setState(() {
           loading = true;
         });
@@ -132,11 +133,11 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         });
       }
       // await _processAESKey(atsign, aesKey, fileContents);
-    } on Error catch (error) {
+    } on Error {
       setState(() {
         loading = false;
       });
-    } on Exception catch (ex) {
+    } on Exception {
       setState(() {
         loading = false;
       });
@@ -146,15 +147,14 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   void _uploadKeyFile() async {
     try {
       var fileContents, aesKey, atsign;
-      FilePickerResult result = await FilePicker.platform
+      var result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: true);
       setState(() {
         loading = true;
       });
       for (var pickedFile in result.files) {
         var path = pickedFile.path;
-        File selectedFile = File(path);
-        var length = selectedFile.lengthSync();
+        var selectedFile = File(path);
         if (selectedFile.lengthSync() < 10) {
           _showAlertDialog(_incorrectKeyFile);
           return;
@@ -170,10 +170,10 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                 file.name.contains('_private_key.png')) {
               var bytes = file.content as List<int>;
               var path = (await path_provider.getTemporaryDirectory()).path;
-              var file1 = await File('$path' + 'test').create();
+              var file1 = await File(path + 'test').create();
               file1.writeAsBytesSync(bytes);
-              String result = await FlutterQrReader.imgScan(file1);
-              List<String> params = result.split(':');
+              var result = await FlutterQrReader.imgScan(file1);
+              var params = result.split(':');
               atsign = params[0];
               aesKey = params[1];
               await File(path + 'test').delete();
@@ -185,8 +185,8 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         } else if (aesKey == null &&
             atsign == null &&
             pickedFile.name.contains('_private_key.png')) {
-          String result = await FlutterQrReader.imgScan(File(path));
-          List<String> params = result.split(':');
+          var result = await FlutterQrReader.imgScan(File(path));
+          var params = result.split(':');
           atsign = params[0];
           aesKey = params[1];
           //read scan QRcode and extract atsign,aeskey
@@ -196,12 +196,12 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         _showAlertDialog(_incorrectKeyFile);
       }
       await _processAESKey(atsign, aesKey, fileContents);
-    } on Error catch (error) {
+    } on Error {
       setState(() {
         loading = false;
       });
       _showAlertDialog(_failedFileProcessing);
-    } on Exception catch (ex) {
+    } on Exception {
       setState(() {
         loading = false;
       });
@@ -209,7 +209,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     }
   }
 
-  _showAlertDialog(var errorMessage) {
+  void _showAlertDialog(var errorMessage) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -218,7 +218,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         });
   }
 
-  _processAESKey(String atsign, String aesKey, String contents) async {
+  void _processAESKey(String atsign, String aesKey, String contents) async {
     assert(aesKey != null || aesKey != '');
     assert(atsign != null || atsign != '');
     assert(contents != null || contents != '');
@@ -235,7 +235,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         loading = false;
       });
     }).catchError((err) {
-      print("Error in authenticateWithAESKey => ${err}");
+      print('Error in authenticateWithAESKey => ${err}');
       throw Exception(err.toString());
     });
   }
@@ -251,7 +251,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -287,7 +287,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                                   width: 300.toWidth,
                                   height: 350.toHeight,
                                   callback: (container) {
-                                    this._controller = container;
+                                    _controller = container;
                                     _controller.startCamera((data, offsets) {
                                       onScan(data, offsets, context);
                                     });

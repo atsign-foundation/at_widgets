@@ -116,6 +116,14 @@ class _AddContactDialogState extends State<AddContactDialog> {
                                 Navigator.pop(context);
                               }
                             },
+                            buttonColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                            fontColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.white
+                                    : Colors.black,
                           )
                   ],
                 ),
@@ -126,13 +134,15 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomButton(
-                        height: 50.toHeight * deviceTextFactor,
-                        buttonText: contactStrings.TextStrings().buttonCancel,
-                        buttonColor: Colors.white,
-                        onPressed: () {
-                          _contactService.getAtSignError = '';
-                          Navigator.pop(context);
-                        })
+                      height: 50.toHeight * deviceTextFactor,
+                      buttonText: contactStrings.TextStrings().buttonCancel,
+                      onPressed: () {
+                        _contactService.getAtSignError = '';
+                        Navigator.pop(context);
+                      },
+                      buttonColor: Colors.white,
+                      fontColor: Colors.black,
+                    )
                   ],
                 ),
               ],
