@@ -11,7 +11,10 @@ import 'utils/constants/constants.dart';
 class ShowLocation extends StatefulWidget {
   Key key;
   final LatLng location;
-  ShowLocation(this.key, {this.location});
+  final List<LatLng> locationList;
+  Widget locationListMarker;
+  ShowLocation(this.key,
+      {this.location, this.locationList, this.locationListMarker});
 
   @override
   _ShowLocationState createState() => _ShowLocationState();
@@ -21,6 +24,7 @@ class _ShowLocationState extends State<ShowLocation> {
   final MapController mapController = MapController();
   bool showMarker, noPointReceived;
   Marker marker;
+  List<Marker> markerList;
   @override
   void initState() {
     super.initState();
@@ -36,6 +40,15 @@ class _ShowLocationState extends State<ShowLocation> {
           singleMarker: true);
       showMarker = false;
     }
+
+    if (widget.locationList != null) {
+      markerList = [];
+      widget.locationList.forEach((location) {
+        Marker marker = buildMarker(new HybridModel(latLng: location),
+            singleMarker: true, marker: widget.locationListMarker);
+        markerList.add(marker);
+      });
+    }
   }
 
   @override
@@ -50,8 +63,16 @@ class _ShowLocationState extends State<ShowLocation> {
           body: FlutterMap(
         mapController: mapController,
         options: MapOptions(
-          center: (widget.location != null) ? widget.location : LatLng(45, 45),
-          zoom: (widget.location != null) ? 8 : 2,
+          center: markerList != null
+              ? markerList[0].point
+              : (widget.location != null)
+                  ? widget.location
+                  : LatLng(45, 45),
+          zoom: markerList != null
+              ? 5
+              : (widget.location != null)
+                  ? 8
+                  : 2,
           plugins: [MarkerClusterPlugin(UniqueKey())],
         ),
         layers: [
@@ -71,7 +92,11 @@ class _ShowLocationState extends State<ShowLocation> {
             fitBoundsOptions: FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
-            markers: showMarker ? [marker] : [],
+            markers: markerList != null
+                ? markerList
+                : showMarker
+                    ? [marker]
+                    : [],
             builder: (context, markers) {},
           ),
         ],
