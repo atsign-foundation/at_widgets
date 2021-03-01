@@ -22,6 +22,16 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+  	<string>The camera is used to scan QR code to pair your device with your @sign</string>
+	<key>NSLocationAlwaysUsageDescription</key>	
+	<string>The Location access is used to get your current location for sharing with other atsigns</string>	
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The Location access is used to get your current location for sharing with other atsigns</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>photos is required to upload for a group image</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>microphone permission is needed because of plugin dependencies.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
