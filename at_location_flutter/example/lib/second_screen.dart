@@ -8,6 +8,7 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:atsign_authentication_helper/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter_example/client_sdk_service.dart';
+import 'package:latlong/latlong.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -102,7 +103,27 @@ class _SecondScreenState extends State<SecondScreen> {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          ShowLocation(UniqueKey(), locationList: [
+                        LatLng(30, 45),
+                        LatLng(40, 45),
+                      ]),
+                    ));
+                  },
+                  child: Text('show multiple points '),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 30,
             ),
             Center(
               child: Text(
@@ -131,7 +152,7 @@ class _SecondScreenState extends State<SecondScreen> {
                               child: Text(
                                 '${snapshot.data.indexOf(notification) + 1}. ${notification.key}',
                                 style: TextStyle(fontSize: 16),
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.left,
                               ),
                             );
                           }).toList());

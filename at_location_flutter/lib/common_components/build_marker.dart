@@ -8,41 +8,45 @@ import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 import 'pointed_bottom.dart';
 
-Marker buildMarker(HybridModel user, {bool singleMarker = false}) {
+Marker buildMarker(HybridModel user,
+    {bool singleMarker = false, Widget marker}) {
   return Marker(
     anchorPos: AnchorPos.align(AnchorAlign.center),
     height: 50,
     width: 50,
     point: user.latLng,
-    builder: (ctx) => singleMarker
-        ? Icon(
-            Icons.location_on,
-            size: 60,
-            color: AllColors().ORANGE,
-          )
-        : Stack(
-            alignment: Alignment.center,
-            children: [
-              CircleAvatar(
-                radius: 20,
-                child: user.image != null
-                    ? CustomCircleAvatar(
-                        byteImage: user.image, nonAsset: true, size: 30)
-                    : ContactInitial(
-                        initials: user.displayName.substring(1, 3),
-                        size: 60,
-                        color: AllColors().ORANGE,
-                      ),
+    builder: (ctx) => marker != null
+        ? marker
+        : singleMarker
+            ? Icon(
+                Icons.location_on,
+                size: 60,
+                color: AllColors().ORANGE,
+              )
+            : Stack(
+                alignment: Alignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    child: user.image != null
+                        ? CustomCircleAvatar(
+                            byteImage: user.image, nonAsset: true, size: 30)
+                        : ContactInitial(
+                            initials: user.displayName.substring(1, 3),
+                            size: 60,
+                            color: AllColors().ORANGE,
+                          ),
+                  ),
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CustomPaint(
+                      painter: CircleMarkerPainter(),
+                    ),
+                  ),
+                  Positioned(
+                      top: 50, child: pointedBottom(color: Colors.black)),
+                ],
               ),
-              SizedBox(
-                width: 40,
-                height: 40,
-                child: CustomPaint(
-                  painter: CircleMarkerPainter(),
-                ),
-              ),
-              Positioned(top: 50, child: pointedBottom(color: Colors.black)),
-            ],
-          ),
   );
 }

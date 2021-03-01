@@ -1,3 +1,3 @@
-## [0.0.1] - 01/25/2021
+## [0.0.1] - 02/24/2021
 
-* The initial release consists of two screens - QR code scanner with button to upload file and screen to save the generated keys.
+* The initial release consists of two screens - A screen to list the created groups and screen to view group details.

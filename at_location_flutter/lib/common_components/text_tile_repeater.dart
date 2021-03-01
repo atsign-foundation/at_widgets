@@ -13,6 +13,7 @@ class TextTileRepeater extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 250.toHeight,
       padding: EdgeInsets.fromLTRB(10.toWidth, 10.toHeight, 20.toWidth, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,7 +29,7 @@ class TextTileRepeater extends StatelessWidget {
               itemCount: options.length,
               itemBuilder: (context, index) {
                 return SizedBox(
-                  height: 60,
+                  height: 50.toHeight,
                   child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {

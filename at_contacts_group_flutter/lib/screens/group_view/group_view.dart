@@ -106,7 +106,6 @@ class _GroupViewState extends State<GroupView> {
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   crossAxisCount: 4,
-                                  // mainAxisSpacing: 10,
                                   childAspectRatio:
                                       ((SizeConfig().screenWidth * 0.25) /
                                           (SizeConfig().screenHeight * 0.2)),
@@ -126,18 +125,23 @@ class _GroupViewState extends State<GroupView> {
                                         }
                                       },
                                       child: CustomPersonVerticalTile(
-                                          imageLocation: null,
-                                          title: groupData.members
-                                                      .elementAt(index)
-                                                      .tags !=
-                                                  null
-                                              ? groupData.members
-                                                  .elementAt(index)
-                                                  .tags['name']
-                                              : null,
-                                          subTitle: groupData.members
-                                              .elementAt(index)
-                                              .atSign),
+                                        imageLocation: null,
+                                        title: groupData.members
+                                                    .elementAt(index)
+                                                    .tags !=
+                                                null
+                                            ? groupData.members
+                                                .elementAt(index)
+                                                .tags['name']
+                                            : null,
+                                        subTitle: groupData.members
+                                            .elementAt(index)
+                                            .atSign,
+                                        isAssetImage: false,
+                                        atsign: groupData.members
+                                            .elementAt(index)
+                                            .atSign,
+                                      ),
                                     );
                                   }),
                                 );
@@ -219,9 +223,13 @@ class _GroupViewState extends State<GroupView> {
                                 selectedList: (selectedList) async {
                                   GroupService().selecteContactList =
                                       selectedList;
-
+                                },
+                                saveGroup: () async {
                                   if (GroupService().selecteContactList.length >
                                       0) {
+                                    CustomToast()
+                                        .show('Adding member', context);
+
                                     var result = await GroupService()
                                         .addGroupMembers([
                                       ...GroupService().selecteContactList
@@ -231,7 +239,7 @@ class _GroupViewState extends State<GroupView> {
                                       CustomToast().show(
                                           TextConstants().SERVICE_ERROR,
                                           context);
-                                    } else if (result) {
+                                    } else if (result is bool && result) {
                                       CustomToast().show(
                                           TextConstants().MEMBER_ADDED,
                                           context);

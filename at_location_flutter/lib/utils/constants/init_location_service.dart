@@ -8,8 +8,8 @@ import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:flutter/material.dart';
 
 void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
-    GlobalKey<NavigatorState> navKey) {
-  AtLocationNotificationListener().init(atClientImpl, currentAtSign, navKey);
+    GlobalKey<NavigatorState> navKey, {String rootDomain = 'vip.ve.atsign.zone'}) {
+  AtLocationNotificationListener().init(atClientImpl, currentAtSign, navKey, rootDomain);
   KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
 }
 

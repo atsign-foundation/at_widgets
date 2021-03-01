@@ -1,3 +1,11 @@
+## [0.0.4] - 02/18/2021
+
+* Updated dependent packages
+
+## [0.0.3] - 02/08/2021
+
+* Fix for messages from different atsigns getting mixed on posting message
+
 ## [0.0.2] - 02/03/2021
 
 * Fix for messages from different atsigns getting mixed

@@ -4,6 +4,7 @@ import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/pop_button.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
+import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
@@ -110,7 +111,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
       atSign = '@' + atSign;
     }
     var checkPresence = await AtLookupImpl.findSecondary(
-        atSign, MixedConstants.ROOT_DOMAIN, 64);
+        atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
     return checkPresence != null;
   }
 }

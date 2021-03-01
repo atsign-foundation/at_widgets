@@ -17,6 +17,10 @@ class TextStrings {
   String blockContact = 'Block Contact';
   String unblockContact = 'Unblock Contact';
   String blockedContacts = 'Blocked Contacts';
+  String addContactHeading =
+      'Are you sure you want to add the user to your contact list?';
+  String yes = 'Yes';
+  String no = 'No';
   List<String> contactFields = [
     'firstname.persona',
     'lastname.persona',

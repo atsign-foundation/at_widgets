@@ -18,13 +18,15 @@ class AtLocationNotificationListener {
   AtClientImpl atClientInstance;
   String currentAtSign;
   GlobalKey<NavigatorState> navKey;
+  String ROOT_DOMAIN;
 
   init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
-      GlobalKey<NavigatorState> navKeyFromMainApp,
+      GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       {Function newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     navKey = navKeyFromMainApp;
+    ROOT_DOMAIN = rootDomain;
     MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
         newGetAtValueFromMainApp: newGetAtValueFromMainApp);
     startMonitor();
