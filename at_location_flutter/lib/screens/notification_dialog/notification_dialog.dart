@@ -5,6 +5,7 @@ import 'package:at_location_flutter/common_components/bottom_sheet.dart';
 import 'package:at_location_flutter/common_components/contacts_initial.dart';
 import 'package:at_location_flutter/common_components/text_tile_repeater.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
@@ -13,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class NotificationDialog extends StatefulWidget {
-  final String userName;
+  String userName;
   final LocationNotificationModel locationData;
   final bool showMembersCount;
 
@@ -29,6 +30,32 @@ class _NotificationDialogState extends State<NotificationDialog> {
   int minutes;
   AtContact contact;
   Uint8List image;
+  String locationUserImageToShow;
+
+  @override
+  void initState() {
+    locationUserImageToShow = (widget.locationData.atsignCreator ==
+            AtLocationNotificationListener().currentAtSign
+        ? widget.locationData.receiver
+        : widget.locationData.atsignCreator);
+
+    widget.userName = locationUserImageToShow;
+    super.initState();
+  }
+
+  getImage() async {
+    // AtContact contact = await getAtSignDetails(widget.eventData != null
+    //     ? widget.eventData.atsignCreator
+    //     : locationUserImageToShow);
+    // if (contact != null) {
+    //   if (contact.tags != null && contact.tags['image'] != null) {
+    //     List<int> intList = contact.tags['image'].cast<int>();
+    //     setState(() {
+    //       image = Uint8List.fromList(intList);
+    //     });
+    //   }
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +72,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   Text(
                       ((!widget.locationData.isRequest)
                           ? '${widget.userName} wants to share their location with you. Are you sure you want to accept their location?'
-                          : '${widget.userName} wants you to share your location? Are you sure you want to share?'),
+                          : '${widget.userName} wants you to share your location. Are you sure you want to share?'),
                       style: CustomTextStyles().grey16,
                       textAlign: TextAlign.center),
                   SizedBox(height: 30),
@@ -63,8 +90,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                               ),
                             )
                           : ContactInitial(
-                              initials: widget.locationData.atsignCreator
-                                  .substring(1, 3),
+                              initials: locationUserImageToShow.substring(1, 3),
                               size: 60,
                             ),
                       widget.showMembersCount

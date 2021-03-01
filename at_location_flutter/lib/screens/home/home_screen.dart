@@ -120,9 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget collapsedContent(
       bool isExpanded, ScrollController slidingScrollController, dynamic T) {
-    if (pc.isPanelAnimating) {
-      print('animating');
-    }
     return Container(
         height: !isExpanded ? 260.toHeight : 530.toHeight,
         padding: EdgeInsets.fromLTRB(15.toWidth, 7.toHeight, 0, 0),
@@ -155,7 +152,10 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: DisplayTile(
                 atsignCreator:
-                    notification.locationNotificationModel.atsignCreator,
+                    notification.locationNotificationModel.atsignCreator ==
+                            AtLocationNotificationListener().currentAtSign
+                        ? notification.locationNotificationModel.receiver
+                        : notification.locationNotificationModel.atsignCreator,
                 title: getTitle(notification.locationNotificationModel),
                 subTitle: getSubTitle(notification.locationNotificationModel),
                 semiTitle: getSemiTitle(notification.locationNotificationModel),
@@ -193,7 +193,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Tasks(
                 task: 'Request Location',
-                icon: Icons.refresh,
+                icon: Icons.sync,
+                angle: (-3.14 / 2),
                 onTap: () async {
                   bottomSheet(context, RequestLocationSheet(),
                       SizeConfig().screenHeight * 0.5);

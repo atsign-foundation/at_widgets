@@ -57,17 +57,17 @@ getSubTitle(LocationNotificationModel locationNotificationModel) {
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
         ? 'Can see my location $time'
-        : 'Can see his location $time';
+        : 'Can see their location $time';
   } else {
     return locationNotificationModel.isAccepted
         ? (locationNotificationModel.atsignCreator ==
                 AtLocationNotificationListener().currentAtSign
             ? 'Sharing my location $time'
-            : 'Sharing his location $time')
+            : 'Sharing their location $time')
         : (locationNotificationModel.atsignCreator ==
                 AtLocationNotificationListener().currentAtSign
-            ? 'Requested Location received'
-            : 'Requested Location sent');
+            ? 'Request Location received'
+            : 'Request Location sent');
   }
 }
 
@@ -78,12 +78,12 @@ getSemiTitle(LocationNotificationModel locationNotificationModel) {
         ? (locationNotificationModel.isAccepted
             ? ''
             : locationNotificationModel.isExited
-                ? 'Received Share location request rejected'
+                ? 'Received Share location rejected'
                 : 'Action required')
         : (locationNotificationModel.isAccepted
             ? ''
             : locationNotificationModel.isExited
-                ? 'Sent Share location request rejected'
+                ? 'Sent Share location rejected'
                 : 'Awaiting response');
   else
     return locationNotificationModel.atsignCreator ==

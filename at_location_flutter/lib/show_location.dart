@@ -2,6 +2,7 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/m
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 import 'common_components/build_marker.dart';
+import 'common_components/marker_cluster.dart';
 import 'location_modal/hybrid_model.dart';
 import 'map_content/flutter_map/flutter_map.dart';
 import 'map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
@@ -95,7 +96,9 @@ class _ShowLocationState extends State<ShowLocation> {
                 : showMarker
                     ? [marker]
                     : [],
-            builder: (context, markers) {},
+            builder: (context, markers) {
+              return buildMarkerCluster(markers);
+            },
           ),
         ],
       )),

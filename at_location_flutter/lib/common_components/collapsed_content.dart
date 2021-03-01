@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'custom_toast.dart';
 import 'display_tile.dart';
 import 'draggable_symbol.dart';
+import 'loading_widget.dart';
 
 class CollapsedContent extends StatefulWidget {
   bool expanded;
@@ -96,13 +97,15 @@ class _CollapsedContentState extends State<CollapsedContent> {
                             ? '${widget.userListenerKeyword.receiver}'
                             : '${widget.userListenerKeyword.atsignCreator}'),
                     Text(
-                      amICreator ? 'This user does not share his location' : '',
+                      amICreator
+                          ? 'This user does not share their location'
+                          : '',
                       style: CustomTextStyles().grey12,
                     ),
                     Text(
                       amICreator
                           ? 'Sharing my location $time'
-                          : 'Sharing his location $time',
+                          : 'Sharing their location $time',
                       style: CustomTextStyles().black12,
                     )
                   ],
@@ -145,33 +148,43 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                 Switch(
                                     value: isSharing,
                                     onChanged: (value) async {
-                                      var result;
-                                      if (widget.userListenerKeyword.key
-                                          .contains("sharelocation")) {
-                                        result = await SharingLocationService()
-                                            .updateWithShareLocationAcknowledge(
-                                                widget.userListenerKeyword,
-                                                isSharing: value);
-                                      } else if (widget.userListenerKeyword.key
-                                          .contains("requestlocation")) {
-                                        result = await RequestLocationService()
-                                            .requestLocationAcknowledgment(
-                                                widget.userListenerKeyword,
-                                                true,
-                                                isSharing: value);
-                                      }
-                                      if (result) {
-                                        if (!value) {
-                                          SendLocationNotification().sendNull(
-                                              widget.userListenerKeyword);
+                                      LoadingDialog().show();
+                                      try {
+                                        var result;
+                                        if (widget.userListenerKeyword.key
+                                            .contains("sharelocation")) {
+                                          result = await SharingLocationService()
+                                              .updateWithShareLocationAcknowledge(
+                                                  widget.userListenerKeyword,
+                                                  isSharing: value);
+                                        } else if (widget
+                                            .userListenerKeyword.key
+                                            .contains("requestlocation")) {
+                                          result = await RequestLocationService()
+                                              .requestLocationAcknowledgment(
+                                                  widget.userListenerKeyword,
+                                                  true,
+                                                  isSharing: value);
                                         }
-                                        setState(() {
-                                          isSharing = value;
-                                        });
-                                      } else {
+                                        if (result) {
+                                          if (!value) {
+                                            SendLocationNotification().sendNull(
+                                                widget.userListenerKeyword);
+                                          }
+                                          setState(() {
+                                            isSharing = value;
+                                          });
+                                        } else {
+                                          CustomToast().show(
+                                              'Something went wrong, try again.',
+                                              context);
+                                        }
+                                      } catch (e) {
+                                        print(e);
                                         CustomToast().show(
-                                            'Something went wrong, try again.',
+                                            'something went wrong , please try again.',
                                             context);
+                                        LoadingDialog().hide();
                                       }
                                     })
                               ],
@@ -182,13 +195,20 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           ? Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  var result = await RequestLocationService()
-                                      .sendRequestLocationEvent(
-                                          widget.userListenerKeyword.receiver);
-                                  if (result == true) {
-                                    CustomToast()
-                                        .show('Request Location sent', context);
-                                  } else {
+                                  try {
+                                    var result = await RequestLocationService()
+                                        .sendRequestLocationEvent(widget
+                                            .userListenerKeyword.receiver);
+                                    if (result == true) {
+                                      CustomToast().show(
+                                          'Request Location sent', context);
+                                    } else {
+                                      CustomToast().show(
+                                          'Something went wrong, try again.',
+                                          context);
+                                    }
+                                  } catch (e) {
+                                    print(e);
                                     CustomToast().show(
                                         'Something went wrong, try again.',
                                         context);
@@ -206,26 +226,40 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           ? Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  var result;
-                                  if (widget.userListenerKeyword.key
-                                      .contains("sharelocation")) {
-                                    result = await SharingLocationService()
-                                        .deleteKey(widget.userListenerKeyword);
-                                  } else if (widget.userListenerKeyword.key
-                                      .contains("requestlocation")) {
-                                    // result = await RequestLocationService()
-                                    //     .removePerson(
-                                    //         widget.userListenerKeyword);
-                                    result = false; // TODO: Remove this
-                                  }
-                                  if (result) {
-                                    SendLocationNotification()
-                                        .sendNull(widget.userListenerKeyword);
-                                    Navigator.pop(context);
-                                  } else {
+                                  LoadingDialog().show();
+                                  try {
+                                    var result;
+                                    if (widget.userListenerKeyword.key
+                                        .contains("sharelocation")) {
+                                      result = await SharingLocationService()
+                                          .deleteKey(
+                                              widget.userListenerKeyword);
+                                    } else if (widget.userListenerKeyword.key
+                                        .contains("requestlocation")) {
+                                      // result = await RequestLocationService()
+                                      //     .removePerson(
+                                      //         widget.userListenerKeyword);
+                                      result = false; // TODO: Remove this
+                                    }
+                                    if (result) {
+                                      SendLocationNotification()
+                                          .sendNull(widget.userListenerKeyword);
+                                      LoadingDialog().hide();
+
+                                      Navigator.pop(context);
+                                    } else {
+                                      LoadingDialog().hide();
+
+                                      CustomToast().show(
+                                          'Something went wrong, try again.',
+                                          context);
+                                    }
+                                  } catch (e) {
+                                    print(e);
                                     CustomToast().show(
-                                        'Something went wrong, try again.',
+                                        'something went wrong , please try again.',
                                         context);
+                                    LoadingDialog().hide();
                                   }
                                 },
                                 child: Text(

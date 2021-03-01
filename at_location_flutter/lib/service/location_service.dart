@@ -70,7 +70,7 @@ class LocationService {
         displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
     if (etaFrom != null) _myData.eta = await _calculateEta(_myData);
 
-    _myData.marker = buildMarker(_myData);
+    _myData.marker = buildMarker(_myData, singleMarker: true);
 
     myData = _myData;
 
@@ -181,8 +181,8 @@ class LocationService {
         if (etaFrom != null)
           _res = await DistanceCalculate().calculateETA(etaFrom, user.latLng);
         else
-          _res =
-              await DistanceCalculate().calculateETA(myData.latLng, user.latLng);
+          _res = await DistanceCalculate()
+              .calculateETA(myData.latLng, user.latLng);
         return _res;
       } catch (e) {
         print('Error in _calculateEta $e');
