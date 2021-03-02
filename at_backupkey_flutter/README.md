@@ -1,15 +1,98 @@
 # at_backupkey_flutter
 
-A new flutter plugin project.
+A flutter plugin project to provide backup keys of an @sign generated during onboarding flow of @protocol.
 
 ## Getting Started
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+This plugin can be added to the project as git dependency in pubspec.yaml
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+dependencies:
+  at_backupkey_flutter:
+    git:
+      url: https://github.com/atsign-foundation//at_widgets.git
+      path: at_backupkey_flutter
+      ref: dev_env
+```
+Note: If the project already has [at_onboarding_flutter](https://github.com/atsign-foundation/at_widgets/tree/dev_env/at_onboarding_flutter) dependency then no need of adding at_backupkey_flutter as a dependency.
 
+### Android
+Add the following permissions to AndroidManifest.xml
+
+```
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+```
+
+Also, the Android version support in app/build.gradle
+```
+compileSdkVersion 29
+
+minSdkVersion 24
+targetSdkVersion 29
+```
+### iOS
+Update the Podfile with the following lines of code:
+
+```
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        ## dart: PermissionGroup.calendar
+        'PERMISSION_EVENTS=0',
+
+        ## dart: PermissionGroup.reminders
+        'PERMISSION_REMINDERS=0',
+
+        ## dart: PermissionGroup.contacts
+        'PERMISSION_CONTACTS=0',
+
+        ## dart: PermissionGroup.microphone
+        'PERMISSION_MICROPHONE=0',
+
+        ## dart: PermissionGroup.speech
+        'PERMISSION_SPEECH_RECOGNIZER=0',
+
+        ## dart: [PermissionGroup.location, PermissionGroup.locationAlways, PermissionGroup.locationWhenInUse]
+        'PERMISSION_LOCATION=0',
+
+        ## dart: PermissionGroup.notification
+        'PERMISSION_NOTIFICATIONS=0',
+
+        ## dart: PermissionGroup.sensors
+        'PERMISSION_SENSORS=0'
+      ]
+    end
+  end
+end
+```
+
+### Plugin description
+Provides backup keys for an @sign. Can be used as an icon or a button. Priorily an @sign should be authenticated through any of @protocol apps to make use of this widget.
+
+### Sample usage
+Provides '.atKeys' file to save it in iCloud/Gdrive.
+
+Plugin as icon
+```
+BackupKeyWidget(
+    atsign: atsign,
+    atClientService: atClientServiceMap[atsign],
+    isIcon: true,
+)
+```
+
+Plugin as button
+```
+BackupKeyWidget(
+    atsign: atsign,
+    atClientService: atClientServiceMap[atsign],
+    isButton: true,
+    buttonText: 'BackupKeys',
+)
+```

@@ -135,7 +135,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
   var error;
   @override
   void initState() {
-    AppConstants.rootDomain = widget.domain ?? '';
+    AppConstants.rootDomain = widget.domain;
     _onboardingService.setLogo = widget.logo;
     _onboardingService.setNextScreen = widget.nextScreen;
     _onboardingService.fistTimeAuthScreen = widget.fistTimeAuthNextScreen;

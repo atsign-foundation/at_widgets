@@ -13,15 +13,35 @@ import 'package:at_utils/at_logger.dart';
 class BackupKeyWidget extends StatelessWidget {
   final AtSignLogger _logger = AtSignLogger('BackUp Key Widget');
   final _backupKeyService = BackUpKeyService();
+
+  ///[required] to provide backup keys for `atsign` to save.
   final String atsign;
+
+  ///set to `true` for using widget as a button.
   final bool isButton;
+
+  ///set to `true` for using widget as an icon.
   final bool isIcon;
+
+  ///[required] to provide backupkeys.
   final atClientService;
+
+  ///takes a `String` and displays on button. set [isButton] to `true` to use this.
   final String buttonText;
+
+  ///Color of the icon can be set if [isIcon] is set as `true`.
   final Color iconColor;
+
+  ///any double value for customizing width of button if [isButton] sets to `true`.
   final double buttonWidth;
+
+  ///any double value for customizing height of a button if [isButton] sets to `true`.
   final double buttonHeight;
+
+  ///any double value for customizing size of the icon if [isIcon] sets to `true`.
   final double iconSize;
+
+  ///Customize the button color if [isButton] sets to `true`.
   final Color buttonColor;
 
   BackupKeyWidget(

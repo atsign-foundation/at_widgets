@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:at_backupkey_flutter/at_backupkey_flutter.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 void main() {
   runApp(MyApp());
@@ -14,32 +15,29 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  bool loading = false;
+  var atClientServiceMap;
+  var atsign;
+  var rootDomain = 'root.atsign.wtf';
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    // initPlatformState();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      // platformVersion = await AtBackupkeyFlutter.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+  Future<AtClientPreference> getAtClientPreference() async {
+    final appDocumentDirectory =
+        await path_provider.getApplicationSupportDirectory();
+    String path = appDocumentDirectory.path;
+    var _atClientPreference = AtClientPreference()
+      ..isLocalStoreRequired = true
+      ..commitLogPath = path
+      ..namespace = 'backupkeys'
+      ..syncStrategy = SyncStrategy.ONDEMAND
+      ..rootDomain = rootDomain
+      ..hiveStoragePath = path;
+    return _atClientPreference;
   }
 
   @override
@@ -49,8 +47,38 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Builder(
+          builder: (context) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: RaisedButton(
+                  onPressed: () async {
+                    var _atClientPreference = await getAtClientPreference();
+                    Onboarding(
+                        context: context,
+                        domain: rootDomain,
+                        atClientPreference: _atClientPreference,
+                        onboard: (map, atsign) {
+                          this.atClientServiceMap = map;
+                          this.atsign = atsign;
+                          loading = true;
+                          setState(() {});
+                        },
+                        onError: (error) {});
+                  },
+                  child: Text('Onboard my @sign'),
+                ),
+              ),
+              if (loading)
+                BackupKeyWidget(
+                  atsign: this.atsign,
+                  atClientService: this.atClientServiceMap[atsign],
+                  isIcon: true,
+                )
+            ],
+          ),
         ),
       ),
     );
