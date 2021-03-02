@@ -27,7 +27,7 @@ packages:
     description:
       path: at_client
       ref: dev_env
-      resolved-ref: e15155756f160fc03afd11ec01302876e3f597c7
+      resolved-ref: "4e47fe1015a9ea5437fee5783a400c6fc7361de0"
       url: "https://github.com/atsign-foundation/at_client_sdk.git"
     source: git
     version: "1.0.1+5"
@@ -36,7 +36,7 @@ packages:
     description:
       path: at_client_mobile
       ref: dev_env
-      resolved-ref: e15155756f160fc03afd11ec01302876e3f597c7
+      resolved-ref: "4e47fe1015a9ea5437fee5783a400c6fc7361de0"
       url: "https://github.com/atsign-foundation/at_client_sdk.git"
     source: git
     version: "1.0.0+5"
@@ -45,7 +45,7 @@ packages:
     description:
       path: at_commons
       ref: dev_env
-      resolved-ref: "3da13624418c5f270af323dc0640f1dc91145b92"
+      resolved-ref: "8e75bd3c4cae4277db3cea8f84f266d49479c1bd"
       url: "https://github.com/atsign-foundation/at_tools.git"
     source: git
     version: "1.0.1+4"
@@ -54,7 +54,7 @@ packages:
     description:
       path: at_lookup
       ref: dev_env
-      resolved-ref: "8677afccafa7c289b45bc0eea5c60ccc872f8c07"
+      resolved-ref: "88839f13bda18a52dedf7b118bbdac2e1bb37be6"
       url: "https://github.com/atsign-foundation/at_libraries.git"
     source: git
     version: "1.0.0+4"
@@ -63,7 +63,7 @@ packages:
     description:
       path: "at_secondary/at_persistence_secondary_server"
       ref: dev_env
-      resolved-ref: "1025ea76542431cca1d36275c564733278587836"
+      resolved-ref: adefd2258ec181ed2a990fd086293d35c1250ecc
       url: "https://github.com/atsign-foundation/at_server.git"
     source: git
     version: "1.0.1+4"
@@ -72,7 +72,7 @@ packages:
     description:
       path: "at_persistence/at_persistence_spec"
       ref: dev_env
-      resolved-ref: "1025ea76542431cca1d36275c564733278587836"
+      resolved-ref: adefd2258ec181ed2a990fd086293d35c1250ecc
       url: "https://github.com/atsign-foundation/at_server.git"
     source: git
     version: "1.0.1+3"
@@ -81,7 +81,7 @@ packages:
     description:
       path: at_utils
       ref: dev_env
-      resolved-ref: "3da13624418c5f270af323dc0640f1dc91145b92"
+      resolved-ref: "8e75bd3c4cae4277db3cea8f84f266d49479c1bd"
       url: "https://github.com/atsign-foundation/at_tools.git"
     source: git
     version: "1.0.1+4"
