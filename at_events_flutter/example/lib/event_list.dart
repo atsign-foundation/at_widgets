@@ -13,7 +13,6 @@ class EventList extends StatefulWidget {
 class _EventListState extends State<EventList> {
   GlobalKey<ScaffoldState> scaffoldKey;
   List<EventNotificationModel> events = [];
-  bool isEventAvailable = false;
 
   @override
   void initState() {
@@ -24,16 +23,10 @@ class _EventListState extends State<EventList> {
 
   getAllEvent() async {
     events = await getEvents();
-    if (events.length > 0) {
-      setState(() {
-        isEventAvailable = true;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print('build called');
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -47,112 +40,112 @@ class _EventListState extends State<EventList> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          !isEventAvailable
-              ? Center(
-                  child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: CircularProgressIndicator(),
-                ))
-              : Expanded(
-                  child: Container(
-                      padding: EdgeInsets.all(15),
-                      child: StreamBuilder(
-                        stream: EventService().eventListStream,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.active) {
-                            if (snapshot.hasData) {
-                              events = snapshot.data;
-                              return ListView.separated(
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return InkWell(
-                                      onLongPress: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return alertDialog(
-                                                events[index], 'Delete event??',
-                                                isDelete: true);
-                                          },
-                                        );
+          Expanded(
+            child: Container(
+                padding: EdgeInsets.all(15),
+                child: StreamBuilder(
+                  stream: EventService().eventListStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data.length < 1) {
+                          return Center(
+                            child: Text('No data found'),
+                          );
+                        } else {
+                          events = snapshot.data;
+
+                          return ListView.separated(
+                              itemBuilder: (BuildContext context, int index) {
+                                return InkWell(
+                                  onLongPress: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return alertDialog(
+                                            events[index], 'Delete event??',
+                                            isDelete: true);
                                       },
-                                      onTap: () {
-                                        if (events[index].atsignCreator ==
-                                            EventService()
-                                                .atClientInstance
-                                                .currentAtSign)
-                                          bottomSheet(
-                                              context,
-                                              CreateEvent(
-                                                isUpdate: true,
-                                                eventData: events[index],
-                                                onEventSaved:
-                                                    (EventNotificationModel
-                                                        event) {
-                                                  EventService()
-                                                      .onUpdatedEventReceived(
-                                                          event);
-                                                },
-                                              ),
-                                              MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.9);
-                                        else
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return alertDialog(events[index],
-                                                  'Accept event invite??');
+                                    );
+                                  },
+                                  onTap: () {
+                                    if (events[index].atsignCreator ==
+                                        EventService()
+                                            .atClientInstance
+                                            .currentAtSign)
+                                      bottomSheet(
+                                          context,
+                                          CreateEvent(
+                                            isUpdate: true,
+                                            eventData: events[index],
+                                            onEventSaved:
+                                                (EventNotificationModel event) {
+                                              EventService()
+                                                  .onUpdatedEventReceived(
+                                                      event);
                                             },
-                                          );
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text('${events[index].title}'),
-                                            EventService().currentAtSign ==
-                                                    events[index].atsignCreator
-                                                ? SizedBox()
-                                                : getActionString(events[index])
-                                                            .length >
-                                                        0
-                                                    ? Text(
-                                                        '${getActionString(events[index])}',
-                                                        style: TextStyle(
-                                                            color: Colors.red),
-                                                      )
-                                                    : SizedBox(),
-                                            SizedBox(height: 5),
-                                            Text(
-                                                'creator:${events[index].atsignCreator}'),
-                                          ],
-                                        ),
-                                      ),
-                                    );
+                                          ),
+                                          MediaQuery.of(context).size.height *
+                                              0.9);
+                                    else
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return alertDialog(events[index],
+                                              'Accept event invite??');
+                                        },
+                                      );
                                   },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return Divider(
-                                      color: Colors.grey,
-                                    );
-                                  },
-                                  itemCount: events.length);
-                            } else {
-                              return Center(
-                                child: Text('something went wrong'),
-                              );
-                            }
-                          } else {
-                            return SizedBox();
-                          }
-                        },
-                      )),
-                )
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('${events[index].title}'),
+                                        EventService().currentAtSign ==
+                                                events[index].atsignCreator
+                                            ? SizedBox()
+                                            : getActionString(events[index])
+                                                        .length >
+                                                    0
+                                                ? Text(
+                                                    '${getActionString(events[index])}',
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  )
+                                                : SizedBox(),
+                                        SizedBox(height: 5),
+                                        Text(
+                                            'creator:${events[index].atsignCreator}'),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return Divider(
+                                  color: Colors.grey,
+                                );
+                              },
+                              itemCount: events.length);
+                        }
+                      } else {
+                        return Center(
+                          child: Text('something went wrong'),
+                        );
+                      }
+                    } else {
+                      return Center(
+                          child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: CircularProgressIndicator(),
+                      ));
+                    }
+                  },
+                )),
+          )
         ],
       ),
     );

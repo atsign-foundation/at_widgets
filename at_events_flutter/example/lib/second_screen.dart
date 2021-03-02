@@ -1,3 +1,4 @@
+import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/screens/create_event.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
 import 'package:at_events_flutter_example/event_list.dart';
@@ -14,15 +15,30 @@ class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
   String activeAtSign;
   GlobalKey<ScaffoldState> scaffoldKey;
-  bool showOptions = false;
+  bool isAuthenticated;
 
   @override
   void initState() {
     scaffoldKey = GlobalKey<ScaffoldState>();
     super.initState();
-    activeAtSign =
-        clientSdkService.atClientServiceInstance.atClient.currentAtSign;
-    initializeEventService();
+
+    try {
+      activeAtSign =
+          clientSdkService.atClientServiceInstance.atClient.currentAtSign;
+      initializeEventService();
+      isAuthenticated = true;
+    } catch (e) {
+      isAuthenticated = false;
+      print('not authenticated');
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alertDialogContent();
+          },
+        );
+      });
+    }
   }
 
   @override
@@ -107,5 +123,20 @@ class _SecondScreenState extends State<SecondScreen> {
             child: T,
           );
         });
+  }
+
+  Widget alertDialogContent() {
+    return AlertDialog(
+      title: Text('you are not authenticated'),
+      actions: [
+        FlatButton(
+          child: Text("Ok"),
+          onPressed: () async {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
   }
 }

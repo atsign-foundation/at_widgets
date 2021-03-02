@@ -7,9 +7,9 @@ import 'package:at_events_flutter/common_components/concurrent_event_request_dia
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/models/hybrid_notifiation_model.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
-import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_lookup/at_lookup.dart';
 
 class EventService {
   EventService._();
@@ -351,6 +351,17 @@ class EventService {
       }
     });
     return [isOverlap, overlapEvent];
+  }
+
+  Future<bool> checkAtsign(String atsign) async {
+    if (atsign == null) {
+      return false;
+    } else if (!atsign.contains('@')) {
+      atsign = '@' + atsign;
+    }
+    var checkPresence =
+        await AtLookupImpl.findSecondary(atsign, rootDomain, 64);
+    return checkPresence != null;
   }
 
   dynamic createEventFormValidation() {

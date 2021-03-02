@@ -120,6 +120,8 @@ Future<List<EventNotificationModel>> getEvents() async {
       );
 
   if (regexList.length == 0) {
+    EventService().allEvents = allEvents;
+    EventService().eventListSink.add(allEvents);
     return [];
   }
 

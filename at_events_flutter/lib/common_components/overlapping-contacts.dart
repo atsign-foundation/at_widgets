@@ -28,7 +28,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
         });
       },
       child: Container(
-        height: (isExpanded) ? 300.toHeight : 50.toHeight,
+        height: (isExpanded) ? 300.toHeight : 55,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Color(0xffF7F7FF),
