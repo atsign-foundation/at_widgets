@@ -57,7 +57,7 @@ class EventService {
     }
     isEventUpdate = isUpdate;
 
-    Future.delayed(Duration(milliseconds: 50), () {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       eventSink.add(eventNotificationModel);
     });
   }
@@ -101,8 +101,8 @@ class EventService {
 
     var decryptedMessage = await atClientInstance.encryptionService
         .decrypt(value, fromAtSign)
-        .catchError((e) =>
-            print("error in decrypting: ${e.errorCode} ${e.errorMessage}"));
+        .catchError((e) => print("error in decrypting: ${e} ${e}"));
+    print('decrypted message:${decryptedMessage}');
     if (atKey.toString().contains('createevent')) {
       EventNotificationModel eventData =
           EventNotificationModel.fromJson(jsonDecode(decryptedMessage));

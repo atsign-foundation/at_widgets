@@ -41,8 +41,9 @@ class CustomInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     textController = new TextEditingController.fromValue(new TextEditingValue(
-        text: initialValue,
-        selection: new TextSelection.collapsed(offset: initialValue.length)));
+        text: initialValue != null ? initialValue : '',
+        selection: new TextSelection.collapsed(
+            offset: initialValue != null ? initialValue.length : -1)));
     return Container(
       width: width,
       height: height,

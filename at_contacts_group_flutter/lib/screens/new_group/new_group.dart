@@ -37,6 +37,7 @@ class _NewGroupState extends State<NewGroup> {
 
   createGroup() async {
     print('object');
+    bool isKeyboardOpen;
     if (groupName != null) {
       // if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
       //   CustomToast().show(TextConstants().INVALID_NAME, context);
@@ -58,23 +59,31 @@ class _NewGroupState extends State<NewGroup> {
 
         var result = await GroupService().createGroup(group);
 
+        isKeyboardOpen =
+            MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
+
         if (result is AtGroup) {
           Navigator.of(context).pop();
         } else if (result != null) {
           if (result.runtimeType == AlreadyExistsException) {
             CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context);
           } else if (result.runtimeType == InvalidAtSignException) {
-            CustomToast().show(result.message, context);
+            CustomToast()
+                .show(result.message, context, gravity: isKeyboardOpen ? 2 : 0);
           } else
-            CustomToast().show(TextConstants().SERVICE_ERROR, context);
+            CustomToast().show(TextConstants().SERVICE_ERROR, context,
+                gravity: isKeyboardOpen ? 2 : 0);
         } else {
-          CustomToast().show(TextConstants().SERVICE_ERROR, context);
+          CustomToast().show(TextConstants().SERVICE_ERROR, context,
+              gravity: isKeyboardOpen ? 2 : 0);
         }
       } else {
-        CustomToast().show(TextConstants().EMPTY_NAME, context);
+        CustomToast().show(TextConstants().EMPTY_NAME, context,
+            gravity: isKeyboardOpen ? 2 : 0);
       }
     } else {
-      CustomToast().show(TextConstants().EMPTY_NAME, context);
+      CustomToast().show(TextConstants().EMPTY_NAME, context,
+          gravity: isKeyboardOpen ? 2 : 0);
     }
   }
 
