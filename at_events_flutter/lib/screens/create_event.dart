@@ -143,15 +143,15 @@ class _CreateEventState extends State<CreateEvent> {
                                         typedAtSign = value;
                                         bool isValid = await EventService()
                                             .checkAtsign(typedAtSign);
-                                        setState(() {
-                                          isValidAtsign = isValid;
-                                        });
+                                        // setState(() {
+                                        // isValidAtsign = isValid;
+                                        // });
 
-                                        if (isValid) {
-                                          EventService().addNewGroupMembers(
-                                              [AtContact(atSign: typedAtSign)]);
-                                          EventService().update();
-                                        }
+                                        // if (isValid) {
+                                        //   EventService().addNewGroupMembers(
+                                        //       [AtContact(atSign: typedAtSign)]);
+                                        //   EventService().update();
+                                        // }
                                       }),
                                   SizedBox(height: 20),
                                   !isValidAtsign
@@ -415,6 +415,14 @@ class _CreateEventState extends State<CreateEvent> {
     setState(() {
       isLoading = true;
     });
+    bool isValidAtsign = await isTypedAtSignValid();
+    if (!isValidAtsign) {
+      CustomToast().show('Invalid atsign entered', context);
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
 
     var formValid = EventService().createEventFormValidation();
     if (formValid is String) {
@@ -451,5 +459,19 @@ class _CreateEventState extends State<CreateEvent> {
         isLoading = false;
       });
     }
+  }
+
+  isTypedAtSignValid() async {
+    if (typedAtSign.trim().length < 1) return true;
+    bool isValid = await EventService().checkAtsign(typedAtSign);
+    setState(() {
+      isValidAtsign = isValid;
+    });
+
+    if (isValid) {
+      EventService().addNewGroupMembers([AtContact(atSign: typedAtSign)]);
+      EventService().update();
+    }
+    return isValid;
   }
 }
