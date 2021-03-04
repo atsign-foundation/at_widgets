@@ -120,7 +120,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                       ),
                       layers: [
                         TileLayerOptions(
-                          fnWhenZoomChanges: (zoom) => fnWhenZoomChanges(zoom),
                           minNativeZoom: 2,
                           maxNativeZoom: 18,
                           minZoom: 2,
@@ -185,21 +184,5 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     LocationService().hybridUsersList.length > 0
         ? mapController.move(LocationService().hybridUsersList[0].latLng, 4)
         : null;
-  }
-
-  fnWhenZoomChanges(double zoom) {
-    print('fnWhenZoomChanges $zoom');
-    if ((zoom > 2) && (!showMarker)) {
-      print('greater $zoom');
-      setState(() {
-        showMarker = true;
-      });
-    }
-    if ((zoom < 2) && (showMarker)) {
-      print('less $zoom');
-      setState(() {
-        showMarker = false;
-      });
-    }
   }
 }

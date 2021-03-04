@@ -1,10 +1,10 @@
+import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_layer_options.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
-
 import 'common_components/build_marker.dart';
+import 'common_components/marker_cluster.dart';
 import 'location_modal/hybrid_model.dart';
 import 'map_content/flutter_map/flutter_map.dart';
-import 'map_content/flutter_map_marker_cluster/src/marker_cluster_layer_options.dart';
 import 'map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
 import 'utils/constants/constants.dart';
 
@@ -77,10 +77,9 @@ class _ShowLocationState extends State<ShowLocation> {
         ),
         layers: [
           TileLayerOptions(
-            fnWhenZoomChanges: (zoom) => fnWhenZoomChanges(zoom),
             minNativeZoom: 2,
             maxNativeZoom: 18,
-            minZoom: 2,
+            minZoom: 1,
             urlTemplate:
                 "https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MixedConstants.MAP_KEY}",
           ),
@@ -97,24 +96,12 @@ class _ShowLocationState extends State<ShowLocation> {
                 : showMarker
                     ? [marker]
                     : [],
-            builder: (context, markers) {},
+            builder: (context, markers) {
+              return buildMarkerCluster(markers);
+            },
           ),
         ],
       )),
     );
-  }
-
-  fnWhenZoomChanges(double zoom) {
-    if (noPointReceived) return;
-    if ((zoom > 2) && (!showMarker)) {
-      setState(() {
-        showMarker = true;
-      });
-    }
-    if ((zoom < 2) && (showMarker)) {
-      setState(() {
-        showMarker = false;
-      });
-    }
   }
 }

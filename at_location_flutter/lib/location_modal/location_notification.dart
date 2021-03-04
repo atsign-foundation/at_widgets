@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
-import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 
 // !isExited && !isisAccepted => decide later
@@ -47,10 +46,10 @@ class LocationNotificationModel {
         isRequest = json['isRequest'] == 'true' ? true : false,
         isSharing = json['isSharing'] == 'true' ? true : false,
         from = ((json['from'] != 'null') && (json['from'] != null))
-            ? DateTime.parse(json['from'])
+            ? DateTime.parse(json['from']).toLocal()
             : null,
         to = ((json['to'] != 'null') && (json['to'] != null))
-            ? DateTime.parse(json['to'])
+            ? DateTime.parse(json['to']).toLocal()
             : null,
         updateMap = json['updateMap'] == 'true' ? true : false;
   Map<String, dynamic> toJson() => {
@@ -69,8 +68,12 @@ class LocationNotificationModel {
       'lat': locationNotificationModel.lat.toString(),
       'long': locationNotificationModel.long.toString(),
       'key': locationNotificationModel.key.toString(),
-      'from': locationNotificationModel.from.toString(),
-      'to': locationNotificationModel.to.toString(),
+      'from': locationNotificationModel.from != null
+          ? locationNotificationModel.from.toUtc().toString()
+          : null.toString(),
+      'to': locationNotificationModel.from != null
+          ? locationNotificationModel.to.toUtc().toString()
+          : null.toString(),
       'isAcknowledgment': locationNotificationModel.isAcknowledgment.toString(),
       'isRequest': locationNotificationModel.isRequest.toString(),
       'isAccepted': locationNotificationModel.isAccepted.toString(),

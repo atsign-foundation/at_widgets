@@ -7,7 +7,12 @@ class Tasks extends StatelessWidget {
   final IconData icon;
   final String task;
   final Function onTap;
-  Tasks({@required this.task, @required this.icon, @required this.onTap});
+  final double angle;
+  Tasks(
+      {@required this.task,
+      @required this.icon,
+      @required this.onTap,
+      this.angle = 0.0});
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -19,10 +24,13 @@ class Tasks extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 20.toWidth,
-              color: AllColors().ORANGE,
+            Transform.rotate(
+              angle: angle,
+              child: Icon(
+                icon,
+                size: 20.toWidth,
+                color: AllColors().ORANGE,
+              ),
             ),
             Flexible(
               child: Text(
