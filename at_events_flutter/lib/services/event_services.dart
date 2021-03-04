@@ -145,7 +145,7 @@ class EventService {
 
     regexKey = await getRegexKeyFromKey('createevent-$eventId');
     if (regexKey != null) {
-      atKey = AtKey.fromString(regexKey);
+      atKey = getAtKey(regexKey);
     } else {
       return false;
     }
@@ -211,7 +211,7 @@ class EventService {
 
   Future<dynamic> editEvent() async {
     try {
-      // AtKey atKey = AtKey.fromString(eventNotificationModel.key);
+      // AtKey atKey = getAtKey(eventNotificationModel.key);
       // var eventData = EventNotificationModel.convertEventNotificationToJson(
       //     EventService().eventNotificationModel);
       // var result = await atClientInstance.put(atKey, eventData);
@@ -425,5 +425,11 @@ class EventService {
         eventData.event.endEventAfterOccurance == null) {
       return 'add event occurance';
     }
+  }
+
+  getAtKey(String regexKey) {
+    AtKey atKey = AtKey.fromString(regexKey);
+    atKey.metadata.ttr = -1;
+    return atKey;
   }
 }
