@@ -22,24 +22,40 @@ class GroupList extends StatefulWidget {
 
 class _GroupListState extends State<GroupList> {
   List<AtContact> selectedContactList = List<AtContact>();
-  bool showAddGroupIcon = false;
+  bool showAddGroupIcon = false, errorOcurred = false;
 
   @override
   void initState() {
-    init();
-    super.initState();
-    GroupService().atGroupStream.listen((groupList) {
-      if (groupList.length > 0) {
-        showAddGroupIcon = true;
-      } else {
-        showAddGroupIcon = false;
-      }
-      setState(() {});
-    });
+    try {
+      init();
+      super.initState();
+      GroupService().atGroupStream.listen((groupList) {
+        if (groupList.length > 0) {
+          showAddGroupIcon = true;
+        } else {
+          showAddGroupIcon = false;
+        }
+        setState(() {});
+      });
+    } catch (e) {
+      print('Error in init of Group_list $e');
+      if (mounted)
+        setState(() {
+          errorOcurred = true;
+        });
+    }
   }
 
   init() async {
-    await GroupService().init(widget.currentAtsign);
+    try {
+      await GroupService().init(widget.currentAtsign);
+    } catch (e) {
+      print('Error in init of Group_list $e');
+      if (mounted)
+        setState(() {
+          errorOcurred = true;
+        });
+    }
   }
 
   @override
@@ -84,69 +100,77 @@ class _GroupListState extends State<GroupList> {
             ),
           ),
         ),
-        body: StreamBuilder(
-          stream: GroupService().atGroupStream,
-          builder:
-              (BuildContext context, AsyncSnapshot<List<AtGroup>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else {
-              if (snapshot.hasError) {
-                return ErrorScreen(onPressed: () {
-                  GroupService().getAllGroupsDetails();
-                });
-              } else {
-                if (snapshot.hasData) {
-                  if (snapshot.data.length == 0) {
-                    showAddGroupIcon = false;
-
-                    return EmptyGroup();
+        body: errorOcurred
+            ? ErrorScreen(onPressed: () {
+                GroupService().getAllGroupsDetails();
+              })
+            : StreamBuilder(
+                stream: GroupService().atGroupStream,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<AtGroup>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
                   } else {
-                    return GridView.count(
-                      childAspectRatio: 150 / 60, // width/height
-                      primary: false,
-                      padding: EdgeInsets.all(20.0),
-                      crossAxisSpacing: 1,
-                      mainAxisSpacing: 20,
-                      crossAxisCount: 2,
-                      children: List.generate(snapshot.data.length, (index) {
-                        return InkWell(
-                          onLongPress: () {
-                            showMyDialog(context, snapshot.data[index]);
-                          },
-                          onTap: () async {
-                            Future.delayed(Duration(milliseconds: 50), () {
-                              GroupService()
-                                  .groupViewSink
-                                  .add(snapshot.data[index]);
-                            });
+                    if (snapshot.hasError) {
+                      return ErrorScreen(onPressed: () {
+                        GroupService().getAllGroupsDetails();
+                      });
+                    } else {
+                      if (snapshot.hasData) {
+                        if (snapshot.data.length == 0) {
+                          showAddGroupIcon = false;
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      GroupView(group: snapshot.data[index])),
-                            );
-                          },
-                          child: CustomPersonHorizontalTile(
-                            image: (snapshot.data[index].groupPicture != null)
-                                ? snapshot.data[index].groupPicture
-                                : null,
-                            title: snapshot.data[index].displayName ?? null,
-                            subTitle:
-                                '${snapshot.data[index].members.length} members',
-                          ),
-                        );
-                      }),
-                    );
+                          return EmptyGroup();
+                        } else {
+                          return GridView.count(
+                            childAspectRatio: 150 / 60, // width/height
+                            primary: false,
+                            padding: EdgeInsets.all(20.0),
+                            crossAxisSpacing: 1,
+                            mainAxisSpacing: 20,
+                            crossAxisCount: 2,
+                            children:
+                                List.generate(snapshot.data.length, (index) {
+                              return InkWell(
+                                onLongPress: () {
+                                  showMyDialog(context, snapshot.data[index]);
+                                },
+                                onTap: () async {
+                                  Future.delayed(Duration(milliseconds: 50),
+                                      () {
+                                    GroupService()
+                                        .groupViewSink
+                                        .add(snapshot.data[index]);
+                                  });
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GroupView(
+                                            group: snapshot.data[index])),
+                                  );
+                                },
+                                child: CustomPersonHorizontalTile(
+                                  image: (snapshot.data[index].groupPicture !=
+                                          null)
+                                      ? snapshot.data[index].groupPicture
+                                      : null,
+                                  title:
+                                      snapshot.data[index].displayName ?? null,
+                                  subTitle:
+                                      '${snapshot.data[index].members.length} members',
+                                ),
+                              );
+                            }),
+                          );
+                        }
+                      } else {
+                        return EmptyGroup();
+                      }
+                    }
                   }
-                } else {
-                  return EmptyGroup();
-                }
-              }
-            }
-          },
-        ),
+                },
+              ),
       ),
     );
   }
