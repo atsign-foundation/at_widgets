@@ -6,6 +6,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
 import 'send_location_notification.dart';
 import 'sharing_location_service.dart';
@@ -60,7 +61,7 @@ class KeyStreamService {
     });
 
     allLocationNotifications.forEach((notification) {
-      AtKey atKey = AtKey.fromString(notification.key);
+      AtKey atKey = getAtKey(notification.key);
       notification.atKey = atKey;
     });
 
@@ -105,8 +106,13 @@ class KeyStreamService {
     List<KeyLocationModel> tempArray = [];
     for (int i = 0; i < allLocationNotifications.length; i++) {
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
-          (allLocationNotifications[i].locationNotificationModel == null))
-        tempArray.add(allLocationNotifications[i]);
+          (allLocationNotifications[i].locationNotificationModel == null) ||
+          (allLocationNotifications[i]
+                  .locationNotificationModel
+                  .to
+                  .difference(DateTime.now())
+                  .inMinutes <
+              0)) tempArray.add(allLocationNotifications[i]);
     }
     allLocationNotifications
         .removeWhere((element) => tempArray.contains(element));
@@ -145,7 +151,7 @@ class KeyStreamService {
         await atClientInstance.getKeys(regex: acknowledgedKeyId);
     print('lenhtg ${allRegexResponses.length}');
     if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
-      AtKey acknowledgedAtKey = AtKey.fromString(allRegexResponses[0]);
+      AtKey acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
       AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
           (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
@@ -168,7 +174,7 @@ class KeyStreamService {
         await atClientInstance.getKeys(regex: acknowledgedKeyId);
     print('lenhtg ${allRegexResponses.length}');
     if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
-      AtKey acknowledgedAtKey = AtKey.fromString(allRegexResponses[0]);
+      AtKey acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
       AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
           (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
@@ -244,7 +250,7 @@ class KeyStreamService {
 
     KeyLocationModel tempHyridNotificationModel = KeyLocationModel(key: key[0]);
 
-    tempHyridNotificationModel.atKey = AtKey.fromString(key[0]);
+    tempHyridNotificationModel.atKey = getAtKey(key[0]);
     tempHyridNotificationModel.atValue =
         await getAtValue(tempHyridNotificationModel.atKey);
     tempHyridNotificationModel.locationNotificationModel =

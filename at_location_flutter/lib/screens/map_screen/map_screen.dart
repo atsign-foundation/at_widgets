@@ -61,7 +61,10 @@ class _MapScreenState extends State<MapScreen> {
                 maxHeight: widget.userListenerKeyword != null
                     ? ((widget.userListenerKeyword.atsignCreator ==
                             widget.currentAtSign)
-                        ? 291
+                        ? widget.userListenerKeyword.key
+                                .contains("requestlocation")
+                            ? 240
+                            : 291
                         : 130)
                     : 431,
                 panel: CollapsedContent(
