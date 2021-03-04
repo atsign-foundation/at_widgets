@@ -14,11 +14,8 @@ dependencies:
   share: ^0.6.5+2
   permission_handler: ^5.0.1+1
   path_provider: ^1.6.24
-  at_client_mobile: 
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: dev_env
+  at_utils: ^1.0.1+5
+  at_client_mobile: ^1.0.0+6
   
 
 dev_dependencies:
