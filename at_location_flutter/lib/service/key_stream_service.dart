@@ -106,13 +106,18 @@ class KeyStreamService {
     List<KeyLocationModel> tempArray = [];
     for (int i = 0; i < allLocationNotifications.length; i++) {
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
-          (allLocationNotifications[i].locationNotificationModel == null) ||
-          (allLocationNotifications[i]
-                  .locationNotificationModel
-                  .to
-                  .difference(DateTime.now())
-                  .inMinutes <
-              0)) tempArray.add(allLocationNotifications[i]);
+          (allLocationNotifications[i].locationNotificationModel == null))
+        tempArray.add(allLocationNotifications[i]);
+      else {
+        if ((allLocationNotifications[i].locationNotificationModel.to !=
+                null) &&
+            (allLocationNotifications[i]
+                    .locationNotificationModel
+                    .to
+                    .difference(DateTime.now())
+                    .inMinutes <
+                0)) tempArray.add(allLocationNotifications[i]);
+      }
     }
     allLocationNotifications
         .removeWhere((element) => tempArray.contains(element));
