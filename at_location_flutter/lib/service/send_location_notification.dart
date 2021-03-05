@@ -4,6 +4,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/my_location.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
 
@@ -37,6 +38,8 @@ class SendLocationNotification {
           (notification.locationNotificationModel.isSharing) &&
           (notification.locationNotificationModel.isAccepted) &&
           (!notification.locationNotificationModel.isExited)) {
+        print(
+            'findAtSignsToShareLocationWith ${(notification.locationNotificationModel.atsignCreator == atClient.currentAtSign)} ${(notification.locationNotificationModel.isSharing)} ${(notification.locationNotificationModel.isSharing)} ${(notification.locationNotificationModel.isAccepted)} ${(!notification.locationNotificationModel.isExited)}');
         atsignsToShareLocationWith.add(notification.locationNotificationModel);
       }
     });
@@ -99,7 +102,7 @@ class SendLocationNotification {
   sendNull(LocationNotificationModel locationNotificationModel) async {
     String atkeyMicrosecondId =
         locationNotificationModel.key.split('-')[1].split('@')[0];
-    AtKey atKey = newAtKey(5000, "locationnotify-$atkeyMicrosecondId",
+    AtKey atKey = newAtKey(-1, "locationnotify-$atkeyMicrosecondId",
         locationNotificationModel.receiver);
     var result = await atClient.delete(atKey);
     print('$atKey delete operation $result');
@@ -113,7 +116,7 @@ class SendLocationNotification {
     response.forEach((key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
-        AtKey atKey = AtKey.fromString(key);
+        AtKey atKey = getAtKey(key);
         var result = await atClient.delete(atKey);
         print('$key is deleted ? $result');
       }

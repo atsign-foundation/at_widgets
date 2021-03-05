@@ -76,12 +76,12 @@ getSemiTitle(LocationNotificationModel locationNotificationModel) {
     return locationNotificationModel.atsignCreator !=
             AtLocationNotificationListener().currentAtSign
         ? (locationNotificationModel.isAccepted
-            ? ''
+            ? null
             : locationNotificationModel.isExited
                 ? 'Received Share location rejected'
                 : 'Action required')
         : (locationNotificationModel.isAccepted
-            ? ''
+            ? null
             : locationNotificationModel.isExited
                 ? 'Sent Share location rejected'
                 : 'Awaiting response');
@@ -89,10 +89,12 @@ getSemiTitle(LocationNotificationModel locationNotificationModel) {
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
         ? (!locationNotificationModel.isExited
-            ? (locationNotificationModel.isAccepted ? '' : 'Action required')
+            ? (locationNotificationModel.isAccepted ? null : 'Action required')
             : 'Request rejected')
         : (!locationNotificationModel.isExited
-            ? (locationNotificationModel.isAccepted ? '' : 'Awaiting response')
+            ? (locationNotificationModel.isAccepted
+                ? null
+                : 'Awaiting response')
             : 'Request rejected');
 }
 

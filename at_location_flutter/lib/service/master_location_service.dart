@@ -9,6 +9,7 @@ import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:latlong/latlong.dart';
 
 import 'location_service.dart';
@@ -60,7 +61,7 @@ class MasterLocationService {
     await Future.forEach(response, (key) async {
       if ('@$key'.contains('cached')) {
         print('cached key $key');
-        AtKey atKey = AtKey.fromString(key);
+        AtKey atKey = getAtKey(key);
         print('getAllLocationData atkey $atKey');
         // AtValue value = await getAtValue(atKey);
         AtValue value = await getAtValueFromMainApp(atKey);
@@ -110,8 +111,13 @@ class MasterLocationService {
     List<KeyLocationModel> tempArray = [];
     for (int i = 0; i < allLocationNotifications.length; i++) {
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
-          (allLocationNotifications[i].locationNotificationModel == null))
-        tempArray.add(allLocationNotifications[i]);
+          (allLocationNotifications[i].locationNotificationModel == null) ||
+          (allLocationNotifications[i]
+                  .locationNotificationModel
+                  .to
+                  .difference(DateTime.now())
+                  .inMinutes <
+              0)) tempArray.add(allLocationNotifications[i]);
     }
     tempArray.forEach((element) {
       print('removed ${element.key}');

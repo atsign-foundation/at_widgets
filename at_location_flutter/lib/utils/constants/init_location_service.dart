@@ -1,4 +1,5 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
@@ -8,8 +9,10 @@ import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:flutter/material.dart';
 
 void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
-    GlobalKey<NavigatorState> navKey, {String rootDomain = 'vip.ve.atsign.zone'}) {
-  AtLocationNotificationListener().init(atClientImpl, currentAtSign, navKey, rootDomain);
+    GlobalKey<NavigatorState> navKey,
+    {String rootDomain = 'vip.ve.atsign.zone'}) {
+  AtLocationNotificationListener()
+      .init(atClientImpl, currentAtSign, navKey, rootDomain);
   KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
 }
 
@@ -37,4 +40,10 @@ Future<bool> deleteLocationData(
 
 deleteAllLocationData() {
   SendLocationNotification().deleteAllLocationKey();
+}
+
+getAtKey(String regexKey) {
+  AtKey atKey = AtKey.fromString(regexKey);
+  atKey.metadata.ttr = -1;
+  return atKey;
 }

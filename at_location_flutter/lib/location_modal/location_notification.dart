@@ -71,7 +71,7 @@ class LocationNotificationModel {
       'from': locationNotificationModel.from != null
           ? locationNotificationModel.from.toUtc().toString()
           : null.toString(),
-      'to': locationNotificationModel.from != null
+      'to': locationNotificationModel.to != null
           ? locationNotificationModel.to.toUtc().toString()
           : null.toString(),
       'isAcknowledgment': locationNotificationModel.isAcknowledgment.toString(),

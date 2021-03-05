@@ -89,7 +89,9 @@ class _DisplayTileState extends State<DisplayTile> {
               child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: widget.semiTitle != null
+                  ? MainAxisAlignment.spaceEvenly
+                  : MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(

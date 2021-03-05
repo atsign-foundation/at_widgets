@@ -69,8 +69,7 @@ class AtLocationNotificationListener {
     }
     var decryptedMessage = await atClientInstance.encryptionService
         .decrypt(value, fromAtSign)
-        .catchError((e) =>
-            print("error in decrypting: ${e.errorCode} ${e.errorMessage}"));
+        .catchError((e) => print("error in decrypting: $e"));
 
     if (atKey.toString().toLowerCase().contains(locationKey)) {
       LocationNotificationModel msg =

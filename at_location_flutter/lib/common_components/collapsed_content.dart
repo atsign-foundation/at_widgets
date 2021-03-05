@@ -89,7 +89,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DisplayTile(
-                        title: 'Name',
+                        title: amICreator
+                            ? '${widget.userListenerKeyword.receiver}'
+                            : '${widget.userListenerKeyword.atsignCreator}',
                         atsignCreator: amICreator
                             ? '${widget.userListenerKeyword.receiver}'
                             : '${widget.userListenerKeyword.atsignCreator}',
@@ -179,6 +181,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                               'Something went wrong, try again.',
                                               context);
                                         }
+                                        LoadingDialog().hide();
                                       } catch (e) {
                                         print(e);
                                         CustomToast().show(
@@ -221,8 +224,14 @@ class _CollapsedContentState extends State<CollapsedContent> {
                               ),
                             )
                           : SizedBox(),
-                      amICreator ? Divider() : SizedBox(),
-                      amICreator
+                      ((amICreator) &&
+                              (widget.userListenerKeyword.key
+                                  .contains("sharelocation")))
+                          ? Divider()
+                          : SizedBox(),
+                      ((amICreator) &&
+                              (widget.userListenerKeyword.key
+                                  .contains("sharelocation")))
                           ? Expanded(
                               child: InkWell(
                                 onTap: () async {
