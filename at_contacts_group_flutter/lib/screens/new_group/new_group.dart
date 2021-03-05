@@ -37,7 +37,8 @@ class _NewGroupState extends State<NewGroup> {
 
   createGroup() async {
     print('object');
-    bool isKeyboardOpen;
+    bool isKeyboardOpen =
+        MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     if (groupName != null) {
       // if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
       //   CustomToast().show(TextConstants().INVALID_NAME, context);
