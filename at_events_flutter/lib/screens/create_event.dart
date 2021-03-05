@@ -131,7 +131,9 @@ class _CreateEventState extends State<CreateEvent> {
                                                   EventService().update();
                                                   setState(() {
                                                     isValidAtsign = true;
-                                                    typedAtSign = '';
+                                                    typedAtSign =
+                                                        selectedContactList[0]
+                                                            .atSign;
                                                   });
                                                 }
                                               },
@@ -467,6 +469,10 @@ class _CreateEventState extends State<CreateEvent> {
     setState(() {
       isValidAtsign = isValid;
     });
+
+    if (typedAtSign[0] != '@') {
+      typedAtSign = '@' + typedAtSign;
+    }
 
     if (isValid) {
       EventService().addNewGroupMembers([AtContact(atSign: typedAtSign)]);

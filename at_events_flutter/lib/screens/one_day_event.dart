@@ -34,7 +34,7 @@ class _OneDayEventState extends State<OneDayEvent> {
       padding: EdgeInsets.all(25),
       child: SingleChildScrollView(
         child: Container(
-          height: SizeConfig().screenHeight * 0.83,
+          height: SizeConfig().screenHeight * 0.85,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -46,30 +46,79 @@ class _OneDayEventState extends State<OneDayEvent> {
                     SizedBox(height: 25),
                     Text('Select Date', style: CustomTextStyles().greyLabel14),
                     SizedBox(height: 6.toHeight),
-                    CustomInputField(
-                      width: 330.toWidth,
-                      height: 50,
-                      isReadOnly: true,
-                      hintText: 'Select Date',
-                      icon: Icons.date_range,
-                      initialValue: (eventData.event.date != null)
-                          ? dateToString(eventData.event.date)
-                          : '',
-                      onTap: () async {
-                        final DateTime datePicked = await showDatePicker(
-                            context: context,
-                            initialDate: (eventData.event.date != null)
-                                ? eventData.event.date
-                                : DateTime.now(),
-                            firstDate: DateTime(2015, 8),
-                            lastDate: DateTime(2101));
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        CustomInputField(
+                          width: 155.toWidth,
+                          height: 50.toHeight,
+                          isReadOnly: true,
+                          hintText: 'Select Start Date',
+                          icon: Icons.date_range,
+                          initialValue: (eventData.event.date != null)
+                              ? dateToString(eventData.event.date)
+                              : '',
+                          onTap: () async {
+                            final DateTime datePicked = await showDatePicker(
+                                context: context,
+                                initialDate: (eventData.event.date != null)
+                                    ? eventData.event.date
+                                    : DateTime.now(),
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2030));
 
-                        if (datePicked != null) {
-                          setState(() {
-                            eventData.event.date = datePicked;
-                          });
-                        }
-                      },
+                            if (datePicked != null) {
+                              setState(() {
+                                eventData.event.date = datePicked;
+                                if (eventData.event.endDate == null)
+                                  eventData.event.endDate = datePicked;
+
+                                if (eventData.event.startTime != null) {
+                                  eventData.event.startTime = DateTime(
+                                      eventData.event.date.year,
+                                      eventData.event.date.month,
+                                      eventData.event.date.day,
+                                      eventData.event.startTime.hour,
+                                      eventData.event.startTime.minute);
+                                }
+                              });
+                            }
+                          },
+                        ),
+                        CustomInputField(
+                          width: 155.toWidth,
+                          height: 50.toHeight,
+                          isReadOnly: true,
+                          hintText: 'Select End Date',
+                          icon: Icons.date_range,
+                          initialValue: (eventData.event.endDate != null)
+                              ? dateToString(eventData.event.endDate)
+                              : '',
+                          onTap: () async {
+                            final DateTime datePicked = await showDatePicker(
+                                context: context,
+                                initialDate: (eventData.event.endDate != null)
+                                    ? eventData.event.endDate
+                                    : DateTime.now(),
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2030));
+
+                            if (datePicked != null) {
+                              setState(() {
+                                eventData.event.endDate = datePicked;
+                                if (eventData.event.endTime != null) {
+                                  eventData.event.endTime = DateTime(
+                                      eventData.event.endDate.year,
+                                      eventData.event.endDate.month,
+                                      eventData.event.endDate.day,
+                                      eventData.event.endTime.hour,
+                                      eventData.event.endTime.minute);
+                                }
+                              });
+                            }
+                          },
+                        ),
+                      ],
                     ),
                     SizedBox(height: 25),
                     Text('Select Time', style: CustomTextStyles().greyLabel14),
@@ -77,32 +126,43 @@ class _OneDayEventState extends State<OneDayEvent> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         CustomInputField(
-                          width: 155,
-                          height: 50,
+                          width: 155.toWidth,
+                          height: 50.toHeight,
                           isReadOnly: true,
                           hintText: 'Start',
                           icon: Icons.access_time,
                           initialValue: eventData.event.startTime != null
-                              ? timeOfDayToString(eventData.event.startTime)
+                              ? timeOfDayToString((eventData.event.startTime))
                               : '',
                           onTap: () async {
                             final TimeOfDay timePicked = await showTimePicker(
-                              context: context,
-                              initialTime: eventData.event.startTime != null
-                                  ? eventData.event.startTime
-                                  : TimeOfDay.now(),
-                            );
+                                context: context,
+                                initialTime: eventData.event.startTime != null
+                                    ? TimeOfDay.fromDateTime(
+                                        eventData.event.startTime)
+                                    : TimeOfDay.now(),
+                                initialEntryMode: TimePickerEntryMode.input);
+
+                            if (eventData.event.date == null) {
+                              eventData.event.date = DateTime.now();
+                              eventData.event.endDate = DateTime.now();
+                            }
 
                             if (timePicked != null) {
                               setState(() {
-                                eventData.event.startTime = timePicked;
+                                eventData.event.startTime = DateTime(
+                                    eventData.event.date.year,
+                                    eventData.event.date.month,
+                                    eventData.event.date.day,
+                                    timePicked.hour,
+                                    timePicked.minute);
                               });
                             }
                           },
                         ),
                         CustomInputField(
-                            width: 155,
-                            height: 50,
+                            width: 155.toWidth,
+                            height: 50.toHeight,
                             hintText: 'Stop',
                             isReadOnly: true,
                             icon: Icons.access_time,
@@ -111,15 +171,29 @@ class _OneDayEventState extends State<OneDayEvent> {
                                 : '',
                             onTap: () async {
                               final TimeOfDay timePicked = await showTimePicker(
-                                context: context,
-                                initialTime: eventData.event.endTime != null
-                                    ? eventData.event.endTime
-                                    : TimeOfDay.now(),
-                              );
+                                  context: context,
+                                  initialTime: eventData.event.endTime != null
+                                      ? TimeOfDay.fromDateTime(
+                                          eventData.event.endTime)
+                                      : TimeOfDay.now(),
+                                  initialEntryMode: TimePickerEntryMode.input);
 
-                              if (timePicked != null)
-                                eventData.event.endTime = timePicked;
-                              setState(() {});
+                              if (eventData.event.endDate == null) {
+                                CustomToast()
+                                    .show('Select start time first', context);
+                                return;
+                              }
+
+                              if (timePicked != null) {
+                                setState(() {
+                                  eventData.event.endTime = DateTime(
+                                      eventData.event.endDate.year,
+                                      eventData.event.endDate.month,
+                                      eventData.event.endDate.day,
+                                      timePicked.hour,
+                                      timePicked.minute);
+                                });
+                              }
                             }),
                       ],
                     )
@@ -131,10 +205,13 @@ class _OneDayEventState extends State<OneDayEvent> {
                   onPressed: () {
                     var formValid = EventService()
                         .checForOneDayEventFormValidation(eventData);
+                    print(formValid);
                     if (formValid is String) {
                       CustomToast().show(formValid, context);
                       return;
                     }
+                    EventService().eventNotificationModel.event.isRecurring =
+                        false;
                     EventService().update(eventData: eventData);
                     Navigator.of(context).pop();
                   },

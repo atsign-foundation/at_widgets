@@ -161,8 +161,11 @@ class _EventListState extends State<EventList> {
           child: Text("No"),
           onPressed: () async {
             if (!isDelete) {
-              var result = await sendEventAcknowledgement(eventData,
-                  isAccepted: false, isSharing: false, isExited: true);
+              var result = await EventService().sendEventAcknowledgement(
+                  eventData,
+                  isAccepted: false,
+                  isSharing: false,
+                  isExited: true);
               if (result != null && result) {
                 Navigator.of(context).pop();
               }
@@ -179,8 +182,11 @@ class _EventListState extends State<EventList> {
                 Navigator.of(context).pop();
               }
             } else {
-              var result = await sendEventAcknowledgement(eventData,
-                  isAccepted: true, isSharing: true, isExited: false);
+              var result = await EventService().sendEventAcknowledgement(
+                  eventData,
+                  isAccepted: true,
+                  isSharing: true,
+                  isExited: false);
               if (result != null && result) {
                 Navigator.of(context).pop();
               }

@@ -120,21 +120,25 @@ class EventService {
       EventNotificationModel msg =
           EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
       print('event acknowledge received:${msg.group} , ${msg.title}');
-      createEventAcknowledged(msg, fromAtSign);
+      createEventAcknowledged(msg, fromAtSign, atKey);
     }
   }
 
-  createEventAcknowledged(
-      EventNotificationModel acknowledgedEvent, String fromAtSign) async {
-    String regexKey,
-        eventId =
-            acknowledgedEvent.key.split('eventacknowledged-')[1].split('@')[0];
+  createEventAcknowledged(EventNotificationModel acknowledgedEvent,
+      String fromAtSign, String key) async {
+    String regexKey, eventId = key.split('eventacknowledged-')[1].split('@')[0];
     AtKey atKey;
     EventNotificationModel presentEventData =
         await getEventDetails('createevent-$eventId');
 
     presentEventData.group.members.forEach((presentGroupMember) {
       acknowledgedEvent.group.members.forEach((acknowledgedGroupMember) {
+        if (acknowledgedGroupMember.atSign[0] != '@')
+          acknowledgedGroupMember.atSign = '@' + acknowledgedGroupMember.atSign;
+
+        if (presentGroupMember.atSign[0] != '@')
+          presentGroupMember.atSign = '@' + presentGroupMember.atSign;
+
         if (acknowledgedGroupMember.atSign == presentGroupMember.atSign &&
             acknowledgedGroupMember.atSign == fromAtSign) {
           presentGroupMember.tags = acknowledgedGroupMember.tags;
@@ -353,6 +357,50 @@ class EventService {
     return [isOverlap, overlapEvent];
   }
 
+  sendEventAcknowledgement(EventNotificationModel acknowledgedEvent,
+      {bool isAccepted, bool isSharing, bool isExited}) async {
+    EventNotificationModel eventData = EventNotificationModel.fromJson(
+        jsonDecode(EventNotificationModel.convertEventNotificationToJson(
+            acknowledgedEvent)));
+    String regexKey,
+        atkeyMicrosecondId,
+        currentAtsign = EventService().atClientInstance.currentAtSign;
+    atkeyMicrosecondId = eventData.key.split('createevent-')[1].split('@')[0];
+
+    eventData.group.members.forEach((member) {
+      if (member.atSign[0] != '@') member.atSign = '@' + member.atSign;
+      if (currentAtsign[0] != '@') currentAtsign = '@' + currentAtsign;
+
+      if (member.atSign == currentAtsign) {
+        member.tags['isAccepted'] =
+            isAccepted != null ? isAccepted : member.tags['isAccepted'];
+        member.tags['isSharing'] =
+            isSharing != null ? isSharing : member.tags['isSharing'];
+        member.tags['isExited'] =
+            isExited != null ? isExited : member.tags['isExited'];
+        print('matched:${isAccepted}, tags:${member.tags}');
+      }
+    });
+
+    // regexKey = await getRegexKeyFromKey(eventData.key);
+    // atKey = EventService().getAtKey(regexKey);
+
+    AtKey atKey = AtKey()
+      ..metadata = Metadata()
+      ..metadata.ttr = -1
+      ..metadata.ccd = true
+      ..sharedWith = eventData.atsignCreator
+      ..sharedBy = currentAtsign;
+    atKey.key = 'eventacknowledged-$atkeyMicrosecondId';
+    eventData.key = atKey.key;
+
+    var notification =
+        EventNotificationModel.convertEventNotificationToJson(eventData);
+
+    var result = await EventService().atClientInstance.put(atKey, notification);
+    return result;
+  }
+
   Future<bool> checkAtsign(String atsign) async {
     if (atsign == null) {
       return false;
@@ -391,12 +439,40 @@ class EventService {
   dynamic checForOneDayEventFormValidation(EventNotificationModel eventData) {
     if (eventData.event.date == null) {
       return 'add event date';
-    } else if (eventData.event.startTime == null) {
+    }
+    if (eventData.event.endDate == null) {
+      return 'add event date';
+    }
+    if (eventData.event.startTime == null) {
       return 'add event start time';
-    } else if (eventData.event.endTime == null) {
+    }
+    if (eventData.event.endTime == null) {
       return 'add event end time';
-    } else
-      return true;
+    }
+    // for time
+    if (!isEventUpdate) {
+      if (eventData.event.startTime.difference(DateTime.now()).inMinutes < 0)
+        return 'Start Time cannot be in past';
+    }
+
+    if (eventData.event.endTime.difference(DateTime.now()).inMinutes < 0) {
+      return 'End Time cannot be in past';
+    }
+
+    if (eventData.event.endTime
+            .difference(eventData.event.startTime)
+            .inMinutes <
+        0) {
+      print('valdation eventData.event.startTime ${eventData.event.startTime}');
+      print('valdation eventData.event.endTime ${eventData.event.endTime}');
+
+      return 'Start time cannot be after End time';
+    }
+
+    if (eventData.event.endTime == eventData.event.startTime) {
+      return 'Start time and End time cannot be same';
+    }
+    return true;
   }
 
   dynamic checForRecurringeDayEventFormValidation(
