@@ -8,12 +8,12 @@ class CustomToast {
   factory CustomToast() => _instance;
 
   show(String text, BuildContext context,
-      {Color bgColor, Color textColor, int duration = 3}) {
+      {Color bgColor, Color textColor, int duration = 3, int gravity = 0}) {
     Toast.show(
       text,
       context,
       duration: duration,
-      gravity: Toast.BOTTOM,
+      gravity: gravity,
       backgroundColor: bgColor ?? AllColors().ORANGE,
       textColor: textColor ?? Colors.white,
     );

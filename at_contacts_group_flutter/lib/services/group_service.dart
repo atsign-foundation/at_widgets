@@ -16,6 +16,7 @@ class GroupService {
   AtGroup selectedGroup;
   AtContactsImpl atContactImpl;
   int length = 0;
+  bool showLoader;
 
 // group list stream
   final _atGroupStreamController = StreamController<List<AtGroup>>.broadcast();
@@ -42,6 +43,11 @@ class GroupService {
       _selectedContactsStreamController.stream;
   StreamSink<List<GroupContactsModel>> get selectedContactsSink =>
       _selectedContactsStreamController.sink;
+
+  // show loader stream
+  final _showLoaderStreamController = StreamController<bool>.broadcast();
+  Stream<bool> get showLoaderStream => _showLoaderStreamController.stream;
+  StreamSink<bool> get showLoaderSink => _showLoaderStreamController.sink;
 
   get currentAtsign => _atsign;
 

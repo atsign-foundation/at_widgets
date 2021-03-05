@@ -2,6 +2,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:at_events_flutter/common_components/bottom_sheet.dart';
+import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/common_components/floating_icon.dart';
 import 'package:at_events_flutter/screens/one_day_event.dart';
 import 'package:at_events_flutter/screens/recurring_event.dart';
@@ -152,21 +153,35 @@ class _SelectedLocationState extends State<SelectedLocation> {
                         child: CustomButton(
                           buttonText: 'Save',
                           onPressed: () {
-                            EventService()
-                                .eventNotificationModel
-                                .venue
-                                .latitude = widget.point.latitude;
+                            if ((EventService()
+                                        .eventNotificationModel
+                                        .venue
+                                        .label !=
+                                    null) &&
+                                (EventService()
+                                    .eventNotificationModel
+                                    .venue
+                                    .label
+                                    .isNotEmpty)) {
+                              EventService()
+                                  .eventNotificationModel
+                                  .venue
+                                  .latitude = widget.point.latitude;
 
-                            EventService()
-                                .eventNotificationModel
-                                .venue
-                                .longitude = widget.point.longitude;
+                              EventService()
+                                  .eventNotificationModel
+                                  .venue
+                                  .longitude = widget.point.longitude;
 
-                            EventService().update(
-                                eventData:
-                                    EventService().eventNotificationModel);
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
+                              EventService().update(
+                                  eventData:
+                                      EventService().eventNotificationModel);
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                            } else {
+                              CustomToast()
+                                  .show('Cannot leave LABEL empty', context);
+                            }
                           },
                           width: 165.toWidth,
                           height: 48.toHeight,

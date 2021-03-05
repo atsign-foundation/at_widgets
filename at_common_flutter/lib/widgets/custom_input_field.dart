@@ -23,7 +23,7 @@ class CustomInputField extends StatelessWidget {
   final ValueChanged<String> value;
   final bool isReadOnly;
 
-  final textController = TextEditingController();
+  TextEditingController textController = TextEditingController();
 
   CustomInputField(
       {this.hintText = '',
@@ -40,7 +40,10 @@ class CustomInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    textController.text = initialValue;
+    textController = new TextEditingController.fromValue(new TextEditingValue(
+        text: initialValue != null ? initialValue : '',
+        selection: new TextSelection.collapsed(
+            offset: initialValue != null ? initialValue.length : -1)));
     return Container(
       width: width,
       height: height,

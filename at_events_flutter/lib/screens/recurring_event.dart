@@ -58,8 +58,8 @@ class _RecurringEventState extends State<RecurringEvent> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 CustomInputField(
-                  width: 155,
-                  height: 50,
+                  width: 155.toWidth,
+                  height: 50.toHeight,
                   hintText: 'repeat cycle',
                   icon: Icons.keyboard_arrow_down,
                   initialValue: eventData.event.repeatDuration != null
@@ -76,7 +76,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                 ),
                 Container(
                   color: AllColors().INPUT_GREY_BACKGROUND,
-                  width: 155,
+                  width: 155.toWidth,
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: DropdownButton(
                     isExpanded: true,
@@ -123,7 +123,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             isRepeatEveryWeek
                 ? Container(
                     color: AllColors().INPUT_GREY_BACKGROUND,
-                    width: 330.toWidth,
+                    width: 350.toWidth,
                     padding: EdgeInsets.only(left: 10, right: 10),
                     child: DropdownButton(
                       isExpanded: true,
@@ -154,8 +154,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                     ),
                   )
                 : CustomInputField(
-                    width: 330.toWidth,
-                    height: 50,
+                    width: 350.toWidth,
+                    height: 50.toHeight,
                     isReadOnly: true,
                     hintText: 'Occurs on',
                     icon: Icons.access_time,
@@ -186,8 +186,8 @@ class _RecurringEventState extends State<RecurringEvent> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 CustomInputField(
-                  width: 155,
-                  height: 50,
+                  width: 155.toWidth,
+                  height: 50.toHeight,
                   isReadOnly: true,
                   hintText: 'Start',
                   icon: Icons.access_time,
@@ -196,21 +196,31 @@ class _RecurringEventState extends State<RecurringEvent> {
                       : '',
                   onTap: () async {
                     final TimeOfDay timePicked = await showTimePicker(
-                      context: context,
-                      initialTime: eventData.event.startTime != null
-                          ? eventData.event.startTime
-                          : TimeOfDay.now(),
-                    );
+                        context: context,
+                        initialTime: eventData.event.startTime != null
+                            ? TimeOfDay.fromDateTime(eventData.event.startTime)
+                            : TimeOfDay.now(),
+                        initialEntryMode: TimePickerEntryMode.input);
+
+                    if (eventData.event.date == null) {
+                      eventData.event.date = DateTime.now();
+                      eventData.event.endDate = DateTime.now();
+                    }
 
                     if (timePicked != null) {
-                      eventData.event.startTime = timePicked;
+                      eventData.event.startTime = DateTime(
+                          eventData.event.date.year,
+                          eventData.event.date.month,
+                          eventData.event.date.day,
+                          timePicked.hour,
+                          timePicked.minute);
                       setState(() {});
                     }
                   },
                 ),
                 CustomInputField(
-                  width: 155,
-                  height: 50,
+                  width: 155.toWidth,
+                  height: 50.toHeight,
                   isReadOnly: true,
                   hintText: 'Stop',
                   icon: Icons.access_time,
@@ -219,14 +229,24 @@ class _RecurringEventState extends State<RecurringEvent> {
                       : '',
                   onTap: () async {
                     final TimeOfDay timePicked = await showTimePicker(
-                      context: context,
-                      initialTime: eventData.event.endTime != null
-                          ? eventData.event.endTime
-                          : TimeOfDay.now(),
-                    );
+                        context: context,
+                        initialTime: eventData.event.endTime != null
+                            ? TimeOfDay.fromDateTime(eventData.event.endTime)
+                            : TimeOfDay.now(),
+                        initialEntryMode: TimePickerEntryMode.input);
+
+                    if (eventData.event.endDate == null) {
+                      CustomToast().show('Select start time first', context);
+                      return;
+                    }
 
                     if (timePicked != null) {
-                      eventData.event.endTime = timePicked;
+                      eventData.event.endTime = DateTime(
+                          eventData.event.date.year,
+                          eventData.event.date.month,
+                          eventData.event.date.day,
+                          timePicked.hour,
+                          timePicked.minute);
                       setState(() {});
                     }
                   },
@@ -239,7 +259,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('Never', style: CustomTextStyles().grey16),
+                Text('Never', style: CustomTextStyles().greyLabel12),
                 Radio(
                   groupValue: eventData.event.endsOn,
                   toggleable: true,
@@ -255,7 +275,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('On', style: CustomTextStyles().grey16),
+                Text('On', style: CustomTextStyles().greyLabel12),
                 Radio(
                   groupValue: eventData.event.endsOn,
                   toggleable: true,
@@ -270,8 +290,8 @@ class _RecurringEventState extends State<RecurringEvent> {
             ),
             SizedBox(height: 6.toHeight),
             CustomInputField(
-              width: 330.toWidth,
-              height: 50,
+              width: 350.toWidth,
+              height: 50.toHeight,
               isReadOnly: true,
               hintText: 'Select Date',
               icon: Icons.date_range,
@@ -299,7 +319,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('After', style: CustomTextStyles().grey16),
+                Text('After', style: CustomTextStyles().greyLabel12),
                 Radio(
                   groupValue: eventData.event.endsOn,
                   toggleable: true,
@@ -314,8 +334,8 @@ class _RecurringEventState extends State<RecurringEvent> {
             ),
             SizedBox(height: 6.toHeight),
             CustomInputField(
-              width: 330.toWidth,
-              height: 50,
+              width: 350.toWidth,
+              height: 50.toHeight,
               hintText: 'Start',
               // icon: Icons.keyboard_arrow_down,
               initialValue: eventData.event.endEventAfterOccurance != null
@@ -338,6 +358,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                     CustomToast().show(formValid, context);
                     return;
                   }
+                  EventService().eventNotificationModel.event.isRecurring =
+                      true;
                   EventService().update(eventData: eventData);
                   Navigator.of(context).pop();
                 },

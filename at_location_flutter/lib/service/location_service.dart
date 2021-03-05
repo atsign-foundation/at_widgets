@@ -24,6 +24,7 @@ class LocationService {
   LatLng etaFrom;
   String textForCenter;
   bool calculateETA, addCurrentUserMarker, isMapInitialized = false;
+  Function showToast;
 
   List<HybridModel> hybridUsersList;
 
@@ -37,7 +38,8 @@ class LocationService {
       {LatLng etaFrom,
       bool calculateETA,
       bool addCurrentUserMarker,
-      String textForCenter}) async {
+      String textForCenter,
+      Function showToast}) async {
     hybridUsersList = [];
     _atHybridUsersController = StreamController<List<HybridModel>>.broadcast();
     atsignsToTrack = atsignsToTrackFromApp;
@@ -45,6 +47,7 @@ class LocationService {
     this.calculateETA = calculateETA;
     this.addCurrentUserMarker = addCurrentUserMarker;
     this.textForCenter = textForCenter;
+    this.showToast = showToast;
     print('atsignsTotrack $atsignsToTrack');
     if (etaFrom != null) addCentreMarker();
     await addMyDetailsToHybridUsersList();
@@ -70,7 +73,7 @@ class LocationService {
         displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
     if (etaFrom != null) _myData.eta = await _calculateEta(_myData);
 
-    _myData.marker = buildMarker(_myData);
+    _myData.marker = buildMarker(_myData, singleMarker: true);
 
     myData = _myData;
 
@@ -164,14 +167,41 @@ class LocationService {
 
   // returns new marker and eta
   addDetails(HybridModel user, {int index}) async {
-    user.marker = buildMarker(user);
-    user.eta = await _calculateEta(user);
-    // user.eta = '?';
-    if (index != null)
-      hybridUsersList[index] = user;
-    else
-      hybridUsersList.add(user);
-    print('hybridUsersList from addDetails $hybridUsersList');
+    try {
+      user.marker = buildMarker(user);
+      await _calculateEta(user);
+      if ((index != null)) {
+        if ((index < hybridUsersList.length)) hybridUsersList[index] = user;
+      } else {
+        bool _continue = true;
+        hybridUsersList.forEach((hybridUser) {
+          if (hybridUser.displayName == user.displayName) {
+            print('hybridUser.displayName == user.displayName');
+            hybridUser = user;
+            _continue = false;
+            return;
+          }
+        });
+        if (_continue) {
+          print('hybridUsersList.add(user);');
+          hybridUsersList.add(user);
+          if (showToast != null)
+            showToast('${user.displayName} started sharing their location');
+        }
+      }
+    } catch (e) {
+      print(e);
+      if (showToast != null) showToast('Something went wrong');
+    }
+
+    // user.marker = buildMarker(user);
+    // user.eta = await _calculateEta(user);
+    // // user.eta = '?';
+    // if (index != null)
+    //   hybridUsersList[index] = user;
+    // else
+    //   hybridUsersList.add(user);
+    // print('hybridUsersList from addDetails $hybridUsersList');
   }
 
   _calculateEta(HybridModel user) async {
@@ -181,8 +211,8 @@ class LocationService {
         if (etaFrom != null)
           _res = await DistanceCalculate().calculateETA(etaFrom, user.latLng);
         else
-          _res =
-              await DistanceCalculate().calculateETA(myData.latLng, user.latLng);
+          _res = await DistanceCalculate()
+              .calculateETA(myData.latLng, user.latLng);
         return _res;
       } catch (e) {
         print('Error in _calculateEta $e');

@@ -22,6 +22,8 @@ class AllColors {
   // ignore: non_constant_identifier_names
   Color BLUE = Color(0xFFC1D9E9);
   // ignore: non_constant_identifier_names
+  Color DARK_BLUE = Color(0xFF036ffc);
+  // ignore: non_constant_identifier_names
   Color LIGHT_PINK = Color(0xFFFED2CF);
   // ignore: non_constant_identifier_names
   Color GREY = Color(0xFF868A92); // Change it to Hex Later

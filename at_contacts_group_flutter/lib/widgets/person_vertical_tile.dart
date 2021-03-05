@@ -33,6 +33,7 @@ class CustomPersonVerticalTile extends StatefulWidget {
 
 class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   Uint8List image;
+  String contactName;
   @override
   void initState() {
     super.initState();
@@ -48,6 +49,11 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
         List<int> intList = contact.tags['image'].cast<int>();
         setState(() {
           image = Uint8List.fromList(intList);
+        });
+      }
+      if (contact.tags != null && contact.tags['name'] != null) {
+        setState(() {
+          contactName = contact.tags['name'];
         });
       }
     }
@@ -107,9 +113,9 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
             ],
           ),
           SizedBox(height: 2),
-          widget.title != null
+          contactName != null
               ? Text(
-                  widget.title,
+                  contactName,
                   style: CustomTextStyles().grey16,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

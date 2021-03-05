@@ -21,7 +21,7 @@ typedef ErrorTileCallBack = void Function(Tile tile, dynamic error);
 /// A tile is an image bound to a specific geographical position.
 class TileLayerOptions extends LayerOptions {
   // to execute a function when zoom changes
-  final Function fnWhenZoomChanges;
+  // final Function fnWhenZoomChanges;
 
   /// Defines the structure to create the URLs for the tiles.
   /// `{s}` means one of the available subdomains (can be omitted)
@@ -198,7 +198,7 @@ class TileLayerOptions extends LayerOptions {
 
   TileLayerOptions({
     Key key,
-    this.fnWhenZoomChanges,
+    // this.fnWhenZoomChanges,
     this.urlTemplate,
     double tileSize = 256.0,
     double minZoom = 0.0,
@@ -210,7 +210,7 @@ class TileLayerOptions extends LayerOptions {
     this.additionalOptions = const <String, String>{},
     this.subdomains = const <String>[],
     this.keepBuffer = 2,
-    this.backgroundColor = const Color(0xFFE0E0E0),
+    this.backgroundColor = const Color(0xFF86CCFA),
     this.placeholderImage,
     this.errorImage,
     this.tileProvider = const CachedNetworkTileProvider(),
@@ -739,8 +739,8 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     _resetGrid();
 
     if (_tileZoom != null) {
-      widget.options
-          .fnWhenZoomChanges(_tileZoom); // execute the zoomChanges Function
+      // widget.options
+      //     .fnWhenZoomChanges(_tileZoom); // execute the zoomChanges Function
       _update(center);
     }
 

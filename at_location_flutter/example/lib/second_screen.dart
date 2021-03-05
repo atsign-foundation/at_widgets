@@ -2,12 +2,14 @@ import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/screens/home/home_screen.dart';
+import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter_example/main.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:atsign_authentication_helper/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter_example/client_sdk_service.dart';
+import 'package:latlong/latlong.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -104,6 +106,40 @@ class _SecondScreenState extends State<SecondScreen> {
             SizedBox(
               height: 30,
             ),
+            ElevatedButton(
+              onPressed: () async {
+                bool result = await checkAtsign();
+                if (!result) {
+                  CustomToast().show('Atsign not valid', context);
+                  return;
+                }
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => AtLocationFlutterPlugin(
+                    [receiver],
+                    calculateETA: true,
+                    addCurrentUserMarker: true,
+                    // etaFrom: LatLng(44, -112),
+                    // textForCenter: 'Final',
+                  ),
+                ));
+              },
+              child: Text('Track Location '),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      ShowLocation(UniqueKey(), locationList: [
+                    LatLng(30, 45),
+                    LatLng(40, 45),
+                  ]),
+                ));
+              },
+              child: Text('Show multiple points '),
+            ),
+            SizedBox(
+              height: 30,
+            ),
             Center(
               child: Text(
                 'Notifications:',
@@ -117,7 +153,7 @@ class _SecondScreenState extends State<SecondScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: StreamBuilder(
-                    stream: newStream,
+                    stream: KeyStreamService().atNotificationsStream,
                     builder: (context,
                         AsyncSnapshot<List<KeyLocationModel>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.active) {

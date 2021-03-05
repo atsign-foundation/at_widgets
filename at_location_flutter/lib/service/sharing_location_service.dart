@@ -1,6 +1,7 @@
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'at_location_notification_listener.dart';
 
 //TODO: Divide services to -> Map_services, at_sdk_services & UI_servcies
@@ -102,7 +103,7 @@ class SharingLocationService {
                 regex: 'sharelocation-$atkeyMicrosecondId',
               );
 
-      AtKey key = AtKey.fromString(response[0]);
+      AtKey key = getAtKey(response[0]);
 
       locationNotificationModel.isAcknowledgment = true;
 
@@ -111,6 +112,19 @@ class SharingLocationService {
       var notification =
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel);
+
+      if ((locationNotificationModel.from != null) &&
+          (locationNotificationModel.to != null)) {
+        key.metadata.ttl = locationNotificationModel.to
+                .difference(locationNotificationModel.from)
+                .inMinutes *
+            60000;
+        key.metadata.ttr = locationNotificationModel.to
+                .difference(locationNotificationModel.from)
+                .inMinutes *
+            60000;
+        key.metadata.expiresAt = locationNotificationModel.to;
+      }
 
       var result = await AtLocationNotificationListener()
           .atClientInstance
@@ -157,7 +171,7 @@ class SharingLocationService {
                 regex: 'sharelocation-$atkeyMicrosecondId',
               );
 
-      AtKey key = AtKey.fromString(response[0]);
+      AtKey key = getAtKey(response[0]);
 
       locationNotificationModel.isAcknowledgment = true;
 
@@ -181,7 +195,7 @@ class SharingLocationService {
     response.forEach((key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
-        AtKey atKey = AtKey.fromString(key);
+        AtKey atKey = getAtKey(key);
         var result = await AtLocationNotificationListener()
             .atClientInstance
             .delete(atKey);

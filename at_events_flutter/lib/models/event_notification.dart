@@ -136,8 +136,13 @@ class EventNotificationModel {
       'event': json.encode({
         'isRecurring': eventNotification.event.isRecurring.toString(),
         'date': eventNotification.event.date.toString(),
-        'startTime': eventNotification.event.startTime.toString(),
-        'endTime': eventNotification.event.endTime.toString(),
+        'endDate': eventNotification.event.endDate.toString(),
+        'startTime': eventNotification.event.startTime != null
+            ? eventNotification.event.startTime.toUtc().toString()
+            : null,
+        'endTime': eventNotification.event.endTime != null
+            ? eventNotification.event.endTime.toUtc().toString()
+            : null,
         'repeatDuration': eventNotification.event.repeatDuration.toString(),
         'repeatCycle': eventNotification.event.repeatCycle.toString(),
         'occursOn': eventNotification.event.occursOn.toString(),
@@ -166,8 +171,8 @@ class Venue {
 class Event {
   Event();
   bool isRecurring;
-  DateTime date;
-  TimeOfDay startTime, endTime; //one day event
+  DateTime date, endDate;
+  DateTime startTime, endTime; //one day event
   int repeatDuration;
   RepeatCycle repeatCycle;
   Week occursOn;
@@ -175,24 +180,30 @@ class Event {
   DateTime endEventOnDate;
   int endEventAfterOccurance;
   Event.fromJson(Map<String, dynamic> data) {
-    data['startTime'] = data['startTime'] != 'null'
-        ? data['startTime'].substring(10, 15)
-        : null;
-    data['endTime'] =
-        data['endTime'] != 'null' ? data['endTime'].substring(10, 15) : null;
+    // data['startTime'] = data['startTime'] != 'null'
+    //     ? data['startTime'].substring(10, 15)
+    //     : null;
+    // data['endTime'] =
+    //     data['endTime'] != 'null' ? data['endTime'].substring(10, 15) : null;
     startTime = data['startTime'] != null
-        ? TimeOfDay(
-            hour: int.parse(data['startTime'].split(":")[0]),
-            minute: int.parse(data['startTime'].split(":")[1]))
+        ? DateTime.parse(data['startTime']).toLocal()
         : null;
+    //  TimeOfDay(
+    //     hour: int.parse(data['startTime'].split(":")[0]),
+    //     minute: int.parse(data['startTime'].split(":")[1]))
+    // : null;
     endTime = data['endTime'] != null
-        ? TimeOfDay(
-            hour: int.parse(data['endTime'].split(":")[0]),
-            minute: int.parse(data['endTime'].split(":")[1]))
+        ? DateTime.parse(data['endTime']).toLocal()
         : null;
+    // ? TimeOfDay(
+    //     hour: int.parse(data['endTime'].split(":")[0]),
+    //     minute: int.parse(data['endTime'].split(":")[1]))
+    // : null;
     isRecurring = data['isRecurring'] == 'true' ? true : false;
     if (!isRecurring) {
       date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
+      endDate =
+          data['endDate'] != 'null' ? DateTime.parse(data['endDate']) : null;
     } else {
       repeatDuration = data['repeatDuration'] != 'null'
           ? int.parse(data['repeatDuration'])
@@ -293,7 +304,7 @@ String getWeekString(Week weekday) {
   }
 }
 
-String timeOfDayToString(TimeOfDay time) {
+String timeOfDayToString(DateTime time) {
   String hhmm = '${time.hour}:${time.minute}';
   return hhmm;
 }

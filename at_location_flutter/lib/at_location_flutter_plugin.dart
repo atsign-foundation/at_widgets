@@ -1,3 +1,4 @@
+import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/show_location.dart';
@@ -43,6 +44,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   List<LatLng> points;
   bool isEventAdmin = false;
   bool showMarker;
+  BuildContext globalContext;
 
   @override
   void initState() {
@@ -53,11 +55,16 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         etaFrom: widget.etaFrom,
         calculateETA: widget.calculateETA,
         addCurrentUserMarker: widget.addCurrentUserMarker,
-        textForCenter: widget.textForCenter);
+        textForCenter: widget.textForCenter,
+        showToast: showToast);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       LocationService().mapInitialized();
       LocationService().notifyListeners();
     });
+  }
+
+  showToast(String msg) {
+    if (globalContext != null) CustomToast().show(msg, globalContext);
   }
 
   @override
@@ -69,6 +76,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
 
   @override
   Widget build(BuildContext context) {
+    globalContext = context;
+
     return SafeArea(
       child: Scaffold(
           body: Stack(
@@ -120,7 +129,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                       ),
                       layers: [
                         TileLayerOptions(
-                          fnWhenZoomChanges: (zoom) => fnWhenZoomChanges(zoom),
                           minNativeZoom: 2,
                           maxNativeZoom: 18,
                           minZoom: 2,
@@ -185,21 +193,5 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     LocationService().hybridUsersList.length > 0
         ? mapController.move(LocationService().hybridUsersList[0].latLng, 4)
         : null;
-  }
-
-  fnWhenZoomChanges(double zoom) {
-    print('fnWhenZoomChanges $zoom');
-    if ((zoom > 2) && (!showMarker)) {
-      print('greater $zoom');
-      setState(() {
-        showMarker = true;
-      });
-    }
-    if ((zoom < 2) && (showMarker)) {
-      print('less $zoom');
-      setState(() {
-        showMarker = false;
-      });
-    }
   }
 }

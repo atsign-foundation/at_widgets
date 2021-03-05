@@ -25,7 +25,7 @@ Widget buildMarkerCluster(List<Marker> markers, {HybridModel eventData}) {
                     children: [
                       Flexible(
                         child: Text(
-                          eventData.displayName ?? 'Tina\'s Birthday Party',
+                          eventData.displayName ?? '...',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -35,7 +35,9 @@ Widget buildMarkerCluster(List<Marker> markers, {HybridModel eventData}) {
                         ),
                       ),
                       Text(
-                        "${markers.length - 1} people nearby",
+                        ((markers.length - 1) == 1)
+                            ? "${markers.length - 1} person nearby"
+                            : "${markers.length - 1} people nearby",
                         style: TextStyle(color: Colors.deepOrange),
                       ),
                     ],
