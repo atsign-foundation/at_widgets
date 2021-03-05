@@ -101,9 +101,7 @@ class _GroupListState extends State<GroupList> {
           ),
         ),
         body: errorOcurred
-            ? ErrorScreen(onPressed: () {
-                GroupService().getAllGroupsDetails();
-              })
+            ? ErrorScreen()
             : StreamBuilder(
                 stream: GroupService().atGroupStream,
                 builder: (BuildContext context,

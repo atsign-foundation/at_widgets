@@ -131,9 +131,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         ),
       ),
       body: errorOcurred
-          ? ErrorScreen(onPressed: () {
-              _contactService.fetchContacts();
-            })
+          ? ErrorScreen()
           : Container(
               padding: EdgeInsets.symmetric(
                   horizontal: 16.toWidth, vertical: 16.toHeight),
