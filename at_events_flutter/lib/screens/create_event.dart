@@ -38,7 +38,8 @@ class CreateEvent extends StatefulWidget {
 
 class _CreateEventState extends State<CreateEvent> {
   List<AtContact> selectedContactList;
-  bool isLoading;
+  bool isLoading, isValidAtsign = true;
+  String typedAtSign = '';
 
   @override
   void initState() {
@@ -102,37 +103,68 @@ class _CreateEventState extends State<CreateEvent> {
                                       style: CustomTextStyles().greyLabel14),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
-                                    width: 330.toWidth,
-                                    height: 50,
-                                    isReadOnly: true,
-                                    hintText:
-                                        'Type @sign or search from contact',
-                                    icon: Icons.contacts_rounded,
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ContactsScreen(
-                                            asSelectionScreen: true,
-                                            context: context,
-                                            selectedList: (selectedList) {
-                                              selectedContactList =
-                                                  selectedList;
+                                      width: 330.toWidth,
+                                      height: 50,
+                                      // isReadOnly: true,
+                                      hintText:
+                                          'Type @sign or search from contact',
+                                      icon: Icons.contacts_rounded,
+                                      initialValue: typedAtSign,
+                                      onIconTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ContactsScreen(
+                                              asSelectionScreen: true,
+                                              asSingleSelectionScreen: true,
+                                              context: context,
+                                              selectedList: (selectedList) {
+                                                selectedContactList =
+                                                    selectedList;
 
-                                              if (selectedContactList.length >
-                                                  0) {
-                                                EventService()
-                                                    .addNewGroupMembers(
-                                                        selectedContactList);
-                                                EventService().update();
-                                              }
-                                            },
+                                                if (selectedContactList.length >
+                                                    0) {
+                                                  EventService()
+                                                      .addNewGroupMembers(
+                                                          selectedContactList);
+                                                  EventService().update();
+                                                  setState(() {
+                                                    isValidAtsign = true;
+                                                    typedAtSign =
+                                                        selectedContactList[0]
+                                                            .atSign;
+                                                  });
+                                                }
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(height: 25),
+                                        );
+                                      },
+                                      value: (String value) async {
+                                        typedAtSign = value;
+                                        bool isValid = await EventService()
+                                            .checkAtsign(typedAtSign);
+                                        // setState(() {
+                                        // isValidAtsign = isValid;
+                                        // });
+
+                                        // if (isValid) {
+                                        //   EventService().addNewGroupMembers(
+                                        //       [AtContact(atSign: typedAtSign)]);
+                                        //   EventService().update();
+                                        // }
+                                      }),
+                                  SizedBox(height: 20),
+                                  !isValidAtsign
+                                      ? Text(
+                                          'Enter a valid atsign',
+                                          style: TextStyle(color: Colors.red),
+                                        )
+                                      : SizedBox(),
+                                  !isValidAtsign
+                                      ? SizedBox(height: 25)
+                                      : SizedBox(),
                                   (EventService().selectedContacts != null &&
                                           EventService()
                                                   .selectedContacts
@@ -385,6 +417,14 @@ class _CreateEventState extends State<CreateEvent> {
     setState(() {
       isLoading = true;
     });
+    bool isValidAtsign = await isTypedAtSignValid();
+    if (!isValidAtsign) {
+      CustomToast().show('Invalid atsign entered', context);
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
 
     var formValid = EventService().createEventFormValidation();
     if (formValid is String) {
@@ -421,5 +461,23 @@ class _CreateEventState extends State<CreateEvent> {
         isLoading = false;
       });
     }
+  }
+
+  isTypedAtSignValid() async {
+    if (typedAtSign.trim().length < 1) return true;
+    bool isValid = await EventService().checkAtsign(typedAtSign);
+    setState(() {
+      isValidAtsign = isValid;
+    });
+
+    if (typedAtSign[0] != '@') {
+      typedAtSign = '@' + typedAtSign;
+    }
+
+    if (isValid) {
+      EventService().addNewGroupMembers([AtContact(atSign: typedAtSign)]);
+      EventService().update();
+    }
+    return isValid;
   }
 }

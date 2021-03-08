@@ -28,6 +28,9 @@ class _GroupViewState extends State<GroupView> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      GroupService().showLoaderSink.add(false);
+    });
   }
 
   @override
@@ -83,6 +86,22 @@ class _GroupViewState extends State<GroupView> {
                   ),
                   SizedBox(
                     height: 60.toHeight,
+                  ),
+                  Container(
+                    child: StreamBuilder(
+                      stream: GroupService().showLoaderStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.active) {
+                          if (snapshot.data == true)
+                            return CircularProgressIndicator();
+                          else
+                            return SizedBox();
+                        } else {
+                          return SizedBox();
+                        }
+                      },
+                    ),
                   ),
                   Padding(
                       padding: EdgeInsets.symmetric(
@@ -158,7 +177,7 @@ class _GroupViewState extends State<GroupView> {
               Positioned(
                 top: 240.toHeight,
                 child: Container(
-                  height: 64,
+                  height: 70.toHeight,
                   width: 343.toWidth,
                   margin: EdgeInsets.symmetric(
                       horizontal: 15.toWidth, vertical: 0.toHeight),
@@ -227,22 +246,23 @@ class _GroupViewState extends State<GroupView> {
                                 saveGroup: () async {
                                   if (GroupService().selecteContactList.length >
                                       0) {
-                                    CustomToast()
-                                        .show('Adding member', context);
+                                    GroupService().showLoaderSink.add(true);
 
                                     var result = await GroupService()
                                         .addGroupMembers([
                                       ...GroupService().selecteContactList
                                     ], widget.group);
 
+                                    GroupService().showLoaderSink.add(false);
                                     if (result == null) {
                                       CustomToast().show(
                                           TextConstants().SERVICE_ERROR,
                                           context);
                                     } else if (result is bool && result) {
-                                      CustomToast().show(
-                                          TextConstants().MEMBER_ADDED,
-                                          context);
+                                      // CustomToast().show(
+                                      //     TextConstants().MEMBER_ADDED,
+                                      //     context);
+
                                     } else
                                       CustomToast()
                                           .show(result.toString(), context);

@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
                     child: FlatButton(
                         color: Colors.black12,
                         onPressed: () async {
-                          await Navigator.pushReplacement(
+                          await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => SecondScreen()));

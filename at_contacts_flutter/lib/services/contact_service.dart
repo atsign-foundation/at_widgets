@@ -59,6 +59,7 @@ class ContactService {
   }
 
   fetchContacts() async {
+    selectedContacts = [];
     try {
       contactList = [];
       allContactsList = [];

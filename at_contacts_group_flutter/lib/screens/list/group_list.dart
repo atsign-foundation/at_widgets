@@ -101,9 +101,7 @@ class _GroupListState extends State<GroupList> {
           ),
         ),
         body: errorOcurred
-            ? ErrorScreen(onPressed: () {
-                GroupService().getAllGroupsDetails();
-              })
+            ? ErrorScreen()
             : StreamBuilder(
                 stream: GroupService().atGroupStream,
                 builder: (BuildContext context,
@@ -136,8 +134,8 @@ class _GroupListState extends State<GroupList> {
                                   showMyDialog(context, snapshot.data[index]);
                                 },
                                 onTap: () async {
-                                  Future.delayed(Duration(milliseconds: 50),
-                                      () {
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) async {
                                     GroupService()
                                         .groupViewSink
                                         .add(snapshot.data[index]);

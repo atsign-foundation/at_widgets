@@ -5,7 +5,9 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 
 class ErrorScreen extends StatelessWidget {
   final Function onPressed;
-  ErrorScreen({this.onPressed});
+  final String msg;
+  ErrorScreen(
+      {this.onPressed, this.msg = 'Something went wrong, please retry.'});
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -13,24 +15,27 @@ class ErrorScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Something went wrong.'),
+          Text(msg,
+              textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
           SizedBox(height: 10),
-          CustomButton(
-            buttonText: 'Retry',
-            width: 120.toWidth,
-            height: 40.toHeight,
-            onPressed: () async {
-              if (this.onPressed != null) {
-                onPressed();
-              }
-            },
-            buttonColor: Theme.of(context).brightness == Brightness.light
-                ? AllColors().Black
-                : AllColors().WHITE,
-            fontColor: Theme.of(context).brightness == Brightness.light
-                ? AllColors().WHITE
-                : AllColors().Black,
-          )
+          onPressed != null
+              ? CustomButton(
+                  buttonText: 'Retry',
+                  width: 120.toWidth,
+                  height: 40.toHeight,
+                  onPressed: () async {
+                    if (this.onPressed != null) {
+                      onPressed();
+                    }
+                  },
+                  buttonColor: Theme.of(context).brightness == Brightness.light
+                      ? AllColors().Black
+                      : AllColors().WHITE,
+                  fontColor: Theme.of(context).brightness == Brightness.light
+                      ? AllColors().WHITE
+                      : AllColors().Black,
+                )
+              : SizedBox()
         ],
       ),
     );

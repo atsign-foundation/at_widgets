@@ -10,6 +10,7 @@ import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_commons/src/exception/at_exceptions.dart';
 
 class NewGroup extends StatefulWidget {
   @override
@@ -36,11 +37,13 @@ class _NewGroupState extends State<NewGroup> {
 
   createGroup() async {
     print('object');
+    bool isKeyboardOpen =
+        MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     if (groupName != null) {
-      if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
-        CustomToast().show(TextConstants().INVALID_NAME, context);
-        return;
-      }
+      // if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
+      //   CustomToast().show(TextConstants().INVALID_NAME, context);
+      //   return;
+      // }
 
       if (groupName.trim().length > 0) {
         AtGroup group = new AtGroup(
@@ -53,26 +56,35 @@ class _NewGroupState extends State<NewGroup> {
 
         if (this.selectedImageByteData != null) {
           group.groupPicture = this.selectedImageByteData;
-          print('adding group image: ${group.groupPicture}');
         }
 
         var result = await GroupService().createGroup(group);
+
+        isKeyboardOpen =
+            MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
 
         if (result is AtGroup) {
           Navigator.of(context).pop();
         } else if (result != null) {
           if (result.runtimeType == AlreadyExistsException) {
-            CustomToast().show(result.toString(), context);
-          }
-          CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context);
+            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context);
+          } else if (result.runtimeType == InvalidAtSignException) {
+            CustomToast()
+                .show(result.message, context, gravity: isKeyboardOpen ? 2 : 0);
+          } else
+            CustomToast().show(TextConstants().SERVICE_ERROR, context,
+                gravity: isKeyboardOpen ? 2 : 0);
         } else {
-          CustomToast().show(TextConstants().SERVICE_ERROR, context);
+          CustomToast().show(TextConstants().SERVICE_ERROR, context,
+              gravity: isKeyboardOpen ? 2 : 0);
         }
       } else {
-        CustomToast().show(TextConstants().EMPTY_NAME, context);
+        CustomToast().show(TextConstants().EMPTY_NAME, context,
+            gravity: isKeyboardOpen ? 2 : 0);
       }
     } else {
-      CustomToast().show(TextConstants().EMPTY_NAME, context);
+      CustomToast().show(TextConstants().EMPTY_NAME, context,
+          gravity: isKeyboardOpen ? 2 : 0);
     }
   }
 
