@@ -264,8 +264,9 @@ class _GroupViewState extends State<GroupView> {
                                       //     context);
 
                                     } else
-                                      CustomToast()
-                                          .show(result.toString(), context);
+                                      CustomToast().show(
+                                          TextConstants().SERVICE_ERROR,
+                                          context);
                                   }
                                 },
                               ),

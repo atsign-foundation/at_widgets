@@ -25,7 +25,7 @@ class CircularContacts extends StatelessWidget {
     }
     return Container(
       padding:
-          EdgeInsets.symmetric(vertical: 10.toHeight, horizontal: 20.toWidth),
+          EdgeInsets.symmetric(vertical: 9.toHeight, horizontal: 20.toWidth),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

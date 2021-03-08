@@ -36,7 +36,6 @@ class _NewGroupState extends State<NewGroup> {
   }
 
   createGroup() async {
-    print('object');
     bool isKeyboardOpen =
         MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     if (groupName != null) {
@@ -67,7 +66,8 @@ class _NewGroupState extends State<NewGroup> {
           Navigator.of(context).pop();
         } else if (result != null) {
           if (result.runtimeType == AlreadyExistsException) {
-            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context);
+            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context,
+                gravity: isKeyboardOpen ? 2 : 0);
           } else if (result.runtimeType == InvalidAtSignException) {
             CustomToast()
                 .show(result.message, context, gravity: isKeyboardOpen ? 2 : 0);
