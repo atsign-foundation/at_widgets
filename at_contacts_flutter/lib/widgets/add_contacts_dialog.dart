@@ -26,6 +26,12 @@ class _AddContactDialogState extends State<AddContactDialog> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    ContactService().resetData();
+  }
+
   bool isLoading = false;
 
   @override
@@ -112,7 +118,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               setState(() {
                                 isLoading = false;
                               });
-                              if (_contactService.checkAtSign) {
+                              if (_contactService.checkAtSign != null &&
+                                  _contactService.checkAtSign) {
                                 Navigator.pop(context);
                               }
                             },

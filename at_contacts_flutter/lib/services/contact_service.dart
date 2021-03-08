@@ -58,6 +58,11 @@ class ContactService {
     atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
   }
 
+  resetData() {
+    getAtSignError = '';
+    checkAtSign = false;
+  }
+
   fetchContacts() async {
     selectedContacts = [];
     try {
