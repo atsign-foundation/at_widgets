@@ -60,13 +60,15 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
           ),
           Expanded(child: SizedBox()),
           Center(
-            child: CustomButton(
-              buttonText: 'Request',
-              onPressed: onRequestTap,
-              fontColor: AllColors().WHITE,
-              width: 164,
-              height: 48,
-            ),
+            child: isLoading
+                ? CircularProgressIndicator()
+                : CustomButton(
+                    buttonText: 'Request',
+                    onPressed: onRequestTap,
+                    fontColor: AllColors().WHITE,
+                    width: 164,
+                    height: 48,
+                  ),
           )
         ],
       ),
