@@ -15,8 +15,7 @@ dependencies:
   permission_handler: ^5.0.1+1
   path_provider: ^1.6.24
   at_utils: ^1.0.1+5
-  at_client_mobile: ^1.0.0+6
-  
+  at_client_mobile: ^1.0.0+8
 
 dev_dependencies:
   flutter_test:

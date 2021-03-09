@@ -17,13 +17,13 @@ dependencies:
   url_launcher: ^5.7.0
   permission_handler: ^5.0.1+1
   path_provider: ^1.6.24
+  webview_flutter: ^1.0.7
   at_utils: ^1.0.1+5
   at_backupkey_flutter: ^1.0.0
   at_server_status: ^0.1.0+1
-  at_client_mobile: ^1.0.0+6
+  at_client_mobile: ^1.0.0+8
   at_commons: ^1.0.1+5
-  at_client: ^1.0.1+6
- 
+  at_client: ^1.0.1+7
 
 dev_dependencies:
   flutter_test:
