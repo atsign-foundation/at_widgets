@@ -8,23 +8,30 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
   final double elevation;
   final bool showBackButton;
+  final List<Widget> actionItems;
 
-  CustomAppBar({
-    this.title,
-    this.elevation = 0.0,
-    this.showBackButton = false,
-  });
+  CustomAppBar(
+      {this.title,
+      this.elevation = 0.0,
+      this.showBackButton = false,
+      this.actionItems = const []});
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        elevation: this.elevation,
-        leading: this.showBackButton
-            ? Icon(Icons.arrow_back)
-            : OnboardingService.getInstance().logo,
-        automaticallyImplyLeading: this.showBackButton,
-        backgroundColor: ColorConstants.appColor,
-        centerTitle: true,
-        title: Text(this.title, style: CustomTextStyles.fontR16secondary));
+      elevation: this.elevation,
+      leading: this.showBackButton
+          ? IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              })
+          : OnboardingService.getInstance().logo,
+      automaticallyImplyLeading: this.showBackButton,
+      backgroundColor: ColorConstants.appColor,
+      centerTitle: true,
+      title: Text(this.title, style: CustomTextStyles.fontR16secondary),
+      actions: this.actionItems.isEmpty ? null : actionItems,
+    );
   }
 
   @override

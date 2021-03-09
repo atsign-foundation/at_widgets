@@ -1,5 +1,3 @@
-import 'package:at_onboarding_flutter/utils/app_constants.dart';
-
 class Strings {
   //atsign texts
   static const String enterAtsignTitle = 'Enter your @sign to pair';
@@ -8,9 +6,9 @@ class Strings {
 
   //atsignStatus texts
   static String atsignNotFound =
-      'Your @sign is not registered yet. Try with the registered one or get a new @sign at ${AppConstants.website} website';
+      'Your @sign is not registered yet. Please try with the registered one.';
   static String atsignNull =
-      'Your @sign and the server is unreachable. Please check your dashboard on ${AppConstants.website} website for the @sign status or contact support@atsign.com';
+      'Your @sign and the server is unreachable. Please try again or contact support@atsign.com';
   static const String scanQr = '';
 
   //Qrscan texts
@@ -41,4 +39,7 @@ class Strings {
   static String backupFileName(String atsign) {
     return atsign + '_encrypt_keys.atKeys';
   }
+
+  static const String faqTitle = 'FAQ';
+  static const String faqUrl = 'https://atsign.com/faqs/';
 }

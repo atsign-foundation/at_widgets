@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/private_key_qrcode_generator.dart';
+import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
@@ -203,21 +204,23 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
       _isServerCheck = false;
       _isContinue = true;
-      String cramKey;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: false);
+      String cramKey =
+          '@colin:540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba';
+      // '@sameeraja:67f75d44efbbd30547b9d090cf67134bc591b65ea7e1c4dec42d08e50ec4b89fc7ba5431ab1ae0b1fb4c99878955ca1f90798422526a070ef1bf2ad428c6353a';
+      // FilePickerResult result = await FilePicker.platform
+      //     .pickFiles(type: FileType.any, allowMultiple: false);
       setState(() {
         loading = true;
       });
-      for (var file in result.files) {
-        if (cramKey == null) {
-          String result = await FlutterQrReader.imgScan(File(file.path));
-          if (result.contains('@')) {
-            cramKey = result;
-            break;
-          } //read scan QRcode and extract atsign,aeskey
-        }
-      }
+      // for (var file in result.files) {
+      //   if (cramKey == null) {
+      //     String result = await FlutterQrReader.imgScan(File(file.path));
+      //     if (result.contains('@')) {
+      //       cramKey = result;
+      //       break;
+      //     } //read scan QRcode and extract atsign,aeskey
+      //   }
+      // }
       if (_isCram(cramKey)) {
         List params = cramKey.split(':');
         if (params[1].length < 128) {
@@ -421,7 +424,22 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
     return Scaffold(
         backgroundColor: ColorConstants.light,
-        appBar: CustomAppBar(title: Strings.pairAtsignTitle),
+        appBar: CustomAppBar(
+          title: Strings.pairAtsignTitle,
+          actionItems: [
+            IconButton(
+                icon: Icon(Icons.help),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WebViewScreen(
+                                title: Strings.faqTitle,
+                                url: Strings.faqUrl,
+                              )));
+                })
+          ],
+        ),
         body: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.symmetric(

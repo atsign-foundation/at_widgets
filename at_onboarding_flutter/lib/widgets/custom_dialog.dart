@@ -1,4 +1,5 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
@@ -65,9 +66,24 @@ class CustomDialog extends StatelessWidget {
               ],
             )
           : isAtsignForm
-              ? Text(
-                  Strings.enterAtsignTitle,
-                  style: CustomTextStyles.fontR16primary,
+              ? Row(
+                  children: [
+                    Text(
+                      Strings.enterAtsignTitle,
+                      style: CustomTextStyles.fontR16primary,
+                    ),
+                    IconButton(
+                        icon: Icon(Icons.help),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WebViewScreen(
+                                        title: Strings.faqTitle,
+                                        url: Strings.faqUrl,
+                                      )));
+                        })
+                  ],
                 )
               : this.title != null
                   ? Text(
@@ -171,7 +187,7 @@ class CustomDialog extends StatelessWidget {
           } else {
             return _onboardingService.serverStatus == ServerStatus.activated
                 ? 'Please provide a relevant backupkey file to authenticate.'
-                : 'Please provide a valid QRcode available on ${AppConstants.website} website to authenticate.';
+                : 'Please provide a valid QRcode to authenticate.';
           }
         } else if (error == ResponseStatus.TIME_OUT) {
           return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AppConstants.contactAddress} if the issue still persists.';
