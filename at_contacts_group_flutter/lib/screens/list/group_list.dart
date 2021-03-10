@@ -6,6 +6,7 @@ import 'package:at_contacts_group_flutter/screens/group_view/group_view.dart';
 import 'package:at_contacts_group_flutter/screens/new_group/new_group.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_group_flutter/widgets/person_horizontal_tile.dart';
@@ -188,7 +189,7 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
           if (result is bool) {
             result ? Navigator.of(context).pop() : null;
           } else {
-            CustomToast().show(result.toString(), context);
+            CustomToast().show(TextConstants().SERVICE_ERROR, context);
           }
         },
       );

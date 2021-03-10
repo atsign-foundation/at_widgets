@@ -9,6 +9,7 @@ import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'dart:typed_data';
+import 'package:emoji_picker/emoji_picker.dart';
 
 class GroupEdit extends StatefulWidget {
   final AtGroup group;
@@ -22,12 +23,22 @@ class _GroupEditState extends State<GroupEdit> {
   String groupName;
   bool isLoading;
   Uint8List groupPicture;
+  bool isKeyBoardVisible = false, showEmojiPicker = false;
+  TextEditingController textController;
+  FocusNode textFieldFocus = FocusNode();
 
   @override
   void initState() {
     super.initState();
     isLoading = false;
     if (widget.group != null) groupName = widget.group.displayName;
+
+    textController = new TextEditingController.fromValue(
+      new TextEditingValue(
+        text: groupName != null ? groupName : '',
+        selection: new TextSelection.collapsed(offset: -1),
+      ),
+    );
 
     if (widget.group.groupPicture != null) {
       List<int> intList = widget.group.groupPicture.cast<int>();
@@ -68,6 +79,7 @@ class _GroupEditState extends State<GroupEdit> {
                     style: TextStyle(color: AllColors().ORANGE, fontSize: 18)),
           ),
           onTrailingIconPressed: () async {
+            groupName = textController.text;
             if (groupName != null) {
               if (groupName.trim().length > 0) {
                 AtGroup group = widget.group;
@@ -134,26 +146,91 @@ class _GroupEditState extends State<GroupEdit> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 27.toWidth, vertical: 2.toHeight),
-              child: Text(
-                'Group Name',
-                style: CustomTextStyles().grey16,
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 27.toWidth, vertical: 2.toHeight),
+                      child: Text(
+                        'Group Name',
+                        style: CustomTextStyles().grey16,
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 27.toWidth, vertical: 2.toHeight),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: AllColors().INPUT_FIELD_COLOR,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: TextField(
+                                  readOnly: false,
+                                  focusNode: textFieldFocus,
+                                  decoration: InputDecoration(
+                                    // hintText: hintText,
+                                    enabledBorder: InputBorder.none,
+                                    border: InputBorder.none,
+                                    hintStyle: TextStyle(
+                                        color: AllColors().INPUT_FIELD_COLOR),
+                                  ),
+                                  onTap: () {},
+                                  onChanged: (val) {},
+                                  controller: textController,
+                                  onSubmitted: (str) {},
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  showEmojiPicker = !showEmojiPicker;
+                                  if (showEmojiPicker) {
+                                    textFieldFocus.unfocus();
+                                  } else {
+                                    textFieldFocus.requestFocus();
+                                  }
+
+                                  setState(() {});
+                                },
+                                child: Icon(
+                                  Icons.emoji_emotions_outlined,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            ],
+                          ),
+                        )),
+                    showEmojiPicker
+                        ? Stack(children: [
+                            Container(
+                              // bottom: 0,
+                              child: EmojiPicker(
+                                key: UniqueKey(),
+                                rows: 5,
+                                columns: 8,
+                                buttonMode: ButtonMode.MATERIAL,
+                                // recommendKeywords: ["happy", "sad"],
+                                numRecommended: 10,
+                                onEmojiSelected: (emoji, category) {
+                                  textController.text += emoji.emoji;
+                                },
+                              ),
+                            ),
+                          ])
+                        : SizedBox()
+                  ],
+                )),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 27.toWidth, vertical: 2.toHeight),
-              child: CustomInputField(
-                icon: Icons.emoji_emotions_outlined,
-                width: double.infinity,
-                initialValue: groupName,
-                value: (String val) {
-                  groupName = val;
-                },
-              ),
-            )
           ],
         ),
       ),
