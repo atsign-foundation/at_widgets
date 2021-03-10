@@ -4,4 +4,9 @@ A flutter plugin project to manage events.
 
 ## Getting Started
 
-This project provides events management functionality.
+This plugin can be added to the project as git dependency in pubspec.yaml
+
+```
+dependencies:
+  at_events_flutter: ^0.0.1
+```
