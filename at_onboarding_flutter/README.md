@@ -1,3 +1,7 @@
+<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+
+### Now for a little internet optimism
+
 # at_onboarding_flutter
 
 A flutter plugin project to cover the onboarding flow of @protocol apps.
@@ -8,7 +12,7 @@ To use this plugin in app, first add it to pubspec.yaml
 
 ```
 dependencies:
-  at_onboarding_flutter: ^1.0.0
+  at_onboarding_flutter: ^1.0.0+1
 ```
 
 
@@ -98,7 +102,7 @@ This screen will help to save the restore keys generated after a successful CRAM
 The plugin will return a Map<String, AtClientService> on successful onboarding and  throws an error if encounters any. Also, the navigation decision can be covered in the app logic.
 
 ```
-FlatButton(
+TextButton(
   color: Colors.black12,
   onPressed: () async {
     Onboarding(

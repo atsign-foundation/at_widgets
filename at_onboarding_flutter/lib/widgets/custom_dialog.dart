@@ -118,7 +118,7 @@ class CustomDialog extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FlatButton(
+                    TextButton(
                       onPressed: () async {
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -130,7 +130,7 @@ class CustomDialog extends StatelessWidget {
                             fontSize: 14.toFont),
                       ),
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           Navigator.pop(context);
@@ -144,7 +144,6 @@ class CustomDialog extends StatelessWidget {
                             fontSize: 14.toFont),
                       ),
                     ),
-                    // SizedBox(width: MediaQuery.of(context).size.width * 0.31),
                   ],
                 )
               ],
@@ -152,7 +151,7 @@ class CustomDialog extends StatelessWidget {
           : _getMessage(this.message, isErrorDialog),
       actions: showClose
           ? [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                   this.onClose();
@@ -163,7 +162,6 @@ class CustomDialog extends StatelessWidget {
                       color: ColorConstants.appColor, fontSize: 14.toFont),
                 ),
               ),
-              // if (isAtsignForm)
             ]
           : null,
     );
