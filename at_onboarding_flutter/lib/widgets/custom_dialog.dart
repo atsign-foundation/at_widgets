@@ -92,54 +92,80 @@ class CustomDialog extends StatelessWidget {
                     )
                   : this.title,
       content: isAtsignForm
-          ? Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.always,
-              child: TextFormField(
-                validator: (value) {
-                  if (value == null || value == '') {
-                    return '@sign cannot be empty';
-                  }
-                  return null;
-                },
-                controller: _atsignController,
-                decoration: InputDecoration(
-                    hintText: Strings.atsignHintText,
-                    prefixText: '@',
-                    border: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: ColorConstants.appColor))),
-              ),
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.always,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value == null || value == '') {
+                        return '@sign cannot be empty';
+                      }
+                      return null;
+                    },
+                    controller: _atsignController,
+                    decoration: InputDecoration(
+                        hintText: Strings.atsignHintText,
+                        prefixText: '@',
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: ColorConstants.appColor))),
+                  ),
+                ),
+                SizedBox(height: 15.toHeight),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FlatButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        Strings.cancelButton,
+                        style: TextStyle(
+                            color: ColorConstants.appColor,
+                            fontSize: 14.toFont),
+                      ),
+                    ),
+                    FlatButton(
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          Navigator.pop(context);
+                          this.onSubmit(_atsignController.text);
+                        }
+                      },
+                      child: Text(
+                        Strings.submitButton,
+                        style: TextStyle(
+                            color: ColorConstants.appColor,
+                            fontSize: 14.toFont),
+                      ),
+                    ),
+                    // SizedBox(width: MediaQuery.of(context).size.width * 0.31),
+                  ],
+                )
+              ],
             )
           : _getMessage(this.message, isErrorDialog),
-      actions: [
-        if (showClose)
-          FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-              this.onClose();
-            },
-            child: Text(
-              Strings.closeTitle,
-              style: TextStyle(
-                  color: ColorConstants.appColor, fontSize: 14.toFont),
-            ),
-          ),
-        if (isAtsignForm)
-          FlatButton(
-            onPressed: () async {
-              if (_formKey.currentState.validate()) {
-                Navigator.pop(context);
-                this.onSubmit(_atsignController.text);
-              }
-            },
-            child: Text(
-              Strings.submitButton,
-              style: TextStyle(
-                  color: ColorConstants.appColor, fontSize: 14.toFont),
-            ),
-          ),
-      ],
+      actions: showClose
+          ? [
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  this.onClose();
+                },
+                child: Text(
+                  Strings.closeTitle,
+                  style: TextStyle(
+                      color: ColorConstants.appColor, fontSize: 14.toFont),
+                ),
+              ),
+              // if (isAtsignForm)
+            ]
+          : null,
     );
   }
 

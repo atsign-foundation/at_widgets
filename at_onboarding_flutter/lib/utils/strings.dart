@@ -3,6 +3,7 @@ class Strings {
   static const String enterAtsignTitle = 'Enter your @sign to pair';
   static const String atsignHintText = 'alice';
   static const String submitButton = 'Submit';
+  static const String cancelButton = 'Cancel';
 
   //atsignStatus texts
   static String atsignNotFound =

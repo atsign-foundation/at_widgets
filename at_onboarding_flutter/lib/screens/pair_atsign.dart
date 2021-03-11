@@ -51,7 +51,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   String _incorrectKeyFile =
       'Unable to fetch the keys from chosen file. Please choose correct file';
   String _failedFileProcessing = 'Failed in processing files. Please try again';
-
   @override
   void initState() {
     checkPermissions();
@@ -177,8 +176,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     var storageStatus = await Permission.storage.status;
     _logger.info("camera status => $cameraStatus");
     _logger.info('storage status is $storageStatus');
-
-    if (cameraStatus.isUndetermined || cameraStatus.isDenied) {
+    if (cameraStatus.isUndetermined && storageStatus.isUndetermined) {
+      await askPermissions(Permission.unknown);
+    } else if (cameraStatus.isUndetermined || cameraStatus.isDenied) {
       await askPermissions(Permission.camera);
     } else if (storageStatus.isUndetermined || storageStatus.isDenied) {
       await askPermissions(Permission.storage);
@@ -194,6 +194,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       await Permission.camera.request();
     } else if (type == Permission.storage) {
       await Permission.storage.request();
+    } else {
+      await [Permission.camera, Permission.storage].request();
     }
   }
 
@@ -204,23 +206,21 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
       _isServerCheck = false;
       _isContinue = true;
-      String cramKey =
-          '@colin:540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba';
-      // '@sameeraja:67f75d44efbbd30547b9d090cf67134bc591b65ea7e1c4dec42d08e50ec4b89fc7ba5431ab1ae0b1fb4c99878955ca1f90798422526a070ef1bf2ad428c6353a';
-      // FilePickerResult result = await FilePicker.platform
-      //     .pickFiles(type: FileType.any, allowMultiple: false);
+      String cramKey;
+      FilePickerResult result = await FilePicker.platform
+          .pickFiles(type: FileType.any, allowMultiple: false);
       setState(() {
         loading = true;
       });
-      // for (var file in result.files) {
-      //   if (cramKey == null) {
-      //     String result = await FlutterQrReader.imgScan(File(file.path));
-      //     if (result.contains('@')) {
-      //       cramKey = result;
-      //       break;
-      //     } //read scan QRcode and extract atsign,aeskey
-      //   }
-      // }
+      for (var file in result.files) {
+        if (cramKey == null) {
+          String result = await FlutterQrReader.imgScan(File(file.path));
+          if (result.contains('@')) {
+            cramKey = result;
+            break;
+          } //read scan QRcode and extract atsign,aeskey
+        }
+      }
       if (_isCram(cramKey)) {
         List params = cramKey.split(':');
         if (params[1].length < 128) {
