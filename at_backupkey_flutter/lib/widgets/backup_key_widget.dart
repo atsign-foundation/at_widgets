@@ -117,7 +117,7 @@ class BackupKeyWidget extends StatelessWidget {
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    FlatButton(
+                    TextButton(
                         child: Text(Strings.backButtonTitle,
                             style: TextStyle(
                                 color: Colors.black,
@@ -127,7 +127,7 @@ class BackupKeyWidget extends StatelessWidget {
                           Navigator.pop(context);
                         }),
                     Spacer(),
-                    FlatButton(
+                    TextButton(
                         child: Text(Strings.cancelButtonTitle,
                             style: TextStyle(color: Colors.black)),
                         onPressed: () {

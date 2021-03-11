@@ -1,3 +1,7 @@
+<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+
+### Now for a little internet optimism
+
 # at_backupkey_flutter
 
 A flutter plugin project to provide backup keys of an @sign generated during onboarding flow of @protocol.
@@ -8,13 +12,8 @@ This plugin can be added to the project as git dependency in pubspec.yaml
 
 ```
 dependencies:
-  at_backupkey_flutter:
-    git:
-      url: https://github.com/atsign-foundation//at_widgets.git
-      path: at_backupkey_flutter
-      ref: dev_env
+  at_backupkey_flutter: ^1.0.0
 ```
-Note: If the project already has [at_onboarding_flutter](https://github.com/atsign-foundation/at_widgets/tree/dev_env/at_onboarding_flutter) dependency then no need of adding at_backupkey_flutter as a dependency.
 
 ### Android
 Add the following permissions to AndroidManifest.xml
