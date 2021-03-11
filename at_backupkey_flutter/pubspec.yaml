@@ -1,6 +1,6 @@
 name: at_backupkey_flutter
-description: A flutter plugin for saving backup keys.
-version: 1.0.0
+description: A flutter plugin project for saving backup key of any @sign that is being onboarded with @protocol apps. Backup key can used to authenticate in any @protocol apps. 
+version: 1.0.0+1
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
 

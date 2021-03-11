@@ -1,3 +1,7 @@
+<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+
+### Now for a little internet optimism
+
 # at_backupkey_flutter
 
 A flutter plugin project to provide backup keys of an @sign generated during onboarding flow of @protocol.
