@@ -11,6 +11,7 @@ import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_commons/src/exception/at_exceptions.dart';
+import 'package:emoji_picker/emoji_picker.dart';
 
 class NewGroup extends StatefulWidget {
   @override
@@ -19,8 +20,12 @@ class NewGroup extends StatefulWidget {
 
 class _NewGroupState extends State<NewGroup> {
   List<AtContact> selectedContacts;
-  String groupName;
+  String groupName = '';
   Uint8List selectedImageByteData;
+  bool isKeyBoardVisible = false, showEmojiPicker = false;
+  TextEditingController textController = TextEditingController();
+  UniqueKey key = UniqueKey();
+  FocusNode textFieldFocus = FocusNode();
 
   @override
   void initState() {
@@ -38,6 +43,7 @@ class _NewGroupState extends State<NewGroup> {
   createGroup() async {
     bool isKeyboardOpen =
         MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
+    groupName = textController.text;
     if (groupName != null) {
       // if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
       //   CustomToast().show(TextConstants().INVALID_NAME, context);
@@ -150,13 +156,57 @@ class _NewGroupState extends State<NewGroup> {
                     children: [
                       Text('Group name', style: TextStyle(fontSize: 15.toFont)),
                       SizedBox(height: 5),
-                      CustomInputField(
-                        icon: Icons.emoji_emotions_outlined,
+                      Container(
                         width: 240.toWidth,
-                        initialValue: groupName != null ? groupName : '',
-                        value: (val) {
-                          groupName = val;
-                        },
+                        height: 50.toHeight,
+                        decoration: BoxDecoration(
+                          color: AllColors().INPUT_FIELD_COLOR,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: TextField(
+                                readOnly: false,
+                                focusNode: textFieldFocus,
+                                decoration: InputDecoration(
+                                  // hintText: hintText,
+                                  enabledBorder: InputBorder.none,
+                                  border: InputBorder.none,
+                                  hintStyle: TextStyle(
+                                      color: AllColors().INPUT_FIELD_COLOR),
+                                ),
+                                onTap: () {
+                                  if (showEmojiPicker)
+                                    setState(() {
+                                      showEmojiPicker = false;
+                                    });
+                                },
+                                onChanged: (val) {},
+                                controller: textController,
+                                onSubmitted: (str) {},
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                showEmojiPicker = !showEmojiPicker;
+                                if (showEmojiPicker) {
+                                  textFieldFocus.unfocus();
+                                }
+                                // else {
+                                //   textFieldFocus.requestFocus();
+                                // }
+
+                                setState(() {});
+                              },
+                              child: Icon(
+                                Icons.emoji_emotions_outlined,
+                                color: Colors.grey,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -194,7 +244,22 @@ class _NewGroupState extends State<NewGroup> {
                   ),
                 ),
               ),
-            )
+            ),
+            showEmojiPicker
+                ? Container(
+                    margin: EdgeInsets.only(bottom: 70.toHeight),
+                    child: EmojiPicker(
+                      key: UniqueKey(),
+                      rows: 5,
+                      columns: 8,
+                      buttonMode: ButtonMode.MATERIAL,
+                      numRecommended: 10,
+                      onEmojiSelected: (emoji, category) {
+                        textController.text += emoji.emoji;
+                      },
+                    ),
+                  )
+                : SizedBox()
           ],
         ),
       ),

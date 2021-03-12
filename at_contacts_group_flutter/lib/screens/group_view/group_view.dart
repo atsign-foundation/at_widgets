@@ -177,7 +177,7 @@ class _GroupViewState extends State<GroupView> {
               Positioned(
                 top: 240.toHeight,
                 child: Container(
-                  height: 70.toHeight,
+                  height: 80.toHeight,
                   width: 343.toWidth,
                   margin: EdgeInsets.symmetric(
                       horizontal: 15.toWidth, vertical: 0.toHeight),
@@ -212,19 +212,30 @@ class _GroupViewState extends State<GroupView> {
                                 if (snapshot.connectionState ==
                                     ConnectionState.active) {
                                   AtGroup groupData = snapshot.data;
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        groupData.displayName,
-                                        style: CustomTextStyles().grey16,
-                                      ),
-                                      Text(
-                                        '${groupData.members.length} members',
-                                        style: CustomTextStyles().grey14,
-                                      ),
-                                    ],
+                                  return Container(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 250.toWidth,
+                                          child: Text(
+                                            groupData.displayName,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            // softWrap: false,
+                                            style: TextStyle(
+                                              color: AllColors().GREY,
+                                              fontSize: 16.toFont,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          '${groupData.members.length} members',
+                                          style: CustomTextStyles().grey14,
+                                        ),
+                                      ],
+                                    ),
                                   );
                                 } else
                                   return SizedBox();
