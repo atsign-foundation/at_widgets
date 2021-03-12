@@ -177,7 +177,12 @@ class _NewGroupState extends State<NewGroup> {
                                   hintStyle: TextStyle(
                                       color: AllColors().INPUT_FIELD_COLOR),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  if (showEmojiPicker)
+                                    setState(() {
+                                      showEmojiPicker = false;
+                                    });
+                                },
                                 onChanged: (val) {},
                                 controller: textController,
                                 onSubmitted: (str) {},
@@ -188,9 +193,10 @@ class _NewGroupState extends State<NewGroup> {
                                 showEmojiPicker = !showEmojiPicker;
                                 if (showEmojiPicker) {
                                   textFieldFocus.unfocus();
-                                } else {
-                                  textFieldFocus.requestFocus();
                                 }
+                                // else {
+                                //   textFieldFocus.requestFocus();
+                                // }
 
                                 setState(() {});
                               },

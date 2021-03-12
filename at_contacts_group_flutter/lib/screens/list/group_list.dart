@@ -36,7 +36,7 @@ class _GroupListState extends State<GroupList> {
         } else {
           showAddGroupIcon = false;
         }
-        setState(() {});
+        if (mounted) setState(() {});
       });
     } catch (e) {
       print('Error in init of Group_list $e');

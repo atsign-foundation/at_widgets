@@ -184,7 +184,12 @@ class _GroupEditState extends State<GroupEdit> {
                                     hintStyle: TextStyle(
                                         color: AllColors().INPUT_FIELD_COLOR),
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    if (showEmojiPicker)
+                                      setState(() {
+                                        showEmojiPicker = false;
+                                      });
+                                  },
                                   onChanged: (val) {},
                                   controller: textController,
                                   onSubmitted: (str) {},
@@ -195,8 +200,6 @@ class _GroupEditState extends State<GroupEdit> {
                                   showEmojiPicker = !showEmojiPicker;
                                   if (showEmojiPicker) {
                                     textFieldFocus.unfocus();
-                                  } else {
-                                    textFieldFocus.requestFocus();
                                   }
 
                                   setState(() {});

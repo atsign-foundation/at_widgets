@@ -217,14 +217,17 @@ class _GroupViewState extends State<GroupView> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          groupData.displayName,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          // softWrap: false,
-                                          style: TextStyle(
-                                            color: AllColors().GREY,
-                                            fontSize: 16.toFont,
+                                        Container(
+                                          width: 250.toWidth,
+                                          child: Text(
+                                            groupData.displayName,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            // softWrap: false,
+                                            style: TextStyle(
+                                              color: AllColors().GREY,
+                                              fontSize: 16.toFont,
+                                            ),
                                           ),
                                         ),
                                         Text(
