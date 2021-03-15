@@ -117,7 +117,12 @@ class _CustomListTileState extends State<CustomListTile> {
                 ),
                 child: contactImage),
             trailing: IconButton(
-              onPressed: selectRemoveContact(),
+              onPressed: widget.asSelectionTile
+                  ? selectRemoveContact()
+                  : () {
+                      if (widget.onTrailingPressed != null)
+                        widget.onTrailingPressed(widget.contact.atSign);
+                    },
               icon: (widget.asSelectionTile ?? false)
                   ? (isSelected)
                       ? Icon(Icons.close)

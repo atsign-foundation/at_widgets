@@ -27,16 +27,17 @@ class ContactsScreen extends StatefulWidget {
   final ValueChanged<List<AtContact>> selectedList;
   final bool asSelectionScreen;
   final bool asSingleSelectionScreen;
-  final Function saveGroup;
+  final Function saveGroup, onSendIconPressed;
 
-  const ContactsScreen({
-    Key key,
-    this.selectedList,
-    this.context,
-    this.asSelectionScreen = false,
-    this.asSingleSelectionScreen = false,
-    this.saveGroup,
-  }) : super(key: key);
+  const ContactsScreen(
+      {Key key,
+      this.selectedList,
+      this.context,
+      this.asSelectionScreen = false,
+      this.asSingleSelectionScreen = false,
+      this.saveGroup,
+      this.onSendIconPressed})
+      : super(key: key);
   @override
   _ContactsScreenState createState() => _ContactsScreenState();
 }
@@ -360,8 +361,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                           widget.selectedList(
                                                               selectedList);
                                                         },
-                                                        onTrailingPressed:
-                                                            () {},
+                                                        onTrailingPressed: widget
+                                                            .onSendIconPressed,
                                                       ),
                                                     ),
                                                   ),
