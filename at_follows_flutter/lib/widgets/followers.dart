@@ -25,6 +25,7 @@ class _FollowersState extends State<Followers> {
   @override
   void initState() {
     super.initState();
+    if (_connectionsService.followerAtsign != null) _followAtsign(context);
   }
 
   @override
@@ -47,7 +48,11 @@ class _FollowersState extends State<Followers> {
           ),
         );
       } else if (provider.status == Status.done) {
-        atsignsList = provider.atsignsList;
+        atsignsList =
+            // provider.atsignsList;
+            widget.isFollowing
+                ? provider.followingList
+                : provider.followersList;
         if (atsignsList.isEmpty) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +62,7 @@ class _FollowersState extends State<Followers> {
                   widget.isFollowing
                       ? Strings.noFollowing
                       : Strings.noFollowers,
-                  style: CustomTextStyles.fontR14primary)
+                  style: CustomTextStyles.fontR14primary),
             ],
           );
         }
@@ -193,6 +198,66 @@ class _FollowersState extends State<Followers> {
         print('Loading getAtsigns....');
         return SizedBox();
       }
+    });
+  }
+
+  _followAtsign(BuildContext context) {
+    var atsign = ConnectionsService().followerAtsign;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                  content: Text(Strings.followBackDescription(atsign),
+                      textAlign: TextAlign.center,
+                      style: CustomTextStyles.fontR14dark),
+                  actions: [
+                    CustomButton(
+                      width: 100.toWidth,
+                      isActive: false,
+                      onPressedCallBack: (value) {
+                        _connectionsService.followerAtsign = null;
+                        Navigator.pop(context);
+                      },
+                      text: Strings.cancel,
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.17),
+                    CustomButton(
+                      width: 100.toWidth,
+                      isActive: true,
+                      onPressedCallBack: (value) {
+                        _connectionsService.followerAtsign = null;
+                        Navigator.pop(context);
+                        ConnectionProvider().follow(atsign);
+                      },
+                      text: Strings.followBack,
+                    ),
+                    // SizedBox(width: MediaQuery.of(context).size.width * 0.10),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     CustomButton(
+                    //       width: 100.toWidth,
+                    //       isActive: false,
+                    //       onPressedCallBack: (value) {
+                    //         _connectionsService.followerAtsign = null;
+                    //         Navigator.pop(context);
+                    //       },
+                    //       text: Strings.cancel,
+                    //     ),
+                    //     CustomButton(
+                    //       width: 100.toWidth,
+                    //       isActive: true,
+                    //       onPressedCallBack: (value) {
+                    //         _connectionsService.followerAtsign = null;
+                    //         ConnectionProvider().follow(atsign);
+                    //       },
+                    //       text: Strings.followBack,
+                    //     ),
+                    //   ],
+                    // ),
+                    // Spacer(),
+                    // SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                  ]));
     });
   }
 }

@@ -25,7 +25,7 @@ class ColorConstants {
 
   static Color activeColor;
   static Color inactiveThumbColor = fillColor;
-  static Color inactiveTrackColor = Colors.grey[300];
+  static Color inactiveTrackColor = Colors.grey[200];
   static Color activeTrackColor;
   static Brightness brightness;
   static Color backgroundColor;

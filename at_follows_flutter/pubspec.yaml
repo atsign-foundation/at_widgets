@@ -14,11 +14,7 @@ dependencies:
   provider: ^4.3.2+2
   flutter_qr_reader: ^1.0.3
   permission_handler: ^5.0.1+1
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: dev_env
+  at_client_mobile: ^1.0.0+8
 
 dev_dependencies:
   flutter_test:

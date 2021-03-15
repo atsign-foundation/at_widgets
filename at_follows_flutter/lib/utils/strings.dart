@@ -12,9 +12,7 @@ class Strings {
   static const String package = 'at_follows_flutter';
   static const String noFollowers = 'No Followers!';
   static const String noFollowing = 'You are not following anyone!';
-  static const String qrTitle = 'QR Scan';
-  static const String qrscanDescription =
-      'Scan the QRcode of an @sign to follow';
+
   static const String privateFollowersList =
       'Followers List cannot be viewed to public by making it private.';
   static const String privateFollowingList =
@@ -25,6 +23,22 @@ class Strings {
     'image.persona'
   ];
 
+  //follow texts
+  static const String followBack = 'Follow Back';
+  static const String cancel = 'Cancel';
+  static String followBackDescription(String atsign) {
+    return '$atsign is following you. Tap on follow back to get connected.';
+  }
+
+  //qrscan texts
+  static const String enterAtsignButton = 'Type the @sign';
+  static const String enterAtsignTitle = 'Enter the @sign';
+  static const String atsignHintText = 'alice';
+  static const String qrTitle = 'Follow @sign';
+  static const String qrscanDescription =
+      'Scan the QRcode of an @sign to follow';
+  static const String submitButton = 'Submit';
+  static const String existingFollower = 'You are already following ';
   //error dialog texts
   static const String errorTitle = 'Error';
   static const String closeButton = 'Close';

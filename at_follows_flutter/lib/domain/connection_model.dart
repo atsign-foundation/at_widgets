@@ -29,16 +29,16 @@ class ConnectionProvider extends ChangeNotifier {
     return _singleton;
   }
   // ConnectionProvider({this.status});
-  List<Atsign> followersList = [];
-  List<Atsign> followingList = [];
-  List<Atsign> atsignsList = [];
+  List<Atsign> followersList;
+  List<Atsign> followingList;
+  List<Atsign> atsignsList;
   // Map<String, Status> status;
   Status status;
   var error;
 
-  ConnectionsService _connectionsService = ConnectionsService();
-  bool _disposed = false;
-  ListStatus connectionslistStatus = ListStatus();
+  ConnectionsService _connectionsService;
+  bool _disposed;
+  ListStatus connectionslistStatus;
 
   @override
   void dispose() {
@@ -52,6 +52,16 @@ class ConnectionProvider extends ChangeNotifier {
     if (!_disposed) {
       super.notifyListeners();
     }
+  }
+
+  init() {
+    this.followersList = [];
+    this.followingList = [];
+    this.atsignsList = [];
+    _connectionsService = ConnectionsService();
+    connectionslistStatus = ListStatus();
+    _disposed = false;
+    this.setStatus(null);
   }
 
   setStatus(Status value) {
@@ -74,18 +84,14 @@ class ConnectionProvider extends ChangeNotifier {
     try {
       setStatus(Status.loading);
       if (isFollowing) {
-        followingList =
-            // followingList.isEmpty
-            // ?
-            await _connectionsService.getAtsignsList(isFollowing: isFollowing);
-        // : followingList;
+        followingList = followingList.isEmpty
+            ? await _connectionsService.getAtsignsList(isFollowing: isFollowing)
+            : followingList;
         atsignsList = followingList;
       } else {
-        followersList =
-            // followersList.isEmpty
-            // ?
-            await _connectionsService.getAtsignsList(isFollowing: isFollowing);
-        // : followersList;
+        followersList = followersList.isEmpty
+            ? await _connectionsService.getAtsignsList(isFollowing: isFollowing)
+            : followersList;
         atsignsList = followersList;
       }
       setStatus(Status.done);
@@ -120,7 +126,10 @@ class ConnectionProvider extends ChangeNotifier {
     try {
       setStatus(Status.loading);
       var data = await _connectionsService.follow(atsign);
-      followingList.add(data);
+      if (data != null) {
+        followingList.add(data);
+        _modifyFollowersList(atsign, true);
+      }
       // atsignsList.add(data);
       setStatus(Status.done);
       c.complete(true);
@@ -139,9 +148,12 @@ class ConnectionProvider extends ChangeNotifier {
     Completer c = Completer();
     try {
       setStatus(Status.loading);
-      await _connectionsService.unfollow(atsign);
-      followingList.removeWhere((element) => element.title == atsign);
-      atsignsList.removeWhere((element) => element.title == atsign);
+      var result = await _connectionsService.unfollow(atsign);
+      if (result) {
+        followingList.removeWhere((element) => element.title == atsign);
+        _modifyFollowersList(atsign, false);
+      }
+      // atsignsList.removeWhere((element) => element.title == atsign);
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
@@ -152,6 +164,18 @@ class ConnectionProvider extends ChangeNotifier {
       setStatus(Status.error);
     }
     return c.future;
+  }
+
+  _modifyFollowersList(String atsign, bool follow) {
+    var index = followersList.indexWhere((element) => element.title == atsign);
+    var data = followersList[index];
+    followersList[index] = data..isFollowing = follow;
+  }
+
+  bool containsFollowing(String atsign) {
+    var index = this.followingList.indexWhere((data) => data.title == atsign);
+    return index != -1;
+    // return this.followingList.contains((data) => data.title == atsign);
   }
 }
 

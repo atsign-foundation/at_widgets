@@ -19,12 +19,15 @@ class Connections extends StatefulWidget {
   final atClientserviceInstance;
   final bool isDarkTheme;
   final Color appColor;
+
+  ///name of the follower atsign received to follow them back immediately.
+  final String followerAtsignTitle;
   // final bool isLightTheme;
-  Connections({
-    @required this.atClientserviceInstance,
-    this.isDarkTheme = false,
-    this.appColor,
-  });
+  Connections(
+      {@required this.atClientserviceInstance,
+      this.isDarkTheme = false,
+      this.appColor,
+      this.followerAtsignTitle});
   @override
   _ConnectionsState createState() => _ConnectionsState();
 }
@@ -38,19 +41,16 @@ class _ConnectionsState extends State<Connections> {
 
   @override
   void initState() {
-    _connectionProvider.setStatus(null);
+    _connectionService.init();
+    _connectionProvider.init();
     ColorConstants.darkTheme = widget.isDarkTheme;
     ColorConstants.appColor = widget.appColor;
     SDKService().setClientService = widget.atClientserviceInstance;
+    _connectionService.followerAtsign = widget.followerAtsignTitle;
     _connectionService.startMonitor().then((value) => setState(() {}));
-    // _connectionService.monitor = widget.monitorCallBack;
-    // ConnectionService()
-    // .then((value) => _formConnectionTabs(2));
     _formConnectionTabs(2);
     super.initState();
   }
-
-  // _formConnectionTabs(2);
 
   @override
   Widget build(BuildContext context) {

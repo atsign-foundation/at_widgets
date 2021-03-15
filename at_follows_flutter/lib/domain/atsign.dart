@@ -19,7 +19,7 @@ class Atsign {
         break;
       case PublicData.lastname:
         subtitle = followsValue.value != null && followsValue.value != ''
-            ? subtitle + followsValue.value
+            ? subtitle + ' ' + followsValue.value
             : followsValue.value;
         break;
       default:
