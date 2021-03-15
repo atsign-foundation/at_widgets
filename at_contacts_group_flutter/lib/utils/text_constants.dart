@@ -4,7 +4,7 @@ class TextConstants {
   factory TextConstants() => _instance;
 
   // ignore: non_constant_identifier_names
-  String SERVICE_ERROR = 'something went wrong , please try again.';
+  String SERVICE_ERROR = 'something went wrong, please try again.';
   // ignore: non_constant_identifier_names
   String GROUP_ALREADY_EXISTS = 'group with this name already exists';
   // ignore: non_constant_identifier_names

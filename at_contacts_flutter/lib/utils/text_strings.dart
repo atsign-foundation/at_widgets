@@ -9,6 +9,7 @@ class TextStrings {
   String addtoContact = 'Add to Contacts';
   String addContact = 'Add Contact';
   String noContacts = 'No contacts added';
+  String noContactsFound = 'No results';
   String deleteContact = 'Delete Contact';
   String delete = 'Delete';
   String block = 'Block';

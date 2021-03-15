@@ -83,10 +83,11 @@ class _GroupContactViewState extends State<GroupContactView> {
         },
         showBackButton: true,
         showLeadingIcon: true,
-        showTrailingIcon: widget.asSelectionScreen == null ||
-                widget.asSelectionScreen == false
-            ? true
-            : false,
+        // showTrailingIcon: widget.asSelectionScreen == null ||
+        //         widget.asSelectionScreen == false
+        //     ? true
+        //     : false,
+        showTrailingIcon: true,
         trailingIcon: Icon(Icons.add),
         onTrailingIconPressed: () {
           showDialog(
