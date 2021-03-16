@@ -43,8 +43,9 @@ class _SecondScreenState extends State<SecondScreen> {
         title: Text("Second Screen"),
       ),
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: ListView(
+          // mainAxisSize: MainAxisSize.min,
+          padding: EdgeInsets.all(20),
           children: [
             Container(
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -149,34 +150,32 @@ class _SecondScreenState extends State<SecondScreen> {
             SizedBox(
               height: 10,
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: StreamBuilder(
-                    stream: KeyStreamService().atNotificationsStream,
-                    builder: (context,
-                        AsyncSnapshot<List<KeyLocationModel>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.active) {
-                        if (snapshot.hasError) {
-                          return Text('error');
-                        } else {
-                          return ListView(
-                              children: snapshot.data.map((notification) {
-                            return Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Text(
-                                '${snapshot.data.indexOf(notification) + 1}. ${notification.key}',
-                                style: TextStyle(fontSize: 16),
-                                textAlign: TextAlign.left,
-                              ),
-                            );
-                          }).toList());
-                        }
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: StreamBuilder(
+                  stream: KeyStreamService().atNotificationsStream,
+                  builder: (context,
+                      AsyncSnapshot<List<KeyLocationModel>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      if (snapshot.hasError) {
+                        return Text('error');
                       } else {
-                        return Text('No Data');
+                        return Column(
+                            children: snapshot.data.map((notification) {
+                          return Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Text(
+                              '${snapshot.data.indexOf(notification) + 1}. ${notification.key}',
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.left,
+                            ),
+                          );
+                        }).toList());
                       }
-                    }),
-              ),
+                    } else {
+                      return Text('No Data');
+                    }
+                  }),
             )
           ],
         ),

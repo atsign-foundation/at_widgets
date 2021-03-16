@@ -145,7 +145,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 }
                                 if (widget.showGroups &&
                                     c.group != null &&
-                                    c.group.name
+                                    c.group.groupName
                                         .toUpperCase()
                                         .contains(searchText.toUpperCase())) {
                                   _filteredList.add(c);
@@ -169,7 +169,8 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showGroups &&
                                       c.group != null &&
-                                      int.tryParse(c?.group?.name[0]) != null) {
+                                      int.tryParse(c?.group?.groupName[0]) !=
+                                          null) {
                                     contactsForAlphabet.add(c);
                                   }
                                 });
@@ -185,7 +186,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showGroups &&
                                       c.group != null &&
-                                      c?.group?.name[0].toUpperCase() ==
+                                      c?.group?.groupName[0].toUpperCase() ==
                                           currentChar) {
                                     contactsForAlphabet.add(c);
                                   }

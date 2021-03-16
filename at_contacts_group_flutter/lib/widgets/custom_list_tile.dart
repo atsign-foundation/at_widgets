@@ -94,7 +94,7 @@ class _CustomListTileState extends State<CustomListTile> {
     } else {
       contactImage = ContactInitial(
         initials: widget?.item?.contact?.atSign?.substring(1, 3) ??
-            widget?.item?.group?.name?.substring(0, 2),
+            widget?.item?.group?.groupName?.substring(0, 2),
       );
     }
     return StreamBuilder<List<GroupContactsModel>>(
@@ -147,7 +147,7 @@ class _CustomListTileState extends State<CustomListTile> {
                       widget?.item?.contact?.tags['name'] != null))
                   ? widget?.item?.contact?.tags['name']
                   : widget?.item?.contact?.atSign?.substring(1) ??
-                      widget?.item?.group?.name?.substring(0),
+                      widget?.item?.group?.groupName?.substring(0),
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14.toFont,

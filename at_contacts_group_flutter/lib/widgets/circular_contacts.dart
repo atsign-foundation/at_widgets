@@ -42,7 +42,7 @@ class CircularContacts extends StatelessWidget {
                     : ContactInitial(
                         initials:
                             groupContact?.contact?.atSign?.substring(1, 3) ??
-                                groupContact?.group?.name?.substring(0, 2),
+                                groupContact?.group?.groupName?.substring(0, 2),
                       ),
                 // child:
               ),
@@ -74,7 +74,7 @@ class CircularContacts extends StatelessWidget {
                       groupContact?.contact?.tags['name'] != null
                   ? groupContact?.contact?.tags['name']
                   : groupContact?.contact?.atSign?.substring(1) ??
-                      groupContact?.group?.name?.substring(0),
+                      groupContact?.group?.groupName?.substring(0),
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 15.toFont),
@@ -84,7 +84,7 @@ class CircularContacts extends StatelessWidget {
           Container(
             width: 60.toWidth,
             child: Text(
-              groupContact?.contact?.atSign ?? groupContact?.group?.name,
+              groupContact?.contact?.atSign ?? groupContact?.group?.groupName,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 15.toFont),
