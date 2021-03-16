@@ -25,11 +25,6 @@ class _FollowersState extends State<Followers> {
   @override
   void initState() {
     super.initState();
-    if (_connectionsService.followerAtsign != null) {
-      _followAtsign(context);
-    } else if (_connectionsService.followAtsign != null) {
-      _followAtsign(context, isFollow: true);
-    }
   }
 
   @override
@@ -44,14 +39,29 @@ class _FollowersState extends State<Followers> {
     return Consumer<ConnectionProvider>(builder: (context, provider, _) {
       print('provider status is ${provider.status}......');
       if (provider.status == Status.loading) {
-        return Center(
-          child: Container(
-            height: 50.toHeight,
-            width: 50.toHeight,
-            child: CircularProgressIndicator(),
+        return Padding(
+          padding: EdgeInsets.only(top: SizeConfig().screenHeight * 0.15),
+          child: Center(
+            child: Column(
+              children: [
+                Container(
+                  height: 50.toHeight,
+                  width: 50.toHeight,
+                  child: CircularProgressIndicator(),
+                ),
+                SizedBox(height: 5.0.toHeight),
+                Text(Strings.loadingDescription,
+                    style: CustomTextStyles.fontR14primary)
+              ],
+            ),
           ),
         );
       } else if (provider.status == Status.done) {
+        if (_connectionsService.followerAtsign != null) {
+          _followAtsign(context);
+        } else if (_connectionsService.followAtsign != null) {
+          _followAtsign(context, isFollow: true);
+        }
         atsignsList =
             // provider.atsignsList;
             widget.isFollowing
@@ -156,7 +166,8 @@ class _FollowersState extends State<Followers> {
                                         currentAtsign.profilePicture,
                                       ),
                                     )
-                                  : Icon(Icons.person),
+                                  : Icon(Icons.person_outline,
+                                      color: Colors.black, size: 25.toFont),
                             ),
                             title: Text(currentAtsign.title,
                                 style: CustomTextStyles.fontR16primary),
@@ -209,6 +220,13 @@ class _FollowersState extends State<Followers> {
     var atsign = isFollow
         ? ConnectionsService().followAtsign
         : ConnectionsService().followerAtsign;
+    bool exists = ConnectionProvider().containsFollowing(atsign);
+    if (exists) {
+      _connectionsService.followerAtsign = null;
+      _connectionsService.followAtsign = null;
+
+      return;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showDialog(
           context: context,

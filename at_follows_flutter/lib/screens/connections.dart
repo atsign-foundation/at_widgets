@@ -38,7 +38,7 @@ class Connections extends StatefulWidget {
 
 class _ConnectionsState extends State<Connections> {
   List<ConnectionTab> connectionTabs = [];
-  int lastAccessedIndex = 0;
+  int lastAccessedIndex;
   TextEditingController searchController = TextEditingController();
   ConnectionProvider _connectionProvider = ConnectionProvider();
   var _connectionService = ConnectionsService();
@@ -80,9 +80,10 @@ class _ConnectionsState extends State<Connections> {
       child: Scaffold(
         backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
+          title: SDKService().atsign,
           showTitle: true,
           showBackButton: true,
-          showQr: true,
+          showQr: connectionTabs[1].isActive,
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -172,11 +173,13 @@ class _ConnectionsState extends State<Connections> {
   }
 
   _formConnectionTabs(int tabsCount) {
-    for (int index = 0; index < tabsCount; index++) {
-      connectionTabs.add(ConnectionTab(
-          isActive: index == 0 ? true : false,
-          name: index == 0 ? Strings.Followers : Strings.Following));
-    }
+    var isFollowingOption =
+        widget.followAtsignTitle != null || widget.followerAtsignTitle != null;
+    lastAccessedIndex = isFollowingOption ? 1 : 0;
+    connectionTabs.addAll([
+      ConnectionTab(name: Strings.Followers, isActive: !isFollowingOption),
+      ConnectionTab(name: Strings.Following, isActive: isFollowingOption),
+    ]);
   }
 }
 

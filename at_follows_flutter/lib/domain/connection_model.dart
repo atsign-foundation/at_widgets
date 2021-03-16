@@ -80,17 +80,20 @@ class ConnectionProvider extends ChangeNotifier {
 
   Future getAtsignsList({bool isFollowing = false}) async {
     Completer c = Completer();
-
+    bool isInit = status == null;
     try {
       setStatus(Status.loading);
-      if (isFollowing) {
+      if (isFollowing || isInit) {
         followingList = followingList.isEmpty
-            ? await _connectionsService.getAtsignsList(isFollowing: isFollowing)
+            ? await _connectionsService.getAtsignsList(
+                isFollowing: isInit ? true : isFollowing)
             : followingList;
         atsignsList = followingList;
-      } else {
+      }
+      if (!isFollowing || isInit) {
         followersList = followersList.isEmpty
-            ? await _connectionsService.getAtsignsList(isFollowing: isFollowing)
+            ? await _connectionsService.getAtsignsList(
+                isFollowing: isInit ? false : isFollowing)
             : followersList;
         atsignsList = followersList;
       }

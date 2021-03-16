@@ -45,4 +45,8 @@ class Strings {
   //error dialog texts
   static const String errorTitle = 'Error';
   static const String closeButton = 'Close';
+
+  //loading texts
+  static const String loadingDescription =
+      'Please wait while loading your data';
 }

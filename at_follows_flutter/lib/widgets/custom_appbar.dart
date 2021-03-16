@@ -68,48 +68,50 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         // SizedBox(width: 10.toFont),
         if (this.showQr)
           GestureDetector(
-              onTap: () {
-                print('Asked for scanning QRcode');
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => QrScan()));
-              },
-              child: Container(
-                // color: Colors.black,
-                height: 20.toHeight,
-                width: 30.toWidth,
-                margin: EdgeInsets.only(right: 16.0.toWidth),
-                child: ColorFiltered(
-                  colorFilter:
-                      ColorFilter.mode(ColorConstants.light, BlendMode.color),
-                  child: Image.asset(
-                    Images.qrscan,
-                    // fit: BoxFit.fill,
-                    // height: 5.0.toHeight,
-                    package: Strings.package,
-                  ),
-                ),
-              ))
+            onTap: () {
+              print('Asked for scanning QRcode');
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => QrScan()));
+            },
+            child: Padding(
+              padding: EdgeInsets.only(right: 12.0.toFont),
+              child: Icon(Icons.person_add,
+                  color: ColorConstants.dark, size: 25.toFont),
+            ),
+          ),
+        if (!showQr)
+          Padding(
+              padding: EdgeInsets.only(right: 12.0.toFont),
+              child: SizedBox(width: 25.toFont))
       ],
       title: Row(
         // mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          GestureDetector(
-              child:
-                  // Icon(Icons.arrow_back, color: ColorConstants.primary),
-                  Text(Strings.BackButton,
-                      style: CustomTextStyles.fontR14primary),
-              onTap: () {
-                Navigator.pop(context);
-              }),
-          SizedBox(width: SizeConfig().screenWidth * 0.25),
+          Flexible(
+            fit: FlexFit.loose,
+            flex: 2,
+            child: GestureDetector(
+                child:
+                    // Icon(Icons.arrow_back, color: ColorConstants.primary),
+                    Text(Strings.BackButton,
+                        style: CustomTextStyles.fontR14primary),
+                onTap: () {
+                  Navigator.pop(context);
+                }),
+          ),
+          SizedBox(width: MediaQuery.of(context).size.width * 0.10),
           if (showTitle)
             Flexible(
-                // flex: 4,
-                child: Text(
-              this.title ?? Strings.Title,
-              style: CustomTextStyles.fontBold18primary,
-              textAlign: TextAlign.center,
-            ))
+                // fit: FlexFit.tight,
+                flex: 7,
+                child: Center(
+                  child: Text(
+                    this.title ?? Strings.Title,
+                    maxLines: 3,
+                    style: CustomTextStyles.fontBold18primary,
+                    textAlign: TextAlign.center,
+                  ),
+                ))
         ],
       ),
     );

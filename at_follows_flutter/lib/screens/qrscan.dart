@@ -88,7 +88,7 @@ class _QrScanState extends State<QrScan> {
         backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
           showTitle: true,
-          title: Strings.qrTitle,
+          title: SDKService().atsign,
         ),
         body: SingleChildScrollView(
           child: Stack(
