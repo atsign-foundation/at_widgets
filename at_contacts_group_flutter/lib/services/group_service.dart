@@ -163,7 +163,7 @@ class GroupService {
   }
 
   updateGroupStreams(AtGroup group) async {
-    AtGroup groupDetail = await getGroupDetail(group.name);
+    AtGroup groupDetail = await getGroupDetail(group.groupName);
     if (groupDetail != null) groupViewSink.add(groupDetail);
     await getAllGroupsDetails();
   }
