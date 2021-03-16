@@ -1,5 +1,6 @@
 import 'package:at_follows_flutter/domain/connection_model.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
+import 'package:at_follows_flutter/services/sdk_service.dart';
 import 'package:at_follows_flutter/utils/color_constants.dart';
 import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
@@ -53,6 +54,19 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
+  bool _validateFollowingAtsign(String atsign) {
+    var formattedAtsign = ConnectionsService().formatAtSign(atsign);
+    if (ConnectionProvider().containsFollowing(formattedAtsign)) {
+      _showFollowersAlertDialog(context, formattedAtsign);
+      return false;
+    } else if (formattedAtsign == SDKService().atsign) {
+      _showFollowersAlertDialog(context, formattedAtsign,
+          message: Strings.ownAtsign);
+      return false;
+    }
+    return true;
+  }
+
   void onScan(String data, List<Offset> offsets, context) async {
     _controller.stopCamera();
     this.setState(() {
@@ -61,12 +75,8 @@ class _QrScanState extends State<QrScan> {
     _logger.info('received data is $data');
     if (data != null || data != '') {
       Navigator.pop(context, true);
-      var formattedAtsign = ConnectionsService().formatAtSign(data);
-      if (ConnectionProvider().containsFollowing(formattedAtsign)) {
-        _showFollowersAlertDialog(context, formattedAtsign);
-        return;
-      }
-      await ConnectionProvider().follow(formattedAtsign);
+      if (_validateFollowingAtsign(data))
+        await ConnectionProvider().follow(data);
     } else {
       _logger.severe('Scanning the QRcode throws error');
     }
@@ -187,18 +197,12 @@ class _QrScanState extends State<QrScan> {
                 FlatButton(
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
-                      var formattedAtsign = ConnectionsService()
-                          .formatAtSign(_atsignController.text);
                       Navigator.pop(context);
-                      print(ConnectionProvider()
-                          .containsFollowing(formattedAtsign));
-                      if (ConnectionProvider()
-                          .containsFollowing(formattedAtsign)) {
-                        _showFollowersAlertDialog(context, formattedAtsign);
+                      if (!_validateFollowingAtsign(_atsignController.text)) {
                         return;
                       }
                       Navigator.pop(context, true);
-                      await ConnectionProvider().follow(formattedAtsign);
+                      await ConnectionProvider().follow(_atsignController.text);
                     }
                   },
                   child: Text(
@@ -212,12 +216,17 @@ class _QrScanState extends State<QrScan> {
         });
   }
 
-  _showFollowersAlertDialog(BuildContext context, String atsign) {
+  _showFollowersAlertDialog(BuildContext context, String atsign,
+      {String message}) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Text('${Strings.existingFollower}$atsign'),
+            content: Text(
+                message == null
+                    ? '${Strings.existingFollower}$atsign'
+                    : message,
+                style: CustomTextStyles.fontR14dark),
             actions: [
               TextButton(
                 child: Text(Strings.Close),

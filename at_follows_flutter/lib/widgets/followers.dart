@@ -25,7 +25,11 @@ class _FollowersState extends State<Followers> {
   @override
   void initState() {
     super.initState();
-    if (_connectionsService.followerAtsign != null) _followAtsign(context);
+    if (_connectionsService.followerAtsign != null) {
+      _followAtsign(context);
+    } else if (_connectionsService.followAtsign != null) {
+      _followAtsign(context, isFollow: true);
+    }
   }
 
   @override
@@ -201,13 +205,18 @@ class _FollowersState extends State<Followers> {
     });
   }
 
-  _followAtsign(BuildContext context) {
-    var atsign = ConnectionsService().followerAtsign;
+  _followAtsign(BuildContext context, {bool isFollow = false}) {
+    var atsign = isFollow
+        ? ConnectionsService().followAtsign
+        : ConnectionsService().followerAtsign;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
-                  content: Text(Strings.followBackDescription(atsign),
+                  content: Text(
+                      isFollow
+                          ? '${Strings.followDescription}$atsign?'
+                          : Strings.followBackDescription(atsign),
                       textAlign: TextAlign.center,
                       style: CustomTextStyles.fontR14dark),
                   actions: [
@@ -229,34 +238,8 @@ class _FollowersState extends State<Followers> {
                         Navigator.pop(context);
                         ConnectionProvider().follow(atsign);
                       },
-                      text: Strings.followBack,
+                      text: isFollow ? Strings.Follow : Strings.followBack,
                     ),
-                    // SizedBox(width: MediaQuery.of(context).size.width * 0.10),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     CustomButton(
-                    //       width: 100.toWidth,
-                    //       isActive: false,
-                    //       onPressedCallBack: (value) {
-                    //         _connectionsService.followerAtsign = null;
-                    //         Navigator.pop(context);
-                    //       },
-                    //       text: Strings.cancel,
-                    //     ),
-                    //     CustomButton(
-                    //       width: 100.toWidth,
-                    //       isActive: true,
-                    //       onPressedCallBack: (value) {
-                    //         _connectionsService.followerAtsign = null;
-                    //         ConnectionProvider().follow(atsign);
-                    //       },
-                    //       text: Strings.followBack,
-                    //     ),
-                    //   ],
-                    // ),
-                    // Spacer(),
-                    // SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                   ]));
     });
   }

@@ -30,6 +30,8 @@ class Strings {
     return '$atsign is following you. Tap on follow back to get connected.';
   }
 
+  static const String followDescription = 'Do you want to follow ';
+
   //qrscan texts
   static const String enterAtsignButton = 'Type the @sign';
   static const String enterAtsignTitle = 'Enter the @sign';
@@ -39,6 +41,7 @@ class Strings {
       'Scan the QRcode of an @sign to follow';
   static const String submitButton = 'Submit';
   static const String existingFollower = 'You are already following ';
+  static const String ownAtsign = 'You cannot follow your own @sign';
   //error dialog texts
   static const String errorTitle = 'Error';
   static const String closeButton = 'Close';

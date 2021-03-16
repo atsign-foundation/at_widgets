@@ -168,8 +168,10 @@ class ConnectionProvider extends ChangeNotifier {
 
   _modifyFollowersList(String atsign, bool follow) {
     var index = followersList.indexWhere((element) => element.title == atsign);
-    var data = followersList[index];
-    followersList[index] = data..isFollowing = follow;
+    if (index != -1) {
+      var data = followersList[index];
+      followersList[index] = data..isFollowing = follow;
+    }
   }
 
   bool containsFollowing(String atsign) {

@@ -14,6 +14,7 @@ class ConnectionsService {
   AtFollowsList followers;
   AtFollowsList following;
   String followerAtsign;
+  String followAtsign;
 
   var _logger = AtSignLogger('Connections Service');
 
@@ -47,6 +48,9 @@ class ConnectionsService {
   }
 
   Future<Atsign> follow(String atsign) async {
+    if (atsign == _sdkService.atsign) {
+      return null;
+    }
     atsign = formatAtSign(atsign);
     var atKey = this._formKey(isFollowing: true);
     var atMetadata = atKey.metadata;
