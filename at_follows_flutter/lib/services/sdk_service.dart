@@ -56,6 +56,9 @@ class SDKService {
     var response = await _atClientServiceInstance.atClient
         .notifyList(regex: AppConstants.following);
     response = response.toString().replaceAll('data:', '');
+    if (response == 'null') {
+      return [];
+    }
     List<AtNotification> notificationList = AtNotification.fromJsonList(
         List<Map<String, dynamic>>.from(jsonDecode(response)));
     notificationList.sort((notification1, notification2) =>
