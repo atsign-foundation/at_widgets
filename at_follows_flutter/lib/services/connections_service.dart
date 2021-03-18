@@ -39,10 +39,16 @@ class ConnectionsService {
     var _connectionProvider = ConnectionProvider();
     if (_connectionProvider.followingList.isEmpty || isInit) {
       await createLists(isFollowing: true);
-      _connectionProvider.followingList = await _formAtSignData(following.list);
+      if (following.list.isNotEmpty) {
+        _connectionProvider.followingList =
+            await _formAtSignData(following.list);
+      }
     } else if (_connectionProvider.followersList.isEmpty || isInit) {
       await createLists(isFollowing: false);
-      _connectionProvider.followersList = await _formAtSignData(followers.list);
+      if (followers.list.isNotEmpty) {
+        _connectionProvider.followersList =
+            await _formAtSignData(followers.list);
+      }
     }
     if (isInit) {
       var notificationsList = await _sdkService.notifyList();
