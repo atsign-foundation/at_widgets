@@ -55,13 +55,11 @@ class _QrScanState extends State<QrScan> {
   }
 
   bool _validateFollowingAtsign(String atsign) {
-    var formattedAtsign = ConnectionsService().formatAtSign(atsign);
-    if (ConnectionProvider().containsFollowing(formattedAtsign)) {
-      _showFollowersAlertDialog(context, formattedAtsign);
+    if (ConnectionProvider().containsFollowing(atsign)) {
+      _showFollowersAlertDialog(context, atsign);
       return false;
-    } else if (formattedAtsign == SDKService().atsign) {
-      _showFollowersAlertDialog(context, formattedAtsign,
-          message: Strings.ownAtsign);
+    } else if (atsign == SDKService().atsign) {
+      _showFollowersAlertDialog(context, atsign, message: Strings.ownAtsign);
       return false;
     }
     return true;
@@ -74,9 +72,10 @@ class _QrScanState extends State<QrScan> {
     });
     _logger.info('received data is $data');
     if (data != null || data != '') {
+      var formattedAtsign = ConnectionsService().formatAtSign(data);
       Navigator.pop(context, true);
-      if (_validateFollowingAtsign(data))
-        await ConnectionProvider().follow(data);
+      if (_validateFollowingAtsign(formattedAtsign))
+        await ConnectionProvider().follow(formattedAtsign);
     } else {
       _logger.severe('Scanning the QRcode throws error');
     }
@@ -197,12 +196,15 @@ class _QrScanState extends State<QrScan> {
                 FlatButton(
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
+                      var formattedAtsign = ConnectionsService()
+                          .formatAtSign(_atsignController.text);
+
                       Navigator.pop(context);
-                      if (!_validateFollowingAtsign(_atsignController.text)) {
+                      if (!_validateFollowingAtsign(formattedAtsign)) {
                         return;
                       }
                       Navigator.pop(context, true);
-                      await ConnectionProvider().follow(_atsignController.text);
+                      await ConnectionProvider().follow(formattedAtsign);
                     }
                   },
                   child: Text(

@@ -35,10 +35,31 @@ class ConnectionsService {
     following = AtFollowsList();
   }
 
-  Future<List<Atsign>> getAtsignsList({bool isFollowing = false}) async {
+  Future<void> getAtsignsList({bool isInit}) async {
+    var _connectionProvider = ConnectionProvider();
+    if (_connectionProvider.followingList.isEmpty || isInit) {
+      await createLists(isFollowing: true);
+      _connectionProvider.followingList = await _formAtSignData(following.list);
+    } else if (_connectionProvider.followersList.isEmpty || isInit) {
+      await createLists(isFollowing: false);
+      _connectionProvider.followersList = await _formAtSignData(followers.list);
+    }
+    if (isInit) {
+      var notificationsList = await _sdkService.notifyList();
+      //filtering notifications which has only new followers
+      for (var notification in notificationsList) {
+        if (notification.operation == Operation.update) {
+          await this.updateFollowers(notification, isSetStatus: false);
+        }
+        if (notification.operation == Operation.delete) {
+          await this.deleteFollowers(notification, isSetStatus: false);
+        }
+      }
+    }
+  }
+
+  Future<List<Atsign>> _formAtSignData(List<String> connectionsList) async {
     List<Atsign> atsignList = [];
-    await createLists(isFollowing);
-    var connectionsList = isFollowing ? following.list : followers.list;
     for (var connection in connectionsList) {
       var atsignData = await _getAtsignData(connection);
       atsignList.add(atsignData);
@@ -112,20 +133,21 @@ class ConnectionsService {
     return result;
   }
 
-  updateFollowers(AtNotification notification) async {
+  updateFollowers(AtNotification notification,
+      {bool isSetStatus = true}) async {
     var connectionProvider = ConnectionProvider();
     try {
-      connectionProvider.setStatus(Status.loading);
+      if (isSetStatus) connectionProvider.setStatus(Status.loading);
       var atKey = this._formKey();
       if (followers.list.contains(notification.fromAtSign)) {
-        connectionProvider.setStatus(Status.done);
+        if (isSetStatus) connectionProvider.setStatus(Status.done);
         return true;
       }
       followers.add(notification.fromAtSign);
       await _sdkService.put(atKey, followers.toString());
       var atsignData = await _getAtsignData(notification.fromAtSign);
       connectionProvider.followersList.add(atsignData);
-      connectionProvider.setStatus(Status.done);
+      if (isSetStatus) connectionProvider.setStatus(Status.done);
       await _sdkService.sync();
     } catch (err) {
       connectionProvider.error = err;
@@ -133,12 +155,13 @@ class ConnectionsService {
     }
   }
 
-  deleteFollowers(AtNotification notification) async {
+  deleteFollowers(AtNotification notification,
+      {bool isSetStatus = true}) async {
     var connectionProvider = ConnectionProvider();
     try {
-      connectionProvider.setStatus(Status.loading);
+      if (isSetStatus) connectionProvider.setStatus(Status.loading);
       if (!followers.list.contains(notification.fromAtSign)) {
-        connectionProvider.setStatus(Status.done);
+        if (isSetStatus) connectionProvider.setStatus(Status.done);
         return true;
       }
       followers.remove(notification.fromAtSign);
@@ -148,7 +171,7 @@ class ConnectionsService {
           : await this._sdkService.delete(atKey);
       connectionProvider.followersList
           .removeWhere((element) => element.title == notification.fromAtSign);
-      connectionProvider.setStatus(Status.done);
+      if (isSetStatus) connectionProvider.setStatus(Status.done);
       await _sdkService.sync();
     } catch (err) {
       connectionProvider.error = err;
@@ -157,7 +180,7 @@ class ConnectionsService {
   }
 
   ///creates following and followers list.
-  Future<void> createLists(bool isFollowing) async {
+  Future<void> createLists({bool isFollowing}) async {
     // for following list followers list is not required.
     if (!isFollowing) {
       var followersValue = await _sdkService.scanAndGet(AppConstants.followers);
@@ -166,19 +189,21 @@ class ConnectionsService {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
             !followersValue.metadata.isPublic;
       }
-    }
-    // for followers list following list is required to show the status of follow button.
-    var followingValue = await _sdkService.scanAndGet(AppConstants.following);
-    this.following.create(followingValue);
-    if (followingValue.metadata != null) {
-      connectionProvider.connectionslistStatus.isFollowingPrivate =
-          !followingValue.metadata.isPublic;
+    } else {
+      // for followers list following list is required to show the status of follow button.
+
+      var followingValue = await _sdkService.scanAndGet(AppConstants.following);
+      this.following.create(followingValue);
+      if (followingValue.metadata != null) {
+        connectionProvider.connectionslistStatus.isFollowingPrivate =
+            !followingValue.metadata.isPublic;
+      }
     }
   }
 
-  AtKey _formKey({bool isFollowing = false}) {
+  AtKey _formKey({bool isFollowing = false, String atsign}) {
     var atKey;
-    var atSign = _sdkService.atsign;
+    var atSign = atsign ?? _sdkService.atsign;
     if (isFollowing) {
       var atMetadata = Metadata()..isPublic = !following.isPrivate;
       atKey = AtKey()
@@ -245,9 +270,11 @@ class ConnectionsService {
     var notification = AtNotification.fromJson(jsonDecode(response));
     _logger.info(
         'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.fromAtSign} to:${notification.toAtSign}');
-    if (notification.operation == Operation.update) {
+    if (notification.operation == Operation.update &&
+        notification.toAtSign == _sdkService.atsign) {
       await updateFollowers(notification);
-    } else if (notification.operation == Operation.delete) {
+    } else if (notification.operation == Operation.delete &&
+        notification.toAtSign == _sdkService.atsign) {
       await deleteFollowers(notification);
     }
   }
@@ -282,6 +309,27 @@ class AtNotification {
       value: json['value'],
     );
   }
+
+  static List<AtNotification> fromJsonList(
+      List<Map<String, dynamic>> jsonList) {
+    List<AtNotification> notificationList = [];
+    for (var json in jsonList) {
+      notificationList.add(AtNotification.fromJson(json));
+    }
+    return notificationList;
+  }
+
+  // factory List<AtNotification>.fromJsonList(){
+  //   return List<AtNotification>.from();
+  // }
+
+  //  factory List<AtNotification>.fromJson( jsonList){
+  //   return [];
+  //   // for(var json in jsonList){
+  //   //   notificationList.add(AtNotification.fromJson(json));
+  //   // }
+  //   // return List<AtNotification>[];
+  // }
 }
 
 class AtFollowsValue extends AtValue {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
@@ -15,6 +17,8 @@ class SDKService {
   factory SDKService() {
     return _singleton;
   }
+
+  Map<String, bool> monitorConnectionMap = {};
 
   AtClientService _atClientServiceInstance;
   String _atsign;
@@ -44,6 +48,29 @@ class SDKService {
     return await _atClientServiceInstance.atClient.put(atKey, value).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
         onTimeout: () => _onTimeOut());
+  }
+
+  ///Returns list of latest notifications of followers with `update` operation.
+  ///Returns null if such notifications are not present.
+  Future<List<AtNotification>> notifyList() async {
+    var response = await _atClientServiceInstance.atClient
+        .notifyList(regex: AppConstants.following);
+    response = response.toString().replaceAll('data:', '');
+    List<AtNotification> notificationList = AtNotification.fromJsonList(
+        List<Map<String, dynamic>>.from(jsonDecode(response)));
+    notificationList.sort((notification1, notification2) =>
+        notification2.dateTime.compareTo(notification1.dateTime));
+    Set<AtNotification> uniqueNotifications = {};
+    Set<String> uniqueKeys = {};
+    for (var notification in notificationList) {
+      // if (notification.operation == Operation.update) {
+      bool isUnique = uniqueKeys.add(notification.fromAtSign);
+      if (isUnique) {
+        uniqueNotifications.add(notification);
+      }
+      // }
+    }
+    return uniqueNotifications.toList();
   }
 
   Future<AtFollowsValue> get(AtKey atkey) async {
@@ -77,9 +104,12 @@ class SDKService {
   }
 
   Future<bool> startMonitor(Function callback) async {
-    String privateKey = await getPrivateKey(_atsign);
-    _atClientServiceInstance.atClient.startMonitor(privateKey, callback);
-    _logger.info('Monitor Started!');
+    if (!monitorConnectionMap.containsKey(_atsign)) {
+      String privateKey = await getPrivateKey(_atsign);
+      _atClientServiceInstance.atClient.startMonitor(privateKey, callback);
+      monitorConnectionMap.putIfAbsent(_atsign, () => true);
+      _logger.info('Monitor Started for $_atsign!');
+    }
     return true;
   }
 
@@ -92,5 +122,11 @@ class SDKService {
   _onTimeOut() {
     _logger.severe('Reponse Timed Out!');
     throw ResponseTimeOutException();
+  }
+
+  toAtNotification(String response) {
+    response = response.toString().replaceAll(RegExp('[|]'), '');
+    response = response.replaceAll('notification:', '').trim();
+    return AtNotification.fromJson(jsonDecode(response));
   }
 }

@@ -2,7 +2,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 
 class AtFollowsList {
-  List<String> list;
+  List<String> list = [];
 
   AtKey _atKey;
 

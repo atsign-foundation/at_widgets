@@ -83,20 +83,7 @@ class ConnectionProvider extends ChangeNotifier {
     bool isInit = status == null;
     try {
       setStatus(Status.loading);
-      if (isFollowing || isInit) {
-        followingList = followingList.isEmpty
-            ? await _connectionsService.getAtsignsList(
-                isFollowing: isInit ? true : isFollowing)
-            : followingList;
-        atsignsList = followingList;
-      }
-      if (!isFollowing || isInit) {
-        followersList = followersList.isEmpty
-            ? await _connectionsService.getAtsignsList(
-                isFollowing: isInit ? false : isFollowing)
-            : followersList;
-        atsignsList = followersList;
-      }
+      await _connectionsService.getAtsignsList(isInit: isInit);
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
