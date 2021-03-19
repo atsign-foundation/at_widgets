@@ -1,3 +1,7 @@
+<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+
+### Now for some internet optimism.
+
 # atsign_authentication_helper
 
 A flutter plugin project to cover the onboarding flow of @protocol.
