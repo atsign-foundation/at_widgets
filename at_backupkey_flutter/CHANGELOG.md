@@ -1,3 +1,5 @@
-## 0.0.1
+## 1.0.0+1
+- Upgraded at_client dependency
 
-* TODO: Describe initial release.
+## 1.0.0
+- Initial version

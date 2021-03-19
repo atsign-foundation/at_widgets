@@ -14,8 +14,9 @@ class AppConstants {
 
   static set rootDomain(String domain) {
     _rootDomain = domain ?? 'root.atsign.org';
-    website =
-        _rootDomain == 'root.atsign.org' ? 'www.atsign.com' : 'www.atsign.wtf';
+    website = _rootDomain == 'root.atsign.org'
+        ? 'https://atsign.com'
+        : 'https://atsign.wtf';
   }
 }
 

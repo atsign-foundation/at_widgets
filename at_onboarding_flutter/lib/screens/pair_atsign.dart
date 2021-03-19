@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/private_key_qrcode_generator.dart';
+import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
@@ -50,7 +51,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   String _incorrectKeyFile =
       'Unable to fetch the keys from chosen file. Please choose correct file';
   String _failedFileProcessing = 'Failed in processing files. Please try again';
-
   @override
   void initState() {
     checkPermissions();
@@ -176,8 +176,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     var storageStatus = await Permission.storage.status;
     _logger.info("camera status => $cameraStatus");
     _logger.info('storage status is $storageStatus');
-
-    if (cameraStatus.isUndetermined || cameraStatus.isDenied) {
+    if (cameraStatus.isUndetermined && storageStatus.isUndetermined) {
+      await askPermissions(Permission.unknown);
+    } else if (cameraStatus.isUndetermined || cameraStatus.isDenied) {
       await askPermissions(Permission.camera);
     } else if (storageStatus.isUndetermined || storageStatus.isDenied) {
       await askPermissions(Permission.storage);
@@ -193,6 +194,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       await Permission.camera.request();
     } else if (type == Permission.storage) {
       await Permission.storage.request();
+    } else {
+      await [Permission.camera, Permission.storage].request();
     }
   }
 
@@ -421,7 +424,22 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
     return Scaffold(
         backgroundColor: ColorConstants.light,
-        appBar: CustomAppBar(title: Strings.pairAtsignTitle),
+        appBar: CustomAppBar(
+          title: Strings.pairAtsignTitle,
+          actionItems: [
+            IconButton(
+                icon: Icon(Icons.help),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WebViewScreen(
+                                title: Strings.faqTitle,
+                                url: Strings.faqUrl,
+                              )));
+                })
+          ],
+        ),
         body: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.symmetric(
