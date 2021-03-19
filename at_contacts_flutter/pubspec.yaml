@@ -1,7 +1,8 @@
 name: at_contacts_flutter
 description: A flutter plugin project to provide ease of managing contacts for an atsign using atprotocol.
-version: 0.0.3
+version: 0.0.4
 homepage: https://atsign.com/
+repository: https://github.com/atsign-foundation/at_widgets/tree/dev_env/at_contacts_flutter
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -11,10 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  at_client_mobile: ^1.0.0+5
-  at_commons: ^1.0.1+4
-  at_lookup: ^1.0.0+4
-  at_contact: ^1.0.0
+  at_client_mobile: ^1.0.0+8
+  at_commons: ^1.0.1+5
+  at_lookup: ^1.0.0+5
+  at_contact: ^1.0.0+2
   at_common_flutter: ^0.0.3
   flutter_slidable: ^0.5.7
 
