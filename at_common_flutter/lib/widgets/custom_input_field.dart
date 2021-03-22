@@ -1,3 +1,5 @@
+import 'package:at_common_flutter/at_common_flutter.dart';
+
 /// This is a custom input field
 /// @param [hintText] is a [String] to display if the input field is empty
 /// @param [initialValue] is a [String] to pre-populate the input field
@@ -57,11 +59,15 @@ class CustomInputField extends StatelessWidget {
           Expanded(
             child: TextField(
               readOnly: isReadOnly,
+              style: TextStyle(
+                fontSize: 15.toFont,
+              ),
               decoration: InputDecoration(
                 hintText: hintText,
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
-                hintStyle: TextStyle(color: ColorConstants.darkGrey),
+                hintStyle: TextStyle(
+                    color: ColorConstants.darkGrey, fontSize: 15.toFont),
               ),
               onTap: onTap ?? null,
               onChanged: (val) {

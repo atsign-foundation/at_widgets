@@ -97,13 +97,13 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                       child: GestureDetector(
                         onTap: widget.onCrossPressed,
                         child: Container(
-                          height: 12,
-                          width: 12,
+                          height: 20.toHeight,
+                          width: 20.toHeight,
                           decoration: BoxDecoration(
                               color: Colors.black, shape: BoxShape.circle),
                           child: Icon(
                             Icons.close,
-                            size: 10,
+                            size: 15.toHeight,
                             color: Colors.white,
                           ),
                         ),
