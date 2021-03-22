@@ -139,6 +139,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 if (widget.showContacts &&
                                     c.contact != null &&
                                     c.contact.atSign
+                                        .toString()
                                         .toUpperCase()
                                         .contains(searchText.toUpperCase())) {
                                   _filteredList.add(c);
