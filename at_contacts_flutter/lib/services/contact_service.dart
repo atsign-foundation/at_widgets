@@ -78,8 +78,11 @@ class ContactService {
         }
       }
       contactList = tempContactList;
-      contactList.sort(
-          (a, b) => a.atSign.substring(1).compareTo(b.atSign.substring(1)));
+      print("error here => $contactList");
+      contactList.sort((a, b) => a?.atSign
+          .toString()
+          ?.substring(1)
+          ?.compareTo(b?.atSign.toString()?.substring(1)));
       contactSink.add(contactList);
       return contactList;
     } catch (e) {
@@ -121,7 +124,7 @@ class ContactService {
     } else if (atSign[0] != '@') {
       atSign = '@' + atSign;
     }
-
+    print('atsignNameMETHOD===>$atSign');
     try {
       isContactPresent = false;
 
@@ -147,7 +150,7 @@ class ContactService {
           atSign: atSign,
           tags: details,
         );
-
+        print('details==>${contact.atSign}');
         var result = await atContactImpl
             .add(contact)
             .catchError((e) => print('error to add contact => $e'));
