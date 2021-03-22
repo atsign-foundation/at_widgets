@@ -157,7 +157,7 @@ class _NewGroupState extends State<NewGroup> {
                       Text('Group name', style: TextStyle(fontSize: 18.toFont)),
                       SizedBox(height: 5),
                       Padding(
-                        padding: const EdgeInsets.only(right: 00.0),
+                        padding: const EdgeInsets.only(right: 15.0),
                         child: Container(
                           width: 330.toWidth,
                           height: 50.toHeight,
