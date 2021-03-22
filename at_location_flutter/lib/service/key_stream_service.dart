@@ -206,14 +206,21 @@ class KeyStreamService {
       }
     }
     notifyListeners();
-    SendLocationNotification().findAtSignsToShareLocationWith();
+
+    // Update location sharing
+    if ((locationData.isSharing)) {
+      if (locationData.atsignCreator == currentAtSign)
+        SendLocationNotification().addMember(locationData);
+    } else
+      SendLocationNotification().removeMember(locationData.key);
   }
 
   removeData(String key) {
     allLocationNotifications
         .removeWhere((notification) => key.contains(notification.atKey.key));
     notifyListeners();
-    SendLocationNotification().findAtSignsToShareLocationWith();
+    // Remove location sharing
+    SendLocationNotification().removeMember(key);
   }
 
   Future<KeyLocationModel> addDataToList(
@@ -264,8 +271,13 @@ class KeyStreamService {
     print('addDataToList:${allLocationNotifications}');
 
     notifyListeners();
-    SendLocationNotification().findAtSignsToShareLocationWith();
 
+    if ((tempHyridNotificationModel.locationNotificationModel.isSharing)) {
+      if (tempHyridNotificationModel.locationNotificationModel.atsignCreator ==
+          currentAtSign)
+        SendLocationNotification()
+            .addMember(tempHyridNotificationModel.locationNotificationModel);
+    }
     return tempHyridNotificationModel;
   }
 

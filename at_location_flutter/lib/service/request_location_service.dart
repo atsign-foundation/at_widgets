@@ -1,6 +1,5 @@
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
-import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
 import 'at_location_notification_listener.dart';
@@ -82,8 +81,6 @@ class RequestLocationService {
       if ((result) && (!isSharing)) {
         KeyStreamService().removeData(atKey.key);
       }
-      // SendLocationNotification().findAtSignsToShareLocationWith();
-      // Todo: Because of this even after turning the location off, it was turning it on
 
       return result;
     } catch (e) {

@@ -4,6 +4,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 
 import 'at_location_notification_listener.dart';
@@ -66,7 +67,7 @@ class LocationService {
 
   addMyDetailsToHybridUsersList() async {
     String _atsign = AtLocationNotificationListener().currentAtSign;
-    LatLng mylatlng = await MyLocation().myLocation();
+    LatLng mylatlng = await getMyLocation();
     var _image = await MasterLocationService().getImageOfAtsignNew(_atsign);
 
     HybridModel _myData = HybridModel(
@@ -80,6 +81,9 @@ class LocationService {
     if (addCurrentUserMarker) {
       hybridUsersList.add(myData);
     }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _atHybridUsersController.add(hybridUsersList);
+    });
     // this is added to _atHybridUsersController using WidgetsBinding.instance.addPostFrameCallback from at_location_flutter_plugin
     // adding it here was leading to Ticker not getting disposed
   }
@@ -210,9 +214,15 @@ class LocationService {
         var _res;
         if (etaFrom != null)
           _res = await DistanceCalculate().calculateETA(etaFrom, user.latLng);
-        else
-          _res = await DistanceCalculate()
-              .calculateETA(myData.latLng, user.latLng);
+        else {
+          LatLng mylatlng;
+          if (myData != null)
+            mylatlng = myData.latLng;
+          else
+            mylatlng = await getMyLocation();
+          _res = await DistanceCalculate().calculateETA(mylatlng, user.latLng);
+        }
+
         return _res;
       } catch (e) {
         print('Error in _calculateEta $e');
