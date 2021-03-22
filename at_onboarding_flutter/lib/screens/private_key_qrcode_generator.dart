@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
@@ -13,10 +11,6 @@ import 'package:at_onboarding_flutter/widgets/custom_appbar.dart';
 import 'package:at_onboarding_flutter/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:at_utils/at_logger.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:share/share.dart';
 
 class PrivateKeyQRCodeGenScreen extends StatefulWidget {
   PrivateKeyQRCodeGenScreen({Key key}) : super(key: key);
@@ -27,10 +21,8 @@ class PrivateKeyQRCodeGenScreen extends StatefulWidget {
 }
 
 class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
-  var _logger = AtSignLogger('AtPrivateKeyQRCodeGeneration');
   String atsign;
   var aesKey;
-  var _size;
   var _onboardingService = OnboardingService.getInstance();
   @override
   void initState() {
@@ -54,7 +46,6 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     if (atsign == null) {
       return Text('An @sign is required.');
     }
-    _size = MediaQuery.of(context).size;
     return Opacity(
       opacity: _loading ? 0.2 : 1,
       child: AbsorbPointer(

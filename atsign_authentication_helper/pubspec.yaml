@@ -1,7 +1,8 @@
 name: atsign_authentication_helper
 description: A flutter plugin project to provide authentication for atsign apps. It provides both QR scanner and feature to upload file.
-version: 0.0.4
+version: 0.0.5
 homepage: https://atsign.com/
+repository: https://github.com/atsign-foundation/at_widgets/tree/dev_env/atsign_authentication_helper
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -20,10 +21,10 @@ dependencies:
   webview_flutter: ^1.0.7
   qr_flutter: ^3.2.0
   
-  at_client_mobile: ^1.0.0+5
-  at_commons: ^1.0.1+4
-  at_utils: ^1.0.1+4
-  at_client: ^1.0.1+5
+  at_client_mobile: ^1.0.0+8
+  at_commons: ^1.0.1+5
+  at_utils: ^1.0.1+5
+  at_client: ^1.0.1+7
   pedantic: ^1.9.0
 
 dev_dependencies:

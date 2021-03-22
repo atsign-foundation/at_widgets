@@ -68,8 +68,4 @@ class AtService {
     atsign = !atsign.startsWith('@') ? '@' + atsign : atsign;
     return atsign;
   }
-
-  _sync() async {
-    await _getAtClientForAtsign().getSyncManager().sync();
-  }
 }

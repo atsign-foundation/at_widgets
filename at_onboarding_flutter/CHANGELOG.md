@@ -1,3 +1,5 @@
-## 0.0.1
+## 1.0.0+1
+- Scanning QRcode fix, pubspec dependency upgrade
 
-* TODO: Describe initial release.
+## 1.0.0
+- Initial version
