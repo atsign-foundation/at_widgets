@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   archive: ^2.0.13
-  file_picker: 2.0.7
+  file_picker: ^2.0.7
   flutter_qr_reader: ^1.0.3
   url_launcher: ^5.7.0
   at_backupkey_flutter:
