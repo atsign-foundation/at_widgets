@@ -13,7 +13,7 @@ dependencies:
 
   path_provider: ^1.6.27
   archive: ^2.0.13
-  file_picker: ^2.1.6
+  file_picker: ^2.0.7
   flutter_qr_reader: ^1.0.3
   permission_handler: ^5.0.1+2
   share: ^0.6.5+4
