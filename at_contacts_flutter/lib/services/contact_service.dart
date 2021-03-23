@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 
@@ -12,10 +13,11 @@ class ContactService {
   static ContactService _instance = ContactService._();
   factory ContactService() => _instance;
 
-  static AtContactsImpl atContactImpl;
+  AtContactsImpl atContactImpl;
   AtClientImpl atClientInstance;
   String rootDomain;
   int rootPort;
+  AtContact loggedInUserDetails;
 
   StreamController<List<AtContact>> contactStreamController =
       StreamController<List<AtContact>>.broadcast();
@@ -56,6 +58,8 @@ class ContactService {
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
     atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
+    loggedInUserDetails = await getAtSignDetails(currentAtSign);
+    contactList = await atContactImpl.listContacts();
   }
 
   resetData() {
