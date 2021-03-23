@@ -154,58 +154,63 @@ class _NewGroupState extends State<NewGroup> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Group name', style: TextStyle(fontSize: 15.toFont)),
+                      Text('Group name', style: TextStyle(fontSize: 18.toFont)),
                       SizedBox(height: 5),
-                      Container(
-                        width: 240.toWidth,
-                        height: 50.toHeight,
-                        decoration: BoxDecoration(
-                          color: AllColors().INPUT_FIELD_COLOR,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextField(
-                                readOnly: false,
-                                focusNode: textFieldFocus,
-                                decoration: InputDecoration(
-                                  // hintText: hintText,
-                                  enabledBorder: InputBorder.none,
-                                  border: InputBorder.none,
-                                  hintStyle: TextStyle(
-                                      color: AllColors().INPUT_FIELD_COLOR),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15.0),
+                        child: Container(
+                          width: 330.toWidth,
+                          height: 50.toHeight,
+                          decoration: BoxDecoration(
+                            color: AllColors().INPUT_FIELD_COLOR,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: TextField(
+                                  readOnly: false,
+                                  focusNode: textFieldFocus,
+                                  style: TextStyle(
+                                    fontSize: 15.toFont,
+                                  ),
+                                  decoration: InputDecoration(
+                                    // hintText: hintText,
+                                    enabledBorder: InputBorder.none,
+                                    border: InputBorder.none,
+                                    hintStyle: TextStyle(
+                                        color: AllColors().INPUT_FIELD_COLOR,
+                                        fontSize: 15.toFont),
+                                  ),
+                                  onTap: () {
+                                    if (showEmojiPicker)
+                                      setState(() {
+                                        showEmojiPicker = false;
+                                      });
+                                  },
+                                  onChanged: (val) {},
+                                  controller: textController,
+                                  onSubmitted: (str) {},
                                 ),
+                              ),
+                              InkWell(
                                 onTap: () {
-                                  if (showEmojiPicker)
-                                    setState(() {
-                                      showEmojiPicker = false;
-                                    });
-                                },
-                                onChanged: (val) {},
-                                controller: textController,
-                                onSubmitted: (str) {},
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                showEmojiPicker = !showEmojiPicker;
-                                if (showEmojiPicker) {
-                                  textFieldFocus.unfocus();
-                                }
-                                // else {
-                                //   textFieldFocus.requestFocus();
-                                // }
+                                  showEmojiPicker = !showEmojiPicker;
+                                  if (showEmojiPicker) {
+                                    textFieldFocus.unfocus();
+                                  }
 
-                                setState(() {});
-                              },
-                              child: Icon(
-                                Icons.emoji_emotions_outlined,
-                                color: Colors.grey,
-                              ),
-                            )
-                          ],
+                                  setState(() {});
+                                },
+                                child: Icon(
+                                  Icons.emoji_emotions_outlined,
+                                  color: Colors.grey,
+                                  size: 20.toFont,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -219,6 +224,7 @@ class _NewGroupState extends State<NewGroup> {
             Expanded(
               child: Container(
                 width: double.infinity,
+                padding: EdgeInsets.only(right: 15, left: 15),
                 child: SingleChildScrollView(
                   child: GridView.count(
                     physics: ScrollPhysics(),
