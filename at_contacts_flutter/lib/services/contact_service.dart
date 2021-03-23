@@ -42,7 +42,9 @@ class ContactService {
     blockedContactStreamController.close();
   }
 
-  List<AtContact> contactList, blockContactList, selectedContacts = [];
+  List<AtContact> contactList = [],
+      blockContactList = [],
+      selectedContacts = [];
   bool isContactPresent, limitReached = false;
 
   String getAtSignError = '';
