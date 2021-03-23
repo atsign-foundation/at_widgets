@@ -4,7 +4,6 @@ import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'at_location_notification_listener.dart';
 
-//TODO: Divide services to -> Map_services, at_sdk_services & UI_servcies
 class SharingLocationService {
   static final SharingLocationService _singleton =
       SharingLocationService._internal();
@@ -19,11 +18,8 @@ class SharingLocationService {
     try {
       AtKey atKey;
       if (minutes != null)
-        atKey = newAtKey(
-            (minutes * 60000),
-            "sharelocation-${DateTime.now().microsecondsSinceEpoch}",
-            // "randomKey-${DateTime.now().microsecondsSinceEpoch}",
-            atsign,
+        atKey = newAtKey((minutes * 60000),
+            "sharelocation-${DateTime.now().microsecondsSinceEpoch}", atsign,
             ttl: (minutes * 60000),
             expiresAt: DateTime.now().add(Duration(minutes: minutes)));
       else
@@ -51,8 +47,7 @@ class SharingLocationService {
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel));
       print('sendLocationNotification:$result');
-      print(
-          "data sent: ${LocationNotificationModel.convertLocationNotificationToJson(locationNotificationModel)}");
+
       if (result) {
         KeyStreamService().addDataToList(locationNotificationModel);
       }
@@ -82,7 +77,6 @@ class SharingLocationService {
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel));
       print('sendLocationNotificationAcknowledgment:$result');
-      print('aknowledged data sent -> ${locationNotificationModel.isAccepted}');
       return result;
     } catch (e) {
       print('sending share awk failed $e');
@@ -135,8 +129,6 @@ class SharingLocationService {
       }
 
       print('update result - $result');
-      print(
-          'data updated ${LocationNotificationModel.convertLocationNotificationToJson(locationNotificationModel)}');
       return result;
     } catch (e) {
       print('update share location failed $e');
@@ -204,7 +196,6 @@ class SharingLocationService {
     });
   }
 
-  //
   AtKey newAtKey(int ttr, String key, String sharedWith,
       {int ttl, DateTime expiresAt}) {
     AtKey atKey = AtKey()

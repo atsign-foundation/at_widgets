@@ -32,8 +32,7 @@ class RequestLocationService {
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel));
       print('requestLocationNotification:$result');
-      print(
-          "data sent: ${LocationNotificationModel.convertLocationNotificationToJson(locationNotificationModel)}");
+
       if (result) {
         KeyStreamService().addDataToList(locationNotificationModel);
       }
@@ -77,7 +76,6 @@ class RequestLocationService {
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel));
       print('requestLocationAcknowledgment $result');
-      print('aknowledged data sent -> ${locationNotificationModel.isAccepted}');
       if ((result) && (!isSharing)) {
         KeyStreamService().removeData(atKey.key);
       }
@@ -92,7 +90,6 @@ class RequestLocationService {
     LocationNotificationModel locationNotificationModel,
   ) async {
     try {
-      // dont use the locationNotificationModel sent with reuqest acknowledgment
       String atkeyMicrosecondId = locationNotificationModel.key
           .split('requestlocation-')[1]
           .split('@')[0];
@@ -131,8 +128,6 @@ class RequestLocationService {
             .mapUpdatedLocationDataToWidget(locationNotificationModel);
 
       print('update result - $result');
-      print(
-          'data updated ${LocationNotificationModel.convertLocationNotificationToJson(locationNotificationModel)}');
 
       return result;
     } catch (e) {
@@ -153,7 +148,6 @@ class RequestLocationService {
           await requestLocationAcknowledgment(locationNotificationModel, false);
     }
     return result;
-    // print('remove person called Request');
   }
 
   sendDeleteAck(LocationNotificationModel locationNotificationModel) async {
@@ -174,52 +168,7 @@ class RequestLocationService {
     print('requestLocationAcknowledgment $result');
   }
 
-  deleteKey() async {
-    // var result = ClientSdkService.getInstance()
-    //     .atClientServiceInstance
-    //     .atClient
-    //     .delete(Provider.of<HybridProvider>(NavService.navKey.currentContext,
-    //             listen: false)
-    //         .allHybridNotifications[0]
-    //         .atKey);
-    // print('delete $result');
-
-    // String atkeyMicrosecondId = locationNotificationModel.key
-    //     .split('requestlocation-')[1]
-    //     .split('@')[0];
-
-    // List<String> response = await ClientSdkService.getInstance()
-    //     .atClientServiceInstance
-    //     .atClient
-    //     .getKeys(
-    //       regex: 'requestlocation-$atkeyMicrosecondId',
-    //     );
-
-    // AtKey key = getAtKey(response[0]);
-
-    // locationNotificationModel.isAcknowledgment = true;
-
-    // var result = await ClientSdkService.getInstance()
-    //     .atClientServiceInstance
-    //     .atClient
-    //     .delete(key);
-    // return result;
-
-    List<String> response = await AtLocationNotificationListener()
-        .atClientInstance
-        .getKeys(regex: '');
-    print(response.length.toString());
-
-    response.forEach((key) async {
-      print('key $key');
-      AtKey atKey = getAtKey(key);
-      print('atkey $atKey');
-      var result =
-          await AtLocationNotificationListener().atClientInstance.delete(atKey);
-      print('deleted $result');
-      return result;
-    });
-  }
+  deleteKey() async {}
 
   AtKey newAtKey(int ttr, String key, String sharedWith,
       {int ttl, DateTime expiresAt}) {

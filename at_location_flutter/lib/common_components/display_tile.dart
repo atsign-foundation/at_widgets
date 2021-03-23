@@ -29,26 +29,6 @@ class _DisplayTileState extends State<DisplayTile> {
   Uint8List image;
   AtContact contact;
   AtContactsImpl atContact;
-  @override
-  void initState() {
-    super.initState();
-    getEventCreator();
-  }
-
-  getEventCreator() async {
-    // // atContact = await AtContactsImpl.getInstance(LocationService().getAtSign());
-    // contact = await atContact.get(widget.atsignCreator);
-    // if (contact != null) {
-    //   if (contact.tags != null && contact.tags['image'] != null) {
-    //     List<int> intList = contact.tags['image'].cast<int>();
-    //     if (Uint8List.fromList(intList) != null) {
-    //       setState(() {
-    //         image = Uint8List.fromList(intList);
-    //       });
-    //     }
-    //   }
-    // }
-  }
 
   @override
   Widget build(BuildContext context) {
