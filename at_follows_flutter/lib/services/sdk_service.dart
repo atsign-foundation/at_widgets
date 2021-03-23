@@ -52,9 +52,9 @@ class SDKService {
 
   ///Returns list of latest notifications of followers with `update` operation.
   ///Returns null if such notifications are not present.
-  Future<List<AtNotification>> notifyList() async {
+  Future<List<AtNotification>> notifyList({String fromDate}) async {
     var response = await _atClientServiceInstance.atClient
-        .notifyList(regex: AppConstants.following);
+        .notifyList(regex: AppConstants.following, fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
     if (response == 'null') {
       return [];
@@ -102,14 +102,15 @@ class SDKService {
             onTimeout: () => _onTimeOut());
     AtFollowsValue value =
         scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
-    value.atKey = scanKey.isNotEmpty ? scanKey[0] : null;
+    // value.atKey = scanKey.isNotEmpty ? scanKey[0] : null;
     return value;
   }
 
   Future<bool> startMonitor(Function callback) async {
     if (!monitorConnectionMap.containsKey(_atsign)) {
       String privateKey = await getPrivateKey(_atsign);
-      _atClientServiceInstance.atClient.startMonitor(privateKey, callback);
+      await _atClientServiceInstance.atClient
+          .startMonitor(privateKey, callback);
       monitorConnectionMap.putIfAbsent(_atsign, () => true);
       _logger.info('Monitor Started for $_atsign!');
     }

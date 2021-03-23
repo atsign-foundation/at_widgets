@@ -50,8 +50,8 @@ class _FollowersState extends State<Followers> {
                   child: CircularProgressIndicator(),
                 ),
                 SizedBox(height: 5.0.toHeight),
-                Text(Strings.loadingDescription,
-                    style: CustomTextStyles.fontR14primary)
+                // Text(Strings.loadingDescription,
+                //     style: CustomTextStyles.fontR14primary)
               ],
             ),
           ),
@@ -88,121 +88,130 @@ class _FollowersState extends State<Followers> {
                 .contains(widget.searchText.toUpperCase());
           });
         }
-        return Column(
-          children: [
-            SwitchListTile(
-              title: Text(
-                  widget.isFollowing
-                      ? Strings.privateFollowingList
-                      : Strings.privateFollowersList,
-                  style: CustomTextStyles.fontBold14primary),
-              value: widget.isFollowing
-                  ? provider.connectionslistStatus.isFollowingPrivate
-                  : provider.connectionslistStatus.isFollowersPrivate,
-              onChanged: (value) {
-                print('changed to $value');
-                provider.changeListStatus(widget.isFollowing, value);
-              },
-              inactiveTrackColor: ColorConstants.inactiveTrackColor,
-              inactiveThumbColor: ColorConstants.inactiveThumbColor,
-              activeTrackColor: ColorConstants.activeTrackColor,
-              activeColor: ColorConstants.activeColor,
-            ),
-            SizedBox(height: 10.toHeight),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: 26,
-              itemBuilder: (_, alphabetIndex) {
-                List<Atsign> sortedListWithAlphabet = [];
-                String currentAlphabet =
-                    String.fromCharCode(alphabetIndex + 65).toUpperCase();
+        return Expanded(
+          child: Column(
+            children: [
+              SwitchListTile(
+                title: Text(
+                    widget.isFollowing
+                        ? Strings.privateFollowingList
+                        : Strings.privateFollowersList,
+                    style: CustomTextStyles.fontBold14primary),
+                value: widget.isFollowing
+                    ? provider.connectionslistStatus.isFollowingPrivate
+                    : provider.connectionslistStatus.isFollowersPrivate,
+                onChanged: (value) {
+                  print('changed to $value');
+                  provider.changeListStatus(widget.isFollowing, value);
+                },
+                inactiveTrackColor: ColorConstants.inactiveTrackColor,
+                inactiveThumbColor: ColorConstants.inactiveThumbColor,
+                activeTrackColor: ColorConstants.activeTrackColor,
+                activeColor: ColorConstants.activeColor,
+              ),
+              SizedBox(height: 10.toHeight),
+              Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  // physics: AlwaysScrollableScrollPhysics(),
+                  // shrinkWrap: true,
+                  itemCount: 26,
+                  itemBuilder: (_, alphabetIndex) {
+                    List<Atsign> sortedListWithAlphabet = [];
+                    String currentAlphabet =
+                        String.fromCharCode(alphabetIndex + 65).toUpperCase();
 
-                tempAtsignList.forEach((atsign) {
-                  var index = atsign.title.indexOf(RegExp('[A-Z]|[a-z]'));
-                  if (atsign.title[index].toUpperCase() == currentAlphabet) {
-                    if (widget.searchText != null &&
-                        atsign.title
-                            .toUpperCase()
-                            .contains(widget.searchText.toUpperCase())) {
-                      sortedListWithAlphabet.add(atsign);
+                    tempAtsignList.forEach((atsign) {
+                      var index = atsign.title.indexOf(RegExp('[A-Z]|[a-z]'));
+                      if (atsign.title[index].toUpperCase() ==
+                          currentAlphabet) {
+                        if (widget.searchText != null &&
+                            atsign.title
+                                .toUpperCase()
+                                .contains(widget.searchText.toUpperCase())) {
+                          sortedListWithAlphabet.add(atsign);
+                        }
+                      }
+                    });
+                    if (sortedListWithAlphabet.isEmpty) {
+                      return Container();
                     }
-                  }
-                });
-                if (sortedListWithAlphabet.isEmpty) {
-                  return Container();
-                }
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(currentAlphabet,
-                            style: CustomTextStyles.fontR14primary),
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.8,
-                            color: ColorConstants.borderColor,
-                          ),
-                        )
+                        Row(
+                          children: [
+                            Text(currentAlphabet,
+                                style: CustomTextStyles.fontR14primary),
+                            Expanded(
+                              child: Divider(
+                                thickness: 0.8,
+                                color: ColorConstants.borderColor,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 4.toHeight,
+                        ),
+                        ListView.separated(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (_, index) {
+                              Atsign currentAtsign =
+                                  sortedListWithAlphabet[index];
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: ColorConstants.fillColor,
+                                  radius: 20.toFont,
+                                  child: currentAtsign.profilePicture != null
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20.toFont),
+                                          child: Image.memory(
+                                            currentAtsign.profilePicture,
+                                          ),
+                                        )
+                                      : Icon(Icons.person_outline,
+                                          color: Colors.black, size: 25.toFont),
+                                ),
+                                title: Text(currentAtsign.title,
+                                    style: CustomTextStyles.fontR16primary),
+                                subtitle: currentAtsign.subtitle != null
+                                    ? Text(currentAtsign.subtitle,
+                                        style: CustomTextStyles.fontR14primary)
+                                    : null,
+                                trailing: CustomButton(
+                                    isActive: !currentAtsign.isFollowing,
+                                    onPressedCallBack: (value) async {
+                                      print('received param is $value');
+                                      if (value) {
+                                        provider.unfollow(currentAtsign.title);
+                                      } else {
+                                        provider.follow(currentAtsign.title);
+                                      }
+                                      sortedListWithAlphabet[index]
+                                          .isFollowing = !value;
+                                      setState(() {});
+                                    },
+                                    text: currentAtsign.isFollowing
+                                        ? Strings.Unfollow
+                                        : Strings.Follow),
+                              );
+                            },
+                            separatorBuilder: (_, index) => Divider(
+                                  thickness: 0.8,
+                                  color: ColorConstants.borderColor,
+                                ),
+                            itemCount: sortedListWithAlphabet.length),
                       ],
-                    ),
-                    SizedBox(
-                      height: 4.toHeight,
-                    ),
-                    ListView.separated(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (_, index) {
-                          Atsign currentAtsign = sortedListWithAlphabet[index];
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: ColorConstants.fillColor,
-                              radius: 20.toFont,
-                              child: currentAtsign.profilePicture != null
-                                  ? ClipRRect(
-                                      borderRadius:
-                                          BorderRadius.circular(20.toFont),
-                                      child: Image.memory(
-                                        currentAtsign.profilePicture,
-                                      ),
-                                    )
-                                  : Icon(Icons.person_outline,
-                                      color: Colors.black, size: 25.toFont),
-                            ),
-                            title: Text(currentAtsign.title,
-                                style: CustomTextStyles.fontR16primary),
-                            subtitle: currentAtsign.subtitle != null
-                                ? Text(currentAtsign.subtitle,
-                                    style: CustomTextStyles.fontR14primary)
-                                : null,
-                            trailing: CustomButton(
-                                isActive: !currentAtsign.isFollowing,
-                                onPressedCallBack: (value) async {
-                                  print('received param is $value');
-                                  if (value) {
-                                    provider.unfollow(currentAtsign.title);
-                                  } else {
-                                    provider.follow(currentAtsign.title);
-                                  }
-                                  sortedListWithAlphabet[index].isFollowing =
-                                      !value;
-                                  setState(() {});
-                                },
-                                text: currentAtsign.isFollowing
-                                    ? Strings.Unfollow
-                                    : Strings.Follow),
-                          );
-                        },
-                        separatorBuilder: (_, index) => Divider(
-                              thickness: 0.8,
-                              color: ColorConstants.borderColor,
-                            ),
-                        itemCount: sortedListWithAlphabet.length)
-                  ],
-                );
-              },
-            ),
-          ],
+                    );
+                  },
+                ),
+              ),
+              // SizedBox(height: 10.toHeight),
+            ],
+          ),
         );
       } else if (provider.status == Status.error) {
         return AtExceptionHandler().handle(provider.error, context);

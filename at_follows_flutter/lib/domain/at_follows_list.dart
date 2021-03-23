@@ -4,13 +4,13 @@ import 'package:at_follows_flutter/services/connections_service.dart';
 class AtFollowsList {
   List<String> list = [];
 
-  AtKey _atKey;
+  AtFollowsValue _atKey;
 
   ///default it is `false`. Set `true` to make [list] as private.
   bool isPrivate = false;
 
   create(AtFollowsValue atValue) {
-    _atKey = atValue.atKey;
+    _atKey = atValue;
     list = atValue.value != null && atValue.value != ''
         ? atValue.value.split(',')
         : [];
@@ -50,9 +50,9 @@ class AtFollowsList {
     return list.join(',');
   }
 
-  set setKey(AtKey key) {
+  set setKey(AtFollowsValue key) {
     this._atKey = key;
   }
 
-  get getKey => _atKey;
+  AtFollowsValue get getKey => _atKey;
 }

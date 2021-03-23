@@ -52,40 +52,42 @@ class _ConnectionsState extends State<Connections> {
     SDKService().setClientService = widget.atClientserviceInstance;
     _connectionService.followerAtsign = widget.followerAtsignTitle;
     _connectionService.followAtsign = widget.followAtsignTitle;
-    _connectionService.startMonitor().then((value) => setState(() {}));
-    _formConnectionTabs(2);
+    _connectionService.startMonitor().then((value) => setState(() {
+          _formConnectionTabs(2);
+        }));
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return ChangeNotifierProvider<ConnectionProvider>.value(
-      builder: (context, child) {
-        if (_connectionService.isMonitorStarted)
-          return child;
-        else {
-          return SizedBox(
-            height: SizeConfig().screenHeight * 0.6,
-            width: SizeConfig().screenWidth,
-            child: Center(
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      ColorConstants.buttonHighLightColor)),
-            ),
-          );
-        }
-      },
-      value: _connectionProvider,
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
           title: SDKService().atsign,
           showTitle: true,
           showBackButton: true,
-          showQr: connectionTabs[1].isActive,
+          showQr:
+              connectionTabs.isNotEmpty ? connectionTabs[1].isActive : false,
         ),
-        body: SingleChildScrollView(
+        body: ChangeNotifierProvider<ConnectionProvider>.value(
+          builder: (context, child) {
+            if (_connectionService.isMonitorStarted)
+              return child;
+            else {
+              return SizedBox(
+                height: SizeConfig().screenHeight * 0.6,
+                width: SizeConfig().screenWidth,
+                child: Center(
+                  child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          ColorConstants.buttonHighLightColor)),
+                ),
+              );
+            }
+          },
+          value: _connectionProvider,
           child: Container(
             padding: EdgeInsets.symmetric(
                 horizontal: 16.toWidth, vertical: 12.toHeight),
@@ -100,6 +102,7 @@ class _ConnectionsState extends State<Connections> {
                     ),
                   )
                 : Column(
+                    // mainAxisSize: MainAxisSize.min,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -167,9 +170,7 @@ class _ConnectionsState extends State<Connections> {
                     ],
                   ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   _formConnectionTabs(int tabsCount) {

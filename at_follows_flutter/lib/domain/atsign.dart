@@ -7,20 +7,22 @@ class Atsign {
   String subtitle;
   bool isFollowing;
 
+  bool _isValid(String value) {
+    return value != null && value != '' && value != 'null';
+  }
+
   setData(AtFollowsValue followsValue) {
     switch (followsValue.atKey.key) {
       case PublicData.image:
         profilePicture = followsValue.value;
         break;
       case PublicData.firstname:
-        subtitle = followsValue.value != null && followsValue.value != ''
-            ? followsValue.value
-            : '';
+        subtitle = _isValid(followsValue.value) ? followsValue.value + ' ' : '';
         break;
       case PublicData.lastname:
-        subtitle = followsValue.value != null && followsValue.value != ''
-            ? subtitle + ' ' + followsValue.value
-            : followsValue.value;
+        subtitle = _isValid(followsValue.value)
+            ? subtitle + followsValue.value
+            : subtitle;
         break;
       default:
         break;
