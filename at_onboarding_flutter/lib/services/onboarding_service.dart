@@ -20,7 +20,7 @@ class OnboardingService {
 
   Map<String, AtClientService> atClientServiceMap = {};
   String _atsign;
-  AtClientPreference _atClientPreference;
+  AtClientPreference _atClientPreference = AtClientPreference();
 
   String _namespace;
   Widget _applogo;
@@ -34,15 +34,21 @@ class OnboardingService {
 
   get isPkam => _isPkam;
 
-  set setAtClientPreference(AtClientPreference _preference) =>
-      _atClientPreference = _preference
-        ..cramSecret = null
-        ..privateKey = null;
+  set setAtClientPreference(AtClientPreference _preference) {
+    _atClientPreference = _preference
+      ..cramSecret = null
+      ..privateKey = null;
+  }
+
   get atClientPreference => _atClientPreference;
 
   set namespace(String namespace) => _namespace = namespace;
   get appNamespace => _namespace;
-  set setAtsign(String atsign) => _atsign = atsign;
+  set setAtsign(String atsign) {
+    atsign = formatAtSign(atsign);
+    _atsign = atsign;
+  }
+
   String get currentAtsign => _atsign;
 
   // next route set from using app
@@ -56,7 +62,6 @@ class OnboardingService {
   Widget get nextScreen => _nextScreen;
 
   AtClientService _getClientServiceForAtsign(String atsign) {
-    if (atsign == null) {}
     if (atClientServiceMap.containsKey(atsign)) {
       return atClientServiceMap[atsign];
     }
