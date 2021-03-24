@@ -56,6 +56,7 @@ class ContactService {
       String currentAtSign,
       String rootDomainFromApp,
       int rootPortFromApp) async {
+    loggedInUserDetails = null;
     atClientInstance = atClientInstanceFromApp;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;

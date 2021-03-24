@@ -27,7 +27,8 @@ Future<AtContact> getAtSignDetails(String atSign) async {
 }
 
 AtContact getCachedContactDetail(String atsign) {
-  if (atsign == ContactService().atContactImpl.atClient.currentAtSign) {
+  if (atsign == ContactService().atContactImpl.atClient.currentAtSign &&
+      ContactService().loggedInUserDetails != null) {
     return ContactService().loggedInUserDetails;
   }
   if (ContactService().contactList.length > 0) {
