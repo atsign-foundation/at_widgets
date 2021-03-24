@@ -1,3 +1,7 @@
+## [0.0.4] - 03/24/2021
+
+* Updated example app
+
 ## [0.0.3] - 02/17/2021
 
 * Updated with example app

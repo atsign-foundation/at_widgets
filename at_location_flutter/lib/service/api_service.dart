@@ -114,14 +114,5 @@ class ConnectivityService {
     return connectivity;
   }
 
-  checkInternetConnection() {
-    // Fluttertoast.showToast(
-    //     msg: "Check Internet Connection",
-    //     toastLength: Toast.LENGTH_LONG,
-    //     gravity: ToastGravity.SNACKBAR,
-    //     timeInSecForIosWeb: 4,
-    //     backgroundColor: MyColors().GREY_COLOR,
-    //     textColor: MyColors().WHITE_TEXT_COLOR,
-    //     fontSize: 16.0);
-  }
+  checkInternetConnection() {}
 }
