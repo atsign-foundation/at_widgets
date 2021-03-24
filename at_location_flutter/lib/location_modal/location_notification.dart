@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
 import 'package:latlong/latlong.dart';
 
-// !isExited && !isisAccepted => decide later
-// isExited && !isAccepted => rejected
 class LocationNotificationModel {
   String atsignCreator, receiver, key;
   double lat, long;

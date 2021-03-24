@@ -20,6 +20,7 @@ class KeyStreamService {
   List<KeyLocationModel> allLocationNotifications = [];
   String currentAtSign;
 
+  // ignore: close_sinks
   StreamController _atNotificationsController;
   Stream<List<KeyLocationModel>> get atNotificationsStream =>
       _atNotificationsController.stream;
@@ -53,7 +54,6 @@ class KeyStreamService {
 
     allResponse.forEach((key) {
       if ('@${key.split(':')[1]}'.contains(currentAtSign)) {
-        print('key -> $key');
         KeyLocationModel tempHyridNotificationModel =
             KeyLocationModel(key: key);
         allLocationNotifications.add(tempHyridNotificationModel);
@@ -82,8 +82,6 @@ class KeyStreamService {
   }
 
   convertJsonToLocationModel() {
-    print(
-        'allShareLocationNotifications.length -> ${allLocationNotifications.length}');
     for (int i = 0; i < allLocationNotifications.length; i++) {
       try {
         if ((allLocationNotifications[i].atValue.value != null) &&
@@ -93,8 +91,6 @@ class KeyStreamService {
                   jsonDecode(allLocationNotifications[i].atValue.value));
           allLocationNotifications[i].locationNotificationModel =
               locationNotificationModel;
-          print(
-              'locationNotificationModel $i -> ${locationNotificationModel.getLatLng}');
         }
       } catch (e) {
         print('convertJsonToLocationModel error :$e');
@@ -105,6 +101,7 @@ class KeyStreamService {
   filterData() {
     List<KeyLocationModel> tempArray = [];
     for (int i = 0; i < allLocationNotifications.length; i++) {
+      // ignore: unrelated_type_equality_checks
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
           (allLocationNotifications[i].locationNotificationModel == null))
         tempArray.add(allLocationNotifications[i]);
@@ -121,11 +118,6 @@ class KeyStreamService {
     }
     allLocationNotifications
         .removeWhere((element) => tempArray.contains(element));
-
-    tempArray.forEach((element) {
-      print('removed data ${element.key}');
-      print('${element.locationNotificationModel}');
-    });
   }
 
   updateEventAccordingToAcknowledgedData() async {
@@ -149,16 +141,16 @@ class KeyStreamService {
   forShareLocation(KeyLocationModel notification) async {
     String atkeyMicrosecondId =
         notification.key.split('sharelocation-')[1].split('@')[0];
-    print('atkeyMicrosecondId $atkeyMicrosecondId');
     String acknowledgedKeyId = 'sharelocationacknowledged-$atkeyMicrosecondId';
 
     List<String> allRegexResponses =
         await atClientInstance.getKeys(regex: acknowledgedKeyId);
-    print('lenhtg ${allRegexResponses.length}');
+
     if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
       AtKey acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
       AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
+          // ignore: return_of_invalid_type_from_catch_error
           (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
 
       LocationNotificationModel acknowledgedEvent =
@@ -171,17 +163,18 @@ class KeyStreamService {
   forRequestLocation(KeyLocationModel notification) async {
     String atkeyMicrosecondId =
         notification.key.split('requestlocation-')[1].split('@')[0];
-    print('atkeyMicrosecondId $atkeyMicrosecondId');
+
     String acknowledgedKeyId =
         'requestlocationacknowledged-$atkeyMicrosecondId';
 
     List<String> allRegexResponses =
         await atClientInstance.getKeys(regex: acknowledgedKeyId);
-    print('lenhtg ${allRegexResponses.length}');
+
     if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
       AtKey acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
       AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
+          // ignore: return_of_invalid_type_from_catch_error
           (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
 
       LocationNotificationModel acknowledgedEvent =
@@ -206,14 +199,21 @@ class KeyStreamService {
       }
     }
     notifyListeners();
-    SendLocationNotification().findAtSignsToShareLocationWith();
+
+    // Update location sharing
+    if ((locationData.isSharing) && (locationData.isAccepted)) {
+      if (locationData.atsignCreator == currentAtSign)
+        SendLocationNotification().addMember(locationData);
+    } else
+      SendLocationNotification().removeMember(locationData.key);
   }
 
   removeData(String key) {
     allLocationNotifications
         .removeWhere((notification) => key.contains(notification.atKey.key));
     notifyListeners();
-    SendLocationNotification().findAtSignsToShareLocationWith();
+    // Remove location sharing
+    SendLocationNotification().removeMember(key);
   }
 
   Future<KeyLocationModel> addDataToList(
@@ -261,11 +261,15 @@ class KeyStreamService {
     tempHyridNotificationModel.locationNotificationModel =
         locationNotificationModel;
     allLocationNotifications.add(tempHyridNotificationModel);
-    print('addDataToList:${allLocationNotifications}');
 
     notifyListeners();
-    SendLocationNotification().findAtSignsToShareLocationWith();
 
+    if ((tempHyridNotificationModel.locationNotificationModel.isSharing)) {
+      if (tempHyridNotificationModel.locationNotificationModel.atsignCreator ==
+          currentAtSign)
+        SendLocationNotification()
+            .addMember(tempHyridNotificationModel.locationNotificationModel);
+    }
     return tempHyridNotificationModel;
   }
 
@@ -273,6 +277,7 @@ class KeyStreamService {
     try {
       AtValue atvalue = await atClientInstance
           .get(key)
+          // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print("error in in key_stream_service get $e"));
 
       if (atvalue != null)

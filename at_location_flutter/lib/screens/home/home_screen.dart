@@ -32,12 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getMyLocation();
+    _getMyLocation();
     KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
   }
 
-  getMyLocation() async {
-    LatLng newMyLatLng = await MyLocation().myLocation();
+  _getMyLocation() async {
+    LatLng newMyLatLng = await getMyLocation();
     if (newMyLatLng != null) {
       if (mounted)
         setState(() {

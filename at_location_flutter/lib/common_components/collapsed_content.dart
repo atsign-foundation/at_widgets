@@ -1,7 +1,6 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/home_screen_service.dart';
-import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
@@ -14,6 +13,7 @@ import 'display_tile.dart';
 import 'draggable_symbol.dart';
 import 'loading_widget.dart';
 
+// ignore: must_be_immutable
 class CollapsedContent extends StatefulWidget {
   bool expanded;
   LocationNotificationModel userListenerKeyword;
@@ -95,9 +95,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                         atsignCreator: amICreator
                             ? '${widget.userListenerKeyword.receiver}'
                             : '${widget.userListenerKeyword.atsignCreator}',
-                        subTitle: amICreator
-                            ? '${widget.userListenerKeyword.receiver}'
-                            : '${widget.userListenerKeyword.atsignCreator}'),
+                        subTitle: ''),
                     Text(
                       amICreator
                           ? 'This user does not share their location'
@@ -245,10 +243,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                               widget.userListenerKeyword);
                                     } else if (widget.userListenerKeyword.key
                                         .contains("requestlocation")) {
-                                      // result = await RequestLocationService()
-                                      //     .removePerson(
-                                      //         widget.userListenerKeyword);
-                                      result = false; // TODO: Remove this
+                                      result = false;
                                     }
                                     if (result) {
                                       SendLocationNotification()

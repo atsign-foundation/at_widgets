@@ -17,6 +17,7 @@ import 'common_components/floating_icon.dart';
 import 'common_components/marker_cluster.dart';
 import 'common_components/popup.dart';
 
+// ignore: must_be_immutable
 class AtLocationFlutterPlugin extends StatefulWidget {
   final List<String> atsignsToTrack;
   double left, right, top, bottom;
@@ -85,7 +86,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
           StreamBuilder(
               stream: LocationService().atHybridUsersStream,
               builder: (context, AsyncSnapshot<List<HybridModel>> snapshot) {
-                print('snapshot.data ${snapshot.data}');
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasError) {
                     return Center(
@@ -173,7 +173,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                     );
                   }
                 } else {
-                  print('map not active');
                   return ShowLocation(UniqueKey());
                 }
               }),
@@ -188,7 +187,6 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   }
 
   zoomOutFn() {
-    print('zoomOutFn');
     _popupController.hidePopup();
     LocationService().hybridUsersList.length > 0
         ? mapController.move(LocationService().hybridUsersList[0].latLng, 4)

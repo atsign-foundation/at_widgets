@@ -13,7 +13,6 @@ class LoadingDialog {
 
   show() {
     if (!_showing) {
-      // isLoading = true;
       _showing = true;
       AtLocationNotificationListener()
           .navKey
@@ -26,16 +25,13 @@ class LoadingDialog {
                 );
               },
               barrierDismissible: false))
-          .then((_) {
-        //        _showing = false;
-      });
+          .then((_) {});
     }
   }
 
   hide() {
     print("hide called");
     if (_showing) {
-      // isLoading = false;
       AtLocationNotificationListener().navKey.currentState.pop();
       _showing = false;
     }

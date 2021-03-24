@@ -14,6 +14,7 @@ class HomeScreenService {
 
     if (locationNotificationModel.key.contains('sharelocation'))
       locationNotificationModel.atsignCreator != currentAtsign
+          // ignore: unnecessary_statements
           ? (locationNotificationModel.isAccepted
               ? navigatorPushToMap(locationNotificationModel)
               : AtLocationNotificationListener().showMyDialog(
@@ -22,11 +23,13 @@ class HomeScreenService {
           : navigatorPushToMap(locationNotificationModel);
     else if (locationNotificationModel.key.contains('requestlocation'))
       locationNotificationModel.atsignCreator == currentAtsign
+          // ignore: unnecessary_statements
           ? (locationNotificationModel.isAccepted
               ? navigatorPushToMap(locationNotificationModel)
               : AtLocationNotificationListener().showMyDialog(
                   locationNotificationModel.atsignCreator,
                   locationNotificationModel))
+          // ignore: unnecessary_statements
           : (locationNotificationModel.isAccepted
               ? navigatorPushToMap(locationNotificationModel)
               : null);
@@ -112,6 +115,8 @@ getTitle(LocationNotificationModel locationNotificationModel) {
 }
 
 String timeOfDayToString(TimeOfDay time) {
-  String hhmm = '${time.hour}:${time.minute}';
-  return hhmm;
+  int minute = time.minute;
+  if (minute < 10) return '${time.hour}: 0${time.minute}';
+
+  return '${time.hour}: ${time.minute}';
 }

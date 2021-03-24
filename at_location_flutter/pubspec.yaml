@@ -21,7 +21,7 @@ dependencies:
   vector_math: ^2.0.0
   proj4dart: ^1.0.4
   meta: ^1.1.0
-  location: ^3.0.0
+  geolocator: ^6.2.1
   toast: ^0.1.5
   sliding_up_panel: ^1.0.2
   http: ^0.12.2
