@@ -428,7 +428,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           title: Strings.pairAtsignTitle,
           actionItems: [
             IconButton(
-                icon: Icon(Icons.help),
+                icon: Icon(Icons.help, size: 16.toFont),
                 onPressed: () {
                   Navigator.push(
                       context,
