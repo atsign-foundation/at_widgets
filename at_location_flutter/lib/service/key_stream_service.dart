@@ -3,11 +3,13 @@ import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
+import 'contact_service.dart';
 import 'send_location_notification.dart';
 import 'sharing_location_service.dart';
 
@@ -17,8 +19,11 @@ class KeyStreamService {
   factory KeyStreamService() => _instance;
 
   AtClientImpl atClientInstance;
+  AtContactsImpl atContactImpl;
+  AtContact loggedInUserDetails;
   List<KeyLocationModel> allLocationNotifications = [];
   String currentAtSign;
+  List<AtContact> contactList = [];
 
   // ignore: close_sinks
   StreamController _atNotificationsController;
@@ -27,13 +32,22 @@ class KeyStreamService {
   StreamSink<List<KeyLocationModel>> get atNotificationsSink =>
       _atNotificationsController.sink;
 
-  init(AtClientImpl clientInstance) {
+  init(AtClientImpl clientInstance) async {
+    loggedInUserDetails = null;
     atClientInstance = clientInstance;
     currentAtSign = atClientInstance.currentAtSign;
     allLocationNotifications = [];
     _atNotificationsController =
         StreamController<List<KeyLocationModel>>.broadcast();
     getAllNotifications();
+
+    loggedInUserDetails = await getAtSignDetails(currentAtSign);
+    getAllContactDetails(currentAtSign);
+  }
+
+  getAllContactDetails(String currentAtSign) async {
+    atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
+    contactList = await atContactImpl.listContacts();
   }
 
   getAllNotifications() async {

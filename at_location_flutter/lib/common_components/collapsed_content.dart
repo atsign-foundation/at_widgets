@@ -92,10 +92,13 @@ class _CollapsedContentState extends State<CollapsedContent> {
                         title: amICreator
                             ? '${widget.userListenerKeyword.receiver}'
                             : '${widget.userListenerKeyword.atsignCreator}',
+                        showName: true,
                         atsignCreator: amICreator
                             ? '${widget.userListenerKeyword.receiver}'
                             : '${widget.userListenerKeyword.atsignCreator}',
-                        subTitle: ''),
+                        subTitle: amICreator
+                            ? '${widget.userListenerKeyword.receiver}'
+                            : '${widget.userListenerKeyword.atsignCreator}'),
                     Text(
                       amICreator
                           ? 'This user does not share their location'

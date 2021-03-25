@@ -10,6 +10,8 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
 class ShareLocationSheet extends StatefulWidget {
+  final Function onTap;
+  ShareLocationSheet({this.onTap});
   @override
   _ShareLocationSheetState createState() => _ShareLocationSheetState();
 }
@@ -55,7 +57,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               textField = str;
             },
             icon: Icons.contacts_rounded,
-            onTap: () {},
+            onTap: widget.onTap,
           ),
           SizedBox(height: 25),
           Text(

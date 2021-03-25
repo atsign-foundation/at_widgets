@@ -68,6 +68,7 @@ class AtLocationNotificationListener {
         return;
       }
     }
+
     var decryptedMessage = await atClientInstance.encryptionService
         .decrypt(value, fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
@@ -77,14 +78,17 @@ class AtLocationNotificationListener {
       LocationNotificationModel msg =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       MasterLocationService().updateHybridList(msg);
-    } else if (atKey
-        .toString()
-        .toLowerCase()
-        .contains('sharelocationacknowledged')) {
+      return;
+    }
+
+    if (atKey.toString().toLowerCase().contains('sharelocationacknowledged')) {
       LocationNotificationModel locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       SharingLocationService().updateWithShareLocationAcknowledge(locationData);
-    } else if (atKey.toString().toLowerCase().contains('sharelocation')) {
+      return;
+    }
+
+    if (atKey.toString().toLowerCase().contains('sharelocation')) {
       LocationNotificationModel locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
@@ -93,7 +97,10 @@ class AtLocationNotificationListener {
         KeyStreamService().addDataToList(locationData);
         showMyDialog(fromAtSign, locationData);
       }
-    } else if (atKey
+      return;
+    }
+
+    if (atKey
         .toString()
         .toLowerCase()
         .contains('requestlocationacknowledged')) {
@@ -101,7 +108,10 @@ class AtLocationNotificationListener {
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       RequestLocationService()
           .updateWithRequestLocationAcknowledge(locationData);
-    } else if (atKey.toString().toLowerCase().contains('requestlocation')) {
+      return;
+    }
+
+    if (atKey.toString().toLowerCase().contains('requestlocation')) {
       LocationNotificationModel locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
@@ -110,6 +120,7 @@ class AtLocationNotificationListener {
         KeyStreamService().addDataToList(locationData);
         showMyDialog(fromAtSign, locationData);
       }
+      return;
     }
   }
 
