@@ -16,6 +16,11 @@ class _SecondScreenState extends State<SecondScreen> {
   String chatWithAtSign = '';
   bool showOptions = false;
 
+  // for goup chat
+  String groupId = '';
+  String member1 = '';
+  String member2 = '';
+
   @override
   void initState() {
     getAtSignAndInitializeChat();
@@ -112,25 +117,7 @@ class _SecondScreenState extends State<SecondScreen> {
                             showOptions = true;
                           });
                         } else {
-                          showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Row(
-                                    children: [Text('Atsign Missing!')],
-                                  ),
-                                  content: Text('Please enter an atsign'),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Close'),
-                                    )
-                                  ],
-                                );
-                              });
+                          showAtsignErrorDialog(context);
                         }
                       },
                       child: Container(
@@ -140,6 +127,67 @@ class _SecondScreenState extends State<SecondScreen> {
                     ),
                   ],
                 ),
+          Divider(
+            thickness: 2,
+            height: 20,
+          ),
+          Text('Group chat:'),
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+            child: TextFormField(
+              autofocus: false,
+              onChanged: (value) {
+                groupId = value;
+              },
+              // validator: Validators.validateAdduser,
+              decoration: InputDecoration(
+                hintText: '\tEnter the group ID',
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+            child: TextFormField(
+              autofocus: false,
+              onChanged: (value) {
+                member1 = value;
+              },
+              // validator: Validators.validateAdduser,
+              decoration: InputDecoration(
+                prefixText: '@',
+                prefixStyle: TextStyle(color: Colors.grey),
+                hintText: '\tEnter first user atsign',
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+            child: TextFormField(
+              autofocus: false,
+              onChanged: (value) {
+                member2 = value;
+              },
+              // validator: Validators.validateAdduser,
+              decoration: InputDecoration(
+                prefixText: '@',
+                prefixStyle: TextStyle(color: Colors.grey),
+                hintText: '\tEnter second user atsign',
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          FlatButton(
+            color: Colors.black,
+            onPressed: () {
+              setGroupToChatWith(context);
+            },
+            child: Text(
+              'Show group chat',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
         ],
       ),
     );
@@ -157,5 +205,47 @@ class _SecondScreenState extends State<SecondScreen> {
 
   void setAtsignToChatWith() {
     setChatWithAtSign(chatWithAtSign);
+  }
+
+  void setGroupToChatWith(BuildContext context) {
+    print('setGroupToChatWith');
+    if (member1 != null &&
+        member1.trim() != '' &&
+        member2 != null &&
+        member2.trim() != '' &&
+        groupId != null &&
+        groupId != '') {
+      setChatWithAtSign(null, isGroup: true, groupId: groupId, groupMembers: [
+        activeAtSign,
+        member1.startsWith('@') ? member1 : '@' + member1,
+        member2.startsWith('@') ? member2 : '@' + member2
+      ]);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ThirdScreen()));
+    } else {
+      showAtsignErrorDialog(context);
+    }
+  }
+
+  void showAtsignErrorDialog(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [Text('Some details are missing!')],
+            ),
+            content: Text('Please enter all fields'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Close'),
+              )
+            ],
+          );
+        });
   }
 }
