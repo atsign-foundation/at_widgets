@@ -5,6 +5,7 @@ import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/screens/notification_dialog/notification_dialog.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
@@ -62,7 +63,10 @@ class AtLocationNotificationListener {
         print('$notificationKey deleted');
         MasterLocationService().deleteReceivedData(fromAtSign);
         return;
-      } else if (atKey.toString().toLowerCase().contains('sharelocation')) {
+      } else if (atKey
+          .toString()
+          .toLowerCase()
+          .contains(MixedConstants.SHARE_LOCATION)) {
         print('$notificationKey containing sharelocation deleted');
         KeyStreamService().removeData(atKey.toString());
         return;
@@ -81,14 +85,20 @@ class AtLocationNotificationListener {
       return;
     }
 
-    if (atKey.toString().toLowerCase().contains('sharelocationacknowledged')) {
+    if (atKey
+        .toString()
+        .toLowerCase()
+        .contains(MixedConstants.SHARE_LOCATION_ACK)) {
       LocationNotificationModel locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       SharingLocationService().updateWithShareLocationAcknowledge(locationData);
       return;
     }
 
-    if (atKey.toString().toLowerCase().contains('sharelocation')) {
+    if (atKey
+        .toString()
+        .toLowerCase()
+        .contains(MixedConstants.SHARE_LOCATION)) {
       LocationNotificationModel locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
@@ -103,7 +113,7 @@ class AtLocationNotificationListener {
     if (atKey
         .toString()
         .toLowerCase()
-        .contains('requestlocationacknowledged')) {
+        .contains(MixedConstants.REQUEST_LOCATION_ACK)) {
       LocationNotificationModel locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       RequestLocationService()
@@ -111,7 +121,10 @@ class AtLocationNotificationListener {
       return;
     }
 
-    if (atKey.toString().toLowerCase().contains('requestlocation')) {
+    if (atKey
+        .toString()
+        .toLowerCase()
+        .contains(MixedConstants.REQUEST_LOCATION)) {
       LocationNotificationModel locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {

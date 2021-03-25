@@ -14,4 +14,10 @@ class MixedConstants {
   static const String MAP_KEY = 'B3Wus46C2WZFhwZKQkEx';
 
   static const String API_KEY = 'yRCeKfJDPQDTp11YI1db67J_fww80QP6R3Llckg-REw';
+
+  static const String SHARE_LOCATION = 'sharelocation';
+  static const String SHARE_LOCATION_ACK = 'sharelocationacknowledged';
+
+  static const String REQUEST_LOCATION = 'requestlocation';
+  static const String REQUEST_LOCATION_ACK = 'requestlocationacknowledged';
 }

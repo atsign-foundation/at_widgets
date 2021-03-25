@@ -7,6 +7,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
 import 'contact_service.dart';
@@ -136,13 +137,13 @@ class KeyStreamService {
 
   updateEventAccordingToAcknowledgedData() async {
     allLocationNotifications.forEach((notification) async {
-      if (notification.key.contains('sharelocation')) {
+      if (notification.key.contains(MixedConstants.SHARE_LOCATION)) {
         if ((notification.locationNotificationModel.atsignCreator ==
                 currentAtSign) &&
             (!notification.locationNotificationModel.isAcknowledgment)) {
           forShareLocation(notification);
         }
-      } else if (notification.key.contains('requestlocation')) {
+      } else if (notification.key.contains(MixedConstants.REQUEST_LOCATION)) {
         if ((notification.locationNotificationModel.atsignCreator ==
                 currentAtSign) &&
             (!notification.locationNotificationModel.isAcknowledgment)) {
@@ -200,7 +201,7 @@ class KeyStreamService {
 
   mapUpdatedLocationDataToWidget(LocationNotificationModel locationData) {
     String newLocationDataKeyId;
-    if (locationData.key.contains('sharelocation'))
+    if (locationData.key.contains(MixedConstants.SHARE_LOCATION))
       newLocationDataKeyId =
           locationData.key.split('sharelocation-')[1].split('@')[0];
     else
@@ -234,7 +235,7 @@ class KeyStreamService {
       LocationNotificationModel locationNotificationModel) async {
     String newLocationDataKeyId;
     String tempKey;
-    if (locationNotificationModel.key.contains('sharelocation')) {
+    if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
       newLocationDataKeyId = locationNotificationModel.key
           .split('sharelocation-')[1]
           .split('@')[0];
