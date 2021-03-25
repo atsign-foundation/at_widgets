@@ -1,5 +1,6 @@
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/screens/map_screen/map_screen.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'at_location_notification_listener.dart';
@@ -12,7 +13,7 @@ class HomeScreenService {
   onLocationModelTap(LocationNotificationModel locationNotificationModel) {
     String currentAtsign = AtLocationNotificationListener().currentAtSign;
 
-    if (locationNotificationModel.key.contains('sharelocation'))
+    if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION))
       locationNotificationModel.atsignCreator != currentAtsign
           // ignore: unnecessary_statements
           ? (locationNotificationModel.isAccepted
@@ -21,7 +22,8 @@ class HomeScreenService {
                   locationNotificationModel.atsignCreator,
                   locationNotificationModel))
           : navigatorPushToMap(locationNotificationModel);
-    else if (locationNotificationModel.key.contains('requestlocation'))
+    else if (locationNotificationModel.key
+        .contains(MixedConstants.REQUEST_LOCATION))
       locationNotificationModel.atsignCreator == currentAtsign
           // ignore: unnecessary_statements
           ? (locationNotificationModel.isAccepted
@@ -56,7 +58,7 @@ getSubTitle(LocationNotificationModel locationNotificationModel) {
         'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to))} today';
   else
     time = '';
-  if (locationNotificationModel.key.contains('sharelocation')) {
+  if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
         ? 'Can see my location $time'
@@ -75,7 +77,7 @@ getSubTitle(LocationNotificationModel locationNotificationModel) {
 }
 
 getSemiTitle(LocationNotificationModel locationNotificationModel) {
-  if (locationNotificationModel.key.contains('sharelocation'))
+  if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION))
     return locationNotificationModel.atsignCreator !=
             AtLocationNotificationListener().currentAtSign
         ? (locationNotificationModel.isAccepted
@@ -102,7 +104,7 @@ getSemiTitle(LocationNotificationModel locationNotificationModel) {
 }
 
 getTitle(LocationNotificationModel locationNotificationModel) {
-  if (locationNotificationModel.key.contains('sharelocation'))
+  if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION))
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
         ? locationNotificationModel.receiver

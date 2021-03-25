@@ -150,7 +150,8 @@ class LocationService {
   addDetails(HybridModel user, {int index}) async {
     try {
       user.marker = buildMarker(user);
-      await _calculateEta(user);
+      var _eta = await _calculateEta(user);
+      user.eta = _eta;
       if ((index != null)) {
         if ((index < hybridUsersList.length)) hybridUsersList[index] = user;
       } else {

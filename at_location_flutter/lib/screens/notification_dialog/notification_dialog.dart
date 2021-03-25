@@ -6,6 +6,7 @@ import 'package:at_location_flutter/common_components/contacts_initial.dart';
 import 'package:at_location_flutter/common_components/text_tile_repeater.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
+import 'package:at_location_flutter/service/contact_service.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
@@ -41,7 +42,22 @@ class _NotificationDialogState extends State<NotificationDialog> {
         : widget.locationData.atsignCreator);
 
     widget.userName = locationUserImageToShow;
+    getEventCreator();
+
     super.initState();
+  }
+
+  getEventCreator() async {
+    AtContact contact = await getAtSignDetails(locationUserImageToShow);
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        if (mounted)
+          setState(() {
+            image = Uint8List.fromList(intList);
+          });
+      }
+    }
   }
 
   @override

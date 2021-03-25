@@ -10,6 +10,8 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
 class RequestLocationSheet extends StatefulWidget {
+  final Function onTap;
+  RequestLocationSheet({this.onTap});
   @override
   _RequestLocationSheetState createState() => _RequestLocationSheetState();
 }
@@ -18,6 +20,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
   AtContact selectedContact;
   bool isLoading;
   String selectedOption, textField;
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +57,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
               textField = str;
             },
             icon: Icons.contacts_rounded,
-            onTap: () {},
+            onTap: widget.onTap,
           ),
           Expanded(child: SizedBox()),
           Center(
