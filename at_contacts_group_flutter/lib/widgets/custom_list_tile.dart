@@ -8,7 +8,6 @@
 import 'dart:typed_data';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/utils/images.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
@@ -122,11 +121,6 @@ class _CustomListTileState extends State<CustomListTile> {
                   _groupService.selectedGroupContacts = [];
                   _groupService.addGroupContact(widget.item);
                   widget.selectedList([widget.item]);
-                  // if (widget.item.contactType == ContactsType.CONTACT) {
-                  //   widget.selectedList([widget.item.contact]);
-                  // } else if (widget.item.contactType == ContactsType.GROUP) {
-                  //   widget.selectedList(widget.item.group.members.toList());
-                  // }
                   Navigator.pop(context);
                 } else if (!widget.selectSingle) {
                   setState(() {
@@ -170,7 +164,10 @@ class _CustomListTileState extends State<CustomListTile> {
                 ),
                 child: contactImage),
             trailing: IconButton(
-              onPressed: selectRemoveContact(),
+              onPressed: (widget?.asSelectionTile == false &&
+                      widget.onTrailingPressed != null)
+                  ? widget.onTrailingPressed
+                  : selectRemoveContact(),
               icon: (widget.asSelectionTile ?? false)
                   ? (isSelected)
                       ? Icon(Icons.close)
