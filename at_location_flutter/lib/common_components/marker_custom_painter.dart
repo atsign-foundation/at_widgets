@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-//Copy this CustomPainter code to the Bottom of the File
 class RPSCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -51,68 +50,6 @@ class RPSCustomPainter extends CustomPainter {
     Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
     paint_0_fill.color = Color(0xfffc7a30).withOpacity(1.0);
     canvas.drawPath(path_0, paint_0_fill);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}
-
-class CircleCustomPainter extends CustomPainter {
-  Color color;
-  CircleCustomPainter({this.color});
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
-    path_0.moveTo(size.width * -36.54597, size.height * -34.36532);
-    path_0.arcToPoint(Offset(size.width * -36.56518, size.height * -34.38568),
-        radius:
-            Radius.elliptical(size.width * 0.2039749, size.height * 0.1793256),
-        rotation: 0,
-        largeArc: false,
-        clockwise: true);
-    path_0.arcToPoint(Offset(size.width * -36.89506, size.height * -34.79917),
-        radius:
-            Radius.elliptical(size.width * 0.5002187, size.height * 0.4397700),
-        rotation: 0,
-        largeArc: false,
-        clockwise: true);
-    path_0.arcToPoint(Offset(size.width * -36.39508, size.height * -35.23874),
-        radius:
-            Radius.elliptical(size.width * 0.4999896, size.height * 0.4395685),
-        rotation: 0,
-        largeArc: false,
-        clockwise: true);
-    path_0.arcToPoint(Offset(size.width * -35.89509, size.height * -34.79917),
-        radius:
-            Radius.elliptical(size.width * 0.4999896, size.height * 0.4395685),
-        rotation: 0,
-        largeArc: false,
-        clockwise: true);
-    path_0.arcToPoint(Offset(size.width * -36.24270, size.height * -34.38039),
-        radius:
-            Radius.elliptical(size.width * 0.5002396, size.height * 0.4397883),
-        rotation: 0,
-        largeArc: false,
-        clockwise: true);
-    path_0.arcToPoint(Offset(size.width * -36.25804, size.height * -34.36532),
-        radius:
-            Radius.elliptical(size.width * 0.2068499, size.height * 0.1818531),
-        rotation: 0,
-        largeArc: false,
-        clockwise: true);
-    path_0.lineTo(size.width * -36.40199, size.height * -34.23874);
-    path_0.close();
-
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = color ?? Color(0xfffc7a30).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
-
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
-    paint_1_fill.color = color ?? Color(0xff000000).withOpacity(1.0);
-    canvas.drawCircle(Offset(size.width * 0.4166580, size.height * 0.3663071),
-        size.width * 0.4166580, paint_1_fill);
   }
 
   @override

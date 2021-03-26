@@ -2,16 +2,16 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/pop_button.dart';
-import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
-import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
 class ShareLocationSheet extends StatefulWidget {
+  final Function onTap;
+  ShareLocationSheet({this.onTap});
   @override
   _ShareLocationSheetState createState() => _ShareLocationSheetState();
 }
@@ -57,7 +57,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               textField = str;
             },
             icon: Icons.contacts_rounded,
-            onTap: () {},
+            onTap: widget.onTap,
           ),
           SizedBox(height: 25),
           Text(

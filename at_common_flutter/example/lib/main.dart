@@ -51,7 +51,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -74,8 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Icon(
             Icons.add,
             color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black
-              : Colors.white,
+                ? Colors.black
+                : Colors.white,
           ),
         ),
       ),
@@ -100,15 +99,27 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 20.0),
-            CustomInputField(
-                icon: Icons.emoji_emotions_outlined,
-                width: 200.0,
-                initialValue: "initial value",
-                value: (String val) {
-                  print('Current value of input field: $val');
-                },
+            Text('Custom AppBar ☝️'),
+            Divider(
+              color: Color(0xFFBEC0C8),
+              height: 30,
+              thickness: 2,
             ),
-            SizedBox(height: 20.0),
+            Text('Custom Input field:'),
+            CustomInputField(
+              icon: Icons.emoji_emotions_outlined,
+              width: 200.0,
+              initialValue: "initial value",
+              value: (String val) {
+                print('Current value of input field: $val');
+              },
+            ),
+            Divider(
+              color: Color(0xFFBEC0C8),
+              height: 30,
+              thickness: 2,
+            ),
+            Text('Custom Button:'),
             CustomButton(
               height: 50.0,
               width: 200.0,
@@ -116,14 +127,12 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 print('Custom button pressed');
               },
-              buttonColor:
-                Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
-              fontColor:
-                  Theme.of(context).brightness == Brightness.light
-                      ? Colors.white
-                      : Colors.black,
+              buttonColor: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+              fontColor: Theme.of(context).brightness == Brightness.light
+                  ? Colors.white
+                  : Colors.black,
             ),
           ],
         ),

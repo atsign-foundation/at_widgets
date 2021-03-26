@@ -14,11 +14,28 @@ void disposeContactsControllers() {
 }
 
 Future<AtContact> getAtSignDetails(String atSign) async {
-  Map<String, dynamic> contactDetails =
-      await ContactService().getContactDetails(atSign);
-  AtContact atContact = AtContact(
-    atSign: atSign,
-    tags: contactDetails,
-  );
+  AtContact atContact = getCachedContactDetail(atSign);
+  if (atContact == null) {
+    Map<String, dynamic> contactDetails =
+        await ContactService().getContactDetails(atSign);
+    atContact = AtContact(
+      atSign: atSign,
+      tags: contactDetails,
+    );
+  }
   return atContact;
+}
+
+AtContact getCachedContactDetail(String atsign) {
+  if (atsign == ContactService().atContactImpl.atClient.currentAtSign &&
+      ContactService().loggedInUserDetails != null) {
+    return ContactService().loggedInUserDetails;
+  }
+  if (ContactService().contactList.length > 0) {
+    int index = ContactService()
+        .contactList
+        .indexWhere((element) => element.atSign == atsign);
+    if (index > -1) return ContactService().contactList[index];
+  }
+  return null;
 }

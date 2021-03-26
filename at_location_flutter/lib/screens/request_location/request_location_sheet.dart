@@ -2,16 +2,16 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/pop_button.dart';
-import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
-import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
 class RequestLocationSheet extends StatefulWidget {
+  final Function onTap;
+  RequestLocationSheet({this.onTap});
   @override
   _RequestLocationSheetState createState() => _RequestLocationSheetState();
 }
@@ -20,6 +20,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
   AtContact selectedContact;
   bool isLoading;
   String selectedOption, textField;
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +57,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
               textField = str;
             },
             icon: Icons.contacts_rounded,
-            onTap: () {},
+            onTap: widget.onTap,
           ),
           Expanded(child: SizedBox()),
           Center(

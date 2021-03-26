@@ -1,54 +1,37 @@
-import 'package:at_location_flutter/service/at_location_notification_listener.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
-import 'package:location/location.dart';
 
-class MyLocation {
-  MyLocation._();
-  static final _instance = MyLocation._();
-  factory MyLocation() => _instance;
+Future<LatLng> getMyLocation() async {
+  try {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-  Future<LatLng> myLocation() async {
-    Location _location = new Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return null;
+    }
 
-    _serviceEnabled = await _location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _location.requestService();
-      if (!_serviceEnabled) {
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.deniedForever) {
+        return null;
+      }
+
+      if (permission == LocationPermission.denied) {
         return null;
       }
     }
-    _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
+
+    if ((permission == LocationPermission.always) ||
+        (permission == LocationPermission.whileInUse)) {
+      Position position = await Geolocator.getCurrentPosition();
+      return LatLng(position.latitude, position.longitude);
     }
-    // LatLng myLocation;
-    // switch (AtLocationNotificationListener().currentAtSign) {
-    //   case '@ashish🛠':
-    //     {
-    //       myLocation = LatLng(38, -122.406417);
-    //       break;
-    //     }
-    //   case '@colin🛠':
-    //     {
-    //       myLocation = LatLng(39, -122.406417);
-    //       break;
-    //     }
-    //   case '@bob🛠':
-    //     {
-    //       myLocation = LatLng(40, -122.406417);
-    //       break;
-    //     }
-    // }
 
-    // return myLocation;
-    _locationData = await _location.getLocation();
-
-    return LatLng(_locationData.latitude, _locationData.longitude);
+    return null;
+  } catch (e) {
+    print('Error in getLocation $e');
+    return null;
   }
 }

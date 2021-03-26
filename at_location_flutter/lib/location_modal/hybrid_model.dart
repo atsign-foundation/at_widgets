@@ -8,7 +8,6 @@ class HybridModel {
   LatLng latLng;
   String eta = '?';
   Marker marker;
-  // int epocTime = DateTime.now().millisecondsSinceEpoch;
   HybridModel({
     this.displayName,
     this.eta,

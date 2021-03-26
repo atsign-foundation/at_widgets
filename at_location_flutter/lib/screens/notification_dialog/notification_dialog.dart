@@ -6,6 +6,7 @@ import 'package:at_location_flutter/common_components/contacts_initial.dart';
 import 'package:at_location_flutter/common_components/text_tile_repeater.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
+import 'package:at_location_flutter/service/contact_service.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
@@ -13,6 +14,7 @@ import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
+// ignore: must_be_immutable
 class NotificationDialog extends StatefulWidget {
   String userName;
   final LocationNotificationModel locationData;
@@ -40,21 +42,22 @@ class _NotificationDialogState extends State<NotificationDialog> {
         : widget.locationData.atsignCreator);
 
     widget.userName = locationUserImageToShow;
+    getEventCreator();
+
     super.initState();
   }
 
-  getImage() async {
-    // AtContact contact = await getAtSignDetails(widget.eventData != null
-    //     ? widget.eventData.atsignCreator
-    //     : locationUserImageToShow);
-    // if (contact != null) {
-    //   if (contact.tags != null && contact.tags['image'] != null) {
-    //     List<int> intList = contact.tags['image'].cast<int>();
-    //     setState(() {
-    //       image = Uint8List.fromList(intList);
-    //     });
-    //   }
-    // }
+  getEventCreator() async {
+    AtContact contact = await getAtSignDetails(locationUserImageToShow);
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        if (mounted)
+          setState(() {
+            image = Uint8List.fromList(intList);
+          });
+      }
+    }
   }
 
   @override
@@ -117,6 +120,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   SizedBox(height: 10.toHeight),
                   CustomButton(
                     onPressed: () => () async {
+                      // ignore: unnecessary_statements
                       ((!widget.locationData.isRequest)
                           ? {
                               print('accept share location'),
@@ -139,6 +143,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   SizedBox(height: 5),
                   CustomButton(
                     onPressed: () => () async {
+                      // ignore: unnecessary_statements
                       ((!widget.locationData.isRequest)
                           ? {
                               print('accept share location'),
@@ -177,13 +182,11 @@ class _NotificationDialogState extends State<NotificationDialog> {
           title: 'How long do you want to share your location for ?',
           options: ['30 mins', '2 hours', '24 hours', 'Until turned off'],
           onChanged: (value) {
-            print('$result');
             result = (value == '30 mins'
                 ? 30
                 : (value == '2 hours'
                     ? (2 * 60)
                     : (value == '24 hours' ? (24 * 60) : null)));
-            print('hours = $result');
           },
         ),
         350, onSheetCLosed: () {

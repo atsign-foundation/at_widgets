@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_location_flutter/service/contact_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 
@@ -12,6 +13,7 @@ class DisplayTile extends StatefulWidget {
   final String title, semiTitle, subTitle, atsignCreator, invitedBy;
   final int number;
   final Widget action;
+  final bool showName;
   DisplayTile(
       {@required this.title,
       this.atsignCreator,
@@ -19,6 +21,7 @@ class DisplayTile extends StatefulWidget {
       this.semiTitle,
       this.invitedBy,
       this.number,
+      this.showName = false,
       this.action});
 
   @override
@@ -29,6 +32,7 @@ class _DisplayTileState extends State<DisplayTile> {
   Uint8List image;
   AtContact contact;
   AtContactsImpl atContact;
+  String name;
   @override
   void initState() {
     super.initState();
@@ -36,18 +40,17 @@ class _DisplayTileState extends State<DisplayTile> {
   }
 
   getEventCreator() async {
-    // // atContact = await AtContactsImpl.getInstance(LocationService().getAtSign());
-    // contact = await atContact.get(widget.atsignCreator);
-    // if (contact != null) {
-    //   if (contact.tags != null && contact.tags['image'] != null) {
-    //     List<int> intList = contact.tags['image'].cast<int>();
-    //     if (Uint8List.fromList(intList) != null) {
-    //       setState(() {
-    //         image = Uint8List.fromList(intList);
-    //       });
-    //     }
-    //   }
-    // }
+    AtContact contact = await getAtSignDetails(widget.atsignCreator);
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        if (mounted)
+          setState(() {
+            image = Uint8List.fromList(intList);
+            if (widget.showName) name = contact.tags['name'].toString();
+          });
+      }
+    }
   }
 
   @override
@@ -95,7 +98,7 @@ class _DisplayTileState extends State<DisplayTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.title,
+                  name ?? widget.title,
                   style: CustomTextStyles().black14,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

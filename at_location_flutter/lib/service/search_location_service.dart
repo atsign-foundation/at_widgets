@@ -17,14 +17,10 @@ class SearchLocationService {
       _atLocationStreamController.sink;
 
   void getAddressLatLng(String address) async {
-    //For maptiler
-    //https://api.maptiler.com/geocoding/bokaro.json?key=B3Wus46C2WZFhwZKQkEx
     var url =
         "https://nominatim.openstreetmap.org/search?q=${address.replaceAll(RegExp(' '), '+')}&format=json&addressdetails=1";
-    print(url);
     var response = await http.get(url);
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+
     List addresses = jsonDecode(response.body);
     List<LocationModal> share = [];
     for (Map ad in addresses) {

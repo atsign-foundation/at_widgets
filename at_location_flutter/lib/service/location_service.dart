@@ -4,6 +4,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 
 import 'at_location_notification_listener.dart';
@@ -48,7 +49,7 @@ class LocationService {
     this.addCurrentUserMarker = addCurrentUserMarker;
     this.textForCenter = textForCenter;
     this.showToast = showToast;
-    print('atsignsTotrack $atsignsToTrack');
+
     if (etaFrom != null) addCentreMarker();
     await addMyDetailsToHybridUsersList();
 
@@ -66,7 +67,7 @@ class LocationService {
 
   addMyDetailsToHybridUsersList() async {
     String _atsign = AtLocationNotificationListener().currentAtSign;
-    LatLng mylatlng = await MyLocation().myLocation();
+    LatLng mylatlng = await getMyLocation();
     var _image = await MasterLocationService().getImageOfAtsignNew(_atsign);
 
     HybridModel _myData = HybridModel(
@@ -80,60 +81,41 @@ class LocationService {
     if (addCurrentUserMarker) {
       hybridUsersList.add(myData);
     }
-    // this is added to _atHybridUsersController using WidgetsBinding.instance.addPostFrameCallback from at_location_flutter_plugin
-    // adding it here was leading to Ticker not getting disposed
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _atHybridUsersController.add(hybridUsersList);
+    });
   }
 
   addCentreMarker() {
     HybridModel centreMarker = HybridModel(
         displayName: textForCenter, latLng: etaFrom, eta: '', image: null);
     centreMarker.marker = buildMarker(centreMarker);
-    // TODO : Think of another way
+
     Future.delayed(
         const Duration(seconds: 2), () => hybridUsersList.add(centreMarker));
   }
 
   // called for the first time pckage is entered from main app
   updateHybridList() async {
-    print('updateHybridList location_service');
-
     await Future.forEach(MasterLocationService().allReceivedUsersList,
         (user) async {
-      print('MasterLocationService().allReceivedUsersList ${user.displayName}');
-      print(
-          'atsignsToTrack.contains(user.displayName) ${atsignsToTrack.contains(user.displayName)}');
       if (atsignsToTrack.contains(user.displayName)) await updateDetails(user);
-    });
-
-    print('hybridUsersList $hybridUsersList');
-    hybridUsersList.forEach((element) {
-      print('added in updateHybridList: ${element.displayName}');
-      print('added in updateHybridList: ${element.latLng}');
     });
 
     if (hybridUsersList.length != 0)
       Future.delayed(const Duration(seconds: 2),
           () => _atHybridUsersController.add(hybridUsersList));
-    // if (isMapInitialized) notifyListeners();
   }
 
   // called when any new/updated data is received in the main app
   newList() async {
-    print('inside newList location_service');
     if (atsignsToTrack != null) {
       await Future.forEach(MasterLocationService().allReceivedUsersList,
           (user) async {
-        print(
-            'MasterLocationService().allReceivedUsersList newList ${user.displayName}');
-        print(
-            'atsignsToTrack.contains(user.displayName) newList ${atsignsToTrack.contains(user.displayName)}');
-
         if (atsignsToTrack.contains(user.displayName))
           await updateDetails(user);
       });
-      hybridUsersList.forEach((element) {
-        print('added in location_service: ${element.displayName}');
-      });
+
       if (!_atHybridUsersController.isClosed)
         _atHybridUsersController.add(hybridUsersList);
     }
@@ -159,7 +141,6 @@ class LocationService {
       }
     });
     if (contains) {
-      print('${hybridUsersList[index].latLng} != ${user.latLng}');
       await addDetails(user, index: index);
     } else
       await addDetails(user);
@@ -169,21 +150,20 @@ class LocationService {
   addDetails(HybridModel user, {int index}) async {
     try {
       user.marker = buildMarker(user);
-      await _calculateEta(user);
+      var _eta = await _calculateEta(user);
+      user.eta = _eta;
       if ((index != null)) {
         if ((index < hybridUsersList.length)) hybridUsersList[index] = user;
       } else {
         bool _continue = true;
         hybridUsersList.forEach((hybridUser) {
           if (hybridUser.displayName == user.displayName) {
-            print('hybridUser.displayName == user.displayName');
             hybridUser = user;
             _continue = false;
             return;
           }
         });
         if (_continue) {
-          print('hybridUsersList.add(user);');
           hybridUsersList.add(user);
           if (showToast != null)
             showToast('${user.displayName} started sharing their location');
@@ -193,15 +173,6 @@ class LocationService {
       print(e);
       if (showToast != null) showToast('Something went wrong');
     }
-
-    // user.marker = buildMarker(user);
-    // user.eta = await _calculateEta(user);
-    // // user.eta = '?';
-    // if (index != null)
-    //   hybridUsersList[index] = user;
-    // else
-    //   hybridUsersList.add(user);
-    // print('hybridUsersList from addDetails $hybridUsersList');
   }
 
   _calculateEta(HybridModel user) async {
@@ -210,9 +181,15 @@ class LocationService {
         var _res;
         if (etaFrom != null)
           _res = await DistanceCalculate().calculateETA(etaFrom, user.latLng);
-        else
-          _res = await DistanceCalculate()
-              .calculateETA(myData.latLng, user.latLng);
+        else {
+          LatLng mylatlng;
+          if (myData != null)
+            mylatlng = myData.latLng;
+          else
+            mylatlng = await getMyLocation();
+          _res = await DistanceCalculate().calculateETA(mylatlng, user.latLng);
+        }
+
         return _res;
       } catch (e) {
         print('Error in _calculateEta $e');
