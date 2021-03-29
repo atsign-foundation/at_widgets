@@ -42,7 +42,7 @@ class ConnectionsService {
       await createLists(isFollowing: true);
       if (following.list.isNotEmpty) {
         _connectionProvider.followingList =
-            await _formAtSignData(following.list);
+            await _formAtSignData(following.list, isFollowing: true);
       }
     }
     if (_connectionProvider.followersList.isEmpty || isInit) {
@@ -53,8 +53,9 @@ class ConnectionsService {
       }
     }
     if (isInit) {
-      var fromDate =
-          following.getKey != null ? following.getKey.metadata.updatedAt : null;
+      var fromDate = following.getKey != null
+          ? following.getKey.metadata?.updatedAt
+          : null;
       var notificationsList =
           await _sdkService.notifyList(fromDate: fromDate?.toString());
       //filtering notifications which has only new followers
@@ -69,10 +70,12 @@ class ConnectionsService {
     }
   }
 
-  Future<List<Atsign>> _formAtSignData(List<String> connectionsList) async {
+  Future<List<Atsign>> _formAtSignData(List<String> connectionsList,
+      {bool isFollowing = false}) async {
     List<Atsign> atsignList = [];
     for (var connection in connectionsList) {
-      var atsignData = await _getAtsignData(connection);
+      var atsignData =
+          await _getAtsignData(connection, isFollowing: isFollowing);
       atsignList.add(atsignData);
     }
     atsignList.sort((a, b) => a.title[1].compareTo(b.title[1]));
@@ -98,7 +101,8 @@ class ConnectionsService {
       atKey..metadata = atMetadata;
       result = await _sdkService.notify(atKey, atsign, OperationEnum.update);
     }
-    var atsignData = await _getAtsignData(atsign);
+    var atsignData =
+        await _getAtsignData(atsign, isNew: true, isFollowing: true);
     await _sdkService.sync();
     return atsignData;
   }
@@ -117,6 +121,8 @@ class ConnectionsService {
     } else {
       result = await _sdkService.put(atKey, following.toString());
     }
+    await _deleteCachedKeys(atKey, atsign);
+
     //change metadata to private to notify
     if (atMetadata.isPublic) {
       atKey..sharedWith = atsign;
@@ -159,7 +165,10 @@ class ConnectionsService {
       }
       followers.add(notification.fromAtSign);
       await _sdkService.put(atKey, followers.toString());
-      var atsignData = await _getAtsignData(notification.fromAtSign);
+      var atsignData = await _getAtsignData(
+        notification.fromAtSign,
+        isNew: true,
+      );
       connectionProvider.followersList.add(atsignData);
       if (isSetStatus) {
         connectionProvider.setStatus(Status.done);
@@ -185,6 +194,10 @@ class ConnectionsService {
       followers.list.isNotEmpty
           ? await _sdkService.put(atKey, followers.toString())
           : await this._sdkService.delete(atKey);
+
+      //deletes cached key.
+      await _deleteCachedKeys(atKey, notification.fromAtSign);
+
       connectionProvider.followersList
           .removeWhere((element) => element.title == notification.fromAtSign);
       if (isSetStatus) {
@@ -238,15 +251,24 @@ class ConnectionsService {
     return atKey;
   }
 
-  Future<Atsign> _getAtsignData(String connection) async {
+  Future<Atsign> _getAtsignData(String connection,
+      {bool isFollowing = false, bool isNew = false}) async {
     AtKey atKey;
     Atsign atsignData = Atsign()
       ..title = connection
       ..isFollowing = following.list.contains(connection);
+    //updates followers list data. If data is present in following for isFollowing = false.
+    //updates following list data. If data is present in followers for isfollowing = true.
+    // if (following.list.contains(connection) && !isFollowing) {
+    var data = connectionProvider.getData(!isFollowing, connection);
+    if (data != null) {
+      return data;
+    }
+    // }
     atKey = AtKey()..sharedBy = connection;
     AtFollowsValue atValue = AtFollowsValue();
     for (var key in PublicData.list) {
-      atKey..metadata = _getPublicFieldsMetadata(key);
+      atKey..metadata = _getPublicFieldsMetadata(key, isNew: isNew);
       atKey..key = key;
       atValue = await _sdkService.get(atKey);
       atValue..atKey = atKey;
@@ -255,12 +277,29 @@ class ConnectionsService {
     return atsignData;
   }
 
-  _getPublicFieldsMetadata(String key) {
+  _getPublicFieldsMetadata(String key, {bool isNew = false}) {
     var atmetadata = Metadata()
       ..namespaceAware = false
       ..isBinary = key == PublicData.image
+      ..isCached = !isNew
       ..isPublic = true;
     return atmetadata;
+  }
+
+  ///Deletes all public cached keys of [atsign]
+  ///if it is removed from both followers and following list.
+  Future<void> _deleteCachedKeys(AtKey atKey, String atsign) async {
+    // if (following.list.contains(atsign) || followers.list.contains(atsign)) {
+    //   return;
+    // }
+    // for (var key in PublicData.list) {
+    //   atKey..metadata = _getPublicFieldsMetadata(key);
+    //   atKey..sharedBy = atsign;
+    //   //TODO:remove after modifying _getPublicFieldsMetadata.
+    //   // atKey.metadata.isCached = true;
+    //   atKey..key = key;
+    //   await _sdkService.delete(atKey);
+    // }
   }
 
   ///Returns null if [atsign] is null else the formatted [atsign].

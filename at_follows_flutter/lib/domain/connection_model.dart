@@ -169,6 +169,20 @@ class ConnectionProvider extends ChangeNotifier {
     return index != -1;
     // return this.followingList.contains((data) => data.title == atsign);
   }
+
+  ///Returns data with the title = [atsign] from either followers/following list based on [isFollowing].
+  Atsign getData(bool isFollowing, String atsign) {
+    if (isFollowing) {
+      return this.followingList.firstWhere(
+            (data) => data.title == atsign,
+            orElse: () => null,
+          );
+    }
+    return this.followersList.firstWhere(
+          (data) => data.title == atsign,
+          orElse: () => null,
+        );
+  }
 }
 
 enum Status { getData, loading, done, error }
