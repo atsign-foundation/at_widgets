@@ -62,6 +62,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: elevation ?? 0,
       centerTitle: true,
+      leadingWidth: 90,
       leading: (showLeadingIcon)
           ? (showBackButton)
               ? IconButton(

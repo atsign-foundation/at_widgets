@@ -78,6 +78,7 @@ class _GroupListState extends State<GroupList> {
           trailingIcon: Icon(
             Icons.add,
             color: AllColors().ORANGE,
+            size: 20.toFont,
           ),
           onTrailingIconPressed: () => Navigator.push(
             context,

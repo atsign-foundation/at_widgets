@@ -178,7 +178,7 @@ class _GroupViewState extends State<GroupView> {
                 top: 240.toHeight,
                 child: Container(
                   height: 80.toHeight,
-                  width: 343.toWidth,
+                  width: SizeConfig().screenWidth * 0.92,
                   margin: EdgeInsets.symmetric(
                       horizontal: 15.toWidth, vertical: 0.toHeight),
                   padding: EdgeInsets.symmetric(
@@ -301,6 +301,7 @@ class _GroupViewState extends State<GroupView> {
                     child: Icon(
                       Icons.arrow_back,
                       color: AllColors().Black,
+                      size: 25.toFont,
                     ),
                   )),
               Positioned(
@@ -315,6 +316,7 @@ class _GroupViewState extends State<GroupView> {
                   child: Icon(
                     Icons.edit,
                     color: AllColors().Black,
+                    size: 25.toFont,
                   ),
                 ),
               )

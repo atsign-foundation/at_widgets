@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class ConfirmationDialog extends StatefulWidget {
-  final String heading, title, subtitle, atsign;
+  final String heading, subtitle, atsign;
+  String title;
   final Function onYesPressed;
   final Uint8List image;
   ConfirmationDialog(
@@ -28,12 +29,18 @@ class ConfirmationDialog extends StatefulWidget {
 class _ConfirmationDialogState extends State<ConfirmationDialog> {
   bool isLoading;
   Uint8List contactImage;
+  String contactInitial;
 
   @override
   void initState() {
     isLoading = false;
     getAtsignImage();
     super.initState();
+    if (widget.title[0] == '@') {
+      contactInitial = widget.title.substring(1, widget.title.length);
+    } else {
+      contactInitial = widget.title;
+    }
   }
 
   getAtsignImage() async {
@@ -99,8 +106,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                           ),
                         )
                       : ContactInitial(
-                          initials: widget.title
-                              .substring(0, widget.title.length > 1 ? 2 : 1),
+                          initials: contactInitial.substring(
+                              0, contactInitial.length > 1 ? 2 : 1),
                           size: 60),
 
               SizedBox(height: 15.toHeight),

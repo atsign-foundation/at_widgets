@@ -35,11 +35,12 @@ class CustomPersonHorizontalTile extends StatelessWidget {
             children: [
               image != null
                   ? ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(30.toWidth)),
                       child: Image.memory(
                         image,
-                        width: 50,
-                        height: 50,
+                        width: 50.toWidth,
+                        height: 50.toWidth,
                         fit: BoxFit.fill,
                       ),
                     )
