@@ -84,6 +84,7 @@ class _GroupEditState extends State<GroupEdit> {
               if (groupName.trim().length > 0) {
                 AtGroup group = widget.group;
                 group.displayName = groupName;
+                group.groupName = groupName;
                 setState(() {
                   isLoading = true;
                 });

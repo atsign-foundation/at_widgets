@@ -54,6 +54,7 @@ class _NewGroupState extends State<NewGroup> {
         AtGroup group = new AtGroup(
           groupName,
           description: 'group desc',
+          displayName: groupName,
           members: Set.from(selectedContacts),
           createdBy: GroupService().currentAtsign,
           updatedBy: GroupService().currentAtsign,
