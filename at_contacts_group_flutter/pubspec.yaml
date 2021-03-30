@@ -20,6 +20,7 @@ dependencies:
   at_contact: ^1.0.0
   emoji_picker: ^0.1.0
   flutter_slidable: ^0.5.7
+  flutter_image_compress: ^1.0.0
 
 dev_dependencies:
   flutter_test:

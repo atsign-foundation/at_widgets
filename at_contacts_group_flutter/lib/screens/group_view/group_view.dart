@@ -346,6 +346,7 @@ class _GroupViewState extends State<GroupView> {
               CustomToast().show(result.toString(), context);
             }
           },
+          atsign: contact.atSign,
         );
       },
     );

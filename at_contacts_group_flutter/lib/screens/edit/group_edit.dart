@@ -74,7 +74,13 @@ class _GroupEditState extends State<GroupEdit> {
           trailingIcon: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: SizedBox(
+                      width: 25.toFont,
+                      height: 25.toFont,
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
                 : Text('Done',
                     style: TextStyle(color: AllColors().ORANGE, fontSize: 18)),
           ),
