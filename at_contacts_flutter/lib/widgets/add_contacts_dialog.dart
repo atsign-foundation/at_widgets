@@ -80,6 +80,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                     prefixStyle: TextStyle(color: Colors.grey),
                     hintText: '\tEnter user atsign',
                   ),
+                  style: TextStyle(fontSize: 15.toFont),
                 ),
                 SizedBox(
                   height: 10.toHeight,
