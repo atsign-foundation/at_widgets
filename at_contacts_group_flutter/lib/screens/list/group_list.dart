@@ -155,7 +155,7 @@ class _GroupListState extends State<GroupList> {
                                       ? snapshot.data[index].groupPicture
                                       : null,
                                   title:
-                                      snapshot.data[index].displayName ?? null,
+                                      snapshot.data[index].displayName ?? ' ',
                                   subTitle:
                                       '${snapshot.data[index].members.length} members',
                                 ),
