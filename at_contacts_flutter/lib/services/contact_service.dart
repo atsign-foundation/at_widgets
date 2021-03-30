@@ -85,7 +85,6 @@ class ContactService {
         }
       }
       contactList = tempContactList;
-      print("error here => $contactList");
       contactList.sort((a, b) => a?.atSign
           .toString()
           ?.substring(1)
@@ -110,7 +109,6 @@ class ContactService {
     try {
       blockContactList = [];
       blockContactList = await atContactImpl.listBlockedContacts();
-      print("fetchBlockContactList => $blockContactList");
       blockedContactSink.add(blockContactList);
     } catch (error) {}
   }
@@ -131,7 +129,6 @@ class ContactService {
     } else if (atSign[0] != '@') {
       atSign = '@' + atSign;
     }
-    print('atsignNameMETHOD===>$atSign');
     try {
       isContactPresent = false;
 

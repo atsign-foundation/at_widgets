@@ -7,7 +7,6 @@ import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 
 Widget buildPopup(HybridModel user) {
-  print('popup builder called');
   bool showEtaSection = true;
   if (LocationService().etaFrom != null) {
     if (user.latLng == LocationService().etaFrom) showEtaSection = false;

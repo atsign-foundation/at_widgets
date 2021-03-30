@@ -75,13 +75,18 @@ class SendLocationNotification {
   }
 
   sendLocation() async {
-    positionStream = Geolocator.getPositionStream(distanceFilter: 100)
-        .listen((myLocation) async {
-      atsignsToShareLocationWith.forEach((notification) async {
-        prepareLocationDataAndSend(
-            notification, LatLng(myLocation.latitude, myLocation.longitude));
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (((permission == LocationPermission.always) ||
+        (permission == LocationPermission.whileInUse))) {
+      positionStream = Geolocator.getPositionStream(distanceFilter: 100)
+          .listen((myLocation) async {
+        atsignsToShareLocationWith.forEach((notification) async {
+          prepareLocationDataAndSend(
+              notification, LatLng(myLocation.latitude, myLocation.longitude));
+        });
       });
-    });
+    }
   }
 
   prepareLocationDataAndSend(

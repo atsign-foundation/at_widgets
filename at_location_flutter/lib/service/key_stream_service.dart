@@ -3,11 +3,14 @@ import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
+import 'contact_service.dart';
 import 'send_location_notification.dart';
 import 'sharing_location_service.dart';
 
@@ -17,8 +20,11 @@ class KeyStreamService {
   factory KeyStreamService() => _instance;
 
   AtClientImpl atClientInstance;
+  AtContactsImpl atContactImpl;
+  AtContact loggedInUserDetails;
   List<KeyLocationModel> allLocationNotifications = [];
   String currentAtSign;
+  List<AtContact> contactList = [];
 
   // ignore: close_sinks
   StreamController _atNotificationsController;
@@ -27,13 +33,22 @@ class KeyStreamService {
   StreamSink<List<KeyLocationModel>> get atNotificationsSink =>
       _atNotificationsController.sink;
 
-  init(AtClientImpl clientInstance) {
+  init(AtClientImpl clientInstance) async {
+    loggedInUserDetails = null;
     atClientInstance = clientInstance;
     currentAtSign = atClientInstance.currentAtSign;
     allLocationNotifications = [];
     _atNotificationsController =
         StreamController<List<KeyLocationModel>>.broadcast();
     getAllNotifications();
+
+    loggedInUserDetails = await getAtSignDetails(currentAtSign);
+    getAllContactDetails(currentAtSign);
+  }
+
+  getAllContactDetails(String currentAtSign) async {
+    atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
+    contactList = await atContactImpl.listContacts();
   }
 
   getAllNotifications() async {
@@ -122,13 +137,13 @@ class KeyStreamService {
 
   updateEventAccordingToAcknowledgedData() async {
     allLocationNotifications.forEach((notification) async {
-      if (notification.key.contains('sharelocation')) {
+      if (notification.key.contains(MixedConstants.SHARE_LOCATION)) {
         if ((notification.locationNotificationModel.atsignCreator ==
                 currentAtSign) &&
             (!notification.locationNotificationModel.isAcknowledgment)) {
           forShareLocation(notification);
         }
-      } else if (notification.key.contains('requestlocation')) {
+      } else if (notification.key.contains(MixedConstants.REQUEST_LOCATION)) {
         if ((notification.locationNotificationModel.atsignCreator ==
                 currentAtSign) &&
             (!notification.locationNotificationModel.isAcknowledgment)) {
@@ -186,7 +201,7 @@ class KeyStreamService {
 
   mapUpdatedLocationDataToWidget(LocationNotificationModel locationData) {
     String newLocationDataKeyId;
-    if (locationData.key.contains('sharelocation'))
+    if (locationData.key.contains(MixedConstants.SHARE_LOCATION))
       newLocationDataKeyId =
           locationData.key.split('sharelocation-')[1].split('@')[0];
     else
@@ -220,7 +235,7 @@ class KeyStreamService {
       LocationNotificationModel locationNotificationModel) async {
     String newLocationDataKeyId;
     String tempKey;
-    if (locationNotificationModel.key.contains('sharelocation')) {
+    if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
       newLocationDataKeyId = locationNotificationModel.key
           .split('sharelocation-')[1]
           .split('@')[0];

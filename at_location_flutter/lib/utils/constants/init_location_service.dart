@@ -7,10 +7,19 @@ import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
-    {String rootDomain = 'vip.ve.atsign.zone'}) {
+    {String rootDomain = 'vip.ve.atsign.zone'}) async {
+  try {
+    /// So that we have the permission status beforehand & later we dont get
+    /// PlatformException(PermissionHandler.PermissionManager) => Multiple Permissions exception
+    await Geolocator.requestPermission();
+  } catch (e) {
+    print('Error in initializeLocationService $e');
+  }
+
   AtLocationNotificationListener()
       .init(atClientImpl, currentAtSign, navKey, rootDomain);
   KeyStreamService().init(AtLocationNotificationListener().atClientInstance);

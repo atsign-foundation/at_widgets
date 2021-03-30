@@ -11,6 +11,7 @@ import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:latlong/latlong.dart';
 
+import 'contact_service.dart';
 import 'location_service.dart';
 
 class MasterLocationService {
@@ -171,9 +172,8 @@ class MasterLocationService {
     try {
       AtContact contact;
       Uint8List image;
-      AtContactsImpl atContact =
-          await AtContactsImpl.getInstance(currentAtSign);
-      contact = await atContact.get(atsign);
+      contact = await getAtSignDetails(atsign);
+
       if (contact != null) {
         if (contact.tags != null && contact.tags['image'] != null) {
           List<int> intList = contact.tags['image'].cast<int>();
