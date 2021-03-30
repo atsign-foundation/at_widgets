@@ -121,8 +121,9 @@ class ConnectionsService {
     } else {
       result = await _sdkService.put(atKey, following.toString());
     }
-    await _deleteCachedKeys(atKey, atsign);
-
+    if (!result) {
+      return result;
+    }
     //change metadata to private to notify
     if (atMetadata.isPublic) {
       atKey..sharedWith = atsign;
@@ -130,6 +131,8 @@ class ConnectionsService {
       atKey..metadata = atMetadata;
       result = await _sdkService.notify(atKey, atsign, OperationEnum.delete);
     }
+    await _deleteCachedKeys(atKey, atsign);
+
     await _sdkService.sync();
     return result;
   }
@@ -293,6 +296,7 @@ class ConnectionsService {
     //   return;
     // }
     // for (var key in PublicData.list) {
+    //   atKey..sharedWith = null;
     //   atKey..metadata = _getPublicFieldsMetadata(key);
     //   atKey..sharedBy = atsign;
     //   //TODO:remove after modifying _getPublicFieldsMetadata.
@@ -331,10 +335,12 @@ class ConnectionsService {
     _logger.info(
         'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.fromAtSign} to:${notification.toAtSign}');
     if (notification.operation == Operation.update &&
-        notification.toAtSign == _sdkService.atsign) {
+        notification.toAtSign == _sdkService.atsign &&
+        notification.key == AppConstants.following) {
       await updateFollowers(notification);
     } else if (notification.operation == Operation.delete &&
-        notification.toAtSign == _sdkService.atsign) {
+        notification.toAtSign == _sdkService.atsign &&
+        notification.key == AppConstants.following) {
       await deleteFollowers(notification);
     }
   }
