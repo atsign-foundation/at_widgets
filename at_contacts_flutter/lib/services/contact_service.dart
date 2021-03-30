@@ -44,7 +44,8 @@ class ContactService {
 
   List<AtContact> contactList = [],
       blockContactList = [],
-      selectedContacts = [];
+      selectedContacts = [],
+      cachedContactList = [];
   bool isContactPresent, limitReached = false;
 
   String getAtSignError = '';
@@ -62,7 +63,7 @@ class ContactService {
     rootPort = rootPortFromApp;
     atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
     loggedInUserDetails = await getAtSignDetails(currentAtSign);
-    contactList = await atContactImpl.listContacts();
+    cachedContactList = await atContactImpl.listContacts();
   }
 
   resetData() {
