@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:at_contact/at_contact.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
@@ -76,6 +78,7 @@ class _GroupListState extends State<GroupList> {
           trailingIcon: Icon(
             Icons.add,
             color: AllColors().ORANGE,
+            size: 20.toFont,
           ),
           onTrailingIconPressed: () => Navigator.push(
             context,
@@ -180,8 +183,13 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
+      Uint8List groupPicture;
+      if (group.groupPicture != null) {
+        List<int> intList = group.groupPicture.cast<int>();
+        groupPicture = Uint8List.fromList(intList);
+      }
       return ConfirmationDialog(
-        title: ' ${group.displayName}',
+        title: '${group.displayName}',
         heading: 'Are you sure you want to delete this group?',
         onYesPressed: () async {
           var result = await GroupService().deleteGroup(group);
@@ -192,6 +200,7 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
             CustomToast().show(TextConstants().SERVICE_ERROR, context);
           }
         },
+        image: groupPicture,
       );
     },
   );

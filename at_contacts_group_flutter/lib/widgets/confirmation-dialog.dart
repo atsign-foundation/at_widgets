@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:at_common_flutter/widgets/custom_button.dart';
+import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
@@ -6,13 +10,17 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class ConfirmationDialog extends StatefulWidget {
-  final String heading, title, subtitle;
+  final String heading, subtitle, atsign;
+  String title;
   final Function onYesPressed;
+  final Uint8List image;
   ConfirmationDialog(
       {@required this.heading,
       @required this.title,
       @required this.onYesPressed,
-      this.subtitle});
+      this.subtitle,
+      this.atsign,
+      this.image});
 
   @override
   _ConfirmationDialogState createState() => _ConfirmationDialogState();
@@ -20,11 +28,33 @@ class ConfirmationDialog extends StatefulWidget {
 
 class _ConfirmationDialogState extends State<ConfirmationDialog> {
   bool isLoading;
+  Uint8List contactImage;
+  String contactInitial;
 
   @override
   void initState() {
     isLoading = false;
+    getAtsignImage();
     super.initState();
+    if (widget.title[0] == '@') {
+      contactInitial = widget.title.substring(1, widget.title.length);
+    } else {
+      contactInitial = widget.title;
+    }
+  }
+
+  getAtsignImage() async {
+    if (widget.atsign == null) return;
+    AtContact contact = await getAtSignDetails(widget.atsign);
+
+    if (contact != null) {
+      if (contact.tags != null && contact.tags['image'] != null) {
+        List<int> intList = contact.tags['image'].cast<int>();
+        setState(() {
+          contactImage = Uint8List.fromList(intList);
+        });
+      }
+    }
   }
 
   @override
@@ -51,13 +81,35 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 15.toHeight),
-              widget.title.length > 2
-                  ? ContactInitial(
-                      initials: widget.title.substring(1, 3), size: 60)
-                  : ContactInitial(
-                      initials: widget.title
-                          .substring(0, widget.title.length >= 1 ? 1 : 0),
-                      size: 60),
+              // when image is direclty passed as parameter(for group picture)
+              widget.image != null
+                  ? ClipRRect(
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(30.toFont)),
+                      child: Image.memory(
+                        widget.image,
+                        width: 50.toFont,
+                        height: 50.toFont,
+                        fit: BoxFit.fill,
+                      ),
+                    )
+                  // when we have to find image of the atsign
+                  : contactImage != null
+                      ? ClipRRect(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(30.toFont)),
+                          child: Image.memory(
+                            contactImage,
+                            width: 50.toFont,
+                            height: 50.toFont,
+                            fit: BoxFit.fill,
+                          ),
+                        )
+                      : ContactInitial(
+                          initials: contactInitial.substring(
+                              0, contactInitial.length > 1 ? 2 : 1),
+                          size: 60),
+
               SizedBox(height: 15.toHeight),
               Text(
                 widget.title,

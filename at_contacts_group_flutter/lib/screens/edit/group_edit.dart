@@ -54,18 +54,21 @@ class _GroupEditState extends State<GroupEdit> {
         appBar: CustomAppBar(
           showLeadingIcon: true,
           leadingIcon: Center(
-            child: GestureDetector(
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? AllColors().Black
-                        : AllColors().Black,
-                    fontSize: 16),
+            child: Container(
+              padding: EdgeInsets.only(left: 10),
+              child: GestureDetector(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AllColors().Black
+                          : AllColors().Black,
+                      fontSize: 14.toFont),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
-              onTap: () {
-                Navigator.pop(context);
-              },
             ),
           ),
           showTrailingIcon: true,
@@ -74,9 +77,16 @@ class _GroupEditState extends State<GroupEdit> {
           trailingIcon: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: SizedBox(
+                      width: 20.toHeight,
+                      height: 20.toHeight,
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
                 : Text('Done',
-                    style: TextStyle(color: AllColors().ORANGE, fontSize: 18)),
+                    style: TextStyle(
+                        color: AllColors().ORANGE, fontSize: 15.toFont)),
           ),
           onTrailingIconPressed: () async {
             groupName = textController.text;
@@ -178,12 +188,14 @@ class _GroupEditState extends State<GroupEdit> {
                                 child: TextField(
                                   readOnly: false,
                                   focusNode: textFieldFocus,
+                                  style: TextStyle(fontSize: 15.toFont),
                                   decoration: InputDecoration(
                                     // hintText: hintText,
                                     enabledBorder: InputBorder.none,
                                     border: InputBorder.none,
                                     hintStyle: TextStyle(
-                                        color: AllColors().INPUT_FIELD_COLOR),
+                                        color: AllColors().INPUT_FIELD_COLOR,
+                                        fontSize: 15.toFont),
                                   ),
                                   onTap: () {
                                     if (showEmojiPicker)
