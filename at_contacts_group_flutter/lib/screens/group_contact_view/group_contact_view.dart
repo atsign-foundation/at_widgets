@@ -9,6 +9,7 @@ import 'package:at_contacts_flutter/widgets/custom_search_field.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/add_contacts_group_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_selction_bottom_sheet.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_list_tile.dart';
@@ -43,6 +44,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   List<GroupContactsModel> unmodifiedSelectedGroupContacts = [];
   ContactService _contactService;
   bool deletingContact = false;
+  int itemCount = 27;
   @override
   void initState() {
     _groupService = GroupService();
@@ -50,7 +52,6 @@ class _GroupContactViewState extends State<GroupContactView> {
     _groupService.fetchGroupsAndContacts();
     unmodifiedSelectedGroupContacts =
         List.from(_groupService.selectedGroupContacts);
-    // print("unmodified list ---> $unmodifiedSelectedGroupContacts");
 
     super.initState();
   }
@@ -131,7 +132,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                           )
                         : ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.toHeight),
-                            itemCount: 27,
+                            itemCount: itemCount,
                             shrinkWrap: true,
                             physics: AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, alphabetIndex) {
@@ -196,8 +197,19 @@ class _GroupContactViewState extends State<GroupContactView> {
                               }
 
                               if (contactsForAlphabet.isEmpty) {
-                                return Container();
+                                itemCount = 1;
+
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 28.toHeight),
+                                  child: Center(
+                                    child: Text(
+                                      'No contact found...',
+                                      style: CustomTextStyles().grey16,
+                                    ),
+                                  ),
+                                );
                               }
+
                               return Container(
                                 child: Column(
                                   children: [
