@@ -6,6 +6,7 @@ import 'package:at_follows_flutter/domain/connection_model.dart';
 import 'package:at_follows_flutter/services/sdk_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_utils/at_logger.dart';
 
 class ConnectionsService {
@@ -311,6 +312,8 @@ class ConnectionsService {
   String formatAtSign(String atsign) {
     if (atsign == null) {
       return null;
+    } else if (atsign.contains(':')) {
+      return Strings.invalidAtsign;
     }
     atsign = atsign.trim().toLowerCase().replaceAll(' ', '');
     atsign = !atsign.startsWith('@') ? '@' + atsign : atsign;

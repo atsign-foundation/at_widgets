@@ -12,6 +12,7 @@ class Strings {
   static const String package = 'at_follows_flutter';
   static const String noFollowers = 'No Followers!';
   static const String noFollowing = 'You are not following anyone!';
+  static const String invalidAtsign = 'Invalid Atsign';
 
   //public content
   static const String publicContentAppbarTitle = 'Public Content';
@@ -47,6 +48,8 @@ class Strings {
   static const String submitButton = 'Submit';
   static const String existingFollower = 'You are already following ';
   static const String ownAtsign = 'You cannot follow your own @sign';
+  static const String invalidAtsignMessage =
+      'Please provide or scan a valid @sign to follow';
   //error dialog texts
   static const String errorTitle = 'Error';
   static const String closeButton = 'Close';

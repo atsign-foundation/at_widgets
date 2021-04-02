@@ -61,6 +61,10 @@ class _QrScanState extends State<QrScan> {
     } else if (atsign == SDKService().atsign) {
       _showFollowersAlertDialog(context, atsign, message: Strings.ownAtsign);
       return false;
+    } else if (atsign == Strings.invalidAtsign) {
+      _showFollowersAlertDialog(context, atsign,
+          message: Strings.invalidAtsignMessage);
+      return false;
     }
     return true;
   }
@@ -74,8 +78,11 @@ class _QrScanState extends State<QrScan> {
     if (data != null || data != '') {
       var formattedAtsign = ConnectionsService().formatAtSign(data);
       Navigator.pop(context, true);
-      if (_validateFollowingAtsign(formattedAtsign))
+      if (_validateFollowingAtsign(formattedAtsign)) {
         await ConnectionProvider().follow(formattedAtsign);
+      } else {
+        //TODO: don't pop the route and restart the scan
+      }
     } else {
       _logger.severe('Scanning the QRcode throws error');
     }
