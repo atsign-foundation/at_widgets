@@ -6,6 +6,7 @@ import 'package:at_follows_flutter/utils/color_constants.dart';
 import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_follows_flutter/widgets/custom_button.dart';
+import 'package:at_follows_flutter/widgets/web_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
@@ -161,6 +162,18 @@ class _FollowersState extends State<Followers> {
                               Atsign currentAtsign =
                                   sortedListWithAlphabet[index];
                               return ListTile(
+                                onTap: () {
+                                  if (!widget.isFollowing) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => WebViewScreen(
+                                                url:
+                                                    '${Strings.directoryUrl}/${currentAtsign.title}',
+                                                title: Strings
+                                                    .publicContentAppbarTitle)));
+                                  }
+                                },
                                 leading: CircleAvatar(
                                   backgroundColor: ColorConstants.fillColor,
                                   radius: 20.toFont,
@@ -252,6 +265,7 @@ class _FollowersState extends State<Followers> {
                       isActive: false,
                       onPressedCallBack: (value) {
                         _connectionsService.followerAtsign = null;
+                        _connectionsService.followAtsign = null;
                         Navigator.pop(context);
                       },
                       text: Strings.cancel,
@@ -262,6 +276,7 @@ class _FollowersState extends State<Followers> {
                       isActive: true,
                       onPressedCallBack: (value) {
                         _connectionsService.followerAtsign = null;
+                        _connectionsService.followAtsign = null;
                         Navigator.pop(context);
                         ConnectionProvider().follow(atsign);
                       },

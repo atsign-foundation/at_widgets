@@ -5,6 +5,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
+import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_utils/at_logger.dart';
 
 class SDKService {
@@ -26,6 +27,8 @@ class SDKService {
   set setClientService(AtClientService service) {
     this._atClientServiceInstance = service;
     this._atsign = _atClientServiceInstance.atClient.currentAtSign;
+    Strings.rootdomain =
+        _atClientServiceInstance.atClient.preference.rootDomain;
   }
 
   get atsign => this._atsign;
@@ -53,6 +56,9 @@ class SDKService {
   ///Returns list of latest notifications of followers with `update` operation.
   ///Returns null if such notifications are not present.
   Future<List<AtNotification>> notifyList({String fromDate}) async {
+    if (fromDate != null) {
+      fromDate = fromDate.split(' ')[0];
+    }
     var response = await _atClientServiceInstance.atClient
         .notifyList(regex: AppConstants.following, fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');

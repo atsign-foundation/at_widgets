@@ -5,13 +5,18 @@ class Strings {
   static const String Unfollow = 'Unfollow';
   static const String BackButton = 'Back';
   static const String Title = 'Connections';
-  static const String Search = 'Search';
+  static const String Search = 'Filter @signs';
   static const String Error = 'Error';
   static const String Close = 'Close';
   static const String atsign = '@';
   static const String package = 'at_follows_flutter';
   static const String noFollowers = 'No Followers!';
   static const String noFollowing = 'You are not following anyone!';
+
+  //public content
+  static const String publicContentAppbarTitle = 'Public Content';
+  static String directoryUrl;
+  static String rootdomain;
 
   static const String privateFollowersList =
       'Followers List cannot be viewed to public by making it private.';

@@ -50,6 +50,9 @@ class _ConnectionsState extends State<Connections> {
     ColorConstants.darkTheme = widget.isDarkTheme;
     ColorConstants.appColor = widget.appColor;
     SDKService().setClientService = widget.atClientserviceInstance;
+    Strings.directoryUrl = Strings.rootdomain == 'root.atsign.org'
+        ? 'https://atsign.directory/'
+        : 'https://directory.atsign.wtf/';
     _connectionService.followerAtsign = widget.followerAtsignTitle;
     _connectionService.followAtsign = widget.followAtsignTitle;
     _connectionService.startMonitor().then((value) => setState(() {
@@ -140,9 +143,9 @@ class _ConnectionsState extends State<Connections> {
                         decoration: InputDecoration(
                             filled: true,
                             fillColor: ColorConstants.fillColor,
-                            labelText: Strings.Search.toUpperCase(),
+                            labelText: Strings.Search,
                             labelStyle: CustomTextStyles.fontR16primary,
-                            prefixIcon: Icon(Icons.search,
+                            prefixIcon: Icon(Icons.filter_list,
                                 color: ColorConstants.primary),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0.toFont),
