@@ -93,12 +93,13 @@ class SendLocationNotification {
       LocationNotificationModel notification, LatLng myLocation) async {
     bool isSend = false;
 
-    if (notification.to == null)
+    if (notification.to == null) {
       isSend = true;
-    else if ((DateTime.now().difference(notification.from) >
+    } else if ((DateTime.now().difference(notification.from) >
             Duration(seconds: 0)) &&
-        (notification.to.difference(DateTime.now()) > Duration(seconds: 0)))
+        (notification.to.difference(DateTime.now()) > Duration(seconds: 0))) {
       isSend = true;
+    }
     if (isSend) {
       String atkeyMicrosecondId = notification.key.split('-')[1].split('@')[0];
       AtKey atKey = newAtKey(

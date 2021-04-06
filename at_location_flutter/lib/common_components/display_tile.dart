@@ -44,11 +44,12 @@ class _DisplayTileState extends State<DisplayTile> {
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
         List<int> intList = contact.tags['image'].cast<int>();
-        if (mounted)
+        if (mounted) {
           setState(() {
             image = Uint8List.fromList(intList);
             if (widget.showName) name = contact.tags['name'].toString();
           });
+        }
       }
     }
   }

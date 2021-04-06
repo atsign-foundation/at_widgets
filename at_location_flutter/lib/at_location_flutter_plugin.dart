@@ -119,10 +119,10 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                           widget.right ?? 20,
                           widget.bottom ?? 20,
                         )),
-                        center: ((users != null) && (users.length != 0))
+                        center: ((users != null) && (users.isNotEmpty))
                             ? users[0].latLng
                             : LatLng(45, 45),
-                        zoom: markers.length != 0 ? 8 : 2,
+                        zoom: markers.isNotEmpty ? 8 : 2,
                         plugins: [MarkerClusterPlugin(UniqueKey())],
                         onTap: (_) => _popupController
                             .hidePopup(), // Hide popup when the map is tapped.
@@ -188,7 +188,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
 
   zoomOutFn() {
     _popupController.hidePopup();
-    LocationService().hybridUsersList.length > 0
+    LocationService().hybridUsersList.isNotEmpty
         ? mapController.move(LocationService().hybridUsersList[0].latLng, 4)
         : null;
   }

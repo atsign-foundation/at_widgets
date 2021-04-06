@@ -61,11 +61,12 @@ class _CollapsedContentState extends State<CollapsedContent> {
         widget.userListenerKeyword.atsignCreator == widget.currentAtSign;
     DateTime to = widget.userListenerKeyword.to;
     String time;
-    if (to != null)
+    if (to != null) {
       time =
           'until ${timeOfDayToString(TimeOfDay.fromDateTime(widget.userListenerKeyword.to))} today';
-    else
+    } else {
       time = '';
+    }
 
     return Column(
         mainAxisSize: MainAxisSize.min,

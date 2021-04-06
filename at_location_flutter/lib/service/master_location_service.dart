@@ -38,8 +38,9 @@ class MasterLocationService {
     allReceivedUsersList = [];
     _allReceivedUsersController =
         StreamController<List<HybridModel>>.broadcast();
-    if (newGetAtValueFromMainApp != null)
+    if (newGetAtValueFromMainApp != null) {
       getAtValueFromMainApp = newGetAtValueFromMainApp;
+    }
 
     getAtValueFromMainApp = getAtValue;
 
@@ -51,7 +52,7 @@ class MasterLocationService {
     List<String> response = await atClientInstance.getKeys(
       regex: '$locationKey',
     );
-    if (response.length == 0) {
+    if (response.isEmpty) {
       return;
     }
 
@@ -193,10 +194,11 @@ class MasterLocationService {
           // ignore: return_of_invalid_type_from_catch_error
           (e) => print("error in getAtValue in master location service : $e"));
 
-      if (atvalue != null)
+      if (atvalue != null) {
         return atvalue;
-      else
+      } else {
         return null;
+      }
     } catch (e) {
       print('getAtValue in master location service:$e');
       return null;
