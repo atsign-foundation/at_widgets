@@ -17,10 +17,9 @@ class OneDayEvent extends StatefulWidget {
 }
 
 class _OneDayEventState extends State<OneDayEvent> {
-  EventNotificationModel eventData = new EventNotificationModel();
+  EventNotificationModel eventData = EventNotificationModel();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // eventData = cloneEventModel();
     eventData = EventNotificationModel.fromJson(jsonDecode(
@@ -70,8 +69,9 @@ class _OneDayEventState extends State<OneDayEvent> {
                             if (datePicked != null) {
                               setState(() {
                                 eventData.event.date = datePicked;
-                                if (eventData.event.endDate == null)
+                                if (eventData.event.endDate == null) {
                                   eventData.event.endDate = datePicked;
+                                }
 
                                 if (eventData.event.startTime != null) {
                                   eventData.event.startTime = DateTime(

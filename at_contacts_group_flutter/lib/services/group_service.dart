@@ -154,8 +154,9 @@ class GroupService {
       if (updatedGroup is AtGroup) {
         updateGroupStreams(updatedGroup);
         return updatedGroup;
-      } else
+      } else {
         return 'something went wrong';
+      }
     } catch (e) {
       print('error in updating group: $e');
       return e;
@@ -207,7 +208,9 @@ class GroupService {
       await getAllGroupsDetails();
       // print('ALL CONTACTS====>${allContacts.length}');
       _allContactsStreamController.add(allContacts);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   removeGroupContact(GroupContactsModel item) async {
@@ -237,7 +240,9 @@ class GroupService {
       }
 
       selectedContactsSink.add(selectedGroupContacts);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   addGroupContact(GroupContactsModel item) {
@@ -274,7 +279,9 @@ class GroupService {
       }
 
       selectedContactsSink.add(selectedGroupContacts);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   void dispose() {

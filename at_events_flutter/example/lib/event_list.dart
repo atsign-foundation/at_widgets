@@ -32,8 +32,8 @@ class _EventListState extends State<EventList> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Event list'),
-        leading: new IconButton(
-          icon: new Icon(Icons.arrow_back),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -72,7 +72,7 @@ class _EventListState extends State<EventList> {
                                     if (events[index].atsignCreator ==
                                         EventService()
                                             .atClientInstance
-                                            .currentAtSign)
+                                            .currentAtSign) {
                                       bottomSheet(
                                           context,
                                           CreateEvent(
@@ -87,7 +87,7 @@ class _EventListState extends State<EventList> {
                                           ),
                                           MediaQuery.of(context).size.height *
                                               0.9);
-                                    else
+                                    } else {
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -95,6 +95,7 @@ class _EventListState extends State<EventList> {
                                               'Accept event invite??');
                                         },
                                       );
+                                    }
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(10),
@@ -107,8 +108,7 @@ class _EventListState extends State<EventList> {
                                                 events[index].atsignCreator
                                             ? SizedBox()
                                             : getActionString(events[index])
-                                                        .length >
-                                                    0
+                                                    .isNotEmpty
                                                 ? Text(
                                                     '${getActionString(events[index])}',
                                                     style: TextStyle(
@@ -169,8 +169,9 @@ class _EventListState extends State<EventList> {
               if (result != null && result) {
                 Navigator.of(context).pop();
               }
-            } else
+            } else {
               Navigator.of(context).pop();
+            }
           },
         ),
         FlatButton(
@@ -201,7 +202,7 @@ class _EventListState extends State<EventList> {
     String label = 'Action required';
     String currentAtsign = EventService().currentAtSign;
 
-    if (event.group.members.length < 1) return '';
+    if (event.group.members.isEmpty) return '';
 
     event.group.members.forEach((member) {
       if (member.tags['isAccepted'] != null &&

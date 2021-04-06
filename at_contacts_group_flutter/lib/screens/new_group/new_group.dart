@@ -34,10 +34,11 @@ class _NewGroupState extends State<NewGroup> {
   }
 
   getContacts() {
-    if (GroupService().selecteContactList.length > 0) {
+    if (GroupService().selecteContactList.isNotEmpty) {
       selectedContacts = GroupService().selecteContactList;
-    } else
+    } else {
       selectedContacts = [];
+    }
   }
 
   createGroup() async {
@@ -50,8 +51,8 @@ class _NewGroupState extends State<NewGroup> {
       //   return;
       // }
 
-      if (groupName.trim().length > 0) {
-        AtGroup group = new AtGroup(
+      if (groupName.trim().isNotEmpty) {
+        AtGroup group = AtGroup(
           groupName,
           description: 'group desc',
           displayName: groupName,
@@ -78,9 +79,10 @@ class _NewGroupState extends State<NewGroup> {
           } else if (result.runtimeType == InvalidAtSignException) {
             CustomToast()
                 .show(result.message, context, gravity: isKeyboardOpen ? 2 : 0);
-          } else
+          } else {
             CustomToast().show(TextConstants().SERVICE_ERROR, context,
                 gravity: isKeyboardOpen ? 2 : 0);
+          }
         } else {
           CustomToast().show(TextConstants().SERVICE_ERROR, context,
               gravity: isKeyboardOpen ? 2 : 0);
@@ -131,7 +133,7 @@ class _NewGroupState extends State<NewGroup> {
                   child: Container(
                     width: 68.toWidth,
                     height: 68.toWidth,
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AllColors().MILD_GREY,
                       shape: BoxShape.circle,
                     ),
@@ -185,10 +187,11 @@ class _NewGroupState extends State<NewGroup> {
                                         fontSize: 15.toFont),
                                   ),
                                   onTap: () {
-                                    if (showEmojiPicker)
+                                    if (showEmojiPicker) {
                                       setState(() {
                                         showEmojiPicker = false;
                                       });
+                                    }
                                   },
                                   onChanged: (val) {},
                                   controller: textController,

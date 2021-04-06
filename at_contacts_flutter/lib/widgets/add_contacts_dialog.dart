@@ -1,10 +1,12 @@
 /// A popup to ask the [AtSign] which is to be added
 
 import 'package:at_common_flutter/at_common_flutter.dart';
+// ignore: library_prefixes
 import 'package:at_contacts_flutter/utils/text_strings.dart' as contactStrings;
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart'
+    // ignore: library_prefixes
     as contactTextStyles;
 import 'package:flutter/material.dart';
 

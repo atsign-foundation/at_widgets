@@ -67,10 +67,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
       if (_result == null) {
         print('_result = true');
-        if (mounted)
+        if (mounted) {
           setState(() {
             errorOcurred = true;
           });
+        }
       }
     });
 
@@ -178,7 +179,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             }
                           });
 
-                          if (_filteredList.length == 0) {
+                          if (_filteredList.isEmpty) {
                             return Center(
                               child: Text(TextStrings().noContactsFound),
                             );
@@ -263,7 +264,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                     setState(() {
                                                       blockingContact = true;
                                                     });
-                                                    showDialog(
+                                                    await showDialog(
                                                       context: context,
                                                       builder: (context) =>
                                                           AlertDialog(
@@ -301,7 +302,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                     setState(() {
                                                       deletingContact = true;
                                                     });
-                                                    showDialog(
+                                                    await showDialog(
                                                       context: context,
                                                       builder: (context) =>
                                                           AlertDialog(

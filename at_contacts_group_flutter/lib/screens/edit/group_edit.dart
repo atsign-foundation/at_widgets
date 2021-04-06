@@ -33,10 +33,10 @@ class _GroupEditState extends State<GroupEdit> {
     isLoading = false;
     if (widget.group != null) groupName = widget.group.displayName;
 
-    textController = new TextEditingController.fromValue(
-      new TextEditingValue(
+    textController = TextEditingController.fromValue(
+      TextEditingValue(
         text: groupName != null ? groupName : '',
-        selection: new TextSelection.collapsed(offset: -1),
+        selection: TextSelection.collapsed(offset: -1),
       ),
     );
 
@@ -91,7 +91,7 @@ class _GroupEditState extends State<GroupEdit> {
           onTrailingIconPressed: () async {
             groupName = textController.text;
             if (groupName != null) {
-              if (groupName.trim().length > 0) {
+              if (groupName.trim().isNotEmpty) {
                 AtGroup group = widget.group;
                 group.displayName = groupName;
                 group.groupName = groupName;
@@ -198,10 +198,11 @@ class _GroupEditState extends State<GroupEdit> {
                                         fontSize: 15.toFont),
                                   ),
                                   onTap: () {
-                                    if (showEmojiPicker)
+                                    if (showEmojiPicker) {
                                       setState(() {
                                         showEmojiPicker = false;
                                       });
+                                    }
                                   },
                                   onChanged: (val) {},
                                   controller: textController,
@@ -261,11 +262,11 @@ class _GroupEditState extends State<GroupEdit> {
         builder: (BuildContext context) {
           return Container(
             height: 119.toHeight,
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: Theme.of(context).brightness == Brightness.light
                   ? AllColors().WHITE
                   : AllColors().Black,
-              borderRadius: new BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(12.0),
                 topRight: const Radius.circular(12.0),
               ),

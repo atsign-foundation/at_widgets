@@ -120,8 +120,9 @@ class _CustomListTileState extends State<CustomListTile> {
               onPressed: widget.asSelectionTile
                   ? selectRemoveContact()
                   : () {
-                      if (widget.onTrailingPressed != null)
+                      if (widget.onTrailingPressed != null) {
                         widget.onTrailingPressed(widget.contact.atSign);
+                      }
                     },
               icon: (widget.asSelectionTile ?? false)
                   ? (isSelected)

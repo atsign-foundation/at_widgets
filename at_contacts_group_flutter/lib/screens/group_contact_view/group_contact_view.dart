@@ -263,7 +263,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                                                     blockingContact =
                                                                         true;
                                                                   });
-                                                                  showDialog(
+                                                                  await showDialog(
                                                                     context:
                                                                         context,
                                                                     builder:
@@ -316,7 +316,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                                                     deletingContact =
                                                                         true;
                                                                   });
-                                                                  showDialog(
+                                                                  await showDialog(
                                                                     context:
                                                                         context,
                                                                     builder:

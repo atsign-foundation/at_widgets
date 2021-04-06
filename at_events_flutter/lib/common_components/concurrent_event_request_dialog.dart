@@ -1,5 +1,4 @@
 import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_events_flutter/common_components/custom_circle_avatar.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:at_events_flutter/utils/colors.dart';
@@ -72,10 +71,11 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                             });
                             await EventService().createEvent(
                                 isEventOverlap: true, context: context);
-                            if (mounted)
+                            if (mounted) {
                               setState(() {
                                 isLoader = true;
                               });
+                            }
                           },
                           buttonText: 'Yes! Create another',
                           width: 278,

@@ -93,10 +93,11 @@ class _GroupViewState extends State<GroupView> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.active) {
-                          if (snapshot.data == true)
+                          if (snapshot.data == true) {
                             return CircularProgressIndicator();
-                          else
+                          } else {
                             return SizedBox();
+                          }
                         } else {
                           return SizedBox();
                         }
@@ -168,8 +169,9 @@ class _GroupViewState extends State<GroupView> {
                                 return SizedBox();
                               }
                             }
-                          } else
+                          } else {
                             return SizedBox();
+                          }
                         },
                       )),
                 ],
@@ -237,14 +239,15 @@ class _GroupViewState extends State<GroupView> {
                                       ],
                                     ),
                                   );
-                                } else
+                                } else {
                                   return SizedBox();
+                                }
                               }),
                         ],
                       ),
                       InkWell(
                         onTap: () async {
-                          Navigator.push(
+                          await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ContactsScreen(
@@ -255,8 +258,9 @@ class _GroupViewState extends State<GroupView> {
                                       selectedList;
                                 },
                                 saveGroup: () async {
-                                  if (GroupService().selecteContactList.length >
-                                      0) {
+                                  if (GroupService()
+                                      .selecteContactList
+                                      .isNotEmpty) {
                                     GroupService().showLoaderSink.add(true);
 
                                     var result = await GroupService()
@@ -274,10 +278,11 @@ class _GroupViewState extends State<GroupView> {
                                       //     TextConstants().MEMBER_ADDED,
                                       //     context);
 
-                                    } else
+                                    } else {
                                       CustomToast().show(
                                           TextConstants().SERVICE_ERROR,
                                           context);
+                                    }
                                   }
                                 },
                               ),

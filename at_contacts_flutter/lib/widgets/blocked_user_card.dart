@@ -68,7 +68,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
           setState(() {
             unblockUser = true;
           });
-          showDialog(
+          await showDialog(
             context: context,
             builder: (context) => AlertDialog(
               title: Center(
