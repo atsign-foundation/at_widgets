@@ -197,6 +197,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     } else {
       await [Permission.camera, Permission.storage].request();
     }
+    setState(() {
+      permissionGrated = true;
+    });
   }
 
   void _uploadCramKeyFile() async {

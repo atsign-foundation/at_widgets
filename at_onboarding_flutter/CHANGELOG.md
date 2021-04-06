@@ -7,3 +7,6 @@
 ## 1.0.0+2
 - pubspec dependency upgrade
 
+## 1.0.0+3
+- Scan QRcode on app start fix
+
