@@ -15,7 +15,10 @@ dependencies:
   flutter_qr_reader: ^1.0.3
   permission_handler: ^5.0.1+1
   webview_flutter: ^1.0.7
-  at_client_mobile: ^1.0.0+8
+  url_launcher: ^5.7.0
+  at_client_mobile: ^1.0.0+9
+  at_server_status: ^0.1.0+1
+
  
 
 dev_dependencies:

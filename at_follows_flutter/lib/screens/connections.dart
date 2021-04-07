@@ -2,6 +2,7 @@ import 'package:at_follows_flutter/domain/connection_model.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/services/sdk_service.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
+import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/color_constants.dart';
 import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
@@ -20,6 +21,9 @@ class Connections extends StatefulWidget {
   final bool isDarkTheme;
   final Color appColor;
 
+  ///Launches the sepcific app if provided.
+  final String deepLinkAppUrl;
+
   ///name of the follower atsign received from notification to follow them back immediately.
   final String followerAtsignTitle;
 
@@ -30,6 +34,7 @@ class Connections extends StatefulWidget {
       {@required this.atClientserviceInstance,
       this.isDarkTheme = false,
       this.appColor,
+      this.deepLinkAppUrl,
       this.followAtsignTitle,
       this.followerAtsignTitle});
   @override
@@ -50,11 +55,10 @@ class _ConnectionsState extends State<Connections> {
     ColorConstants.darkTheme = widget.isDarkTheme;
     ColorConstants.appColor = widget.appColor;
     SDKService().setClientService = widget.atClientserviceInstance;
+    AppConstants.appUrl = widget.deepLinkAppUrl;
     Strings.directoryUrl = Strings.rootdomain == 'root.atsign.org'
         ? 'https://atsign.directory/'
         : 'https://directory.atsign.wtf/';
-    _connectionService.followerAtsign = widget.followerAtsignTitle;
-    _connectionService.followAtsign = widget.followAtsignTitle;
     _connectionService.startMonitor().then((value) => setState(() {
           _formConnectionTabs(2);
         }));
@@ -115,6 +119,8 @@ class _ConnectionsState extends State<Connections> {
                               index < connectionTabs.length;
                               index++)
                             CustomButton(
+                              showCount: true,
+                              count: '${connectionTabs[index].count ?? 0}',
                               width: 150.0.toWidth,
                               isActive: connectionTabs[index].isActive,
                               text: connectionTabs[index].name,
@@ -163,17 +169,39 @@ class _ConnectionsState extends State<Connections> {
                       SizedBox(height: 20.toHeight),
                       if (connectionTabs[0].isActive)
                         Followers(
+                          count: () {
+                            _getCount();
+                          },
                           searchText: searchController.text,
                         ),
                       if (connectionTabs[1].isActive)
                         Followers(
-                          isFollowing: true,
-                          searchText: searchController.text,
-                        )
+                            isFollowing: true,
+                            searchText: searchController.text,
+                            count: () {
+                              _connectionService.followerAtsign =
+                                  widget.followerAtsignTitle;
+                              _connectionService.followAtsign =
+                                  widget.followAtsignTitle;
+                              _getCount();
+                            })
                     ],
                   ),
           ),
         ));
+  }
+
+  _getCount() {
+    bool isCalled = false;
+    if (connectionTabs[0].count != ConnectionProvider().followersList.length) {
+      connectionTabs[0].count = ConnectionProvider().followersList.length;
+      setState(() {});
+      isCalled = true;
+    }
+    if (connectionTabs[1].count != ConnectionProvider().followingList.length) {
+      connectionTabs[1].count = ConnectionProvider().followingList.length;
+      if (!isCalled) setState(() {});
+    }
   }
 
   _formConnectionTabs(int tabsCount) {
@@ -190,5 +218,6 @@ class _ConnectionsState extends State<Connections> {
 class ConnectionTab {
   bool isActive;
   String name;
+  int count;
   ConnectionTab({this.isActive = false, @required this.name});
 }

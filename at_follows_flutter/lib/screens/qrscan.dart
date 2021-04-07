@@ -6,6 +6,7 @@ import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_follows_flutter/widgets/custom_appbar.dart';
 import 'package:at_follows_flutter/widgets/custom_button.dart';
+import 'package:at_server_status/at_server_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,6 +22,7 @@ class _QrScanState extends State<QrScan> {
   var _logger = AtSignLogger('Connections QR Scan');
   bool permissionGrated = false;
   bool loading = false;
+  bool _scanCompleted = false;
   QrReaderViewController _controller;
 
   @override
@@ -54,7 +56,7 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
-  bool _validateFollowingAtsign(String atsign) {
+  Future<bool> _validateFollowingAtsign(String atsign) async {
     if (ConnectionProvider().containsFollowing(atsign)) {
       _showFollowersAlertDialog(context, atsign);
       return false;
@@ -66,10 +68,18 @@ class _QrScanState extends State<QrScan> {
           message: Strings.invalidAtsignMessage);
       return false;
     }
-    return true;
+    var atSignStatus = await SDKService().checkAtSignStatus(atsign);
+    if (atSignStatus == AtSignStatus.teapot ||
+        atSignStatus == AtSignStatus.activated) {
+      return true;
+    } else {
+      _showFollowersAlertDialog(context, atsign,
+          message: Strings.getAtSignStatusMessage(atSignStatus));
+      return false;
+    }
   }
 
-  void onScan(String data, List<Offset> offsets, context) async {
+  Future<void> onScan(String data, List<Offset> offsets, context) async {
     _controller.stopCamera();
     this.setState(() {
       loading = true;
@@ -77,11 +87,23 @@ class _QrScanState extends State<QrScan> {
     _logger.info('received data is $data');
     if (data != null || data != '') {
       var formattedAtsign = ConnectionsService().formatAtSign(data);
-      Navigator.pop(context, true);
-      if (_validateFollowingAtsign(formattedAtsign)) {
+      var result = await _validateFollowingAtsign(formattedAtsign);
+
+      if (result) {
+        Navigator.pop(context);
         await ConnectionProvider().follow(formattedAtsign);
       } else {
-        //TODO: don't pop the route and restart the scan
+        setState(() {
+          loading = false;
+          _scanCompleted = false;
+        });
+
+        _controller.startCamera((data1, offsets1) {
+          if (!_scanCompleted) {
+            onScan(data1, offsets1, context);
+            _scanCompleted = true;
+          }
+        });
       }
     } else {
       _logger.severe('Scanning the QRcode throws error');
@@ -123,12 +145,15 @@ class _QrScanState extends State<QrScan> {
                                   QrReaderView(
                                     width: 300.toWidth,
                                     height: 350.toHeight,
-                                    callback: (container) {
+                                    callback: (container) async {
                                       this._controller = container;
-                                      _controller.startCamera((data, offsets) {
-                                        if (!loading) {
-                                          onScan(data, offsets, context);
-                                          loading = true;
+                                      await _controller
+                                          .startCamera((data, offsets) async {
+                                        if (!_scanCompleted) {
+                                          _controller?.stopCamera();
+                                          _scanCompleted = true;
+
+                                          await onScan(data, offsets, context);
                                         }
                                       });
                                     },
@@ -174,7 +199,7 @@ class _QrScanState extends State<QrScan> {
     final _formKey = GlobalKey<FormState>();
     showDialog(
         context: context,
-        builder: (context) {
+        builder: (_) {
           return AlertDialog(
               title: Text(
                 Strings.enterAtsignTitle,
@@ -203,15 +228,26 @@ class _QrScanState extends State<QrScan> {
                 FlatButton(
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
+                      this.setState(() {
+                        loading = true;
+                        // _scanCompleted = true;
+                      });
                       var formattedAtsign = ConnectionsService()
                           .formatAtSign(_atsignController.text);
 
-                      Navigator.pop(context);
-                      if (!_validateFollowingAtsign(formattedAtsign)) {
+                      Navigator.pop(_);
+                      var result =
+                          await _validateFollowingAtsign(formattedAtsign);
+
+                      if (!result) {
+                        setState(() {
+                          loading = false;
+                        });
                         return;
+                      } else {
+                        Navigator.pop(context, true);
+                        await ConnectionProvider().follow(formattedAtsign);
                       }
-                      Navigator.pop(context, true);
-                      await ConnectionProvider().follow(formattedAtsign);
                     }
                   },
                   child: Text(
@@ -226,7 +262,7 @@ class _QrScanState extends State<QrScan> {
   }
 
   _showFollowersAlertDialog(BuildContext context, String atsign,
-      {String message}) {
+      {String message, String status}) {
     showDialog(
         context: context,
         builder: (context) {

@@ -1,3 +1,5 @@
+import 'package:at_server_status/at_server_status.dart';
+
 class Strings {
   static const String Followers = 'Followers';
   static const String Following = 'Following';
@@ -20,9 +22,9 @@ class Strings {
   static String rootdomain;
 
   static const String privateFollowersList =
-      'Followers List cannot be viewed to public by making it private.';
+      'Public cannot see your followers list when it’s set to private';
   static const String privateFollowingList =
-      'Following List cannot be viewed to public by making it private.';
+      'Public cannot see your following list when it’s set to private';
   static const List<String> publicDataKeys = [
     'firstname.persona',
     'lastname.persona',
@@ -44,12 +46,29 @@ class Strings {
   static const String atsignHintText = 'alice';
   static const String qrTitle = 'Follow @sign';
   static const String qrscanDescription =
-      'Scan the QRcode of an @sign to follow';
+      'Scan the QR code of an @sign to follow';
   static const String submitButton = 'Submit';
   static const String existingFollower = 'You are already following ';
   static const String ownAtsign = 'You cannot follow your own @sign';
   static const String invalidAtsignMessage =
       'Please provide or scan a valid @sign to follow';
+  // static const String atSignStatusMessage = 'This @sing is unreachable. P'
+  static String getAtSignStatusMessage(AtSignStatus status) {
+    status ??= AtSignStatus.error;
+    switch (status) {
+      case AtSignStatus.unavailable:
+      case AtSignStatus.notFound:
+        return '@sign is not registered yet. Please try with the registered one.';
+        break;
+      case AtSignStatus.error:
+        return '@sign and the server is unreachable. Please try again';
+        break;
+      default:
+        return 'Unknown status. Please try again later.';
+        break;
+    }
+  }
+
   //error dialog texts
   static const String errorTitle = 'Error';
   static const String closeButton = 'Close';

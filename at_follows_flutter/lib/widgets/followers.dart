@@ -14,7 +14,8 @@ import 'package:provider/provider.dart';
 class Followers extends StatefulWidget {
   final String searchText;
   final bool isFollowing;
-  Followers({this.searchText, this.isFollowing = false});
+  final Function count;
+  Followers({this.searchText, this.isFollowing = false, this.count});
   @override
   _FollowersState createState() => _FollowersState();
 }
@@ -58,6 +59,9 @@ class _FollowersState extends State<Followers> {
           ),
         );
       } else if (provider.status == Status.done) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          widget.count();
+        });
         if (_connectionsService.followerAtsign != null) {
           _followAtsign(context);
         } else if (_connectionsService.followAtsign != null) {
@@ -225,6 +229,7 @@ class _FollowersState extends State<Followers> {
               // SizedBox(height: 10.toHeight),
             ],
           ),
+          // widget.refresh(true);
         );
       } else if (provider.status == Status.error) {
         return AtExceptionHandler().handle(provider.error, context);

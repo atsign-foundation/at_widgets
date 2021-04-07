@@ -6,6 +6,7 @@ import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
+import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_logger.dart';
 
 class SDKService {
@@ -121,6 +122,12 @@ class SDKService {
       _logger.info('Monitor Started for $_atsign!');
     }
     return true;
+  }
+
+  Future<AtSignStatus> checkAtSignStatus(String atsign) async {
+    var atStatusImpl = AtStatusImpl(rootUrl: Strings.rootdomain);
+    var status = await atStatusImpl.get(atsign);
+    return status.status();
   }
 
   sync() async {

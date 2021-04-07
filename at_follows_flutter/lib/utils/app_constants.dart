@@ -4,5 +4,7 @@ class AppConstants {
   static const String publicImage = 'image.persona';
   static const String publicFirstname = 'firstname.persona';
   static const String publicLastname = 'lastname.persona';
+  static String appUrl;
+
   static const int responseTimeLimit = 30;
 }

@@ -11,6 +11,8 @@ class CustomButton extends StatefulWidget {
   final providerStatus;
   final double width;
   final Function onPressedCallBack;
+  final bool showCount;
+  final String count;
   // final highlightColor;
   CustomButton(
       {@required this.text,
@@ -19,6 +21,8 @@ class CustomButton extends StatefulWidget {
       textstyle,
       highLightColor,
       this.width = 0.0,
+      this.showCount = false,
+      this.count,
       this.isActive = false})
       : this.highLightColor = highLightColor ?? ColorConstants.secondary;
 
@@ -40,26 +44,45 @@ class _CustomButtonState extends State<CustomButton> {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-        minWidth: widget.width,
-        onPressed: () {
-          // print("pressed highlight color is ${widget.highLightColor}");
-          // if (widget.providerStatus != null) {
-          //   connectionProvider.setStatus(widget.providerStatus);
-          // }
-          widget.onPressedCallBack(!widget.isActive);
-        },
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0.toFont),
-            side: BorderSide(color: ColorConstants.borderColor)),
-        color: widget.isActive
-            ? ColorConstants.buttonHighLightColor
-            : ColorConstants.secondary,
-        highlightColor: widget.highLightColor,
-        child: Text(
-          widget.text,
-          style: widget.isActive
-              ? CustomTextStyles.fontR14light
-              : CustomTextStyles.fontR14primary,
-        ));
+      minWidth: widget.width,
+      onPressed: () {
+        // print("pressed highlight color is ${widget.highLightColor}");
+        // if (widget.providerStatus != null) {
+        //   connectionProvider.setStatus(widget.providerStatus);
+        // }
+        widget.onPressedCallBack(!widget.isActive);
+      },
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0.toFont),
+          side: BorderSide(color: ColorConstants.borderColor)),
+      color: widget.isActive
+          ? ColorConstants.buttonHighLightColor
+          : ColorConstants.secondary,
+      highlightColor: widget.highLightColor,
+      child: widget.showCount
+          ? Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0.toFont),
+              child: Column(
+                children: [
+                  Text('${widget.count ?? 0}',
+                      style: widget.isActive
+                          ? CustomTextStyles.fontBold14light
+                          : CustomTextStyles.fontBold14primary),
+                  Text(
+                    widget.text,
+                    style: widget.isActive
+                        ? CustomTextStyles.fontBold14light
+                        : CustomTextStyles.fontBold14primary,
+                  ),
+                ],
+              ),
+            )
+          : Text(
+              widget.text,
+              style: widget.isActive
+                  ? CustomTextStyles.fontR14light
+                  : CustomTextStyles.fontR14primary,
+            ),
+    );
   }
 }

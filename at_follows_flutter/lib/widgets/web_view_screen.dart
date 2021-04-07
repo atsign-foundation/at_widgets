@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/color_constants.dart';
 import 'package:at_follows_flutter/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -43,15 +45,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
           WebView(
             initialUrl: widget.url,
             javascriptMode: JavascriptMode.unrestricted,
-            // navigationDelegate: (NavigationRequest navReq) async {
-            //   if (navReq.url.startsWith(AppConstants.appUrl)) {
-            //     _logger.info('Navigation decision is taken by urlLauncher');
-            //     await _launchURL(navReq.url);
-            //     return NavigationDecision.prevent;
-            //   }
-            //   _logger.info('Navigation decision is taken by webView');
-            //   return NavigationDecision.navigate;
-            // },
+            navigationDelegate: (NavigationRequest navReq) async {
+              if (navReq.url.startsWith(AppConstants.appUrl) &&
+                  AppConstants.appUrl != null) {
+                _logger.info('Navigation decision is taken by urlLauncher');
+                await _launchURL(navReq.url);
+                return NavigationDecision.prevent;
+              }
+              _logger.info('Navigation decision is taken by webView');
+              return NavigationDecision.navigate;
+            },
             onPageFinished: (value) {
               setState(() {
                 isLoading = false;
@@ -71,13 +74,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
     );
   }
 
-  // _launchURL(String url) async {
-  //   url = Uri.encodeFull(url);
-  //   if (await canLaunch(url)) {
-  //     Navigator.pop(context);
-  //     await launch(url);
-  //   } else {
-  //     _logger.severe('unable to launch $url');
-  //   }
-  // }
+  _launchURL(String url) async {
+    url = Uri.encodeFull(url);
+    if (await canLaunch(url)) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      await launch(url);
+    } else {
+      _logger.severe('unable to launch $url');
+    }
+  }
 }
