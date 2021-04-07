@@ -197,6 +197,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     } else {
       await [Permission.camera, Permission.storage].request();
     }
+    setState(() {
+      permissionGrated = true;
+    });
   }
 
   void _uploadCramKeyFile() async {
@@ -425,6 +428,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     return Scaffold(
         backgroundColor: ColorConstants.light,
         appBar: CustomAppBar(
+          showBackButton: true,
           title: Strings.pairAtsignTitle,
           actionItems: [
             IconButton(
