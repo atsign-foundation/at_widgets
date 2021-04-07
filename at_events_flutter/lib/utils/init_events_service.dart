@@ -16,11 +16,11 @@ Future<bool> createEvent(EventNotificationModel eventData) async {
     throw Exception('Event cannot be null');
   }
   if (eventData.atsignCreator == null ||
-      eventData.atsignCreator.trim().length == 0) {
+      eventData.atsignCreator.trim().isEmpty) {
     throw Exception('Event creator cannot be empty');
   }
 
-  if (eventData.group.members.length < 1) {
+  if (eventData.group.members.isEmpty) {
     throw Exception('No members found');
   }
 
@@ -76,8 +76,9 @@ Future<bool> deleteEvent(String key) async {
   eventData = await getValue(regexKey);
   print('eventData to delete:${eventData}');
 
-  if (eventData.atsignCreator != currentAtsign)
+  if (eventData.atsignCreator != currentAtsign) {
     throw Exception('Only creator can delete the event');
+  }
 
   try {
     AtKey atKey = EventService().getAtKey(regexKey);
@@ -119,7 +120,7 @@ Future<List<EventNotificationModel>> getEvents() async {
         regex: 'createevent-',
       );
 
-  if (regexList.length == 0) {
+  if (regexList.isEmpty) {
     EventService().allEvents = allEvents;
     EventService().eventListSink.add(allEvents);
     return [];
@@ -143,6 +144,7 @@ Future<List<EventNotificationModel>> getEvents() async {
     return allEvents;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -159,8 +161,9 @@ Future<EventNotificationModel> getValue(String key) async {
     EventNotificationModel event;
     AtKey atKey = EventService().getAtKey(key);
     AtValue atValue = await EventService().atClientInstance.get(atKey);
-    if (atValue.value != null)
+    if (atValue.value != null) {
       event = EventNotificationModel.fromJson(jsonDecode(atValue.value));
+    }
 
     return event;
   } catch (e) {

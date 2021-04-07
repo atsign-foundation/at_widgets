@@ -5,7 +5,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 
 class ErrorScreen extends StatelessWidget {
   final Function onPressed;
-  String msg;
+  final String msg;
   ErrorScreen(
       {this.onPressed, this.msg = 'Something went wrong, please retry.'});
   @override

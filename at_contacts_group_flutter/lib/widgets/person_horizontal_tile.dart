@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
-import 'package:at_contacts_group_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
+// ignore: must_be_immutable
 class CustomPersonHorizontalTile extends StatelessWidget {
   final String title, subTitle;
   final bool isTopRight;

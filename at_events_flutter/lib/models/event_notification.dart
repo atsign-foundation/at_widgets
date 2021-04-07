@@ -1,10 +1,6 @@
 import 'dart:convert';
 
-import 'package:at_events_flutter/services/event_services.dart';
-import 'package:at_location_flutter/location_modal/location_notification.dart';
-import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:latlong/latlong.dart';
 
 class EventNotificationModel {
   EventNotificationModel();
@@ -35,7 +31,7 @@ class EventNotificationModel {
 
     if (data['group'] != null) {
       data['group'] = jsonDecode(data['group']);
-      group = new AtGroup(data['group']['name']);
+      group = AtGroup(data['group']['name']);
 
       data['group']['members'].forEach((contact) {
         AtContact newContact = AtContact(atSign: contact['atSign']);
@@ -283,6 +279,7 @@ Week getWeekEnum(String weekday) {
     case 'Sunday':
       return Week.SUNDAY;
   }
+  return null;
 }
 
 String getWeekString(Week weekday) {
@@ -302,6 +299,7 @@ String getWeekString(Week weekday) {
     case Week.SUNDAY:
       return 'Sunday';
   }
+  return null;
 }
 
 String timeOfDayToString(DateTime time) {

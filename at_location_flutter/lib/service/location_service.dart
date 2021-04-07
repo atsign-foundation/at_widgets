@@ -102,9 +102,10 @@ class LocationService {
       if (atsignsToTrack.contains(user.displayName)) await updateDetails(user);
     });
 
-    if (hybridUsersList.length != 0)
+    if (hybridUsersList.isNotEmpty) {
       Future.delayed(const Duration(seconds: 2),
           () => _atHybridUsersController.add(hybridUsersList));
+    }
   }
 
   // called when any new/updated data is received in the main app
@@ -112,21 +113,24 @@ class LocationService {
     if (atsignsToTrack != null) {
       await Future.forEach(MasterLocationService().allReceivedUsersList,
           (user) async {
-        if (atsignsToTrack.contains(user.displayName))
+        if (atsignsToTrack.contains(user.displayName)) {
           await updateDetails(user);
+        }
       });
 
-      if (!_atHybridUsersController.isClosed)
+      if (!_atHybridUsersController.isClosed) {
         _atHybridUsersController.add(hybridUsersList);
+      }
     }
   }
 
   // called when a user stops sharing his location
   removeUser(String atsign) {
-    if ((atsignsToTrack != null) && (hybridUsersList.length != 0)) {
+    if ((atsignsToTrack != null) && (hybridUsersList.isNotEmpty)) {
       hybridUsersList.removeWhere((element) => element.displayName == atsign);
-      if (!_atHybridUsersController.isClosed)
+      if (!_atHybridUsersController.isClosed) {
         _atHybridUsersController.add(hybridUsersList);
+      }
     }
   }
 
@@ -142,8 +146,9 @@ class LocationService {
     });
     if (contains) {
       await addDetails(user, index: index);
-    } else
+    } else {
       await addDetails(user);
+    }
   }
 
   // returns new marker and eta
@@ -165,8 +170,9 @@ class LocationService {
         });
         if (_continue) {
           hybridUsersList.add(user);
-          if (showToast != null)
+          if (showToast != null) {
             showToast('${user.displayName} started sharing their location');
+          }
         }
       }
     } catch (e) {
@@ -176,17 +182,18 @@ class LocationService {
   }
 
   _calculateEta(HybridModel user) async {
-    if (calculateETA)
+    if (calculateETA) {
       try {
         var _res;
-        if (etaFrom != null)
+        if (etaFrom != null) {
           _res = await DistanceCalculate().calculateETA(etaFrom, user.latLng);
-        else {
+        } else {
           LatLng mylatlng;
-          if (myData != null)
+          if (myData != null) {
             mylatlng = myData.latLng;
-          else
+          } else {
             mylatlng = await getMyLocation();
+          }
           _res = await DistanceCalculate().calculateETA(mylatlng, user.latLng);
         }
 
@@ -195,12 +202,14 @@ class LocationService {
         print('Error in _calculateEta $e');
         return '?';
       }
-    else
+    } else {
       return '?';
+    }
   }
 
   notifyListeners() {
-    if (hybridUsersList.length > 0)
+    if (hybridUsersList.isNotEmpty) {
       _atHybridUsersController.add(hybridUsersList);
+    }
   }
 }

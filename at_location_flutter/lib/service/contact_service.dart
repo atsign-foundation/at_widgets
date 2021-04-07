@@ -19,7 +19,7 @@ AtContact getCachedContactDetail(String atsign) {
   if (atsign == KeyStreamService().atContactImpl?.atClient?.currentAtSign) {
     return KeyStreamService().loggedInUserDetails;
   }
-  if (KeyStreamService().contactList.length > 0) {
+  if (KeyStreamService().contactList.isNotEmpty) {
     int index = KeyStreamService()
         .contactList
         .indexWhere((element) => element.atSign == atsign);

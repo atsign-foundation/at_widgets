@@ -6,7 +6,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ImagePicker {
   ImagePicker._();
-  static ImagePicker _instance = new ImagePicker._();
+  static ImagePicker _instance = ImagePicker._();
   factory ImagePicker() => _instance;
 
   Future<Uint8List> pickImage() async {

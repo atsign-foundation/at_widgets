@@ -9,6 +9,7 @@ import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
+// ignore: must_be_immutable
 class ConfirmationDialog extends StatefulWidget {
   final String heading, subtitle, atsign;
   String title;
@@ -133,8 +134,9 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                           isLoading = true;
                         });
 
-                        if (widget.onYesPressed != null)
+                        if (widget.onYesPressed != null) {
                           await widget.onYesPressed();
+                        }
 
                         if (mounted) {
                           setState(() {

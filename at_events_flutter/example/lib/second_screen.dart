@@ -1,4 +1,3 @@
-import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/screens/create_event.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
 import 'package:at_events_flutter_example/event_list.dart';
@@ -106,16 +105,16 @@ class _SecondScreenState extends State<SecondScreen> {
     T,
     double height,
   ) async {
-    showModalBottomSheet<void>(
+    await showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
         shape: StadiumBorder(),
         builder: (BuildContext context) {
           return Container(
             height: height,
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: new BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(12.0),
                 topRight: const Radius.circular(12.0),
               ),

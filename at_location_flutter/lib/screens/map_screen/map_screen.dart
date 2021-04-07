@@ -4,7 +4,6 @@ import 'package:at_location_flutter/common_components/floating_icon.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class MapScreen extends StatefulWidget {

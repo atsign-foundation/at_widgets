@@ -9,11 +9,11 @@ bottomSheet(BuildContext context, T, double height, {Function onSheetCLosed}) {
       builder: (BuildContext context) {
         return Container(
           height: height,
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.light
                 ? AllColors().WHITE
                 : AllColors().Black,
-            borderRadius: new BorderRadius.only(
+            borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(12.0),
               topRight: const Radius.circular(12.0),
             ),

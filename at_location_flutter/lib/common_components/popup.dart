@@ -10,8 +10,9 @@ Widget buildPopup(HybridModel user) {
   bool showEtaSection = true;
   if (LocationService().etaFrom != null) {
     if (user.latLng == LocationService().etaFrom) showEtaSection = false;
-  } else if (user.latLng == LocationService().myData.latLng)
+  } else if (user.latLng == LocationService().myData.latLng) {
     showEtaSection = false;
+  }
 
   return Stack(
     alignment: Alignment.center,

@@ -1,5 +1,4 @@
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_group_flutter/screens/list/group_list.dart';
 import 'package:at_contacts_group_flutter_example/constants.dart';
 import 'package:flutter/material.dart';

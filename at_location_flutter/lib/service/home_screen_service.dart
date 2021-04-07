@@ -13,7 +13,7 @@ class HomeScreenService {
   onLocationModelTap(LocationNotificationModel locationNotificationModel) {
     String currentAtsign = AtLocationNotificationListener().currentAtSign;
 
-    if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION))
+    if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
       locationNotificationModel.atsignCreator != currentAtsign
           // ignore: unnecessary_statements
           ? (locationNotificationModel.isAccepted
@@ -22,8 +22,8 @@ class HomeScreenService {
                   locationNotificationModel.atsignCreator,
                   locationNotificationModel))
           : navigatorPushToMap(locationNotificationModel);
-    else if (locationNotificationModel.key
-        .contains(MixedConstants.REQUEST_LOCATION))
+    } else if (locationNotificationModel.key
+        .contains(MixedConstants.REQUEST_LOCATION)) {
       locationNotificationModel.atsignCreator == currentAtsign
           // ignore: unnecessary_statements
           ? (locationNotificationModel.isAccepted
@@ -35,6 +35,7 @@ class HomeScreenService {
           : (locationNotificationModel.isAccepted
               ? navigatorPushToMap(locationNotificationModel)
               : null);
+    }
   }
 
   navigatorPushToMap(LocationNotificationModel locationNotificationModel) {
@@ -53,11 +54,12 @@ getSubTitle(LocationNotificationModel locationNotificationModel) {
   DateTime to;
   String time;
   to = locationNotificationModel.to;
-  if (to != null)
+  if (to != null) {
     time =
         'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to))} today';
-  else
+  } else {
     time = '';
+  }
   if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
@@ -77,7 +79,7 @@ getSubTitle(LocationNotificationModel locationNotificationModel) {
 }
 
 getSemiTitle(LocationNotificationModel locationNotificationModel) {
-  if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION))
+  if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
     return locationNotificationModel.atsignCreator !=
             AtLocationNotificationListener().currentAtSign
         ? (locationNotificationModel.isAccepted
@@ -90,7 +92,7 @@ getSemiTitle(LocationNotificationModel locationNotificationModel) {
             : locationNotificationModel.isExited
                 ? 'Sent Share location rejected'
                 : 'Awaiting response');
-  else
+  } else {
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
         ? (!locationNotificationModel.isExited
@@ -101,19 +103,21 @@ getSemiTitle(LocationNotificationModel locationNotificationModel) {
                 ? null
                 : 'Awaiting response')
             : 'Request rejected');
+  }
 }
 
 getTitle(LocationNotificationModel locationNotificationModel) {
-  if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION))
+  if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
         ? locationNotificationModel.receiver
         : locationNotificationModel.atsignCreator;
-  else
+  } else {
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
         ? locationNotificationModel.receiver
         : locationNotificationModel.atsignCreator;
+  }
 }
 
 String timeOfDayToString(TimeOfDay time) {

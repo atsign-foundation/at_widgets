@@ -24,7 +24,7 @@ class GroupList extends StatefulWidget {
 }
 
 class _GroupListState extends State<GroupList> {
-  List<AtContact> selectedContactList = List<AtContact>();
+  List<AtContact> selectedContactList = [];
   bool showAddGroupIcon = false, errorOcurred = false;
 
   @override
@@ -33,7 +33,7 @@ class _GroupListState extends State<GroupList> {
       init();
       super.initState();
       GroupService().atGroupStream.listen((groupList) {
-        if (groupList.length > 0) {
+        if (groupList.isNotEmpty) {
           showAddGroupIcon = true;
         } else {
           showAddGroupIcon = false;
@@ -42,10 +42,11 @@ class _GroupListState extends State<GroupList> {
       });
     } catch (e) {
       print('Error in init of Group_list $e');
-      if (mounted)
+      if (mounted) {
         setState(() {
           errorOcurred = true;
         });
+      }
     }
   }
 
@@ -54,10 +55,11 @@ class _GroupListState extends State<GroupList> {
       await GroupService().init(widget.currentAtsign);
     } catch (e) {
       print('Error in init of Group_list $e');
-      if (mounted)
+      if (mounted) {
         setState(() {
           errorOcurred = true;
         });
+      }
     }
   }
 
@@ -88,7 +90,7 @@ class _GroupListState extends State<GroupList> {
                 asSelectionScreen: true,
                 selectedList: (selectedList) {
                   selectedContactList = selectedList;
-                  if (selectedContactList.length > 0) {
+                  if (selectedContactList.isNotEmpty) {
                     GroupService().setSelectedContacts(selectedContactList);
                   }
                 },
@@ -119,7 +121,7 @@ class _GroupListState extends State<GroupList> {
                       });
                     } else {
                       if (snapshot.hasData) {
-                        if (snapshot.data.length == 0) {
+                        if (snapshot.data.isEmpty) {
                           showAddGroupIcon = false;
 
                           return EmptyGroup();
@@ -145,7 +147,7 @@ class _GroupListState extends State<GroupList> {
                                         .add(snapshot.data[index]);
                                   });
 
-                                  Navigator.push(
+                                  await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => GroupView(

@@ -32,20 +32,20 @@ class _ShowLocationState extends State<ShowLocation> {
     showMarker = true;
     noPointReceived = false;
     print('widget.location ${widget.location}');
-    if (widget.location != null)
-      marker = buildMarker(new HybridModel(latLng: widget.location),
-          singleMarker: true);
-    else {
+    if (widget.location != null) {
+      marker =
+          buildMarker(HybridModel(latLng: widget.location), singleMarker: true);
+    } else {
       noPointReceived = true;
-      marker = buildMarker(new HybridModel(latLng: LatLng(45, 45)),
-          singleMarker: true);
+      marker =
+          buildMarker(HybridModel(latLng: LatLng(45, 45)), singleMarker: true);
       showMarker = false;
     }
 
     if (widget.locationList != null) {
       markerList = [];
       widget.locationList.forEach((location) {
-        Marker marker = buildMarker(new HybridModel(latLng: location),
+        Marker marker = buildMarker(HybridModel(latLng: location),
             singleMarker: true, marker: widget.locationListMarker);
         markerList.add(marker);
       });

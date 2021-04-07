@@ -17,17 +17,18 @@ class SharingLocationService {
       {int minutes}) async {
     try {
       AtKey atKey;
-      if (minutes != null)
+      if (minutes != null) {
         atKey = newAtKey((minutes * 60000),
             "sharelocation-${DateTime.now().microsecondsSinceEpoch}", atsign,
             ttl: (minutes * 60000),
             expiresAt: DateTime.now().add(Duration(minutes: minutes)));
-      else
+      } else {
         atKey = newAtKey(
           60000,
           "sharelocation-${DateTime.now().microsecondsSinceEpoch}",
           atsign,
         );
+      }
 
       LocationNotificationModel locationNotificationModel =
           LocationNotificationModel()
@@ -39,9 +40,10 @@ class SharingLocationService {
             ..from = DateTime.now()
             ..isAcknowledgment = isAcknowledgment;
 
-      if ((minutes != null))
+      if ((minutes != null)) {
         locationNotificationModel.to =
             DateTime.now().add(Duration(minutes: minutes));
+      }
       var result = await AtLocationNotificationListener().atClientInstance.put(
           atKey,
           LocationNotificationModel.convertLocationNotificationToJson(

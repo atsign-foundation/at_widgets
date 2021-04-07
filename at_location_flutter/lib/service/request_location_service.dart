@@ -123,9 +123,10 @@ class RequestLocationService {
           .atClientInstance
           .put(key, notification);
 
-      if (result)
+      if (result) {
         KeyStreamService()
             .mapUpdatedLocationDataToWidget(locationNotificationModel);
+      }
 
       print('update result - $result');
 
