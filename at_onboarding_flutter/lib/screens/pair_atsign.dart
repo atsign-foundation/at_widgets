@@ -428,6 +428,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     return Scaffold(
         backgroundColor: ColorConstants.light,
         appBar: CustomAppBar(
+          showBackButton: true,
           title: Strings.pairAtsignTitle,
           actionItems: [
             IconButton(
