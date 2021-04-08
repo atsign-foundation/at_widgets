@@ -56,16 +56,18 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
-  Future<bool> _validateFollowingAtsign(String atsign) async {
+  Future<bool> _validateFollowingAtsign(String atsign,
+      [bool isScan = false]) async {
     if (ConnectionProvider().containsFollowing(atsign)) {
-      _showFollowersAlertDialog(context, atsign);
+      _showFollowersAlertDialog(context, atsign, isScan: isScan);
       return false;
     } else if (atsign == SDKService().atsign) {
-      _showFollowersAlertDialog(context, atsign, message: Strings.ownAtsign);
+      _showFollowersAlertDialog(context, atsign,
+          message: Strings.ownAtsign, isScan: isScan);
       return false;
     } else if (atsign == Strings.invalidAtsign) {
       _showFollowersAlertDialog(context, atsign,
-          message: Strings.invalidAtsignMessage);
+          message: Strings.invalidAtsignMessage, isScan: isScan);
       return false;
     }
     var atSignStatus = await SDKService().checkAtSignStatus(atsign);
@@ -74,7 +76,8 @@ class _QrScanState extends State<QrScan> {
       return true;
     } else {
       _showFollowersAlertDialog(context, atsign,
-          message: Strings.getAtSignStatusMessage(atSignStatus));
+          message: Strings.getAtSignStatusMessage(atSignStatus),
+          isScan: isScan);
       return false;
     }
   }
@@ -87,7 +90,7 @@ class _QrScanState extends State<QrScan> {
     _logger.info('received data is $data');
     if (data != null || data != '') {
       var formattedAtsign = ConnectionsService().formatAtSign(data);
-      var result = await _validateFollowingAtsign(formattedAtsign);
+      var result = await _validateFollowingAtsign(formattedAtsign, true);
 
       if (result) {
         Navigator.pop(context);
@@ -96,13 +99,6 @@ class _QrScanState extends State<QrScan> {
         setState(() {
           loading = false;
           _scanCompleted = false;
-        });
-
-        _controller.startCamera((data1, offsets1) {
-          if (!_scanCompleted) {
-            onScan(data1, offsets1, context);
-            _scanCompleted = true;
-          }
         });
       }
     } else {
@@ -262,7 +258,7 @@ class _QrScanState extends State<QrScan> {
   }
 
   _showFollowersAlertDialog(BuildContext context, String atsign,
-      {String message, String status}) {
+      {String message, bool isScan = false}) {
     showDialog(
         context: context,
         builder: (context) {
@@ -277,6 +273,14 @@ class _QrScanState extends State<QrScan> {
                 child: Text(Strings.Close),
                 onPressed: () {
                   Navigator.pop(context);
+                  if (isScan) {
+                    _controller.startCamera((data1, offsets1) {
+                      if (!_scanCompleted) {
+                        onScan(data1, offsets1, context);
+                        _scanCompleted = true;
+                      }
+                    });
+                  }
                 },
               )
             ],
