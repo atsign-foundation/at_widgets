@@ -16,9 +16,6 @@ import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
 import 'package:flutter/material.dart';
 
 class GroupList extends StatefulWidget {
-  final String currentAtsign;
-
-  GroupList({@required this.currentAtsign});
   @override
   _GroupListState createState() => _GroupListState();
 }
@@ -30,8 +27,8 @@ class _GroupListState extends State<GroupList> {
   @override
   void initState() {
     try {
-      init();
       super.initState();
+      GroupService().getAllGroupsDetails();
       GroupService().atGroupStream.listen((groupList) {
         if (groupList.isNotEmpty) {
           showAddGroupIcon = true;
@@ -40,19 +37,6 @@ class _GroupListState extends State<GroupList> {
         }
         if (mounted) setState(() {});
       });
-    } catch (e) {
-      print('Error in init of Group_list $e');
-      if (mounted) {
-        setState(() {
-          errorOcurred = true;
-        });
-      }
-    }
-  }
-
-  init() async {
-    try {
-      await GroupService().init(widget.currentAtsign);
     } catch (e) {
       print('Error in init of Group_list $e');
       if (mounted) {

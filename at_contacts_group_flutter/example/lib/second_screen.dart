@@ -1,4 +1,5 @@
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/screens/list/group_list.dart';
 import 'package:at_contacts_group_flutter_example/constants.dart';
 import 'package:flutter/material.dart';
@@ -64,9 +65,7 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => GroupList(
-                    currentAtsign: activeAtSign,
-                  ),
+                  builder: (BuildContext context) => GroupList(),
                 ));
               },
               child: Text('Show groups screen'),
@@ -83,6 +82,9 @@ class _SecondScreenState extends State<SecondScreen> {
       activeAtSign = currentAtSign;
     });
     initializeContactsService(
+        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
+    initializeGroupService(
         clientSdkService.atClientServiceInstance.atClient, currentAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }

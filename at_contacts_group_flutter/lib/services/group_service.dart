@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:at_contacts_flutter/utils/exposed_service.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
 class GroupService {
   GroupService._();
@@ -14,7 +15,10 @@ class GroupService {
   List<AtContact> selecteContactList;
   List<GroupContactsModel> allContacts = [], selectedGroupContacts = [];
   AtGroup selectedGroup;
+  AtClientImpl atClientInstance;
   AtContactsImpl atContactImpl;
+  String rootDomain;
+  int rootPort;
   int length = 0;
   bool showLoader;
 
@@ -59,11 +63,14 @@ class GroupService {
 
   List<AtContact> get selectedContactList => selecteContactList;
 
-  init(String atSign) async {
+  init(AtClientImpl atClientImpl, String atSign, String rootDomainFromApp,
+      int rootPortFromApp) async {
+    atClientInstance = atClientImpl;
     _atsign = atSign;
+    rootDomain = rootDomainFromApp;
+    rootPort = rootPortFromApp;
     atContactImpl = await AtContactsImpl.getInstance(atSign);
     await atContactImpl.listContacts();
-    // print('test => $test');
     await getAllGroupsDetails();
   }
 
