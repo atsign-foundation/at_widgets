@@ -16,6 +16,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_common_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CustomInputField extends StatelessWidget {
   final String hintText, initialValue;
   final double width, height;
@@ -42,9 +43,9 @@ class CustomInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    textController = new TextEditingController.fromValue(new TextEditingValue(
+    textController = TextEditingController.fromValue(TextEditingValue(
         text: initialValue != null ? initialValue : '',
-        selection: new TextSelection.collapsed(
+        selection: TextSelection.collapsed(
             offset: initialValue != null ? initialValue.length : -1)));
     return Container(
       width: width,
@@ -69,7 +70,7 @@ class CustomInputField extends StatelessWidget {
                 hintStyle: TextStyle(
                     color: ColorConstants.darkGrey, fontSize: 15.toFont),
               ),
-              onTap: onTap ?? null,
+              onTap: onTap ?? () {},
               onChanged: (val) {
                 value(val);
               },

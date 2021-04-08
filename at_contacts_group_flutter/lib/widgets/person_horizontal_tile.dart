@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
-import 'package:at_contacts_group_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
+// ignore: must_be_immutable
 class CustomPersonHorizontalTile extends StatelessWidget {
   final String title, subTitle;
   final bool isTopRight;
@@ -35,16 +35,17 @@ class CustomPersonHorizontalTile extends StatelessWidget {
             children: [
               image != null
                   ? ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(30.toWidth)),
                       child: Image.memory(
                         image,
-                        width: 50,
-                        height: 50,
+                        width: 50.toWidth,
+                        height: 50.toWidth,
                         fit: BoxFit.fill,
                       ),
                     )
                   : ContactInitial(
-                      initials: title.substring(0, title.length >= 1 ? 1 : 0)),
+                      initials: title.substring(0, title.length > 1 ? 2 : 1)),
               icon != null
                   ? Positioned(
                       top: isTopRight ? 0 : null,

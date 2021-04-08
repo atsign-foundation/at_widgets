@@ -4,7 +4,6 @@ import 'package:at_contacts_group_flutter/screens/new_group/new_group.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
-import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
@@ -19,7 +18,6 @@ class _EmptyGroupState extends State<EmptyGroup> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -67,7 +65,7 @@ class _EmptyGroupState extends State<EmptyGroup> {
                         print('in selectedList => selectedList');
                         selectedContactList = selectedList;
 
-                        if (selectedContactList.length > 0) {
+                        if (selectedContactList.isNotEmpty) {
                           GroupService()
                               .setSelectedContacts(selectedContactList);
                         }

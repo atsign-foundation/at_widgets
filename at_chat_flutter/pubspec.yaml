@@ -15,6 +15,7 @@ dependencies:
   at_commons: ^1.0.1+4
   at_client_mobile: ^1.0.0+5
   at_lookup: ^1.0.0+4
+  pedantic: ^1.11.0
 
 dev_dependencies:
   flutter_test:

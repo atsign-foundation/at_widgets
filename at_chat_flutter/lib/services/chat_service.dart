@@ -82,8 +82,9 @@ class ChatService {
       var message = responseJson['value'];
       var decryptedMessage = await atClientInstance.encryptionService
           .decrypt(message, fromAtsign)
-          .catchError((e) => print(
-              'error in decrypting message ${e.errorCode} ${e.errorMessage}'));
+          .catchError((e) {
+        print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
+      });
       print('chat message => $decryptedMessage $fromAtsign');
       setChatHistory(Message(
           message: decryptedMessage,
@@ -122,8 +123,9 @@ class ChatService {
         ..sharedBy = currentAtSign
         ..metadata = Metadata();
 
-      var keyValue = await atClientInstance.get(key).catchError(
-          (e) => print('error in get ${e.errorCode} ${e.errorMessage}'));
+      var keyValue = await atClientInstance.get(key).catchError((e) {
+        print('error in get ${e.errorCode} ${e.errorMessage}');
+      });
 
       if (keyValue != null && keyValue.value != null) {
         chatHistoryMessages = json.decode((keyValue.value) as String) as List;
@@ -152,9 +154,10 @@ class ChatService {
             sharedBy: chatWithAtSign,
             sharedWith: currentAtSign,
             regex: chatKey + (isGroupChat ? groupChatId : ''))
-        .catchError((e) =>
-            print('error in checkForMissedMessages:getKeys ${e.toString()}'));
-    Future.forEach(result, (key) async {
+        .catchError((e) {
+      print('error in checkForMissedMessages:getKeys ${e.toString()}');
+    });
+    await Future.forEach(result, (key) async {
       if (referenceKey.compareTo(key) == -1) {
         print('missed key - $key');
         await getMissingKey(key);
@@ -164,9 +167,9 @@ class ChatService {
 
   Future<void> getMissingKey(String missingKey) async {
     var missingAtkey = AtKey.fromString(missingKey);
-    var result = await atClientInstance
-        .get(missingAtkey)
-        .catchError((e) => print('error in getMissingKey:get ${e.toString()}'));
+    var result = await atClientInstance.get(missingAtkey).catchError((e) {
+      print('error in getMissingKey:get ${e.toString()}');
+    });
     print('result - $result');
     if (result != null) {
       setChatHistory(Message(

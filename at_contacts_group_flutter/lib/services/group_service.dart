@@ -82,11 +82,11 @@ class GroupService {
 
   getAllGroupsDetails() async {
     try {
-      List<String> groupNames = await atContactImpl.listGroupNames();
+      List<String> groupIds = await atContactImpl.listGroupIds();
       List<AtGroup> groupList = [];
 
-      for (int i = 0; i < groupNames.length; i++) {
-        AtGroup groupDetail = await getGroupDetail(groupNames[i]);
+      for (int i = 0; i < groupIds.length; i++) {
+        AtGroup groupDetail = await getGroupDetail(groupIds[i]);
         if (groupDetail != null) groupList.add(groupDetail);
       }
 
@@ -109,9 +109,9 @@ class GroupService {
     }
   }
 
-  Future<dynamic> getGroupDetail(String groupName) async {
+  Future<dynamic> getGroupDetail(String groupId) async {
     try {
-      AtGroup group = await atContactImpl.getGroup(groupName);
+      AtGroup group = await atContactImpl.getGroup(groupId);
       return group;
     } catch (e) {
       print('error in getting group details : $e');
@@ -154,8 +154,9 @@ class GroupService {
       if (updatedGroup is AtGroup) {
         updateGroupStreams(updatedGroup);
         return updatedGroup;
-      } else
+      } else {
         return 'something went wrong';
+      }
     } catch (e) {
       print('error in updating group: $e');
       return e;
@@ -163,7 +164,7 @@ class GroupService {
   }
 
   updateGroupStreams(AtGroup group) async {
-    AtGroup groupDetail = await getGroupDetail(group.groupName);
+    AtGroup groupDetail = await getGroupDetail(group.groupId);
     if (groupDetail != null) groupViewSink.add(groupDetail);
     await getAllGroupsDetails();
   }
@@ -207,7 +208,9 @@ class GroupService {
       await getAllGroupsDetails();
       // print('ALL CONTACTS====>${allContacts.length}');
       _allContactsStreamController.add(allContacts);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   removeGroupContact(GroupContactsModel item) async {
@@ -237,7 +240,9 @@ class GroupService {
       }
 
       selectedContactsSink.add(selectedGroupContacts);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   addGroupContact(GroupContactsModel item) {
@@ -274,56 +279,10 @@ class GroupService {
       }
 
       selectedContactsSink.add(selectedGroupContacts);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
-
-  // updateGroupWithoutNameChange(
-  //     BuildContext context, AtGroup group, String newGroupName) async {
-  //   group.name = newGroupName;
-  //   var result = await updateGroup(group);
-  //   if (result is AtGroup) {
-  //     Navigator.of(context).pop();
-  //   } else if (result == null) {
-  //     CustomToast().show(TextConstants().SERVICE_ERROR, context);
-  //   } else {
-  //     CustomToast().show(result.toString(), context);
-  //   }
-  // }
-
-  // updateGroupWithNameChange(
-  //     BuildContext context, AtGroup group, String newGroupName) async {
-  //   AtGroup newGroup = new AtGroup(
-  //     newGroupName,
-  //     description: group.description,
-  //     groupPicture: group.groupPicture,
-  //     members: group.members,
-  //     tags: group.tags,
-  //     createdOn: group.createdOn,
-  //     createdBy: group.createdBy,
-  //     updatedOn: group.updatedOn,
-  //     updatedBy: group.updatedBy,
-  //   );
-
-  //   // creating new group
-  //   var createGroupResult = await createGroup(newGroup);
-  //   if (createGroupResult is AtGroup) {
-  //     //deleting previous group
-  //     var deleteGroupResult = await deleteGroup(group);
-  //     if (deleteGroupResult is bool) {
-  //       // updating streams
-  //       await updateGroupStreams(newGroup);
-  //       Navigator.of(context).pop();
-  //     } else if (deleteGroupResult != null) {
-  //       CustomToast().show(deleteGroupResult.toString(), context);
-  //     } else {
-  //       CustomToast().show(TextConstants().SERVICE_ERROR, context);
-  //     }
-  //   } else if (createGroupResult != null) {
-  //     CustomToast().show(createGroupResult.toString(), context);
-  //   } else {
-  //     CustomToast().show(TextConstants().SERVICE_ERROR, context);
-  //   }
-  // }
 
   void dispose() {
     _atGroupStreamController.close();

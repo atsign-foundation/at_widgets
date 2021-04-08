@@ -31,10 +31,11 @@ class _RecurringEventState extends State<RecurringEvent> {
         EventNotificationModel.convertEventNotificationToJson(
             EventService().eventNotificationModel)));
     if (eventData.event.repeatCycle != null) {
-      if (eventData.event.repeatCycle == RepeatCycle.MONTH)
+      if (eventData.event.repeatCycle == RepeatCycle.MONTH) {
         isRepeatEveryWeek = false;
-      else if (eventData.event.repeatCycle == RepeatCycle.WEEK)
+      } else if (eventData.event.repeatCycle == RepeatCycle.WEEK) {
         isRepeatEveryWeek = true;
+      }
     } else {
       isRepeatEveryWeek = false;
       eventData.event.repeatCycle = RepeatCycle.MONTH;
@@ -66,11 +67,12 @@ class _RecurringEventState extends State<RecurringEvent> {
                       ? eventData.event.repeatDuration.toString()
                       : '',
                   value: (val) {
-                    if (val.trim().length > 0) {
+                    if (val.trim().isNotEmpty) {
                       int repeatCycle = int.parse(val);
                       eventData.event.repeatDuration = repeatCycle;
-                    } else
+                    } else {
                       eventData.event.repeatDuration = null;
+                    }
                     print('repeat cycle:${eventData.event.repeatDuration}');
                   },
                 ),
@@ -93,7 +95,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                         : null,
                     hint: Text("Select Category"),
                     items: repeatOccurance.map((String option) {
-                      return new DropdownMenuItem<String>(
+                      return DropdownMenuItem<String>(
                         value: option,
                         child: Text(option),
                       );
@@ -136,7 +138,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                           : null,
                       hint: Text("Occurs on"),
                       items: occursOnOptions.map((String option) {
-                        return new DropdownMenuItem<String>(
+                        return DropdownMenuItem<String>(
                           value: option,
                           child: Text(option),
                         );
@@ -342,7 +344,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                   ? eventData.event.endEventAfterOccurance.toString()
                   : '',
               value: (val) {
-                if (val.trim().length > 0) {
+                if (val.trim().isNotEmpty) {
                   int occurance = int.parse(val);
                   eventData.event.endEventAfterOccurance = occurance;
                 }

@@ -93,10 +93,11 @@ class _GroupViewState extends State<GroupView> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.active) {
-                          if (snapshot.data == true)
+                          if (snapshot.data == true) {
                             return CircularProgressIndicator();
-                          else
+                          } else {
                             return SizedBox();
+                          }
                         } else {
                           return SizedBox();
                         }
@@ -168,8 +169,9 @@ class _GroupViewState extends State<GroupView> {
                                 return SizedBox();
                               }
                             }
-                          } else
+                          } else {
                             return SizedBox();
+                          }
                         },
                       )),
                 ],
@@ -178,7 +180,7 @@ class _GroupViewState extends State<GroupView> {
                 top: 240.toHeight,
                 child: Container(
                   height: 80.toHeight,
-                  width: 343.toWidth,
+                  width: SizeConfig().screenWidth * 0.92,
                   margin: EdgeInsets.symmetric(
                       horizontal: 15.toWidth, vertical: 0.toHeight),
                   padding: EdgeInsets.symmetric(
@@ -237,14 +239,15 @@ class _GroupViewState extends State<GroupView> {
                                       ],
                                     ),
                                   );
-                                } else
+                                } else {
                                   return SizedBox();
+                                }
                               }),
                         ],
                       ),
                       InkWell(
                         onTap: () async {
-                          Navigator.push(
+                          await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ContactsScreen(
@@ -255,8 +258,9 @@ class _GroupViewState extends State<GroupView> {
                                       selectedList;
                                 },
                                 saveGroup: () async {
-                                  if (GroupService().selecteContactList.length >
-                                      0) {
+                                  if (GroupService()
+                                      .selecteContactList
+                                      .isNotEmpty) {
                                     GroupService().showLoaderSink.add(true);
 
                                     var result = await GroupService()
@@ -274,10 +278,11 @@ class _GroupViewState extends State<GroupView> {
                                       //     TextConstants().MEMBER_ADDED,
                                       //     context);
 
-                                    } else
+                                    } else {
                                       CustomToast().show(
                                           TextConstants().SERVICE_ERROR,
                                           context);
+                                    }
                                   }
                                 },
                               ),
@@ -301,6 +306,7 @@ class _GroupViewState extends State<GroupView> {
                     child: Icon(
                       Icons.arrow_back,
                       color: AllColors().Black,
+                      size: 25.toFont,
                     ),
                   )),
               Positioned(
@@ -315,6 +321,7 @@ class _GroupViewState extends State<GroupView> {
                   child: Icon(
                     Icons.edit,
                     color: AllColors().Black,
+                    size: 25.toFont,
                   ),
                 ),
               )
@@ -346,6 +353,7 @@ class _GroupViewState extends State<GroupView> {
               CustomToast().show(result.toString(), context);
             }
           },
+          atsign: contact.atSign,
         );
       },
     );

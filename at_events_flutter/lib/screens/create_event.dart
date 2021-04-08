@@ -1,4 +1,3 @@
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_common_flutter/widgets/custom_input_field.dart';
@@ -43,7 +42,6 @@ class _CreateEventState extends State<CreateEvent> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isLoading = false;
     EventService().init(
@@ -123,8 +121,8 @@ class _CreateEventState extends State<CreateEvent> {
                                                 selectedContactList =
                                                     selectedList;
 
-                                                if (selectedContactList.length >
-                                                    0) {
+                                                if (selectedContactList
+                                                    .isNotEmpty) {
                                                   EventService()
                                                       .addNewGroupMembers(
                                                           selectedContactList);
@@ -143,17 +141,6 @@ class _CreateEventState extends State<CreateEvent> {
                                       },
                                       value: (String value) async {
                                         typedAtSign = value;
-                                        bool isValid = await EventService()
-                                            .checkAtsign(typedAtSign);
-                                        // setState(() {
-                                        // isValidAtsign = isValid;
-                                        // });
-
-                                        // if (isValid) {
-                                        //   EventService().addNewGroupMembers(
-                                        //       [AtContact(atSign: typedAtSign)]);
-                                        //   EventService().update();
-                                        // }
                                       }),
                                   SizedBox(height: 20),
                                   !isValidAtsign
@@ -167,18 +154,16 @@ class _CreateEventState extends State<CreateEvent> {
                                       : SizedBox(),
                                   (EventService().selectedContacts != null &&
                                           EventService()
-                                                  .selectedContacts
-                                                  .length >
-                                              0)
+                                              .selectedContacts
+                                              .isNotEmpty)
                                       ? (OverlappingContacts(
                                           selectedList:
                                               EventService().selectedContacts))
                                       : SizedBox(),
                                   (EventService().selectedContacts != null &&
                                           EventService()
-                                                  .selectedContacts
-                                                  .length >
-                                              0)
+                                              .selectedContacts
+                                              .isNotEmpty)
                                       ? SizedBox(height: 25)
                                       : SizedBox(),
                                   Text(
@@ -464,7 +449,7 @@ class _CreateEventState extends State<CreateEvent> {
   }
 
   isTypedAtSignValid() async {
-    if (typedAtSign.trim().length < 1) return true;
+    if (typedAtSign.trim().isEmpty) return true;
     bool isValid = await EventService().checkAtsign(typedAtSign);
     setState(() {
       isValidAtsign = isValid;

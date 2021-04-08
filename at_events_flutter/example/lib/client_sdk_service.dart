@@ -44,7 +44,9 @@ class ClientSdkService {
     atClientPreference.downloadPath = downloadDirectory.path;
     var result = await atClientServiceInstance
         .onboard(atClientPreference: atClientPreference, atsign: atsign)
-        .catchError((e) => print('Error in Onboarding: $e'));
+        .catchError((e) {
+      print('Error in Onboarding: $e');
+    });
     return result;
   }
 

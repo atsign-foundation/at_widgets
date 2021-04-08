@@ -37,7 +37,7 @@ class CustomInputField extends StatelessWidget {
                 border: InputBorder.none,
                 hintStyle: TextStyle(color: AllColors().DARK_GREY),
               ),
-              onTap: onTap ?? null,
+              onTap: onTap ?? () {},
             ),
           ),
           icon != null

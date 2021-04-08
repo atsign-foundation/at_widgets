@@ -72,9 +72,11 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   // validator: Validators.validateAdduser,
                   decoration: InputDecoration(
                     prefixText: '@',
-                    prefixStyle: TextStyle(color: Colors.grey),
+                    prefixStyle:
+                        TextStyle(color: Colors.grey, fontSize: 15.toFont),
                     hintText: '\tEnter user atsign',
                   ),
+                  style: TextStyle(fontSize: 15.toFont),
                 ),
                 SizedBox(
                   height: 10.toHeight,

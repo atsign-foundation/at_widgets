@@ -39,10 +39,11 @@ class _HomeScreenState extends State<HomeScreen> {
   _getMyLocation() async {
     LatLng newMyLatLng = await getMyLocation();
     if (newMyLatLng != null) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           myLatLng = newMyLatLng;
         });
+      }
     }
   }
 
@@ -91,12 +92,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           minHeight: 267.toHeight,
                           maxHeight: 530.toHeight,
                           panelBuilder: (scrollController) {
-                            if (snapshot.data.length > 0)
+                            if (snapshot.data.isNotEmpty) {
                               return collapsedContent(false, scrollController,
                                   getListView(snapshot.data, scrollController));
-                            else
+                            } else {
                               return collapsedContent(false, scrollController,
                                   emptyWidget('No Data Found!!'));
+                            }
                           },
                         );
                       }

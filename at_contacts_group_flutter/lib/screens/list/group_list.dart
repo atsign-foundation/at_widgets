@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:at_contact/at_contact.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
@@ -22,7 +24,7 @@ class GroupList extends StatefulWidget {
 }
 
 class _GroupListState extends State<GroupList> {
-  List<AtContact> selectedContactList = List<AtContact>();
+  List<AtContact> selectedContactList = [];
   bool showAddGroupIcon = false, errorOcurred = false;
 
   @override
@@ -31,7 +33,7 @@ class _GroupListState extends State<GroupList> {
       init();
       super.initState();
       GroupService().atGroupStream.listen((groupList) {
-        if (groupList.length > 0) {
+        if (groupList.isNotEmpty) {
           showAddGroupIcon = true;
         } else {
           showAddGroupIcon = false;
@@ -40,10 +42,11 @@ class _GroupListState extends State<GroupList> {
       });
     } catch (e) {
       print('Error in init of Group_list $e');
-      if (mounted)
+      if (mounted) {
         setState(() {
           errorOcurred = true;
         });
+      }
     }
   }
 
@@ -52,10 +55,11 @@ class _GroupListState extends State<GroupList> {
       await GroupService().init(widget.currentAtsign);
     } catch (e) {
       print('Error in init of Group_list $e');
-      if (mounted)
+      if (mounted) {
         setState(() {
           errorOcurred = true;
         });
+      }
     }
   }
 
@@ -76,6 +80,7 @@ class _GroupListState extends State<GroupList> {
           trailingIcon: Icon(
             Icons.add,
             color: AllColors().ORANGE,
+            size: 20.toFont,
           ),
           onTrailingIconPressed: () => Navigator.push(
             context,
@@ -85,7 +90,7 @@ class _GroupListState extends State<GroupList> {
                 asSelectionScreen: true,
                 selectedList: (selectedList) {
                   selectedContactList = selectedList;
-                  if (selectedContactList.length > 0) {
+                  if (selectedContactList.isNotEmpty) {
                     GroupService().setSelectedContacts(selectedContactList);
                   }
                 },
@@ -116,7 +121,7 @@ class _GroupListState extends State<GroupList> {
                       });
                     } else {
                       if (snapshot.hasData) {
-                        if (snapshot.data.length == 0) {
+                        if (snapshot.data.isEmpty) {
                           showAddGroupIcon = false;
 
                           return EmptyGroup();
@@ -142,7 +147,7 @@ class _GroupListState extends State<GroupList> {
                                         .add(snapshot.data[index]);
                                   });
 
-                                  Navigator.push(
+                                  await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => GroupView(
@@ -155,7 +160,7 @@ class _GroupListState extends State<GroupList> {
                                       ? snapshot.data[index].groupPicture
                                       : null,
                                   title:
-                                      snapshot.data[index].displayName ?? null,
+                                      snapshot.data[index].displayName ?? ' ',
                                   subTitle:
                                       '${snapshot.data[index].members.length} members',
                                 ),
@@ -180,8 +185,13 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
+      Uint8List groupPicture;
+      if (group.groupPicture != null) {
+        List<int> intList = group.groupPicture.cast<int>();
+        groupPicture = Uint8List.fromList(intList);
+      }
       return ConfirmationDialog(
-        title: ' ${group.displayName}',
+        title: '${group.displayName}',
         heading: 'Are you sure you want to delete this group?',
         onYesPressed: () async {
           var result = await GroupService().deleteGroup(group);
@@ -192,6 +202,7 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
             CustomToast().show(TextConstants().SERVICE_ERROR, context);
           }
         },
+        image: groupPicture,
       );
     },
   );

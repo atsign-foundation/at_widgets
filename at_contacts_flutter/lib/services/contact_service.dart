@@ -44,7 +44,8 @@ class ContactService {
 
   List<AtContact> contactList = [],
       blockContactList = [],
-      selectedContacts = [];
+      selectedContacts = [],
+      cachedContactList = [];
   bool isContactPresent, limitReached = false;
 
   String getAtSignError = '';
@@ -62,7 +63,7 @@ class ContactService {
     rootPort = rootPortFromApp;
     atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
     loggedInUserDetails = await getAtSignDetails(currentAtSign);
-    contactList = await atContactImpl.listContacts();
+    cachedContactList = await atContactImpl.listContacts();
   }
 
   resetData() {
@@ -102,7 +103,9 @@ class ContactService {
       await atContactImpl.update(contact);
       await fetchBlockContactList();
       await fetchContacts();
-    } catch (error) {}
+    } catch (error) {
+      print('error in unblock: $error');
+    }
   }
 
   fetchBlockContactList() async {
@@ -110,7 +113,9 @@ class ContactService {
       blockContactList = [];
       blockContactList = await atContactImpl.listBlockedContacts();
       blockedContactSink.add(blockContactList);
-    } catch (error) {}
+    } catch (error) {
+      print('error in fetching contact list:$error');
+    }
   }
 
   deleteAtSign({String atSign}) async {
@@ -118,7 +123,9 @@ class ContactService {
       var result = await atContactImpl.delete(atSign);
       print("delete result => $result");
       fetchContacts();
-    } catch (error) {}
+    } catch (error) {
+      print('error in delete atsign:$error');
+    }
   }
 
   addAtSign(context, {String atSign}) async {
@@ -155,13 +162,15 @@ class ContactService {
           tags: details,
         );
         print('details==>${contact.atSign}');
-        var result = await atContactImpl
-            .add(contact)
-            .catchError((e) => print('error to add contact => $e'));
+        var result = await atContactImpl.add(contact).catchError((e) {
+          print('error to add contact => $e');
+        });
         print(result);
         fetchContacts();
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   removeSelectedAtSign(AtContact contact) {
@@ -180,7 +189,9 @@ class ContactService {
         limitReached = true;
       }
       selectedContactSink.add(selectedContacts);
-    } catch (error) {}
+    } catch (error) {
+      print(error);
+    }
   }
 
   selectAtSign(AtContact contact) {
@@ -192,14 +203,18 @@ class ContactService {
         limitReached = true;
       }
       selectedContactSink.add(selectedContacts);
-    } catch (error) {}
+    } catch (error) {
+      print(error);
+    }
   }
 
   clearAtSigns() {
     try {
       selectedContacts = [];
       selectedContactSink.add(selectedContacts);
-    } catch (error) {}
+    } catch (error) {
+      print(error);
+    }
   }
 
   Future<bool> checkAtsign(String atSign) async {
@@ -232,8 +247,9 @@ class ContactService {
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientInstance.get(key).catchError(
-          (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+      var result = await atClientInstance.get(key).catchError((e) {
+        print("error in get ${e.errorCode} ${e.errorMessage}");
+      });
       var firstname = result.value;
 
       // lastname

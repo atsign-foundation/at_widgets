@@ -174,26 +174,30 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
   Animation<double> _fadeAnimation(
       AnimationController controller, FadeType fade) {
-    if (fade == FadeType.FadeIn)
+    if (fade == FadeType.FadeIn) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(controller);
-    if (fade == FadeType.FadeOut)
+    }
+    if (fade == FadeType.FadeOut) {
       return Tween<double>(begin: 1.0, end: 0.0).animate(controller);
+    }
 
     return null;
   }
 
   Animation<Point> _translateAnimation(AnimationController controller,
       TranslateType translate, Point pos, Point newPos) {
-    if (translate == TranslateType.FromNewPosToMyPos)
+    if (translate == TranslateType.FromNewPosToMyPos) {
       return Tween<Point>(
         begin: Point(newPos.x, newPos.y),
         end: Point(pos.x, pos.y),
       ).animate(controller);
-    if (translate == TranslateType.FromMyPosToNewPos)
+    }
+    if (translate == TranslateType.FromMyPosToNewPos) {
       return Tween<Point>(
         begin: Point(pos.x, pos.y),
         end: Point(newPos.x, newPos.y),
       ).animate(controller);
+    }
 
     return null;
   }
@@ -430,7 +434,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
     if (layer is MarkerNode) {
       if (!_boundsContainsMarker(layer)) {
-        return List<Widget>();
+        return <Widget>[];
       }
 
       // fade in if
@@ -454,7 +458,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
     }
     if (layer is MarkerClusterNode) {
       if (!_boundsContainsCluster(layer)) {
-        return List<Widget>();
+        return <Widget>[];
       }
 
       // fade in if
@@ -465,7 +469,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
         // cluster
         layers.add(_buildCluster(layer, FadeType.FadeIn));
         // children
-        List<Marker> markersGettingClustered = List<Marker>();
+        List<Marker> markersGettingClustered = <Marker>[];
         layer.children.forEach((child) {
           if (child is MarkerNode) {
             markersGettingClustered.add(child.marker);

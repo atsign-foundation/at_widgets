@@ -52,7 +52,7 @@ class EventService {
       eventNotificationModel = EventNotificationModel();
       eventNotificationModel.venue = Venue();
       eventNotificationModel.event = Event();
-      eventNotificationModel.group = new AtGroup('');
+      eventNotificationModel.group = AtGroup('');
       selectedContacts = [];
     }
     isEventUpdate = isUpdate;
@@ -101,7 +101,9 @@ class EventService {
 
     var decryptedMessage = await atClientInstance.encryptionService
         .decrypt(value, fromAtSign)
-        .catchError((e) => print("error in decrypting: ${e} ${e}"));
+        .catchError((e) {
+      print("error in decrypting: ${e} ${e}");
+    });
     print('decrypted message:${decryptedMessage}');
     if (atKey.toString().contains('createevent')) {
       EventNotificationModel eventData =
@@ -133,11 +135,13 @@ class EventService {
 
     presentEventData.group.members.forEach((presentGroupMember) {
       acknowledgedEvent.group.members.forEach((acknowledgedGroupMember) {
-        if (acknowledgedGroupMember.atSign[0] != '@')
+        if (acknowledgedGroupMember.atSign[0] != '@') {
           acknowledgedGroupMember.atSign = '@' + acknowledgedGroupMember.atSign;
+        }
 
-        if (presentGroupMember.atSign[0] != '@')
+        if (presentGroupMember.atSign[0] != '@') {
           presentGroupMember.atSign = '@' + presentGroupMember.atSign;
+        }
 
         if (acknowledgedGroupMember.atSign == presentGroupMember.atSign &&
             acknowledgedGroupMember.atSign == fromAtSign) {
@@ -308,7 +312,7 @@ class EventService {
 
   bool showConcurrentEventDialog(List<HybridNotificationModel> createdEvents,
       EventNotificationModel newEvent, BuildContext context) {
-    if (!isEventUpdate && createdEvents != null && createdEvents.length > 0) {
+    if (!isEventUpdate && createdEvents != null && createdEvents.isNotEmpty) {
       var isOverlapData =
           isEventTimeSlotOverlap(createdEvents, eventNotificationModel);
       if (isOverlapData[0]) {
@@ -320,10 +324,12 @@ class EventService {
             });
 
         return isOverlapData[0];
-      } else
+      } else {
         return isOverlapData[0];
-    } else
+      }
+    } else {
       return false;
+    }
   }
 
   dynamic isEventTimeSlotOverlap(List<HybridNotificationModel> hybridEvents,
@@ -362,8 +368,7 @@ class EventService {
     EventNotificationModel eventData = EventNotificationModel.fromJson(
         jsonDecode(EventNotificationModel.convertEventNotificationToJson(
             acknowledgedEvent)));
-    String regexKey,
-        atkeyMicrosecondId,
+    String atkeyMicrosecondId,
         currentAtsign = EventService().atClientInstance.currentAtSign;
     atkeyMicrosecondId = eventData.key.split('createevent-')[1].split('@')[0];
 
@@ -381,9 +386,6 @@ class EventService {
         print('matched:${isAccepted}, tags:${member.tags}');
       }
     });
-
-    // regexKey = await getRegexKeyFromKey(eventData.key);
-    // atKey = EventService().getAtKey(regexKey);
 
     AtKey atKey = AtKey()
       ..metadata = Metadata()
@@ -414,9 +416,9 @@ class EventService {
 
   dynamic createEventFormValidation() {
     EventNotificationModel eventData = EventService().eventNotificationModel;
-    if (eventData.group.members == null || eventData.group.members.length < 1) {
+    if (eventData.group.members == null || eventData.group.members.isEmpty) {
       return 'add contacts';
-    } else if (eventData.title == null || eventData.title.trim().length < 1) {
+    } else if (eventData.title == null || eventData.title.trim().isEmpty) {
       return 'add title';
     } else if (eventData.venue == null ||
         eventData.venue.label == null ||
@@ -451,8 +453,9 @@ class EventService {
     }
     // for time
     if (!isEventUpdate) {
-      if (eventData.event.startTime.difference(DateTime.now()).inMinutes < 0)
+      if (eventData.event.startTime.difference(DateTime.now()).inMinutes < 0) {
         return 'Start Time cannot be in past';
+      }
     }
 
     if (eventData.event.endTime.difference(DateTime.now()).inMinutes < 0) {

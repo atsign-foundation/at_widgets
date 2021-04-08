@@ -33,10 +33,10 @@ class _GroupEditState extends State<GroupEdit> {
     isLoading = false;
     if (widget.group != null) groupName = widget.group.displayName;
 
-    textController = new TextEditingController.fromValue(
-      new TextEditingValue(
+    textController = TextEditingController.fromValue(
+      TextEditingValue(
         text: groupName != null ? groupName : '',
-        selection: new TextSelection.collapsed(offset: -1),
+        selection: TextSelection.collapsed(offset: -1),
       ),
     );
 
@@ -54,18 +54,21 @@ class _GroupEditState extends State<GroupEdit> {
         appBar: CustomAppBar(
           showLeadingIcon: true,
           leadingIcon: Center(
-            child: GestureDetector(
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? AllColors().Black
-                        : AllColors().Black,
-                    fontSize: 16),
+            child: Container(
+              padding: EdgeInsets.only(left: 10),
+              child: GestureDetector(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AllColors().Black
+                          : AllColors().Black,
+                      fontSize: 14.toFont),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
-              onTap: () {
-                Navigator.pop(context);
-              },
             ),
           ),
           showTrailingIcon: true,
@@ -74,16 +77,24 @@ class _GroupEditState extends State<GroupEdit> {
           trailingIcon: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: SizedBox(
+                      width: 20.toHeight,
+                      height: 20.toHeight,
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
                 : Text('Done',
-                    style: TextStyle(color: AllColors().ORANGE, fontSize: 18)),
+                    style: TextStyle(
+                        color: AllColors().ORANGE, fontSize: 15.toFont)),
           ),
           onTrailingIconPressed: () async {
             groupName = textController.text;
             if (groupName != null) {
-              if (groupName.trim().length > 0) {
+              if (groupName.trim().isNotEmpty) {
                 AtGroup group = widget.group;
                 group.displayName = groupName;
+                group.groupName = groupName;
                 setState(() {
                   isLoading = true;
                 });
@@ -177,18 +188,21 @@ class _GroupEditState extends State<GroupEdit> {
                                 child: TextField(
                                   readOnly: false,
                                   focusNode: textFieldFocus,
+                                  style: TextStyle(fontSize: 15.toFont),
                                   decoration: InputDecoration(
                                     // hintText: hintText,
                                     enabledBorder: InputBorder.none,
                                     border: InputBorder.none,
                                     hintStyle: TextStyle(
-                                        color: AllColors().INPUT_FIELD_COLOR),
+                                        color: AllColors().INPUT_FIELD_COLOR,
+                                        fontSize: 15.toFont),
                                   ),
                                   onTap: () {
-                                    if (showEmojiPicker)
+                                    if (showEmojiPicker) {
                                       setState(() {
                                         showEmojiPicker = false;
                                       });
+                                    }
                                   },
                                   onChanged: (val) {},
                                   controller: textController,
@@ -248,11 +262,11 @@ class _GroupEditState extends State<GroupEdit> {
         builder: (BuildContext context) {
           return Container(
             height: 119.toHeight,
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: Theme.of(context).brightness == Brightness.light
                   ? AllColors().WHITE
                   : AllColors().Black,
-              borderRadius: new BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(12.0),
                 topRight: const Radius.circular(12.0),
               ),

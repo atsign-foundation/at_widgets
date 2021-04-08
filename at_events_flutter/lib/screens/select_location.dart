@@ -98,7 +98,7 @@ class _SelectLocationState extends State<SelectLocation> {
               return snapshot.connectionState == ConnectionState.waiting
                   ? SizedBox()
                   : snapshot.hasData
-                      ? snapshot.data.length == 0
+                      ? snapshot.data.isEmpty
                           ? Text('No such location found')
                           : Expanded(
                               child: ListView.separated(

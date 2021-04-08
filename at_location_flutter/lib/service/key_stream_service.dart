@@ -62,7 +62,7 @@ class KeyStreamService {
 
     allResponse = [...allResponse, ...allRequestResponse];
 
-    if (allResponse.length == 0) {
+    if (allResponse.isEmpty) {
       SendLocationNotification().init(atClientInstance);
       return;
     }
@@ -118,9 +118,9 @@ class KeyStreamService {
     for (int i = 0; i < allLocationNotifications.length; i++) {
       // ignore: unrelated_type_equality_checks
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
-          (allLocationNotifications[i].locationNotificationModel == null))
+          (allLocationNotifications[i].locationNotificationModel == null)) {
         tempArray.add(allLocationNotifications[i]);
-      else {
+      } else {
         if ((allLocationNotifications[i].locationNotificationModel.to !=
                 null) &&
             (allLocationNotifications[i]
@@ -161,7 +161,7 @@ class KeyStreamService {
     List<String> allRegexResponses =
         await atClientInstance.getKeys(regex: acknowledgedKeyId);
 
-    if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
+    if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
       AtKey acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
       AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
@@ -185,7 +185,7 @@ class KeyStreamService {
     List<String> allRegexResponses =
         await atClientInstance.getKeys(regex: acknowledgedKeyId);
 
-    if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
+    if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
       AtKey acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
       AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
@@ -201,12 +201,13 @@ class KeyStreamService {
 
   mapUpdatedLocationDataToWidget(LocationNotificationModel locationData) {
     String newLocationDataKeyId;
-    if (locationData.key.contains(MixedConstants.SHARE_LOCATION))
+    if (locationData.key.contains(MixedConstants.SHARE_LOCATION)) {
       newLocationDataKeyId =
           locationData.key.split('sharelocation-')[1].split('@')[0];
-    else
+    } else {
       newLocationDataKeyId =
           locationData.key.split('requestlocation-')[1].split('@')[0];
+    }
 
     for (int i = 0; i < allLocationNotifications.length; i++) {
       if (allLocationNotifications[i].key.contains(newLocationDataKeyId)) {
@@ -217,10 +218,12 @@ class KeyStreamService {
 
     // Update location sharing
     if ((locationData.isSharing) && (locationData.isAccepted)) {
-      if (locationData.atsignCreator == currentAtSign)
+      if (locationData.atsignCreator == currentAtSign) {
         SendLocationNotification().addMember(locationData);
-    } else
+      }
+    } else {
       SendLocationNotification().removeMember(locationData.key);
+    }
   }
 
   removeData(String key) {
@@ -248,18 +251,18 @@ class KeyStreamService {
     }
 
     List<String> key = [];
-    if (key.length == 0) {
+    if (key.isEmpty) {
       key = await atClientInstance.getKeys(
         regex: tempKey,
       );
     }
-    if (key.length == 0) {
+    if (key.isEmpty) {
       key = await atClientInstance.getKeys(
         regex: tempKey,
         sharedWith: locationNotificationModel.receiver,
       );
     }
-    if (key.length == 0) {
+    if (key.isEmpty) {
       key = await atClientInstance.getKeys(
         regex: tempKey,
         sharedBy: locationNotificationModel.key.contains('share')
@@ -281,9 +284,10 @@ class KeyStreamService {
 
     if ((tempHyridNotificationModel.locationNotificationModel.isSharing)) {
       if (tempHyridNotificationModel.locationNotificationModel.atsignCreator ==
-          currentAtSign)
+          currentAtSign) {
         SendLocationNotification()
             .addMember(tempHyridNotificationModel.locationNotificationModel);
+      }
     }
     return tempHyridNotificationModel;
   }
@@ -295,10 +299,11 @@ class KeyStreamService {
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print("error in in key_stream_service get $e"));
 
-      if (atvalue != null)
+      if (atvalue != null) {
         return atvalue;
-      else
+      } else {
         return null;
+      }
     } catch (e) {
       print('error in key_stream_service getAtValue:$e');
       return null;

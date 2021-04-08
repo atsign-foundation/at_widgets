@@ -22,6 +22,9 @@ Future<AtContact> getAtSignDetails(String atSign) async {
       atSign: atSign,
       tags: contactDetails,
     );
+    if (contactDetails != null) {
+      ContactService().cachedContactList.add(atContact);
+    }
   }
   return atContact;
 }
@@ -31,11 +34,11 @@ AtContact getCachedContactDetail(String atsign) {
       ContactService().loggedInUserDetails != null) {
     return ContactService().loggedInUserDetails;
   }
-  if (ContactService().contactList.length > 0) {
+  if (ContactService().cachedContactList.isNotEmpty) {
     int index = ContactService()
-        .contactList
+        .cachedContactList
         .indexWhere((element) => element.atSign == atsign);
-    if (index > -1) return ContactService().contactList[index];
+    if (index > -1) return ContactService().cachedContactList[index];
   }
   return null;
 }

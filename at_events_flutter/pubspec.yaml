@@ -18,6 +18,7 @@ dependencies:
   at_contacts_flutter: ^0.0.3
   at_commons: ^1.0.1+4
   at_client_mobile: ^1.0.0+5
+  pedantic: ^1.11.0
 
 dev_dependencies:
   flutter_test:
