@@ -272,20 +272,25 @@ class ConnectionsService {
     atKey = AtKey()..sharedBy = connection;
     AtFollowsValue atValue = AtFollowsValue();
     for (var key in PublicData.list) {
-      atKey..metadata = _getPublicFieldsMetadata(key, isNew: isNew);
+      atKey..metadata = _getPublicFieldsMetadata(key);
       atKey..key = key;
       atValue = await _sdkService.get(atKey);
+      //performs plookup if the data is not in cache.
+      if (atValue.value == null) {
+        atKey.metadata.isCached = false;
+        atValue = await _sdkService.get(atKey);
+      }
       atValue..atKey = atKey;
       atsignData.setData(atValue);
     }
     return atsignData;
   }
 
-  _getPublicFieldsMetadata(String key, {bool isNew = false}) {
+  _getPublicFieldsMetadata(String key) {
     var atmetadata = Metadata()
       ..namespaceAware = false
+      ..isCached = true
       ..isBinary = key == PublicData.image
-      ..isCached = !isNew
       ..isPublic = true;
     return atmetadata;
   }

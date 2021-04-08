@@ -70,6 +70,7 @@ class _ConnectionsState extends State<Connections> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
           title: SDKService().atsign,
@@ -149,8 +150,8 @@ class _ConnectionsState extends State<Connections> {
                         decoration: InputDecoration(
                             filled: true,
                             fillColor: ColorConstants.fillColor,
-                            labelText: Strings.Search,
-                            labelStyle: CustomTextStyles.fontR16primary,
+                            hintText: Strings.Search,
+                            hintStyle: CustomTextStyles.fontR16primary,
                             prefixIcon: Icon(Icons.filter_list,
                                 color: ColorConstants.primary),
                             focusedBorder: OutlineInputBorder(
