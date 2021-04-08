@@ -15,7 +15,9 @@ class Followers extends StatefulWidget {
   final String searchText;
   final bool isFollowing;
   final Function count;
-  Followers({this.searchText, this.isFollowing = false, this.count});
+  final Function isDialog;
+  Followers(
+      {this.searchText, this.isFollowing = false, this.count, this.isDialog});
   @override
   _FollowersState createState() => _FollowersState();
 }
@@ -257,6 +259,7 @@ class _FollowersState extends State<Followers> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (context) => AlertDialog(
                   content: Text(
                       isFollow
@@ -266,22 +269,24 @@ class _FollowersState extends State<Followers> {
                       style: CustomTextStyles.fontR14dark),
                   actions: [
                     CustomButton(
-                      width: 100.toWidth,
+                      width: SizeConfig().screenWidth * 0.23,
                       isActive: false,
                       onPressedCallBack: (value) {
                         _connectionsService.followerAtsign = null;
                         _connectionsService.followAtsign = null;
+                        widget.isDialog();
                         Navigator.pop(context);
                       },
                       text: Strings.cancel,
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.17),
                     CustomButton(
-                      width: 100.toWidth,
+                      width: SizeConfig().screenWidth * 0.23,
                       isActive: true,
                       onPressedCallBack: (value) {
                         _connectionsService.followerAtsign = null;
                         _connectionsService.followAtsign = null;
+                        widget.isDialog();
                         Navigator.pop(context);
                         ConnectionProvider().follow(atsign);
                       },

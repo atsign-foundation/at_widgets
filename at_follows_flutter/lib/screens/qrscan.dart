@@ -83,7 +83,7 @@ class _QrScanState extends State<QrScan> {
   }
 
   Future<void> onScan(String data, List<Offset> offsets, context) async {
-    _controller.stopCamera();
+    // _controller.stopCamera();
     this.setState(() {
       loading = true;
     });
@@ -95,12 +95,7 @@ class _QrScanState extends State<QrScan> {
       if (result) {
         Navigator.pop(context);
         await ConnectionProvider().follow(formattedAtsign);
-      } else {
-        setState(() {
-          loading = false;
-          _scanCompleted = false;
-        });
-      }
+      } else {}
     } else {
       _logger.severe('Scanning the QRcode throws error');
     }
@@ -279,6 +274,10 @@ class _QrScanState extends State<QrScan> {
                         onScan(data1, offsets1, context);
                         _scanCompleted = true;
                       }
+                    });
+                    setState(() {
+                      loading = false;
+                      _scanCompleted = false;
                     });
                   }
                 },

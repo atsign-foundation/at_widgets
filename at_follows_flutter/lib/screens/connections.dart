@@ -47,6 +47,8 @@ class _ConnectionsState extends State<Connections> {
   TextEditingController searchController = TextEditingController();
   ConnectionProvider _connectionProvider = ConnectionProvider();
   var _connectionService = ConnectionsService();
+  String followAtsignTitle;
+  String followerAtsignTitle;
 
   @override
   void initState() {
@@ -62,6 +64,8 @@ class _ConnectionsState extends State<Connections> {
     _connectionService.startMonitor().then((value) => setState(() {
           _formConnectionTabs(2);
         }));
+    followAtsignTitle = widget.followAtsignTitle;
+    followerAtsignTitle = widget.followerAtsignTitle;
 
     super.initState();
   }
@@ -181,10 +185,14 @@ class _ConnectionsState extends State<Connections> {
                             searchText: searchController.text,
                             count: () {
                               _connectionService.followerAtsign =
-                                  widget.followerAtsignTitle;
+                                  this.followerAtsignTitle;
                               _connectionService.followAtsign =
-                                  widget.followAtsignTitle;
+                                  this.followAtsignTitle;
                               _getCount();
+                            },
+                            isDialog: () {
+                              this.followerAtsignTitle = null;
+                              this.followAtsignTitle = null;
                             })
                     ],
                   ),
