@@ -2,7 +2,6 @@ import 'package:at_follows_flutter/screens/notifications.dart';
 import 'package:at_follows_flutter/screens/qrscan.dart';
 import 'package:at_follows_flutter/utils/color_constants.dart';
 import 'package:at_follows_flutter/utils/custom_textstyles.dart';
-import 'package:at_follows_flutter/utils/images.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
@@ -30,9 +29,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       leading: null,
       automaticallyImplyLeading: false,
       actions: [
-        // PopupMenuButton(itemBuilder: (builder){
-        //   return PopupMenuItems(child: null)
-        // })
         if (this.showNotifications)
           GestureDetector(
               onTap: () {
@@ -69,7 +65,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         if (this.showQr)
           GestureDetector(
             onTap: () {
-              print('Asked for scanning QRcode');
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => QrScan()));
             },
@@ -85,16 +80,13 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               child: SizedBox(width: 25.toFont))
       ],
       title: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Flexible(
             fit: FlexFit.loose,
             flex: 2,
             child: GestureDetector(
-                child:
-                    // Icon(Icons.arrow_back, color: ColorConstants.primary),
-                    Text(Strings.BackButton,
-                        style: CustomTextStyles.fontR14primary),
+                child: Text(Strings.BackButton,
+                    style: CustomTextStyles.fontR14dark),
                 onTap: () {
                   Navigator.pop(context);
                 }),

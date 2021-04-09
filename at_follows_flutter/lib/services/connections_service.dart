@@ -8,6 +8,7 @@ import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:at_lookup/at_lookup.dart';
 
 class ConnectionsService {
   static final ConnectionsService _singleton = ConnectionsService._internal();
@@ -261,28 +262,28 @@ class ConnectionsService {
     Atsign atsignData = Atsign()
       ..title = connection
       ..isFollowing = following.list.contains(connection);
-    //updates followers list data. If data is present in following for isFollowing = false.
-    //updates following list data. If data is present in followers for isfollowing = true.
-    // if (following.list.contains(connection) && !isFollowing) {
-    var data = connectionProvider.getData(!isFollowing, connection);
-    if (data != null) {
-      return data;
-    }
-    // }
-    atKey = AtKey()..sharedBy = connection;
-    AtFollowsValue atValue = AtFollowsValue();
-    for (var key in PublicData.list) {
-      atKey..metadata = _getPublicFieldsMetadata(key);
-      atKey..key = key;
-      atValue = await _sdkService.get(atKey);
-      //performs plookup if the data is not in cache.
-      if (atValue.value == null) {
-        atKey.metadata.isCached = false;
-        atValue = await _sdkService.get(atKey);
+    try {
+      var data = connectionProvider.getData(!isFollowing, connection);
+      if (data != null) {
+        return data;
       }
-      atValue..atKey = atKey;
-      atsignData.setData(atValue);
+      atKey = AtKey()..sharedBy = connection;
+      AtFollowsValue atValue = AtFollowsValue();
+      for (var key in PublicData.list) {
+        atKey..metadata = _getPublicFieldsMetadata(key);
+        atKey..key = key;
+        atValue = await _sdkService.get(atKey);
+        //performs plookup if the data is not in cache.
+        if (atValue.value == null) {
+          atKey.metadata.isCached = false;
+          atValue = await _sdkService.get(atKey);
+        }
+        atsignData.setData(atValue);
+      }
+    } on AtLookUpException catch (e) {
+      _logger.severe('Fetching keys for $connection throws ${e.errorMessage}');
     }
+
     return atsignData;
   }
 

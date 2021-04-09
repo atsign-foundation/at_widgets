@@ -66,10 +66,8 @@ class _MyAppState extends State<MyApp> {
             context,
             MaterialPageRoute(
                 builder: (context) => Connections(
-                      atClientserviceInstance:
-                          atService.atClientServiceInstance,
-                      isDarkTheme: false,
-                    )));
+                    atClientserviceInstance: atService.atClientServiceInstance,
+                    appColor: Colors.black)));
       },
       onError: (error) {
         Center(child: Text('Onboarding throws $error'));

@@ -169,16 +169,14 @@ class _FollowersState extends State<Followers> {
                                   sortedListWithAlphabet[index];
                               return ListTile(
                                 onTap: () {
-                                  if (!widget.isFollowing) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => WebViewScreen(
-                                                url:
-                                                    '${Strings.directoryUrl}/${currentAtsign.title}',
-                                                title: Strings
-                                                    .publicContentAppbarTitle)));
-                                  }
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => WebViewScreen(
+                                              url:
+                                                  '${Strings.directoryUrl}/${currentAtsign.title}',
+                                              title: Strings
+                                                  .publicContentAppbarTitle)));
                                 },
                                 leading: CircleAvatar(
                                   backgroundColor: ColorConstants.fillColor,

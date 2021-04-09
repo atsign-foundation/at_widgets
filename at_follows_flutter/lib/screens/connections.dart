@@ -17,8 +17,10 @@ import 'package:provider/provider.dart';
 ///Throws assertion error if [service] is null.
 ///To enable darkTheme set [isDarkTheme] as true.
 class Connections extends StatefulWidget {
+  ///Perform operations like follow/following for a particular @sign.
   final atClientserviceInstance;
-  final bool isDarkTheme;
+
+  ///color to match with your app theme. Defaults to [orange].
   final Color appColor;
 
   ///Launches the sepcific app if provided.
@@ -32,7 +34,6 @@ class Connections extends StatefulWidget {
   // final bool isLightTheme;
   Connections(
       {@required this.atClientserviceInstance,
-      this.isDarkTheme = false,
       this.appColor,
       this.deepLinkAppUrl,
       this.followAtsignTitle,
@@ -54,7 +55,7 @@ class _ConnectionsState extends State<Connections> {
   void initState() {
     _connectionService.init();
     _connectionProvider.init();
-    ColorConstants.darkTheme = widget.isDarkTheme;
+    ColorConstants.darkTheme = false;
     ColorConstants.appColor = widget.appColor;
     SDKService().setClientService = widget.atClientserviceInstance;
     AppConstants.appUrl = widget.deepLinkAppUrl;
@@ -114,7 +115,6 @@ class _ConnectionsState extends State<Connections> {
                     ),
                   )
                 : Column(
-                    // mainAxisSize: MainAxisSize.min,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
