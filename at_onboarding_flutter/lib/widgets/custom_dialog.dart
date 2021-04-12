@@ -61,29 +61,37 @@ class CustomDialog extends StatelessWidget {
                   style: CustomTextStyles.fontR16primary,
                 ),
                 this.message == ResponseStatus.TIME_OUT
-                    ? Icon(Icons.access_time)
-                    : Icon(Icons.sentiment_dissatisfied)
+                    ? Icon(Icons.access_time, size: 18.toFont)
+                    : Icon(Icons.sentiment_dissatisfied, size: 18.toFont)
               ],
             )
           : isAtsignForm
-              ? Row(
-                  children: [
-                    Text(
-                      Strings.enterAtsignTitle,
-                      style: CustomTextStyles.fontR16primary,
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.help),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WebViewScreen(
-                                        title: Strings.faqTitle,
-                                        url: Strings.faqUrl,
-                                      )));
-                        })
-                  ],
+              ? Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.0.toFont),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          Strings.enterAtsignTitle,
+                          style: CustomTextStyles.fontR16primary,
+                        ),
+                      ),
+                      IconButton(
+                          icon: Icon(
+                            Icons.help,
+                            size: 18.toFont,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => WebViewScreen(
+                                          title: Strings.faqTitle,
+                                          url: Strings.faqUrl,
+                                        )));
+                          })
+                    ],
+                  ),
                 )
               : this.title != null
                   ? Text(
@@ -92,61 +100,70 @@ class CustomDialog extends StatelessWidget {
                     )
                   : this.title,
       content: isAtsignForm
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Form(
-                  key: _formKey,
-                  autovalidateMode: AutovalidateMode.always,
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value == null || value == '') {
-                        return '@sign cannot be empty';
-                      }
-                      return null;
-                    },
-                    controller: _atsignController,
-                    decoration: InputDecoration(
-                        hintText: Strings.atsignHintText,
-                        prefixText: '@',
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: ColorConstants.appColor))),
-                  ),
-                ),
-                SizedBox(height: 15.toHeight),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        Strings.cancelButton,
-                        style: TextStyle(
-                            color: ColorConstants.appColor,
-                            fontSize: 14.toFont),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        if (_formKey.currentState.validate()) {
-                          Navigator.pop(context);
-                          this.onSubmit(_atsignController.text);
+          ? Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.always,
+                    child: TextFormField(
+                      style:
+                          TextStyle(fontSize: 14.toFont, height: 1.0.toHeight),
+                      validator: (value) {
+                        if (value == null || value == '') {
+                          return '@sign cannot be empty';
                         }
+                        return null;
                       },
-                      child: Text(
-                        Strings.submitButton,
-                        style: TextStyle(
-                            color: ColorConstants.appColor,
-                            fontSize: 14.toFont),
-                      ),
+                      controller: _atsignController,
+                      decoration: InputDecoration(
+                          errorStyle: TextStyle(
+                            fontSize: 10.toFont,
+                          ),
+                          hintText: Strings.atsignHintText,
+                          prefixText: '@',
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: ColorConstants.appColor))),
                     ),
-                  ],
-                )
-              ],
+                  ),
+                  SizedBox(height: 15.toHeight),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          Strings.cancelButton,
+                          style: TextStyle(
+                              color: ColorConstants.appColor,
+                              fontSize: 12.toFont),
+                        ),
+                      ),
+                      SizedBox(width: 15.toWidth),
+                      TextButton(
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            Navigator.pop(context);
+                            this.onSubmit(_atsignController.text);
+                          }
+                        },
+                        child: Text(
+                          Strings.submitButton,
+                          style: TextStyle(
+                              color: ColorConstants.appColor,
+                              fontSize: 12.toFont),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             )
           : _getMessage(this.message, isErrorDialog),
       actions: showClose

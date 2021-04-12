@@ -58,6 +58,11 @@ class AtService {
     return await _getAtClientForAtsign().getKeys(regex: AppConstants.regex);
   }
 
+  Future<bool> makeAtsignPrimary(String atsign) async {
+    atsign = formatAtSign(atsign);
+    return await atClientServiceMap[atsign].makeAtSignPrimary(atsign);
+  }
+
   ///Returns null if [atsign] is null else the formatted [atsign].
   ///[atsign] must be non-null.
   String formatAtSign(String atsign) {
