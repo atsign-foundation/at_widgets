@@ -16,6 +16,7 @@ import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class CustomListTile extends StatefulWidget {
   final Function onTap;
@@ -57,6 +58,7 @@ class _CustomListTileState extends State<CustomListTile> {
         isSelected = false;
       }
     }
+    getImage();
     // }
     super.initState();
   }
@@ -75,27 +77,62 @@ class _CustomListTileState extends State<CustomListTile> {
         isSelected = false;
       }
     }
+    getImage();
     // }
     super.didChangeDependencies();
   }
 
+  Widget contactImage;
+
+  getImage() async {
+    setState(() {
+      isLoading = true;
+    });
+    Uint8List image;
+
+    if (widget.item.contact == null) {
+      if (widget?.item?.group?.groupName == null) {
+        contactImage = ContactInitial(
+            initials: widget.item.group.displayName.length > 3
+                ? widget?.item?.group?.displayName?.substring(0, 2)
+                : widget?.item?.group?.displayName ?? 'UG');
+      } else {
+        contactImage = ContactInitial(
+            initials: widget.item.group.groupName.length > 3
+                ? widget?.item?.group?.groupName?.substring(0, 2)
+                : widget?.item?.group?.groupName ?? 'UG');
+      }
+    } else {
+      if ((widget?.item?.contact?.tags != null &&
+          widget?.item?.contact?.tags['image'] != null)) {
+        List<int> intList = widget?.item?.contact?.tags['image'].cast<int>();
+        image = Uint8List.fromList(intList);
+        image = await FlutterImageCompress.compressWithList(
+          image,
+          minWidth: 400,
+          minHeight: 200,
+        );
+
+        contactImage = CustomCircleAvatar(
+          byteImage: image,
+          nonAsset: true,
+        );
+      } else {
+        contactImage = ContactInitial(
+          initials: widget?.item?.contact?.atSign?.substring(1, 3),
+        );
+      }
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+
+    ;
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget contactImage;
-    if ((widget?.item?.contact?.tags != null &&
-        widget?.item?.contact?.tags['image'] != null)) {
-      List<int> intList = widget?.item?.contact?.tags['image'].cast<int>();
-      Uint8List image = Uint8List.fromList(intList);
-      contactImage = CustomCircleAvatar(
-        byteImage: image,
-        nonAsset: true,
-      );
-    } else {
-      contactImage = ContactInitial(
-        initials: widget?.item?.contact?.atSign?.substring(1, 3) ??
-            widget?.item?.group?.groupName?.substring(0, 2),
-      );
-    }
     return StreamBuilder<List<GroupContactsModel>>(
         initialData: _groupService.selectedGroupContacts,
         stream: _groupService.selectedContactsStream,
@@ -137,11 +174,13 @@ class _CustomListTileState extends State<CustomListTile> {
               }
             },
             title: Text(
-              ((widget?.item?.contact?.tags != null &&
-                      widget?.item?.contact?.tags['name'] != null))
-                  ? widget?.item?.contact?.tags['name']
-                  : widget?.item?.contact?.atSign?.substring(1) ??
-                      widget?.item?.group?.groupName?.substring(0),
+              widget.item.contact == null
+                  ? widget.item.group.displayName == null
+                      ? widget.item.group.groupName
+                      : widget.item.group.displayName
+                  : widget.item.contact.tags['name'] == null
+                      ? widget.item.contact.atSign.substring(1)
+                      : widget.item.contact.tags['name'],
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14.toFont,
@@ -162,7 +201,8 @@ class _CustomListTileState extends State<CustomListTile> {
                   color: Colors.black,
                   shape: BoxShape.circle,
                 ),
-                child: contactImage),
+                child:
+                    (isLoading) ? CircularProgressIndicator() : contactImage),
             trailing: IconButton(
               onPressed: (widget?.asSelectionTile == false &&
                       widget.onTrailingPressed != null)

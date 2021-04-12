@@ -44,7 +44,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   List<GroupContactsModel> unmodifiedSelectedGroupContacts = [];
   ContactService _contactService;
   bool deletingContact = false;
-  int itemCount = 27;
+
   @override
   void initState() {
     _groupService = GroupService();
@@ -132,7 +132,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                           )
                         : ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.toHeight),
-                            itemCount: itemCount,
+                            itemCount: 27,
                             shrinkWrap: true,
                             physics: AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, alphabetIndex) {
@@ -148,7 +148,8 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 }
                                 if (widget.showGroups &&
                                     c.group != null &&
-                                    c.group.groupName
+                                    c.group.displayName != null &&
+                                    c.group.displayName
                                         .toUpperCase()
                                         .contains(searchText.toUpperCase())) {
                                   _filteredList.add(c);
@@ -172,7 +173,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showGroups &&
                                       c.group != null &&
-                                      int.tryParse(c?.group?.groupName[0]) !=
+                                      int.tryParse(c?.group?.displayName[0]) !=
                                           null) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -189,7 +190,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showGroups &&
                                       c.group != null &&
-                                      c?.group?.groupName[0].toUpperCase() ==
+                                      c?.group?.displayName[0].toUpperCase() ==
                                           currentChar) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -197,17 +198,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                               }
 
                               if (contactsForAlphabet.isEmpty) {
-                                itemCount = 1;
-
-                                return Padding(
-                                  padding: EdgeInsets.only(top: 28.toHeight),
-                                  child: Center(
-                                    child: Text(
-                                      'No contact found...',
-                                      style: CustomTextStyles().grey16,
-                                    ),
-                                  ),
-                                );
+                                return Container();
                               }
 
                               return Container(

@@ -214,7 +214,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       });
       for (var file in result.files) {
         if (cramKey == null) {
-          String result = await FlutterQrReader.imgScan(File(file.path));
+          String result = await FlutterQrReader.imgScan((file.path));
           if (result.contains('@')) {
             cramKey = result;
             break;
@@ -332,7 +332,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               var path = (await path_provider.getTemporaryDirectory()).path;
               var file1 = await File('$path' + 'test').create();
               file1.writeAsBytesSync(bytes);
-              String result = await FlutterQrReader.imgScan(file1);
+              String result = await FlutterQrReader.imgScan(file1.path);
               List<String> params = result.replaceAll('"', '').split(':');
               atsign = params[0];
               aesKey = params[1];
@@ -346,7 +346,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             atsign == null &&
             pickedFile.name.contains('_private_key.png')) {
           //read scan QRcode and extract atsign,aeskey
-          String result = await FlutterQrReader.imgScan(File(path));
+          String result = await FlutterQrReader.imgScan((path));
           List<String> params = result.split(':');
           atsign = params[0];
           aesKey = params[1];
