@@ -129,6 +129,7 @@ class _GroupEditState extends State<GroupEdit> {
                     height: 272.toHeight,
                     width: double.infinity,
                     fit: BoxFit.fitWidth,
+                    package: 'at_contacts_group_flutter',
                   ),
             Padding(
               padding: EdgeInsets.symmetric(

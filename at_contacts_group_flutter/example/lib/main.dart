@@ -39,8 +39,11 @@ class _MyAppState extends State<MyApp> {
                           textAlign: TextAlign.center),
                     )),
                 Center(
-                    child: FlatButton(
-                        color: Colors.black12,
+                    child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black12),
+                        ),
                         onPressed: () async {
                           await Navigator.pushReplacement(
                               context,
@@ -52,20 +55,25 @@ class _MyAppState extends State<MyApp> {
                                           clientSdkService.atClientPreference,
                                       nextScreen: SecondScreen())));
                         },
-                        child: Text('Show QR scanner screen'))),
+                        child: Text('Show QR scanner screen',
+                            style: TextStyle(color: Colors.black)))),
                 SizedBox(
                   height: 25,
                 ),
                 Center(
-                    child: FlatButton(
-                        color: Colors.black12,
+                    child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black12),
+                        ),
                         onPressed: () async {
                           await Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => SecondScreen()));
                         },
-                        child: Text('Already authenticated'))),
+                        child: Text('Already authenticated',
+                            style: TextStyle(color: Colors.black)))),
               ],
             ),
           )),

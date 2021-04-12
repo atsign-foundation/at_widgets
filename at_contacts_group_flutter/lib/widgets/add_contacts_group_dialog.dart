@@ -1,11 +1,11 @@
 /// A popup to ask the [AtSign] which is to be added
 
 import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_contacts_flutter/utils/text_strings.dart' as contactStrings;
+import 'package:at_contacts_flutter/utils/text_strings.dart' as contact_strings;
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart'
-    as contactTextStyles;
+    as contact_text_styles;
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:flutter/material.dart';
 
@@ -47,9 +47,9 @@ class _AddContactDialogState extends State<AddContactDialog> {
             children: [
               Expanded(
                 child: Text(
-                  contactStrings.TextStrings().addContact,
+                  contact_strings.TextStrings().addContact,
                   textAlign: TextAlign.center,
-                  style: contactTextStyles.CustomTextStyles.primaryBold18,
+                  style: contact_text_styles.CustomTextStyles.primaryBold18,
                 ),
               )
             ],
@@ -104,7 +104,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                         : CustomButton(
                             height: 50.toHeight * deviceTextFactor,
                             buttonText:
-                                contactStrings.TextStrings().addtoContact,
+                                contact_strings.TextStrings().addtoContact,
                             onPressed: () async {
                               setState(() {
                                 isLoading = true;
@@ -139,7 +139,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   children: [
                     CustomButton(
                       height: 50.toHeight * deviceTextFactor,
-                      buttonText: contactStrings.TextStrings().buttonCancel,
+                      buttonText: contact_strings.TextStrings().buttonCancel,
                       onPressed: () {
                         _contactService.getAtSignError = '';
                         Navigator.pop(context);
