@@ -43,6 +43,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   List<GroupContactsModel> unmodifiedSelectedGroupContacts = [];
   ContactService _contactService;
   bool deletingContact = false;
+
   @override
   void initState() {
     _groupService = GroupService();
@@ -50,7 +51,6 @@ class _GroupContactViewState extends State<GroupContactView> {
     _groupService.fetchGroupsAndContacts();
     unmodifiedSelectedGroupContacts =
         List.from(_groupService.selectedGroupContacts);
-    // print("unmodified list ---> $unmodifiedSelectedGroupContacts");
 
     super.initState();
   }
@@ -147,7 +147,8 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 }
                                 if (widget.showGroups &&
                                     c.group != null &&
-                                    c.group.groupName
+                                    c.group.displayName != null &&
+                                    c.group.displayName
                                         .toUpperCase()
                                         .contains(searchText.toUpperCase())) {
                                   _filteredList.add(c);
@@ -171,7 +172,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showGroups &&
                                       c.group != null &&
-                                      int.tryParse(c?.group?.groupName[0]) !=
+                                      int.tryParse(c?.group?.displayName[0]) !=
                                           null) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -188,7 +189,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showGroups &&
                                       c.group != null &&
-                                      c?.group?.groupName[0].toUpperCase() ==
+                                      c?.group?.displayName[0].toUpperCase() ==
                                           currentChar) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -198,6 +199,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                               if (contactsForAlphabet.isEmpty) {
                                 return Container();
                               }
+
                               return Container(
                                 child: Column(
                                   children: [

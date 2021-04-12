@@ -213,7 +213,7 @@ class GroupService {
             contact: contact, contactType: ContactsType.CONTACT));
       });
       await getAllGroupsDetails();
-      // print('ALL CONTACTS====>${allContacts.length}');
+      // print('ALL CONTACTS====>${allContacts[8]}');
       _allContactsStreamController.add(allContacts);
     } catch (e) {
       print(e);
