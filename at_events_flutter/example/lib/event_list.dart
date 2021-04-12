@@ -157,8 +157,11 @@ class _EventListState extends State<EventList> {
       title: Text(eventData.title),
       content: Text(heading),
       actions: [
-        FlatButton(
-          child: Text("No"),
+        TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
+          ),
+          child: Text("No", style: TextStyle(color: Colors.black)),
           onPressed: () async {
             if (!isDelete) {
               var result = await EventService().sendEventAcknowledgement(
@@ -174,8 +177,8 @@ class _EventListState extends State<EventList> {
             }
           },
         ),
-        FlatButton(
-          child: Text("Yes"),
+        TextButton(
+          child: Text("Yes", style: TextStyle(color: Colors.black)),
           onPressed: () async {
             if (isDelete) {
               bool result = await deleteEvent(eventData.key);
