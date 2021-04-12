@@ -82,17 +82,20 @@ class _SecondScreenState extends State<SecondScreen> {
                 ? Column(
                     children: [
                       SizedBox(height: 20.0),
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
                           scaffoldKey.currentState
                               .showBottomSheet((context) => ChatScreen());
                         },
                         child: Container(
                           height: 40,
-                          child: Text('Open chat in bottom sheet'),
+                          child: Text(
+                            'Open chat in bottom sheet',
+                            style: TextStyle(color: Colors.black),
+                          ),
                         ),
                       ),
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
                           Navigator.push(
                               context,
@@ -101,7 +104,10 @@ class _SecondScreenState extends State<SecondScreen> {
                         },
                         child: Container(
                           height: 40,
-                          child: Text('Navigate to chat screen'),
+                          child: Text(
+                            'Navigate to chat screen',
+                            style: TextStyle(color: Colors.black),
+                          ),
                         ),
                       )
                     ],
@@ -109,7 +115,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
                           if (chatWithAtSign != null &&
                               chatWithAtSign.trim() != '') {
@@ -123,7 +129,10 @@ class _SecondScreenState extends State<SecondScreen> {
                         },
                         child: Container(
                           height: 40,
-                          child: Text('Chat options'),
+                          child: Text(
+                            'Chat options',
+                            style: TextStyle(color: Colors.black),
+                          ),
                         ),
                       ),
                     ],
@@ -179,8 +188,10 @@ class _SecondScreenState extends State<SecondScreen> {
               ),
             ),
             SizedBox(height: 10),
-            FlatButton(
-              color: Colors.black,
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+              ),
               onPressed: () {
                 setGroupToChatWith(context);
               },
@@ -240,11 +251,14 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             content: Text('Please enter all fields'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('Close'),
+                child: Text(
+                  'Close',
+                  style: TextStyle(color: Colors.black),
+                ),
               )
             ],
           );

@@ -214,7 +214,7 @@ class ChatService {
           (isGroupChat ? groupChatId : '') +
           DateTime.now().millisecondsSinceEpoch.toString();
     if (isGroupChat) {
-      Future.forEach(groupChatMembers, (member) async {
+      await Future.forEach(groupChatMembers, (member) async {
         if (member != currentAtSign) {
           atKey.sharedWith = member;
           var result = await atClientInstance.put(atKey, message);
