@@ -64,20 +64,21 @@ class _SecondScreenState extends State<SecondScreen> {
           SizedBox(
             height: 20.0,
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               bottomSheet(
                   CreateEvent(), MediaQuery.of(context).size.height * 0.9);
             },
             child: Container(
               height: 40,
-              child: Text('Create event'),
+              child:
+                  Text('Create event', style: TextStyle(color: Colors.black)),
             ),
           ),
           SizedBox(
             height: 20.0,
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.push(
                 context,
@@ -88,7 +89,7 @@ class _SecondScreenState extends State<SecondScreen> {
             },
             child: Container(
               height: 40,
-              child: Text('Event list'),
+              child: Text('Event list', style: TextStyle(color: Colors.black)),
             ),
           ),
         ],
@@ -128,8 +129,8 @@ class _SecondScreenState extends State<SecondScreen> {
     return AlertDialog(
       title: Text('you are not authenticated'),
       actions: [
-        FlatButton(
-          child: Text("Ok"),
+        TextButton(
+          child: Text("Ok", style: TextStyle(color: Colors.black)),
           onPressed: () async {
             Navigator.of(context).pop();
             Navigator.of(context).pop();

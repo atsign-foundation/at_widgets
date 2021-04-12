@@ -79,7 +79,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               hint: Text("Occurs on"),
               items: ['30 mins', '2 hours', '24 hours', 'Until turned off']
                   .map((String option) {
-                return new DropdownMenuItem<String>(
+                return DropdownMenuItem<String>(
                   value: option,
                   child: Text(option),
                 );

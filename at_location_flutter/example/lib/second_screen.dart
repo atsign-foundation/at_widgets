@@ -22,12 +22,26 @@ class _SecondScreenState extends State<SecondScreen> {
   Stream<List<KeyLocationModel>> newStream;
   @override
   void initState() {
-    super.initState();
-    activeAtSign =
-        clientSdkService.atClientServiceInstance.atClient.currentAtSign;
-    initializeLocationService(clientSdkService.atClientServiceInstance.atClient,
-        activeAtSign, NavService.navKey);
-    newStream = getAllNotification();
+    try {
+      super.initState();
+      activeAtSign =
+          clientSdkService.atClientServiceInstance.atClient.currentAtSign;
+      initializeLocationService(
+          clientSdkService.atClientServiceInstance.atClient,
+          activeAtSign,
+          NavService.navKey);
+      newStream = getAllNotification();
+    } catch (e) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return alertDialogContent();
+          },
+        );
+      });
+    }
   }
 
   @override
@@ -87,7 +101,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       CustomToast().show('Atsign not valid', context);
                       return;
                     }
-                    sendShareLocationNotification(receiver, 30);
+                    await sendShareLocationNotification(receiver, 30);
                   },
                   child: Text('Send Location '),
                 ),
@@ -98,7 +112,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       CustomToast().show('Atsign not valid', context);
                       return;
                     }
-                    sendRequestLocationNotification(receiver);
+                    await sendRequestLocationNotification(receiver);
                   },
                   child: Text('Request Location'),
                 ),
@@ -114,7 +128,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   CustomToast().show('Atsign not valid', context);
                   return;
                 }
-                Navigator.of(context).push(MaterialPageRoute(
+                await Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => AtLocationFlutterPlugin(
                     [receiver],
                     calculateETA: true,
@@ -128,7 +142,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                Navigator.of(context).push(MaterialPageRoute(
+                await Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) =>
                       ShowLocation(UniqueKey(), locationList: [
                     LatLng(30, 45),
@@ -192,5 +206,20 @@ class _SecondScreenState extends State<SecondScreen> {
     var checkPresence = await AtLookupImpl.findSecondary(
         receiver, MixedConstants.ROOT_DOMAIN, 64);
     return checkPresence != null;
+  }
+
+  Widget alertDialogContent() {
+    return AlertDialog(
+      title: Text('you are not authenticated.'),
+      actions: [
+        TextButton(
+          child: Text("Ok", style: TextStyle(color: Colors.black)),
+          onPressed: () async {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
   }
 }
