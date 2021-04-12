@@ -34,7 +34,7 @@ class RequestLocationService {
       print('requestLocationNotification:$result');
 
       if (result) {
-        KeyStreamService().addDataToList(locationNotificationModel);
+        await KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
     } catch (e) {

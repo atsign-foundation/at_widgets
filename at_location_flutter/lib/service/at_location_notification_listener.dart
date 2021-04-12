@@ -104,8 +104,8 @@ class AtLocationNotificationListener {
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
       } else {
-        KeyStreamService().addDataToList(locationData);
-        showMyDialog(fromAtSign, locationData);
+        await KeyStreamService().addDataToList(locationData);
+        await showMyDialog(fromAtSign, locationData);
       }
       return;
     }
@@ -130,8 +130,8 @@ class AtLocationNotificationListener {
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
       } else {
-        KeyStreamService().addDataToList(locationData);
-        showMyDialog(fromAtSign, locationData);
+        await KeyStreamService().addDataToList(locationData);
+        await showMyDialog(fromAtSign, locationData);
       }
       return;
     }

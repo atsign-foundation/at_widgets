@@ -27,7 +27,8 @@ class KeyStreamService {
   List<AtContact> contactList = [];
 
   // ignore: close_sinks
-  StreamController _atNotificationsController;
+  StreamController _atNotificationsController =
+      StreamController<List<KeyLocationModel>>.broadcast();
   Stream<List<KeyLocationModel>> get atNotificationsStream =>
       _atNotificationsController.stream;
   StreamSink<List<KeyLocationModel>> get atNotificationsSink =>
