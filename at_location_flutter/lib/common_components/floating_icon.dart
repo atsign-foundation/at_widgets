@@ -17,6 +17,7 @@ class FloatingIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Container(
       height: 50.toHeight,
       width: 50.toHeight,
