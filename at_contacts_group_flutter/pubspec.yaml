@@ -13,11 +13,7 @@ dependencies:
 
   toast: ^0.1.5
   file_picker: ^2.0.7
-  at_common_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_common_flutter
-      ref: dev_env
+  at_common_flutter: ^0.0.4
   at_contacts_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git
