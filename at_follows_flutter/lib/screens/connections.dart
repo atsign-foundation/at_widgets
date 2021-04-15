@@ -2,7 +2,6 @@ import 'package:at_follows_flutter/domain/connection_model.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/services/sdk_service.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
-import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/color_constants.dart';
 import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
@@ -23,9 +22,6 @@ class Connections extends StatefulWidget {
   ///color to match with your app theme. Defaults to [orange].
   final Color appColor;
 
-  ///Launches the sepcific app if provided.
-  final String deepLinkAppUrl;
-
   ///name of the follower atsign received from notification to follow them back immediately.
   final String followerAtsignTitle;
 
@@ -35,7 +31,6 @@ class Connections extends StatefulWidget {
   Connections(
       {@required this.atClientserviceInstance,
       this.appColor,
-      this.deepLinkAppUrl,
       this.followAtsignTitle,
       this.followerAtsignTitle});
   @override
@@ -58,7 +53,6 @@ class _ConnectionsState extends State<Connections> {
     ColorConstants.darkTheme = false;
     ColorConstants.appColor = widget.appColor;
     SDKService().setClientService = widget.atClientserviceInstance;
-    AppConstants.appUrl = widget.deepLinkAppUrl;
     Strings.directoryUrl = Strings.rootdomain == 'root.atsign.org'
         ? 'https://atsign.directory/'
         : 'https://directory.atsign.wtf/';

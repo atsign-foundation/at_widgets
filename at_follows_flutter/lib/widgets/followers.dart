@@ -51,7 +51,10 @@ class _FollowersState extends State<Followers> {
                 Container(
                   height: 50.toHeight,
                   width: 50.toHeight,
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        ColorConstants.buttonHighLightColor),
+                  ),
                 ),
                 SizedBox(height: 5.0.toHeight),
                 // Text(Strings.loadingDescription,

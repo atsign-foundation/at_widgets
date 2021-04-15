@@ -86,16 +86,36 @@ end
 Supports for single @sign follows feature. This plugin provides two screens:
 
 ### Follows screen
-Displays all the @signs that are being followed and followers of the given @sign. Unfollows will remove the particaulr @sign from following whereas follow adds the @sign to following list.
+Displays all the @signs that are being followed and followers of the given @sign. Unfollow button will remove the particular @sign from following whereas follow button adds the @sign to following list.
 
 ### Add @sign to follow
-Scan the QR code of an @sign to follow or type the @sign.
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+Scan the QR code of an @sign or type the @sign to follow.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Sample usage
+The plugin will takes AtClientService instance to show the follows list of an @sign. 
+
+```
+TextButton(
+  color: Colors.black,
+  onPressed: () {
+    Navigator.push(
+          ctxt,
+          MaterialPageRoute(
+              builder: (context) => Connections(
+                  atClientserviceInstance: atClientServiceInstance,
+                  appColor: Colors.blue)));
+  },
+  child: Text('AtFollows')
+)
+```
+
+##### Plugin parameters
+1. atClientserviceInstance - to perform further actions for the given @sign.
+2. appColor - applies to plugin screens to match the app's theme. This should be bright color as it takes white font over that. Defaults to orange.
+3. followerAtsignTitle - follower @sign received from app's notification
+4. followAtsignTitle - @sign followed from webapp.
+
+
+
+
 

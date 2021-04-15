@@ -38,35 +38,6 @@ class AtService {
     return _atClientPreference;
   }
 
-  ///Returns `true` if authentication is successful for the existing atsign in device.
-  Future<bool> onboard({String atsign}) async {
-    atClientServiceInstance = AtClientService();
-    var _atClientPreference = await getAtClientPreference();
-    var result = await atClientServiceInstance.onboard(
-        atClientPreference: _atClientPreference, atsign: atsign);
-    atClientInstance = atClientServiceInstance.atClient;
-    _logger.finer('Onboarded $atsign successfully!');
-    _sync();
-    return result;
-  }
-
-  ///Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].
-  Future<bool> authenticate(String atsign,
-      {String cramSecret,
-      String jsonData,
-      String decryptKey,
-      OnboardingStatus status}) async {
-    var _atClientPreference = await getAtClientPreference();
-    _atClientPreference..cramSecret = cramSecret;
-    var result = await atClientServiceInstance.authenticate(
-        atsign, _atClientPreference,
-        jsonData: jsonData, decryptKey: decryptKey, status: status);
-    atClientInstance = atClientServiceInstance.atClient;
-    _logger.finer('Authenticated $atsign successfully!');
-    await _sync();
-    return result;
-  }
-
   Future<bool> put({String key, var value}) async {
     var atKey = at_commons.AtKey()..key = key;
     // ..metadata = metaData;
@@ -101,14 +72,20 @@ class AtService {
     return await atClientServiceInstance.getAtSign();
   }
 
+  ///Fetches atsign list from device keychain.
+  Future<List<String>> getAtSignList() async {
+    return await atClientServiceInstance.getAtsignList();
+  }
+
+  Future<void> deleteAtsign(String atsign) async {
+    return await atClientServiceInstance.deleteAtSignFromKeychain(atsign);
+  }
+
   // startMonitor needs to be called at the beginning of session
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
     await atClientInstance.startMonitor(privateKey, (response) {
-      // monitorCallBack == null
-      //     ? monitorCallBack = () => response
-      //     : monitorCallBack(response);
       acceptStream(response);
     });
     print("Monitor started");
@@ -165,16 +142,4 @@ class AtNotification {
       'value': value
     };
   }
-
-  // AtNotification AtNotification.fromString(String data){
-  //   return AtNotification()..id :
-  // }
-
-  // Map<String,dynamic> AtNotification.toJson(String data){
-  //   return {
-  //     'id': id,
-  //     'fromAtSign': fromAtSign,
-
-  //   }
-  // }
 }
