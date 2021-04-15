@@ -136,8 +136,9 @@ class _MyAppState extends State<MyApp> {
         atService.atClientServiceInstance = value[atsign];
         atService.atClientInstance = atService.atClientServiceInstance.atClient;
         _atsign = await atService.getAtSign();
-        Future.delayed(Duration(seconds: 2));
-        setState(() {});
+        Future.delayed(Duration(milliseconds: 300), () {
+          setState(() {});
+        });
       },
       onError: (error) {
         Center(child: Text('Onboarding throws $error'));
