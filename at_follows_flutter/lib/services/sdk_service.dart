@@ -42,12 +42,14 @@ class SDKService {
             onTimeout: () => _onTimeOut());
   }
 
+  ///Returns `true` on deleting [atKey].
   Future<bool> delete(AtKey atKey) async {
     return await _atClientServiceInstance.atClient.delete(atKey).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
         onTimeout: () => _onTimeOut());
   }
 
+  ///Returns `true` on storing/updating [atKey].
   Future<bool> put(AtKey atKey, String value) async {
     return await _atClientServiceInstance.atClient.put(atKey, value).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
@@ -73,16 +75,15 @@ class SDKService {
     Set<AtNotification> uniqueNotifications = {};
     Set<String> uniqueKeys = {};
     for (var notification in notificationList) {
-      // if (notification.operation == Operation.update) {
       bool isUnique = uniqueKeys.add(notification.fromAtSign);
       if (isUnique) {
         uniqueNotifications.add(notification);
       }
-      // }
     }
     return uniqueNotifications.toList();
   }
 
+  ///Returns `AtFollowsValue` for [atKey].
   Future<AtFollowsValue> get(AtKey atkey) async {
     var response = await _atClientServiceInstance.atClient.get(atkey).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
@@ -95,6 +96,7 @@ class SDKService {
     return val;
   }
 
+  ///Returns `true` on notifying [key] with [value], [operation].
   Future<bool> notify(AtKey key, String value, OperationEnum operation) async {
     return await _atClientServiceInstance.atClient
         .notify(key, value, operation, notifier: 'persona')
@@ -102,6 +104,7 @@ class SDKService {
             onTimeout: () => _onTimeOut());
   }
 
+  ///Returns `AtFollowsValue` after scan with [regex], fetching data for that key.
   Future<AtFollowsValue> scanAndGet(String regex) async {
     var scanKey = await _atClientServiceInstance.atClient
         .getAtKeys(regex: regex)
@@ -109,13 +112,14 @@ class SDKService {
             onTimeout: () => _onTimeOut());
     AtFollowsValue value =
         scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
-    // value.atKey = scanKey.isNotEmpty ? scanKey[0] : null;
     return value;
   }
 
+  ///Returns `true` on starting monitor and passes [callback].
   Future<bool> startMonitor(Function callback) async {
     if (!monitorConnectionMap.containsKey(_atsign)) {
       String privateKey = await getPrivateKey(_atsign);
+      // ignore: await_only_futures
       await _atClientServiceInstance.atClient
           .startMonitor(privateKey, callback);
       monitorConnectionMap.putIfAbsent(_atsign, () => true);
@@ -124,24 +128,28 @@ class SDKService {
     return true;
   }
 
+  ///Returns `AtSignStatus` for [atsign].
   Future<AtSignStatus> checkAtSignStatus(String atsign) async {
     var atStatusImpl = AtStatusImpl(rootUrl: Strings.rootdomain);
     var status = await atStatusImpl.get(atsign);
     return status.status();
   }
 
+  ///Performs sync for current @sign if syncStrategy is [SyncStrategy.ONDEMAND].
   sync() async {
     if (_atClientServiceInstance.atClient.preference.syncStrategy ==
         SyncStrategy.ONDEMAND)
       await _atClientServiceInstance.atClient.getSyncManager().sync();
   }
 
+  ///Throws [ResponseTimeOutException].
   _onTimeOut() {
     _logger.severe('Reponse Timed Out!');
     throw ResponseTimeOutException();
   }
 
-  toAtNotification(String response) {
+  ///Converts `String` [response] into `AtNotification` type.
+  AtNotification toAtNotification(String response) {
     response = response.toString().replaceAll(RegExp('[|]'), '');
     response = response.replaceAll('notification:', '').trim();
     return AtNotification.fromJson(jsonDecode(response));

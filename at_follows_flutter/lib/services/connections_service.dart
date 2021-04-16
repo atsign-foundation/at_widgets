@@ -97,7 +97,7 @@ class ConnectionsService {
     following.add(atsign);
     var result = await _sdkService.put(atKey, following.toString());
     //change metadata to private to notify
-    if (atMetadata.isPublic) {
+    if (atMetadata.isPublic && result) {
       atKey..sharedWith = atsign;
       atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
@@ -133,8 +133,6 @@ class ConnectionsService {
       atKey..metadata = atMetadata;
       result = await _sdkService.notify(atKey, atsign, OperationEnum.delete);
     }
-    await _deleteCachedKeys(atKey, atsign);
-
     await _sdkService.sync();
     return result;
   }
@@ -199,9 +197,6 @@ class ConnectionsService {
       followers.list.isNotEmpty
           ? await _sdkService.put(atKey, followers.toString())
           : await this._sdkService.delete(atKey);
-
-      //deletes cached key.
-      await _deleteCachedKeys(atKey, notification.fromAtSign);
 
       connectionProvider.followersList
           .removeWhere((element) => element.title == notification.fromAtSign);
@@ -294,23 +289,6 @@ class ConnectionsService {
       ..isBinary = key == PublicData.image
       ..isPublic = true;
     return atmetadata;
-  }
-
-  ///Deletes all public cached keys of [atsign]
-  ///if it is removed from both followers and following list.
-  Future<void> _deleteCachedKeys(AtKey atKey, String atsign) async {
-    // if (following.list.contains(atsign) || followers.list.contains(atsign)) {
-    //   return;
-    // }
-    // for (var key in PublicData.list) {
-    //   atKey..sharedWith = null;
-    //   atKey..metadata = _getPublicFieldsMetadata(key);
-    //   atKey..sharedBy = atsign;
-    //   //TODO:remove after modifying _getPublicFieldsMetadata.
-    //   // atKey.metadata.isCached = true;
-    //   atKey..key = key;
-    //   await _sdkService.delete(atKey);
-    // }
   }
 
   ///Returns null if [atsign] is null else the formatted [atsign].

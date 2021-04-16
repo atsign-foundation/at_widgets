@@ -1,25 +1,8 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:at_follows_flutter/domain/atsign.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-class ConnectionModel extends ChangeNotifier {
-  final List<Atsign> _atsigns = [];
-
-  /// An unmodifiable view of the items in the atsigns.
-  UnmodifiableListView<Atsign> get items => UnmodifiableListView(_atsigns);
-
-  void follow(Atsign atsign) {
-    print('follow atsign is ${atsign.title}');
-  }
-
-  void unfollow(Atsign atsign) {
-    print('unfollowin atsign is ${atsign.title}');
-  }
-}
 
 class ConnectionProvider extends ChangeNotifier {
   static final _singleton = ConnectionProvider._internal();
@@ -28,11 +11,9 @@ class ConnectionProvider extends ChangeNotifier {
   factory ConnectionProvider() {
     return _singleton;
   }
-  // ConnectionProvider({this.status});
   List<Atsign> followersList;
   List<Atsign> followingList;
   List<Atsign> atsignsList;
-  // Map<String, Status> status;
   Status status;
   var error;
 
@@ -43,7 +24,6 @@ class ConnectionProvider extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
-    // Provider.of<ConnectionProvider>(context, listen: false).close;
     super.dispose();
   }
 
@@ -75,7 +55,6 @@ class ConnectionProvider extends ChangeNotifier {
     } else {
       connectionslistStatus.isFollowingPrivate = value;
     }
-    // notifyListeners();
   }
 
   Future getAtsignsList({bool isFollowing = false}) async {
@@ -120,7 +99,6 @@ class ConnectionProvider extends ChangeNotifier {
         followingList.add(data);
         _modifyFollowersList(atsign, true);
       }
-      // atsignsList.add(data);
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
@@ -143,7 +121,6 @@ class ConnectionProvider extends ChangeNotifier {
         followingList.removeWhere((element) => element.title == atsign);
         _modifyFollowersList(atsign, false);
       }
-      // atsignsList.removeWhere((element) => element.title == atsign);
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
@@ -167,7 +144,6 @@ class ConnectionProvider extends ChangeNotifier {
   bool containsFollowing(String atsign) {
     var index = this.followingList.indexWhere((data) => data.title == atsign);
     return index != -1;
-    // return this.followingList.contains((data) => data.title == atsign);
   }
 
   ///Returns data with the title = [atsign] from either followers/following list based on [isFollowing].

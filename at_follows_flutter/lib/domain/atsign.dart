@@ -1,5 +1,4 @@
 import 'package:at_follows_flutter/services/connections_service.dart';
-import 'package:at_follows_flutter/utils/strings.dart';
 
 class Atsign {
   String title;

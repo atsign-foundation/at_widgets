@@ -1,4 +1,3 @@
-import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 
 class AtFollowsList {
@@ -15,7 +14,6 @@ class AtFollowsList {
         ? atValue.value.split(',')
         : [];
     list.toSet().toList();
-    // return atsignList;
   }
 
   add(String value) {

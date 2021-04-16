@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_follows_flutter_example/services/notification_service.dart';
 import 'package:at_follows_flutter_example/utils/app_constants.dart';
-import 'package:at_utils/at_logger.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_commons/at_commons.dart' as at_commons;
 
@@ -11,7 +10,6 @@ class AtService {
   static final AtService _singleton = AtService._internal();
 
   AtService._internal();
-  final AtSignLogger _logger = AtSignLogger('AtService');
 
   factory AtService.getInstance() {
     return _singleton;
@@ -53,10 +51,6 @@ class AtService {
     return await atClientInstance.getKeys(regex: AppConstants.regex);
   }
 
-  _sync() async {
-    await atClientInstance.getSyncManager().sync();
-  }
-
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
     return await atClientServiceInstance.getPrivateKey(atsign);
@@ -85,6 +79,7 @@ class AtService {
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
     String privateKey = await getPrivateKey(_atsign);
+    // ignore: await_only_futures
     await atClientInstance.startMonitor(privateKey, (response) {
       acceptStream(response);
     });
