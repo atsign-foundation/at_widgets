@@ -264,7 +264,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                     setState(() {
                                                       blockingContact = true;
                                                     });
-                                                    await showDialog(
+                                                     showDialog(
                                                       context: context,
                                                       builder: (context) =>
                                                           AlertDialog(
@@ -302,7 +302,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                     setState(() {
                                                       deletingContact = true;
                                                     });
-                                                    await showDialog(
+                                                     showDialog(
                                                       context: context,
                                                       builder: (context) =>
                                                           AlertDialog(
