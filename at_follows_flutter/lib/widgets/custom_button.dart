@@ -31,11 +31,8 @@ class CustomButton extends StatefulWidget {
 }
 
 class _CustomButtonState extends State<CustomButton> {
-  // bool isActive = false;
-
   @override
   void initState() {
-    // this.isActive = widget.isActive;
     super.initState();
   }
 
@@ -46,10 +43,6 @@ class _CustomButtonState extends State<CustomButton> {
     return FlatButton(
       minWidth: widget.width,
       onPressed: () {
-        // print("pressed highlight color is ${widget.highLightColor}");
-        // if (widget.providerStatus != null) {
-        //   connectionProvider.setStatus(widget.providerStatus);
-        // }
         widget.onPressedCallBack(!widget.isActive);
       },
       shape: RoundedRectangleBorder(
