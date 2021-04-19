@@ -14,8 +14,6 @@ class NotificationService {
   InitializationSettings initializationSettings;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
 
-  // ReceivedNotification didReceiveNotification =
-
   init() async {
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -42,9 +40,6 @@ class NotificationService {
       requestSoundPermission: false,
       onDidReceiveLocalNotification: (id, title, body, payload) async {
         print('id $id, title $title, body $body, payload $payload');
-        // ReceivedNotification receivedNotification = ReceivedNotification(
-        //     id: id, title: title, body: body, payload: payload);
-        // didReceivedLocalNotificationSubject.add(receivedNotification);
       },
     );
 
@@ -75,47 +70,13 @@ class NotificationService {
 
     var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics, iOS: iosChannelSpecifics);
-    // NotificationPayload payload = NotificationPayload(
-    //     file: fileName, name: from, size: double.parse(fileSize));
     await _notificationsPlugin.show(
         0,
         '${atNotification.from} is following your ${atNotification.to}',
         'Open the app to follow them back',
         platformChannelSpecifics,
-        // payload: jsonEncode(payload)
         payload: jsonEncode(atNotification.toJson()));
-
-    // await flutterLocalNotificationsPlugin.show(
-    //     0, 'plain title', 'plain body', platformChannelSpecifics,
-    //     payload: 'item x');
   }
-
-//   Future onDidReceiveLocalNotification(
-//     int id, String title, String body, String payload) async {
-//   // display a dialog with the notification details, tap ok to go to another page
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) => CupertinoAlertDialog(
-//       title: Text(title),
-//       content: Text(body),
-//       actions: [
-//         CupertinoDialogAction(
-//           isDefaultAction: true,
-//           child: Text('Ok'),
-//           onPressed: () async {
-//             Navigator.of(context, rootNavigator: true).pop();
-//             await Navigator.push(
-//               context,
-//               MaterialPageRoute(
-//                 builder: (context) => SecondScreen(payload),
-//               ),
-//             );
-//           },
-//         )
-//       ],
-//     ),
-//   );
-// }
 
   cancelNotification() async {
     await _notificationsPlugin.cancelAll();
