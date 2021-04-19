@@ -216,12 +216,11 @@ class _QrScanState extends State<QrScan> {
                 ),
               ),
               actions: [
-                FlatButton(
+                TextButton(
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       this.setState(() {
                         loading = true;
-                        // _scanCompleted = true;
                       });
                       var formattedAtsign = ConnectionsService()
                           .formatAtSign(_atsignController.text);
