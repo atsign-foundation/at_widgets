@@ -10,6 +10,7 @@ import 'package:at_follows_flutter/widgets/web_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
+import 'package:at_utils/at_logger.dart';
 
 class Followers extends StatefulWidget {
   final String searchText;
@@ -25,6 +26,7 @@ class Followers extends StatefulWidget {
 class _FollowersState extends State<Followers> {
   List<Atsign> atsignsList = [];
   ConnectionsService _connectionsService = ConnectionsService();
+  final _logger = AtSignLogger('Follows Widget');
 
   @override
   void initState() {
@@ -41,7 +43,7 @@ class _FollowersState extends State<Followers> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ConnectionProvider>(builder: (context, provider, _) {
-      print('provider status is ${provider.status}......');
+      _logger.info('provider status is ${provider.status}');
       if (provider.status == Status.loading) {
         return Padding(
           padding: EdgeInsets.only(top: SizeConfig().screenHeight * 0.15),
@@ -57,8 +59,6 @@ class _FollowersState extends State<Followers> {
                   ),
                 ),
                 SizedBox(height: 5.0.toHeight),
-                // Text(Strings.loadingDescription,
-                //     style: CustomTextStyles.fontR14primary)
               ],
             ),
           ),
@@ -72,11 +72,9 @@ class _FollowersState extends State<Followers> {
         } else if (_connectionsService.followAtsign != null) {
           _followAtsign(context, isFollow: true);
         }
-        atsignsList =
-            // provider.atsignsList;
-            widget.isFollowing
-                ? provider.followingList
-                : provider.followersList;
+        atsignsList = widget.isFollowing
+            ? provider.followingList
+            : provider.followersList;
         if (atsignsList.isEmpty) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +109,6 @@ class _FollowersState extends State<Followers> {
                     ? provider.connectionslistStatus.isFollowingPrivate
                     : provider.connectionslistStatus.isFollowersPrivate,
                 onChanged: (value) {
-                  print('changed to $value');
                   provider.changeListStatus(widget.isFollowing, value);
                 },
                 inactiveTrackColor: ColorConstants.inactiveTrackColor,
@@ -123,8 +120,6 @@ class _FollowersState extends State<Followers> {
               Expanded(
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
-                  // physics: AlwaysScrollableScrollPhysics(),
-                  // shrinkWrap: true,
                   itemCount: 26,
                   itemBuilder: (_, alphabetIndex) {
                     List<Atsign> sortedListWithAlphabet = [];
@@ -204,7 +199,6 @@ class _FollowersState extends State<Followers> {
                                 trailing: CustomButton(
                                     isActive: !currentAtsign.isFollowing,
                                     onPressedCallBack: (value) async {
-                                      print('received param is $value');
                                       if (value) {
                                         provider.unfollow(currentAtsign.title);
                                       } else {
@@ -229,10 +223,8 @@ class _FollowersState extends State<Followers> {
                   },
                 ),
               ),
-              // SizedBox(height: 10.toHeight),
             ],
           ),
-          // widget.refresh(true);
         );
       } else if (provider.status == Status.error) {
         return AtExceptionHandler().handle(provider.error, context);
@@ -240,7 +232,6 @@ class _FollowersState extends State<Followers> {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await provider.getAtsignsList(isFollowing: widget.isFollowing);
         });
-        print('Loading getAtsigns....');
         return SizedBox();
       }
     });

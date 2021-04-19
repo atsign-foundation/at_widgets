@@ -13,12 +13,7 @@ dependencies:
     sdk: flutter
   path_provider: ^1.6.7
   flutter_local_notifications: ^2.0.1
-  at_onboarding_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_onboarding_flutter
-      ref: dev_env
-  
+  at_onboarding_flutter: ^1.0.0+3
 
   at_follows_flutter:
     # When depending on this package from a real application you should use:
