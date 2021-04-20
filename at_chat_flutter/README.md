@@ -1,3 +1,7 @@
+<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+
+### Now for some internet optimism.
+
 # at_chat_flutter
 
 A flutter plugin to provide chat feature between two atsigns.
