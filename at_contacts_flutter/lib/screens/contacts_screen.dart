@@ -289,7 +289,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                                     index],
                                                             blockAction: true);
                                                     setState(() {
-                                                      blockingContact = true;
+                                                      blockingContact = false;
                                                       Navigator.pop(context);
                                                     });
                                                   },
