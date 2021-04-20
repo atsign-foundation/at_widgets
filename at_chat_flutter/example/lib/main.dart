@@ -1,6 +1,7 @@
-import 'package:atsign_authentication_helper/screens/scan_qr.dart';
-
+import 'package:at_chat_flutter_example/constants.dart';
 import 'package:at_chat_flutter_example/second_screen.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'client_sdk_service.dart';
@@ -53,15 +54,38 @@ class _MyAppState extends State<MyApp> {
                               MaterialStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () async {
-                          await Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ScanQrScreen(
-                                      atClientServiceInstance: clientSdkService
-                                          .atClientServiceInstance,
-                                      atClientPreference:
-                                          clientSdkService.atClientPreference,
-                                      nextScreen: SecondScreen())));
+                          Onboarding(
+                            context: context,
+                            atClientPreference:
+                                clientSdkService.atClientPreference,
+                            domain: MixedConstants.ROOT_DOMAIN,
+                            appColor: Color.fromARGB(255, 240, 94, 62),
+                            onboard: (Map<String, AtClientService> value,
+                                String atsign) async {
+                              this.clientSdkService.atClientServiceInstance =
+                                  value[atsign];
+                              await Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SecondScreen()));
+                            },
+                            onError: (error) async {
+                              await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: Text('Something went wrong'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('ok'))
+                                      ],
+                                    );
+                                  });
+                            },
+                          );
                         },
                         child: Text('Show QR scanner screen',
                             style: TextStyle(color: Colors.black)))),

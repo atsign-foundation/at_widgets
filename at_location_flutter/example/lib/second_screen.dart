@@ -6,7 +6,7 @@ import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter_example/main.dart';
 import 'package:at_lookup/at_lookup.dart';
-import 'package:atsign_authentication_helper/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter_example/client_sdk_service.dart';
 import 'package:latlong/latlong.dart';
