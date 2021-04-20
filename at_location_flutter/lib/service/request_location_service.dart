@@ -158,7 +158,7 @@ class RequestLocationService {
     AtKey atKey;
     atKey = newAtKey(
       60000,
-      "deleterequestlocation-$atkeyMicrosecondId",
+      "deleterequestacklocation-$atkeyMicrosecondId",
       locationNotificationModel.receiver,
     );
 
@@ -169,7 +169,29 @@ class RequestLocationService {
     print('requestLocationAcknowledgment $result');
   }
 
-  deleteKey() async {}
+  deleteKey(LocationNotificationModel locationNotificationModel) async {
+    String atkeyMicrosecondId = locationNotificationModel.key
+        .split('requestlocation-')[1]
+        .split('@')[0];
+
+    List<String> response =
+        await AtLocationNotificationListener().atClientInstance.getKeys(
+              regex: 'requestlocation-$atkeyMicrosecondId',
+            );
+
+    AtKey key = getAtKey(response[0]);
+
+    locationNotificationModel.isAcknowledgment = true;
+
+    var result =
+        await AtLocationNotificationListener().atClientInstance.delete(key);
+    print('$key delete operation $result');
+
+    if (result) {
+      KeyStreamService().removeData(key.key);
+    }
+    return result;
+  }
 
   AtKey newAtKey(int ttr, String key, String sharedWith,
       {int ttl, DateTime expiresAt}) {

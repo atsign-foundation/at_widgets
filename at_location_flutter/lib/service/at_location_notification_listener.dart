@@ -63,11 +63,22 @@ class AtLocationNotificationListener {
         print('$notificationKey deleted');
         MasterLocationService().deleteReceivedData(fromAtSign);
         return;
-      } else if (atKey
+      }
+
+      if (atKey
           .toString()
           .toLowerCase()
           .contains(MixedConstants.SHARE_LOCATION)) {
         print('$notificationKey containing sharelocation deleted');
+        KeyStreamService().removeData(atKey.toString());
+        return;
+      }
+
+      if (atKey
+          .toString()
+          .toLowerCase()
+          .contains(MixedConstants.REQUEST_LOCATION)) {
+        print('$notificationKey containing requestlocation deleted');
         KeyStreamService().removeData(atKey.toString());
         return;
       }
@@ -77,6 +88,16 @@ class AtLocationNotificationListener {
         .decrypt(value, fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) => print("error in decrypting: $e"));
+
+    if (atKey
+        .toString()
+        .toLowerCase()
+        .contains(MixedConstants.DELETE_REQUEST_LOCATION_ACK)) {
+      LocationNotificationModel msg =
+          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      RequestLocationService().deleteKey(msg);
+      return;
+    }
 
     if (atKey.toString().toLowerCase().contains(locationKey)) {
       LocationNotificationModel msg =

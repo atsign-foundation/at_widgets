@@ -20,4 +20,5 @@ class MixedConstants {
 
   static const String REQUEST_LOCATION = 'requestlocation';
   static const String REQUEST_LOCATION_ACK = 'requestlocationacknowledged';
+  static const String DELETE_REQUEST_LOCATION_ACK = 'deleterequestacklocation';
 }

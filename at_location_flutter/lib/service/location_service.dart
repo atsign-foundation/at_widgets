@@ -5,6 +5,7 @@ import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 
 import 'at_location_notification_listener.dart';
@@ -26,6 +27,7 @@ class LocationService {
   String textForCenter;
   bool calculateETA, addCurrentUserMarker, isMapInitialized = false;
   Function showToast;
+  StreamSubscription<Position> myLocationStream;
 
   List<HybridModel> hybridUsersList;
 
@@ -50,6 +52,9 @@ class LocationService {
     this.textForCenter = textForCenter;
     this.showToast = showToast;
 
+    // ignore: unawaited_futures
+    if (myLocationStream != null) myLocationStream.cancel();
+
     if (etaFrom != null) addCentreMarker();
     await addMyDetailsToHybridUsersList();
 
@@ -72,6 +77,38 @@ class LocationService {
 
     HybridModel _myData = HybridModel(
         displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
+
+    updateMyLatLng(_myData);
+
+    // if (etaFrom != null) _myData.eta = await _calculateEta(_myData);
+
+    // _myData.marker = buildMarker(_myData, singleMarker: true);
+
+    // myData = _myData;
+
+    // if (addCurrentUserMarker) {
+    //   hybridUsersList.add(myData);
+    // }
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   _atHybridUsersController.add(hybridUsersList);
+    // });
+    //
+    var permission = await Geolocator.checkPermission();
+    if (((permission == LocationPermission.always) ||
+        (permission == LocationPermission.whileInUse))) {
+      myLocationStream = Geolocator.getPositionStream(distanceFilter: 10)
+          .listen((myLocation) async {
+        var mylatlng = LatLng(myLocation.latitude, myLocation.longitude);
+
+        _myData = HybridModel(
+            displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
+
+        updateMyLatLng(_myData);
+      });
+    }
+  }
+
+  updateMyLatLng(HybridModel _myData) async {
     if (etaFrom != null) _myData.eta = await _calculateEta(_myData);
 
     _myData.marker = buildMarker(_myData, singleMarker: true);

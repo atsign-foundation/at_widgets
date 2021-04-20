@@ -231,9 +231,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                   .contains("sharelocation")))
                           ? Divider()
                           : SizedBox(),
-                      ((amICreator) &&
-                              (widget.userListenerKeyword.key
-                                  .contains("sharelocation")))
+                      (amICreator)
                           ? Expanded(
                               child: InkWell(
                                 onTap: () async {
@@ -247,7 +245,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                               widget.userListenerKeyword);
                                     } else if (widget.userListenerKeyword.key
                                         .contains("requestlocation")) {
-                                      result = false;
+                                      result = await RequestLocationService()
+                                          .removePerson(
+                                              widget.userListenerKeyword);
                                     }
                                     if (result) {
                                       SendLocationNotification()
