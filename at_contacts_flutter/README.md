@@ -12,7 +12,7 @@ This plugin can be added to the project as git dependency in pubspec.yaml
 
 ```
 dependencies:
-  at_contacts_flutter: ^0.0.4
+  at_contacts_flutter: ^1.0.0
 ```
 
 ### Plugin description
