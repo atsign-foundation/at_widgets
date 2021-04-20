@@ -22,20 +22,20 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String titleText;
+  final String? titleText;
   final bool showTitle;
   final bool showBackButton;
   final bool showLeadingIcon;
   final bool showTrailingIcon;
   final bool closeOnRight;
-  final Widget trailingIcon;
-  final Widget leadingIcon;
-  final Function onTrailingIconPressed;
+  final Widget? trailingIcon;
+  final Widget? leadingIcon;
+  final Function? onTrailingIconPressed;
   final double elevation;
-  final Color appBarColor;
-  final TextStyle backTextStyle;
-  final TextStyle titleTextStyle;
-  final Function onLeadingIconPressed;
+  final Color? appBarColor;
+  final TextStyle? backTextStyle;
+  final TextStyle? titleTextStyle;
+  final Function? onLeadingIconPressed;
 
   const CustomAppBar({
     this.titleText,
@@ -74,7 +74,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: () {
                     Navigator.pop(context);
                     if (onLeadingIconPressed != null) {
-                      onLeadingIconPressed();
+                      onLeadingIconPressed!();
                     }
                   })
               : leadingIcon
@@ -99,7 +99,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: (showTitle)
                 ? Center(
                     child: Text(
-                      titleText,
+                      titleText!,
                       style: titleTextStyle ?? CustomTextStyles.primaryBold18,
                     ),
                   )
@@ -136,7 +136,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: trailingIcon,
                         onTap: () {
                           if (onTrailingIconPressed != null) {
-                            onTrailingIconPressed();
+                            onTrailingIconPressed!();
                           }
                         },
                       )
