@@ -1,3 +1,7 @@
+## [1.0.0] - 04/20/2021
+
+* Package deprecated
+
 ## [0.0.5] - 03/19/2021
 
 * The referenced packages updated
