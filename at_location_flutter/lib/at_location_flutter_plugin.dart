@@ -109,6 +109,14 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                       print('point - ${element.point}');
                     });
 
+                    try {
+                      if ((markers.isNotEmpty) && (mapController != null)) {
+                        mapController.move(markers[0].point, 4);
+                      }
+                    } catch (e) {
+                      print('$e');
+                    }
+
                     return FlutterMap(
                       mapController: mapController,
                       options: MapOptions(

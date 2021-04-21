@@ -80,19 +80,6 @@ class LocationService {
 
     updateMyLatLng(_myData);
 
-    // if (etaFrom != null) _myData.eta = await _calculateEta(_myData);
-
-    // _myData.marker = buildMarker(_myData, singleMarker: true);
-
-    // myData = _myData;
-
-    // if (addCurrentUserMarker) {
-    //   hybridUsersList.add(myData);
-    // }
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   _atHybridUsersController.add(hybridUsersList);
-    // });
-    //
     var permission = await Geolocator.checkPermission();
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
@@ -115,11 +102,21 @@ class LocationService {
 
     myData = _myData;
 
-    if (addCurrentUserMarker) {
-      hybridUsersList.add(myData);
+    var _index = hybridUsersList.indexWhere((element) =>
+        element.displayName == AtLocationNotificationListener().currentAtSign);
+
+    if (_index < 0) {
+      if (addCurrentUserMarker) {
+        hybridUsersList.add(myData);
+      }
+    } else {
+      hybridUsersList[_index] = myData;
     }
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _atHybridUsersController.add(hybridUsersList);
+      if (!_atHybridUsersController.isClosed) {
+        _atHybridUsersController.add(hybridUsersList);
+      }
     });
   }
 
