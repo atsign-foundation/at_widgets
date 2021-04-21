@@ -12,17 +12,17 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomBottomSheet extends StatelessWidget {
-  final Function onPressed;
-  final ValueChanged<List<AtContact>> selectedList;
-  const CustomBottomSheet({Key key, this.onPressed, this.selectedList})
+  final Function? onPressed;
+  final ValueChanged<List<AtContact?>?>? selectedList;
+  const CustomBottomSheet({Key? key, this.onPressed, this.selectedList})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     ContactService _contactServive = ContactService();
-    return StreamBuilder<List<AtContact>>(
+    return StreamBuilder<List<AtContact?>>(
       stream: _contactServive.selectedContactStream,
       initialData: _contactServive.selectedContacts,
-      builder: (context, snapshot) => (snapshot.data.isEmpty)
+      builder: (context, snapshot) => (snapshot.data!.isEmpty)
           ? Container(
               height: 0,
             )
@@ -34,8 +34,8 @@ class CustomBottomSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      (snapshot.data.length != 25)
-                          ? '${snapshot.data.length} Contacts Selected'
+                      (snapshot.data!.length != 25)
+                          ? '${snapshot.data!.length} Contacts Selected'
                           : '25 of 25 Contact Selected',
                       style: CustomTextStyles.primaryMedium14,
                     ),
@@ -52,8 +52,8 @@ class CustomBottomSheet extends StatelessWidget {
                         ? Colors.white
                         : Colors.black,
                     onPressed: () {
-                      onPressed();
-                      selectedList(snapshot.data);
+                      onPressed!();
+                      selectedList!(snapshot.data);
                     },
                   )
                 ],

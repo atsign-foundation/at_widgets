@@ -1,6 +1,6 @@
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CustomToast {
   CustomToast._();
@@ -9,13 +9,13 @@ class CustomToast {
 
   show(String text, BuildContext context,
       {Color bgColor, Color textColor, int duration = 3, int gravity = 0}) {
-    Toast.show(
-      text,
-      context,
-      duration: duration,
-      gravity: gravity,
-      backgroundColor: bgColor ?? AllColors().ORANGE,
-      textColor: textColor ?? Colors.white,
-    );
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: bgColor ?? AllColors().ORANGE,
+        textColor: textColor ?? Colors.white,
+        fontSize: 16.0);
   }
 }

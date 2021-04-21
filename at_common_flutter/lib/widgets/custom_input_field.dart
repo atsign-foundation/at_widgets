@@ -84,7 +84,8 @@ class CustomInputField extends StatelessWidget {
           ),
           icon != null
               ? InkWell(
-                  onTap: onIconTap as void Function()? ?? onTap as void Function()?,
+                  onTap: onIconTap as void Function()? ??
+                      onTap as void Function()?,
                   child: Icon(
                     icon,
                     color: iconColor ?? ColorConstants.darkGrey,

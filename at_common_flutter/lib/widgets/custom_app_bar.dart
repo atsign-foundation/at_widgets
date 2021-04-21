@@ -60,7 +60,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return AppBar(
-      elevation: elevation ?? 0,
+      elevation: elevation,
       centerTitle: true,
       leadingWidth: 90,
       leading: (showLeadingIcon)

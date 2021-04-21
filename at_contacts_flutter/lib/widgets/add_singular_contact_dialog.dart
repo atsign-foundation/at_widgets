@@ -11,10 +11,10 @@ import 'package:flutter/material.dart';
 /// onTap function named as [onYesTap] for on press of [Yes] button of the dialog
 
 class AddSingleContact extends StatefulWidget {
-  final String atSignName;
+  final String? atSignName;
   // final ContactProvider contactProvider;
 
-  const AddSingleContact({Key key, this.atSignName}) : super(key: key);
+  const AddSingleContact({Key? key, this.atSignName}) : super(key: key);
 
   @override
   _AddSingleContactState createState() => _AddSingleContactState();
@@ -61,7 +61,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
                 height: 10.toHeight,
               ),
               Text(
-                widget.atSignName.substring(1) ?? 'Levina Thomas',
+                widget.atSignName!.substring(1) ?? 'Levina Thomas',
                 style: CustomTextStyles.primaryBold16,
               ),
               SizedBox(
