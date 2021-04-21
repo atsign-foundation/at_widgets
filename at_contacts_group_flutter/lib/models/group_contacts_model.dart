@@ -34,7 +34,7 @@ class GroupContactsModel {
   }
 
   factory GroupContactsModel.fromMap(Map<String, dynamic>? map) {
-    if (map == null) return null;
+    if (map == null) return GroupContactsModel();
 
     return GroupContactsModel(
       contact: AtContact.fromJson(map['contact']),

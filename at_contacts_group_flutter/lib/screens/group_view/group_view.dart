@@ -136,7 +136,7 @@ class _GroupViewState extends State<GroupView> {
                                     return InkWell(
                                       onTap: () {
                                         if (index < groupData.members.length) {
-                                          return showMyDialog(
+                                          showMyDialog(
                                               context,
                                               groupData.members
                                                   .elementAt(index),

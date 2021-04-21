@@ -91,21 +91,21 @@ class _CustomListTileState extends State<CustomListTile> {
     Uint8List image;
 
     if (widget.item!.contact == null) {
-      if (widget?.item?.group?.groupName == null) {
+      if (widget.item?.group?.groupName == null) {
         contactImage = ContactInitial(
             initials: (widget.item!.group!.displayName.length > 3
-                ? widget?.item?.group?.displayName?.substring(0, 2)
-                : widget?.item?.group?.displayName ?? 'UG')!);
+                ? widget.item?.group?.displayName?.substring(0, 2)
+                : widget.item?.group?.displayName ?? 'UG')!);
       } else {
         contactImage = ContactInitial(
             initials: (widget.item!.group!.groupName.length > 3
-                ? widget?.item?.group?.groupName?.substring(0, 2)
-                : widget?.item?.group?.groupName ?? 'UG')!);
+                ? widget.item?.group?.groupName?.substring(0, 2)
+                : widget.item?.group?.groupName ?? 'UG')!);
       }
     } else {
-      if ((widget?.item?.contact?.tags != null &&
-          widget?.item?.contact?.tags['image'] != null)) {
-        List<int> intList = widget?.item?.contact?.tags['image'].cast<int>();
+      if ((widget.item?.contact?.tags != null &&
+          widget.item?.contact?.tags['image'] != null)) {
+        List<int> intList = widget.item?.contact?.tags['image'].cast<int>();
         image = Uint8List.fromList(intList);
         image = await FlutterImageCompress.compressWithList(
           image,
@@ -118,9 +118,14 @@ class _CustomListTileState extends State<CustomListTile> {
           nonAsset: true,
         );
       } else {
-        contactImage = ContactInitial(
-          (initials: widget?.item?.contact?.atSign?.substring(1, 3))!,
-        );
+        String initial;
+        if (widget.item?.contact?.atSign == null) {
+          initial = '    ';
+        } else {
+          initial = widget.item!.contact!.atSign;
+        }
+
+        contactImage = ContactInitial(initials: initial.substring(1, 3));
       }
     }
 
@@ -170,7 +175,7 @@ class _CustomListTileState extends State<CustomListTile> {
                   });
                 }
               } else {
-                widget?.onTap!();
+                widget.onTap!();
               }
             },
             title: Text(
@@ -187,8 +192,8 @@ class _CustomListTileState extends State<CustomListTile> {
               ),
             ),
             subtitle: Text(
-              widget?.item?.contact?.atSign ??
-                  '${widget?.item?.group?.members?.length} Members',
+              widget.item?.contact?.atSign ??
+                  '${widget.item?.group?.members?.length} Members',
               style: TextStyle(
                 color: AllColors().FADED_TEXT,
                 fontSize: 14.toFont,
@@ -204,11 +209,11 @@ class _CustomListTileState extends State<CustomListTile> {
                 child:
                     (isLoading) ? CircularProgressIndicator() : contactImage),
             trailing: IconButton(
-              onPressed: (widget?.asSelectionTile == false &&
+              onPressed: (widget.asSelectionTile == false &&
                       widget.onTrailingPressed != null)
                   ? widget.onTrailingPressed as void Function()?
                   : selectRemoveContact(),
-              icon: (widget.asSelectionTile ?? false)
+              icon: (widget.asSelectionTile)
                   ? (isSelected)
                       ? Icon(Icons.close)
                       : Icon(Icons.add)

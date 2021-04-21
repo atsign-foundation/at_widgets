@@ -33,7 +33,8 @@ class GroupService {
   StreamSink<AtGroup> get groupViewSink => _groupViewStreamController.sink;
 
 // all contacts stream
-  final StreamController<List<GroupContactsModel?>> _allContactsStreamController =
+  final StreamController<List<GroupContactsModel?>>
+      _allContactsStreamController =
       StreamController<List<GroupContactsModel>>.broadcast();
   Stream<List<GroupContactsModel?>> get allContactsStream =>
       _allContactsStreamController.stream;
@@ -74,16 +75,16 @@ class GroupService {
     await getAllGroupsDetails();
   }
 
-  Future<dynamic> createGroup(AtGroup atGroup) async {
+  Future<dynamic?> createGroup(AtGroup atGroup) async {
     try {
-      AtGroup group = await atContactImpl.createGroup(atGroup);
-      if (group != null) {
+      AtGroup? group = await atContactImpl.createGroup(atGroup);
+      if (group is AtGroup) {
         await updateGroupStreams(group);
         return group;
       }
     } catch (e) {
       print('error in creating group: $e');
-      return e;
+      return;
     }
   }
 
@@ -93,7 +94,8 @@ class GroupService {
       List<AtGroup> groupList = [];
 
       for (int i = 0; i < groupIds.length; i++) {
-        AtGroup groupDetail = await (getGroupDetail(groupIds[i]) as FutureOr<AtGroup>);
+        AtGroup groupDetail =
+            await (getGroupDetail(groupIds[i]) as FutureOr<AtGroup>);
         if (groupDetail != null) groupList.add(groupDetail);
       }
 
@@ -116,13 +118,13 @@ class GroupService {
     }
   }
 
-  Future<dynamic> getGroupDetail(String groupId) async {
+  Future<AtGroup?> getGroupDetail(String groupId) async {
     try {
       AtGroup group = await atContactImpl.getGroup(groupId);
       return group;
     } catch (e) {
       print('error in getting group details : $e');
-      return e;
+      return null;
     }
   }
 
@@ -171,19 +173,20 @@ class GroupService {
   }
 
   updateGroupStreams(AtGroup group) async {
-    AtGroup groupDetail = await (getGroupDetail(group.groupId) as FutureOr<AtGroup>);
-    if (groupDetail != null) groupViewSink.add(groupDetail);
+    AtGroup? groupDetail =
+        await (getGroupDetail(group.groupId) as FutureOr<AtGroup>);
+    if (groupDetail is AtGroup) groupViewSink.add(groupDetail);
     await getAllGroupsDetails();
   }
 
-  Future<dynamic> deleteGroup(AtGroup group) async {
+  Future<bool?> deleteGroup(AtGroup group) async {
     try {
       var result = await atContactImpl.deleteGroup(group);
       await getAllGroupsDetails(); //updating group list sink
       return result;
     } catch (e) {
       print('error in deleting group: $e');
-      return e;
+      return null;
     }
   }
 
