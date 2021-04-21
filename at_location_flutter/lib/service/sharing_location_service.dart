@@ -17,7 +17,7 @@ class SharingLocationService {
     return _singleton;
   }
 
-  checkForAlreadyExisting(String atsign) {
+  List checkForAlreadyExisting(String atsign) {
     var index = KeyStreamService().allLocationNotifications.indexWhere((e) =>
         ((e.locationNotificationModel.receiver == atsign) &&
             (e.locationNotificationModel.key
@@ -40,8 +40,8 @@ class SharingLocationService {
       var alreadyExists = checkForAlreadyExisting(atsign);
       var result;
       if (alreadyExists[0]) {
-        LocationNotificationModel newLocationNotificationModel =
-            LocationNotificationModel.fromJson(jsonDecode(
+        var newLocationNotificationModel = LocationNotificationModel.fromJson(
+            jsonDecode(
                 LocationNotificationModel.convertLocationNotificationToJson(
                     alreadyExists[1])));
 
@@ -62,26 +62,25 @@ class SharingLocationService {
       AtKey atKey;
       if (minutes != null) {
         atKey = newAtKey((minutes * 60000),
-            "sharelocation-${DateTime.now().microsecondsSinceEpoch}", atsign,
+            'sharelocation-${DateTime.now().microsecondsSinceEpoch}', atsign,
             ttl: (minutes * 60000),
             expiresAt: DateTime.now().add(Duration(minutes: minutes)));
       } else {
         atKey = newAtKey(
           60000,
-          "sharelocation-${DateTime.now().microsecondsSinceEpoch}",
+          'sharelocation-${DateTime.now().microsecondsSinceEpoch}',
           atsign,
         );
       }
 
-      LocationNotificationModel locationNotificationModel =
-          LocationNotificationModel()
-            ..atsignCreator = AtLocationNotificationListener().currentAtSign
-            ..key = atKey.key
-            ..lat = 12
-            ..long = 12
-            ..receiver = atsign
-            ..from = DateTime.now()
-            ..isAcknowledgment = isAcknowledgment;
+      var locationNotificationModel = LocationNotificationModel()
+        ..atsignCreator = AtLocationNotificationListener().currentAtSign
+        ..key = atKey.key
+        ..lat = 12
+        ..long = 12
+        ..receiver = atsign
+        ..from = DateTime.now()
+        ..isAcknowledgment = isAcknowledgment;
 
       if ((minutes != null)) {
         locationNotificationModel.to =
@@ -103,16 +102,14 @@ class SharingLocationService {
     }
   }
 
-  shareLocationAcknowledgment(
+  Future<bool> shareLocationAcknowledgment(
       LocationNotificationModel locationNotificationModel,
       bool isAccepted) async {
     try {
-      String atkeyMicrosecondId = locationNotificationModel.key
+      var atkeyMicrosecondId = locationNotificationModel.key
           .split('sharelocation-')[1]
           .split('@')[0];
-      AtKey atKey = newAtKey(
-          -1,
-          "sharelocationacknowledged-$atkeyMicrosecondId",
+      var atKey = newAtKey(-1, 'sharelocationacknowledged-$atkeyMicrosecondId',
           locationNotificationModel.atsignCreator);
       locationNotificationModel.isAccepted = isAccepted;
       locationNotificationModel.isExited = !isAccepted;
@@ -129,20 +126,20 @@ class SharingLocationService {
     }
   }
 
-  updateWithShareLocationAcknowledge(
+  Future<bool> updateWithShareLocationAcknowledge(
       LocationNotificationModel locationNotificationModel,
       {bool isSharing}) async {
     try {
-      String atkeyMicrosecondId = locationNotificationModel.key
+      var atkeyMicrosecondId = locationNotificationModel.key
           .split('sharelocation-')[1]
           .split('@')[0];
 
-      List<String> response =
+      var response =
           await AtLocationNotificationListener().atClientInstance.getKeys(
                 regex: 'sharelocation-$atkeyMicrosecondId',
               );
 
-      AtKey key = getAtKey(response[0]);
+      var key = getAtKey(response[0]);
 
       locationNotificationModel.isAcknowledgment = true;
 
@@ -182,7 +179,8 @@ class SharingLocationService {
     }
   }
 
-  removePerson(LocationNotificationModel locationNotificationModel) async {
+  Future removePerson(
+      LocationNotificationModel locationNotificationModel) async {
     var result;
     if (locationNotificationModel.atsignCreator ==
         AtLocationNotificationListener().currentAtSign) {
@@ -197,18 +195,19 @@ class SharingLocationService {
     return result;
   }
 
-  deleteKey(LocationNotificationModel locationNotificationModel) async {
+  Future<bool> deleteKey(
+      LocationNotificationModel locationNotificationModel) async {
     try {
-      String atkeyMicrosecondId = locationNotificationModel.key
+      var atkeyMicrosecondId = locationNotificationModel.key
           .split('sharelocation-')[1]
           .split('@')[0];
 
-      List<String> response =
+      var response =
           await AtLocationNotificationListener().atClientInstance.getKeys(
                 regex: 'sharelocation-$atkeyMicrosecondId',
               );
 
-      AtKey key = getAtKey(response[0]);
+      var key = getAtKey(response[0]);
 
       locationNotificationModel.isAcknowledgment = true;
 
@@ -224,15 +223,15 @@ class SharingLocationService {
     }
   }
 
-  deleteAllKey() async {
-    List<String> response =
+  Future<void> deleteAllKey() async {
+    var response =
         await AtLocationNotificationListener().atClientInstance.getKeys(
               regex: '',
             );
     response.forEach((key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
-        AtKey atKey = getAtKey(key);
+        var atKey = getAtKey(key);
         var result = await AtLocationNotificationListener()
             .atClientInstance
             .delete(atKey);
@@ -243,7 +242,7 @@ class SharingLocationService {
 
   AtKey newAtKey(int ttr, String key, String sharedWith,
       {int ttl, DateTime expiresAt}) {
-    AtKey atKey = AtKey()
+    var atKey = AtKey()
       ..metadata = Metadata()
       ..metadata.ttr = ttr
       ..metadata.ccd = true

@@ -79,11 +79,11 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     );
   }
 
-  onRequestTap() async {
+  void onRequestTap() async {
     setState(() {
       isLoading = true;
     });
-    bool validAtSign = await checkAtsign(textField);
+    var validAtSign = await checkAtsign(textField);
 
     if (!validAtSign) {
       setState(() {

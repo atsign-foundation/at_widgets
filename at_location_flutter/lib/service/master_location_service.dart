@@ -24,32 +24,35 @@ class MasterLocationService {
   String currentAtSign;
   List<HybridModel> allReceivedUsersList;
   List<KeyLocationModel> allLocationNotifications = [];
+
   final String locationKey = 'locationnotify';
+
   StreamController _allReceivedUsersController;
   Stream<List<HybridModel>> get allReceivedUsersStream =>
       _allReceivedUsersController.stream;
   StreamSink<List<HybridModel>> get allReceivedUsersSink =>
       _allReceivedUsersController.sink;
 
-  init(String currentAtSignFromApp, AtClientImpl atClientInstanceFromApp,
+  void init(String currentAtSignFromApp, AtClientImpl atClientInstanceFromApp,
       {Function newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     allReceivedUsersList = [];
     _allReceivedUsersController =
         StreamController<List<HybridModel>>.broadcast();
+
     if (newGetAtValueFromMainApp != null) {
       getAtValueFromMainApp = newGetAtValueFromMainApp;
     }
 
     getAtValueFromMainApp = getAtValue;
 
-    // get all 'locationnotify' data shared with us
     getAllLocationData();
   }
 
-  getAllLocationData() async {
-    List<String> response = await atClientInstance.getKeys(
+  /// get all 'locationnotify' data shared with us
+  Future<void> getAllLocationData() async {
+    var response = await atClientInstance.getKeys(
       regex: '$locationKey',
     );
     if (response.isEmpty) {
@@ -58,10 +61,10 @@ class MasterLocationService {
 
     await Future.forEach(response, (key) async {
       if ('@$key'.contains('cached')) {
-        AtKey atKey = getAtKey(key);
+        var atKey = getAtKey(key);
         AtValue value = await getAtValueFromMainApp(atKey);
         if (value != null) {
-          KeyLocationModel tempKeyLocationModel =
+          var tempKeyLocationModel =
               KeyLocationModel(key: key, atKey: atKey, atValue: value);
           allLocationNotifications.add(tempKeyLocationModel);
         }
@@ -74,14 +77,13 @@ class MasterLocationService {
     createHybridFromKeyLocationModel();
   }
 
-  convertJsonToLocationModel() {
-    for (int i = 0; i < allLocationNotifications.length; i++) {
+  void convertJsonToLocationModel() {
+    for (var i = 0; i < allLocationNotifications.length; i++) {
       try {
         if ((allLocationNotifications[i].atValue.value != null) &&
-            (allLocationNotifications[i].atValue.value != "null")) {
-          LocationNotificationModel locationNotificationModel =
-              LocationNotificationModel.fromJson(
-                  jsonDecode(allLocationNotifications[i].atValue.value));
+            (allLocationNotifications[i].atValue.value != 'null')) {
+          var locationNotificationModel = LocationNotificationModel.fromJson(
+              jsonDecode(allLocationNotifications[i].atValue.value));
           allLocationNotifications[i].locationNotificationModel =
               locationNotificationModel;
         }
@@ -91,9 +93,9 @@ class MasterLocationService {
     }
   }
 
-  filterData() {
-    List<KeyLocationModel> tempArray = [];
-    for (int i = 0; i < allLocationNotifications.length; i++) {
+  void filterData() {
+    var tempArray = <KeyLocationModel>[];
+    for (var i = 0; i < allLocationNotifications.length; i++) {
       // ignore: unrelated_type_equality_checks
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
           (allLocationNotifications[i].locationNotificationModel == null) ||
@@ -109,11 +111,11 @@ class MasterLocationService {
         .removeWhere((element) => tempArray.contains(element));
   }
 
-  createHybridFromKeyLocationModel() {
+  void createHybridFromKeyLocationModel() {
     allLocationNotifications.forEach((keyLocationModel) async {
       var _image = await getImageOfAtsignNew(
           keyLocationModel.locationNotificationModel.atsignCreator);
-      HybridModel user = HybridModel(
+      var user = HybridModel(
           displayName: keyLocationModel.locationNotificationModel.atsignCreator,
           latLng: keyLocationModel.locationNotificationModel.getLatLng,
           image: _image,
@@ -124,8 +126,8 @@ class MasterLocationService {
     allReceivedUsersSink.add(allReceivedUsersList);
   }
 
-  updateHybridList(LocationNotificationModel newUser) async {
-    bool contains = false;
+  void updateHybridList(LocationNotificationModel newUser) async {
+    var contains = false;
     int index;
     allReceivedUsersList.forEach((user) {
       if (user.displayName == newUser.atsignCreator) {
@@ -136,11 +138,11 @@ class MasterLocationService {
     if (!contains) {
       if (newUser.getLatLng != LatLng(0, 0)) {
         print('!contains from main app');
-        String atsign = newUser.atsignCreator;
-        LatLng _latlng = newUser.getLatLng;
+        var atsign = newUser.atsignCreator;
+        var _latlng = newUser.getLatLng;
         var _image = await getImageOfAtsignNew(atsign);
 
-        HybridModel user = HybridModel(
+        var user = HybridModel(
             displayName: newUser.atsignCreator,
             latLng: _latlng,
             image: _image,
@@ -162,14 +164,14 @@ class MasterLocationService {
     }
   }
 
-  deleteReceivedData(String atsign) {
+  void deleteReceivedData(String atsign) {
     allReceivedUsersList
         .removeWhere((element) => element.displayName == atsign);
     LocationService().removeUser(atsign);
     allReceivedUsersSink.add(allReceivedUsersList);
   }
 
-  getImageOfAtsignNew(String atsign) async {
+  Future<Uint8List> getImageOfAtsignNew(String atsign) async {
     try {
       AtContact contact;
       Uint8List image;
@@ -190,9 +192,9 @@ class MasterLocationService {
   Future<dynamic> getAtValue(AtKey key) async {
     print(atClientInstance.currentAtSign);
     try {
-      AtValue atvalue = await atClientInstance.get(key).catchError(
+      var atvalue = await atClientInstance.get(key).catchError(
           // ignore: return_of_invalid_type_from_catch_error
-          (e) => print("error in getAtValue in master location service : $e"));
+          (e) => print('error in getAtValue in master location service : $e'));
 
       if (atvalue != null) {
         return atvalue;

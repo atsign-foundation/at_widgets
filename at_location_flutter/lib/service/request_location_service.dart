@@ -16,7 +16,7 @@ class RequestLocationService {
     return _singleton;
   }
 
-  checkForAlreadyExisting(String atsign) {
+  List checkForAlreadyExisting(String atsign) {
     var index = KeyStreamService().allLocationNotifications.indexWhere((e) =>
         ((e.locationNotificationModel.atsignCreator == atsign) &&
             (e.locationNotificationModel.key
@@ -48,16 +48,15 @@ class RequestLocationService {
         return null;
       }
 
-      AtKey atKey = newAtKey(60000,
-          "requestlocation-${DateTime.now().microsecondsSinceEpoch}", atsign);
+      var atKey = newAtKey(60000,
+          'requestlocation-${DateTime.now().microsecondsSinceEpoch}', atsign);
 
-      LocationNotificationModel locationNotificationModel =
-          LocationNotificationModel()
-            ..atsignCreator = atsign
-            ..key = atKey.key
-            ..isRequest = true
-            ..receiver =
-                AtLocationNotificationListener().atClientInstance.currentAtSign;
+      var locationNotificationModel = LocationNotificationModel()
+        ..atsignCreator = atsign
+        ..key = atKey.key
+        ..isRequest = true
+        ..receiver =
+            AtLocationNotificationListener().atClientInstance.currentAtSign;
 
       result = await AtLocationNotificationListener().atClientInstance.put(
           atKey,
@@ -74,18 +73,18 @@ class RequestLocationService {
     }
   }
 
-  requestLocationAcknowledgment(
+  Future<bool> requestLocationAcknowledgment(
       LocationNotificationModel locationNotificationModel, bool isAccepted,
       {int minutes, bool isSharing}) async {
     try {
-      String atkeyMicrosecondId = locationNotificationModel.key
+      var atkeyMicrosecondId = locationNotificationModel.key
           .split('requestlocation-')[1]
           .split('@')[0];
       AtKey atKey;
 
       atKey = newAtKey(
         60000,
-        "requestlocationacknowledged-$atkeyMicrosecondId",
+        'requestlocationacknowledged-$atkeyMicrosecondId',
         locationNotificationModel.receiver,
       );
 
@@ -118,20 +117,20 @@ class RequestLocationService {
     }
   }
 
-  updateWithRequestLocationAcknowledge(
+  Future updateWithRequestLocationAcknowledge(
     LocationNotificationModel locationNotificationModel,
   ) async {
     try {
-      String atkeyMicrosecondId = locationNotificationModel.key
+      var atkeyMicrosecondId = locationNotificationModel.key
           .split('requestlocation-')[1]
           .split('@')[0];
 
-      List<String> response =
+      var response =
           await AtLocationNotificationListener().atClientInstance.getKeys(
                 regex: 'requestlocation-$atkeyMicrosecondId',
               );
 
-      AtKey key = getAtKey(response[0]);
+      var key = getAtKey(response[0]);
 
       if (locationNotificationModel.isAccepted) {
         key.metadata.ttl = locationNotificationModel.to
@@ -168,15 +167,16 @@ class RequestLocationService {
     }
   }
 
-  sendDeleteAck(LocationNotificationModel locationNotificationModel) async {
+  Future<bool> sendDeleteAck(
+      LocationNotificationModel locationNotificationModel) async {
     try {
-      String atkeyMicrosecondId = locationNotificationModel.key
+      var atkeyMicrosecondId = locationNotificationModel.key
           .split('requestlocation-')[1]
           .split('@')[0];
       AtKey atKey;
       atKey = newAtKey(
         60000,
-        "deleterequestacklocation-$atkeyMicrosecondId",
+        'deleterequestacklocation-$atkeyMicrosecondId',
         locationNotificationModel.receiver,
       );
 
@@ -192,17 +192,18 @@ class RequestLocationService {
     }
   }
 
-  deleteKey(LocationNotificationModel locationNotificationModel) async {
-    String atkeyMicrosecondId = locationNotificationModel.key
+  Future<bool> deleteKey(
+      LocationNotificationModel locationNotificationModel) async {
+    var atkeyMicrosecondId = locationNotificationModel.key
         .split('requestlocation-')[1]
         .split('@')[0];
 
-    List<String> response =
+    var response =
         await AtLocationNotificationListener().atClientInstance.getKeys(
               regex: 'requestlocation-$atkeyMicrosecondId',
             );
 
-    AtKey key = getAtKey(response[0]);
+    var key = getAtKey(response[0]);
 
     locationNotificationModel.isAcknowledgment = true;
 
@@ -218,7 +219,7 @@ class RequestLocationService {
 
   AtKey newAtKey(int ttr, String key, String sharedWith,
       {int ttl, DateTime expiresAt}) {
-    AtKey atKey = AtKey()
+    var atKey = AtKey()
       ..metadata = Metadata()
       ..metadata.ttr = ttr
       ..metadata.ccd = true

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class RPSCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
+    var path_0 = Path();
     path_0.moveTo(size.width * 0.4984829, size.height * 0.5929065);
     path_0.arcToPoint(Offset(size.width * 0.7102083, size.height * 0.4184499),
         radius:
@@ -47,7 +47,7 @@ class RPSCustomPainter extends CustomPainter {
         clockwise: true);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    var paint_0_fill = Paint()..style = PaintingStyle.fill;
     paint_0_fill.color = Color(0xfffc7a30).withOpacity(1.0);
     canvas.drawPath(path_0, paint_0_fill);
   }

@@ -22,7 +22,7 @@ class AtLocationNotificationListener {
   // ignore: non_constant_identifier_names
   String ROOT_DOMAIN;
 
-  init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
+  void init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
       GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       {Function newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
@@ -35,9 +35,9 @@ class AtLocationNotificationListener {
   }
 
   Future<bool> startMonitor() async {
-    String privateKey = await getPrivateKey(currentAtSign);
+    var privateKey = await getPrivateKey(currentAtSign);
     atClientInstance.startMonitor(privateKey, _notificationCallback);
-    print("Monitor started in location package");
+    print('Monitor started in location package');
     return true;
   }
 
@@ -87,20 +87,21 @@ class AtLocationNotificationListener {
     var decryptedMessage = await atClientInstance.encryptionService
         .decrypt(value, fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
-        .catchError((e) => print("error in decrypting: $e"));
+        .catchError((e) => print('error in decrypting: $e'));
 
     if (atKey
         .toString()
         .toLowerCase()
         .contains(MixedConstants.DELETE_REQUEST_LOCATION_ACK)) {
-      LocationNotificationModel msg =
+      var msg =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      // ignore: unawaited_futures
       RequestLocationService().deleteKey(msg);
       return;
     }
 
     if (atKey.toString().toLowerCase().contains(locationKey)) {
-      LocationNotificationModel msg =
+      var msg =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       MasterLocationService().updateHybridList(msg);
       return;
@@ -110,8 +111,9 @@ class AtLocationNotificationListener {
         .toString()
         .toLowerCase()
         .contains(MixedConstants.SHARE_LOCATION_ACK)) {
-      LocationNotificationModel locationData =
+      var locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      // ignore: unawaited_futures
       SharingLocationService().updateWithShareLocationAcknowledge(locationData);
       return;
     }
@@ -120,7 +122,7 @@ class AtLocationNotificationListener {
         .toString()
         .toLowerCase()
         .contains(MixedConstants.SHARE_LOCATION)) {
-      LocationNotificationModel locationData =
+      var locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
@@ -135,8 +137,9 @@ class AtLocationNotificationListener {
         .toString()
         .toLowerCase()
         .contains(MixedConstants.REQUEST_LOCATION_ACK)) {
-      LocationNotificationModel locationData =
+      var locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      // ignore: unawaited_futures
       RequestLocationService()
           .updateWithRequestLocationAcknowledge(locationData);
       return;
@@ -146,7 +149,7 @@ class AtLocationNotificationListener {
         .toString()
         .toLowerCase()
         .contains(MixedConstants.REQUEST_LOCATION)) {
-      LocationNotificationModel locationData =
+      var locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);

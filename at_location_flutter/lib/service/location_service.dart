@@ -14,7 +14,7 @@ import 'my_location.dart';
 
 class LocationService {
   LocationService._();
-  static LocationService _instance = LocationService._();
+  static final LocationService _instance = LocationService._();
   factory LocationService() => _instance;
 
   List<String> atsignsToTrack;
@@ -37,7 +37,7 @@ class LocationService {
   StreamSink<List<HybridModel>> get atHybridUsersSink =>
       _atHybridUsersController.sink;
 
-  init(List<String> atsignsToTrackFromApp,
+  void init(List<String> atsignsToTrackFromApp,
       {LatLng etaFrom,
       bool calculateETA,
       bool addCurrentUserMarker,
@@ -66,16 +66,16 @@ class LocationService {
     isMapInitialized = false;
   }
 
-  mapInitialized() {
+  void mapInitialized() {
     isMapInitialized = true;
   }
 
-  addMyDetailsToHybridUsersList() async {
-    String _atsign = AtLocationNotificationListener().currentAtSign;
-    LatLng mylatlng = await getMyLocation();
+  Future addMyDetailsToHybridUsersList() async {
+    var _atsign = AtLocationNotificationListener().currentAtSign;
+    var mylatlng = await getMyLocation();
     var _image = await MasterLocationService().getImageOfAtsignNew(_atsign);
 
-    HybridModel _myData = HybridModel(
+    var _myData = HybridModel(
         displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
 
     updateMyLatLng(_myData);
@@ -95,7 +95,7 @@ class LocationService {
     }
   }
 
-  updateMyLatLng(HybridModel _myData) async {
+  void updateMyLatLng(HybridModel _myData) async {
     if (etaFrom != null) _myData.eta = await _calculateEta(_myData);
 
     _myData.marker = buildMarker(_myData, singleMarker: true);
@@ -120,8 +120,8 @@ class LocationService {
     });
   }
 
-  addCentreMarker() {
-    HybridModel centreMarker = HybridModel(
+  void addCentreMarker() {
+    var centreMarker = HybridModel(
         displayName: textForCenter, latLng: etaFrom, eta: '', image: null);
     centreMarker.marker = buildMarker(centreMarker);
 
@@ -129,8 +129,8 @@ class LocationService {
         const Duration(seconds: 2), () => hybridUsersList.add(centreMarker));
   }
 
-  // called for the first time pckage is entered from main app
-  updateHybridList() async {
+  /// called for the first time pckage is entered from main app
+  void updateHybridList() async {
     await Future.forEach(MasterLocationService().allReceivedUsersList,
         (user) async {
       if (atsignsToTrack.contains(user.displayName)) await updateDetails(user);
@@ -142,8 +142,8 @@ class LocationService {
     }
   }
 
-  // called when any new/updated data is received in the main app
-  newList() async {
+  /// called when any new/updated data is received in the main app
+  void newList() async {
     if (atsignsToTrack != null) {
       await Future.forEach(MasterLocationService().allReceivedUsersList,
           (user) async {
@@ -158,8 +158,8 @@ class LocationService {
     }
   }
 
-  // called when a user stops sharing his location
-  removeUser(String atsign) {
+  /// called when a user stops sharing his location
+  void removeUser(String atsign) {
     if ((atsignsToTrack != null) && (hybridUsersList.isNotEmpty)) {
       hybridUsersList.removeWhere((element) => element.displayName == atsign);
       if (!_atHybridUsersController.isClosed) {
@@ -168,9 +168,9 @@ class LocationService {
     }
   }
 
-  // called to get the new details marker & eta
-  updateDetails(HybridModel user) async {
-    bool contains = false;
+  /// called to get the new details marker & eta
+  Future<void> updateDetails(HybridModel user) async {
+    var contains = false;
     int index;
     hybridUsersList.forEach((hybridUser) {
       if (hybridUser.displayName == user.displayName) {
@@ -185,8 +185,8 @@ class LocationService {
     }
   }
 
-  // returns new marker and eta
-  addDetails(HybridModel user, {int index}) async {
+  /// returns new marker and eta
+  Future<void> addDetails(HybridModel user, {int index}) async {
     try {
       user.marker = buildMarker(user);
       var _eta = await _calculateEta(user);
@@ -194,7 +194,7 @@ class LocationService {
       if ((index != null)) {
         if ((index < hybridUsersList.length)) hybridUsersList[index] = user;
       } else {
-        bool _continue = true;
+        var _continue = true;
         hybridUsersList.forEach((hybridUser) {
           if (hybridUser.displayName == user.displayName) {
             hybridUser = user;
@@ -215,7 +215,7 @@ class LocationService {
     }
   }
 
-  _calculateEta(HybridModel user) async {
+  Future _calculateEta(HybridModel user) async {
     if (calculateETA) {
       try {
         var _res;
@@ -241,7 +241,7 @@ class LocationService {
     }
   }
 
-  notifyListeners() {
+  void notifyListeners() {
     if (hybridUsersList.isNotEmpty) {
       _atHybridUsersController.add(hybridUsersList);
     }

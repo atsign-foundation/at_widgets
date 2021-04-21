@@ -6,12 +6,12 @@ import 'custom_popup_route.dart';
 class LoadingDialog {
   LoadingDialog._();
 
-  static LoadingDialog _instance = LoadingDialog._();
+  static final LoadingDialog _instance = LoadingDialog._();
 
   factory LoadingDialog() => _instance;
   bool _showing = false;
 
-  show() {
+  void show() {
     if (!_showing) {
       _showing = true;
       AtLocationNotificationListener()
@@ -19,7 +19,7 @@ class LoadingDialog {
           .currentState
           .push(CustomPopupRoutes(
               pageBuilder: (_, __, ___) {
-                print("building loader");
+                print('building loader');
                 return Center(
                   child: CircularProgressIndicator(),
                 );
@@ -29,8 +29,8 @@ class LoadingDialog {
     }
   }
 
-  hide() {
-    print("hide called");
+  void hide() {
+    print('hide called');
     if (_showing) {
       AtLocationNotificationListener().navKey.currentState.pop();
       _showing = false;

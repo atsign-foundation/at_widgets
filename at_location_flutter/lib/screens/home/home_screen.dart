@@ -37,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
     KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
   }
 
-  _getMyLocation() async {
-    LatLng newMyLatLng = await getMyLocation();
+  void _getMyLocation() async {
+    var newMyLatLng = await getMyLocation();
     if (newMyLatLng != null) {
       if (mounted) {
         setState(() {
@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: T);
   }
 
-  getListView(List<KeyLocationModel> allNotifications,
+  Widget getListView(List<KeyLocationModel> allNotifications,
       ScrollController slidingScrollController) {
     return ListView(
       children: allNotifications.map((notification) {

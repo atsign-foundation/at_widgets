@@ -8,7 +8,7 @@ import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/layer/marker_layer.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/layer/tile_layer.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_layer_options.dart';
-import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_Plugin.dart';
+import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_controller.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_snap.dart';
 import 'package:latlong/latlong.dart';
@@ -64,7 +64,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     });
   }
 
-  showToast(String msg) {
+  void showToast(String msg) {
     if (globalContext != null) CustomToast().show(msg, globalContext);
   }
 
@@ -97,9 +97,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                   } else {
                     print('FlutterMap called');
                     _popupController = PopupController();
-                    List<HybridModel> users = snapshot.data;
-                    List<Marker> markers =
-                        users.map((user) => user.marker).toList();
+                    var users = snapshot.data;
+                    var markers = users.map((user) => user.marker).toList();
                     points = users.map((user) => user.latLng).toList();
                     print('markers length = ${markers.length}');
                     users.forEach((element) {
@@ -141,7 +140,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                           maxNativeZoom: 18,
                           minZoom: 2,
                           urlTemplate:
-                              "https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MixedConstants.MAP_KEY}",
+                              'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MixedConstants.MAP_KEY}',
                         ),
                         MarkerClusterLayerOptions(
                           maxClusterRadius: 190,
@@ -194,7 +193,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     );
   }
 
-  zoomOutFn() {
+  void zoomOutFn() {
     _popupController.hidePopup();
     LocationService().hybridUsersList.isNotEmpty
         ? mapController.move(LocationService().hybridUsersList[0].latLng, 4)

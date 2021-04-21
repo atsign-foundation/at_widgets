@@ -67,9 +67,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
       widget.currentAtSign = '@' + widget.currentAtSign;
     }
 
-    bool amICreator =
+    var amICreator =
         widget.userListenerKeyword.atsignCreator == widget.currentAtSign;
-    DateTime to = widget.userListenerKeyword.to;
+    var to = widget.userListenerKeyword.to;
     String time;
     if (to != null) {
       time =
@@ -166,14 +166,14 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                       try {
                                         var result;
                                         if (widget.userListenerKeyword.key
-                                            .contains("sharelocation")) {
+                                            .contains('sharelocation')) {
                                           result = await SharingLocationService()
                                               .updateWithShareLocationAcknowledge(
                                                   widget.userListenerKeyword,
                                                   isSharing: value);
                                         } else if (widget
                                             .userListenerKeyword.key
-                                            .contains("requestlocation")) {
+                                            .contains('requestlocation')) {
                                           result = await RequestLocationService()
                                               .requestLocationAcknowledgment(
                                                   widget.userListenerKeyword,
@@ -182,8 +182,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                         }
                                         if (result) {
                                           if (!value) {
-                                            SendLocationNotification().sendNull(
-                                                widget.userListenerKeyword);
+                                            await SendLocationNotification()
+                                                .sendNull(
+                                                    widget.userListenerKeyword);
                                           }
                                           setState(() {
                                             isSharing = value;
@@ -197,7 +198,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                       } catch (e) {
                                         print(e);
                                         CustomToast().show(
-                                            'something went wrong , please try again.',
+                                            'Something went wrong , please try again.',
                                             context);
                                         LoadingDialog().hide();
                                       }
@@ -245,18 +246,18 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                   try {
                                     var result;
                                     if (widget.userListenerKeyword.key
-                                        .contains("sharelocation")) {
+                                        .contains('sharelocation')) {
                                       result = await SharingLocationService()
                                           .deleteKey(
                                               widget.userListenerKeyword);
                                     } else if (widget.userListenerKeyword.key
-                                        .contains("requestlocation")) {
+                                        .contains('requestlocation')) {
                                       result = await RequestLocationService()
                                           .sendDeleteAck(
                                               widget.userListenerKeyword);
                                     }
                                     if (result) {
-                                      SendLocationNotification()
+                                      await SendLocationNotification()
                                           .sendNull(widget.userListenerKeyword);
                                       LoadingDialog().hide();
 

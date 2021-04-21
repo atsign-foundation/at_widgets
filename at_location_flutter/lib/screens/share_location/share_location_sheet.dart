@@ -79,7 +79,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               elevation: 0,
               dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
               value: selectedOption,
-              hint: Text("Occurs on"),
+              hint: Text('Occurs on'),
               items: ['30 mins', '2 hours', '24 hours', 'Until turned off']
                   .map((String option) {
                 return DropdownMenuItem<String>(
@@ -112,11 +112,11 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     );
   }
 
-  onShareTap() async {
+  void onShareTap() async {
     setState(() {
       isLoading = true;
     });
-    bool validAtSign = await checkAtsign(textField);
+    var validAtSign = await checkAtsign(textField);
 
     if (!validAtSign) {
       setState(() {
@@ -131,7 +131,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
       return;
     }
 
-    int minutes = (selectedOption == '30 mins'
+    var minutes = (selectedOption == '30 mins'
         ? 30
         : (selectedOption == '2 hours'
             ? (2 * 60)

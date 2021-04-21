@@ -31,29 +31,29 @@ Stream getAllNotification() {
 }
 
 Future<bool> sendShareLocationNotification(String atsign, int minutes) async {
-  bool result = await SharingLocationService()
+  var result = await SharingLocationService()
       .sendShareLocationEvent(atsign, false, minutes: minutes);
   return result;
 }
 
 Future<bool> sendRequestLocationNotification(String atsign) async {
-  bool result = await RequestLocationService().sendRequestLocationEvent(atsign);
+  var result = await RequestLocationService().sendRequestLocationEvent(atsign);
   return result;
 }
 
 Future<bool> deleteLocationData(
     LocationNotificationModel locationNotificationModel) async {
-  bool result =
+  var result =
       await SendLocationNotification().sendNull(locationNotificationModel);
   return result;
 }
 
-deleteAllLocationData() {
+void deleteAllLocationData() {
   SendLocationNotification().deleteAllLocationKey();
 }
 
-getAtKey(String regexKey) {
-  AtKey atKey = AtKey.fromString(regexKey);
+AtKey getAtKey(String regexKey) {
+  var atKey = AtKey.fromString(regexKey);
   atKey.metadata.ttr = -1;
   return atKey;
 }
