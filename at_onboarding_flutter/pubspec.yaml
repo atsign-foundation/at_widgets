@@ -11,19 +11,31 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  archive: ^2.0.13
+  archive: ^3.0.0
   file_picker: ^2.0.7
   flutter_qr_reader: ^1.0.3
   url_launcher: ^5.7.0
   permission_handler: ^5.0.1+1
   path_provider: ^1.6.24
   webview_flutter: ^1.0.7
-  at_utils: ^1.0.1+6
-  at_backupkey_flutter: ^1.0.0+2
-  at_server_status: ^0.1.0+1
-  at_client_mobile: ^1.0.0+9
-  at_commons: ^1.0.1+6
-  at_client: ^1.0.1+8
+  at_backupkey_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_backupkey_flutter
+      ref: package_upgrade
+      version: ^1.0.0+2
+  at_server_status:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_server_status
+      ref: package_upgrade
+      version: ^0.1.0+1
+#  at_client_mobile:
+#    git:
+#      url: https://github.com/atsign-foundation/at_client_sdk.git
+#      path: at_client_mobile
+#      ref: package_upgrade
+#      version: ^1.0.1+5
   
 
 dev_dependencies:
