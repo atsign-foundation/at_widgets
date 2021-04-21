@@ -1,5 +1,7 @@
 import 'package:at_commons/at_commons.dart';
+import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
 import 'at_location_notification_listener.dart';
@@ -14,8 +16,38 @@ class RequestLocationService {
     return _singleton;
   }
 
+  checkForAlreadyExisting(String atsign) {
+    var index = KeyStreamService().allLocationNotifications.indexWhere((e) =>
+        ((e.locationNotificationModel.atsignCreator == atsign) &&
+            (e.locationNotificationModel.key
+                .contains(MixedConstants.REQUEST_LOCATION))));
+    if (index > -1) {
+      return [
+        true,
+        KeyStreamService()
+            .allLocationNotifications[index]
+            .locationNotificationModel
+      ];
+    } else {
+      return [false];
+    }
+  }
+
   Future<bool> sendRequestLocationEvent(String atsign) async {
     try {
+      var alreadyExists = checkForAlreadyExisting(atsign);
+      var result;
+      if (alreadyExists[0]) {
+        await locationPromptDialog(
+          text: 'You have already requested $atsign',
+          isShareLocationData: false,
+          isRequestLocationData: false,
+          onlyText: true,
+        );
+
+        return null;
+      }
+
       AtKey atKey = newAtKey(60000,
           "requestlocation-${DateTime.now().microsecondsSinceEpoch}", atsign);
 
@@ -27,7 +59,7 @@ class RequestLocationService {
             ..receiver =
                 AtLocationNotificationListener().atClientInstance.currentAtSign;
 
-      var result = await AtLocationNotificationListener().atClientInstance.put(
+      result = await AtLocationNotificationListener().atClientInstance.put(
           atKey,
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel));
