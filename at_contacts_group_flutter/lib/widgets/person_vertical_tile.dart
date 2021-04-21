@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class CustomPersonVerticalTile extends StatefulWidget {
-  final String imageLocation, title, subTitle, atsign;
+  final String? imageLocation, title, subTitle, atsign;
   final bool isTopRight, isAssetImage;
-  final IconData icon;
-  final Function onCrossPressed;
-  final Uint8List imageIntList;
+  final IconData? icon;
+  final Function? onCrossPressed;
+  final Uint8List? imageIntList;
 
   CustomPersonVerticalTile(
       {this.imageLocation,
@@ -32,8 +32,8 @@ class CustomPersonVerticalTile extends StatefulWidget {
 }
 
 class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
-  Uint8List image;
-  String contactName;
+  Uint8List? image;
+  String? contactName;
   @override
   void initState() {
     super.initState();
@@ -42,13 +42,13 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
 
   getAtsignImage() async {
     if (widget.atsign == null) return;
-    AtContact contact = await getAtSignDetails(widget.atsign);
+    AtContact contact = await getAtSignDetails(widget.atsign!);
 
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
+        List<int>? intList = contact.tags['image'].cast<int>();
         setState(() {
-          image = Uint8List.fromList(intList);
+          image = Uint8List.fromList(intList!);
         });
       }
       if (contact.tags != null && contact.tags['name'] != null) {
@@ -80,14 +80,14 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(30.toFont)),
                             child: Image.memory(
-                              image,
+                              image!,
                               width: 50.toFont,
                               height: 50.toFont,
                               fit: BoxFit.fill,
                             ),
                           )
                         : ContactInitial(
-                            initials: widget.subTitle.substring(1, 3),
+                            initials: widget.subTitle!.substring(1, 3),
                           ),
               ),
               widget.icon != null
@@ -96,7 +96,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                       bottom: !widget.isTopRight ? 0 : null,
                       right: 0,
                       child: GestureDetector(
-                        onTap: widget.onCrossPressed,
+                        onTap: widget.onCrossPressed as void Function()?,
                         child: Container(
                           height: 20.toHeight,
                           width: 20.toHeight,
@@ -116,7 +116,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
           SizedBox(height: 2),
           contactName != null
               ? Text(
-                  contactName,
+                  contactName!,
                   style: CustomTextStyles().grey16,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -126,7 +126,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
           SizedBox(height: 2),
           widget.subTitle != null
               ? Text(
-                  widget.subTitle,
+                  widget.subTitle!,
                   style: CustomTextStyles().grey14,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

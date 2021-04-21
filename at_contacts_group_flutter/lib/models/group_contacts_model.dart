@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
 
 class GroupContactsModel {
-  final AtContact contact;
-  final AtGroup group;
+  final AtContact? contact;
+  final AtGroup? group;
 
-  final ContactsType contactType;
+  final ContactsType? contactType;
   GroupContactsModel({
     this.contact,
     this.group,
@@ -14,9 +14,9 @@ class GroupContactsModel {
   });
 
   GroupContactsModel copyWith({
-    AtContact contact,
-    AtGroup group,
-    ContactsType contactType,
+    AtContact? contact,
+    AtGroup? group,
+    ContactsType? contactType,
   }) {
     return GroupContactsModel(
       contact: contact ?? this.contact,
@@ -33,7 +33,7 @@ class GroupContactsModel {
     };
   }
 
-  factory GroupContactsModel.fromMap(Map<String, dynamic> map) {
+  factory GroupContactsModel.fromMap(Map<String, dynamic>? map) {
     if (map == null) return null;
 
     return GroupContactsModel(
