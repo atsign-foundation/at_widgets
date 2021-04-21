@@ -99,12 +99,13 @@ class MasterLocationService {
       // ignore: unrelated_type_equality_checks
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
           (allLocationNotifications[i].locationNotificationModel == null) ||
-          (allLocationNotifications[i]
-                  .locationNotificationModel
-                  .to
-                  .difference(DateTime.now())
-                  .inMinutes <
-              0)) tempArray.add(allLocationNotifications[i]);
+          ((allLocationNotifications[i].locationNotificationModel.to != null) &&
+              (allLocationNotifications[i]
+                      .locationNotificationModel
+                      .to
+                      .difference(DateTime.now())
+                      .inMinutes <
+                  0))) tempArray.add(allLocationNotifications[i]);
     }
 
     allLocationNotifications
