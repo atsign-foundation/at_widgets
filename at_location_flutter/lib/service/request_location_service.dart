@@ -136,37 +136,28 @@ class RequestLocationService {
     }
   }
 
-  removePerson(LocationNotificationModel locationNotificationModel) async {
-    var result;
-    if (locationNotificationModel.atsignCreator !=
-        AtLocationNotificationListener().atClientInstance.currentAtSign) {
-      locationNotificationModel.isAccepted = false;
-      locationNotificationModel.isExited = true;
-      result =
-          await updateWithRequestLocationAcknowledge(locationNotificationModel);
-    } else {
-      result =
-          await requestLocationAcknowledgment(locationNotificationModel, false);
-    }
-    return result;
-  }
-
   sendDeleteAck(LocationNotificationModel locationNotificationModel) async {
-    String atkeyMicrosecondId = locationNotificationModel.key
-        .split('requestlocation-')[1]
-        .split('@')[0];
-    AtKey atKey;
-    atKey = newAtKey(
-      60000,
-      "deleterequestacklocation-$atkeyMicrosecondId",
-      locationNotificationModel.receiver,
-    );
+    try {
+      String atkeyMicrosecondId = locationNotificationModel.key
+          .split('requestlocation-')[1]
+          .split('@')[0];
+      AtKey atKey;
+      atKey = newAtKey(
+        60000,
+        "deleterequestacklocation-$atkeyMicrosecondId",
+        locationNotificationModel.receiver,
+      );
 
-    var result = await AtLocationNotificationListener().atClientInstance.put(
-        atKey,
-        LocationNotificationModel.convertLocationNotificationToJson(
-            locationNotificationModel));
-    print('requestLocationAcknowledgment $result');
+      var result = await AtLocationNotificationListener().atClientInstance.put(
+          atKey,
+          LocationNotificationModel.convertLocationNotificationToJson(
+              locationNotificationModel));
+      print('sendDeleteAck $result');
+      return result;
+    } catch (e) {
+      print('sendDeleteAck error $e');
+      return false;
+    }
   }
 
   deleteKey(LocationNotificationModel locationNotificationModel) async {

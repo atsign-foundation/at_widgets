@@ -12,6 +12,7 @@ import 'custom_toast.dart';
 import 'display_tile.dart';
 import 'draggable_symbol.dart';
 import 'loading_widget.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 // ignore: must_be_immutable
 class CollapsedContent extends StatefulWidget {
@@ -36,7 +37,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: widget.expanded ? 431 : 205,
+        height: widget.expanded ? 431.toHeight : 205.toHeight,
         padding: EdgeInsets.fromLTRB(15, 3, 15, 0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -57,6 +58,15 @@ class _CollapsedContentState extends State<CollapsedContent> {
   }
 
   Widget forUser(bool expanded, BuildContext context) {
+    if (!widget.userListenerKeyword.atsignCreator.contains('@')) {
+      widget.userListenerKeyword.atsignCreator =
+          '@' + widget.userListenerKeyword.atsignCreator;
+    }
+
+    if (!widget.currentAtSign.contains('@')) {
+      widget.currentAtSign = '@' + widget.currentAtSign;
+    }
+
     bool amICreator =
         widget.userListenerKeyword.atsignCreator == widget.currentAtSign;
     DateTime to = widget.userListenerKeyword.to;
@@ -226,11 +236,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                               ),
                             )
                           : SizedBox(),
-                      ((amICreator) &&
-                              (widget.userListenerKeyword.key
-                                  .contains("sharelocation")))
-                          ? Divider()
-                          : SizedBox(),
+                      (amICreator) ? Divider() : SizedBox(),
                       (amICreator)
                           ? Expanded(
                               child: InkWell(
@@ -246,7 +252,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                     } else if (widget.userListenerKeyword.key
                                         .contains("requestlocation")) {
                                       result = await RequestLocationService()
-                                          .removePerson(
+                                          .sendDeleteAck(
                                               widget.userListenerKeyword);
                                     }
                                     if (result) {

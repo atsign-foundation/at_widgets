@@ -6,12 +6,13 @@ import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
-    {String rootDomain = 'vip.ve.atsign.zone'}) async {
+    {String rootDomain = MixedConstants.ROOT_DOMAIN}) async {
   try {
     /// So that we have the permission status beforehand & later we dont get
     /// PlatformException(PermissionHandler.PermissionManager) => Multiple Permissions exception

@@ -54,6 +54,9 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
             hintText: 'Type @sign ',
             initialValue: textField,
             value: (str) {
+              if (!str.contains('@')) {
+                str = '@' + str;
+              }
               textField = str;
             },
             icon: Icons.contacts_rounded,
