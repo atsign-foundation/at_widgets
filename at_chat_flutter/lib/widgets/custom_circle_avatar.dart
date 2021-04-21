@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
-  final String image;
+  final String? image;
   final double size;
   final bool nonAsset;
-  final Uint8List byteImage;
+  final Uint8List? byteImage;
 
   /// A customized circular avatar to display the profile picture with a small border
   /// takes in @param [image] for the [asset image]
@@ -14,7 +14,7 @@ class CustomCircleAvatar extends StatelessWidget {
   /// @param [nonAsset] if the image is coming over the network
   /// @param [byteImage] to display the image from the netwok
   const CustomCircleAvatar({
-    Key key,
+    Key? key,
     this.image,
     this.size = 50,
     this.nonAsset = false,
@@ -32,8 +32,8 @@ class CustomCircleAvatar extends StatelessWidget {
         radius: (size - 5).toFont,
         backgroundColor: Colors.transparent,
         backgroundImage: nonAsset
-            ? Image.memory(byteImage).image
-            : AssetImage(image, package: 'atsign_contacts'),
+            ? Image.memory(byteImage!).image
+            : AssetImage(image!, package: 'atsign_contacts'),
       ),
     );
   }

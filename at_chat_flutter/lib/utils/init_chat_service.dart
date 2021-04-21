@@ -8,7 +8,7 @@ void initializeChatService(AtClientImpl atClientInstance, String currentAtSign,
 }
 
 void setChatWithAtSign(String atsign,
-    {bool isGroup = false, String groupId, List<String> groupMembers}) {
+    {bool isGroup = false, String? groupId, List<String>? groupMembers}) {
   ChatService().setAtsignToChatWith(atsign, isGroup, groupId, groupMembers);
 }
 
