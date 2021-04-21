@@ -14,12 +14,6 @@ dependencies:
   share: ^0.6.5+2
   permission_handler: ^5.0.1+1
   path_provider: ^1.6.24
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_utils
-      ref: package_upgrade
-      version: ^1.0.1+4
   at_client_mobile:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
