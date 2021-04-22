@@ -15,6 +15,7 @@ import 'package:at_location_flutter/show_location.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -36,14 +37,26 @@ class _HomeScreenState extends State<HomeScreen> {
     KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
   }
 
-  _getMyLocation() async {
-    LatLng newMyLatLng = await getMyLocation();
+  void _getMyLocation() async {
+    var newMyLatLng = await getMyLocation();
     if (newMyLatLng != null) {
       if (mounted) {
         setState(() {
           myLatLng = newMyLatLng;
         });
       }
+    }
+
+    var permission = await Geolocator.checkPermission();
+
+    if (((permission == LocationPermission.always) ||
+        (permission == LocationPermission.whileInUse))) {
+      Geolocator.getPositionStream(distanceFilter: 2)
+          .listen((locationStream) async {
+        setState(() {
+          myLatLng = LatLng(locationStream.latitude, locationStream.longitude);
+        });
+      });
     }
   }
 
@@ -141,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: T);
   }
 
-  getListView(List<KeyLocationModel> allNotifications,
+  Widget getListView(List<KeyLocationModel> allNotifications,
       ScrollController slidingScrollController) {
     return ListView(
       children: allNotifications.map((notification) {

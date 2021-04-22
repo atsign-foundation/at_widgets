@@ -22,7 +22,7 @@ class SearchLocationService {
     var response = await http.get(url);
 
     List addresses = jsonDecode(response.body);
-    List<LocationModal> share = [];
+    var share = <LocationModal>[];
     for (Map ad in addresses) {
       share.add(LocationModal.fromJson(ad));
     }

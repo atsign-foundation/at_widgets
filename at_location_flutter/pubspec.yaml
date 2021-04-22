@@ -26,7 +26,6 @@ dependencies:
   toast: ^0.1.5
   sliding_up_panel: ^1.0.2
   http: ^0.12.2
-  crypto: ^2.1.5
 
   at_client_mobile: ^1.0.0+9
   at_lookup: ^1.0.0+6

@@ -25,7 +25,7 @@ Future<LatLng> getMyLocation() async {
 
     if ((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse)) {
-      Position position = await Geolocator.getCurrentPosition();
+      var position = await Geolocator.getCurrentPosition();
       return LatLng(position.latitude, position.longitude);
     }
 
