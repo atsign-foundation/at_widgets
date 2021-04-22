@@ -1,3 +1,7 @@
+## [1.0.0] - 04/20/2021
+
+* Updated example app
+
 ## [0.0.4] - 03/19/2021
 
 * The referenced packages are updated

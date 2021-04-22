@@ -64,6 +64,7 @@ class ContactService {
     atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
     loggedInUserDetails = await getAtSignDetails(currentAtSign);
     cachedContactList = await atContactImpl.listContacts();
+    await fetchBlockContactList();
   }
 
   resetData() {

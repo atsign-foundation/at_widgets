@@ -458,6 +458,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
       _throttleUpdate = null;
     } else {
       _throttleUpdate = StreamController<LatLng>(sync: true);
+      // ignore: avoid_single_cascade_in_expression_statements
       _throttleUpdate.stream.transform(
         util.throttleStreamTransformerWithTrailingCall<LatLng>(
           options.updateInterval,

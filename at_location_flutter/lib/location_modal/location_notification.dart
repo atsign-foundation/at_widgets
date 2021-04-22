@@ -23,11 +23,11 @@ class LocationNotificationModel {
     this.updateMap = false,
   });
 
-  getAtContact() {
+  void getAtContact() {
     atContact = AtContact(atSign: receiver);
   }
 
-  LatLng get getLatLng => LatLng(this.lat, this.long);
+  LatLng get getLatLng => LatLng(lat, long);
   LocationNotificationModel.fromJson(Map<String, dynamic> json)
       : atsignCreator = json['atsignCreator'],
         receiver = json['receiver'],

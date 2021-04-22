@@ -36,14 +36,14 @@ Widget buildMarkerCluster(List<Marker> markers, {HybridModel eventData}) {
                       ),
                       Text(
                         ((markers.length - 1) == 1)
-                            ? "${markers.length - 1} person nearby"
-                            : "${markers.length - 1} people nearby",
+                            ? '${markers.length - 1} person nearby'
+                            : '${markers.length - 1} people nearby',
                         style: TextStyle(color: Colors.deepOrange),
                       ),
                     ],
                   )
                 : Text(
-                    "${markers.length} people nearby",
+                    '${markers.length} people nearby',
                     style: TextStyle(color: Colors.deepOrange),
                   ),
           )),

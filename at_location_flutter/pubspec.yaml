@@ -1,7 +1,8 @@
 name: at_location_flutter
 description: A flutter plugin project to share location between two atsigns and track them on OSM (open street maps).
-version: 0.0.2
+version: 0.0.3
 homepage: https://atsign.com/
+repository: https://github.com/atsign-foundation/at_widgets/tree/master/at_location_flutter
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -25,13 +26,12 @@ dependencies:
   toast: ^0.1.5
   sliding_up_panel: ^1.0.2
   http: ^0.12.2
-  crypto: ^2.1.5
 
-  at_client_mobile: ^1.0.0+5
-  at_lookup: ^1.0.0+3
-  at_commons: ^1.0.1+4
-  at_contact: ^1.0.0
-  at_common_flutter: ^0.0.3
+  at_client_mobile: ^1.0.0+9
+  at_lookup: ^1.0.0+6
+  at_commons: ^1.0.1+6
+  at_contact: ^1.0.0+3
+  at_common_flutter: ^1.0.0
   pedantic: ^1.11.0
 
 dev_dependencies:

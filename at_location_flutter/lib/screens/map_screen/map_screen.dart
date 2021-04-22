@@ -5,10 +5,12 @@ import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
+// ignore: must_be_immutable
 class MapScreen extends StatefulWidget {
   final LocationNotificationModel userListenerKeyword;
-  final String currentAtSign;
+  String currentAtSign;
 
   MapScreen({this.currentAtSign, this.userListenerKeyword});
 
@@ -29,6 +31,15 @@ class _MapScreenState extends State<MapScreen> {
         widget.userListenerKeyword.atsignCreator == widget.currentAtSign
             ? []
             : [widget.userListenerKeyword.atsignCreator];
+
+    if (!widget.userListenerKeyword.atsignCreator.contains('@')) {
+      widget.userListenerKeyword.atsignCreator =
+          '@' + widget.userListenerKeyword.atsignCreator;
+    }
+
+    if (!widget.currentAtSign.contains('@')) {
+      widget.currentAtSign = '@' + widget.currentAtSign;
+    }
   }
 
   @override
@@ -56,16 +67,19 @@ class _MapScreenState extends State<MapScreen> {
               ),
               SlidingUpPanel(
                 controller: pc,
-                minHeight: widget.userListenerKeyword != null ? 130 : 205,
+                minHeight: widget.userListenerKeyword != null
+                    ? 130.toHeight < 130
+                        ? 130
+                        : 130.toHeight
+                    : 205.toHeight,
                 maxHeight: widget.userListenerKeyword != null
                     ? ((widget.userListenerKeyword.atsignCreator ==
                             widget.currentAtSign)
-                        ? widget.userListenerKeyword.key
-                                .contains("requestlocation")
-                            ? 240
-                            : 291
-                        : 130)
-                    : 431,
+                        ? 291.toHeight
+                        : 130.toHeight < 130
+                            ? 130
+                            : 130.toHeight)
+                    : 431.toHeight,
                 panel: CollapsedContent(
                     true, AtLocationNotificationListener().atClientInstance,
                     userListenerKeyword: widget.userListenerKeyword,
