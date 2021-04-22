@@ -6,7 +6,7 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:flutter/cupertino.dart';
 
-initialiseEventService(AtClientImpl atClientInstance,
+void initialiseEventService(AtClientImpl atClientInstance,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
   EventService().initializeAtContactImpl(atClientInstance, rootDomain);
 }
@@ -24,10 +24,10 @@ Future<bool> createEvent(EventNotificationModel eventData) async {
     throw Exception('No members found');
   }
 
-  eventData.key = "createevent-${DateTime.now().microsecondsSinceEpoch}";
+  eventData.key = 'createevent-${DateTime.now().microsecondsSinceEpoch}';
 
   try {
-    AtKey atKey = AtKey()
+    var atKey = AtKey()
       ..metadata = Metadata()
       ..metadata.ttr = -1
       ..key = eventData.key
@@ -54,7 +54,7 @@ Future<bool> updateEvent(EventNotificationModel eventData, String key) async {
   eventData.atsignCreator = currentEventData.atsignCreator;
 
   try {
-    AtKey atKey = EventService().getAtKey(regexKey);
+    var atKey = EventService().getAtKey(regexKey);
     var eventJson =
         EventNotificationModel.convertEventNotificationToJson(eventData);
     var result = await EventService().atClientInstance.put(atKey, eventJson);
@@ -74,14 +74,14 @@ Future<bool> deleteEvent(String key) async {
     throw Exception('Event key not found');
   }
   eventData = await getValue(regexKey);
-  print('eventData to delete:${eventData}');
+  print('eventData to delete:$eventData');
 
   if (eventData.atsignCreator != currentAtsign) {
     throw Exception('Only creator can delete the event');
   }
 
   try {
-    AtKey atKey = EventService().getAtKey(regexKey);
+    var atKey = EventService().getAtKey(regexKey);
     var result = await EventService().atClientInstance.delete(atKey);
     if (result != null && result) {
       EventService().allEvents.removeWhere((element) => element.key == key);
@@ -101,10 +101,10 @@ Future<EventNotificationModel> getEventDetails(String key) async {
     throw Exception('Event key not found');
   }
   try {
-    AtKey atkey = EventService().getAtKey(regexKey);
-    AtValue atvalue =
+    var atkey = EventService().getAtKey(regexKey);
+    var atvalue =
         await EventService().atClientInstance.get(atkey).catchError((e) {
-      print("error in get ${e.errorCode} ${e.errorMessage}");
+      print('error in get ${e.errorCode} ${e.errorMessage}');
       return null;
     });
     eventData = EventNotificationModel.fromJson(jsonDecode(atvalue.value));
@@ -116,7 +116,7 @@ Future<EventNotificationModel> getEventDetails(String key) async {
 
 Future<List<EventNotificationModel>> getEvents() async {
   List<EventNotificationModel> allEvents = [];
-  List<String> regexList = await EventService().atClientInstance.getKeys(
+  var regexList = await EventService().atClientInstance.getKeys(
         regex: 'createevent-',
       );
 
@@ -127,12 +127,13 @@ Future<List<EventNotificationModel>> getEvents() async {
   }
 
   try {
-    for (int i = 0; i < regexList.length; i++) {
-      AtKey atkey = EventService().getAtKey(regexList[i]);
-      AtValue atValue = await EventService().atClientInstance.get(atkey);
+    for (var i = 0; i < regexList.length; i++) {
+      var atkey = EventService().getAtKey(regexList[i]);
+      var atValue = await EventService().atClientInstance.get(atkey);
+      print('event atvalue: ${atValue}');
       if (atValue.value != null) {
-        EventNotificationModel event =
-            EventNotificationModel.fromJson(jsonDecode(atValue.value));
+        var event = EventNotificationModel.fromJson(jsonDecode(atValue.value));
+        print('event : ${event.title}');
         allEvents.add(event);
       }
     }
@@ -149,7 +150,7 @@ Future<List<EventNotificationModel>> getEvents() async {
 }
 
 Future<List<String>> getRegexKeys() async {
-  List<String> regexList = await EventService().atClientInstance.getKeys(
+  var regexList = await EventService().atClientInstance.getKeys(
         regex: 'createevent-',
       );
 
@@ -159,8 +160,8 @@ Future<List<String>> getRegexKeys() async {
 Future<EventNotificationModel> getValue(String key) async {
   try {
     EventNotificationModel event;
-    AtKey atKey = EventService().getAtKey(key);
-    AtValue atValue = await EventService().atClientInstance.get(atKey);
+    var atKey = EventService().getAtKey(key);
+    var atValue = await EventService().atClientInstance.get(atKey);
     if (atValue.value != null) {
       event = EventNotificationModel.fromJson(jsonDecode(atValue.value));
     }
@@ -174,8 +175,8 @@ Future<EventNotificationModel> getValue(String key) async {
 
 Future<String> getRegexKeyFromKey(String key) async {
   String regexKey;
-  List<String> allRegex = await getRegexKeys();
-  int index = allRegex.indexWhere((element) => element.contains(key));
+  var allRegex = await getRegexKeys();
+  var index = allRegex.indexWhere((element) => element.contains(key));
   if (index > -1) {
     regexKey = allRegex[index];
     return regexKey;

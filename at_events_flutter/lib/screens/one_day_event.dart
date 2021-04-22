@@ -58,7 +58,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                               ? dateToString(eventData.event.date)
                               : '',
                           onTap: () async {
-                            final DateTime datePicked = await showDatePicker(
+                            final datePicked = await showDatePicker(
                                 context: context,
                                 initialDate: (eventData.event.date != null)
                                     ? eventData.event.date
@@ -69,9 +69,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                             if (datePicked != null) {
                               setState(() {
                                 eventData.event.date = datePicked;
-                                if (eventData.event.endDate == null) {
-                                  eventData.event.endDate = datePicked;
-                                }
+                                eventData.event.endDate ??= datePicked;
 
                                 if (eventData.event.startTime != null) {
                                   eventData.event.startTime = DateTime(
@@ -95,7 +93,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                               ? dateToString(eventData.event.endDate)
                               : '',
                           onTap: () async {
-                            final DateTime datePicked = await showDatePicker(
+                            final datePicked = await showDatePicker(
                                 context: context,
                                 initialDate: (eventData.event.endDate != null)
                                     ? eventData.event.endDate
@@ -135,7 +133,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                               ? timeOfDayToString((eventData.event.startTime))
                               : '',
                           onTap: () async {
-                            final TimeOfDay timePicked = await showTimePicker(
+                            final timePicked = await showTimePicker(
                                 context: context,
                                 initialTime: eventData.event.startTime != null
                                     ? TimeOfDay.fromDateTime(
@@ -170,7 +168,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                                 ? timeOfDayToString(eventData.event.endTime)
                                 : '',
                             onTap: () async {
-                              final TimeOfDay timePicked = await showTimePicker(
+                              final timePicked = await showTimePicker(
                                   context: context,
                                   initialTime: eventData.event.endTime != null
                                       ? TimeOfDay.fromDateTime(

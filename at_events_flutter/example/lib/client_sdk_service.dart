@@ -33,7 +33,7 @@ class ClientSdkService {
 
     final appSupportDirectory =
         await path_provider.getApplicationSupportDirectory();
-    String path = appSupportDirectory.path;
+    var path = appSupportDirectory.path;
     atClientPreference = AtClientPreference();
 
     atClientPreference.isLocalStoreRequired = true;

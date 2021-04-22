@@ -13,7 +13,7 @@ import 'package:at_lookup/at_lookup.dart';
 
 class EventService {
   EventService._();
-  static EventService _instance = EventService._();
+  static final EventService _instance = EventService._();
   factory EventService() => _instance;
   bool isEventUpdate = false;
 
@@ -41,7 +41,7 @@ class EventService {
   StreamSink<List<EventNotificationModel>> get eventListSink =>
       eventListController.sink;
 
-  init({bool isUpdate, EventNotificationModel eventData, rootDomain}) {
+  void init({bool isUpdate, EventNotificationModel eventData, rootDomain}) {
     if (eventData != null) {
       EventService().eventNotificationModel = EventNotificationModel.fromJson(
           jsonDecode(EventNotificationModel.convertEventNotificationToJson(
@@ -62,7 +62,8 @@ class EventService {
     });
   }
 
-  initializeAtContactImpl(AtClientImpl _atClientInstance, String rootDomain) {
+  void initializeAtContactImpl(
+      AtClientImpl _atClientInstance, String rootDomain) {
     atClientInstance = _atClientInstance;
     currentAtSign = atClientInstance.currentAtSign;
     this.rootDomain = rootDomain;
@@ -72,9 +73,9 @@ class EventService {
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
-    String privateKey = await getPrivateKey(currentAtSign);
+    var privateKey = await getPrivateKey(currentAtSign);
     atClientInstance.startMonitor(privateKey, _notificationCallback);
-    print("Monitor started");
+    print('Monitor started');
     return true;
   }
 
@@ -102,11 +103,11 @@ class EventService {
     var decryptedMessage = await atClientInstance.encryptionService
         .decrypt(value, fromAtSign)
         .catchError((e) {
-      print("error in decrypting: ${e} ${e}");
+      print('error in decrypting: $e');
     });
-    print('decrypted message:${decryptedMessage}');
+    print('decrypted message:$decryptedMessage');
     if (atKey.toString().contains('createevent')) {
-      EventNotificationModel eventData =
+      var eventData =
           EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (eventData.isUpdate != null && eventData.isUpdate == false) {
         // new event received
@@ -119,19 +120,17 @@ class EventService {
         onUpdatedEventReceived(eventData);
       }
     } else if (atKey.toString().contains('eventacknowledged')) {
-      EventNotificationModel msg =
-          EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      var msg = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
       print('event acknowledge received:${msg.group} , ${msg.title}');
       createEventAcknowledged(msg, fromAtSign, atKey);
     }
   }
 
-  createEventAcknowledged(EventNotificationModel acknowledgedEvent,
+  void createEventAcknowledged(EventNotificationModel acknowledgedEvent,
       String fromAtSign, String key) async {
     String regexKey, eventId = key.split('eventacknowledged-')[1].split('@')[0];
     AtKey atKey;
-    EventNotificationModel presentEventData =
-        await getEventDetails('createevent-$eventId');
+    var presentEventData = await getEventDetails('createevent-$eventId');
 
     presentEventData.group.members.forEach((presentGroupMember) {
       acknowledgedEvent.group.members.forEach((acknowledgedGroupMember) {
@@ -155,7 +154,7 @@ class EventService {
     if (regexKey != null) {
       atKey = getAtKey(regexKey);
     } else {
-      return false;
+      return;
     }
 
     var notification =
@@ -166,8 +165,8 @@ class EventService {
     }
   }
 
-  removeDeletedEventFromList(String regexKey) {
-    String key = regexKey.split('createevent-')[1].split('@')[0];
+  void removeDeletedEventFromList(String regexKey) {
+    var key = regexKey.split('createevent-')[1].split('@')[0];
 
     EventService()
         .allEvents
@@ -176,14 +175,14 @@ class EventService {
     EventService().eventListSink.add(EventService().allEvents);
   }
 
-  addNewEventInEventList(EventNotificationModel newEvent) {
+  void addNewEventInEventList(EventNotificationModel newEvent) {
     if (EventService().allEvents == null) EventService().allEvents = [];
     EventService().allEvents.add(newEvent);
     EventService().eventListSink.add(EventService().allEvents);
   }
 
-  onUpdatedEventReceived(EventNotificationModel newEvent) {
-    int eventIndex = EventService()
+  void onUpdatedEventReceived(EventNotificationModel newEvent) {
+    var eventIndex = EventService()
         .allEvents
         .indexWhere((element) => element.key.contains(newEvent.key));
 
@@ -193,14 +192,15 @@ class EventService {
     }
   }
 
-  update({EventNotificationModel eventData}) {
+  void update({EventNotificationModel eventData}) {
     if (eventData != null) {
       eventNotificationModel = eventData;
     }
     eventSink.add(eventNotificationModel);
   }
 
-  createEvent({bool isEventOverlap = false, BuildContext context}) async {
+  Future createEvent(
+      {bool isEventOverlap = false, BuildContext context}) async {
     var result;
     if (isEventUpdate) {
       eventNotificationModel.isUpdate = true;
@@ -219,14 +219,6 @@ class EventService {
 
   Future<dynamic> editEvent() async {
     try {
-      // AtKey atKey = getAtKey(eventNotificationModel.key);
-      // var eventData = EventNotificationModel.convertEventNotificationToJson(
-      //     EventService().eventNotificationModel);
-      // var result = await atClientInstance.put(atKey, eventData);
-      // if (onEventSaved != null) {
-      //   onEventSaved(eventNotificationModel);
-      // }
-      // return result;
       var result =
           await updateEvent(eventNotificationModel, eventNotificationModel.key);
       if (onEventSaved != null && result) {
@@ -238,18 +230,18 @@ class EventService {
     }
   }
 
-  sendEventNotification() async {
-    EventNotificationModel eventNotification = eventNotificationModel;
+  Future<bool> sendEventNotification() async {
+    var eventNotification = eventNotificationModel;
     eventNotification.isUpdate = false;
     eventNotification.isSharing = true;
 
     eventNotification.key =
-        "createevent-${DateTime.now().microsecondsSinceEpoch}";
+        'createevent-${DateTime.now().microsecondsSinceEpoch}';
     eventNotification.atsignCreator = atClientInstance.currentAtSign;
     var notification = EventNotificationModel.convertEventNotificationToJson(
         EventService().eventNotificationModel);
 
-    AtKey atKey = AtKey()
+    var atKey = AtKey()
       ..metadata = Metadata()
       ..metadata.ccd = true
       ..metadata.ttr = -1
@@ -269,27 +261,26 @@ class EventService {
     return result;
   }
 
-  addNewGroupMembers(List<AtContact> selectedContactList) {
+  void addNewGroupMembers(List<AtContact> selectedContactList) {
     EventService().selectedContacts = [];
     EventService().eventNotificationModel.group.members = {};
 
-    for (AtContact selectedContact in selectedContactList) {
+    for (var selectedContact in selectedContactList) {
       EventService().selectedContacts.add(selectedContact);
-      AtContact newContact = getGroupMemberContact(selectedContact);
+      var newContact = getGroupMemberContact(selectedContact);
       EventService().eventNotificationModel.group.members.add(newContact);
     }
   }
 
-  createContactListFromGroupMembers() {
+  void createContactListFromGroupMembers() {
     selectedContacts = [];
-    for (AtContact contact
-        in EventService().eventNotificationModel.group.members) {
+    for (var contact in EventService().eventNotificationModel.group.members) {
       selectedContacts.add(contact);
     }
   }
 
   AtContact getGroupMemberContact(AtContact atcontact) {
-    AtContact newContact = AtContact(atSign: atcontact.atSign);
+    var newContact = AtContact(atSign: atcontact.atSign);
     newContact.tags = {};
     newContact.tags['isAccepted'] = false;
     newContact.tags['isSharing'] = true;
@@ -301,7 +292,7 @@ class EventService {
     return newContact;
   }
 
-  removeSelectedContact(int index) {
+  void removeSelectedContact(int index) {
     if (eventNotificationModel.group.members.length > index &&
         selectedContacts.length > index) {
       eventNotificationModel.group.members.removeWhere(
@@ -334,14 +325,14 @@ class EventService {
 
   dynamic isEventTimeSlotOverlap(List<HybridNotificationModel> hybridEvents,
       EventNotificationModel newEvent) {
-    bool isOverlap = false;
-    EventNotificationModel overlapEvent = EventNotificationModel();
+    var isOverlap = false;
+    var overlapEvent = EventNotificationModel();
 
     hybridEvents.forEach((element) {
       if (!element.eventNotificationModel.event.isRecurring) {
         if (dateToString(element.eventNotificationModel.event.date) ==
             dateToString(newEvent.event.date)) {
-          Event event = element.eventNotificationModel.event;
+          var event = element.eventNotificationModel.event;
           if (event.startTime.hour >= newEvent.event.startTime.hour &&
               event.startTime.hour <= newEvent.event.endTime.hour) {
             isOverlap = true;
@@ -363,10 +354,10 @@ class EventService {
     return [isOverlap, overlapEvent];
   }
 
-  sendEventAcknowledgement(EventNotificationModel acknowledgedEvent,
+  Future sendEventAcknowledgement(EventNotificationModel acknowledgedEvent,
       {bool isAccepted, bool isSharing, bool isExited}) async {
-    EventNotificationModel eventData = EventNotificationModel.fromJson(
-        jsonDecode(EventNotificationModel.convertEventNotificationToJson(
+    var eventData = EventNotificationModel.fromJson(jsonDecode(
+        EventNotificationModel.convertEventNotificationToJson(
             acknowledgedEvent)));
     String atkeyMicrosecondId,
         currentAtsign = EventService().atClientInstance.currentAtSign;
@@ -377,17 +368,13 @@ class EventService {
       if (currentAtsign[0] != '@') currentAtsign = '@' + currentAtsign;
 
       if (member.atSign == currentAtsign) {
-        member.tags['isAccepted'] =
-            isAccepted != null ? isAccepted : member.tags['isAccepted'];
-        member.tags['isSharing'] =
-            isSharing != null ? isSharing : member.tags['isSharing'];
-        member.tags['isExited'] =
-            isExited != null ? isExited : member.tags['isExited'];
-        print('matched:${isAccepted}, tags:${member.tags}');
+        member.tags['isAccepted'] = isAccepted ?? member.tags['isAccepted'];
+        member.tags['isSharing'] = isSharing ?? member.tags['isSharing'];
+        member.tags['isExited'] = isExited ?? member.tags['isExited'];
       }
     });
 
-    AtKey atKey = AtKey()
+    var atKey = AtKey()
       ..metadata = Metadata()
       ..metadata.ttr = -1
       ..metadata.ccd = true
@@ -415,7 +402,7 @@ class EventService {
   }
 
   dynamic createEventFormValidation() {
-    EventNotificationModel eventData = EventService().eventNotificationModel;
+    var eventData = EventService().eventNotificationModel;
     if (eventData.group.members == null || eventData.group.members.isEmpty) {
       return 'add contacts';
     } else if (eventData.title == null || eventData.title.trim().isEmpty) {
@@ -506,8 +493,8 @@ class EventService {
     }
   }
 
-  getAtKey(String regexKey) {
-    AtKey atKey = AtKey.fromString(regexKey);
+  AtKey getAtKey(String regexKey) {
+    var atKey = AtKey.fromString(regexKey);
     atKey.metadata.ttr = -1;
     return atKey;
   }

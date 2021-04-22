@@ -34,7 +34,7 @@ class EventNotificationModel {
       group = AtGroup(data['group']['name']);
 
       data['group']['members'].forEach((contact) {
-        AtContact newContact = AtContact(atSign: contact['atSign']);
+        var newContact = AtContact(atSign: contact['atSign']);
         newContact.tags = {};
         newContact.tags['isAccepted'] = contact['tags']['isAccepted'];
         newContact.tags['isSharing'] = contact['tags']['isSharing'];
@@ -303,12 +303,12 @@ String getWeekString(Week weekday) {
 }
 
 String timeOfDayToString(DateTime time) {
-  String hhmm = '${time.hour}:${time.minute}';
+  var hhmm = '${time.hour}:${time.minute}';
   return hhmm;
 }
 
 String dateToString(DateTime date) {
-  String dateString = '${date.day}/${date.month}/${date.year}';
+  var dateString = '${date.day}/${date.month}/${date.year}';
   return dateString;
 }
 
@@ -324,18 +324,3 @@ List<String> get occursOnWeekOptions => [
     ];
 
 enum ATKEY_TYPE_ENUM { CREATEEVENT, ACKNOWLEDGEEVENT }
-
-Map<String, dynamic> get monthsList => {
-      '1': {'month': 'jan', 'days': 31, 'count': 1},
-      '2': {'month': 'feb', 'days': 28, 'count': 2},
-      '3': {'month': 'mar', 'days': 31, 'count': 3},
-      '4': {'month': 'apr', 'days': 30, 'count': 4},
-      '5': {'month': 'may', 'days': 31, 'count': 5},
-      '6': {'month': 'jun', 'days': 30, 'count': 6},
-      '7': {'month': 'jul', 'days': 31, 'count': 7},
-      '8': {'month': 'aug', 'days': 31, 'count': 8},
-      '9': {'month': 'sept', 'days': 30, 'count': 9},
-      '10': {'month': 'oct', 'days': 31, 'count': 10},
-      '11': {'month': 'nov', 'days': 30, 'count': 11},
-      '12': {'month': 'dec', 'days': 31, 'count': 12},
-    };

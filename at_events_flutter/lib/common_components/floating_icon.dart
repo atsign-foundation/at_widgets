@@ -25,10 +25,10 @@ class FloatingIcon extends StatelessWidget {
           bottomLeft: !isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
           bottomRight: isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
         ),
-        color: bgColor != null ? bgColor : AllColors().Black,
+        color: bgColor ?? AllColors().Black,
         boxShadow: [
           BoxShadow(
-            color: iconColor != null ? iconColor : AllColors().GREY,
+            color: iconColor ?? AllColors().GREY,
             blurRadius: 2.0,
             spreadRadius: 2.0,
             offset: Offset(0.0, 0.0),
@@ -39,8 +39,8 @@ class FloatingIcon extends StatelessWidget {
           padding: EdgeInsets.all(10.toHeight),
           //iconSize: 20.toHeight,
           icon: Icon(
-            icon != null ? icon : Icons.table_rows,
-            color: iconColor != null ? iconColor : AllColors().WHITE,
+            icon ?? Icons.table_rows,
+            color: iconColor ?? AllColors().WHITE,
             size: 27.toFont,
           ),
           onPressed: onPressed ?? () => Scaffold.of(context).openEndDrawer()),

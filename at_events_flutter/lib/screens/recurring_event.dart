@@ -68,7 +68,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                       : '',
                   value: (val) {
                     if (val.trim().isNotEmpty) {
-                      int repeatCycle = int.parse(val);
+                      var repeatCycle = int.parse(val);
                       eventData.event.repeatDuration = repeatCycle;
                     } else {
                       eventData.event.repeatDuration = null;
@@ -93,7 +93,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                                 ? 'Month'
                                 : null
                         : null,
-                    hint: Text("Select Category"),
+                    hint: Text('Select Category'),
                     items: repeatOccurance.map((String option) {
                       return DropdownMenuItem<String>(
                         value: option,
@@ -136,7 +136,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                       value: eventData.event.occursOn != null
                           ? getWeekString(eventData.event.occursOn)
                           : null,
-                      hint: Text("Occurs on"),
+                      hint: Text('Occurs on'),
                       items: occursOnOptions.map((String option) {
                         return DropdownMenuItem<String>(
                           value: option,
@@ -144,7 +144,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                         );
                       }).toList(),
                       onChanged: (String selectedOption) {
-                        Week weekday = getWeekEnum(selectedOption);
+                        var weekday = getWeekEnum(selectedOption);
                         if (weekday != null) {
                           eventData.event.occursOn = weekday;
                         }
@@ -165,7 +165,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                         ? dateToString(eventData.event.date)
                         : '',
                     onTap: () async {
-                      final DateTime datePicked = await showDatePicker(
+                      final datePicked = await showDatePicker(
                         context: context,
                         initialDate: (eventData.event.date != null)
                             ? eventData.event.date
@@ -197,7 +197,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                       ? timeOfDayToString(eventData.event.startTime)
                       : '',
                   onTap: () async {
-                    final TimeOfDay timePicked = await showTimePicker(
+                    final timePicked = await showTimePicker(
                         context: context,
                         initialTime: eventData.event.startTime != null
                             ? TimeOfDay.fromDateTime(eventData.event.startTime)
@@ -230,7 +230,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                       ? timeOfDayToString(eventData.event.endTime)
                       : '',
                   onTap: () async {
-                    final TimeOfDay timePicked = await showTimePicker(
+                    final timePicked = await showTimePicker(
                         context: context,
                         initialTime: eventData.event.endTime != null
                             ? TimeOfDay.fromDateTime(eventData.event.endTime)
@@ -301,11 +301,9 @@ class _RecurringEventState extends State<RecurringEvent> {
                   ? dateToString(eventData.event.endEventOnDate)
                   : '',
               onTap: () async {
-                final DateTime datePicked = await showDatePicker(
+                final datePicked = await showDatePicker(
                   context: context,
-                  initialDate: eventData.event.endEventOnDate != null
-                      ? eventData.event.endEventOnDate
-                      : DateTime.now(),
+                  initialDate: eventData.event.endEventOnDate ?? DateTime.now(),
                   firstDate: DateTime(2015, 8),
                   lastDate: DateTime(2101),
                 );
@@ -345,7 +343,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                   : '',
               value: (val) {
                 if (val.trim().isNotEmpty) {
-                  int occurance = int.parse(val);
+                  var occurance = int.parse(val);
                   eventData.event.endEventAfterOccurance = occurance;
                 }
               },
