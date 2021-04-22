@@ -19,7 +19,7 @@ class SearchLocationService {
   void getAddressLatLng(String address) async {
     var url =
         "https://nominatim.openstreetmap.org/search?q=${address.replaceAll(RegExp(' '), '+')}&format=json&addressdetails=1";
-    var response = await http.get(url);
+    var response = await http.get(Uri.parse(url));
 
     List addresses = jsonDecode(response.body);
     var share = <LocationModal>[];

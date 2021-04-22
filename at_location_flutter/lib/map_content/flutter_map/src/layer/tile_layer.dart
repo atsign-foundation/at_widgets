@@ -282,7 +282,6 @@ class WMSTileLayerOptions {
   /// tile transperency flag
   final bool transparent;
 
-  // TODO find a way to implicit pass of current map [Crs]
   final Crs crs;
 
   /// other request parameters
