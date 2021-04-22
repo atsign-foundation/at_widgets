@@ -7,7 +7,9 @@ class ApiService {
   Future<dynamic> getRequest(String url, [Map<String, String> header]) async {
     var val = await ConnectivityService().checkConnectivity();
     if (val) {
-      return http.get(url, headers: header).then((http.Response response) {
+      return http
+          .get(Uri.parse(url), headers: header)
+          .then((http.Response response) {
         final statusCode = response.statusCode;
         print(statusCode);
         if (statusCode == 200) {
@@ -45,7 +47,7 @@ class ApiService {
     var val = await ConnectivityService().checkConnectivity();
     if (val) {
       return http
-          .post(url,
+          .post(Uri.parse(url),
               body: json.encode(body), headers: headers, encoding: encoding)
           .then((http.Response response) {
         final statusCode = response.statusCode;

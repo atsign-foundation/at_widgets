@@ -11,21 +11,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  tuple: ^1.0.2
+  tuple: ^2.0.0
   latlong: ^0.6.1
-  positioned_tap_detector: ^1.0.2
-  transparent_image: ^1.0.0
-  async: ^2.1.0
+  positioned_tap_detector: ^1.0.3
+  transparent_image: ^2.0.0
+  async: ^2.5.0
   flutter_image: ^3.0.0
   cached_network_image: ^2.0.0
+  # cached_network_image: ^3.0.0
   path_provider: ^1.6.7
-  vector_math: ^2.0.0
-  proj4dart: ^1.0.4
-  meta: ^1.1.0
+  # path_provider: ^2.0.1
+  vector_math: ^2.1.0
+  proj4dart: ^2.0.0
+  meta: ^1.3.0
   geolocator: ^6.2.1
+  # geolocator: ^7.0.3
   toast: ^0.1.5
   sliding_up_panel: ^1.0.2
-  http: ^0.12.2
+  http: ^0.13.1
 
   at_client_mobile: ^1.0.0+9
   at_lookup: ^1.0.0+6
