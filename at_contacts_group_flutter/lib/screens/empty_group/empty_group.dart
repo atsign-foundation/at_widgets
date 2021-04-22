@@ -14,7 +14,7 @@ class EmptyGroup extends StatefulWidget {
 }
 
 class _EmptyGroupState extends State<EmptyGroup> {
-  List<AtContact> selectedContactList;
+  List<AtContact?>? selectedContactList;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _EmptyGroupState extends State<EmptyGroup> {
                         print('in selectedList => selectedList');
                         selectedContactList = selectedList;
 
-                        if (selectedContactList.isNotEmpty) {
+                        if (selectedContactList!.isNotEmpty) {
                           GroupService()
                               .setSelectedContacts(selectedContactList);
                         }

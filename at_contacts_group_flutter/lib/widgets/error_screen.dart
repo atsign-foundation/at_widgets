@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class ErrorScreen extends StatelessWidget {
-  final Function onPressed;
+  final Function? onPressed;
   final String msg;
   ErrorScreen(
       {this.onPressed, this.msg = 'Something went wrong, please retry.'});
@@ -25,7 +25,7 @@ class ErrorScreen extends StatelessWidget {
                   height: 40.toHeight,
                   onPressed: () async {
                     if (this.onPressed != null) {
-                      onPressed();
+                      onPressed!();
                     }
                   },
                   buttonColor: Theme.of(context).brightness == Brightness.light

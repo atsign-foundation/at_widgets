@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 class AddContactDialog extends StatefulWidget {
   AddContactDialog({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -122,7 +122,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                                 isLoading = false;
                               });
                               if (_contactService.checkAtSign != null &&
-                                  _contactService.checkAtSign) {
+                                  _contactService.checkAtSign!) {
                                 Navigator.pop(context);
                               }
                             },

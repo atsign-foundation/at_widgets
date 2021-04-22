@@ -5,9 +5,9 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 class CustomInputField extends StatelessWidget {
   final String hintText;
   final double width, height;
-  final IconData icon;
-  final Function onTap;
-  final Color iconColor;
+  final IconData? icon;
+  final Function? onTap;
+  final Color? iconColor;
 
   CustomInputField(
       {this.hintText = '',
@@ -37,7 +37,7 @@ class CustomInputField extends StatelessWidget {
                 border: InputBorder.none,
                 hintStyle: TextStyle(color: AllColors().DARK_GREY),
               ),
-              onTap: onTap ?? () {},
+              onTap: onTap as void Function()? ?? () {},
             ),
           ),
           icon != null

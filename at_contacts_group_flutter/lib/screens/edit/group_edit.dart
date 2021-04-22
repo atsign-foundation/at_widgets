@@ -13,18 +13,18 @@ import 'package:emoji_picker/emoji_picker.dart';
 
 class GroupEdit extends StatefulWidget {
   final AtGroup group;
-  GroupEdit({@required this.group});
+  GroupEdit({required this.group});
 
   @override
   _GroupEditState createState() => _GroupEditState();
 }
 
 class _GroupEditState extends State<GroupEdit> {
-  String groupName;
-  bool isLoading;
-  Uint8List groupPicture;
+  String? groupName;
+  late bool isLoading;
+  Uint8List? groupPicture;
   bool isKeyBoardVisible = false, showEmojiPicker = false;
-  TextEditingController textController;
+  TextEditingController? textController;
   FocusNode textFieldFocus = FocusNode();
 
   @override
@@ -35,7 +35,7 @@ class _GroupEditState extends State<GroupEdit> {
 
     textController = TextEditingController.fromValue(
       TextEditingValue(
-        text: groupName != null ? groupName : '',
+        text: groupName != null ? groupName! : '',
         selection: TextSelection.collapsed(offset: -1),
       ),
     );
@@ -89,12 +89,12 @@ class _GroupEditState extends State<GroupEdit> {
                         color: AllColors().ORANGE, fontSize: 15.toFont)),
           ),
           onTrailingIconPressed: () async {
-            groupName = textController.text;
+            groupName = textController!.text;
             if (groupName != null) {
-              if (groupName.trim().isNotEmpty) {
+              if (groupName!.trim().isNotEmpty) {
                 AtGroup group = widget.group;
-                group.displayName = groupName;
-                group.groupName = groupName;
+                group.displayName = groupName!;
+                group.groupName = groupName!;
                 setState(() {
                   isLoading = true;
                 });
@@ -119,7 +119,7 @@ class _GroupEditState extends State<GroupEdit> {
           children: [
             (widget.group.groupPicture != null && groupPicture != null)
                 ? Image.memory(
-                    groupPicture,
+                    groupPicture!,
                     width: double.infinity,
                     height: 272.toHeight,
                     fit: BoxFit.fill,
@@ -239,7 +239,7 @@ class _GroupEditState extends State<GroupEdit> {
                                 // recommendKeywords: ["happy", "sad"],
                                 numRecommended: 10,
                                 onEmojiSelected: (emoji, category) {
-                                  textController.text += emoji.emoji;
+                                  textController!.text += emoji.emoji;
                                 },
                               ),
                             ),

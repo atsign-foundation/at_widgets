@@ -8,11 +8,11 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactInitial extends StatelessWidget {
   final double size;
-  final String initials;
+  final String? initials;
   final Color backgroundColor;
 
   const ContactInitial(
-      {Key key,
+      {Key? key,
       this.size = 50,
       this.initials,
       this.backgroundColor = CustomColors.defaultColor})
@@ -28,12 +28,13 @@ class ContactInitial extends StatelessWidget {
       ),
       // border: Border.all(width: 0.5, color: ColorConstants.fontSecondary)),
       child: Center(
-        child: Text(initials.toUpperCase(),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.toFont,
-              fontWeight: FontWeight.w700,
-            )),
+        child:
+            Text(initials?.toUpperCase() != null ? initials!.toUpperCase() : '',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.toFont,
+                  fontWeight: FontWeight.w700,
+                )),
       ),
     );
   }

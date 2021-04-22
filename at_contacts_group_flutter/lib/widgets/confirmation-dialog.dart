@@ -11,14 +11,14 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 
 // ignore: must_be_immutable
 class ConfirmationDialog extends StatefulWidget {
-  final String heading, subtitle, atsign;
+  final String? heading, subtitle, atsign;
   String title;
   final Function onYesPressed;
-  final Uint8List image;
+  final Uint8List? image;
   ConfirmationDialog(
-      {@required this.heading,
-      @required this.title,
-      @required this.onYesPressed,
+      {required this.heading,
+      required this.title,
+      required this.onYesPressed,
       this.subtitle,
       this.atsign,
       this.image});
@@ -28,9 +28,9 @@ class ConfirmationDialog extends StatefulWidget {
 }
 
 class _ConfirmationDialogState extends State<ConfirmationDialog> {
-  bool isLoading;
-  Uint8List contactImage;
-  String contactInitial;
+  late bool isLoading;
+  Uint8List? contactImage;
+  late String contactInitial;
 
   @override
   void initState() {
@@ -46,13 +46,13 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
 
   getAtsignImage() async {
     if (widget.atsign == null) return;
-    AtContact contact = await getAtSignDetails(widget.atsign);
+    AtContact contact = await getAtSignDetails(widget.atsign!);
 
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
+        List<int>? intList = contact.tags['image'].cast<int>();
         setState(() {
-          contactImage = Uint8List.fromList(intList);
+          contactImage = Uint8List.fromList(intList!);
         });
       }
     }
@@ -77,7 +77,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                widget.heading,
+                widget.heading!,
                 style: CustomTextStyles().grey16,
                 textAlign: TextAlign.center,
               ),
@@ -88,7 +88,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                       borderRadius:
                           BorderRadius.all(Radius.circular(30.toFont)),
                       child: Image.memory(
-                        widget.image,
+                        widget.image!,
                         width: 50.toFont,
                         height: 50.toFont,
                         fit: BoxFit.fill,
@@ -100,7 +100,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                           borderRadius:
                               BorderRadius.all(Radius.circular(30.toFont)),
                           child: Image.memory(
-                            contactImage,
+                            contactImage!,
                             width: 50.toFont,
                             height: 50.toFont,
                             fit: BoxFit.fill,
@@ -118,7 +118,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               ),
               widget.subtitle != null
                   ? Text(
-                      widget.subtitle,
+                      widget.subtitle!,
                       style: CustomTextStyles().grey16,
                     )
                   : SizedBox(),

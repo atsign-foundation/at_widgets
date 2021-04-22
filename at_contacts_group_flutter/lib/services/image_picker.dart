@@ -9,8 +9,8 @@ class ImagePicker {
   static ImagePicker _instance = ImagePicker._();
   factory ImagePicker() => _instance;
 
-  Future<Uint8List> pickImage() async {
-    Uint8List fileContents;
+  Future<Uint8List?> pickImage() async {
+    Uint8List? fileContents;
     FilePickerResult result = await FilePicker.platform
         .pickFiles(type: FileType.image, allowMultiple: false);
     for (var pickedFile in result.files) {

@@ -5,12 +5,12 @@ import 'package:at_chat_flutter/widgets/contacts_initials.dart';
 import 'package:flutter/material.dart';
 
 class IncomingMessageBubble extends StatefulWidget {
-  final Message message;
+  final Message? message;
   final Color color;
   final Color avatarColor;
 
   const IncomingMessageBubble(
-      {Key key,
+      {Key? key,
       this.message,
       this.color = CustomColors.incomingMessageColor,
       this.avatarColor = CustomColors.defaultColor})
@@ -38,8 +38,8 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
             borderRadius: BorderRadius.circular(45.toWidth),
           ),
           child: ContactInitial(
-            initials: widget?.message?.sender?.substring(1, 3) ?? '@',
-            backgroundColor: widget?.avatarColor,
+            initials: widget.message?.sender?.substring(1, 3) ?? '@',
+            backgroundColor: widget.avatarColor,
           ),
         ),
         SizedBox(
@@ -48,13 +48,13 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
         Container(
           padding: EdgeInsets.all(30.toHeight),
           decoration: BoxDecoration(
-            color: widget?.color,
+            color: widget.color,
             borderRadius: BorderRadius.circular(10.toWidth),
           ),
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 170.toWidth),
             child: Text(
-              widget?.message?.message ?? ' ',
+              widget.message?.message ?? ' ',
               textAlign: TextAlign.right,
               maxLines: 3,
             ),
