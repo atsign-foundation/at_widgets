@@ -6,7 +6,7 @@ import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter_example/main.dart';
 import 'package:at_lookup/at_lookup.dart';
-import 'package:atsign_authentication_helper/services/size_config.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter_example/client_sdk_service.dart';
 import 'package:latlong/latlong.dart';
@@ -54,7 +54,7 @@ class _SecondScreenState extends State<SecondScreen> {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Second Screen"),
+        title: Text('Second Screen'),
       ),
       body: Center(
         child: ListView(
@@ -96,7 +96,7 @@ class _SecondScreenState extends State<SecondScreen> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    bool result = await checkAtsign();
+                    var result = await checkAtsign();
                     if (!result) {
                       CustomToast().show('Atsign not valid', context);
                       return;
@@ -107,7 +107,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    bool result = await checkAtsign();
+                    var result = await checkAtsign();
                     if (!result) {
                       CustomToast().show('Atsign not valid', context);
                       return;
@@ -123,7 +123,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                bool result = await checkAtsign();
+                var result = await checkAtsign();
                 if (!result) {
                   CustomToast().show('Atsign not valid', context);
                   return;
@@ -213,11 +213,14 @@ class _SecondScreenState extends State<SecondScreen> {
       title: Text('you are not authenticated.'),
       actions: [
         TextButton(
-          child: Text("Ok", style: TextStyle(color: Colors.black)),
           onPressed: () async {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
+          child: Text(
+            'Ok',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
       ],
     );

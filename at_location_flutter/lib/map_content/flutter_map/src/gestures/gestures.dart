@@ -67,7 +67,8 @@ abstract class MapGestureMixin extends State<FlutterMap>
 
     setState(() {
       final focalOffset = _offsetToPoint(details.localFocalPoint);
-      // TODO: Added it to restrict zoom out & in
+
+      ///  Added to restrict zoom out & in
       var newZoom = map.zoom;
       if ((!((map.zoom <= 2) &&
               (_getZoomForScale(_mapZoomStart, details.scale) <= 2))) &&

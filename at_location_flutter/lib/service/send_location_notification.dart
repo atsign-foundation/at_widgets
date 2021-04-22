@@ -12,7 +12,8 @@ import 'key_stream_service.dart';
 
 class SendLocationNotification {
   SendLocationNotification._();
-  static SendLocationNotification _instance = SendLocationNotification._();
+  static final SendLocationNotification _instance =
+      SendLocationNotification._();
   factory SendLocationNotification() => _instance;
   Timer timer;
   final String locationKey = 'locationnotify';
@@ -21,7 +22,7 @@ class SendLocationNotification {
 
   AtClientImpl atClient;
 
-  init(AtClientImpl newAtClient) {
+  void init(AtClientImpl newAtClient) {
     if ((timer != null) && (timer.isActive)) timer.cancel();
     atClient = newAtClient;
     atsignsToShareLocationWith = [];
@@ -31,7 +32,7 @@ class SendLocationNotification {
     findAtSignsToShareLocationWith();
   }
 
-  findAtSignsToShareLocationWith() {
+  void findAtSignsToShareLocationWith() {
     atsignsToShareLocationWith = [];
     KeyStreamService().allLocationNotifications.forEach((notification) {
       if ((notification.locationNotificationModel.atsignCreator ==
@@ -46,14 +47,14 @@ class SendLocationNotification {
     sendLocation();
   }
 
-  addMember(LocationNotificationModel notification) async {
+  Future<void> addMember(LocationNotificationModel notification) async {
     if (atsignsToShareLocationWith
             .indexWhere((element) => element.key == notification.key) >
         -1) {
       return;
     }
 
-    LatLng myLocation = await getMyLocation();
+    var myLocation = await getMyLocation();
     prepareLocationDataAndSend(notification, myLocation);
 
     // add
@@ -62,20 +63,22 @@ class SendLocationNotification {
         'after adding atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
   }
 
-  removeMember(String key) async {
+  void removeMember(String key) async {
     LocationNotificationModel locationNotificationModel;
     atsignsToShareLocationWith.removeWhere((element) {
       if (key.contains(element.key)) locationNotificationModel = element;
       return key.contains(element.key);
     });
-    if (locationNotificationModel != null) sendNull(locationNotificationModel);
+    if (locationNotificationModel != null) {
+      await sendNull(locationNotificationModel);
+    }
 
     print(
         'after deleting atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
   }
 
-  sendLocation() async {
-    LocationPermission permission = await Geolocator.checkPermission();
+  void sendLocation() async {
+    var permission = await Geolocator.checkPermission();
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
@@ -89,9 +92,9 @@ class SendLocationNotification {
     }
   }
 
-  prepareLocationDataAndSend(
+  void prepareLocationDataAndSend(
       LocationNotificationModel notification, LatLng myLocation) async {
-    bool isSend = false;
+    var isSend = false;
 
     if (notification.to == null) {
       isSend = true;
@@ -101,27 +104,26 @@ class SendLocationNotification {
       isSend = true;
     }
     if (isSend) {
-      String atkeyMicrosecondId = notification.key.split('-')[1].split('@')[0];
-      AtKey atKey = newAtKey(
-          5000, "locationnotify-$atkeyMicrosecondId", notification.receiver,
+      var atkeyMicrosecondId = notification.key.split('-')[1].split('@')[0];
+      var atKey = newAtKey(
+          5000, 'locationnotify-$atkeyMicrosecondId', notification.receiver,
           ttl: (notification.to != null)
               ? notification.to.difference(DateTime.now()).inMilliseconds
               : null);
 
-      LocationNotificationModel newLocationNotificationModel =
-          LocationNotificationModel()
-            ..atsignCreator = notification.atsignCreator
-            ..receiver = notification.receiver
-            ..isAccepted = notification.isAccepted
-            ..isAcknowledgment = notification.isAcknowledgment
-            ..isExited = notification.isExited
-            ..isRequest = notification.isRequest
-            ..isSharing = notification.isSharing
-            ..from = DateTime.now()
-            ..to = notification.to != null ? notification.to : null
-            ..lat = myLocation.latitude
-            ..long = myLocation.longitude
-            ..key = "locationnotify-$atkeyMicrosecondId";
+      var newLocationNotificationModel = LocationNotificationModel()
+        ..atsignCreator = notification.atsignCreator
+        ..receiver = notification.receiver
+        ..isAccepted = notification.isAccepted
+        ..isAcknowledgment = notification.isAcknowledgment
+        ..isExited = notification.isExited
+        ..isRequest = notification.isRequest
+        ..isSharing = notification.isSharing
+        ..from = DateTime.now()
+        ..to = notification.to
+        ..lat = myLocation.latitude
+        ..long = myLocation.longitude
+        ..key = 'locationnotify-$atkeyMicrosecondId';
       try {
         await atClient.put(
             atKey,
@@ -133,24 +135,25 @@ class SendLocationNotification {
     }
   }
 
-  sendNull(LocationNotificationModel locationNotificationModel) async {
-    String atkeyMicrosecondId =
+  Future<bool> sendNull(
+      LocationNotificationModel locationNotificationModel) async {
+    var atkeyMicrosecondId =
         locationNotificationModel.key.split('-')[1].split('@')[0];
-    AtKey atKey = newAtKey(-1, "locationnotify-$atkeyMicrosecondId",
+    var atKey = newAtKey(-1, 'locationnotify-$atkeyMicrosecondId',
         locationNotificationModel.receiver);
     var result = await atClient.delete(atKey);
     print('$atKey delete operation $result');
     return result;
   }
 
-  deleteAllLocationKey() async {
-    List<String> response = await atClient.getKeys(
+  void deleteAllLocationKey() async {
+    var response = await atClient.getKeys(
       regex: '$locationKey',
     );
     response.forEach((key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
-        AtKey atKey = getAtKey(key);
+        var atKey = getAtKey(key);
         var result = await atClient.delete(atKey);
         print('$key is deleted ? $result');
       }
@@ -158,7 +161,7 @@ class SendLocationNotification {
   }
 
   AtKey newAtKey(int ttr, String key, String sharedWith, {int ttl}) {
-    AtKey atKey = AtKey()
+    var atKey = AtKey()
       ..metadata = Metadata()
       ..metadata.ttr = ttr
       ..metadata.ccd = true

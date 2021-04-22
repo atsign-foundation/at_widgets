@@ -2,11 +2,11 @@ class MixedConstants {
   static const String WEBSITE_URL = 'https://atsign.com/';
 
   // for local server
-  static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
+  // static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
   // for staging server
   // static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
-  // static const String ROOT_DOMAIN = 'root.atsign.org';
+  static const String ROOT_DOMAIN = 'root.atsign.org';
 
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
   static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
@@ -20,4 +20,5 @@ class MixedConstants {
 
   static const String REQUEST_LOCATION = 'requestlocation';
   static const String REQUEST_LOCATION_ACK = 'requestlocationacknowledged';
+  static const String DELETE_REQUEST_LOCATION_ACK = 'deleterequestacklocation';
 }

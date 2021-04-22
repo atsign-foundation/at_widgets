@@ -36,7 +36,6 @@ class Bounds<T extends num> {
 
   /// This [Bounds] cental point.
   CustomPoint<double> getCenter() {
-    //TODO should this be a getter?
     return CustomPoint<double>(
       (min.x + max.x) / 2,
       (min.y + max.y) / 2,

@@ -7,11 +7,11 @@ import 'at_location_notification_listener.dart';
 
 class HomeScreenService {
   HomeScreenService._();
-  static HomeScreenService _instance = HomeScreenService._();
+  static final HomeScreenService _instance = HomeScreenService._();
   factory HomeScreenService() => _instance;
 
-  onLocationModelTap(LocationNotificationModel locationNotificationModel) {
-    String currentAtsign = AtLocationNotificationListener().currentAtSign;
+  void onLocationModelTap(LocationNotificationModel locationNotificationModel) {
+    var currentAtsign = AtLocationNotificationListener().currentAtSign;
 
     if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
       locationNotificationModel.atsignCreator != currentAtsign
@@ -38,7 +38,7 @@ class HomeScreenService {
     }
   }
 
-  navigatorPushToMap(LocationNotificationModel locationNotificationModel) {
+  void navigatorPushToMap(LocationNotificationModel locationNotificationModel) {
     Navigator.push(
       AtLocationNotificationListener().navKey.currentContext,
       MaterialPageRoute(
@@ -50,7 +50,7 @@ class HomeScreenService {
   }
 }
 
-getSubTitle(LocationNotificationModel locationNotificationModel) {
+String getSubTitle(LocationNotificationModel locationNotificationModel) {
   DateTime to;
   String time;
   to = locationNotificationModel.to;
@@ -78,7 +78,7 @@ getSubTitle(LocationNotificationModel locationNotificationModel) {
   }
 }
 
-getSemiTitle(LocationNotificationModel locationNotificationModel) {
+String getSemiTitle(LocationNotificationModel locationNotificationModel) {
   if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
     return locationNotificationModel.atsignCreator !=
             AtLocationNotificationListener().currentAtSign
@@ -106,7 +106,7 @@ getSemiTitle(LocationNotificationModel locationNotificationModel) {
   }
 }
 
-getTitle(LocationNotificationModel locationNotificationModel) {
+String getTitle(LocationNotificationModel locationNotificationModel) {
   if (locationNotificationModel.key.contains(MixedConstants.SHARE_LOCATION)) {
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
@@ -121,7 +121,7 @@ getTitle(LocationNotificationModel locationNotificationModel) {
 }
 
 String timeOfDayToString(TimeOfDay time) {
-  int minute = time.minute;
+  var minute = time.minute;
   if (minute < 10) return '${time.hour}: 0${time.minute}';
 
   return '${time.hour}: ${time.minute}';

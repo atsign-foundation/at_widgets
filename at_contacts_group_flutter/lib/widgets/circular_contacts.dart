@@ -6,16 +6,16 @@ import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:flutter/material.dart';
 
 class CircularContacts extends StatelessWidget {
-  final Function onCrossPressed;
+  final Function? onCrossPressed;
 
-  final GroupContactsModel groupContact;
+  final GroupContactsModel? groupContact;
 
-  const CircularContacts({Key key, this.onCrossPressed, this.groupContact})
+  const CircularContacts({Key? key, this.onCrossPressed, this.groupContact})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    Uint8List image;
+    Uint8List? image;
     if (groupContact?.contact?.tags != null &&
         groupContact?.contact?.tags['image'] != null) {
       List<int> intList = groupContact?.contact?.tags['image'].cast<int>();
@@ -41,8 +41,8 @@ class CircularContacts extends StatelessWidget {
                       )
                     : ContactInitial(
                         initials:
-                            groupContact?.contact?.atSign?.substring(1, 3) ??
-                                groupContact?.group?.groupName?.substring(0, 2),
+                            (groupContact?.contact?.atSign?.substring(1, 3) ??
+                                groupContact?.group?.groupName?.substring(0, 2))!,
                       ),
                 // child:
               ),
@@ -50,7 +50,7 @@ class CircularContacts extends StatelessWidget {
                 right: 0,
                 bottom: 0,
                 child: GestureDetector(
-                  onTap: onCrossPressed,
+                  onTap: onCrossPressed as void Function()?,
                   child: Container(
                     height: 12.toHeight,
                     width: 12.toHeight,
@@ -73,8 +73,8 @@ class CircularContacts extends StatelessWidget {
               groupContact?.contact?.tags != null &&
                       groupContact?.contact?.tags['name'] != null
                   ? groupContact?.contact?.tags['name']
-                  : groupContact?.contact?.atSign?.substring(1) ??
-                      groupContact?.group?.groupName?.substring(0),
+                  : (groupContact?.contact?.atSign?.substring(1) ??
+                      groupContact?.group?.groupName?.substring(0))!,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 15.toFont),
@@ -84,7 +84,7 @@ class CircularContacts extends StatelessWidget {
           Container(
             width: 60.toWidth,
             child: Text(
-              groupContact?.contact?.atSign ?? groupContact?.group?.groupName,
+              (groupContact?.contact?.atSign ?? groupContact?.group?.groupName)!,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 15.toFont),

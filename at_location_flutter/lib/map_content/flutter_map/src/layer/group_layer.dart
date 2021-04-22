@@ -35,7 +35,6 @@ class GroupLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      // TODO unused BoxContraints should remove?
       builder: (BuildContext context, BoxConstraints bc) {
         return _build(context);
       },

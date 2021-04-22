@@ -13,11 +13,11 @@ class ContactService {
   static ContactService _instance = ContactService._();
   factory ContactService() => _instance;
 
-  AtContactsImpl atContactImpl;
-  AtClientImpl atClientInstance;
-  String rootDomain;
-  int rootPort;
-  AtContact loggedInUserDetails;
+  late AtContactsImpl atContactImpl;
+  AtClientImpl? atClientInstance;
+  late String rootDomain;
+  late int rootPort;
+  AtContact? loggedInUserDetails;
 
   StreamController<List<AtContact>> contactStreamController =
       StreamController<List<AtContact>>.broadcast();
@@ -42,14 +42,14 @@ class ContactService {
     blockedContactStreamController.close();
   }
 
-  List<AtContact> contactList = [],
+  List<AtContact?> contactList = [],
       blockContactList = [],
       selectedContacts = [],
       cachedContactList = [];
-  bool isContactPresent, limitReached = false;
+  bool isContactPresent = false, limitReached = false;
 
   String getAtSignError = '';
-  bool checkAtSign;
+  bool? checkAtSign;
   List<String> allContactsList = [];
 
   initContactsService(
@@ -64,6 +64,7 @@ class ContactService {
     atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
     loggedInUserDetails = await getAtSignDetails(currentAtSign);
     cachedContactList = await atContactImpl.listContacts();
+    await fetchBlockContactList();
   }
 
   resetData() {
@@ -77,19 +78,22 @@ class ContactService {
       contactList = [];
       allContactsList = [];
       contactList = await atContactImpl.listContacts();
-      List<AtContact> tempContactList = [...contactList];
+      List<AtContact?> tempContactList = [...contactList];
       int range = contactList.length;
       for (int i = 0; i < range; i++) {
-        allContactsList.add(contactList[i].atSign);
-        if (contactList[i].blocked) {
+        allContactsList.add(contactList[i]!.atSign);
+        if (contactList[i]!.blocked) {
           tempContactList.remove(contactList[i]);
         }
       }
       contactList = tempContactList;
-      contactList.sort((a, b) => a?.atSign
-          .toString()
-          ?.substring(1)
-          ?.compareTo(b?.atSign.toString()?.substring(1)));
+      contactList.sort((a, b) {
+        int? index = a?.atSign
+            .toString()
+            .substring(1)
+            .compareTo(b!.atSign!.toString().substring(1));
+        return index!;
+      });
       contactSink.add(contactList);
       return contactList;
     } catch (e) {
@@ -97,7 +101,8 @@ class ContactService {
     }
   }
 
-  blockUnblockContact({AtContact contact, bool blockAction}) async {
+  blockUnblockContact(
+      {required AtContact contact, required bool blockAction}) async {
     try {
       contact.blocked = blockAction;
       await atContactImpl.update(contact);
@@ -118,7 +123,7 @@ class ContactService {
     }
   }
 
-  deleteAtSign({String atSign}) async {
+  deleteAtSign({required String atSign}) async {
     try {
       var result = await atContactImpl.delete(atSign);
       print("delete result => $result");
@@ -128,7 +133,7 @@ class ContactService {
     }
   }
 
-  addAtSign(context, {String atSign}) async {
+  Future<dynamic> addAtSign(context, {String? atSign}) async {
     if (atSign == null || atSign == '') {
       getAtSignError = TextStrings().emptyAtsign;
 
@@ -144,18 +149,18 @@ class ContactService {
 
       checkAtSign = await checkAtsign(atSign);
 
-      if (!checkAtSign) {
+      if (!checkAtSign!) {
         getAtSignError = TextStrings().unknownAtsign(atSign);
       } else {
         contactList.forEach((element) async {
-          if (element.atSign == atSign) {
+          if (element!.atSign == atSign) {
             getAtSignError = TextStrings().atsignExists(atSign);
             isContactPresent = true;
-            return true;
+            return;
           }
         });
       }
-      if (!isContactPresent && checkAtSign) {
+      if (!isContactPresent && checkAtSign!) {
         var details = await getContactDetails(atSign);
         contact = AtContact(
           atSign: atSign,
@@ -173,10 +178,10 @@ class ContactService {
     }
   }
 
-  removeSelectedAtSign(AtContact contact) {
+  removeSelectedAtSign(AtContact? contact) {
     try {
-      for (AtContact atContact in selectedContacts) {
-        if (contact == atContact || atContact.atSign == contact.atSign) {
+      for (AtContact? atContact in selectedContacts) {
+        if (contact == atContact || atContact!.atSign == contact!.atSign) {
           int index = selectedContacts.indexOf(contact);
           print("index is $index");
           selectedContacts.removeAt(index);
@@ -194,7 +199,7 @@ class ContactService {
     }
   }
 
-  selectAtSign(AtContact contact) {
+  selectAtSign(AtContact? contact) {
     try {
       if (selectedContacts.length <= 25 &&
           !selectedContacts.contains(contact)) {
@@ -217,7 +222,7 @@ class ContactService {
     }
   }
 
-  Future<bool> checkAtsign(String atSign) async {
+  Future<bool> checkAtsign(String? atSign) async {
     if (atSign == null) {
       return false;
     } else if (!atSign.contains('@')) {
@@ -228,7 +233,7 @@ class ContactService {
     return checkPresence != null;
   }
 
-  Future<Map<String, dynamic>> getContactDetails(String atSign) async {
+  Future<Map<String, dynamic>> getContactDetails(String? atSign) async {
     Map<String, dynamic> contactDetails = {};
 
     if (atClientInstance == null || atSign == null) {
@@ -247,14 +252,14 @@ class ContactService {
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientInstance.get(key).catchError((e) {
+      var result = await atClientInstance!.get(key).catchError((e) {
         print("error in get ${e.errorCode} ${e.errorMessage}");
       });
       var firstname = result.value;
 
       // lastname
       key.key = contactFields[1];
-      result = await atClientInstance.get(key);
+      result = await atClientInstance!.get(key);
       var lastname = result.value;
 
       // construct name
@@ -266,7 +271,7 @@ class ContactService {
       // profile picture
       key.metadata.isBinary = true;
       key.key = contactFields[2];
-      result = await atClientInstance.get(key);
+      result = await atClientInstance!.get(key);
       var image = result.value;
       contactDetails['name'] = name;
       contactDetails['image'] = image;

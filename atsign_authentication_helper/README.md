@@ -2,6 +2,9 @@
 
 ### Now for some internet optimism.
 
+# PACKAGE DEPRECATED
+### Please do not use this package for lack of multiple atsign support. Use [at_onboarding_flutter](https://pub.dev/packages/at_onboarding_flutter) instead.
+
 # atsign_authentication_helper
 
 A flutter plugin project to cover the onboarding flow of @protocol.

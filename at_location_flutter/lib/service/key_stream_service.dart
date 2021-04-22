@@ -34,7 +34,7 @@ class KeyStreamService {
   StreamSink<List<KeyLocationModel>> get atNotificationsSink =>
       _atNotificationsController.sink;
 
-  init(AtClientImpl clientInstance) async {
+  void init(AtClientImpl clientInstance) async {
     loggedInUserDetails = null;
     atClientInstance = clientInstance;
     currentAtSign = atClientInstance.currentAtSign;
@@ -47,17 +47,17 @@ class KeyStreamService {
     getAllContactDetails(currentAtSign);
   }
 
-  getAllContactDetails(String currentAtSign) async {
+  void getAllContactDetails(String currentAtSign) async {
     atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
     contactList = await atContactImpl.listContacts();
   }
 
-  getAllNotifications() async {
-    List<String> allResponse = await atClientInstance.getKeys(
+  void getAllNotifications() async {
+    var allResponse = await atClientInstance.getKeys(
       regex: 'sharelocation-',
     );
 
-    List<String> allRequestResponse = await atClientInstance.getKeys(
+    var allRequestResponse = await atClientInstance.getKeys(
       regex: 'requestlocation-',
     );
 
@@ -70,18 +70,17 @@ class KeyStreamService {
 
     allResponse.forEach((key) {
       if ('@${key.split(':')[1]}'.contains(currentAtSign)) {
-        KeyLocationModel tempHyridNotificationModel =
-            KeyLocationModel(key: key);
+        var tempHyridNotificationModel = KeyLocationModel(key: key);
         allLocationNotifications.add(tempHyridNotificationModel);
       }
     });
 
     allLocationNotifications.forEach((notification) {
-      AtKey atKey = getAtKey(notification.key);
+      var atKey = getAtKey(notification.key);
       notification.atKey = atKey;
     });
 
-    for (int i = 0; i < allLocationNotifications.length; i++) {
+    for (var i = 0; i < allLocationNotifications.length; i++) {
       AtValue value = await getAtValue(allLocationNotifications[i].atKey);
       if (value != null) {
         allLocationNotifications[i].atValue = value;
@@ -93,18 +92,48 @@ class KeyStreamService {
 
     notifyListeners();
     updateEventAccordingToAcknowledgedData();
+    checkForDeleteRequestAck();
 
     SendLocationNotification().init(atClientInstance);
   }
 
-  convertJsonToLocationModel() {
-    for (int i = 0; i < allLocationNotifications.length; i++) {
+  void checkForDeleteRequestAck() async {
+    // Letting other events complete
+    await Future.delayed(Duration(seconds: 5));
+
+    var dltRequestLocationResponse = await atClientInstance.getKeys(
+      regex: 'deleterequestacklocation',
+    );
+
+    for (var i = 0; i < dltRequestLocationResponse.length; i++) {
+      /// Operate on receied notifications
+      if (dltRequestLocationResponse[i].contains('cached')) {
+        var atkeyMicrosecondId = dltRequestLocationResponse[i]
+            .split('deleterequestacklocation-')[1]
+            .split('@')[0];
+
+        var _index = allLocationNotifications.indexWhere((element) {
+          return (element.locationNotificationModel.key
+                  .contains(atkeyMicrosecondId) &&
+              (element.locationNotificationModel.key
+                  .contains(MixedConstants.SHARE_LOCATION)));
+        });
+
+        if (_index == -1) continue;
+
+        await RequestLocationService().deleteKey(
+            allLocationNotifications[_index].locationNotificationModel);
+      }
+    }
+  }
+
+  void convertJsonToLocationModel() {
+    for (var i = 0; i < allLocationNotifications.length; i++) {
       try {
         if ((allLocationNotifications[i].atValue.value != null) &&
-            (allLocationNotifications[i].atValue.value != "null")) {
-          LocationNotificationModel locationNotificationModel =
-              LocationNotificationModel.fromJson(
-                  jsonDecode(allLocationNotifications[i].atValue.value));
+            (allLocationNotifications[i].atValue.value != 'null')) {
+          var locationNotificationModel = LocationNotificationModel.fromJson(
+              jsonDecode(allLocationNotifications[i].atValue.value));
           allLocationNotifications[i].locationNotificationModel =
               locationNotificationModel;
         }
@@ -114,9 +143,9 @@ class KeyStreamService {
     }
   }
 
-  filterData() {
-    List<KeyLocationModel> tempArray = [];
-    for (int i = 0; i < allLocationNotifications.length; i++) {
+  void filterData() {
+    var tempArray = <KeyLocationModel>[];
+    for (var i = 0; i < allLocationNotifications.length; i++) {
       // ignore: unrelated_type_equality_checks
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
           (allLocationNotifications[i].locationNotificationModel == null)) {
@@ -136,7 +165,7 @@ class KeyStreamService {
         .removeWhere((element) => tempArray.contains(element));
   }
 
-  updateEventAccordingToAcknowledgedData() async {
+  void updateEventAccordingToAcknowledgedData() async {
     allLocationNotifications.forEach((notification) async {
       if (notification.key.contains(MixedConstants.SHARE_LOCATION)) {
         if ((notification.locationNotificationModel.atsignCreator ==
@@ -154,53 +183,54 @@ class KeyStreamService {
     });
   }
 
-  forShareLocation(KeyLocationModel notification) async {
-    String atkeyMicrosecondId =
+  void forShareLocation(KeyLocationModel notification) async {
+    var atkeyMicrosecondId =
         notification.key.split('sharelocation-')[1].split('@')[0];
-    String acknowledgedKeyId = 'sharelocationacknowledged-$atkeyMicrosecondId';
+    var acknowledgedKeyId = 'sharelocationacknowledged-$atkeyMicrosecondId';
 
-    List<String> allRegexResponses =
+    var allRegexResponses =
         await atClientInstance.getKeys(regex: acknowledgedKeyId);
 
     if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
-      AtKey acknowledgedAtKey = getAtKey(allRegexResponses[0]);
+      var acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
-      AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
+      var result = await atClientInstance.get(acknowledgedAtKey).catchError(
           // ignore: return_of_invalid_type_from_catch_error
-          (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+          (e) => print('error in get ${e.errorCode} ${e.errorMessage}'));
 
-      LocationNotificationModel acknowledgedEvent =
+      var acknowledgedEvent =
           LocationNotificationModel.fromJson(jsonDecode(result.value));
+      // ignore: unawaited_futures
       SharingLocationService()
           .updateWithShareLocationAcknowledge(acknowledgedEvent);
     }
   }
 
-  forRequestLocation(KeyLocationModel notification) async {
-    String atkeyMicrosecondId =
+  void forRequestLocation(KeyLocationModel notification) async {
+    var atkeyMicrosecondId =
         notification.key.split('requestlocation-')[1].split('@')[0];
 
-    String acknowledgedKeyId =
-        'requestlocationacknowledged-$atkeyMicrosecondId';
+    var acknowledgedKeyId = 'requestlocationacknowledged-$atkeyMicrosecondId';
 
-    List<String> allRegexResponses =
+    var allRegexResponses =
         await atClientInstance.getKeys(regex: acknowledgedKeyId);
 
     if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
-      AtKey acknowledgedAtKey = getAtKey(allRegexResponses[0]);
+      var acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
-      AtValue result = await atClientInstance.get(acknowledgedAtKey).catchError(
+      var result = await atClientInstance.get(acknowledgedAtKey).catchError(
           // ignore: return_of_invalid_type_from_catch_error
-          (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+          (e) => print('error in get ${e.errorCode} ${e.errorMessage}'));
 
-      LocationNotificationModel acknowledgedEvent =
+      var acknowledgedEvent =
           LocationNotificationModel.fromJson(jsonDecode(result.value));
+      // ignore: unawaited_futures
       RequestLocationService()
           .updateWithRequestLocationAcknowledge(acknowledgedEvent);
     }
   }
 
-  mapUpdatedLocationDataToWidget(LocationNotificationModel locationData) {
+  void mapUpdatedLocationDataToWidget(LocationNotificationModel locationData) {
     String newLocationDataKeyId;
     if (locationData.key.contains(MixedConstants.SHARE_LOCATION)) {
       newLocationDataKeyId =
@@ -210,7 +240,7 @@ class KeyStreamService {
           locationData.key.split('requestlocation-')[1].split('@')[0];
     }
 
-    for (int i = 0; i < allLocationNotifications.length; i++) {
+    for (var i = 0; i < allLocationNotifications.length; i++) {
       if (allLocationNotifications[i].key.contains(newLocationDataKeyId)) {
         allLocationNotifications[i].locationNotificationModel = locationData;
       }
@@ -227,7 +257,7 @@ class KeyStreamService {
     }
   }
 
-  removeData(String key) {
+  void removeData(String key) {
     allLocationNotifications
         .removeWhere((notification) => key.contains(notification.atKey.key));
     notifyListeners();
@@ -251,7 +281,7 @@ class KeyStreamService {
       tempKey = 'requestlocation-$newLocationDataKeyId';
     }
 
-    List<String> key = [];
+    var key = <String>[];
     if (key.isEmpty) {
       key = await atClientInstance.getKeys(
         regex: tempKey,
@@ -272,7 +302,7 @@ class KeyStreamService {
       );
     }
 
-    KeyLocationModel tempHyridNotificationModel = KeyLocationModel(key: key[0]);
+    var tempHyridNotificationModel = KeyLocationModel(key: key[0]);
 
     tempHyridNotificationModel.atKey = getAtKey(key[0]);
     tempHyridNotificationModel.atValue =
@@ -286,6 +316,7 @@ class KeyStreamService {
     if ((tempHyridNotificationModel.locationNotificationModel.isSharing)) {
       if (tempHyridNotificationModel.locationNotificationModel.atsignCreator ==
           currentAtSign) {
+        // ignore: unawaited_futures
         SendLocationNotification()
             .addMember(tempHyridNotificationModel.locationNotificationModel);
       }
@@ -295,10 +326,10 @@ class KeyStreamService {
 
   Future<dynamic> getAtValue(AtKey key) async {
     try {
-      AtValue atvalue = await atClientInstance
+      var atvalue = await atClientInstance
           .get(key)
           // ignore: return_of_invalid_type_from_catch_error
-          .catchError((e) => print("error in in key_stream_service get $e"));
+          .catchError((e) => print('error in in key_stream_service get $e'));
 
       if (atvalue != null) {
         return atvalue;
@@ -311,7 +342,7 @@ class KeyStreamService {
     }
   }
 
-  notifyListeners() {
+  void notifyListeners() {
     atNotificationsSink.add(allLocationNotifications);
   }
 }

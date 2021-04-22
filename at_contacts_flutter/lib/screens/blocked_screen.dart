@@ -14,7 +14,7 @@ class BlockedScreen extends StatefulWidget {
 }
 
 class _BlockedScreenState extends State<BlockedScreen> {
-  ContactService _contactService;
+  late ContactService _contactService;
   @override
   void initState() {
     _contactService = ContactService();
@@ -50,7 +50,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                 child: StreamBuilder(
                   initialData: _contactService.blockContactList,
                   stream: _contactService.blockedContactStream,
-                  builder: (context, snapshot) {
+                  builder: (context, AsyncSnapshot snapshot) {
                     return snapshot.data.isEmpty
                         ? Center(
                             child: Text(
@@ -70,7 +70,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                             ),
                             itemBuilder: (context, index) {
                               return BlockedUserCard(
-                                blockeduser: snapshot.data[index],
+                                blockeduser: snapshot.data?[index],
                               );
                             },
                           );

@@ -1,7 +1,7 @@
 class TextStrings {
-  String unknownAtsign(String atSign) =>
+  String unknownAtsign(String? atSign) =>
       '$atSign is not found. Please check and try again.';
-  String atsignExists(String atSign) => '$atSign already exists';
+  String atsignExists(String? atSign) => '$atSign already exists';
   String contacts = 'Contacts';
   String emptyAtsign = 'Please type in an atsign';
   String searchContact = 'Search Contact';

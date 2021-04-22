@@ -19,9 +19,9 @@ class NewGroup extends StatefulWidget {
 }
 
 class _NewGroupState extends State<NewGroup> {
-  List<AtContact> selectedContacts;
+  List<AtContact?>? selectedContacts;
   String groupName = '';
-  Uint8List selectedImageByteData;
+  Uint8List? selectedImageByteData;
   bool isKeyBoardVisible = false, showEmojiPicker = false;
   TextEditingController textController = TextEditingController();
   UniqueKey key = UniqueKey();
@@ -34,7 +34,7 @@ class _NewGroupState extends State<NewGroup> {
   }
 
   getContacts() {
-    if (GroupService().selecteContactList.isNotEmpty) {
+    if (GroupService().selecteContactList!.isNotEmpty) {
       selectedContacts = GroupService().selecteContactList;
     } else {
       selectedContacts = [];
@@ -56,7 +56,7 @@ class _NewGroupState extends State<NewGroup> {
           groupName,
           description: 'group desc',
           displayName: groupName,
-          members: Set.from(selectedContacts),
+          members: Set.from(selectedContacts!),
           createdBy: GroupService().currentAtsign,
           updatedBy: GroupService().currentAtsign,
         );
@@ -106,7 +106,7 @@ class _NewGroupState extends State<NewGroup> {
             : AllColors().Black,
         bottomSheet: GroupBottomSheet(
           onPressed: createGroup,
-          message: '${selectedContacts.length} Contacts Selected',
+          message: '${selectedContacts!.length} Contacts Selected',
           buttontext: 'Done',
         ),
         appBar: CustomAppBar(
@@ -144,7 +144,7 @@ class _NewGroupState extends State<NewGroup> {
                               height: 68.toWidth,
                               child: CircleAvatar(
                                 backgroundImage:
-                                    Image.memory(this.selectedImageByteData)
+                                    Image.memory(this.selectedImageByteData!)
                                         .image,
                               ),
                             )
@@ -236,17 +236,17 @@ class _NewGroupState extends State<NewGroup> {
                     crossAxisCount: 4,
                     childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
                         (SizeConfig().screenHeight * 0.2)),
-                    children: List.generate(selectedContacts.length, (index) {
+                    children: List.generate(selectedContacts!.length, (index) {
                       return CustomPersonVerticalTile(
                         imageLocation: null,
-                        title: selectedContacts[index].atSign,
-                        subTitle: selectedContacts[index].atSign,
+                        title: selectedContacts![index]!.atSign,
+                        subTitle: selectedContacts![index]!.atSign,
                         icon: Icons.close,
                         isTopRight: true,
-                        atsign: selectedContacts[index].atSign,
+                        atsign: selectedContacts![index]!.atSign,
                         onCrossPressed: () {
                           setState(() {
-                            selectedContacts.removeAt(index);
+                            selectedContacts!.removeAt(index);
                           });
                         },
                       );

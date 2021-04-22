@@ -13,18 +13,18 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactSelectionBottomSheet extends StatelessWidget {
-  final Function onPressed;
-  final ValueChanged<List<GroupContactsModel>> selectedList;
+  final Function? onPressed;
+  final ValueChanged<List<GroupContactsModel?>>? selectedList;
   const ContactSelectionBottomSheet(
-      {Key key, this.onPressed, this.selectedList})
+      {Key? key, this.onPressed, this.selectedList})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     GroupService _groupService = GroupService();
-    return StreamBuilder<List<GroupContactsModel>>(
+    return StreamBuilder<List<GroupContactsModel?>>(
       stream: _groupService.selectedContactsStream,
       initialData: _groupService.selectedGroupContacts,
-      builder: (context, snapshot) => (snapshot.data.isEmpty)
+      builder: (context, snapshot) => (snapshot.data!.isEmpty)
           ? Container(
               height: 0,
             )
@@ -47,8 +47,8 @@ class ContactSelectionBottomSheet extends StatelessWidget {
                     width: 120.toWidth,
                     height: 40.toHeight,
                     onPressed: () {
-                      onPressed();
-                      selectedList(_groupService.selectedGroupContacts);
+                      onPressed!();
+                      selectedList!(_groupService.selectedGroupContacts);
                     },
                     buttonColor:
                         Theme.of(context).brightness == Brightness.light
