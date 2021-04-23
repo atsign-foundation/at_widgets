@@ -34,7 +34,7 @@ class EventNotificationModel {
       group = AtGroup(data['group']['name']);
 
       data['group']['members'].forEach((contact) {
-        AtContact newContact = AtContact(atSign: contact['atSign']);
+        var newContact = AtContact(atSign: contact['atSign']);
         newContact.tags = {};
         newContact.tags['isAccepted'] = contact['tags']['isAccepted'];
         newContact.tags['isSharing'] = contact['tags']['isSharing'];
@@ -60,57 +60,7 @@ class EventNotificationModel {
     }
   }
 
-  // toJson(EventNotificationModel eventNotification) {
-  //   var value = json.encode({
-  //     'title': eventNotification.title.toString(),
-  //     'isCancelled': eventNotification.isCancelled.toString(),
-  //     'isUpdate': eventNotification.isUpdate.toString(),
-  //     'atsignCreator': eventNotification.atsignCreator.toString(),
-  //     'key': eventNotification.key,
-  //     // 'contactList': json.encode(eventNotification.contactList
-  //     //     .map((e) =>
-  //     //         LocationNotificationModel.convertLocationNotificationToJson(e))
-  //     //     .toList()),
-  //     'group': json.encode(eventNotification.group),
-  //     'venue': json.encode({
-  //       'latitude': eventNotification.venue.latitude.toString(),
-  //       'longitude': eventNotification.venue.longitude.toString(),
-  //       'label': eventNotification.venue.label
-  //     }),
-  //     'event': json.encode({
-  //       'isRecurring': eventNotification.event.isRecurring.toString(),
-  //       'date': eventNotification.event.date.toString(),
-  //       'startTime': eventNotification.event.startTime.toString(),
-  //       'endTime': eventNotification.event.endTime.toString(),
-  //       'repeatDuration': eventNotification.event.repeatDuration.toString(),
-  //       'repeatCycle': eventNotification.event.repeatCycle.toString(),
-  //       'occursOn': eventNotification.event.occursOn.toString(),
-  //       'endsOn': eventNotification.event.endsOn.toString(),
-  //       'endEventOnDate': eventNotification.event.endEventOnDate.toString(),
-  //       'endEventAfterOccurance':
-  //           eventNotification.event.endEventAfterOccurance.toString()
-  //     })
-  //   });
-  //   return value;
-  // }
 
-  // getContactList(var element) {
-  //   var element2 = jsonDecode(element);
-  //   LocationNotificationModel obj = LocationNotificationModel(
-  //       atsign: element2['atsign'] != null && element2['atsign'] != 'null'
-  //           ? element2['atsign']
-  //           : null,
-  //       lat: element2['lat'] != null && element2['lat'] != 'null'
-  //           ? double.parse(element2['lat'])
-  //           : null,
-  //       long: element2['long'] != null && element2['long'] != 'null'
-  //           ? double.parse(element2['long'])
-  //           : null,
-  //       isAccepted: element2['isAccepted'] == 'true' ? true : false,
-  //       isSharing: element2['isSharing'] == 'true' ? true : false,
-  //       isExited: element2['isExited'] == 'true' ? true : false);
-  //   return obj;
-  // }
 
   static String convertEventNotificationToJson(
       EventNotificationModel eventNotification) {
@@ -303,12 +253,12 @@ String getWeekString(Week weekday) {
 }
 
 String timeOfDayToString(DateTime time) {
-  String hhmm = '${time.hour}:${time.minute}';
+  var hhmm = '${time.hour}:${time.minute}';
   return hhmm;
 }
 
 String dateToString(DateTime date) {
-  String dateString = '${date.day}/${date.month}/${date.year}';
+  var dateString = '${date.day}/${date.month}/${date.year}';
   return dateString;
 }
 
@@ -324,18 +274,3 @@ List<String> get occursOnWeekOptions => [
     ];
 
 enum ATKEY_TYPE_ENUM { CREATEEVENT, ACKNOWLEDGEEVENT }
-
-Map<String, dynamic> get monthsList => {
-      '1': {'month': 'jan', 'days': 31, 'count': 1},
-      '2': {'month': 'feb', 'days': 28, 'count': 2},
-      '3': {'month': 'mar', 'days': 31, 'count': 3},
-      '4': {'month': 'apr', 'days': 30, 'count': 4},
-      '5': {'month': 'may', 'days': 31, 'count': 5},
-      '6': {'month': 'jun', 'days': 30, 'count': 6},
-      '7': {'month': 'jul', 'days': 31, 'count': 7},
-      '8': {'month': 'aug', 'days': 31, 'count': 8},
-      '9': {'month': 'sept', 'days': 30, 'count': 9},
-      '10': {'month': 'oct', 'days': 31, 'count': 10},
-      '11': {'month': 'nov', 'days': 30, 'count': 11},
-      '12': {'month': 'dec', 'days': 31, 'count': 12},
-    };

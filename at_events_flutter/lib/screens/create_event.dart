@@ -44,9 +44,8 @@ class _CreateEventState extends State<CreateEvent> {
   void initState() {
     super.initState();
     isLoading = false;
-    EventService().init(
-        isUpdate: widget.isUpdate != null ? widget.isUpdate : false,
-        eventData: widget.eventData != null ? widget.eventData : null);
+    EventService()
+        .init(isUpdate: widget.isUpdate ?? false, eventData: widget.eventData);
     if (widget.createdEvents != null) {
       EventService().createdEvents = widget.createdEvents;
     }
@@ -57,7 +56,7 @@ class _CreateEventState extends State<CreateEvent> {
     initContactPlugin();
   }
 
-  initContactPlugin() {
+  void initContactPlugin() {
     initializeContactsService(EventService().atClientInstance,
         EventService().atClientInstance.currentAtSign,
         rootDomain: EventService().rootDomain);
@@ -175,7 +174,7 @@ class _CreateEventState extends State<CreateEvent> {
                                     width: 330.toWidth,
                                     height: 50,
                                     hintText: 'Title of the event',
-                                    initialValue: eventData.title != null
+                                    initialValue: eventData?.title != null
                                         ? eventData.title
                                         : '',
                                     value: (val) {
@@ -193,9 +192,7 @@ class _CreateEventState extends State<CreateEvent> {
                                     height: 50,
                                     isReadOnly: true,
                                     hintText: 'Start typing or select from map',
-                                    initialValue: eventData.venue.label != null
-                                        ? eventData.venue.label
-                                        : '',
+                                    initialValue: eventData.venue.label ?? '',
                                     onTap: () => bottomSheet(
                                         context,
                                         SelectLocation(),
@@ -356,13 +353,11 @@ class _CreateEventState extends State<CreateEvent> {
                           } else if (snapshot.hasError) {
                             return Center(
                               child: ErrorScreen(
-                                onPressed: EventService().init(
-                                    isUpdate: widget.isUpdate != null
-                                        ? widget.isUpdate
-                                        : false,
-                                    eventData: widget.eventData != null
-                                        ? widget.eventData
-                                        : null),
+                                onPressed: () {
+                                  EventService().init(
+                                      isUpdate: widget.isUpdate ?? false,
+                                      eventData: widget.eventData);
+                                },
                               ),
                             );
                           } else {
@@ -398,11 +393,11 @@ class _CreateEventState extends State<CreateEvent> {
     );
   }
 
-  onCreateEvent() async {
+  void onCreateEvent() async {
     setState(() {
       isLoading = true;
     });
-    bool isValidAtsign = await isTypedAtSignValid();
+    var isValidAtsign = await isTypedAtSignValid();
     if (!isValidAtsign) {
       CustomToast().show('Invalid atsign entered', context);
       setState(() {
@@ -420,7 +415,7 @@ class _CreateEventState extends State<CreateEvent> {
       return;
     }
 
-    bool isOverlap = EventService().showConcurrentEventDialog(
+    var isOverlap = EventService().showConcurrentEventDialog(
         widget.createdEvents, EventService().eventNotificationModel, context);
 
     if (isOverlap) {
@@ -448,9 +443,9 @@ class _CreateEventState extends State<CreateEvent> {
     }
   }
 
-  isTypedAtSignValid() async {
+  Future<bool> isTypedAtSignValid() async {
     if (typedAtSign.trim().isEmpty) return true;
-    bool isValid = await EventService().checkAtsign(typedAtSign);
+    var isValid = await EventService().checkAtsign(typedAtSign);
     setState(() {
       isValidAtsign = isValid;
     });

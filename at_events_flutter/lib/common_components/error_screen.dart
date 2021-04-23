@@ -26,7 +26,7 @@ class ErrorScreen extends StatelessWidget {
                 ? AllColors().WHITE
                 : AllColors().Black,
             onPressed: () async {
-              if (this.onPressed != null) {
+              if (onPressed != null) {
                 onPressed();
               }
             },
