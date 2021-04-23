@@ -115,7 +115,7 @@ Future<EventNotificationModel> getEventDetails(String key) async {
 }
 
 Future<List<EventNotificationModel>> getEvents() async {
-  List<EventNotificationModel> allEvents = [];
+  var allEvents = <EventNotificationModel>[];
   var regexList = await EventService().atClientInstance.getKeys(
         regex: 'createevent-',
       );
