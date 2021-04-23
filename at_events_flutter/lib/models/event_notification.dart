@@ -60,57 +60,7 @@ class EventNotificationModel {
     }
   }
 
-  // toJson(EventNotificationModel eventNotification) {
-  //   var value = json.encode({
-  //     'title': eventNotification.title.toString(),
-  //     'isCancelled': eventNotification.isCancelled.toString(),
-  //     'isUpdate': eventNotification.isUpdate.toString(),
-  //     'atsignCreator': eventNotification.atsignCreator.toString(),
-  //     'key': eventNotification.key,
-  //     // 'contactList': json.encode(eventNotification.contactList
-  //     //     .map((e) =>
-  //     //         LocationNotificationModel.convertLocationNotificationToJson(e))
-  //     //     .toList()),
-  //     'group': json.encode(eventNotification.group),
-  //     'venue': json.encode({
-  //       'latitude': eventNotification.venue.latitude.toString(),
-  //       'longitude': eventNotification.venue.longitude.toString(),
-  //       'label': eventNotification.venue.label
-  //     }),
-  //     'event': json.encode({
-  //       'isRecurring': eventNotification.event.isRecurring.toString(),
-  //       'date': eventNotification.event.date.toString(),
-  //       'startTime': eventNotification.event.startTime.toString(),
-  //       'endTime': eventNotification.event.endTime.toString(),
-  //       'repeatDuration': eventNotification.event.repeatDuration.toString(),
-  //       'repeatCycle': eventNotification.event.repeatCycle.toString(),
-  //       'occursOn': eventNotification.event.occursOn.toString(),
-  //       'endsOn': eventNotification.event.endsOn.toString(),
-  //       'endEventOnDate': eventNotification.event.endEventOnDate.toString(),
-  //       'endEventAfterOccurance':
-  //           eventNotification.event.endEventAfterOccurance.toString()
-  //     })
-  //   });
-  //   return value;
-  // }
 
-  // getContactList(var element) {
-  //   var element2 = jsonDecode(element);
-  //   LocationNotificationModel obj = LocationNotificationModel(
-  //       atsign: element2['atsign'] != null && element2['atsign'] != 'null'
-  //           ? element2['atsign']
-  //           : null,
-  //       lat: element2['lat'] != null && element2['lat'] != 'null'
-  //           ? double.parse(element2['lat'])
-  //           : null,
-  //       long: element2['long'] != null && element2['long'] != 'null'
-  //           ? double.parse(element2['long'])
-  //           : null,
-  //       isAccepted: element2['isAccepted'] == 'true' ? true : false,
-  //       isSharing: element2['isSharing'] == 'true' ? true : false,
-  //       isExited: element2['isExited'] == 'true' ? true : false);
-  //   return obj;
-  // }
 
   static String convertEventNotificationToJson(
       EventNotificationModel eventNotification) {

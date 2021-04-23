@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   latlong: ^0.6.1
-  toast: ^0.1.5
+  fluttertoast: ^8.0.5
 
   at_common_flutter: ^1.0.0
   at_location_flutter: ^0.0.3

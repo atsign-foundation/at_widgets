@@ -74,7 +74,8 @@ class EventService {
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     var privateKey = await getPrivateKey(currentAtSign);
-    atClientInstance.startMonitor(privateKey, _notificationCallback);
+    // ignore: await_only_futures
+    await atClientInstance.startMonitor(privateKey, _notificationCallback);
     print('Monitor started');
     return true;
   }

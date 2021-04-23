@@ -130,10 +130,8 @@ Future<List<EventNotificationModel>> getEvents() async {
     for (var i = 0; i < regexList.length; i++) {
       var atkey = EventService().getAtKey(regexList[i]);
       var atValue = await EventService().atClientInstance.get(atkey);
-      print('event atvalue: ${atValue}');
       if (atValue.value != null) {
         var event = EventNotificationModel.fromJson(jsonDecode(atValue.value));
-        print('event : ${event.title}');
         allEvents.add(event);
       }
     }
