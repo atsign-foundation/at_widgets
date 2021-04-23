@@ -1,3 +1,7 @@
+## [1.0.0] - 04/22/2021
+
+* Updated dependent packages
+
 ## [0.0.3] - 04/20/2021
 
 * Updated example app
