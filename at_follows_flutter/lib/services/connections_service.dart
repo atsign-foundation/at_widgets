@@ -267,6 +267,7 @@ class ConnectionsService {
       for (var key in PublicData.list) {
         atKey..metadata = _getPublicFieldsMetadata(key);
         atKey..key = key;
+        atKey..sharedWith = null;
         atValue = await _sdkService.get(atKey);
         //performs plookup if the data is not in cache.
         if (atValue.value == null) {
