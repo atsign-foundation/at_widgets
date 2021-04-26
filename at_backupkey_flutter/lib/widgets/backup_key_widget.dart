@@ -114,7 +114,7 @@ class BackupKeyWidget extends StatelessWidget {
                 Text(Strings.backUpKeysDescription,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.grey[700])),
-                SizedBox(height: 20),
+                SizedBox(height: 20.toHeight),
                 Row(
                   children: [
                     TextButton(
@@ -148,7 +148,7 @@ class BackupKeyWidget extends StatelessWidget {
       var directory;
       String path;
       var status = await Permission.storage.status;
-      if (status.isUndetermined) {
+      if (status.isDenied || status.isRestricted) {
         await Permission.storage.request();
       }
       directory = await path_provider.getApplicationSupportDirectory();

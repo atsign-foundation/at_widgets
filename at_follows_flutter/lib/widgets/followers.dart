@@ -16,9 +16,11 @@ class Followers extends StatefulWidget {
   final String searchText;
   final bool isFollowing;
   final Function count;
-  final Function isDialog;
-  Followers(
-      {this.searchText, this.isFollowing = false, this.count, this.isDialog});
+  Followers({
+    this.searchText,
+    this.isFollowing = false,
+    this.count,
+  });
   @override
   _FollowersState createState() => _FollowersState();
 }
@@ -27,6 +29,7 @@ class _FollowersState extends State<Followers> {
   List<Atsign> atsignsList = [];
   ConnectionsService _connectionsService = ConnectionsService();
   final _logger = AtSignLogger('Follows Widget');
+  bool _isDialogOpen = false;
 
   @override
   void initState() {
@@ -242,13 +245,14 @@ class _FollowersState extends State<Followers> {
         ? ConnectionsService().followAtsign
         : ConnectionsService().followerAtsign;
     bool exists = ConnectionProvider().containsFollowing(atsign);
-    if (exists) {
+    if (exists || _isDialogOpen) {
       _connectionsService.followerAtsign = null;
       _connectionsService.followAtsign = null;
 
       return;
     }
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _isDialogOpen = true;
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -266,7 +270,8 @@ class _FollowersState extends State<Followers> {
                       onPressedCallBack: (value) {
                         _connectionsService.followerAtsign = null;
                         _connectionsService.followAtsign = null;
-                        widget.isDialog();
+                        _isDialogOpen = false;
+                        // widget.isDialog();
                         Navigator.pop(context);
                       },
                       text: Strings.cancel,
@@ -278,7 +283,8 @@ class _FollowersState extends State<Followers> {
                       onPressedCallBack: (value) {
                         _connectionsService.followerAtsign = null;
                         _connectionsService.followAtsign = null;
-                        widget.isDialog();
+                        _isDialogOpen = false;
+                        // widget.isDialog();
                         Navigator.pop(context);
                         ConnectionProvider().follow(atsign);
                       },

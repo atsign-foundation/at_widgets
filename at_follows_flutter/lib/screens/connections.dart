@@ -43,8 +43,8 @@ class _ConnectionsState extends State<Connections> {
   TextEditingController searchController = TextEditingController();
   ConnectionProvider _connectionProvider = ConnectionProvider();
   var _connectionService = ConnectionsService();
-  String followAtsignTitle;
-  String followerAtsignTitle;
+  // String followAtsignTitle;
+  // String followerAtsignTitle;
 
   @override
   void initState() {
@@ -59,8 +59,11 @@ class _ConnectionsState extends State<Connections> {
     _connectionService.startMonitor().then((value) => setState(() {
           _formConnectionTabs(2);
         }));
-    followAtsignTitle = widget.followAtsignTitle;
-    followerAtsignTitle = widget.followerAtsignTitle;
+
+    _connectionService.followerAtsign = widget.followerAtsignTitle;
+    _connectionService.followAtsign = widget.followAtsignTitle;
+    // followAtsignTitle = widget.followAtsignTitle;
+    // followerAtsignTitle = widget.followerAtsignTitle;
 
     super.initState();
   }
@@ -175,19 +178,12 @@ class _ConnectionsState extends State<Connections> {
                         ),
                       if (connectionTabs[1].isActive)
                         Followers(
-                            isFollowing: true,
-                            searchText: searchController.text,
-                            count: () {
-                              _connectionService.followerAtsign =
-                                  this.followerAtsignTitle;
-                              _connectionService.followAtsign =
-                                  this.followAtsignTitle;
-                              _getCount();
-                            },
-                            isDialog: () {
-                              this.followerAtsignTitle = null;
-                              this.followAtsignTitle = null;
-                            })
+                          isFollowing: true,
+                          searchText: searchController.text,
+                          count: () {
+                            _getCount();
+                          },
+                        )
                     ],
                   ),
           ),
