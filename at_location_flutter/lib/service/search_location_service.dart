@@ -29,4 +29,8 @@ class SearchLocationService {
 
     atLocationSink.add(share);
   }
+
+  void dispose() {
+    _atLocationStreamController.close();
+  }
 }
