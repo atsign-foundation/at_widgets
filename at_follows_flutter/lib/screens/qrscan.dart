@@ -37,9 +37,9 @@ class _QrScanState extends State<QrScan> {
     _logger.info("camera status => $cameraStatus");
     _logger.info('storage status is $storageStatus');
 
-    if (cameraStatus.isUndetermined || cameraStatus.isDenied) {
+    if (cameraStatus.isRestricted || cameraStatus.isDenied) {
       await askPermissions(Permission.camera);
-    } else if (storageStatus.isUndetermined || storageStatus.isDenied) {
+    } else if (storageStatus.isRestricted || storageStatus.isDenied) {
       await askPermissions(Permission.storage);
     } else if (cameraStatus.isGranted && storageStatus.isGranted) {
       setState(() {

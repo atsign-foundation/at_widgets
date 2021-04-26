@@ -1,6 +1,6 @@
 name: at_follows_flutter
 description: A new flutter plugin project to integrate follows functionality for any @sign. Provides list of followers, following and options to follow, unfollow any @sign.
-version: 1.0.0+1
+version: 1.0.0+2
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
 
@@ -11,18 +11,42 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^4.3.2+2
+  provider: ^5.0.0
   flutter_qr_reader: ^1.0.3
-  permission_handler: ^5.0.1+1
-  webview_flutter: ^1.0.7
-  url_launcher: ^5.7.0
-  at_client_mobile: ^1.0.0+9
-  at_server_status: ^0.1.0+1
-  at_commons: ^1.0.1+6
-  at_utils: ^1.0.1+6
-  at_lookup: ^1.0.0+6
+  permission_handler: ^6.1.3
+  webview_flutter: ^2.0.4
+  url_launcher: ^6.0.3
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: dev_env
+      version: ^1.0.1+7
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: at_client_mobile
+      ref: dev_env
+      version: ^1.0.0+10
+  at_server_status:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_server_status
+      ref: dev_env
+      version: ^0.1.0+1
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_commons
+      ref: dev_env
+      version: ^1.0.1+7
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_lookup
+      ref: package_upgrade
+      version: ^1.0.0+7
 
- 
 
 dev_dependencies:
   flutter_test:
