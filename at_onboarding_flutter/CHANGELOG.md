@@ -10,3 +10,5 @@
 ## 1.0.0+3
 - Scan QRcode on app start fix
 
+## 1.0.0+4
+- upgraded some packages to resolve dependency issues
