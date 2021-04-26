@@ -5,4 +5,4 @@
 - Notifications fix
 
 ## 1.0.0+2
-- Upgraded all depedencies to nullsafety versions
+- upgraded some packages to resolve dependency issues

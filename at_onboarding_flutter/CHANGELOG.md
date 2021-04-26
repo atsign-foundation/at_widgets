@@ -11,5 +11,4 @@
 - Scan QRcode on app start fix
 
 ## 1.0.0+4
-- upgraded all dependencies to nullsafety versions
-
+- upgraded some packages to resolve dependency issues

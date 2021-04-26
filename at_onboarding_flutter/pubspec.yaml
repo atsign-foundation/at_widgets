@@ -53,7 +53,7 @@ dependencies:
       url: https://github.com/atsign-foundation/at_widgets.git
       path: at_backupkey_flutter
       ref: dev_env
-      version: ^1.0.0+4
+      version: ^1.0.0+3
   
 
 dev_dependencies:
