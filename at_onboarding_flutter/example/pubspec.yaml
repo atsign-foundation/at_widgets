@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^1.6.7
+  path_provider: ^2.0.1
   at_onboarding_flutter:
     # When depending on this package from a real application you should use:
     #   at_onboarding_flutter: ^x.y.z
