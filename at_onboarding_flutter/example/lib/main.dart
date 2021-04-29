@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Builder(
           builder: (context) => Center(
-            child: RaisedButton(
+            child: TextButton(
                 onPressed: () async {
                   Onboarding(
                     context: context,

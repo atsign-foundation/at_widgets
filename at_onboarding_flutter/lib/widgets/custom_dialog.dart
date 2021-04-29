@@ -31,7 +31,7 @@ class CustomDialog extends StatelessWidget {
   final String title;
 
   ///Returns a valid atsign if atsignForm is made true.
-  final Function onSubmit;
+  final Function(String) onSubmit;
 
   ///The context to open this widget.
   final context;
@@ -134,6 +134,7 @@ class CustomDialog extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
+                        key: Key('${Strings.cancelButton}'),
                         onPressed: () async {
                           Navigator.pop(context);
                           Navigator.pop(context);
@@ -147,6 +148,7 @@ class CustomDialog extends StatelessWidget {
                       ),
                       SizedBox(width: 15.toWidth),
                       TextButton(
+                        key: Key('${Strings.submitButton}'),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
                             Navigator.pop(context);
