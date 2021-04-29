@@ -5,26 +5,63 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:at_common_flutter_example/main.dart';
+import 'test_material_app.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  Widget _homeWidget({@required Widget home}) {
+    return TestMaterialApp(home: home);
+  }
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  group('testing common custom widgets', () {
+    testWidgets('Testing customAppBar with and without title',
+        (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_homeWidget(home: MyHomePage(title: 'Welcome Screen')));
+      final appBar = tester.widget<CustomAppBar>(find.byType(CustomAppBar));
+      expect(appBar.titleText, 'Welcome Screen');
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      await tester.pumpWidget(_homeWidget(home: MyHomePage()));
+      expect(tester.takeException(), isInstanceOf<AssertionError>());
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    testWidgets('Custom Input Field', (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_homeWidget(home: MyHomePage(title: 'Welcome Screen')));
+
+      var text = 'Hello!!';
+      await tester.enterText(find.byType(CustomInputField), text);
+      expect(find.text(text), findsOneWidget);
+
+      text = 'accepts @, *, #, %, 1,2,80, characters';
+      await tester.enterText(find.byType(CustomInputField), text);
+      expect(find.text(text), findsOneWidget);
+
+      text = '\n is not considered';
+      await tester.enterText(find.byType(CustomInputField), text);
+      expect(find.text(text), findsNothing);
+    });
+
+    testWidgets('Custom Button', (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_homeWidget(home: MyHomePage(title: 'Welcome Screen')));
+
+      expect(find.byType(CustomButton), findsOneWidget);
+      await tester.tap(find.byType(CustomButton));
+
+      var customButton =
+          await tester.widget<CustomButton>(find.byType(CustomButton));
+      expect(customButton.buttonText, 'Add');
+      expect(customButton.buttonColor, Colors.black);
+      expect(customButton.onPressed.call(), null);
+
+      await tester.pumpWidget(_homeWidget(home: CustomButton()));
+      expect(customButton.buttonText, 'Add');
+      expect(customButton.buttonColor, Colors.black);
+      expect(customButton.onPressed.call(), null);
+    });
   });
 }
