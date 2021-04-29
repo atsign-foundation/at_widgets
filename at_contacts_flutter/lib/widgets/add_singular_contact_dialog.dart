@@ -61,7 +61,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
                 height: 10.toHeight,
               ),
               Text(
-                widget.atSignName!.substring(1) ?? 'Levina Thomas',
+                widget.atSignName!.substring(1),
                 style: CustomTextStyles.primaryBold16,
               ),
               SizedBox(
