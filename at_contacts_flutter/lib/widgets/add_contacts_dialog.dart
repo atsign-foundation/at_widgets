@@ -74,14 +74,14 @@ class _AddContactDialogState extends State<AddContactDialog> {
                 TextFormField(
                   autofocus: true,
                   onChanged: (value) {
-                    atsignName = value;
+                    atsignName = value.toLowerCase().replaceAll(' ', '');
                   },
                   // validator: Validators.validateAdduser,
                   decoration: InputDecoration(
                     prefixText: '@',
                     prefixStyle:
                         TextStyle(color: Colors.grey, fontSize: 15.toFont),
-                    hintText: '\tEnter user atsign',
+                    hintText: '\tEnter contact’s atsign',
                   ),
                   style: TextStyle(fontSize: 15.toFont),
                 ),

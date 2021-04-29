@@ -20,10 +20,7 @@ dependencies:
     # the parent directory to use the current plugin's version.
     path: ../
   latlong: ^0.6.1
-  # atsign_authentication_helper:
-  #   path: ../../atsign_authentication_helper
-  at_onboarding_flutter: 
-    path: ../../at_onboarding_flutter
+  at_onboarding_flutter: ^1.0.0+4
   at_client_mobile: ^1.0.0+5
   at_lookup: ^1.0.0+4
 
