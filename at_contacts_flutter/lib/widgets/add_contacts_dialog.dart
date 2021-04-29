@@ -74,7 +74,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                 TextFormField(
                   autofocus: true,
                   onChanged: (value) {
-                    atsignName = value;
+                    atsignName = value.toLowerCase().replaceAll(' ', '');
                   },
                   // validator: Validators.validateAdduser,
                   decoration: InputDecoration(
