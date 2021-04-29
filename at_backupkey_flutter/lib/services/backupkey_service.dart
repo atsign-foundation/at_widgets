@@ -16,8 +16,13 @@ class BackUpKeyService {
   }
 
   Future<Map<String, String>> getEncryptedKeys(String atsign) async {
-    var result = await atClientService.getEncryptedKeys(atsign);
-    result[atsign] = await this._getAESKey(atsign);
+    var result;
+    try {
+      result = await atClientService.getEncryptedKeys(atsign);
+      result[atsign] = await this._getAESKey(atsign);
+    } catch (e) {
+      result = {};
+    }
     return result;
   }
 }
