@@ -3,14 +3,14 @@ import 'dart:convert';
 enum MessageType { INCOMING, OUTGOING }
 
 class Message {
-  int time;
-  String message;
-  MessageType type;
-  String sender;
+  int? time;
+  String? message;
+  MessageType? type;
+  String? sender;
   Message({this.time, this.message, this.type, this.sender});
 
   Message copyWith(
-      {int time, String message, MessageType type, String sender}) {
+      {int? time, String? message, MessageType? type, String? sender}) {
     return Message(
         time: time ?? this.time,
         message: message ?? this.message,
@@ -27,8 +27,8 @@ class Message {
     };
   }
 
-  factory Message.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+  factory Message.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return Message();
 
     return Message(
         time: map['time'],

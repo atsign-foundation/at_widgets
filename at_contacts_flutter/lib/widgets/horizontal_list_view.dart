@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class HorizontalCircularList extends StatelessWidget {
-  final List<AtContact> list;
+  final List<AtContact>? list;
 
-  const HorizontalCircularList({Key key, this.list}) : super(key: key);
+  const HorizontalCircularList({Key? key, this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ContactService _contactService = ContactService();
-    return StreamBuilder<List<AtContact>>(
+    return StreamBuilder<List<AtContact?>>(
         initialData: _contactService.selectedContacts,
         stream: _contactService.selectedContactStream,
         builder: (context, snapshot) {
-          List<AtContact> selectedContacts = snapshot.data;
+          List<AtContact?> selectedContacts = snapshot.data!;
           return Container(
             height: (selectedContacts.isEmpty) ? 0 : 150.toHeight,
             child: ListView.builder(

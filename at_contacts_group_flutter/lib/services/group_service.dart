@@ -11,16 +11,16 @@ class GroupService {
   GroupService._();
   static GroupService _instance = GroupService._();
   factory GroupService() => _instance;
-  String _atsign;
-  List<AtContact> selecteContactList;
-  List<GroupContactsModel> allContacts = [], selectedGroupContacts = [];
-  AtGroup selectedGroup;
-  AtClientImpl atClientInstance;
-  AtContactsImpl atContactImpl;
-  String rootDomain;
-  int rootPort;
+  String? _atsign;
+  List<AtContact?>? selecteContactList;
+  List<GroupContactsModel?> allContacts = [], selectedGroupContacts = [];
+  AtGroup? selectedGroup;
+  AtClientImpl? atClientInstance;
+  late AtContactsImpl atContactImpl;
+  String? rootDomain;
+  int? rootPort;
   int length = 0;
-  bool showLoader;
+  bool? showLoader;
 
 // group list stream
   final _atGroupStreamController = StreamController<List<AtGroup>>.broadcast();
@@ -33,11 +33,12 @@ class GroupService {
   StreamSink<AtGroup> get groupViewSink => _groupViewStreamController.sink;
 
 // all contacts stream
-  final _allContactsStreamController =
+  final StreamController<List<GroupContactsModel?>>
+      _allContactsStreamController =
       StreamController<List<GroupContactsModel>>.broadcast();
-  Stream<List<GroupContactsModel>> get allContactsStream =>
+  Stream<List<GroupContactsModel?>> get allContactsStream =>
       _allContactsStreamController.stream;
-  StreamSink<List<GroupContactsModel>> get allContactsSink =>
+  StreamSink<List<GroupContactsModel?>> get allContactsSink =>
       _allContactsStreamController.sink;
 
   // selected group contact stream
@@ -45,7 +46,7 @@ class GroupService {
       StreamController<List<GroupContactsModel>>.broadcast();
   Stream<List<GroupContactsModel>> get selectedContactsStream =>
       _selectedContactsStreamController.stream;
-  StreamSink<List<GroupContactsModel>> get selectedContactsSink =>
+  StreamSink<List<GroupContactsModel?>> get selectedContactsSink =>
       _selectedContactsStreamController.sink;
 
   // show loader stream
@@ -57,11 +58,11 @@ class GroupService {
 
   get currentSelectedGroup => selectedGroup;
 
-  setSelectedContacts(List<AtContact> list) {
+  setSelectedContacts(List<AtContact?>? list) {
     selecteContactList = list;
   }
 
-  List<AtContact> get selectedContactList => selecteContactList;
+  List<AtContact?>? get selectedContactList => selecteContactList;
 
   init(AtClientImpl atClientImpl, String atSign, String rootDomainFromApp,
       int rootPortFromApp) async {
@@ -74,16 +75,16 @@ class GroupService {
     await getAllGroupsDetails();
   }
 
-  Future<dynamic> createGroup(AtGroup atGroup) async {
+  Future<dynamic?> createGroup(AtGroup atGroup) async {
     try {
-      AtGroup group = await atContactImpl.createGroup(atGroup);
-      if (group != null) {
+      AtGroup? group = await atContactImpl.createGroup(atGroup);
+      if (group is AtGroup) {
         await updateGroupStreams(group);
         return group;
       }
     } catch (e) {
       print('error in creating group: $e');
-      return e;
+      return;
     }
   }
 
@@ -93,7 +94,8 @@ class GroupService {
       List<AtGroup> groupList = [];
 
       for (int i = 0; i < groupIds.length; i++) {
-        AtGroup groupDetail = await getGroupDetail(groupIds[i]);
+        AtGroup groupDetail =
+            await (getGroupDetail(groupIds[i]) as FutureOr<AtGroup>);
         if (groupDetail != null) groupList.add(groupDetail);
       }
 
@@ -116,13 +118,13 @@ class GroupService {
     }
   }
 
-  Future<dynamic> getGroupDetail(String groupId) async {
+  Future<AtGroup?> getGroupDetail(String groupId) async {
     try {
       AtGroup group = await atContactImpl.getGroup(groupId);
       return group;
     } catch (e) {
       print('error in getting group details : $e');
-      return e;
+      return null;
     }
   }
 
@@ -142,7 +144,7 @@ class GroupService {
   }
 
   Future<dynamic> addGroupMembers(
-      List<AtContact> contacts, AtGroup group) async {
+      List<AtContact?> contacts, AtGroup group) async {
     try {
       bool result = await atContactImpl.addMembers(Set.from(contacts), group);
       if (result is bool) {
@@ -171,19 +173,20 @@ class GroupService {
   }
 
   updateGroupStreams(AtGroup group) async {
-    AtGroup groupDetail = await getGroupDetail(group.groupId);
-    if (groupDetail != null) groupViewSink.add(groupDetail);
+    AtGroup? groupDetail =
+        await (getGroupDetail(group.groupId) as FutureOr<AtGroup>);
+    if (groupDetail is AtGroup) groupViewSink.add(groupDetail);
     await getAllGroupsDetails();
   }
 
-  Future<dynamic> deleteGroup(AtGroup group) async {
+  Future<bool?> deleteGroup(AtGroup group) async {
     try {
       var result = await atContactImpl.deleteGroup(group);
       await getAllGroupsDetails(); //updating group list sink
       return result;
     } catch (e) {
       print('error in deleting group: $e');
-      return e;
+      return null;
     }
   }
 
@@ -220,30 +223,30 @@ class GroupService {
     }
   }
 
-  removeGroupContact(GroupContactsModel item) async {
+  removeGroupContact(GroupContactsModel? item) async {
     try {
       length = 0;
       if (selectedGroupContacts.isNotEmpty) {
         selectedGroupContacts.forEach((groupContact) {
-          if (groupContact.contactType == ContactsType.CONTACT) {
+          if (groupContact!.contactType == ContactsType.CONTACT) {
             length++;
           } else if (groupContact.contactType == ContactsType.GROUP) {
-            length = length + groupContact.group.members.length;
+            length = length + groupContact.group!.members.length;
           }
         });
       }
 
-      for (GroupContactsModel groupContact in selectedGroupContacts) {
+      for (GroupContactsModel? groupContact in selectedGroupContacts) {
         if ((groupContact.toString() == item.toString())) {
           int index = selectedGroupContacts.indexOf(groupContact);
           selectedGroupContacts.removeAt(index);
           break;
         }
       }
-      if (item.contactType == ContactsType.CONTACT) {
+      if (item!.contactType == ContactsType.CONTACT) {
         length--;
       } else if (item.contactType == ContactsType.GROUP) {
-        length -= item.group.members.length;
+        length -= item.group!.members.length;
       }
 
       selectedContactsSink.add(selectedGroupContacts);
@@ -252,21 +255,21 @@ class GroupService {
     }
   }
 
-  addGroupContact(GroupContactsModel item) {
+  addGroupContact(GroupContactsModel? item) {
     try {
       bool isSelected = false;
       length = 0;
       if (selectedGroupContacts.isNotEmpty) {
         selectedGroupContacts.forEach((groupContact) {
-          if (groupContact.contactType == ContactsType.CONTACT) {
+          if (groupContact!.contactType == ContactsType.CONTACT) {
             length++;
           } else if (groupContact.contactType == ContactsType.GROUP) {
-            length = length + groupContact.group.members.length;
+            length = length + groupContact.group!.members.length;
           }
         });
       }
 
-      for (GroupContactsModel groupContact in selectedGroupContacts) {
+      for (GroupContactsModel? groupContact in selectedGroupContacts) {
         if ((item.toString() == groupContact.toString())) {
           isSelected = true;
           break;
@@ -279,10 +282,10 @@ class GroupService {
         selectedGroupContacts.add(item);
       }
 
-      if (item.contactType == ContactsType.CONTACT) {
+      if (item!.contactType == ContactsType.CONTACT) {
         length++;
       } else if (item.contactType == ContactsType.GROUP) {
-        length += item.group.members.length;
+        length += item.group!.members.length;
       }
 
       selectedContactsSink.add(selectedGroupContacts);

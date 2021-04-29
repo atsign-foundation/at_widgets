@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 /// onTap function named as [onYesTap] for on press of [Yes] button of the dialog
 
 class AddSingleContact extends StatefulWidget {
-  final String atSignName;
+  final String? atSignName;
   // final ContactProvider contactProvider;
 
-  const AddSingleContact({Key key, this.atSignName}) : super(key: key);
+  const AddSingleContact({Key? key, this.atSignName}) : super(key: key);
 
   @override
   _AddSingleContactState createState() => _AddSingleContactState();

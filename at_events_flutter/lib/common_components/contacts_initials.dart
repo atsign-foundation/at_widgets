@@ -15,7 +15,7 @@ class ContactInitial extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Random r = Random();
+    var r = Random();
     return Container(
       height: size.toFont,
       width: size.toFont,

@@ -36,6 +36,7 @@ class _SelectLocationState extends State<SelectLocation> {
                     setState(() {
                       isLoader = true;
                     });
+                    // ignore: await_only_futures
                     await SearchLocationService().getAddressLatLng(str);
                     setState(() {
                       isLoader = false;
@@ -49,6 +50,7 @@ class _SelectLocationState extends State<SelectLocation> {
                     setState(() {
                       isLoader = true;
                     });
+                    // ignore: await_only_futures
                     await SearchLocationService().getAddressLatLng(inputText);
                     setState(() {
                       isLoader = false;
@@ -67,7 +69,7 @@ class _SelectLocationState extends State<SelectLocation> {
           SizedBox(height: 18.toHeight),
           InkWell(
               onTap: () async {
-                LatLng point = await MyLocation().myLocation();
+                var point = await getMyLocation();
                 if (point == null) {
                   CustomToast().show('Unable to access location', context);
                   return;

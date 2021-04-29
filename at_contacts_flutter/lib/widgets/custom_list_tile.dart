@@ -16,16 +16,16 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomListTile extends StatefulWidget {
-  final Function onTap;
-  final Function onTrailingPressed;
+  final Function? onTap;
+  final Function? onTrailingPressed;
   final bool asSelectionTile;
   final bool asSingleSelectionTile;
-  final AtContact contact;
-  final ContactService contactService;
-  final ValueChanged<List<AtContact>> selectedList;
+  final AtContact? contact;
+  final ContactService? contactService;
+  final ValueChanged<List<AtContact?>?>? selectedList;
 
   const CustomListTile(
-      {Key key,
+      {Key? key,
       this.onTap,
       this.onTrailingPressed,
       this.asSelectionTile = false,
@@ -43,8 +43,8 @@ class _CustomListTileState extends State<CustomListTile> {
   @override
   Widget build(BuildContext context) {
     Widget contactImage;
-    if (widget.contact.tags != null && widget.contact.tags['image'] != null) {
-      List<int> intList = widget.contact.tags['image'].cast<int>();
+    if (widget.contact!.tags != null && widget.contact!.tags['image'] != null) {
+      List<int> intList = widget.contact!.tags['image'].cast<int>();
       Uint8List image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
@@ -52,57 +52,58 @@ class _CustomListTileState extends State<CustomListTile> {
       );
     } else {
       contactImage = ContactInitial(
-        initials: widget.contact.atSign.substring(1, 3),
+        initials: widget.contact!.atSign.substring(1, 3),
       );
     }
-    return StreamBuilder<List<AtContact>>(
-        initialData: widget.contactService.selectedContacts,
-        stream: widget.contactService.selectedContactStream,
+    return StreamBuilder<List<AtContact?>>(
+        initialData: widget.contactService!.selectedContacts,
+        stream: widget.contactService!.selectedContactStream,
         builder: (context, snapshot) {
-          for (AtContact contact in widget.contactService.selectedContacts) {
+          for (AtContact? contact in widget.contactService!.selectedContacts) {
             if (contact == widget.contact ||
-                contact.atSign == widget.contact.atSign) {
+                contact!.atSign == widget.contact!.atSign) {
               isSelected = true;
               break;
             } else {
               isSelected = false;
             }
           }
-          if (widget.contactService.selectedContacts.isEmpty) {
+          if (widget.contactService!.selectedContacts.isEmpty) {
             isSelected = false;
           }
           return ListTile(
             onTap: () {
-              if (widget.asSelectionTile ?? false) {
+              if (widget.asSelectionTile) {
                 setState(() {
                   if (isSelected) {
-                    widget.contactService.removeSelectedAtSign(widget.contact);
+                    widget.contactService!.removeSelectedAtSign(widget.contact);
                   } else {
                     if (widget.asSingleSelectionTile) {
-                      widget.contactService.clearAtSigns();
+                      widget.contactService!.clearAtSigns();
                       Navigator.pop(context);
                     }
-                    widget.contactService.selectAtSign(widget.contact);
+                    widget.contactService!.selectAtSign(widget.contact);
                   }
                   isSelected = !isSelected;
                 });
 
-                widget.selectedList(widget.contactService.selectedContacts);
+                widget.selectedList!(widget.contactService!.selectedContacts);
               } else {
-                widget?.onTap();
+                widget.onTap!();
               }
             },
             title: Text(
-              widget.contact.tags != null && widget.contact.tags['name'] != null
-                  ? widget.contact.tags['name']
-                  : widget.contact.atSign.substring(1),
+              widget.contact!.tags != null &&
+                      widget.contact!.tags['name'] != null
+                  ? widget.contact!.tags['name']
+                  : widget.contact!.atSign.substring(1),
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14.toFont,
               ),
             ),
             subtitle: Text(
-              widget.contact.atSign,
+              widget.contact!.atSign,
               style: TextStyle(
                 color: ColorConstants.fadedText,
                 fontSize: 14.toFont,
@@ -121,10 +122,10 @@ class _CustomListTileState extends State<CustomListTile> {
                   ? selectRemoveContact()
                   : () {
                       if (widget.onTrailingPressed != null) {
-                        widget.onTrailingPressed(widget.contact.atSign);
+                        widget.onTrailingPressed!(widget.contact!.atSign);
                       }
                     },
-              icon: (widget.asSelectionTile ?? false)
+              icon: (widget.asSelectionTile)
                   ? (isSelected)
                       ? Icon(Icons.close)
                       : Icon(Icons.add)

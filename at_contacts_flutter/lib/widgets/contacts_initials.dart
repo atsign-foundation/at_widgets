@@ -11,7 +11,7 @@ class ContactInitial extends StatelessWidget {
   final double size;
   final String initials;
 
-  const ContactInitial({Key key, this.size = 50, this.initials})
+  const ContactInitial({Key? key, this.size = 50, required this.initials})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class ContactInitial extends StatelessWidget {
       // border: Border.all(width: 0.5, color: ColorConstants.fontSecondary)),
       child: Center(
         child: Text(
-          initials?.toUpperCase(),
+          initials.toUpperCase(),
           style: CustomTextStyles.whiteBold16,
         ),
       ),

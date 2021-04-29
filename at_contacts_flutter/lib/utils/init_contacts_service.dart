@@ -14,7 +14,7 @@ void disposeContactsControllers() {
 }
 
 Future<AtContact> getAtSignDetails(String atSign) async {
-  AtContact atContact = getCachedContactDetail(atSign);
+  AtContact? atContact = getCachedContactDetail(atSign);
   if (atContact == null) {
     Map<String, dynamic> contactDetails =
         await ContactService().getContactDetails(atSign);
@@ -29,7 +29,7 @@ Future<AtContact> getAtSignDetails(String atSign) async {
   return atContact;
 }
 
-AtContact getCachedContactDetail(String atsign) {
+AtContact? getCachedContactDetail(String atsign) {
   if (atsign == ContactService().atContactImpl.atClient.currentAtSign &&
       ContactService().loggedInUserDetails != null) {
     return ContactService().loggedInUserDetails;
@@ -37,7 +37,7 @@ AtContact getCachedContactDetail(String atsign) {
   if (ContactService().cachedContactList.isNotEmpty) {
     int index = ContactService()
         .cachedContactList
-        .indexWhere((element) => element.atSign == atsign);
+        .indexWhere((element) => element!.atSign == atsign);
     if (index > -1) return ContactService().cachedContactList[index];
   }
   return null;

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 class AddContactDialog extends StatefulWidget {
   AddContactDialog({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -79,7 +79,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   // validator: Validators.validateAdduser,
                   decoration: InputDecoration(
                     prefixText: '@',
-                    prefixStyle: TextStyle(color: Colors.grey),
+                    prefixStyle:
+                        TextStyle(color: Colors.grey, fontSize: 15.toFont),
                     hintText: '\tEnter contact’s atsign',
                   ),
                   style: TextStyle(fontSize: 15.toFont),
@@ -122,7 +123,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                                 isLoading = false;
                               });
                               if (_contactService.checkAtSign != null &&
-                                  _contactService.checkAtSign) {
+                                  _contactService.checkAtSign!) {
                                 Navigator.pop(context);
                               }
                             },
