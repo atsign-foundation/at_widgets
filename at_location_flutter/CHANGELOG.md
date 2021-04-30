@@ -1,3 +1,7 @@
+## [1.0.2] - 04/30/2021
+
+* Updated dependent packages
+
 ## [1.0.1] - 04/23/2021
 
 * Resolved static analysis issues
