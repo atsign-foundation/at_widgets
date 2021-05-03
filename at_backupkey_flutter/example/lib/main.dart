@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
-                child: RaisedButton(
+                child: TextButton(
                   onPressed: () async {
                     var _atClientPreference = await getAtClientPreference();
                     Onboarding(

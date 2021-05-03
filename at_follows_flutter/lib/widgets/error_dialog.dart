@@ -20,7 +20,7 @@ class CustomErrorDialog extends StatelessWidget {
       ),
       content: Text('${this.error}'),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.pop(context);
           },

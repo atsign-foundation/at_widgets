@@ -63,8 +63,11 @@ class BackupKeyWidget extends StatelessWidget {
     SizeConfig().init(context);
     return isButton
         ? GestureDetector(
-            onTap: () {
-              _onBackup(context);
+            onTap: () async {
+              var result = await _onBackup(context);
+              if (result == false) {
+                _showAlertDialog(context);
+              }
             },
             child: Container(
               width: this.buttonWidth ?? 158.toWidth,
@@ -96,10 +99,43 @@ class BackupKeyWidget extends StatelessWidget {
           );
   }
 
+  _showAlertDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Text(
+                  'Error',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 14.toFont),
+                ),
+                Icon(Icons.sentiment_dissatisfied, size: 25.toFont)
+              ],
+            ),
+            content: Text(
+              'Couldn\'t able to backup the key file',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: 14.toFont),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(_);
+                },
+                child: Text('Close'),
+              )
+            ],
+          );
+        });
+  }
+
   _showDialog(BuildContext context) {
     showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext ctxt) {
           return AlertDialog(
             title: Center(
               child: Text(
@@ -123,8 +159,11 @@ class BackupKeyWidget extends StatelessWidget {
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold)),
                         onPressed: () async {
-                          await _onBackup(context);
-                          Navigator.pop(context);
+                          var result = await _onBackup(context);
+                          Navigator.pop(ctxt);
+                          if (result == false) {
+                            _showAlertDialog(context);
+                          }
                         }),
                     Spacer(),
                     TextButton(
@@ -145,19 +184,11 @@ class BackupKeyWidget extends StatelessWidget {
     var _size = MediaQuery.of(context).size;
     try {
       var aesEncryptedKeys = await _backupKeyService.getEncryptedKeys(atsign);
-      var directory;
-      String path;
-      var status = await Permission.storage.status;
-      if (status.isDenied || status.isRestricted) {
-        await Permission.storage.request();
+      if (aesEncryptedKeys.isEmpty) {
+        return false;
       }
-      directory = await path_provider.getApplicationSupportDirectory();
-      path = directory.path.toString() + '/';
-      final encryptedKeysFile =
-          await File('$path' + '$atsign${Strings.backupKeyName}').create();
-      var keyString = jsonEncode(aesEncryptedKeys);
-      encryptedKeysFile.writeAsStringSync(keyString);
-      await Share.shareFiles([encryptedKeysFile.path],
+      String path = await _generateFile(aesEncryptedKeys);
+      await Share.shareFiles([path],
           sharePositionOrigin:
               Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
     } on Exception catch (ex) {
@@ -165,5 +196,19 @@ class BackupKeyWidget extends StatelessWidget {
     } on Error catch (err) {
       _logger.severe('BackingUp keys throws $err error');
     }
+  }
+
+  Future<String> _generateFile(Map<String, String> aesEncryptedKeys) async {
+    var status = await Permission.storage.status;
+    if (status.isDenied || status.isRestricted) {
+      await Permission.storage.request();
+    }
+    var directory = await path_provider.getApplicationSupportDirectory();
+    String path = directory.path.toString() + '/';
+    final encryptedKeysFile =
+        await File('$path' + '$atsign${Strings.backupKeyName}').create();
+    var keyString = jsonEncode(aesEncryptedKeys);
+    encryptedKeysFile.writeAsStringSync(keyString);
+    return encryptedKeysFile.path;
   }
 }

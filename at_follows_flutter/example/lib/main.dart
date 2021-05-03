@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
                     if (_atsign != null) Divider(thickness: 0.8),
                     if (_atsign == null)
                       Center(
-                        child: RaisedButton(
+                        child: TextButton(
                             onPressed: () async {
                               await _onboard(context);
                             },

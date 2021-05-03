@@ -1,3 +1,9 @@
+import 'package:at_common_flutter/utils/colors.dart';
+import 'package:at_common_flutter/utils/text_strings.dart';
+import 'package:at_common_flutter/utils/text_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:at_common_flutter/services/size_config.dart';
+
 /// This is a custom app bar
 /// @param [showTitle] toggles to display the center aligned title
 /// @param [showBackButton] toggles the automatically implies leading functionality, with [Icons.arrow_back]
@@ -14,13 +20,6 @@
 /// @param [titleTextStyle] sets the textStyle for the [titleText]
 /// @param [appBarColor] sets the appBar color
 /// @param [onLeadingIconPressed] defines what to execute on press of [leadingIcon]
-
-import 'package:at_common_flutter/utils/colors.dart';
-import 'package:at_common_flutter/utils/text_strings.dart';
-import 'package:at_common_flutter/utils/text_styles.dart';
-import 'package:flutter/material.dart';
-import 'package:at_common_flutter/services/size_config.dart';
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String titleText;
   final bool showTitle;
