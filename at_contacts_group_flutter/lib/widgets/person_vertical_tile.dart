@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_circle_avatar.dart';
@@ -87,7 +88,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                             ),
                           )
                         : ContactInitial(
-                            initials: widget.subTitle!.substring(1, 3),
+                            initials: widget.subTitle ?? ' ',
                           ),
               ),
               widget.icon != null

@@ -129,4 +129,10 @@ class CustomTextStyles {
     color: AllColors().GREY,
     fontSize: 14.toFont,
   );
+
+  TextStyle whiteBold16 = TextStyle(
+    color: Colors.white,
+    fontSize: 16.toFont,
+    fontWeight: FontWeight.w700,
+  );
 }

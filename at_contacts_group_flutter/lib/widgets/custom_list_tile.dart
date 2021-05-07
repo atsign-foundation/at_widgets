@@ -6,7 +6,9 @@
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
 import 'dart:typed_data';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
@@ -125,7 +127,7 @@ class _CustomListTileState extends State<CustomListTile> {
           initial = widget.item!.contact!.atSign;
         }
 
-        contactImage = ContactInitial(initials: initial.substring(1, 3));
+        contactImage = ContactInitial(initials: initial);
       }
     }
 

@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
@@ -40,9 +41,8 @@ class CircularContacts extends StatelessWidget {
                         nonAsset: true,
                       )
                     : ContactInitial(
-                        initials:
-                            (groupContact?.contact?.atSign?.substring(1, 3) ??
-                                groupContact?.group?.groupName?.substring(0, 2))!,
+                        initials: (groupContact?.contact?.atSign ??
+                            groupContact?.group?.groupName)!,
                       ),
                 // child:
               ),
@@ -84,7 +84,8 @@ class CircularContacts extends StatelessWidget {
           Container(
             width: 60.toWidth,
             child: Text(
-              (groupContact?.contact?.atSign ?? groupContact?.group?.groupName)!,
+              (groupContact?.contact?.atSign ??
+                  groupContact?.group?.groupName)!,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 15.toFont),

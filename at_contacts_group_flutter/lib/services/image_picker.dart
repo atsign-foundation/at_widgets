@@ -11,17 +11,19 @@ class ImagePicker {
 
   Future<Uint8List?> pickImage() async {
     Uint8List? fileContents;
-    FilePickerResult result = await FilePicker.platform
+    FilePickerResult? result = await FilePicker.platform
         .pickFiles(type: FileType.image, allowMultiple: false);
-    for (var pickedFile in result.files) {
-      var path = pickedFile.path;
-      File file = File(path);
-      var compressedFile = await FlutterImageCompress.compressWithFile(
-        file.absolute.path,
-        minWidth: 400,
-        minHeight: 200,
-      );
-      fileContents = compressedFile;
+    if (result != null) {
+      for (var pickedFile in result.files) {
+        var path = pickedFile.path!;
+        File file = File(path);
+        var compressedFile = await FlutterImageCompress.compressWithFile(
+          file.absolute.path,
+          minWidth: 400,
+          minHeight: 200,
+        );
+        fileContents = compressedFile;
+      }
     }
     return fileContents;
   }

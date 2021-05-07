@@ -6,6 +6,7 @@
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
 import 'dart:typed_data';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -13,6 +14,7 @@ import 'package:at_contacts_flutter/utils/images.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomListTile extends StatefulWidget {
@@ -52,7 +54,7 @@ class _CustomListTileState extends State<CustomListTile> {
       );
     } else {
       contactImage = ContactInitial(
-        initials: widget.contact!.atSign.substring(1, 3),
+        initials: widget.contact!.atSign,
       );
     }
     return StreamBuilder<List<AtContact?>>(
