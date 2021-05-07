@@ -34,6 +34,8 @@ These packages help to achieve the common functionalities associated with atsign
 
 [atsign_authentication_helper](https://pub.dev/packages/atsign_authentication_helper)- (DISCONTINUED) A flutter plugin project to provide authentication for atsign apps. It provides both a QR scanner and feature to upload files.
 
+[at_follows_flutter](/at_follows_flutter)-  A flutter plugin project to integrate follows feature for @signs.
+
 
 # Installation:
 All installation guidelines are written in their respective directories and pub.dev sites. 
