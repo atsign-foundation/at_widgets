@@ -4,8 +4,11 @@
 /// @param [selectedList] is a callback function to return back the selected list from the screen to the app
 /// @param [asSelectionScreen] toggles between the selection type screen of to display the contacts
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -121,6 +124,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
             builder: (context) => AddContactDialog(),
           );
         },
+        // ignore: unnecessary_null_comparison
         showTrailingIcon: widget.asSelectionScreen == null ||
                 widget.asSelectionScreen == false
             ? true
@@ -170,7 +174,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             child: Text(TextStrings().noContacts),
                           );
                         } else {
-                          List<AtContact?> _filteredList = [];
+                          var _filteredList = <AtContact?>[];
                           snapshot.data!.forEach((c) {
                             if (c!.atSign
                                 .toUpperCase()
@@ -191,8 +195,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             shrinkWrap: true,
                             physics: AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, alphabetIndex) {
-                              List<AtContact?> contactsForAlphabet = [];
-                              String currentChar =
+                              var contactsForAlphabet = <AtContact?>[];
+                              var currentChar =
                                   String.fromCharCode(alphabetIndex + 65)
                                       .toUpperCase();
                               if (alphabetIndex == 26) {
@@ -264,6 +268,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                     setState(() {
                                                       blockingContact = true;
                                                     });
+                                                    // ignore: unawaited_futures
                                                     showDialog(
                                                       context: context,
                                                       builder: (context) =>
@@ -302,6 +307,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                     setState(() {
                                                       deletingContact = true;
                                                     });
+                                                    // ignore: unawaited_futures
                                                     showDialog(
                                                       context: context,
                                                       builder: (context) =>

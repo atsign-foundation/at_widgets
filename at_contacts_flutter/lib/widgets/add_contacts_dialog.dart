@@ -1,8 +1,10 @@
 /// A popup to ask the [AtSign] which is to be added
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 // ignore: library_prefixes
 import 'package:at_contacts_flutter/utils/text_strings.dart' as contactStrings;
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart'
@@ -38,8 +40,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
 
   @override
   Widget build(BuildContext context) {
-    ContactService _contactService = ContactService();
-    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    var _contactService = ContactService();
+    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,

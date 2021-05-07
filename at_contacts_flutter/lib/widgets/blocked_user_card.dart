@@ -37,7 +37,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
     if (widget.blockeduser!.tags != null &&
         widget.blockeduser!.tags['image'] != null) {
       List<int> intList = widget.blockeduser!.tags['image'].cast<int>();
-      Uint8List image = Uint8List.fromList(intList);
+      var image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
         nonAsset: true,

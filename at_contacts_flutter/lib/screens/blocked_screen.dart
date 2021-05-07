@@ -1,11 +1,13 @@
 /// Screen exposed to see blocked contacts and unblock them
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/widgets/blocked_user_card.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class BlockedScreen extends StatefulWidget {

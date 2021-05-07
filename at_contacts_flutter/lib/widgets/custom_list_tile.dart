@@ -47,7 +47,7 @@ class _CustomListTileState extends State<CustomListTile> {
     Widget contactImage;
     if (widget.contact!.tags != null && widget.contact!.tags['image'] != null) {
       List<int> intList = widget.contact!.tags['image'].cast<int>();
-      Uint8List image = Uint8List.fromList(intList);
+      var image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
         nonAsset: true,
@@ -61,6 +61,7 @@ class _CustomListTileState extends State<CustomListTile> {
         initialData: widget.contactService!.selectedContacts,
         stream: widget.contactService!.selectedContactStream,
         builder: (context, snapshot) {
+          // ignore: omit_local_variable_types
           for (AtContact? contact in widget.contactService!.selectedContacts) {
             if (contact == widget.contact ||
                 contact!.atSign == widget.contact!.atSign) {
@@ -142,5 +143,6 @@ class _CustomListTileState extends State<CustomListTile> {
         });
   }
 
+  // ignore: always_declare_return_types
   selectRemoveContact() {}
 }
