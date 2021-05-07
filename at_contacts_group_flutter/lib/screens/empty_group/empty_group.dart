@@ -1,3 +1,4 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_group_flutter/screens/new_group/new_group.dart';
@@ -6,6 +7,7 @@ import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class EmptyGroup extends StatefulWidget {

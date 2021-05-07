@@ -1,3 +1,4 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
@@ -5,11 +6,12 @@ import 'dart:async';
 import 'package:at_contacts_flutter/utils/exposed_service.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 class GroupService {
   GroupService._();
-  static GroupService _instance = GroupService._();
+  static final GroupService _instance = GroupService._();
   factory GroupService() => _instance;
   String? _atsign;
   List<AtContact?>? selecteContactList;
@@ -54,16 +56,18 @@ class GroupService {
   Stream<bool> get showLoaderStream => _showLoaderStreamController.stream;
   StreamSink<bool> get showLoaderSink => _showLoaderStreamController.sink;
 
-  get currentAtsign => _atsign;
+  String? get currentAtsign => _atsign;
 
-  get currentSelectedGroup => selectedGroup;
+  AtGroup? get currentSelectedGroup => selectedGroup;
 
+  // ignore: always_declare_return_types
   setSelectedContacts(List<AtContact?>? list) {
     selecteContactList = list;
   }
 
   List<AtContact?>? get selectedContactList => selecteContactList;
 
+  // ignore: always_declare_return_types
   init(AtClientImpl atClientImpl, String atSign, String rootDomainFromApp,
       int rootPortFromApp) async {
     atClientInstance = atClientImpl;
@@ -88,14 +92,16 @@ class GroupService {
     }
   }
 
+  // ignore: always_declare_return_types
   getAllGroupsDetails() async {
     try {
       List<String> groupIds = await atContactImpl.listGroupIds();
-      List<AtGroup> groupList = [];
+      var groupList = <AtGroup>[];
 
-      for (int i = 0; i < groupIds.length; i++) {
-        AtGroup groupDetail =
+      for (var i = 0; i < groupIds.length; i++) {
+        var groupDetail =
             await (getGroupDetail(groupIds[i]) as FutureOr<AtGroup>);
+        // ignore: unnecessary_null_comparison
         if (groupDetail != null) groupList.add(groupDetail);
       }
 
@@ -109,6 +115,7 @@ class GroupService {
     }
   }
 
+  // ignore: always_declare_return_types
   listAllGroupNames() async {
     try {
       List<String> groupNames = await atContactImpl.listGroupNames();
@@ -172,6 +179,7 @@ class GroupService {
     }
   }
 
+  // ignore: always_declare_return_types
   updateGroupStreams(AtGroup group) async {
     AtGroup? groupDetail =
         await (getGroupDetail(group.groupId) as FutureOr<AtGroup>);
@@ -206,6 +214,7 @@ class GroupService {
   }
 
   // fetches contacts using the contacts library and groups from itself
+  // ignore: always_declare_return_types
   fetchGroupsAndContacts() async {
     try {
       allContacts = [];
@@ -223,6 +232,7 @@ class GroupService {
     }
   }
 
+  // ignore: always_declare_return_types
   removeGroupContact(GroupContactsModel? item) async {
     try {
       length = 0;
@@ -236,9 +246,10 @@ class GroupService {
         });
       }
 
+      // ignore: omit_local_variable_types
       for (GroupContactsModel? groupContact in selectedGroupContacts) {
         if ((groupContact.toString() == item.toString())) {
-          int index = selectedGroupContacts.indexOf(groupContact);
+          var index = selectedGroupContacts.indexOf(groupContact);
           selectedGroupContacts.removeAt(index);
           break;
         }
@@ -255,9 +266,10 @@ class GroupService {
     }
   }
 
+  // ignore: always_declare_return_types
   addGroupContact(GroupContactsModel? item) {
     try {
-      bool isSelected = false;
+      var isSelected = false;
       length = 0;
       if (selectedGroupContacts.isNotEmpty) {
         selectedGroupContacts.forEach((groupContact) {
@@ -269,6 +281,7 @@ class GroupService {
         });
       }
 
+      // ignore: omit_local_variable_types
       for (GroupContactsModel? groupContact in selectedGroupContacts) {
         if ((item.toString() == groupContact.toString())) {
           isSelected = true;

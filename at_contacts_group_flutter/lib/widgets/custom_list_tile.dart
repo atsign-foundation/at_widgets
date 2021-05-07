@@ -51,6 +51,7 @@ class _CustomListTileState extends State<CustomListTile> {
   void initState() {
     _groupService = GroupService();
     // if (!widget.selectSingle) {
+    // ignore: omit_local_variable_types
     for (GroupContactsModel? groupContact
         in _groupService.selectedGroupContacts) {
       if (widget.item.toString() == groupContact.toString()) {
@@ -70,6 +71,7 @@ class _CustomListTileState extends State<CustomListTile> {
     _groupService = GroupService();
 
     // if (!widget.selectSingle) {
+    // ignore: omit_local_variable_types
     for (GroupContactsModel? groupContact
         in _groupService.selectedGroupContacts) {
       if (widget.item.toString() == groupContact.toString()) {
@@ -86,6 +88,7 @@ class _CustomListTileState extends State<CustomListTile> {
 
   Widget? contactImage;
 
+  // ignore: always_declare_return_types
   getImage() async {
     setState(() {
       isLoading = true;
@@ -145,6 +148,7 @@ class _CustomListTileState extends State<CustomListTile> {
         stream: _groupService.selectedContactsStream,
         builder: (context, snapshot) {
           // if (!widget.selectSingle) {
+          // ignore: omit_local_variable_types
           for (GroupContactsModel? groupContact
               in _groupService.selectedGroupContacts) {
             if (widget.item.toString() == groupContact.toString()) {
@@ -182,9 +186,11 @@ class _CustomListTileState extends State<CustomListTile> {
             },
             title: Text(
               widget.item!.contact == null
+                  // ignore: prefer_if_null_operators
                   ? widget.item!.group!.displayName == null
                       ? widget.item!.group!.groupName
                       : widget.item!.group!.displayName
+                  // ignore: prefer_if_null_operators
                   : widget.item!.contact!.tags['name'] == null
                       ? widget.item!.contact!.atSign.substring(1)
                       : widget.item!.contact!.tags['name'],
@@ -230,5 +236,6 @@ class _CustomListTileState extends State<CustomListTile> {
         });
   }
 
+  // ignore: always_declare_return_types
   selectRemoveContact() {}
 }

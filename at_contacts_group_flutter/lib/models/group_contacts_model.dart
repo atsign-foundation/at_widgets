@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 
 class GroupContactsModel {

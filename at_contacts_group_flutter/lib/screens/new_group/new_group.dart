@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/image_picker.dart';
@@ -9,8 +10,11 @@ import 'package:at_contacts_group_flutter/widgets/bottom_sheet.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/src/exception/at_exceptions.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:emoji_picker/emoji_picker.dart';
 
 class NewGroup extends StatefulWidget {
@@ -33,6 +37,7 @@ class _NewGroupState extends State<NewGroup> {
     getContacts();
   }
 
+  // ignore: always_declare_return_types
   getContacts() {
     if (GroupService().selecteContactList!.isNotEmpty) {
       selectedContacts = GroupService().selecteContactList;
@@ -41,10 +46,12 @@ class _NewGroupState extends State<NewGroup> {
     }
   }
 
+  // ignore: always_declare_return_types
   createGroup() async {
-    bool isKeyboardOpen =
+    var isKeyboardOpen =
         MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     groupName = textController.text;
+    // ignore: unnecessary_null_comparison
     if (groupName != null) {
       // if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
       //   CustomToast().show(TextConstants().INVALID_NAME, context);
@@ -52,7 +59,7 @@ class _NewGroupState extends State<NewGroup> {
       // }
 
       if (groupName.trim().isNotEmpty) {
-        AtGroup group = AtGroup(
+        var group = AtGroup(
           groupName,
           description: 'group desc',
           displayName: groupName,
@@ -61,8 +68,8 @@ class _NewGroupState extends State<NewGroup> {
           updatedBy: GroupService().currentAtsign,
         );
 
-        if (this.selectedImageByteData != null) {
-          group.groupPicture = this.selectedImageByteData;
+        if (selectedImageByteData != null) {
+          group.groupPicture = selectedImageByteData;
         }
 
         var result = await GroupService().createGroup(group);
@@ -138,14 +145,13 @@ class _NewGroupState extends State<NewGroup> {
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: this.selectedImageByteData != null
+                      child: selectedImageByteData != null
                           ? SizedBox(
                               width: 68.toWidth,
                               height: 68.toWidth,
                               child: CircleAvatar(
                                 backgroundImage:
-                                    Image.memory(this.selectedImageByteData!)
-                                        .image,
+                                    Image.memory(selectedImageByteData!).image,
                               ),
                             )
                           : Icon(Icons.add, color: AllColors().ORANGE),
