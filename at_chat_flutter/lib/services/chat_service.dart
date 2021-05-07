@@ -2,7 +2,9 @@
 
 import 'dart:async';
 import 'dart:convert';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
 import 'package:at_chat_flutter/models/message_model.dart';
 
@@ -52,7 +54,7 @@ class ChatService {
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     var privateKey = await getPrivateKey(currentAtSign!);
-    atClientInstance.startMonitor(privateKey, _notificationCallback);
+    await atClientInstance.startMonitor(privateKey, _notificationCallback);
     print('Monitor started');
     return true;
   }
@@ -101,6 +103,7 @@ class ChatService {
       groupChatId = groupId;
       groupChatMembers = groupMembers;
     } else {
+      // ignore: unnecessary_null_comparison
       if (chatWithAtSignFromApp != null) {
         if (chatWithAtSignFromApp.startsWith('@')) {
           chatWithAtSign = chatWithAtSignFromApp;
@@ -127,6 +130,7 @@ class ChatService {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
 
+      // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
         chatHistoryMessages = json.decode((keyValue.value) as String) as List?;
         chatHistoryMessages!.forEach((value) {
@@ -171,6 +175,7 @@ class ChatService {
       print('error in getMissingKey:get ${e.toString()}');
     });
     print('result - $result');
+    // ignore: unnecessary_null_comparison
     if (result != null) {
       setChatHistory(Message(
           message: result.value,
