@@ -62,8 +62,6 @@ class _ConnectionsState extends State<Connections> {
 
     _connectionService.followerAtsign = widget.followerAtsignTitle;
     _connectionService.followAtsign = widget.followAtsignTitle;
-    // followAtsignTitle = widget.followAtsignTitle;
-    // followerAtsignTitle = widget.followerAtsignTitle;
 
     super.initState();
   }
@@ -122,7 +120,8 @@ class _ConnectionsState extends State<Connections> {
                               index++)
                             CustomButton(
                               showCount: true,
-                              count: '${connectionTabs[index].count ?? 0}',
+                              count:
+                                  _getFollowsCount(connectionTabs[index].count),
                               width: 150.0.toWidth,
                               isActive: connectionTabs[index].isActive,
                               text: connectionTabs[index].name,
@@ -201,6 +200,25 @@ class _ConnectionsState extends State<Connections> {
       connectionTabs[1].count = ConnectionProvider().followingList.length;
       if (!isCalled) setState(() {});
     }
+  }
+
+  String _getFollowsCount(int count) {
+    count ??= 0;
+    String countValue;
+    if (count / 100000 > 1) {
+      countValue = count % 100000 == 0
+          ? (count / 100000).toStringAsFixed(0)
+          : (count / 100000).toStringAsFixed(1);
+      countValue += 'M';
+    } else if (count / 1000 > 1) {
+      countValue = count % 1000 == 0
+          ? (count / 1000).toStringAsFixed(0)
+          : (count / 1000).toStringAsFixed(1);
+      countValue += 'K';
+    } else {
+      countValue = count.toString();
+    }
+    return countValue;
   }
 
   _formConnectionTabs(int tabsCount) {

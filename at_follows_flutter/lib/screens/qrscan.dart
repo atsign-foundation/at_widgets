@@ -24,6 +24,7 @@ class _QrScanState extends State<QrScan> {
   bool loading = false;
   bool _scanCompleted = false;
   QrReaderViewController _controller;
+  bool _isScan = false;
 
   @override
   initState() {
@@ -95,7 +96,7 @@ class _QrScanState extends State<QrScan> {
       if (result) {
         Navigator.pop(context);
         await ConnectionProvider().follow(formattedAtsign);
-      } else {}
+      }
     } else {
       _logger.severe('Scanning the QRcode throws error');
     }
@@ -116,10 +117,22 @@ class _QrScanState extends State<QrScan> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                  Text(
-                    Strings.qrscanDescription,
-                    style: CustomTextStyles.fontR16primary,
-                    textAlign: TextAlign.center,
+                  SwitchListTile(
+                    title: Text(
+                      Strings.qrscanDescription,
+                      style: CustomTextStyles.fontR16primary,
+                      textAlign: TextAlign.center,
+                    ),
+                    value: _isScan,
+                    onChanged: (value) {
+                      setState(() {
+                        _isScan = value;
+                      });
+                    },
+                    inactiveTrackColor: ColorConstants.inactiveTrackColor,
+                    inactiveThumbColor: ColorConstants.inactiveThumbColor,
+                    activeTrackColor: ColorConstants.activeTrackColor,
+                    activeColor: ColorConstants.activeColor,
                   ),
                   SizedBox(height: 20.toHeight),
                   Center(
@@ -129,7 +142,7 @@ class _QrScanState extends State<QrScan> {
                         width: 300.toWidth,
                         height: 350.toHeight,
                         color: Colors.black,
-                        child: !permissionGrated
+                        child: !permissionGrated || !_isScan
                             ? SizedBox()
                             : Stack(
                                 children: [

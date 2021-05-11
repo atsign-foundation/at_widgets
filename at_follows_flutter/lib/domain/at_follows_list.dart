@@ -10,9 +10,10 @@ class AtFollowsList {
 
   create(AtFollowsValue atValue) {
     _atKey = atValue;
-    list = atValue.value != null && atValue.value != ''
-        ? atValue.value.split(',')
-        : [];
+    list =
+        atValue.value != null && atValue.value != '' && atValue.value != 'null'
+            ? atValue.value.split(',')
+            : [];
     list.toSet().toList();
   }
 

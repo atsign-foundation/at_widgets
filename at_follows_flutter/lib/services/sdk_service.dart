@@ -59,23 +59,31 @@ class SDKService {
   ///Returns list of latest notifications of followers with `update` operation.
   ///Returns null if such notifications are not present.
   Future<List<AtNotification>> notifyList({String fromDate}) async {
+    int fromDateTime = 0;
+
     if (fromDate != null) {
+      fromDateTime = DateTime.parse(fromDate).millisecondsSinceEpoch;
       fromDate = fromDate.split(' ')[0];
     }
-    var response = await _atClientServiceInstance.atClient
-        .notifyList(regex: AppConstants.following, fromDate: fromDate);
+    var response = await _atClientServiceInstance.atClient.notifyList(
+        regex: AppConstants.following + '|' + AppConstants.followers,
+        fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
     if (response == 'null') {
       return [];
     }
     List<AtNotification> notificationList = AtNotification.fromJsonList(
         List<Map<String, dynamic>>.from(jsonDecode(response)));
+
+    notificationList
+        .retainWhere((notification) => notification.dateTime > fromDateTime);
     notificationList.sort((notification1, notification2) =>
         notification2.dateTime.compareTo(notification1.dateTime));
     Set<AtNotification> uniqueNotifications = {};
     Set<String> uniqueKeys = {};
     for (var notification in notificationList) {
-      bool isUnique = uniqueKeys.add(notification.fromAtSign);
+      bool isUnique =
+          uniqueKeys.add(notification.fromAtSign + notification.key);
       if (isUnique) {
         uniqueNotifications.add(notification);
       }

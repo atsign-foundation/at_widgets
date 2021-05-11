@@ -46,7 +46,7 @@ class Strings {
   static const String atsignHintText = 'alice';
   static const String qrTitle = 'Follow @sign';
   static const String qrscanDescription =
-      'Scan the QR code of an @sign to follow';
+      'Toggle to scan the QR code of an @sign to follow';
   static const String submitButton = 'Submit';
   static const String existingFollower = 'You are already following ';
   static const String ownAtsign = 'You cannot follow your own @sign';
