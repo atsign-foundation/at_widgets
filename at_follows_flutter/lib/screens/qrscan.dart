@@ -170,10 +170,12 @@ class _QrScanState extends State<QrScan> {
                   SizedBox(height: 20.toHeight),
                   Text(
                     'OR',
+                    style: CustomTextStyles.fontR14primary,
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 20.toHeight),
                   CustomButton(
+                      height: 40.toHeight,
                       isActive: true,
                       onPressedCallBack: (value) {
                         _getAtsignForm(context);

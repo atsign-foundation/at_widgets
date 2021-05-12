@@ -142,18 +142,20 @@ class _ConnectionsState extends State<Connections> {
                       ),
                       SizedBox(height: 20.toHeight),
                       TextField(
+                        style: CustomTextStyles.fontR16primary,
                         onChanged: (value) {
                           setState(() {});
                         },
                         textInputAction: TextInputAction.search,
                         controller: searchController,
                         decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(18.toFont),
                             filled: true,
                             fillColor: ColorConstants.fillColor,
                             hintText: Strings.Search,
                             hintStyle: CustomTextStyles.fontR16primary,
                             prefixIcon: Icon(Icons.filter_list,
-                                color: ColorConstants.primary),
+                                size: 20.toFont, color: ColorConstants.primary),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0.toFont),
                                 borderSide: BorderSide(
