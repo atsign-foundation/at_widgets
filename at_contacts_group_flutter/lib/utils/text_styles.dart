@@ -1,10 +1,11 @@
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class CustomTextStyles {
   CustomTextStyles._();
-  static CustomTextStyles _instance = CustomTextStyles._();
+  static final CustomTextStyles _instance = CustomTextStyles._();
   factory CustomTextStyles() => _instance;
 
   TextStyle orange16 = TextStyle(

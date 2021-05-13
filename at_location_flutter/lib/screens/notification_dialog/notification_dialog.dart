@@ -94,7 +94,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                               ),
                             )
                           : ContactInitial(
-                              initials: locationUserImageToShow.substring(1, 3),
+                              initials: locationUserImageToShow,
                               size: 60,
                             ),
                       widget.showMembersCount

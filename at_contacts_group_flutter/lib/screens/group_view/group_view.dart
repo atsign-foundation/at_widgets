@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_group_flutter/screens/edit/group_edit.dart';
@@ -13,6 +14,7 @@ import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class GroupView extends StatefulWidget {
@@ -54,8 +56,7 @@ class _GroupViewState extends State<GroupView> {
                           if (snapshot.data!.groupPicture != null) {
                             List<int> intList =
                                 snapshot.data!.groupPicture.cast<int>();
-                            Uint8List groupPicture =
-                                Uint8List.fromList(intList);
+                            var groupPicture = Uint8List.fromList(intList);
 
                             return Image.memory(
                               groupPicture,
@@ -123,7 +124,7 @@ class _GroupViewState extends State<GroupView> {
                               );
                             } else {
                               if (snapshot.hasData) {
-                                AtGroup groupData = snapshot.data!;
+                                var groupData = snapshot.data!;
                                 return GridView.count(
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
@@ -215,7 +216,7 @@ class _GroupViewState extends State<GroupView> {
                                   (context, AsyncSnapshot<AtGroup> snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.active) {
-                                  AtGroup groupData = snapshot.data!;
+                                  var groupData = snapshot.data!;
                                   return Container(
                                     child: Column(
                                       crossAxisAlignment:

@@ -66,8 +66,7 @@ class _DisplayTileState extends State<DisplayTile> {
                   ? CustomCircleAvatar(
                       byteImage: image, nonAsset: true, size: 30)
                   : widget.atsignCreator != null
-                      ? ContactInitial(
-                          initials: widget.atsignCreator.substring(1, 3))
+                      ? ContactInitial(initials: widget.atsignCreator)
                       : SizedBox(),
               widget.number != null
                   ? Positioned(

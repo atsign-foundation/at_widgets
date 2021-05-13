@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   fluttertoast: ^8.0.5
-  file_picker: ^2.0.7
+  file_picker: ^3.0.1
   emoji_picker: ^0.1.0
   flutter_slidable: ^0.6.0
   flutter_image_compress: ^1.0.0
@@ -22,7 +22,8 @@ dependencies:
   at_client_mobile: ^1.0.0+9
   at_commons: ^1.0.1+6
   at_common_flutter: ^1.0.0
-  at_contacts_flutter: ^1.0.0
+  at_contacts_flutter: 
+    path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter
   at_contact: ^1.0.0+3
   
 dev_dependencies:

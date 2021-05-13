@@ -4,9 +4,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class CustomToast {
   CustomToast._();
-  static CustomToast _instance = CustomToast._();
+  static final CustomToast _instance = CustomToast._();
   factory CustomToast() => _instance;
 
+  // ignore: always_declare_return_types
   show(String text, BuildContext context,
       {Color? bgColor, Color? textColor, int duration = 3, int gravity = 0}) {
     Fluttertoast.showToast(

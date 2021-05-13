@@ -36,7 +36,7 @@ class AtLocationNotificationListener {
 
   Future<bool> startMonitor() async {
     var privateKey = await getPrivateKey(currentAtSign);
-    atClientInstance.startMonitor(privateKey, _notificationCallback);
+    await atClientInstance.startMonitor(privateKey, _notificationCallback);
     print('Monitor started in location package');
     return true;
   }

@@ -76,7 +76,7 @@ Widget buildPopup(HybridModel user) {
                                   nonAsset: true,
                                   size: 30)
                               : ContactInitial(
-                                  initials: user.displayName.substring(1, 3),
+                                  initials: user.displayName,
                                   size: 60,
                                 ),
                         ),

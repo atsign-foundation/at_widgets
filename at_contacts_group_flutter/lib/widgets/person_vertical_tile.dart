@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
-import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
-import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class CustomPersonVerticalTile extends StatefulWidget {
@@ -40,10 +40,12 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
     getAtsignImage();
   }
 
+  // ignore: always_declare_return_types
   getAtsignImage() async {
     if (widget.atsign == null) return;
-    AtContact contact = await getAtSignDetails(widget.atsign!);
+    var contact = await getAtSignDetails(widget.atsign!);
 
+    // ignore: unnecessary_null_comparison
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
         List<int>? intList = contact.tags['image'].cast<int>();
@@ -87,7 +89,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                             ),
                           )
                         : ContactInitial(
-                            initials: widget.subTitle!.substring(1, 3),
+                            initials: widget.subTitle ?? ' ',
                           ),
               ),
               widget.icon != null

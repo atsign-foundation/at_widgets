@@ -6,6 +6,7 @@
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
 import 'dart:typed_data';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -13,6 +14,7 @@ import 'package:at_contacts_flutter/utils/images.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomListTile extends StatefulWidget {
@@ -45,20 +47,21 @@ class _CustomListTileState extends State<CustomListTile> {
     Widget contactImage;
     if (widget.contact!.tags != null && widget.contact!.tags['image'] != null) {
       List<int> intList = widget.contact!.tags['image'].cast<int>();
-      Uint8List image = Uint8List.fromList(intList);
+      var image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
         nonAsset: true,
       );
     } else {
       contactImage = ContactInitial(
-        initials: widget.contact!.atSign.substring(1, 3),
+        initials: widget.contact!.atSign,
       );
     }
     return StreamBuilder<List<AtContact?>>(
         initialData: widget.contactService!.selectedContacts,
         stream: widget.contactService!.selectedContactStream,
         builder: (context, snapshot) {
+          // ignore: omit_local_variable_types
           for (AtContact? contact in widget.contactService!.selectedContacts) {
             if (contact == widget.contact ||
                 contact!.atSign == widget.contact!.atSign) {
@@ -140,5 +143,6 @@ class _CustomListTileState extends State<CustomListTile> {
         });
   }
 
+  // ignore: always_declare_return_types
   selectRemoveContact() {}
 }

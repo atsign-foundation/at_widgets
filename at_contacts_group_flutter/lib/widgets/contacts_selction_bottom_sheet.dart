@@ -4,12 +4,14 @@
 /// @param [selectedList] is a [ValueChanged] function which return the selected contacts
 /// to be used outside of package.
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactSelectionBottomSheet extends StatelessWidget {
@@ -20,7 +22,7 @@ class ContactSelectionBottomSheet extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    GroupService _groupService = GroupService();
+    var _groupService = GroupService();
     return StreamBuilder<List<GroupContactsModel?>>(
       stream: _groupService.selectedContactsStream,
       initialData: _groupService.selectedGroupContacts,
@@ -31,6 +33,9 @@ class ContactSelectionBottomSheet extends StatelessWidget {
           : Container(
               padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
               height: 70.toHeight,
+              decoration: BoxDecoration(
+                  color: Color(0xffF7F7FF),
+                  boxShadow: [BoxShadow(color: Colors.grey)]),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -60,9 +65,6 @@ class ContactSelectionBottomSheet extends StatelessWidget {
                   )
                 ],
               ),
-              decoration: BoxDecoration(
-                  color: Color(0xffF7F7FF),
-                  boxShadow: [BoxShadow(color: Colors.grey)]),
             ),
     );
   }

@@ -1,12 +1,13 @@
 import 'dart:typed_data';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
-import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 // ignore: must_be_immutable
@@ -44,10 +45,12 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
     }
   }
 
+  // ignore: always_declare_return_types
   getAtsignImage() async {
     if (widget.atsign == null) return;
-    AtContact contact = await getAtSignDetails(widget.atsign!);
+    var contact = await getAtSignDetails(widget.atsign!);
 
+    // ignore: unnecessary_null_comparison
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
         List<int>? intList = contact.tags['image'].cast<int>();
@@ -106,10 +109,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                             fit: BoxFit.fill,
                           ),
                         )
-                      : ContactInitial(
-                          initials: contactInitial.substring(
-                              0, contactInitial.length > 1 ? 2 : 1),
-                          size: 60),
+                      : ContactInitial(initials: contactInitial, size: 60),
 
               SizedBox(height: 15.toHeight),
               Text(
@@ -134,6 +134,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                           isLoading = true;
                         });
 
+                        // ignore: unnecessary_null_comparison
                         if (widget.onYesPressed != null) {
                           await widget.onYesPressed();
                         }

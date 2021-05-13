@@ -1,16 +1,20 @@
 /// A service to handle CRUD operation on contacts
 
 import 'dart:async';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 
 class ContactService {
   ContactService._();
-  static ContactService _instance = ContactService._();
+  static final ContactService _instance = ContactService._();
   factory ContactService() => _instance;
 
   late AtContactsImpl atContactImpl;
@@ -36,7 +40,7 @@ class ContactService {
   Stream<List<AtContact>> get selectedContactStream =>
       selectedContactStreamController.stream;
 
-  disposeControllers() {
+  void disposeControllers() {
     contactStreamController.close();
     selectedContactStreamController.close();
     blockedContactStreamController.close();
@@ -52,6 +56,7 @@ class ContactService {
   bool? checkAtSign;
   List<String> allContactsList = [];
 
+  // ignore: always_declare_return_types
   initContactsService(
       AtClientImpl atClientInstanceFromApp,
       String currentAtSign,
@@ -67,20 +72,22 @@ class ContactService {
     await fetchBlockContactList();
   }
 
+  // ignore: always_declare_return_types
   resetData() {
     getAtSignError = '';
     checkAtSign = false;
   }
 
+  // ignore: always_declare_return_types
   fetchContacts() async {
     selectedContacts = [];
     try {
       contactList = [];
       allContactsList = [];
       contactList = await atContactImpl.listContacts();
-      List<AtContact?> tempContactList = [...contactList];
-      int range = contactList.length;
-      for (int i = 0; i < range; i++) {
+      var tempContactList = <AtContact?>[...contactList];
+      var range = contactList.length;
+      for (var i = 0; i < range; i++) {
         allContactsList.add(contactList[i]!.atSign);
         if (contactList[i]!.blocked) {
           tempContactList.remove(contactList[i]);
@@ -88,6 +95,7 @@ class ContactService {
       }
       contactList = tempContactList;
       contactList.sort((a, b) {
+        // ignore: omit_local_variable_types
         int? index = a?.atSign
             .toString()
             .substring(1)
@@ -97,10 +105,11 @@ class ContactService {
       contactSink.add(contactList);
       return contactList;
     } catch (e) {
-      print("error here => $e");
+      print('error here => $e');
     }
   }
 
+  // ignore: always_declare_return_types
   blockUnblockContact(
       {required AtContact contact, required bool blockAction}) async {
     try {
@@ -113,6 +122,7 @@ class ContactService {
     }
   }
 
+  // ignore: always_declare_return_types
   fetchBlockContactList() async {
     try {
       blockContactList = [];
@@ -123,10 +133,11 @@ class ContactService {
     }
   }
 
+  // ignore: always_declare_return_types
   deleteAtSign({required String atSign}) async {
     try {
       var result = await atContactImpl.delete(atSign);
-      print("delete result => $result");
+      print('delete result => $result');
       fetchContacts();
     } catch (error) {
       print('error in delete atsign:$error');
@@ -145,7 +156,7 @@ class ContactService {
       isContactPresent = false;
 
       getAtSignError = '';
-      AtContact contact = AtContact();
+      var contact = AtContact();
 
       checkAtSign = await checkAtsign(atSign);
 
@@ -178,12 +189,14 @@ class ContactService {
     }
   }
 
+  // ignore: always_declare_return_types
   removeSelectedAtSign(AtContact? contact) {
     try {
+      // ignore: omit_local_variable_types
       for (AtContact? atContact in selectedContacts) {
         if (contact == atContact || atContact!.atSign == contact!.atSign) {
-          int index = selectedContacts.indexOf(contact);
-          print("index is $index");
+          var index = selectedContacts.indexOf(contact);
+          print('index is $index');
           selectedContacts.removeAt(index);
           break;
         }
@@ -199,6 +212,7 @@ class ContactService {
     }
   }
 
+  // ignore: always_declare_return_types
   selectAtSign(AtContact? contact) {
     try {
       if (selectedContacts.length <= 25 &&
@@ -213,6 +227,7 @@ class ContactService {
     }
   }
 
+  // ignore: always_declare_return_types
   clearAtSigns() {
     try {
       selectedContacts = [];
@@ -230,11 +245,12 @@ class ContactService {
     }
     var checkPresence =
         await AtLookupImpl.findSecondary(atSign, rootDomain, rootPort);
+    // ignore: unnecessary_null_comparison
     return checkPresence != null;
   }
 
   Future<Map<String, dynamic>> getContactDetails(String? atSign) async {
-    Map<String, dynamic> contactDetails = {};
+    var contactDetails = <String, dynamic>{};
 
     if (atClientInstance == null || atSign == null) {
       return contactDetails;
@@ -244,7 +260,7 @@ class ContactService {
     var metadata = Metadata();
     metadata.isPublic = true;
     metadata.namespaceAware = false;
-    AtKey key = AtKey();
+    var key = AtKey();
     key.sharedBy = atSign;
     key.metadata = metadata;
     List contactFields = TextStrings().contactFields;
@@ -253,7 +269,7 @@ class ContactService {
       // firstname
       key.key = contactFields[0];
       var result = await atClientInstance!.get(key).catchError((e) {
-        print("error in get ${e.errorCode} ${e.errorMessage}");
+        print('error in get ${e.errorCode} ${e.errorMessage}');
       });
       var firstname = result.value;
 

@@ -6,22 +6,25 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ImagePicker {
   ImagePicker._();
-  static ImagePicker _instance = ImagePicker._();
+  static final ImagePicker _instance = ImagePicker._();
   factory ImagePicker() => _instance;
 
   Future<Uint8List?> pickImage() async {
     Uint8List? fileContents;
-    FilePickerResult result = await FilePicker.platform
+    // ignore: omit_local_variable_types
+    FilePickerResult? result = await FilePicker.platform
         .pickFiles(type: FileType.image, allowMultiple: false);
-    for (var pickedFile in result.files) {
-      var path = pickedFile.path;
-      File file = File(path);
-      var compressedFile = await FlutterImageCompress.compressWithFile(
-        file.absolute.path,
-        minWidth: 400,
-        minHeight: 200,
-      );
-      fileContents = compressedFile;
+    if (result != null) {
+      for (var pickedFile in result.files) {
+        var path = pickedFile.path!;
+        var file = File(path);
+        var compressedFile = await FlutterImageCompress.compressWithFile(
+          file.absolute.path,
+          minWidth: 400,
+          minHeight: 200,
+        );
+        fileContents = compressedFile;
+      }
     }
     return fileContents;
   }

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
@@ -7,6 +8,7 @@ import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 ///
 
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CircularContacts extends StatelessWidget {
@@ -41,7 +43,7 @@ class CircularContacts extends StatelessWidget {
                         nonAsset: true,
                       )
                     : ContactInitial(
-                        initials: contact!.atSign.substring(1, 3),
+                        initials: contact!.atSign,
                       ),
                 // child:
               ),

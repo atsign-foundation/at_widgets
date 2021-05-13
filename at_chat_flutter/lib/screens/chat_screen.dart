@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:at_chat_flutter/widgets/incoming_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/outgoing_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/send_message.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ChatScreen extends StatefulWidget {
