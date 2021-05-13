@@ -1,3 +1,7 @@
+## [1.0.3] - 05/13/2021
+
+* Improved notification handling
+
 ## [1.0.2] - 04/30/2021
 
 * Updated dependent packages
