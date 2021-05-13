@@ -20,6 +20,7 @@ dependencies:
       ref: trunk
       version: ^1.0.0+4
 
+
   at_follows_flutter:
     # When depending on this package from a real application you should use:
     #   at_follows_flutter: ^x.y.z
