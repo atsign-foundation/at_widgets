@@ -1,3 +1,8 @@
+## [1.0.2] - 05/13/2021
+
+* Updated dependent packages
+* Improved notification handling
+
 ## [1.0.1] - 04/23/2021
 
 * Resolved static analysis issues
