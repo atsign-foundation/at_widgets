@@ -1,6 +1,6 @@
 name: at_contacts_group_flutter
 description: A flutter plugin project to provide the group functionality with contacts using atprotocol.
-version: 1.0.0
+version: 1.0.1
 homepage: https://atsign.com/
 repository: https://github.com/atsign-foundation/at_widgets/tree/master/at_contacts_group_flutter
 
@@ -19,12 +19,11 @@ dependencies:
   flutter_image_compress: ^1.0.0
   pedantic: ^1.11.0
 
-  at_client_mobile: ^1.0.0+9
-  at_commons: ^1.0.1+6
+  at_client_mobile: ^1.0.0+10
+  at_commons: ^1.0.1+7
   at_common_flutter: ^1.0.0
-  at_contacts_flutter: 
-    path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_flutter
-  at_contact: ^1.0.0+3
+  at_contacts_flutter: ^1.0.1
+  at_contact: ^1.0.0+4
   
 dev_dependencies:
   flutter_test:
