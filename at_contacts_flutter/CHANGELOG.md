@@ -1,3 +1,8 @@
+## [1.0.1] - 05/13/2021
+
+* The referenced packages are updated
+* Improved avatar placeholder
+
 ## [1.0.0] - 04/20/2021
 
 * Updated example app
