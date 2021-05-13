@@ -46,9 +46,12 @@ class ConnectionsService {
         _connectionProvider.followingList =
             await _formAtSignData(following.list, isFollowing: true);
       }
+      //to sync created cached keys in remote to local.
+      await _sdkService.sync();
       if (!this.following.contains(this.followAtsign) &&
           this.followAtsign != null) {
-        var atsignData = await this.follow(this.followAtsign);
+        var atsignData =
+            await this.follow(this.followAtsign, isSyncRequired: false);
         if (atsignData != null) {
           _connectionProvider.followingList.add(atsignData);
         }
@@ -96,7 +99,7 @@ class ConnectionsService {
     return atsignList;
   }
 
-  Future<Atsign> follow(String atsign) async {
+  Future<Atsign> follow(String atsign, {bool isSyncRequired = true}) async {
     if (atsign == _sdkService.atsign) {
       return null;
     }
@@ -110,6 +113,7 @@ class ConnectionsService {
     var result = await _sdkService.put(atKey, following.toString());
     //change metadata to private to notify
     if (atMetadata.isPublic && result) {
+      await _sdkService.sync();
       atKey..sharedWith = atsign;
       atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
@@ -117,7 +121,7 @@ class ConnectionsService {
     }
     var atsignData =
         await _getAtsignData(atsign, isNew: true, isFollowing: true);
-    await _sdkService.sync();
+    if (isSyncRequired) await _sdkService.sync();
     return atsignData;
   }
 
