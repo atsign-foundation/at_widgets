@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:at_follows_flutter/domain/atsign.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:flutter/material.dart';
+import 'package:at_utils/at_logger.dart';
 
 class ConnectionProvider extends ChangeNotifier {
   static final _singleton = ConnectionProvider._internal();
   ConnectionProvider._internal();
+
+  var _logger = AtSignLogger('Connection Provider');
 
   factory ConnectionProvider() {
     return _singleton;
@@ -131,6 +134,26 @@ class ConnectionProvider extends ChangeNotifier {
       setStatus(Status.error);
     }
     return c.future;
+  }
+
+  ///deletes [atsign] from followers and following list.
+  Future delete(String atsign) async {
+    Completer c = Completer();
+    try {
+      setStatus(Status.loading);
+      var result = await _connectionsService.delete(atsign);
+      if (result) {
+        followingList.removeWhere((element) => element.title == atsign);
+        followersList.removeWhere((element) => element.title == atsign);
+      }
+      setStatus(Status.done);
+      c.complete(true);
+    } catch (e) {
+      _logger.severe('deleting $atsign throws $e');
+      this.error = e;
+
+      setStatus(Status.error);
+    }
   }
 
   _modifyFollowersList(String atsign, bool follow) {

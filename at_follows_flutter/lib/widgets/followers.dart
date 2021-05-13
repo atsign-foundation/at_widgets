@@ -72,9 +72,10 @@ class _FollowersState extends State<Followers> {
         });
         if (_connectionsService.followerAtsign != null) {
           _followAtsign(context);
-        } else if (_connectionsService.followAtsign != null) {
-          _followAtsign(context, isFollow: true);
         }
+        //  else if (_connectionsService.followAtsign != null) {
+        //   _followAtsign(context, isFollow: true);
+        // }
         atsignsList = widget.isFollowing
             ? provider.followingList
             : provider.followersList;
@@ -159,61 +160,84 @@ class _FollowersState extends State<Followers> {
                             )
                           ],
                         ),
-                        SizedBox(
-                          height: 4.toHeight,
-                        ),
+                        // SizedBox(
+                        //   height: 2.toHeight,
+                        // ),
                         ListView.separated(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemBuilder: (_, index) {
                               Atsign currentAtsign =
                                   sortedListWithAlphabet[index];
-                              return ListTile(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => WebViewScreen(
-                                              url:
-                                                  '${Strings.directoryUrl}/${currentAtsign.title}',
-                                              title: Strings
-                                                  .publicContentAppbarTitle)));
-                                },
-                                leading: CircleAvatar(
-                                  backgroundColor: ColorConstants.fillColor,
-                                  radius: 20.toFont,
-                                  child: currentAtsign.profilePicture != null
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20.toFont),
-                                          child: Image.memory(
-                                            currentAtsign.profilePicture,
-                                          ),
-                                        )
-                                      : Icon(Icons.person_outline,
-                                          color: Colors.black, size: 25.toFont),
+                              return Padding(
+                                padding:
+                                    EdgeInsets.symmetric(vertical: 8.0.toFont),
+                                child: ListTile(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => WebViewScreen(
+                                                url:
+                                                    '${Strings.directoryUrl}/${currentAtsign.title}',
+                                                title: Strings
+                                                    .publicContentAppbarTitle)));
+                                  },
+                                  leading: CircleAvatar(
+                                    backgroundColor: ColorConstants.fillColor,
+                                    radius: 20.toFont,
+                                    child: currentAtsign.profilePicture != null
+                                        ? ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                20.toFont),
+                                            child: Image.memory(
+                                              currentAtsign.profilePicture,
+                                            ),
+                                          )
+                                        : Icon(Icons.person_outline,
+                                            color: Colors.black,
+                                            size: 25.toFont),
+                                  ),
+                                  title: Text(currentAtsign.title,
+                                      style: CustomTextStyles.fontR16primary),
+                                  subtitle: currentAtsign.subtitle != null
+                                      ? Text(currentAtsign.subtitle,
+                                          style:
+                                              CustomTextStyles.fontR14primary)
+                                      : null,
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CustomButton(
+                                          height: 35.toHeight,
+                                          // width: 70.toWidth,
+                                          // width: 150.toWidth,
+                                          isActive: !currentAtsign.isFollowing,
+                                          onPressedCallBack: (value) async {
+                                            if (value) {
+                                              provider.unfollow(
+                                                  currentAtsign.title);
+                                            } else {
+                                              provider
+                                                  .follow(currentAtsign.title);
+                                            }
+                                            sortedListWithAlphabet[index]
+                                                .isFollowing = !value;
+                                            setState(() {});
+                                          },
+                                          text: currentAtsign.isFollowing
+                                              ? Strings.Unfollow
+                                              : Strings.Follow),
+                                      // IconButton(
+                                      //     iconSize: 20.toFont,
+                                      //     icon: Icon(Icons.delete),
+                                      //     onPressed: () async {
+                                      //       await provider
+                                      //           .delete(currentAtsign.title);
+                                      //     }),
+                                    ],
+                                  ),
                                 ),
-                                title: Text(currentAtsign.title,
-                                    style: CustomTextStyles.fontR16primary),
-                                subtitle: currentAtsign.subtitle != null
-                                    ? Text(currentAtsign.subtitle,
-                                        style: CustomTextStyles.fontR14primary)
-                                    : null,
-                                trailing: CustomButton(
-                                    isActive: !currentAtsign.isFollowing,
-                                    onPressedCallBack: (value) async {
-                                      if (value) {
-                                        provider.unfollow(currentAtsign.title);
-                                      } else {
-                                        provider.follow(currentAtsign.title);
-                                      }
-                                      sortedListWithAlphabet[index]
-                                          .isFollowing = !value;
-                                      setState(() {});
-                                    },
-                                    text: currentAtsign.isFollowing
-                                        ? Strings.Unfollow
-                                        : Strings.Follow),
                               );
                             },
                             separatorBuilder: (_, index) => Divider(
@@ -240,14 +264,11 @@ class _FollowersState extends State<Followers> {
     });
   }
 
-  _followAtsign(BuildContext context, {bool isFollow = false}) {
-    var atsign = isFollow
-        ? ConnectionsService().followAtsign
-        : ConnectionsService().followerAtsign;
+  _followAtsign(BuildContext context) {
+    var atsign = ConnectionsService().followerAtsign;
     bool exists = ConnectionProvider().containsFollowing(atsign);
     if (exists || _isDialogOpen) {
       _connectionsService.followerAtsign = null;
-      _connectionsService.followAtsign = null;
 
       return;
     }
@@ -257,10 +278,7 @@ class _FollowersState extends State<Followers> {
           context: context,
           barrierDismissible: false,
           builder: (context) => AlertDialog(
-                  content: Text(
-                      isFollow
-                          ? '${Strings.followDescription}$atsign?'
-                          : Strings.followBackDescription(atsign),
+                  content: Text(Strings.followBackDescription(atsign),
                       textAlign: TextAlign.center,
                       style: CustomTextStyles.fontR14dark),
                   actions: [
@@ -269,7 +287,6 @@ class _FollowersState extends State<Followers> {
                       isActive: false,
                       onPressedCallBack: (value) {
                         _connectionsService.followerAtsign = null;
-                        _connectionsService.followAtsign = null;
                         _isDialogOpen = false;
                         // widget.isDialog();
                         Navigator.pop(context);
@@ -280,15 +297,14 @@ class _FollowersState extends State<Followers> {
                     CustomButton(
                       width: SizeConfig().screenWidth * 0.23,
                       isActive: true,
-                      onPressedCallBack: (value) {
+                      onPressedCallBack: (value) async {
                         _connectionsService.followerAtsign = null;
-                        _connectionsService.followAtsign = null;
                         _isDialogOpen = false;
                         // widget.isDialog();
                         Navigator.pop(context);
-                        ConnectionProvider().follow(atsign);
+                        await ConnectionProvider().follow(atsign);
                       },
-                      text: isFollow ? Strings.Follow : Strings.followBack,
+                      text: Strings.followBack,
                     ),
                   ]));
     });

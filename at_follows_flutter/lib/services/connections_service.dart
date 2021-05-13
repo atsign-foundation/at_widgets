@@ -46,6 +46,14 @@ class ConnectionsService {
         _connectionProvider.followingList =
             await _formAtSignData(following.list, isFollowing: true);
       }
+      if (!this.following.contains(this.followAtsign) &&
+          this.followAtsign != null) {
+        var atsignData = await this.follow(this.followAtsign);
+        if (atsignData != null) {
+          _connectionProvider.followingList.add(atsignData);
+        }
+        this.followAtsign = null;
+      }
     }
     if (_connectionProvider.followersList.isEmpty || isInit) {
       await createLists(isFollowing: false);
@@ -55,8 +63,8 @@ class ConnectionsService {
       }
     }
     if (isInit) {
-      var fromDate = following.getKey != null
-          ? following.getKey.metadata?.updatedAt
+      var fromDate = followers.getKey != null
+          ? followers.getKey.metadata?.updatedAt
           : null;
       var notificationsList =
           await _sdkService.notifyList(fromDate: fromDate?.toString());
@@ -64,8 +72,12 @@ class ConnectionsService {
       for (var notification in notificationsList) {
         if (notification.operation == Operation.update) {
           await this.updateFollowers(notification, isSetStatus: false);
-        } else if (notification.operation == Operation.delete) {
+        } else if (notification.operation == Operation.delete &&
+            notification.key.contains(AppConstants.following)) {
           await this.deleteFollowers(notification, isSetStatus: false);
+        } else if (notification.operation == Operation.delete &&
+            notification.key.contains(AppConstants.followers)) {
+          await this.deleteFollowing(notification, isSetStatus: false);
         }
       }
       await _sdkService.sync();
@@ -109,24 +121,43 @@ class ConnectionsService {
     return atsignData;
   }
 
+  ///Deletes the [atsign] from followers and following lists.
+  Future<bool> delete(String atsign) async {
+    bool result;
+
+    //deleting @sign from followers
+    var atKey = this._formKey();
+    var atMetadata = atKey.metadata;
+    result = await _modifyKey(atsign, followers, atKey);
+    //notify @sign about delete
+    if (result) {
+      atKey..sharedWith = atsign;
+      atMetadata..isPublic = false;
+      atKey..metadata = atMetadata;
+      result = await _sdkService.notify(atKey, atsign, OperationEnum.delete);
+    }
+
+    //deleting @sign from following
+    atKey = this._formKey(isFollowing: true);
+    atMetadata = atKey.metadata;
+    result = await _modifyKey(atsign, following, atKey);
+    //notify @sign about delete
+    if (result) {
+      atKey..sharedWith = atsign;
+      atMetadata..isPublic = false;
+      atKey..metadata = atMetadata;
+      result = await _sdkService.notify(atKey, atsign, OperationEnum.delete);
+    }
+
+    await _sdkService.sync();
+    return result;
+  }
+
   Future<bool> unfollow(String atsign) async {
     atsign = formatAtSign(atsign);
     var atKey = this._formKey(isFollowing: true);
     var atMetadata = atKey.metadata;
-    var result;
-    if (!following.list.contains(atsign)) {
-      return false;
-    }
-    following.remove(atsign);
-    if (following.toString().isEmpty) {
-      result = await _sdkService.delete(atKey);
-    } else {
-      result = await _sdkService.put(atKey, following.toString());
-    }
-    if (!result) {
-      return result;
-    }
-    //change metadata to private to notify
+    var result = await _modifyKey(atsign, following, atKey);
     if (atMetadata.isPublic) {
       atKey..sharedWith = atsign;
       atMetadata..isPublic = false;
@@ -137,6 +168,22 @@ class ConnectionsService {
     return result;
   }
 
+  Future<bool> _modifyKey(
+      String atsign, AtFollowsList atFollowsList, AtKey atKey) async {
+    var result = false;
+    if (!atFollowsList.list.contains(atsign)) {
+      return false;
+    }
+    atFollowsList.remove(atsign);
+    if (atFollowsList.toString().isEmpty) {
+      result = await _sdkService.put(atKey, 'null');
+    } else {
+      result = await _sdkService.put(atKey, atFollowsList.toString());
+    }
+    return result;
+  }
+
+  ///Returns `true` on changing the status of the list to [statusValue].
   Future<bool> changeListPublicStatus(
       bool isFollowing, bool statusValue) async {
     isFollowing
@@ -156,7 +203,8 @@ class ConnectionsService {
     return result;
   }
 
-  updateFollowers(AtNotification notification,
+  ///adds [notification.fromAtSign] into followers list.
+  Future<void> updateFollowers(AtNotification notification,
       {bool isSetStatus = true}) async {
     var connectionProvider = ConnectionProvider();
     try {
@@ -183,7 +231,8 @@ class ConnectionsService {
     }
   }
 
-  deleteFollowers(AtNotification notification,
+  ///deletes [notification.fromAtSign] from followers list.
+  Future<void> deleteFollowers(AtNotification notification,
       {bool isSetStatus = true}) async {
     var connectionProvider = ConnectionProvider();
     try {
@@ -196,9 +245,37 @@ class ConnectionsService {
       var atKey = this._formKey();
       followers.list.isNotEmpty
           ? await _sdkService.put(atKey, followers.toString())
-          : await this._sdkService.delete(atKey);
+          : await this._sdkService.put(atKey, 'null');
 
       connectionProvider.followersList
+          .removeWhere((element) => element.title == notification.fromAtSign);
+      if (isSetStatus) {
+        connectionProvider.setStatus(Status.done);
+        await _sdkService.sync();
+      }
+    } catch (err) {
+      connectionProvider.error = err;
+      connectionProvider.setStatus(Status.error);
+    }
+  }
+
+  ///deletes [notification.fromAtSign] from following list.
+  Future<void> deleteFollowing(AtNotification notification,
+      {bool isSetStatus = true}) async {
+    var connectionProvider = ConnectionProvider();
+    try {
+      if (isSetStatus) connectionProvider.setStatus(Status.loading);
+      if (!following.list.contains(notification.fromAtSign)) {
+        if (isSetStatus) connectionProvider.setStatus(Status.done);
+        return true;
+      }
+      following.remove(notification.fromAtSign);
+      var atKey = this._formKey(isFollowing: true);
+      following.list.isNotEmpty
+          ? await _sdkService.put(atKey, following.toString())
+          : await this._sdkService.put(atKey, 'null');
+
+      connectionProvider.followingList
           .removeWhere((element) => element.title == notification.fromAtSign);
       if (isSetStatus) {
         connectionProvider.setStatus(Status.done);
@@ -225,6 +302,7 @@ class ConnectionsService {
 
       var followingValue = await _sdkService.scanAndGet(AppConstants.following);
       this.following.create(followingValue);
+
       if (followingValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowingPrivate =
             !followingValue.metadata.isPublic;
@@ -271,9 +349,22 @@ class ConnectionsService {
         atValue = await _sdkService.get(atKey);
         //performs plookup if the data is not in cache.
         if (atValue.value == null) {
+          //plookup for wavi keys.
           atKey.metadata.isCached = false;
           atValue = await _sdkService.get(atKey);
+          //cache lookup for persona keys
+          if (atValue.value == null) {
+            atKey.key = PublicData.personaMap[key];
+            atKey.metadata.isCached = true;
+            atValue = await _sdkService.get(atKey);
+            //plookup for persona keys.
+            if (atValue.value == null) {
+              atKey.metadata.isCached = false;
+              atValue = await _sdkService.get(atKey);
+            }
+          }
         }
+
         atsignData.setData(atValue);
       }
     } on AtLookUpException catch (e) {
@@ -287,7 +378,7 @@ class ConnectionsService {
     var atmetadata = Metadata()
       ..namespaceAware = false
       ..isCached = true
-      ..isBinary = key == PublicData.image
+      ..isBinary = key == PublicData.image || key == PublicData.imagePersona
       ..isPublic = true;
     return atmetadata;
   }
@@ -324,12 +415,16 @@ class ConnectionsService {
         'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.fromAtSign} to:${notification.toAtSign}');
     if (notification.operation == Operation.update &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key == AppConstants.following) {
+        notification.key.contains(AppConstants.following)) {
       await updateFollowers(notification);
     } else if (notification.operation == Operation.delete &&
         notification.toAtSign == _sdkService.atsign &&
         notification.key.contains(AppConstants.following)) {
       await deleteFollowers(notification);
+    } else if (notification.operation == Operation.delete &&
+        notification.toAtSign == _sdkService.atsign &&
+        notification.key.contains(AppConstants.followers)) {
+      await deleteFollowing(notification);
     }
   }
 }
@@ -381,4 +476,5 @@ class AtFollowsValue extends AtValue {
 class Operation {
   static final String update = 'update';
   static final String delete = 'delete';
+  static final String deleteBoth = 'deleteBoth';
 }
