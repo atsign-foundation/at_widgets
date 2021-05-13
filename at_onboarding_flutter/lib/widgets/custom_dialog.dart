@@ -87,48 +87,48 @@ class CustomDialog extends StatelessWidget {
                 ? Padding(
                     padding: EdgeInsets.symmetric(horizontal: 4.0.toFont),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                      Text(
-                        'START PAIRING',
-                        style: TextStyle(
-                            color: ColorConstants.appColor,
-                            fontSize: 16.toFont),
-                      ),
-                      SizedBox(height: 15.toHeight),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Flexible(
-                            child: Text(
-                              !isfreeAtsign
-                                  ? Strings.enterAtsignTitle
-                                  : !pair
-                                      ? 'Free @sign'
-                                      : !otp
-                                          ? 'Enter your email'
-                                          : 'Enter OTP which was sent to your email',
-                              style: CustomTextStyles.fontR16primary,
-                            ),
-                          ),
-                          IconButton(
-                              icon: Icon(
-                                Icons.help,
+                          Text(
+                            'START PAIRING',
+                            style: TextStyle(
                                 color: ColorConstants.appColor,
-                                size: 18.toFont,
+                                fontSize: 16.toFont),
+                          ),
+                          SizedBox(height: 15.toHeight),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  !isfreeAtsign
+                                      ? Strings.enterAtsignTitle
+                                      : !pair
+                                          ? 'Free @sign'
+                                          : !otp
+                                              ? 'Enter your email'
+                                              : 'Enter OTP which was sent to your email',
+                                  style: CustomTextStyles.fontR16primary,
+                                ),
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => WebViewScreen(
-                                              title: Strings.faqTitle,
-                                              url: Strings.faqUrl,
-                                            )));
-                              })
-                        ],
-                      ),
-                    ]))
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.help,
+                                    color: ColorConstants.appColor,
+                                    size: 18.toFont,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => WebViewScreen(
+                                                  title: Strings.faqTitle,
+                                                  url: Strings.faqUrl,
+                                                )));
+                                  })
+                            ],
+                          ),
+                        ]))
                 : this.title != null
                     ? Text(
                         title,
@@ -147,6 +147,7 @@ class CustomDialog extends StatelessWidget {
                         autovalidateMode: AutovalidateMode.always,
                         child: !otp
                             ? TextFormField(
+                              enabled: isfreeAtsign?false:true,
                                 style: TextStyle(
                                     fontSize: 14.toFont, height: 1.0.toHeight),
                                 validator: (value) {
@@ -268,7 +269,7 @@ class CustomDialog extends StatelessWidget {
                                     },
                                     child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.center,
                                         children: [
                                           Center(
                                               child: Text(
@@ -374,6 +375,7 @@ class CustomDialog extends StatelessWidget {
                               child: TextButton(
                                   onPressed: () {
                                     isfreeAtsign = false;
+                                    _atsignController.text ='';
                                     stateSet(() {});
                                   },
                                   child: Text(
@@ -405,6 +407,7 @@ class CustomDialog extends StatelessWidget {
     });
   }
 
+  //to get free atsign from the server
   Future<String> getFreeAtsign(BuildContext context) async {
     var data;
     String atsign;
@@ -433,6 +436,8 @@ class CustomDialog extends StatelessWidget {
     return atsign;
   }
 
+  //To register the person with the provided atsign and email
+//It will send an OTP to the registered email
   Future<bool> registerPersona(
       String atsign, String email, BuildContext context) async {
     var data;
@@ -465,6 +470,8 @@ class CustomDialog extends StatelessWidget {
     return status;
   }
 
+  //It will validate the person with atsign, email and the OTP.
+  //If the validation is successful, it will return a cram secret for the user to login
   Future<String> validatePerson(
       String atsign, String email, String otp, BuildContext context) async {
     var data;
