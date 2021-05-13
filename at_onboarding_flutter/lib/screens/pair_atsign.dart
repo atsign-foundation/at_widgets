@@ -629,6 +629,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           },
           child: CustomDialog(
             isAtsignForm: true,
+            onValidate: (atsign, secret)async{
+              await _processSharedSecret(atsign, secret);
+            },
             onSubmit: (atsign) async {
               var isExist = await OnboardingService.getInstance()
                   .isExistingAtsign(atsign)

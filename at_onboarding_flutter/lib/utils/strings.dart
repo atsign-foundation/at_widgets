@@ -1,6 +1,7 @@
 class Strings {
   //atsign texts
-  static const String enterAtsignTitle = 'Enter your @sign to pair';
+  static const String enterAtsignTitle = 'Enter your @sign';
+  static const String freeAtsignTitle = 'Free @sign';
   static const String atsignHintText = 'alice';
   static const String submitButton = 'Submit';
   static const String cancelButton = 'Cancel';
