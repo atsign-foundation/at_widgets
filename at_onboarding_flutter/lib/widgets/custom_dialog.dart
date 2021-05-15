@@ -90,7 +90,7 @@ class CustomDialog extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'START PAIRING',
+                            'Setting up your account',
                             style: TextStyle(
                                 color: ColorConstants.appColor,
                                 fontSize: 16.toFont),
@@ -107,7 +107,7 @@ class CustomDialog extends StatelessWidget {
                                           ? 'Free @sign'
                                           : !otp
                                               ? 'Enter your email'
-                                              : 'Enter OTP which was sent to your email',
+                                              : 'Enter Verification Code',
                                   style: CustomTextStyles.fontR16primary,
                                 ),
                               ),
@@ -128,6 +128,10 @@ class CustomDialog extends StatelessWidget {
                                   })
                             ],
                           ),
+                          otp
+                              ? Text(
+                                  'A verification code has been sent to ${_emailController.text}',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 13.toFont),)
+                              : Container()
                         ]))
                 : this.title != null
                     ? Text(
@@ -147,7 +151,7 @@ class CustomDialog extends StatelessWidget {
                         autovalidateMode: AutovalidateMode.always,
                         child: !otp
                             ? TextFormField(
-                              enabled: isfreeAtsign?false:true,
+                                enabled: isfreeAtsign & !pair ? false : true,
                                 style: TextStyle(
                                     fontSize: 14.toFont, height: 1.0.toHeight),
                                 validator: (value) {
@@ -180,11 +184,11 @@ class CustomDialog extends StatelessWidget {
                                 length: 4,
                                 keyboardType: TextInputType.text,
                                 width: MediaQuery.of(context).size.width,
-                                fieldWidth: 20,
+                                fieldWidth: 50,
                                 style: TextStyle(fontSize: 17),
                                 textFieldAlignment:
                                     MainAxisAlignment.spaceAround,
-                                fieldStyle: FieldStyle.underline,
+                                fieldStyle: FieldStyle.box,
                                 onCompleted: (pin) {
                                   verificationCode = pin;
                                 },
@@ -244,7 +248,7 @@ class CustomDialog extends StatelessWidget {
                               stateSet(() {});
                             },
                             child: Text(
-                              'Generate Free',
+                              'Generate Free @sign',
                               style: TextStyle(
                                   color: Colors.white, fontSize: 15.toFont),
                             ),
@@ -375,7 +379,7 @@ class CustomDialog extends StatelessWidget {
                               child: TextButton(
                                   onPressed: () {
                                     isfreeAtsign = false;
-                                    _atsignController.text ='';
+                                    _atsignController.text = '';
                                     stateSet(() {});
                                   },
                                   child: Text(
