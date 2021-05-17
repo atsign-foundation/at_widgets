@@ -19,7 +19,7 @@ dependencies:
   path_provider: ^2.0.1
   webview_flutter: ^2.0.4
   otp_text_field: ^1.1.0
-  http: ^0.12.2
+  http: ^0.13.0
   at_utils: ^1.0.1+7
   at_client:  ^1.0.1+9
   at_client_mobile: ^1.0.0+10

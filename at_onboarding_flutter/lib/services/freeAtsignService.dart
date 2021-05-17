@@ -16,6 +16,7 @@ class FreeAtsignService {
   var _http;
   bool initialized = false;
   var api;
+  var path = '/api/app/v1/';
 
   _init() {
     final ioc = new HttpClient();
@@ -29,19 +30,15 @@ class FreeAtsignService {
   setApi() {
     // for prod
     if (AppConstants.serverDomain == 'root.atsign.org') {
-      api = 'https://my.atsign.com/api/app/v1/';
+      api = 'my.atsign.com';
     }
 
     // api for dev environment
     if (AppConstants.serverDomain == 'root.atsign.wtf') {
-      api = 'https://my.atsign.wtf/api/app/v1/';
+      api = 'my.atsign.wtf';
     }
   }
 
-// var api = 'https://my.atsign.com/api/app/v1/';
-
-// for staging
-// var api = 'https://my.staging.atsign.wtf/api/app/v1/';
 
 //To get free @sign from the server
   Future<dynamic> getFreeAtsigns() async {
@@ -49,7 +46,7 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    String url = api + 'get-free-atsign';
+    var url = Uri.https(api, '${path}get-free-atsign');
 
     var response = await _http.get(url, headers: {
       "Authorization": "477b-876u-bcez-c42z-6a3d",
@@ -65,7 +62,8 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    String url = api + 'register-person';
+
+    var url = Uri.https(api, '${path}register-person');
 
     Map data = {'email': '$email', 'atsign': "$atsign"};
 
@@ -84,7 +82,8 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    String url = api + 'validate-person';
+
+    var url = Uri.https(api, '${path}validate-person');
 
     Map data = {'email': '$email', 'atsign': "$atsign", 'otp': '$otp'};
 
