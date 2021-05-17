@@ -66,348 +66,427 @@ class CustomDialog extends StatelessWidget {
   bool pair = false;
   bool isfreeAtsign = false;
   String verificationCode;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, stateSet) {
-      return AlertDialog(
-        title: isErrorDialog
-            ? Row(
-                children: [
-                  Text(
-                    title ?? Strings.errorTitle,
-                    style: CustomTextStyles.fontR16primary,
-                  ),
-                  this.message == ResponseStatus.TIME_OUT
-                      ? Icon(Icons.access_time, size: 18.toFont)
-                      : Icon(Icons.sentiment_dissatisfied, size: 18.toFont)
-                ],
-              )
-            : isAtsignForm
-                ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4.0.toFont),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Setting up your account',
-                            style: TextStyle(
-                                color: ColorConstants.appColor,
-                                fontSize: 16.toFont),
-                          ),
-                          SizedBox(height: 15.toHeight),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  !isfreeAtsign
-                                      ? Strings.enterAtsignTitle
-                                      : !pair
-                                          ? 'Free @sign'
-                                          : !otp
-                                              ? 'Enter your email'
-                                              : 'Enter Verification Code',
-                                  style: CustomTextStyles.fontR16primary,
-                                ),
-                              ),
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.help,
-                                    color: ColorConstants.appColor,
-                                    size: 18.toFont,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => WebViewScreen(
-                                                  title: Strings.faqTitle,
-                                                  url: Strings.faqUrl,
-                                                )));
-                                  })
-                            ],
-                          ),
-                          otp
-                              ? Text(
-                                  'A verification code has been sent to ${_emailController.text}',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 13.toFont),)
-                              : Container()
-                        ]))
-                : this.title != null
-                    ? Text(
-                        title,
-                        style: CustomTextStyles.fontR16primary,
-                      )
-                    : this.title,
-        content: isAtsignForm
-            ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Form(
-                        key: _formKey,
-                        autovalidateMode: AutovalidateMode.always,
-                        child: !otp
-                            ? TextFormField(
-                                enabled: isfreeAtsign & !pair ? false : true,
-                                style: TextStyle(
-                                    fontSize: 14.toFont, height: 1.0.toHeight),
-                                validator: (value) {
-                                  if (value == null || value == '') {
-                                    return !pair
-                                        ? '@sign cannot be empty'
-                                        : 'Email cannot be empty';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) {
-                                  stateSet(() {});
-                                },
-                                controller: !pair
-                                    ? _atsignController
-                                    : _emailController,
-                                decoration: InputDecoration(
-                                    fillColor: Colors.blueAccent,
-                                    errorStyle: TextStyle(
-                                      fontSize: 12.toFont,
+      return Stack(children: [
+        Opacity(
+            opacity: loading ? 0.3 : 1,
+            child: AbsorbPointer(
+                absorbing: loading,
+                child: AlertDialog(
+                  title: isErrorDialog
+                      ? Row(
+                          children: [
+                            Text(
+                              title ?? Strings.errorTitle,
+                              style: CustomTextStyles.fontR16primary,
+                            ),
+                            this.message == ResponseStatus.TIME_OUT
+                                ? Icon(Icons.access_time, size: 18.toFont)
+                                : Icon(Icons.sentiment_dissatisfied,
+                                    size: 18.toFont)
+                          ],
+                        )
+                      : isAtsignForm
+                          ? Padding(
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: 4.0.toFont),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Setting up your account',
+                                      style: TextStyle(
+                                          color: ColorConstants.appColor,
+                                          fontSize: 16.toFont),
                                     ),
-                                    hintText:
-                                        !pair ? Strings.atsignHintText : '',
-                                    prefixText: !pair ? '@' : '',
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ColorConstants.appColor))),
-                              )
-                            : OTPTextField(
-                                length: 4,
-                                keyboardType: TextInputType.text,
-                                width: MediaQuery.of(context).size.width,
-                                fieldWidth: 50,
-                                style: TextStyle(fontSize: 17),
-                                textFieldAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                fieldStyle: FieldStyle.box,
-                                onCompleted: (pin) {
-                                  verificationCode = pin;
-                                },
-                              )),
-                    SizedBox(height: 15.toHeight),
-                    if (!isfreeAtsign) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            key: Key('${Strings.cancelButton}'),
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              Strings.cancelButton,
-                              style: TextStyle(
-                                  color: ColorConstants.appColor,
-                                  fontSize: 12.toFont),
-                            ),
-                          ),
-                          SizedBox(width: 15.toWidth),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    ColorConstants.appColor)),
-                            key: Key('${Strings.submitButton}'),
-                            onPressed: () async {
-                              if (_formKey.currentState.validate()) {
-                                Navigator.pop(context);
-                                this.onSubmit(_atsignController.text);
-                              }
-                            },
-                            child: Text(
-                              Strings.submitButton,
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 12.toFont),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20.toHeight),
-                      Text('Need an @sign?'),
-                      SizedBox(height: 5.toHeight),
-                      Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    Colors.grey[800])),
-                            // key: Key(''),
-                            onPressed: () async {
-                              freeAtsign = await getFreeAtsign(context);
-                              _atsignController.text = freeAtsign;
-                              isfreeAtsign = true;
-                              stateSet(() {});
-                            },
-                            child: Text(
-                              'Generate Free @sign',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 15.toFont),
-                            ),
-                          )),
-                    ],
-                    if (isfreeAtsign) ...[
-                      SizedBox(height: 15.toHeight),
-                      !otp
-                          ? !pair
-                              ? Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.grey[800])),
-                                    // key: Key(''),
-                                    onPressed: () async {
-                                      _atsignController.text =
-                                          await getFreeAtsign(context);
-                                      stateSet(() {});
-                                    },
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Center(
+                                    SizedBox(height: 15.toHeight),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            !isfreeAtsign
+                                                ? Strings.enterAtsignTitle
+                                                : !pair
+                                                    ? 'Free @sign'
+                                                    : !otp
+                                                        ? 'Enter your email'
+                                                        : 'Enter Verification Code',
+                                            style:
+                                                CustomTextStyles.fontR16primary,
+                                          ),
+                                        ),
+                                        IconButton(
+                                            icon: Icon(
+                                              Icons.help,
+                                              color: ColorConstants.appColor,
+                                              size: 18.toFont,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          WebViewScreen(
+                                                            title: Strings
+                                                                .faqTitle,
+                                                            url: Strings.faqUrl,
+                                                          )));
+                                            })
+                                      ],
+                                    ),
+                                    otp
+                                        ? Text(
+                                            'A verification code has been sent to ${_emailController.text}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 13.toFont),
+                                          )
+                                        : Container()
+                                  ]))
+                          : this.title != null
+                              ? Text(
+                                  title,
+                                  style: CustomTextStyles.fontR16primary,
+                                )
+                              : this.title,
+                  content: isAtsignForm
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Form(
+                                  key: _formKey,
+                                  autovalidateMode: AutovalidateMode.always,
+                                  child: !otp
+                                      ? TextFormField(
+                                          enabled: isfreeAtsign & !pair
+                                              ? false
+                                              : true,
+                                          style: TextStyle(
+                                              fontSize: 14.toFont,
+                                              height: 1.0.toHeight),
+                                          validator: (value) {
+                                            if (value == null || value == '') {
+                                              return !pair
+                                                  ? '@sign cannot be empty'
+                                                  : 'Email cannot be empty';
+                                            }
+                                            return null;
+                                          },
+                                          onChanged: (value) {
+                                            stateSet(() {});
+                                          },
+                                          controller: !pair
+                                              ? _atsignController
+                                              : _emailController,
+                                          decoration: InputDecoration(
+                                              fillColor: Colors.blueAccent,
+                                              errorStyle: TextStyle(
+                                                fontSize: 12.toFont,
+                                              ),
+                                              hintText: !pair
+                                                  ? Strings.atsignHintText
+                                                  : '',
+                                              prefixText: !pair ? '@' : '',
+                                              border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: ColorConstants
+                                                          .appColor))),
+                                        )
+                                      : OTPTextField(
+                                          length: 4,
+                                          keyboardType: TextInputType.text,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          fieldWidth: 50,
+                                          style: TextStyle(fontSize: 17),
+                                          textFieldAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          fieldStyle: FieldStyle.box,
+                                          onCompleted: (pin) {
+                                            verificationCode = pin;
+                                          },
+                                        )),
+                              SizedBox(height: 15.toHeight),
+                              if (!isfreeAtsign) ...[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      key: Key('${Strings.cancelButton}'),
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        Strings.cancelButton,
+                                        style: TextStyle(
+                                            color: ColorConstants.appColor,
+                                            fontSize: 12.toFont),
+                                      ),
+                                    ),
+                                    SizedBox(width: 15.toWidth),
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  ColorConstants.appColor)),
+                                      key: Key('${Strings.submitButton}'),
+                                      onPressed: () async {
+                                        if (_formKey.currentState.validate()) {
+                                          Navigator.pop(context);
+                                          this.onSubmit(_atsignController.text);
+                                        }
+                                      },
+                                      child: Text(
+                                        Strings.submitButton,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.toFont),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20.toHeight),
+                                Text('Need an @sign?'),
+                                SizedBox(height: 5.toHeight),
+                                Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Colors.grey[800])),
+                                      // key: Key(''),
+                                      onPressed: () async {
+                                        loading = true;
+                                        stateSet(() {});
+                                        freeAtsign =
+                                            await getFreeAtsign(context);
+                                        _atsignController.text = freeAtsign;
+                                        isfreeAtsign = true;
+                                        loading = false;
+                                        stateSet(() {});
+                                      },
+                                      child: Text(
+                                        'Generate Free @sign',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15.toFont),
+                                      ),
+                                    )),
+                              ],
+                              if (isfreeAtsign) ...[
+                                SizedBox(height: 15.toHeight),
+                                !otp
+                                    ? !pair
+                                        ? Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.grey[800])),
+                                              // key: Key(''),
+                                              onPressed: () async {
+                                                loading = true;
+                                                stateSet(() {});
+                                                _atsignController.text =
+                                                    await getFreeAtsign(
+                                                        context);
+                                                loading = false;
+                                                stateSet(() {});
+                                              },
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Center(
+                                                        child: Text(
+                                                      'Refresh',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15.toFont),
+                                                    )),
+                                                    Icon(
+                                                      Icons.refresh,
+                                                      color: Colors.white,
+                                                    )
+                                                  ]),
+                                            ))
+                                        : Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          (_emailController
+                                                                          .text !=
+                                                                      '' &&
+                                                                  _emailController
+                                                                          .text !=
+                                                                      null)
+                                                              ? Colors.grey[800]
+                                                              : Colors
+                                                                  .grey[400])),
+                                              // key: Key(''),
+                                              onPressed: () async {
+                                                if (_emailController.text !=
+                                                        '' &&
+                                                    _emailController.text !=
+                                                        null) {
+                                                  loading = true;
+                                                  stateSet(() {});
+                                                  bool status =
+                                                      await registerPersona(
+                                                          _atsignController
+                                                              .text,
+                                                          _emailController.text,
+                                                          context);
+                                                  loading = false;
+                                                  stateSet(() {});
+                                                  if (status) {
+                                                    otp = true;
+                                                    stateSet(() {});
+                                                  }
+                                                }
+                                              },
+                                              child: Center(
+                                                  child: Text(
+                                                'Send OTP',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15.toFont),
+                                              )),
+                                            ))
+                                    : Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      (_emailController.text !=
+                                                                  '' &&
+                                                              _emailController
+                                                                      .text !=
+                                                                  null)
+                                                          ? Colors.grey[800]
+                                                          : Colors.grey[400])),
+                                          // key: Key(''),
+                                          onPressed: () async {
+                                            if (_emailController.text != '' &&
+                                                _emailController.text != null) {
+                                              loading = true;
+                                              stateSet(() {});
+                                              String result =
+                                                  await validatePerson(
+                                                      _atsignController.text,
+                                                      _emailController.text,
+                                                      verificationCode,
+                                                      context);
+                                              loading = false;
+                                              stateSet(() {});
+                                              if (result != null) {
+                                                List params = result.split(':');
+                                                Navigator.pop(context);
+                                                this.onValidate(
+                                                    params[0], params[1]);
+                                              }
+                                            }
+                                          },
+                                          child: Center(
                                               child: Text(
-                                            'Refresh',
+                                            'Verify & Login',
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 15.toFont),
                                           )),
-                                          Icon(
-                                            Icons.refresh,
-                                            color: Colors.white,
-                                          )
-                                        ]),
-                                  ))
-                              : Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                (_emailController.text != '' &&
-                                                        _emailController.text !=
-                                                            null)
-                                                    ? Colors.grey[800]
-                                                    : Colors.grey[400])),
-                                    // key: Key(''),
-                                    onPressed: () async {
-                                      if (_emailController.text != '' &&
-                                          _emailController.text != null) {
-                                        bool status = await registerPersona(
-                                            _atsignController.text,
-                                            _emailController.text,
-                                            context);
-                                        if (status) {
-                                          otp = true;
-                                          stateSet(() {});
-                                        }
-                                      }
-                                    },
-                                    child: Center(
-                                        child: Text(
-                                      'Send OTP',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15.toFont),
-                                    )),
-                                  ))
-                          : Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        (_emailController.text != '' &&
-                                                _emailController.text != null)
-                                            ? Colors.grey[800]
-                                            : Colors.grey[400])),
-                                // key: Key(''),
-                                onPressed: () async {
-                                  if (_emailController.text != '' &&
-                                      _emailController.text != null) {
-                                    String result = await validatePerson(
-                                        _atsignController.text,
-                                        _emailController.text,
-                                        verificationCode,
-                                        context);
-                                    if (result != null) {
-                                      List params = result.split(':');
-                                      Navigator.pop(context);
-                                      this.onValidate(params[0], params[1]);
-                                    }
-                                  }
-                                },
-                                child: Center(
-                                    child: Text(
-                                  'Verify & Login',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15.toFont),
-                                )),
-                              )),
-                      SizedBox(height: 15.toHeight),
-                      !pair
-                          ? Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        ColorConstants.appColor)),
-                                // key: Key(''),
-                                onPressed: () async {
-                                  pair = true;
-                                  stateSet(() {});
-                                },
-                                child: Center(
-                                    child: Text(
-                                  'Pair',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15.toFont),
-                                )),
-                              ))
-                          : Text(''),
-                      !pair
-                          ? Center(
-                              child: TextButton(
-                                  onPressed: () {
-                                    isfreeAtsign = false;
-                                    _atsignController.text = '';
-                                    stateSet(() {});
-                                  },
-                                  child: Text(
-                                    'Back',
-                                    style: TextStyle(color: Colors.grey),
-                                  )))
-                          : Text(''),
-                    ]
-                  ],
-                ),
-              )
-            : _getMessage(this.message, isErrorDialog),
-        actions: showClose
-            ? [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    this.onClose();
-                  },
-                  child: Text(
-                    Strings.closeTitle,
-                    style: TextStyle(
-                        color: ColorConstants.appColor, fontSize: 14.toFont),
-                  ),
-                ),
-              ]
-            : null,
-      );
+                                        )),
+                                SizedBox(height: 15.toHeight),
+                                !pair
+                                    ? Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      ColorConstants.appColor)),
+                                          // key: Key(''),
+                                          onPressed: () async {
+                                            pair = true;
+                                            stateSet(() {});
+                                          },
+                                          child: Center(
+                                              child: Text(
+                                            'Pair',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15.toFont),
+                                          )),
+                                        ))
+                                    : Text(''),
+                                !pair
+                                    ? Center(
+                                        child: TextButton(
+                                            onPressed: () {
+                                              isfreeAtsign = false;
+                                              _atsignController.text = '';
+                                              stateSet(() {});
+                                            },
+                                            child: Text(
+                                              'Back',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            )))
+                                    : Text(''),
+                              ]
+                            ],
+                          ),
+                        )
+                      : _getMessage(this.message, isErrorDialog),
+                  actions: showClose
+                      ? [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              this.onClose();
+                            },
+                            child: Text(
+                              Strings.closeTitle,
+                              style: TextStyle(
+                                  color: ColorConstants.appColor,
+                                  fontSize: 14.toFont),
+                            ),
+                          ),
+                        ]
+                      : null,
+                ))),
+        // Opacity(
+        //   opacity: loading ? 1 : 0,
+        //   child: Center(
+        //     child: RefreshProgressIndicator(
+        //       backgroundColor: Colors.black,
+        //       strokeWidth: 4,
+        //       valueColor:
+        //           AlwaysStoppedAnimation<Color>(ColorConstants.appColor),
+        //     ),
+        //   ),
+        // )
+      ]);
     });
   }
 
@@ -481,14 +560,29 @@ class CustomDialog extends StatelessWidget {
     var data;
     String cramSecret;
     // String atsign;
+
     dynamic response =
         await _freeAtsignService.validatePerson(atsign, email, otp);
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
       print(data);
-      if (data != null) {
+      if (data['status'] != 'error') {
         cramSecret = data['cramkey'];
+      } else {
+        String errorMessage = data['message'];
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return CustomDialog(
+                isErrorDialog: true,
+                showClose: true,
+                context: context,
+                message: errorMessage,
+                onClose: () {},
+              );
+            });
       }
       // atsign = data['data']['atsign'];
     } else {

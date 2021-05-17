@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:http/io_client.dart';
 
 class FreeAtsignService {
@@ -14,6 +15,7 @@ class FreeAtsignService {
 
   var _http;
   bool initialized = false;
+  var api;
 
   _init() {
     final ioc = new HttpClient();
@@ -21,12 +23,21 @@ class FreeAtsignService {
         (X509Certificate cert, String host, int port) => true;
     _http = new IOClient(ioc);
     initialized = true;
+    setApi();
   }
 
-// api for dev environment
-  var api = 'https://my.atsign.wtf/api/app/v1/';
+  setApi() {
+    // for prod
+    if (AppConstants.serverDomain == 'root.atsign.org') {
+      api = 'https://my.atsign.com/api/app/v1/';
+    }
 
-// for prod
+    // api for dev environment
+    if (AppConstants.serverDomain == 'root.atsign.wtf') {
+      api = 'https://my.atsign.wtf/api/app/v1/';
+    }
+  }
+
 // var api = 'https://my.atsign.com/api/app/v1/';
 
 // for staging
