@@ -280,8 +280,10 @@ class CustomDialog extends StatelessWidget {
                                           stateSet(() {});
                                           freeAtsign =
                                               await getFreeAtsign(context);
-                                          _atsignController.text = freeAtsign;
-                                          isfreeAtsign = true;
+                                          if (freeAtsign != null) {
+                                            _atsignController.text = freeAtsign;
+                                            isfreeAtsign = true;
+                                          }
                                           loading = false;
                                           stateSet(() {});
                                         },

@@ -17,6 +17,7 @@ class FreeAtsignService {
   bool initialized = false;
   var api;
   var path = '/api/app/v1/';
+  var apiKey;
 
   _init() {
     final ioc = new HttpClient();
@@ -31,14 +32,15 @@ class FreeAtsignService {
     // for prod
     if (AppConstants.serverDomain == 'root.atsign.org') {
       api = 'my.atsign.com';
+      apiKey = AppConstants.prodApiKey;
     }
 
     // api for dev environment
     if (AppConstants.serverDomain == 'root.atsign.wtf') {
       api = 'my.atsign.wtf';
+      apiKey = AppConstants.devApiKey;
     }
   }
-
 
 //To get free @sign from the server
   Future<dynamic> getFreeAtsigns() async {
@@ -46,10 +48,10 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    var url = Uri.https(api, '${path}get-free-atsign');
+    var url = Uri.https(api, '$path${AppConstants.getFreeAtsign}');
 
     var response = await _http.get(url, headers: {
-      "Authorization": "477b-876u-bcez-c42z-6a3d",
+      "Authorization": '$apiKey',
       "Content-Type": "application/json"
     });
 
@@ -63,13 +65,13 @@ class FreeAtsignService {
       _init();
     }
 
-    var url = Uri.https(api, '${path}register-person');
+    var url = Uri.https(api, '$path${AppConstants.registerPerson}');
 
     Map data = {'email': '$email', 'atsign': "$atsign"};
 
     String body = json.encode(data);
     var response = await _http.post(url, body: body, headers: {
-      'Authorization': '477b-876u-bcez-c42z-6a3d',
+      'Authorization': '$apiKey',
       'Content-Type': 'application/json'
     });
     return response;
@@ -83,13 +85,13 @@ class FreeAtsignService {
       _init();
     }
 
-    var url = Uri.https(api, '${path}validate-person');
+    var url = Uri.https(api, '$path${AppConstants.validatePerson}');
 
     Map data = {'email': '$email', 'atsign': "$atsign", 'otp': '$otp'};
 
     String body = json.encode(data);
     var response = await _http.post(url, body: body, headers: {
-      'Authorization': '477b-876u-bcez-c42z-6a3d',
+      'Authorization': '$apiKey',
       'Content-Type': 'application/json'
     });
 
