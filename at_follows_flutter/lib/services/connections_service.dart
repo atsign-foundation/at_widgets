@@ -54,6 +54,7 @@ class ConnectionsService {
         this.followAtsign = null;
       }
     }
+    await _sdkService.sync();
     if (connectionProvider.followersList.isEmpty || isInit) {
       await createLists(isFollowing: false);
       if (followers.list.isNotEmpty) {
@@ -292,6 +293,7 @@ class ConnectionsService {
       if (followersValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
             !followersValue.metadata.isPublic;
+        await _sdkService.sync();
       }
     } else {
       // for followers list following list is required to show the status of follow button.
@@ -303,6 +305,7 @@ class ConnectionsService {
       if (followingValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowingPrivate =
             !followingValue.metadata.isPublic;
+        await _sdkService.sync();
       }
     }
   }
