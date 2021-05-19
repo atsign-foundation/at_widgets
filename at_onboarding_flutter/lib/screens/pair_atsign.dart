@@ -331,12 +331,16 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             } else if (aesKey == null &&
                 atsign == null &&
                 file.name.contains('_private_key.png')) {
+              var bytes = file.content as List<int>;
               var path = (await path_provider.getTemporaryDirectory()).path;
-              String result = await FlutterQrReader.imgScan(path);
+              var file1 = await File('$path' + 'test').create();
+              file1.writeAsBytesSync(bytes);
+              String result = await FlutterQrReader.imgScan(file1.path);
               List<String> params = result.replaceAll('"', '').split(':');
               atsign = params[0];
               aesKey = params[1];
-              //read scan QRcode and extract atsign,aeskey
+              await File(path + 'test').delete();
+//read scan QRcode and extract atsign,aeskey
             }
           }
         } else if (pickedFile.name.contains('atKeys')) {
@@ -344,7 +348,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         } else if (aesKey == null &&
             atsign == null &&
             pickedFile.name.contains('_private_key.png')) {
-          //read scan QRcode and extract atsign,aeskey
+//read scan QRcode and extract atsign,aeskey
           String result = await FlutterQrReader.imgScan(path);
           List<String> params = result.split(':');
           atsign = params[0];
@@ -629,7 +633,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           },
           child: CustomDialog(
             isAtsignForm: true,
-            onValidate: (atsign, secret)async{
+            onValidate: (atsign, secret) async {
               await _processSharedSecret(atsign, secret);
             },
             onSubmit: (atsign) async {
