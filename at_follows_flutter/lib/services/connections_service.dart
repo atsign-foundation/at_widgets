@@ -415,15 +415,18 @@ class ConnectionsService {
         'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.fromAtSign} to:${notification.toAtSign}');
     if (notification.operation == Operation.update &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key.contains(AppConstants.following)) {
+        notification.key.contains(
+            ('${AppConstants.following} | ${AppConstants.followingKey}'))) {
       await updateFollowers(notification);
     } else if (notification.operation == Operation.delete &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key.contains(AppConstants.following)) {
+        notification.key.contains(
+            '${AppConstants.following} | ${AppConstants.followingKey}')) {
       await deleteFollowers(notification);
     } else if (notification.operation == Operation.delete &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key.contains(AppConstants.followers)) {
+        notification.key.contains(
+            ('${AppConstants.followers} | ${AppConstants.followersKey}'))) {
       await deleteFollowing(notification);
     }
   }

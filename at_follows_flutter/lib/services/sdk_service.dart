@@ -66,10 +66,11 @@ class SDKService {
       fromDate = fromDate.split(' ')[0];
     }
     var response = await _atClientServiceInstance.atClient.notifyList(
-        regex: AppConstants.following + '|' + AppConstants.followers,
+        regex:
+            ('${AppConstants.following}|${AppConstants.followers}|${AppConstants.followersKey}|${AppConstants.followingKey}'),
         fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
-    if (response == 'null') {
+    if (response == 'null' || response == null) {
       return [];
     }
     List<AtNotification> notificationList = AtNotification.fromJsonList(
