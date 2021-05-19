@@ -213,7 +213,7 @@ class CustomDialog extends StatelessWidget {
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
-                                            fieldWidth: 50,
+                                            fieldWidth: 45.toWidth,
                                             style: TextStyle(fontSize: 17),
                                             textFieldAlignment:
                                                 MainAxisAlignment.spaceAround,
@@ -437,7 +437,33 @@ class CustomDialog extends StatelessWidget {
                                                       fontSize: 15.toFont),
                                                 )),
                                               )),
-                                          SizedBox(height: 20.toHeight),
+                                          SizedBox(height: 10.toHeight),
+                                          TextButton(
+                                              onPressed: () async {
+                                                if (_emailController.text !=
+                                                        '' &&
+                                                    _emailController.text !=
+                                                        null) {
+                                                  loading = true;
+                                                  stateSet(() {});
+                                                  bool status =
+                                                      await registerPersona(
+                                                          _atsignController
+                                                              .text,
+                                                          _emailController.text,
+                                                          context);
+                                                  
+                                                  loading = false;
+                                                  stateSet(() {});
+                                                }
+                                              },
+                                              child: Text(
+                                                'Resend OTP',
+                                                style: TextStyle(
+                                                    color: ColorConstants
+                                                        .appColor),
+                                              )),
+                                          SizedBox(height: 10.toHeight),
                                           TextButton(
                                               onPressed: () {
                                                 otp = false;
