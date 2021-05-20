@@ -108,7 +108,8 @@ class SDKService {
   ///Returns `true` on notifying [key] with [value], [operation].
   Future<bool> notify(AtKey key, String value, OperationEnum operation) async {
     return await _atClientServiceInstance.atClient
-        .notify(key, value, operation, notifier: 'persona')
+        .notify(key, value, operation,
+            notifier: _atClientServiceInstance.atClient.preference.namespace)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
   }

@@ -4,6 +4,8 @@ class AppConstants {
   static final String followers = 'at_followers_of_self';
   static final String followingKey = 'following_by_self.$libraryNamespace';
   static final String followersKey = 'followers_of_self.$libraryNamespace';
+  static final String containsFollowing = 'following_by_self';
+  static final String containsFollowers = 'followers_of_self';
 
   static final String publicImage = 'image.persona';
   static final String publicFirstname = 'firstname.persona';
