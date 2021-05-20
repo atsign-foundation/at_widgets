@@ -45,7 +45,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   bool _isServerCheck = false;
   bool _isContinue = true;
   String _pairingAtsign;
-
+  bool isValidated = false;
   bool permissionGrated = false;
   bool scanCompleted = false;
   String _incorrectKeyFile =
@@ -536,10 +536,16 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                             height: SizeConfig().screenHeight * 0.6,
                             width: SizeConfig().screenWidth,
                             child: Center(
-                              child: CircularProgressIndicator(
+                                child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [
+                              CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                       ColorConstants.appColor)),
-                            ),
+                              SizedBox(height: 20.toHeight),
+                              isValidated
+                                  ? Text(
+                                      'Getting your @sign ready. Please wait...',style: TextStyle(fontSize: 15.toFont,fontWeight: FontWeight.w500),)
+                                  : Text('')
+                            ])),
                           )
                     : SizedBox()
               ],
@@ -634,7 +640,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           child: CustomDialog(
             isAtsignForm: true,
             onValidate: (atsign, secret) async {
+              isValidated = true;
+              setState(() {});
               await _processSharedSecret(atsign, secret);
+              
             },
             onSubmit: (atsign) async {
               var isExist = await OnboardingService.getInstance()

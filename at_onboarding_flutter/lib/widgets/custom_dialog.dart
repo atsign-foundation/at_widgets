@@ -338,53 +338,80 @@ class CustomDialog extends StatelessWidget {
                                                       )
                                                     ]),
                                               ))
-                                          : Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty
-                                                        .all((_emailController
-                                                                        .text !=
-                                                                    '' &&
+                                          : Column(children: [
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: ElevatedButton(
+                                                    style: ButtonStyle(
+                                                        backgroundColor: MaterialStateProperty
+                                                            .all((_emailController
+                                                                            .text !=
+                                                                        '' &&
+                                                                    _emailController
+                                                                            .text !=
+                                                                        null)
+                                                                ? Colors
+                                                                    .grey[800]
+                                                                : Colors.grey[
+                                                                    400])),
+                                                    // key: Key(''),
+                                                    onPressed: () async {
+                                                      if (_emailController
+                                                                  .text !=
+                                                              '' &&
+                                                          _emailController
+                                                                  .text !=
+                                                              null) {
+                                                        loading = true;
+                                                        stateSet(() {});
+                                                        bool status =
+                                                            await registerPersona(
+                                                                _atsignController
+                                                                    .text,
                                                                 _emailController
-                                                                        .text !=
-                                                                    null)
-                                                            ? Colors.grey[800]
-                                                            : Colors
-                                                                .grey[400])),
-                                                // key: Key(''),
-                                                onPressed: () async {
-                                                  if (_emailController.text !=
-                                                          '' &&
-                                                      _emailController.text !=
-                                                          null) {
-                                                    loading = true;
-                                                    stateSet(() {});
-                                                    bool status =
-                                                        await registerPersona(
-                                                            _atsignController
-                                                                .text,
-                                                            _emailController
-                                                                .text,
-                                                            context);
-                                                    loading = false;
-                                                    stateSet(() {});
-                                                    if (status) {
-                                                      otp = true;
-                                                      stateSet(() {});
-                                                    }
-                                                  }
-                                                },
-                                                child: Center(
-                                                    child: Text(
-                                                  'Send OTP',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15.toFont),
-                                                )),
-                                              ))
+                                                                    .text,
+                                                                context);
+                                                        loading = false;
+                                                        stateSet(() {});
+                                                        if (status) {
+                                                          otp = true;
+                                                          stateSet(() {});
+                                                        }
+                                                      }
+                                                    },
+                                                    child: Center(
+                                                        child: Text(
+                                                      'Send Code',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15.toFont),
+                                                    )),
+                                                  )),
+                                              SizedBox(
+                                                height: 10.toHeight,
+                                              ),
+                                              Text(
+                                                Strings.emailNote,
+                                                style: TextStyle(
+                                                    fontSize: 13.toFont,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              Center(
+                                                  child: TextButton(
+                                                      onPressed: () {
+                                                        // isfreeAtsign = false;
+                                                        pair =false;
+                                                        stateSet(() {});
+                                                      },
+                                                      child: Text(
+                                                        'Back',
+                                                        style: TextStyle(
+                                                            color: Colors.grey[700]),
+                                                      )))
+                                            ])
                                       : Column(children: [
                                           Container(
                                               width: MediaQuery.of(context)
@@ -452,13 +479,13 @@ class CustomDialog extends StatelessWidget {
                                                               .text,
                                                           _emailController.text,
                                                           context);
-                                                  
+
                                                   loading = false;
                                                   stateSet(() {});
                                                 }
                                               },
                                               child: Text(
-                                                'Resend OTP',
+                                                'Resend Code',
                                                 style: TextStyle(
                                                     color: ColorConstants
                                                         .appColor),
@@ -488,6 +515,7 @@ class CustomDialog extends StatelessWidget {
                                           // key: Key(''),
                                           onPressed: () async {
                                             pair = true;
+                                            _emailController.text ='';
                                             stateSet(() {});
                                           },
                                           child: Center(
