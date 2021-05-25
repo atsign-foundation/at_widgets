@@ -331,11 +331,15 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             } else if (aesKey == null &&
                 atsign == null &&
                 file.name.contains('_private_key.png')) {
+              var bytes = file.content as List<int>;
               var path = (await path_provider.getTemporaryDirectory()).path;
-              String result = await FlutterQrReader.imgScan(path);
+              var file1 = await File('$path' + 'test').create();
+              file1.writeAsBytesSync(bytes);
+              String result = await FlutterQrReader.imgScan(file1.path);
               List<String> params = result.replaceAll('"', '').split(':');
               atsign = params[0];
               aesKey = params[1];
+              await File(path + 'test').delete();
               //read scan QRcode and extract atsign,aeskey
             }
           }
