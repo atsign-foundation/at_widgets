@@ -4,6 +4,7 @@ class TextStrings {
   String atsignExists(String? atSign) => '$atSign already exists';
   String contacts = 'Contacts';
   String emptyAtsign = 'Please type in an atsign';
+  String addingLoggedInUser = 'Cannot add yourself';
   String searchContact = 'Search Contact';
   String buttonCancel = 'Cancel';
   String addtoContact = 'Add to Contacts';
