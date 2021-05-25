@@ -152,6 +152,12 @@ class ContactService {
     } else if (atSign[0] != '@') {
       atSign = '@' + atSign;
     }
+
+    if (atSign == atClientInstance?.currentAtSign) {
+      getAtSignError = TextStrings().addingLoggedInUser;
+
+      return true;
+    }
     try {
       isContactPresent = false;
 
