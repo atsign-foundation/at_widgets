@@ -32,6 +32,13 @@ Future<AtContact> getAtSignDetails(String atSign) async {
   return atContact;
 }
 
+// this function is used to get contact from cached array only
+AtContact checkForCachedContactDetail(String atSign) {
+  // ignore: omit_local_variable_types
+  AtContact? atContact = getCachedContactDetail(atSign);
+  return atContact ?? AtContact(atSign: atSign);
+}
+
 AtContact? getCachedContactDetail(String atsign) {
   if (atsign == ContactService().atContactImpl.atClient.currentAtSign &&
       ContactService().loggedInUserDetails != null) {
