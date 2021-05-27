@@ -1,16 +1,17 @@
 import 'dart:typed_data';
 
+import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
-import 'package:at_contacts_group_flutter/widgets/contacts_initials.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 // ignore: must_be_immutable
 class CustomPersonHorizontalTile extends StatelessWidget {
-  final String title, subTitle;
+  final String? title, subTitle;
   final bool isTopRight;
-  final IconData icon;
-  List<dynamic> image;
+  final IconData? icon;
+  List<dynamic>? image;
 
   CustomPersonHorizontalTile({
     this.image,
@@ -20,7 +21,7 @@ class CustomPersonHorizontalTile extends StatelessWidget {
     this.icon,
   }) {
     if (image != null) {
-      List<int> intList = image.cast<int>();
+      var intList = image!.cast<int>();
       image = Uint8List.fromList(intList);
     }
   }
@@ -38,14 +39,13 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                       borderRadius:
                           BorderRadius.all(Radius.circular(30.toWidth)),
                       child: Image.memory(
-                        image,
+                        image as Uint8List,
                         width: 50.toWidth,
                         height: 50.toWidth,
                         fit: BoxFit.fill,
                       ),
                     )
-                  : ContactInitial(
-                      initials: title.substring(0, title.length > 1 ? 2 : 1)),
+                  : ContactInitial(initials: title ?? ' '),
               icon != null
                   ? Positioned(
                       top: isTopRight ? 0 : null,
@@ -65,7 +65,7 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                   width: 100,
                   child: title != null
                       ? Text(
-                          title,
+                          title!,
                           style: CustomTextStyles().grey16,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -75,7 +75,7 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                 SizedBox(height: 5.toHeight),
                 subTitle != null
                     ? Text(
-                        subTitle,
+                        subTitle!,
                         style: CustomTextStyles().grey14,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

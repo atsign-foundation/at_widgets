@@ -47,8 +47,8 @@ class _NotificationDialogState extends State<NotificationDialog> {
     super.initState();
   }
 
-  getEventCreator() async {
-    AtContact contact = await getAtSignDetails(locationUserImageToShow);
+  void getEventCreator() async {
+    var contact = await getAtSignDetails(locationUserImageToShow);
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
         List<int> intList = contact.tags['image'].cast<int>();
@@ -94,7 +94,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                               ),
                             )
                           : ContactInitial(
-                              initials: locationUserImageToShow.substring(1, 3),
+                              initials: locationUserImageToShow,
                               size: 60,
                             ),
                       widget.showMembersCount
@@ -175,7 +175,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
     );
   }
 
-  timeSelect(BuildContext context) {
+  void timeSelect(BuildContext context) {
     int result;
     bottomSheet(
         context,

@@ -11,7 +11,7 @@ class PopupPosition {
     Marker marker,
     PopupSnap snap,
   ) {
-    final CustomPoint markerPosition = _markerPosition(mapState, marker);
+    final markerPosition = _markerPosition(mapState, marker);
 
     return _containerFor(
       mapState.size,

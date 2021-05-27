@@ -7,26 +7,39 @@ import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
+// ignore: must_be_immutable
 class ContactInitial extends StatelessWidget {
   final double size;
   final String initials;
-  final Color color;
-
-  const ContactInitial({Key key, this.size = 50, this.initials, this.color})
+  int index;
+  final Color backgroundColor;
+  ContactInitial(
+      {Key key,
+      this.size = 50,
+      this.initials,
+      this.index,
+      this.backgroundColor})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    if (initials.length < 3) {
+      index = initials.length;
+    } else {
+      index = 3;
+    }
+
     return Container(
-      height: size.toFont,
-      width: size.toFont,
+      height: size.toHeight,
+      width: size.toHeight,
       decoration: BoxDecoration(
-        color: color ?? AllColors().Black,
+        color: backgroundColor ?? ContactInitialsColors.getColor(initials),
         borderRadius: BorderRadius.circular(size.toWidth),
       ),
       child: Center(
         child: Text(
-          initials.toUpperCase(),
-          style: CustomTextStyles().white15,
+          initials.substring((index == 1) ? 0 : 1, index).toUpperCase(),
+          style: CustomTextStyles().whiteBold16,
         ),
       ),
     );

@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
                             appColor: Color.fromARGB(255, 240, 94, 62),
                             onboard: (Map<String, AtClientService> value,
                                 String atsign) async {
-                              this.clientSdkService.atClientServiceInstance =
+                              clientSdkService.atClientServiceInstance =
                                   value[atsign];
                               await Navigator.pushReplacement(
                                   context,

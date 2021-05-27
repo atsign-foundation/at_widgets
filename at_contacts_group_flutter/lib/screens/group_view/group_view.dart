@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_group_flutter/screens/edit/group_edit.dart';
@@ -13,11 +14,12 @@ import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class GroupView extends StatefulWidget {
   final AtGroup group;
-  GroupView({@required this.group});
+  GroupView({required this.group});
 
   @override
   _GroupViewState createState() => _GroupViewState();
@@ -28,7 +30,7 @@ class _GroupViewState extends State<GroupView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       GroupService().showLoaderSink.add(false);
     });
   }
@@ -51,11 +53,10 @@ class _GroupViewState extends State<GroupView> {
                     builder: (context, AsyncSnapshot<AtGroup> snapshot) {
                       if (snapshot.connectionState == ConnectionState.active) {
                         if (snapshot.hasData) {
-                          if (snapshot.data.groupPicture != null) {
+                          if (snapshot.data!.groupPicture != null) {
                             List<int> intList =
-                                snapshot.data.groupPicture.cast<int>();
-                            Uint8List groupPicture =
-                                Uint8List.fromList(intList);
+                                snapshot.data!.groupPicture.cast<int>();
+                            var groupPicture = Uint8List.fromList(intList);
 
                             return Image.memory(
                               groupPicture,
@@ -123,7 +124,7 @@ class _GroupViewState extends State<GroupView> {
                               );
                             } else {
                               if (snapshot.hasData) {
-                                AtGroup groupData = snapshot.data;
+                                var groupData = snapshot.data!;
                                 return GridView.count(
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
@@ -136,7 +137,7 @@ class _GroupViewState extends State<GroupView> {
                                     return InkWell(
                                       onTap: () {
                                         if (index < groupData.members.length) {
-                                          return showMyDialog(
+                                          showMyDialog(
                                               context,
                                               groupData.members
                                                   .elementAt(index),
@@ -215,7 +216,7 @@ class _GroupViewState extends State<GroupView> {
                                   (context, AsyncSnapshot<AtGroup> snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.active) {
-                                  AtGroup groupData = snapshot.data;
+                                  var groupData = snapshot.data!;
                                   return Container(
                                     child: Column(
                                       crossAxisAlignment:
@@ -261,13 +262,13 @@ class _GroupViewState extends State<GroupView> {
                                 },
                                 saveGroup: () async {
                                   if (GroupService()
-                                      .selecteContactList
+                                      .selecteContactList!
                                       .isNotEmpty) {
                                     GroupService().showLoaderSink.add(true);
 
                                     var result = await GroupService()
                                         .addGroupMembers([
-                                      ...GroupService().selecteContactList
+                                      ...GroupService().selecteContactList!
                                     ], widget.group);
 
                                     GroupService().showLoaderSink.add(false);

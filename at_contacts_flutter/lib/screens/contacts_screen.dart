@@ -4,8 +4,11 @@
 /// @param [selectedList] is a callback function to return back the selected list from the screen to the app
 /// @param [asSelectionScreen] toggles between the selection type screen of to display the contacts
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -22,15 +25,15 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../services/contact_service.dart';
 
 class ContactsScreen extends StatefulWidget {
-  final BuildContext context;
+  final BuildContext? context;
 
-  final ValueChanged<List<AtContact>> selectedList;
+  final ValueChanged<List<AtContact?>>? selectedList;
   final bool asSelectionScreen;
   final bool asSingleSelectionScreen;
-  final Function saveGroup, onSendIconPressed;
+  final Function? saveGroup, onSendIconPressed;
 
   const ContactsScreen(
-      {Key key,
+      {Key? key,
       this.selectedList,
       this.context,
       this.asSelectionScreen = false,
@@ -44,7 +47,7 @@ class ContactsScreen extends StatefulWidget {
 
 class _ContactsScreenState extends State<ContactsScreen> {
   String searchText = '';
-  ContactService _contactService;
+  ContactService? _contactService;
   bool deletingContact = false;
   bool blockingContact = false;
   bool errorOcurred = false;
@@ -52,7 +55,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   @override
   void initState() {
     _contactService = ContactService();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       // try {
       //   _contactService.fetchContacts();
       // } catch (e) {
@@ -62,7 +65,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       //       errorOcurred = true;
       //     });
       // }
-      var _result = await _contactService.fetchContacts();
+      var _result = await _contactService!.fetchContacts();
       print('$_result = true');
 
       if (_result == null) {
@@ -82,20 +85,20 @@ class _ContactsScreenState extends State<ContactsScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      bottomSheet: (widget.asSelectionScreen ?? false)
-          ? (widget.asSingleSelectionScreen ?? false)
+      bottomSheet: (widget.asSelectionScreen)
+          ? (widget.asSingleSelectionScreen)
               ? Container(height: 0)
               : CustomBottomSheet(
                   onPressed: () {
-                    Navigator.pop(widget.context);
+                    Navigator.pop(widget.context!);
                     if (widget.saveGroup != null) {
-                      widget.saveGroup();
+                      widget.saveGroup!();
                       ContactService().clearAtSigns();
                     }
                   },
                   selectedList: (s) {
-                    selectedList = s;
-                    widget.selectedList(selectedList);
+                    selectedList = s as List<AtContact>;
+                    widget.selectedList!(selectedList);
                   },
                 )
           : Container(
@@ -108,10 +111,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
         titleText: TextStrings().contacts,
         onLeadingIconPressed: () {
           setState(() {
-            if (widget.asSelectionScreen ?? false) {
+            if (widget.asSelectionScreen) {
               ContactService().clearAtSigns();
               selectedList = [];
-              widget.selectedList(selectedList);
+              widget.selectedList!(selectedList);
             }
           });
         },
@@ -121,6 +124,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
             builder: (context) => AddContactDialog(),
           );
         },
+        // ignore: unnecessary_null_comparison
         showTrailingIcon: widget.asSelectionScreen == null ||
                 widget.asSelectionScreen == false
             ? true
@@ -149,15 +153,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   SizedBox(
                     height: 15.toHeight,
                   ),
-                  (widget.asSelectionScreen ?? false)
-                      ? (widget.asSingleSelectionScreen ?? false)
+                  (widget.asSelectionScreen)
+                      ? (widget.asSingleSelectionScreen)
                           ? Container()
                           : HorizontalCircularList()
                       : Container(),
                   Expanded(
-                      child: StreamBuilder<List<AtContact>>(
-                    stream: _contactService.contactStream,
-                    initialData: _contactService.contactList,
+                      child: StreamBuilder<List<AtContact?>>(
+                    stream: _contactService!.contactStream,
+                    initialData: _contactService!.contactList,
                     builder: (context, snapshot) {
                       if ((snapshot.connectionState ==
                           ConnectionState.waiting)) {
@@ -165,14 +169,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
                           child: CircularProgressIndicator(),
                         );
                       } else {
-                        if ((snapshot.data == null || snapshot.data.isEmpty)) {
+                        if ((snapshot.data == null || snapshot.data!.isEmpty)) {
                           return Center(
                             child: Text(TextStrings().noContacts),
                           );
                         } else {
-                          List<AtContact> _filteredList = [];
-                          snapshot.data.forEach((c) {
-                            if (c.atSign
+                          var _filteredList = <AtContact?>[];
+                          snapshot.data!.forEach((c) {
+                            if (c!.atSign
                                 .toUpperCase()
                                 .contains(searchText.toUpperCase())) {
                               _filteredList.add(c);
@@ -191,20 +195,20 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             shrinkWrap: true,
                             physics: AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, alphabetIndex) {
-                              List<AtContact> contactsForAlphabet = [];
-                              String currentChar =
+                              var contactsForAlphabet = <AtContact?>[];
+                              var currentChar =
                                   String.fromCharCode(alphabetIndex + 65)
                                       .toUpperCase();
                               if (alphabetIndex == 26) {
                                 currentChar = 'Others';
                                 _filteredList.forEach((c) {
-                                  if (int.tryParse(c.atSign[1]) != null) {
+                                  if (int.tryParse(c!.atSign[1]) != null) {
                                     contactsForAlphabet.add(c);
                                   }
                                 });
                               } else {
                                 _filteredList.forEach((c) {
-                                  if (c.atSign[1].toUpperCase() ==
+                                  if (c!.atSign[1].toUpperCase() ==
                                       currentChar) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -264,7 +268,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                     setState(() {
                                                       blockingContact = true;
                                                     });
-                                                     showDialog(
+                                                    // ignore: unawaited_futures
+                                                    showDialog(
                                                       context: context,
                                                       builder: (context) =>
                                                           AlertDialog(
@@ -282,14 +287,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                         ),
                                                       ),
                                                     );
-                                                    await _contactService
+                                                    await _contactService!
                                                         .blockUnblockContact(
                                                             contact:
                                                                 contactsForAlphabet[
-                                                                    index],
+                                                                    index]!,
                                                             blockAction: true);
                                                     setState(() {
-                                                      blockingContact = true;
+                                                      blockingContact = false;
                                                       Navigator.pop(context);
                                                     });
                                                   },
@@ -302,7 +307,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                     setState(() {
                                                       deletingContact = true;
                                                     });
-                                                     showDialog(
+                                                    // ignore: unawaited_futures
+                                                    showDialog(
                                                       context: context,
                                                       builder: (context) =>
                                                           AlertDialog(
@@ -320,11 +326,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                         ),
                                                       ),
                                                     );
-                                                    await _contactService
+                                                    await _contactService!
                                                         .deleteAtSign(
                                                             atSign:
                                                                 contactsForAlphabet[
-                                                                        index]
+                                                                        index]!
                                                                     .atSign);
                                                     setState(() {
                                                       deletingContact = false;
@@ -345,8 +351,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                   contact: contactsForAlphabet[
                                                       index],
                                                   selectedList: (s) {
-                                                    selectedList = s;
-                                                    widget.selectedList(
+                                                    selectedList =
+                                                        s as List<AtContact>;
+                                                    widget.selectedList!(
                                                         selectedList);
                                                   },
                                                   onTrailingPressed:

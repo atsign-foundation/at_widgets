@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 
 class GroupContactsModel {
-  final AtContact contact;
-  final AtGroup group;
+  final AtContact? contact;
+  final AtGroup? group;
 
-  final ContactsType contactType;
+  final ContactsType? contactType;
   GroupContactsModel({
     this.contact,
     this.group,
@@ -14,9 +15,9 @@ class GroupContactsModel {
   });
 
   GroupContactsModel copyWith({
-    AtContact contact,
-    AtGroup group,
-    ContactsType contactType,
+    AtContact? contact,
+    AtGroup? group,
+    ContactsType? contactType,
   }) {
     return GroupContactsModel(
       contact: contact ?? this.contact,
@@ -33,8 +34,8 @@ class GroupContactsModel {
     };
   }
 
-  factory GroupContactsModel.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+  factory GroupContactsModel.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return GroupContactsModel();
 
     return GroupContactsModel(
       contact: AtContact.fromJson(map['contact']),

@@ -1,7 +1,9 @@
 /// A popup to ask the [AtSign] which is to be added
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart' as contact_strings;
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart'
@@ -11,7 +13,7 @@ import 'package:flutter/material.dart';
 
 class AddContactDialog extends StatefulWidget {
   AddContactDialog({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -31,8 +33,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
 
   @override
   Widget build(BuildContext context) {
-    ContactService _contactService = ContactService();
-    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    var _contactService = ContactService();
+    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,
@@ -111,12 +113,13 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               });
                               await _contactService.addAtSign(context,
                                   atSign: atsignName);
-                              GroupService _groupService = GroupService();
+                              var _groupService = GroupService();
                               await _groupService.fetchGroupsAndContacts();
                               setState(() {
                                 isLoading = false;
                               });
-                              if (_contactService.checkAtSign) {
+                              if (_contactService.checkAtSign != null &&
+                                  _contactService.checkAtSign!) {
                                 Navigator.pop(context);
                               }
                             },
