@@ -67,6 +67,8 @@ class CustomDialog extends StatelessWidget {
   bool isfreeAtsign = false;
   String verificationCode;
   bool loading = false;
+  bool wrongEmail = false;
+  String oldEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -366,13 +368,24 @@ class CustomDialog extends StatelessWidget {
                                                               null) {
                                                         loading = true;
                                                         stateSet(() {});
-                                                        bool status =
-                                                            await registerPersona(
-                                                                _atsignController
-                                                                    .text,
-                                                                _emailController
-                                                                    .text,
-                                                                context);
+                                                        bool status = false;
+                                                        if (!wrongEmail) {
+                                                          status = await registerPersona(
+                                                              _atsignController
+                                                                  .text,
+                                                              _emailController
+                                                                  .text,
+                                                              context);
+                                                        } else {
+                                                          status = await registerPersona(
+                                                              _atsignController
+                                                                  .text,
+                                                              _emailController
+                                                                  .text,
+                                                              context,
+                                                              oldEmail:
+                                                                  oldEmail);
+                                                        }
                                                         loading = false;
                                                         stateSet(() {});
                                                         if (status) {
@@ -403,13 +416,14 @@ class CustomDialog extends StatelessWidget {
                                                   child: TextButton(
                                                       onPressed: () {
                                                         // isfreeAtsign = false;
-                                                        pair =false;
+                                                        pair = false;
                                                         stateSet(() {});
                                                       },
                                                       child: Text(
                                                         'Back',
                                                         style: TextStyle(
-                                                            color: Colors.grey[700]),
+                                                            color: Colors
+                                                                .grey[700]),
                                                       )))
                                             ])
                                       : Column(children: [
@@ -494,6 +508,9 @@ class CustomDialog extends StatelessWidget {
                                           TextButton(
                                               onPressed: () {
                                                 otp = false;
+                                                wrongEmail = true;
+                                                oldEmail =
+                                                    _emailController.text;
                                                 stateSet(() {});
                                               },
                                               child: Text(
@@ -515,7 +532,7 @@ class CustomDialog extends StatelessWidget {
                                           // key: Key(''),
                                           onPressed: () async {
                                             pair = true;
-                                            _emailController.text ='';
+                                            _emailController.text = '';
                                             stateSet(() {});
                                           },
                                           child: Center(
@@ -608,11 +625,13 @@ class CustomDialog extends StatelessWidget {
   //To register the person with the provided atsign and email
 //It will send an OTP to the registered email
   Future<bool> registerPersona(
-      String atsign, String email, BuildContext context) async {
+      String atsign, String email, BuildContext context,
+      {String oldEmail}) async {
     var data;
     bool status = false;
     // String atsign;
-    dynamic response = await _freeAtsignService.registerPerson(atsign, email);
+    dynamic response = await _freeAtsignService.registerPerson(atsign, email,
+        oldEmail: oldEmail);
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);

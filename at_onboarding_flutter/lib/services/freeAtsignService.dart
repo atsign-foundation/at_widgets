@@ -60,14 +60,22 @@ class FreeAtsignService {
 
 //To register the person with the provided atsign and email
 //It will send an OTP to the registered email
-  Future<dynamic> registerPerson(String atsign, String email) async {
+  Future<dynamic> registerPerson(String atsign, String email,
+      {String oldEmail}) async {
     if (!initialized) {
       _init();
     }
-
+    Map data;
     var url = Uri.https(api, '$path${AppConstants.registerPerson}');
-
-    Map data = {'email': '$email', 'atsign': "$atsign"};
+    if (oldEmail != null) {
+       data = {
+        'email': '$email',
+        'atsign': "$atsign",
+        'oldEmail': '$oldEmail'
+      };
+    } else {
+       data = {'email': '$email', 'atsign': "$atsign"};
+    }
 
     String body = json.encode(data);
     var response = await _http.post(url, body: body, headers: {
