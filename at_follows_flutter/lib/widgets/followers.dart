@@ -62,6 +62,12 @@ class _FollowersState extends State<Followers> {
                   ),
                 ),
                 SizedBox(height: 5.0.toHeight),
+                if (provider.message != null)
+                  Text(
+                    provider.message,
+                    style: CustomTextStyles.fontBold14primary,
+                    textAlign: TextAlign.center,
+                  )
               ],
             ),
           ),
@@ -254,6 +260,7 @@ class _FollowersState extends State<Followers> {
           ),
         );
       } else if (provider.status == Status.error) {
+        _logger.severe('Loading throws ${provider.error}');
         return AtExceptionHandler().handle(provider.error, context);
       } else {
         WidgetsBinding.instance.addPostFrameCallback((_) async {

@@ -17,6 +17,7 @@ class ConnectionsService {
   AtFollowsList following;
   String followerAtsign;
   String followAtsign;
+  bool inQueue = false;
 
   var _logger = AtSignLogger('Connections Service');
 
@@ -39,48 +40,53 @@ class ConnectionsService {
   }
 
   Future<void> getAtsignsList({bool isInit = false}) async {
-    if (connectionProvider.followingList.isEmpty || isInit) {
-      await createLists(isFollowing: true);
-      if (following.list.isNotEmpty) {
-        connectionProvider.followingList =
-            await _formAtSignData(following.list, isFollowing: true);
-      }
-      if (!this.following.contains(this.followAtsign) &&
-          this.followAtsign != null) {
-        var atsignData = await this.follow(this.followAtsign);
-        if (atsignData != null) {
-          connectionProvider.followingList.add(atsignData);
+    try {
+      inQueue = true;
+      if (connectionProvider.followingList.isEmpty || isInit) {
+        await createLists(isFollowing: true);
+        if (following.list.isNotEmpty) {
+          connectionProvider.followingList =
+              await _formAtSignData(following.list, isFollowing: true);
         }
-        this.followAtsign = null;
-      }
-    }
-    await _sdkService.sync();
-    if (connectionProvider.followersList.isEmpty || isInit) {
-      await createLists(isFollowing: false);
-      if (followers.list.isNotEmpty) {
-        connectionProvider.followersList =
-            await _formAtSignData(followers.list);
-      }
-    }
-    if (isInit) {
-      var fromDate = followers.getKey != null
-          ? followers.getKey.metadata?.updatedAt
-          : null;
-      var notificationsList =
-          await _sdkService.notifyList(fromDate: fromDate?.toString());
-      //filtering notifications which has only new followers
-      for (var notification in notificationsList) {
-        if (notification.operation == Operation.update) {
-          await this.updateFollowers(notification, isSetStatus: false);
-        } else if (notification.operation == Operation.delete &&
-            notification.key.contains(AppConstants.containsFollowing)) {
-          await this.deleteFollowers(notification, isSetStatus: false);
-        } else if (notification.operation == Operation.delete &&
-            notification.key.contains(AppConstants.containsFollowers)) {
-          await this.deleteFollowing(notification, isSetStatus: false);
+        if (!this.following.contains(this.followAtsign) &&
+            this.followAtsign != null) {
+          var atsignData = await this.follow(this.followAtsign);
+          if (atsignData != null) {
+            connectionProvider.followingList.add(atsignData);
+          }
+          this.followAtsign = null;
         }
       }
       await _sdkService.sync();
+      if (connectionProvider.followersList.isEmpty || isInit) {
+        await createLists(isFollowing: false);
+        if (followers.list.isNotEmpty) {
+          connectionProvider.followersList =
+              await _formAtSignData(followers.list);
+        }
+      }
+      if (isInit) {
+        var fromDate = followers.getKey != null
+            ? followers.getKey.metadata?.updatedAt
+            : null;
+        var notificationsList =
+            await _sdkService.notifyList(fromDate: fromDate?.toString());
+        //filtering notifications which has only new followers
+        for (var notification in notificationsList) {
+          if (notification.operation == Operation.update) {
+            await this.updateFollowers(notification, isSetStatus: false);
+          } else if (notification.operation == Operation.delete &&
+              notification.key.contains(AppConstants.containsFollowing)) {
+            await this.deleteFollowers(notification, isSetStatus: false);
+          } else if (notification.operation == Operation.delete &&
+              notification.key.contains(AppConstants.containsFollowers)) {
+            await this.deleteFollowing(notification, isSetStatus: false);
+          }
+        }
+        await _sdkService.sync();
+      }
+    } finally {
+      inQueue = false;
     }
   }
 

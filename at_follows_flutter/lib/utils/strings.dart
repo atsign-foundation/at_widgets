@@ -74,6 +74,11 @@ class Strings {
   static const String closeButton = 'Close';
 
   //loading texts
-  static const String loadingDescription =
-      'Please wait while loading your data';
+  static const String getAtSignList =
+      'Please wait and don\'t go back while fetching your data';
+  static const String statusCheck = 'Fetching @sign status...';
+  static const String followMessage =
+      'Please wait while adding @sign to your following list';
+  static const String unfollowMessage =
+      'Please wait while removing @sign from list';
 }
