@@ -20,12 +20,51 @@ dependencies:
   webview_flutter: ^2.0.4
   otp_text_field: ^1.1.0
   http: ^0.13.0
-  at_utils: ^1.0.1+7
-  at_client:  ^1.0.1+9
-  at_client_mobile: ^1.0.0+10
-  at_commons: ^1.0.1+7
-  at_server_status: ^0.1.0+1
-  at_backupkey_flutter: ^1.0.0+3
+
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: trunk
+      version: ^1.0.1+7
+  at_client:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: at_client
+      ref: trunk
+      version: ^1.0.1+9
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: at_client_mobile
+      ref: trunk
+      version: ^1.0.0+10
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_commons
+      ref: trunk
+      version: ^1.0.1+7
+  at_server_status:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_server_status
+      ref: trunk
+      version: ^0.1.0+1
+  at_backupkey_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_backupkey_flutter
+      ref: trunk
+      version: ^1.0.0+3
+  
+
+  # at_utils: ^1.0.1+7
+  # at_client:  ^1.0.1+9
+  # at_client_mobile: ^1.0.0+10
+  # at_commons: ^1.0.1+7
+  # at_server_status: ^0.1.0+1
+  # at_backupkey_flutter: ^1.0.0+3
   
 
 dev_dependencies:
