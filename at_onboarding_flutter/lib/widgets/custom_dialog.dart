@@ -578,17 +578,6 @@ class CustomDialog extends StatelessWidget {
                         ]
                       : null,
                 ))),
-        // Opacity(
-        //   opacity: loading ? 1 : 0,
-        //   child: Center(
-        //     child: RefreshProgressIndicator(
-        //       backgroundColor: Colors.black,
-        //       strokeWidth: 4,
-        //       valueColor:
-        //           AlwaysStoppedAnimation<Color>(ColorConstants.appColor),
-        //     ),
-        //   ),
-        // )
       ]);
     });
   }
@@ -606,18 +595,7 @@ class CustomDialog extends StatelessWidget {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return CustomDialog(
-              isErrorDialog: true,
-              showClose: true,
-              context: context,
-              message: errorMessage,
-              onClose: () {},
-            );
-          });
+      showErrorDialog(context, errorMessage);
     }
     return atsign;
   }
@@ -642,18 +620,11 @@ class CustomDialog extends StatelessWidget {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return CustomDialog(
-              isErrorDialog: true,
-              showClose: true,
-              context: context,
-              message: errorMessage,
-              onClose: () {},
-            );
-          });
+      if (errorMessage.contains('maximum number of free @signs')) {
+        showlimitDialog(context);
+      } else {
+        showErrorDialog(context, errorMessage);
+      }
     }
     return status;
   }
@@ -676,36 +647,14 @@ class CustomDialog extends StatelessWidget {
         cramSecret = data['cramkey'];
       } else {
         String errorMessage = data['message'];
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              return CustomDialog(
-                isErrorDialog: true,
-                showClose: true,
-                context: context,
-                message: errorMessage,
-                onClose: () {},
-              );
-            });
+        showErrorDialog(context, errorMessage);
       }
       // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return CustomDialog(
-              isErrorDialog: true,
-              showClose: true,
-              context: context,
-              message: errorMessage,
-              onClose: () {},
-            );
-          });
+      showErrorDialog(context, errorMessage);
     }
     return cramSecret;
   }
@@ -784,6 +733,66 @@ class CustomDialog extends StatelessWidget {
         return '';
         break;
     }
+  }
+
+  showErrorDialog(BuildContext context, String errorMessage) {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return CustomDialog(
+            isErrorDialog: true,
+            showClose: true,
+            context: context,
+            message: errorMessage,
+            onClose: () {},
+          );
+        });
+  }
+
+  showlimitDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: RichText(
+              text: TextSpan(children: [
+                TextSpan(
+                  style: TextStyle(color: Colors.black),
+                  text:
+                      'Oops! You already have the maximum number of free @signs. Please login to ',
+                ),
+                TextSpan(
+                    text: 'https://my.atsign.com',
+                    style: TextStyle(
+                        color: ColorConstants.appColor,
+                        decoration: TextDecoration.underline),
+                    recognizer: new TapGestureRecognizer()
+                      ..onTap = () async {
+                        var url = 'https://my.atsign.com';
+                        String errorMessage = 'Cannot launch $url';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        }
+                      }),
+                TextSpan(
+                  text: ' to select one of your existing @signs.',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ]),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Close',
+                    style: TextStyle(color: ColorConstants.appColor),
+                  ))
+            ],
+          );
+        });
   }
 
   Widget _getMessage(var message, bool isErrorDialog) {
