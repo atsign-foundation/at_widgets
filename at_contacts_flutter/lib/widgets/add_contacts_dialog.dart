@@ -83,7 +83,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                     prefixText: '@',
                     prefixStyle:
                         TextStyle(color: Colors.grey, fontSize: 15.toFont),
-                    hintText: '\tEnter contact’s atsign',
+                    hintText: '\tEnter @Sign',
                   ),
                   style: TextStyle(fontSize: 15.toFont),
                 ),
