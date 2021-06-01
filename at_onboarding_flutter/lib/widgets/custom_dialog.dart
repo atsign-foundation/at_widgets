@@ -620,6 +620,9 @@ class CustomDialog extends StatelessWidget {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
+      if(errorMessage.contains('Invalid Email')){
+        oldEmail = email;
+      }
       if (errorMessage.contains('maximum number of free @signs')) {
         showlimitDialog(context);
       } else {
@@ -758,14 +761,16 @@ class CustomDialog extends StatelessWidget {
             content: RichText(
               text: TextSpan(children: [
                 TextSpan(
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black,fontSize: 16.toFont,letterSpacing: 0.5),
                   text:
                       'Oops! You already have the maximum number of free @signs. Please login to ',
                 ),
                 TextSpan(
                     text: 'https://my.atsign.com',
                     style: TextStyle(
+                      fontSize: 16.toFont,
                         color: ColorConstants.appColor,
+                        letterSpacing: 0.5,
                         decoration: TextDecoration.underline),
                     recognizer: new TapGestureRecognizer()
                       ..onTap = () async {
@@ -776,8 +781,8 @@ class CustomDialog extends StatelessWidget {
                         }
                       }),
                 TextSpan(
-                  text: ' to select one of your existing @signs.',
-                  style: TextStyle(color: Colors.black),
+                  text: '  to select one of your existing @signs.',
+                  style: TextStyle(color: Colors.black,fontSize: 16.toFont,letterSpacing: 0.5),
                 ),
               ]),
             ),
