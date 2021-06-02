@@ -40,7 +40,7 @@ class _CustomButtonState extends State<CustomButton> {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    return MaterialButton(
       minWidth: widget.width,
       onPressed: () {
         widget.onPressedCallBack(!widget.isActive);
