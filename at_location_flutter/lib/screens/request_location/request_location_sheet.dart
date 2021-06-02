@@ -54,6 +54,9 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
             hintText: 'Type @sign ',
             initialValue: textField,
             value: (str) {
+              if (!str.contains('@')) {
+                str = '@' + str;
+              }
               textField = str;
             },
             icon: Icons.contacts_rounded,
@@ -76,11 +79,11 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     );
   }
 
-  onRequestTap() async {
+  void onRequestTap() async {
     setState(() {
       isLoading = true;
     });
-    bool validAtSign = await checkAtsign(textField);
+    var validAtSign = await checkAtsign(textField);
 
     if (!validAtSign) {
       setState(() {
@@ -92,6 +95,14 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
 
     var result =
         await RequestLocationService().sendRequestLocationEvent(textField);
+
+    if (result == null) {
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.of(context).pop();
+      return;
+    }
 
     if (result == true) {
       CustomToast().show('Request Location sent', context);

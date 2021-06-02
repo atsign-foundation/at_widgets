@@ -63,8 +63,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                               nonAsset: true,
                             )
                           : ContactInitial(
-                              initials: widget.selectedList[index].atSign
-                                  .substring(1, 3),
+                              initials: widget.selectedList[index].atSign,
                             ),
                     ),
                   );
@@ -182,8 +181,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                     nonAsset: true,
                                   )
                                 : ContactInitial(
-                                    initials: widget.selectedList[index].atSign
-                                        .substring(1, 3),
+                                    initials: widget.selectedList[index].atSign,
                                   ),
                           );
                         },

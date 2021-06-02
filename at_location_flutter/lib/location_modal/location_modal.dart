@@ -25,7 +25,7 @@ class LocationModal {
 
   Map<dynamic, dynamic> toJson() {
     // ignore: omit_local_variable_types
-    final Map<dynamic, dynamic> data = Map<dynamic, dynamic>();
+    final Map<dynamic, dynamic> data = <dynamic, dynamic>{};
     data['lat'] = lat;
     data['long'] = long;
     data['displayName'] = displayName;

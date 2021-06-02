@@ -97,12 +97,12 @@ class _SecondScreenState extends State<SecondScreen> {
     );
   }
 
-  initializeEventService() {
+  void initializeEventService() {
     initialiseEventService(clientSdkService.atClientServiceInstance.atClient,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
-  bottomSheet(
+  void bottomSheet(
     T,
     double height,
   ) async {
@@ -130,11 +130,11 @@ class _SecondScreenState extends State<SecondScreen> {
       title: Text('you are not authenticated'),
       actions: [
         TextButton(
-          child: Text("Ok", style: TextStyle(color: Colors.black)),
           onPressed: () async {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
+          child: Text('Ok', style: TextStyle(color: Colors.black)),
         ),
       ],
     );

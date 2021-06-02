@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('at_events_flutter');
+  const channel = MethodChannel('at_events_flutter');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 

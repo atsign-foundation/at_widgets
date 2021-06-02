@@ -1,3 +1,4 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/images.dart';
@@ -11,10 +12,10 @@ import 'package:flutter/material.dart';
 /// onTap function named as [onYesTap] for on press of [Yes] button of the dialog
 
 class AddSingleContact extends StatefulWidget {
-  final String atSignName;
+  final String? atSignName;
   // final ContactProvider contactProvider;
 
-  const AddSingleContact({Key key, this.atSignName}) : super(key: key);
+  const AddSingleContact({Key? key, this.atSignName}) : super(key: key);
 
   @override
   _AddSingleContactState createState() => _AddSingleContactState();
@@ -61,7 +62,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
                 height: 10.toHeight,
               ),
               Text(
-                widget.atSignName.substring(1) ?? 'Levina Thomas',
+                widget.atSignName!.substring(1),
                 style: CustomTextStyles.primaryBold16,
               ),
               SizedBox(
