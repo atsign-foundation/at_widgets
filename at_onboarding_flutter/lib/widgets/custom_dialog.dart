@@ -15,8 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_commons/at_commons.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomDialog extends StatelessWidget {
@@ -209,19 +208,32 @@ class CustomDialog extends StatelessWidget {
                                                         color: ColorConstants
                                                             .appColor))),
                                           )
-                                        : OTPTextField(
+                                        : PinCodeTextField(
+                                            textCapitalization:
+                                                TextCapitalization.characters,
+                                            appContext: context,
                                             length: 4,
+                                            onChanged: (value) {
+                                              verificationCode = value;
+                                            },
+                                            pinTheme: PinTheme(
+                                              selectedColor: Colors.black,
+                                              inactiveColor: Colors.grey[500],
+                                              activeColor:
+                                                  ColorConstants.appColor,
+                                              shape: PinCodeFieldShape.box,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              fieldHeight: 50,
+                                              fieldWidth: 45.toWidth,
+                                            ),
+                                            cursorHeight: 15.toFont,
+                                            cursorColor: Colors.black,
+                                            animationDuration:
+                                                Duration(milliseconds: 300),
                                             keyboardType: TextInputType.text,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            fieldWidth: 45.toWidth,
-                                            style: TextStyle(fontSize: 17),
-                                            textFieldAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            fieldStyle: FieldStyle.box,
-                                            onCompleted: (pin) {
-                                              verificationCode = pin;
+                                            onCompleted: (v) {
+                                              verificationCode = v;
                                             },
                                           )),
                                 if (!isfreeAtsign) ...[
@@ -620,7 +632,7 @@ class CustomDialog extends StatelessWidget {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      if(errorMessage.contains('Invalid Email')){
+      if (errorMessage.contains('Invalid Email')) {
         oldEmail = email;
       }
       if (errorMessage.contains('maximum number of free @signs')) {
@@ -761,14 +773,17 @@ class CustomDialog extends StatelessWidget {
             content: RichText(
               text: TextSpan(children: [
                 TextSpan(
-                  style: TextStyle(color: Colors.black,fontSize: 16.toFont,letterSpacing: 0.5),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.toFont,
+                      letterSpacing: 0.5),
                   text:
                       'Oops! You already have the maximum number of free @signs. Please login to ',
                 ),
                 TextSpan(
                     text: 'https://my.atsign.com',
                     style: TextStyle(
-                      fontSize: 16.toFont,
+                        fontSize: 16.toFont,
                         color: ColorConstants.appColor,
                         letterSpacing: 0.5,
                         decoration: TextDecoration.underline),
@@ -782,7 +797,10 @@ class CustomDialog extends StatelessWidget {
                       }),
                 TextSpan(
                   text: '  to select one of your existing @signs.',
-                  style: TextStyle(color: Colors.black,fontSize: 16.toFont,letterSpacing: 0.5),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.toFont,
+                      letterSpacing: 0.5),
                 ),
               ]),
             ),
