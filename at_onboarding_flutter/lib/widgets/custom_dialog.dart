@@ -203,6 +203,9 @@ class CustomDialog extends StatelessWidget {
                                                     ? Strings.atsignHintText
                                                     : '',
                                                 prefixText: !pair ? '@' : '',
+                                                prefixStyle: TextStyle(
+                                                    color: ColorConstants
+                                                        .appColor),
                                                 border: OutlineInputBorder(
                                                     borderSide: BorderSide(
                                                         color: ColorConstants
