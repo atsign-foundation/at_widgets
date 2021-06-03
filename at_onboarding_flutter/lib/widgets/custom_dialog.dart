@@ -59,6 +59,7 @@ class CustomDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _atsignController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
   final FreeAtsignService _freeAtsignService = FreeAtsignService();
   String freeAtsign;
   bool otp = false;
@@ -212,6 +213,7 @@ class CustomDialog extends StatelessWidget {
                                                             .appColor))),
                                           )
                                         : PinCodeTextField(
+                                          animationType: AnimationType.none,
                                             textCapitalization:
                                                 TextCapitalization.characters,
                                             appContext: context,
@@ -219,6 +221,7 @@ class CustomDialog extends StatelessWidget {
                                             onChanged: (value) {
                                               verificationCode = value;
                                             },
+                                            textStyle: TextStyle(fontWeight: FontWeight.w500),
                                             pinTheme: PinTheme(
                                               selectedColor: Colors.black,
                                               inactiveColor: Colors.grey[500],
@@ -231,9 +234,8 @@ class CustomDialog extends StatelessWidget {
                                               fieldWidth: 45.toWidth,
                                             ),
                                             cursorHeight: 15.toFont,
-                                            cursorColor: Colors.black,
-                                            animationDuration:
-                                                Duration(milliseconds: 300),
+                                            cursorColor: Colors.grey,
+                                            controller: _otpController,
                                             keyboardType: TextInputType.text,
                                             onCompleted: (v) {
                                               verificationCode = v;
@@ -502,6 +504,7 @@ class CustomDialog extends StatelessWidget {
                                                         null) {
                                                   loading = true;
                                                   stateSet(() {});
+                                                  _otpController.text ='';
                                                   bool status =
                                                       await registerPersona(
                                                           _atsignController
