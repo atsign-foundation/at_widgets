@@ -68,13 +68,9 @@ class FreeAtsignService {
     Map data;
     var url = Uri.https(api, '$path${AppConstants.registerPerson}');
     if (oldEmail != null) {
-       data = {
-        'email': '$email',
-        'atsign': "$atsign",
-        'oldEmail': '$oldEmail'
-      };
+      data = {'email': '$email', 'atsign': "$atsign", 'oldEmail': '$oldEmail'};
     } else {
-       data = {'email': '$email', 'atsign': "$atsign"};
+      data = {'email': '$email', 'atsign': "$atsign"};
     }
 
     String body = json.encode(data);
@@ -87,16 +83,23 @@ class FreeAtsignService {
 
 //It will validate the person with atsign, email and the OTP.
 //If the validation is successful, it will return a cram secret for the user to login
-  Future<dynamic> validatePerson(
-      String atsign, String email, String otp) async {
+  Future<dynamic> validatePerson(String atsign, String email, String otp,
+      {bool confirmation = false}) async {
     if (!initialized) {
       _init();
     }
-
+    Map data;
     var url = Uri.https(api, '$path${AppConstants.validatePerson}');
-
-    Map data = {'email': '$email', 'atsign': "$atsign", 'otp': '$otp'};
-
+    if (AppConstants.serverDomain == 'root.atsign.wtf') {
+      data = {
+        'email': '$email',
+        'atsign': "$atsign",
+        'otp': '$otp',
+        'confirmation': true
+      };
+    } else {
+      data = {'email': '$email', 'atsign': "$atsign", 'otp': '$otp'};
+    }
     String body = json.encode(data);
     var response = await _http.post(url, body: body, headers: {
       'Authorization': '$apiKey',

@@ -57,9 +57,9 @@ class CustomDialog extends StatelessWidget {
       this.onClose,
       this.context});
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _atsignController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _otpController = TextEditingController();
+   TextEditingController _atsignController = TextEditingController();
+   TextEditingController _emailController = TextEditingController();
+   TextEditingController _otpController = TextEditingController();
   final FreeAtsignService _freeAtsignService = FreeAtsignService();
   String freeAtsign;
   bool otp = false;
@@ -235,7 +235,7 @@ class CustomDialog extends StatelessWidget {
                                             ),
                                             cursorHeight: 15.toFont,
                                             cursorColor: Colors.grey,
-                                            controller: _otpController,
+                                            // controller: _otpController,
                                             keyboardType: TextInputType.text,
                                             onCompleted: (v) {
                                               verificationCode = v;
@@ -504,7 +504,7 @@ class CustomDialog extends StatelessWidget {
                                                         null) {
                                                   loading = true;
                                                   stateSet(() {});
-                                                  _otpController.text ='';
+                                                  // _otpController.text ='';
                                                   bool status =
                                                       await registerPersona(
                                                           _atsignController
