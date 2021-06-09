@@ -52,8 +52,8 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _scrollController = ScrollController();
     _chatService = ChatService();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _chatService.getChatHistory();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await _chatService.getChatHistory();
     });
   }
 
@@ -166,7 +166,7 @@ class _ChatScreenState extends State<ChatScreen> {
               hintText: widget.hintText,
               onSend: () async {
                 if (message != '') {
-                  _chatService.sendMessage(message);
+                  await _chatService.sendMessage(message);
                 }
               },
             ),
