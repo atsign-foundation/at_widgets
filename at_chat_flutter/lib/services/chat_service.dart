@@ -88,7 +88,7 @@ class ChatService {
         print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
       });
       print('chat message => $decryptedMessage $fromAtsign');
-      setChatHistory(Message(
+      await setChatHistory(Message(
           message: decryptedMessage,
           sender: fromAtsign,
           time: responseJson['epochMillis'],
@@ -116,7 +116,7 @@ class ChatService {
     }
   }
 
-  void getChatHistory({String? atsign}) async {
+  Future<void> getChatHistory({String? atsign}) async {
     try {
       chatHistory = [];
       var key = AtKey()
@@ -146,13 +146,13 @@ class ChatService {
           (isGroupChat ? groupChatId! : '') +
           (chatHistory.isEmpty ? '' : chatHistory[0].time.toString()) +
           currentAtSign!;
-      checkForMissedMessages(referenceKey);
+      await checkForMissedMessages(referenceKey);
     } catch (error) {
       print('Error in getting chat -> $error');
     }
   }
 
-  void checkForMissedMessages(String referenceKey) async {
+  Future<void> checkForMissedMessages(String referenceKey) async {
     var result = await atClientInstance
         .getKeys(
             sharedBy: chatWithAtSign!,
@@ -177,7 +177,7 @@ class ChatService {
     print('result - $result');
     // ignore: unnecessary_null_comparison
     if (result != null) {
-      setChatHistory(Message(
+      await setChatHistory(Message(
           message: result.value,
           sender: chatWithAtSign ?? missingAtkey.sharedBy,
           time: int.parse(missingKey
@@ -188,7 +188,7 @@ class ChatService {
     }
   }
 
-  void setChatHistory(Message message) async {
+  Future<void> setChatHistory(Message message) async {
     try {
       var key = AtKey()
         ..key = storageKey +
@@ -205,8 +205,8 @@ class ChatService {
     }
   }
 
-  void sendMessage(String? message) async {
-    setChatHistory(Message(
+  Future<void> sendMessage(String? message) async {
+    await setChatHistory(Message(
         message: message,
         sender: currentAtSign,
         time: DateTime.now().millisecondsSinceEpoch,
