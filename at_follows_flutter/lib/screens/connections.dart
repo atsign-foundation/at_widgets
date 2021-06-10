@@ -129,7 +129,9 @@ class _ConnectionsState extends State<Connections> {
                                 if (index != lastAccessedIndex &&
                                     lastAccessedIndex != null &&
                                     !connectionTabs[index].isActive) {
-                                  _connectionProvider.setStatus(Status.getData);
+                                  if (_connectionProvider.status == null)
+                                    _connectionProvider
+                                        .setStatus(Status.getData);
                                   connectionTabs[lastAccessedIndex].isActive =
                                       false;
                                   connectionTabs[index].isActive = isActive;
