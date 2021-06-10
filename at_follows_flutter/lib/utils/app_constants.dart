@@ -1,9 +1,12 @@
 class AppConstants {
+  static var appNamespace = '';
   static final String libraryNamespace = 'at_follows';
   static final String following = 'at_following_by_self';
   static final String followers = 'at_followers_of_self';
-  static final String followingKey = 'following_by_self.$libraryNamespace';
-  static final String followersKey = 'followers_of_self.$libraryNamespace';
+  static final String followingKey =
+      'following_by_self${'.' + appNamespace}.$libraryNamespace';
+  static final String followersKey =
+      'followers_of_self${'.' + appNamespace}.$libraryNamespace';
   static final String containsFollowing = 'following_by_self';
   static final String containsFollowers = 'followers_of_self';
 

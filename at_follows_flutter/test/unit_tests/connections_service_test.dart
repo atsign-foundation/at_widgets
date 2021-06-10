@@ -169,9 +169,11 @@ void main() {
         ..key = AppConstants.following
         ..metadata = metadata;
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
+      AppConstants.appNamespace = 'sample';
 
       var followersValue = await _sdkService
           .scanAndGet('${AppConstants.followers}|${AppConstants.followersKey}');
+      print('followers value is $followersValue');
       expect(followersValue.value.isNotEmpty, true);
 
       var oldKeyfollowersValue =
@@ -180,6 +182,8 @@ void main() {
 
       var followingValue = await _sdkService
           .scanAndGet('${AppConstants.following}|${AppConstants.followingKey}');
+      print('following value is $followingValue');
+
       expect(followingValue.value.isNotEmpty, true);
 
       var oldKeyfollowingValue =

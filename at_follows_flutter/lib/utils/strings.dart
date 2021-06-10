@@ -5,6 +5,7 @@ class Strings {
   static const String Following = 'Following';
   static const String Follow = 'Follow';
   static const String Unfollow = 'Unfollow';
+  static const String Remove = 'Remove';
   static const String BackButton = 'Back';
   static const String Title = 'Connections';
   static const String Search = 'Filter @signs';

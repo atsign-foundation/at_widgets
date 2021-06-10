@@ -30,6 +30,8 @@ class SDKService {
     this._atsign = _atClientServiceInstance.atClient.currentAtSign;
     Strings.rootdomain =
         _atClientServiceInstance.atClient.preference.rootDomain;
+    AppConstants.appNamespace =
+        _atClientServiceInstance.atClient.preference.namespace;
   }
 
   get atsign => this._atsign;
@@ -120,19 +122,23 @@ class SDKService {
         .getAtKeys(regex: regex)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
-    AtFollowsValue value =
-        scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
+    AtFollowsValue value = scanKey.isNotEmpty
+        ? await this.get(_formKeysFromScanKey(scanKey[0]))
+        : AtFollowsValue();
     //migrates to newnamespace
     if (scanKey.isNotEmpty &&
         _isOldKey(scanKey[0].key) &&
         value.value != null) {
-      var newKey = AtKey()..metadata = scanKey[0].metadata;
+      var metadata = scanKey[0].metadata;
+      metadata.namespaceAware = false;
+      var newKey = AtKey()..metadata = metadata;
       newKey.key = scanKey[0].key.contains('following')
           ? AppConstants.followingKey
           : AppConstants.followersKey;
       await this.put(newKey, value.value);
       value = await this.get(newKey);
       if (value != null && value.value != null) {
+        scanKey[0].metadata.namespaceAware = true;
         await this.delete(scanKey[0]);
       }
     }
@@ -183,5 +189,13 @@ class SDKService {
   ///Returns `true` if key is old key else `false`.
   bool _isOldKey(String key) {
     return !key.contains(AppConstants.libraryNamespace);
+  }
+
+  //Returns AtKey by formatting scanned [atKey].
+  AtKey _formKeysFromScanKey(AtKey atkey) {
+    var atKey = atkey;
+    atKey.key = atKey.key + '.' + atKey.namespace;
+    atKey.metadata.namespaceAware = false;
+    return atKey;
   }
 }

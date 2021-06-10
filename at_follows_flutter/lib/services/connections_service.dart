@@ -320,13 +320,17 @@ class ConnectionsService {
     var atKey;
     var atSign = atsign ?? _sdkService.atsign;
     if (isFollowing) {
-      var atMetadata = Metadata()..isPublic = !following.isPrivate;
+      var atMetadata = Metadata()
+        ..isPublic = !following.isPrivate
+        ..namespaceAware = false;
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followingKey
         ..sharedWith = atMetadata.isPublic ? null : atSign;
     } else {
-      var atMetadata = Metadata()..isPublic = !followers.isPrivate;
+      var atMetadata = Metadata()
+        ..isPublic = !followers.isPrivate
+        ..namespaceAware = false;
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followersKey
