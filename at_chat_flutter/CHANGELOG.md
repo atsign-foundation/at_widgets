@@ -1,3 +1,7 @@
+## [1.0.2] - 06/10/2021
+
+* Fix for key saving failure
+
 ## [1.0.1] - 05/13/2021
 
 * Updated dependent packages
