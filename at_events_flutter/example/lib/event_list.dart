@@ -21,7 +21,7 @@ class _EventListState extends State<EventList> {
     getAllEvent();
   }
 
-  getAllEvent() async {
+  void getAllEvent() async {
     events = await getEvents();
   }
 
@@ -161,7 +161,6 @@ class _EventListState extends State<EventList> {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
           ),
-          child: Text("No", style: TextStyle(color: Colors.black)),
           onPressed: () async {
             if (!isDelete) {
               var result = await EventService().sendEventAcknowledgement(
@@ -176,12 +175,15 @@ class _EventListState extends State<EventList> {
               Navigator.of(context).pop();
             }
           },
+          child: Text(
+            'No',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         TextButton(
-          child: Text("Yes", style: TextStyle(color: Colors.black)),
           onPressed: () async {
             if (isDelete) {
-              bool result = await deleteEvent(eventData.key);
+              var result = await deleteEvent(eventData.key);
               if (result != null && result) {
                 Navigator.of(context).pop();
               }
@@ -196,14 +198,15 @@ class _EventListState extends State<EventList> {
               }
             }
           },
+          child: Text('Yes', style: TextStyle(color: Colors.black)),
         ),
       ],
     );
   }
 
   String getActionString(EventNotificationModel event) {
-    String label = 'Action required';
-    String currentAtsign = EventService().currentAtSign;
+    var label = 'Action required';
+    var currentAtsign = EventService().currentAtSign;
 
     if (event.group.members.isEmpty) return '';
 

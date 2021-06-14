@@ -10,6 +10,7 @@ import 'utils/constants/constants.dart';
 
 // ignore: must_be_immutable
 class ShowLocation extends StatefulWidget {
+  @override
   Key key;
   final LatLng location;
   final List<LatLng> locationList;
@@ -45,7 +46,7 @@ class _ShowLocationState extends State<ShowLocation> {
     if (widget.locationList != null) {
       markerList = [];
       widget.locationList.forEach((location) {
-        Marker marker = buildMarker(HybridModel(latLng: location),
+        var marker = buildMarker(HybridModel(latLng: location),
             singleMarker: true, marker: widget.locationListMarker);
         markerList.add(marker);
       });
@@ -82,7 +83,7 @@ class _ShowLocationState extends State<ShowLocation> {
             maxNativeZoom: 18,
             minZoom: 1,
             urlTemplate:
-                "https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MixedConstants.MAP_KEY}",
+                'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MixedConstants.MAP_KEY}',
           ),
           MarkerClusterLayerOptions(
             maxClusterRadius: 190,
@@ -92,11 +93,7 @@ class _ShowLocationState extends State<ShowLocation> {
             fitBoundsOptions: FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
-            markers: markerList != null
-                ? markerList
-                : showMarker
-                    ? [marker]
-                    : [],
+            markers: markerList ?? showMarker ? [marker] : [],
             builder: (context, markers) {
               return buildMarkerCluster(markers);
             },

@@ -6,17 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:at_chat_flutter/widgets/incoming_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/outgoing_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/send_message.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ChatScreen extends StatefulWidget {
-  final double height;
+  final double? height;
   final bool isScreen;
   final Color outgoingMessageColor;
   final Color incomingMessageColor;
   final Color senderAvatarColor;
   final Color receiverAvatarColor;
   final String title;
-  final String hintText;
+  final String? hintText;
 
   /// Widget to display chats as a screen or a bottom sheet.
   /// [height] specifies the height of bottom sheet/screen,
@@ -27,7 +28,7 @@ class ChatScreen extends StatefulWidget {
   /// [hintText] specifies the hint text to be displayed in the input box.
 
   const ChatScreen(
-      {Key key,
+      {Key? key,
       this.height,
       this.isScreen = false,
       this.outgoingMessageColor = CustomColors.outgoingMessageColor,
@@ -43,16 +44,16 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   List<Widget> messageList = [];
-  String message;
-  ScrollController _scrollController;
-  ChatService _chatService;
+  String? message;
+  ScrollController? _scrollController;
+  late ChatService _chatService;
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     _chatService = ChatService();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _chatService.getChatHistory();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await _chatService.getChatHistory();
     });
   }
 
@@ -65,7 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
         topRight: Radius.circular(10.toHeight),
       ),
       child: Container(
-        height: widget?.height ?? SizeConfig().screenHeight * 0.8,
+        height: widget.height ?? SizeConfig().screenHeight * 0.8,
         margin: widget.isScreen
             ? const EdgeInsets.all(0.0)
             : const EdgeInsets.only(top: 10.0),
@@ -126,7 +127,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ? Center(
                               child: CircularProgressIndicator(),
                             )
-                          : (snapshot.data == null || snapshot.data.isEmpty)
+                          : (snapshot.data == null || snapshot.data!.isEmpty)
                               ? Center(
                                   child: Text('No chat history found'),
                                 )
@@ -134,26 +135,26 @@ class _ChatScreenState extends State<ChatScreen> {
                                   reverse: true,
                                   controller: _scrollController,
                                   shrinkWrap: true,
-                                  itemCount: snapshot.data.length,
+                                  itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding:
                                           EdgeInsets.symmetric(vertical: 10.0),
-                                      child: snapshot.data[index].type ==
+                                      child: snapshot.data![index].type ==
                                               MessageType.INCOMING
                                           ? IncomingMessageBubble(
-                                              message: snapshot.data[index],
+                                              message: snapshot.data![index],
                                               color:
-                                                  widget?.incomingMessageColor,
+                                                  widget.incomingMessageColor,
                                               avatarColor:
-                                                  widget?.senderAvatarColor,
+                                                  widget.senderAvatarColor,
                                             )
                                           : OutgoingMessageBubble(
-                                              message: snapshot.data[index],
+                                              message: snapshot.data![index],
                                               color:
-                                                  widget?.outgoingMessageColor,
+                                                  widget.outgoingMessageColor,
                                               avatarColor:
-                                                  widget?.receiverAvatarColor,
+                                                  widget.receiverAvatarColor,
                                             ),
                                     );
                                   });
@@ -165,7 +166,7 @@ class _ChatScreenState extends State<ChatScreen> {
               hintText: widget.hintText,
               onSend: () async {
                 if (message != '') {
-                  _chatService.sendMessage(message);
+                  await _chatService.sendMessage(message);
                 }
               },
             ),

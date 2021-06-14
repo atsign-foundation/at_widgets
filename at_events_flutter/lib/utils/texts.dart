@@ -1,6 +1,6 @@
 class AllText {
   AllText._();
-  static AllText _instance = AllText._();
+  static final AllText _instance = AllText._();
   factory AllText() => _instance;
 
   // ignore: non_constant_identifier_names

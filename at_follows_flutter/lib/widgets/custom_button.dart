@@ -9,6 +9,7 @@ class CustomButton extends StatefulWidget {
   final text;
   final highLightColor;
   final providerStatus;
+  final double height;
   final double width;
   final Function onPressedCallBack;
   final bool showCount;
@@ -20,6 +21,7 @@ class CustomButton extends StatefulWidget {
       this.providerStatus,
       textstyle,
       highLightColor,
+      this.height,
       this.width = 0.0,
       this.showCount = false,
       this.count,
@@ -41,6 +43,7 @@ class _CustomButtonState extends State<CustomButton> {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+      height: widget.height,
       minWidth: widget.width,
       onPressed: () {
         widget.onPressedCallBack(!widget.isActive);

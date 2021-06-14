@@ -3,25 +3,27 @@
 /// and displays it's name, atsign, profile picture and option to unblock the user
 
 import 'dart:typed_data';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
 class BlockedUserCard extends StatefulWidget {
-  final AtContact blockeduser;
+  final AtContact? blockeduser;
 
-  const BlockedUserCard({Key key, this.blockeduser}) : super(key: key);
+  const BlockedUserCard({Key? key, this.blockeduser}) : super(key: key);
   @override
   _BlockedUserCardState createState() => _BlockedUserCardState();
 }
 
 class _BlockedUserCardState extends State<BlockedUserCard> {
-  ContactService _contactService;
+  late ContactService _contactService;
   bool unblockUser = false;
   @override
   void initState() {
@@ -32,17 +34,17 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
   @override
   Widget build(BuildContext context) {
     Widget contactImage;
-    if (widget.blockeduser.tags != null &&
-        widget.blockeduser.tags['image'] != null) {
-      List<int> intList = widget.blockeduser.tags['image'].cast<int>();
-      Uint8List image = Uint8List.fromList(intList);
+    if (widget.blockeduser!.tags != null &&
+        widget.blockeduser!.tags['image'] != null) {
+      List<int> intList = widget.blockeduser!.tags['image'].cast<int>();
+      var image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
         nonAsset: true,
       );
     } else {
       contactImage = ContactInitial(
-        initials: widget.blockeduser.atSign.substring(1, 3),
+        initials: widget.blockeduser!.atSign,
       );
     }
     return ListTile(
@@ -53,11 +55,11 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.blockeduser.atSign.substring(1).toString(),
+              widget.blockeduser!.atSign.substring(1).toString(),
               style: CustomTextStyles.primaryRegular16,
             ),
             Text(
-              widget.blockeduser.atSign.toString(),
+              widget.blockeduser!.atSign.toString(),
               style: CustomTextStyles.secondaryRegular12,
             ),
           ],
@@ -68,7 +70,8 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
           setState(() {
             unblockUser = true;
           });
-          await showDialog(
+          // ignore: unawaited_futures
+          showDialog(
             context: context,
             builder: (context) => AlertDialog(
               title: Center(
@@ -83,7 +86,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
             ),
           );
           await _contactService.blockUnblockContact(
-              contact: widget.blockeduser, blockAction: false);
+              contact: widget.blockeduser!, blockAction: false);
 
           setState(() {
             unblockUser = false;

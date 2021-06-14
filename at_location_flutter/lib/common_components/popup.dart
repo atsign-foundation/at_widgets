@@ -7,7 +7,7 @@ import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 
 Widget buildPopup(HybridModel user) {
-  bool showEtaSection = true;
+  var showEtaSection = true;
   if (LocationService().etaFrom != null) {
     if (user.latLng == LocationService().etaFrom) showEtaSection = false;
   } else if (user.latLng == LocationService().myData.latLng) {
@@ -76,7 +76,7 @@ Widget buildPopup(HybridModel user) {
                                   nonAsset: true,
                                   size: 30)
                               : ContactInitial(
-                                  initials: user.displayName.substring(1, 3),
+                                  initials: user.displayName,
                                   size: 60,
                                 ),
                         ),

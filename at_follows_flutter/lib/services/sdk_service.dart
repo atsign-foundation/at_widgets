@@ -59,23 +59,32 @@ class SDKService {
   ///Returns list of latest notifications of followers with `update` operation.
   ///Returns null if such notifications are not present.
   Future<List<AtNotification>> notifyList({String fromDate}) async {
+    int fromDateTime = 0;
+
     if (fromDate != null) {
+      fromDateTime = DateTime.parse(fromDate).millisecondsSinceEpoch;
       fromDate = fromDate.split(' ')[0];
     }
-    var response = await _atClientServiceInstance.atClient
-        .notifyList(regex: AppConstants.following, fromDate: fromDate);
+    var response = await _atClientServiceInstance.atClient.notifyList(
+        regex:
+            ('${AppConstants.following}|${AppConstants.followers}|${AppConstants.followersKey}|${AppConstants.followingKey}'),
+        fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
-    if (response == 'null') {
+    if (response == 'null' || response == null) {
       return [];
     }
     List<AtNotification> notificationList = AtNotification.fromJsonList(
         List<Map<String, dynamic>>.from(jsonDecode(response)));
+
+    notificationList
+        .retainWhere((notification) => notification.dateTime > fromDateTime);
     notificationList.sort((notification1, notification2) =>
         notification2.dateTime.compareTo(notification1.dateTime));
     Set<AtNotification> uniqueNotifications = {};
     Set<String> uniqueKeys = {};
     for (var notification in notificationList) {
-      bool isUnique = uniqueKeys.add(notification.fromAtSign);
+      bool isUnique =
+          uniqueKeys.add(notification.fromAtSign + notification.key);
       if (isUnique) {
         uniqueNotifications.add(notification);
       }
@@ -99,7 +108,8 @@ class SDKService {
   ///Returns `true` on notifying [key] with [value], [operation].
   Future<bool> notify(AtKey key, String value, OperationEnum operation) async {
     return await _atClientServiceInstance.atClient
-        .notify(key, value, operation, notifier: 'persona')
+        .notify(key, value, operation,
+            notifier: _atClientServiceInstance.atClient.preference.namespace)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
   }
@@ -112,6 +122,21 @@ class SDKService {
             onTimeout: () => _onTimeOut());
     AtFollowsValue value =
         scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
+    //migrates to newnamespace
+    if (scanKey.isNotEmpty &&
+        _isOldKey(scanKey[0].key) &&
+        value.value != null) {
+      var newKey = AtKey()..metadata = scanKey[0].metadata;
+      newKey.key = scanKey[0].key.contains('following')
+          ? AppConstants.followingKey
+          : AppConstants.followersKey;
+      await this.put(newKey, value.value);
+      value = await this.get(newKey);
+      if (value != null && value.value != null) {
+        await this.delete(scanKey[0]);
+      }
+    }
+
     return value;
   }
 
@@ -153,5 +178,10 @@ class SDKService {
     response = response.toString().replaceAll(RegExp('[|]'), '');
     response = response.replaceAll('notification:', '').trim();
     return AtNotification.fromJson(jsonDecode(response));
+  }
+
+  ///Returns `true` if key is old key else `false`.
+  bool _isOldKey(String key) {
+    return !key.contains(AppConstants.libraryNamespace);
   }
 }

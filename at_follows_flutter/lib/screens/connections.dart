@@ -62,8 +62,6 @@ class _ConnectionsState extends State<Connections> {
 
     _connectionService.followerAtsign = widget.followerAtsignTitle;
     _connectionService.followAtsign = widget.followAtsignTitle;
-    // followAtsignTitle = widget.followAtsignTitle;
-    // followerAtsignTitle = widget.followerAtsignTitle;
 
     super.initState();
   }
@@ -122,7 +120,8 @@ class _ConnectionsState extends State<Connections> {
                               index++)
                             CustomButton(
                               showCount: true,
-                              count: '${connectionTabs[index].count ?? 0}',
+                              count:
+                                  _getFollowsCount(connectionTabs[index].count),
                               width: 150.0.toWidth,
                               isActive: connectionTabs[index].isActive,
                               text: connectionTabs[index].name,
@@ -130,7 +129,9 @@ class _ConnectionsState extends State<Connections> {
                                 if (index != lastAccessedIndex &&
                                     lastAccessedIndex != null &&
                                     !connectionTabs[index].isActive) {
-                                  _connectionProvider.setStatus(Status.getData);
+                                  if (_connectionProvider.status == null)
+                                    _connectionProvider
+                                        .setStatus(Status.getData);
                                   connectionTabs[lastAccessedIndex].isActive =
                                       false;
                                   connectionTabs[index].isActive = isActive;
@@ -143,18 +144,20 @@ class _ConnectionsState extends State<Connections> {
                       ),
                       SizedBox(height: 20.toHeight),
                       TextField(
+                        style: CustomTextStyles.fontR16primary,
                         onChanged: (value) {
                           setState(() {});
                         },
                         textInputAction: TextInputAction.search,
                         controller: searchController,
                         decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(18.toFont),
                             filled: true,
                             fillColor: ColorConstants.fillColor,
                             hintText: Strings.Search,
                             hintStyle: CustomTextStyles.fontR16primary,
                             prefixIcon: Icon(Icons.filter_list,
-                                color: ColorConstants.primary),
+                                size: 20.toFont, color: ColorConstants.primary),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0.toFont),
                                 borderSide: BorderSide(
@@ -201,6 +204,25 @@ class _ConnectionsState extends State<Connections> {
       connectionTabs[1].count = ConnectionProvider().followingList.length;
       if (!isCalled) setState(() {});
     }
+  }
+
+  String _getFollowsCount(int count) {
+    count ??= 0;
+    String countValue;
+    if (count / 100000 > 1) {
+      countValue = count % 100000 == 0
+          ? (count / 100000).toStringAsFixed(0)
+          : (count / 100000).toStringAsFixed(1);
+      countValue += 'M';
+    } else if (count / 1000 > 1) {
+      countValue = count % 1000 == 0
+          ? (count / 1000).toStringAsFixed(0)
+          : (count / 1000).toStringAsFixed(1);
+      countValue += 'K';
+    } else {
+      countValue = count.toString();
+    }
+    return countValue;
   }
 
   _formConnectionTabs(int tabsCount) {

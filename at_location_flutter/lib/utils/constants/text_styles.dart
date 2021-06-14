@@ -5,7 +5,7 @@ import 'colors.dart';
 
 class CustomTextStyles {
   CustomTextStyles._();
-  static CustomTextStyles _instance = CustomTextStyles._();
+  static final CustomTextStyles _instance = CustomTextStyles._();
   factory CustomTextStyles() => _instance;
 
   TextStyle blackPlayfairDisplay38 = TextStyle(
@@ -128,5 +128,11 @@ class CustomTextStyles {
   TextStyle grey14 = TextStyle(
     color: AllColors().GREY,
     fontSize: 14.toFont,
+  );
+
+  TextStyle whiteBold16 = TextStyle(
+    color: Colors.white,
+    fontSize: 16.toFont,
+    fontWeight: FontWeight.w700,
   );
 }

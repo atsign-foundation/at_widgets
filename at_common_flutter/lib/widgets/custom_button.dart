@@ -12,15 +12,15 @@ import 'package:at_common_flutter/utils/colors.dart';
 import 'package:at_common_flutter/utils/text_styles.dart';
 
 class CustomButton extends StatelessWidget {
-  final Function() onPressed;
+  final Function()? onPressed;
   final String buttonText;
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final Color buttonColor;
   final Color fontColor;
 
   const CustomButton({
-    Key key,
+    Key? key,
     this.onPressed,
     this.buttonText = '',
     this.height,

@@ -340,7 +340,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               atsign = params[0];
               aesKey = params[1];
               await File(path + 'test').delete();
-//read scan QRcode and extract atsign,aeskey
+              //read scan QRcode and extract atsign,aeskey
             }
           }
         } else if (pickedFile.name.contains('atKeys')) {

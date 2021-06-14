@@ -1,16 +1,17 @@
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_chat_flutter/widgets/contacts_initials.dart';
 import 'package:flutter/material.dart';
 
 class OutgoingMessageBubble extends StatefulWidget {
-  final Message message;
+  final Message? message;
   final Color color;
   final Color avatarColor;
 
   const OutgoingMessageBubble(
-      {Key key,
+      {Key? key,
       this.message,
       this.color = CustomColors.outgoingMessageColor,
       this.avatarColor = CustomColors.defaultColor})
@@ -30,13 +31,13 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
         Container(
           padding: EdgeInsets.all(30.toHeight),
           decoration: BoxDecoration(
-            color: widget?.color,
+            color: widget.color,
             borderRadius: BorderRadius.circular(10.toWidth),
           ),
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 165.toWidth),
             child: Text(
-              widget?.message?.message ?? ' ',
+              widget.message?.message ?? ' ',
               textAlign: TextAlign.right,
             ),
           ),
@@ -52,7 +53,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
             borderRadius: BorderRadius.circular(45.toWidth),
           ),
           child: ContactInitial(
-            initials: widget?.message?.sender?.substring(1, 3) ?? '@',
+            initials: widget.message?.sender ?? '@',
           ),
         ),
         SizedBox(

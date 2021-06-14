@@ -75,7 +75,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   _launchURL(String url) async {
-    url = Uri.encodeFull(url);
+    // url = Uri.encodeFull(url);
     if (await canLaunch(url)) {
       Navigator.pop(context);
       Navigator.pop(context);

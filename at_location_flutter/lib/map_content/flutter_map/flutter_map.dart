@@ -125,7 +125,7 @@ class MapOptions {
   final double minZoom;
   final double maxZoom;
   @deprecated
-  final bool debug; // TODO no usage outside of constructor. Marked for removal?
+  final bool debug;
   final bool interactive;
   final TapCallback onTap;
   final LongPressCallback onLongPress;

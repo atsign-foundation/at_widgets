@@ -13,7 +13,7 @@ class DistanceCalculate {
     try {
       var url =
           'https://router.hereapi.com/v8/routes?transportMode=car&origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&return=summary&apiKey=${MixedConstants.API_KEY}';
-      var response = await ApiService().getRequest("$url");
+      var response = await ApiService().getRequest('$url');
       var data = response;
       data = jsonDecode(data['body']);
       var _min = (data['routes'][0]['sections'][0]['summary']['duration'] / 60);

@@ -39,8 +39,8 @@ class _DisplayTileState extends State<DisplayTile> {
     getEventCreator();
   }
 
-  getEventCreator() async {
-    AtContact contact = await getAtSignDetails(widget.atsignCreator);
+  void getEventCreator() async {
+    var contact = await getAtSignDetails(widget.atsignCreator);
     if (contact != null) {
       if (contact.tags != null && contact.tags['image'] != null) {
         List<int> intList = contact.tags['image'].cast<int>();
@@ -66,8 +66,7 @@ class _DisplayTileState extends State<DisplayTile> {
                   ? CustomCircleAvatar(
                       byteImage: image, nonAsset: true, size: 30)
                   : widget.atsignCreator != null
-                      ? ContactInitial(
-                          initials: widget.atsignCreator.substring(1, 3))
+                      ? ContactInitial(initials: widget.atsignCreator)
                       : SizedBox(),
               widget.number != null
                   ? Positioned(

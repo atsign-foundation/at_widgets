@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
@@ -21,7 +23,7 @@ class GroupList extends StatefulWidget {
 }
 
 class _GroupListState extends State<GroupList> {
-  List<AtContact> selectedContactList = [];
+  List<AtContact?> selectedContactList = [];
   bool showAddGroupIcon = false, errorOcurred = false;
 
   @override
@@ -105,7 +107,7 @@ class _GroupListState extends State<GroupList> {
                       });
                     } else {
                       if (snapshot.hasData) {
-                        if (snapshot.data.isEmpty) {
+                        if (snapshot.data!.isEmpty) {
                           showAddGroupIcon = false;
 
                           return EmptyGroup();
@@ -118,35 +120,35 @@ class _GroupListState extends State<GroupList> {
                             mainAxisSpacing: 20,
                             crossAxisCount: 2,
                             children:
-                                List.generate(snapshot.data.length, (index) {
+                                List.generate(snapshot.data!.length, (index) {
                               return InkWell(
                                 onLongPress: () {
-                                  showMyDialog(context, snapshot.data[index]);
+                                  showMyDialog(context, snapshot.data![index]);
                                 },
                                 onTap: () async {
-                                  WidgetsBinding.instance
+                                  WidgetsBinding.instance!
                                       .addPostFrameCallback((_) async {
                                     GroupService()
                                         .groupViewSink
-                                        .add(snapshot.data[index]);
+                                        .add(snapshot.data![index]);
                                   });
 
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => GroupView(
-                                            group: snapshot.data[index])),
+                                            group: snapshot.data![index])),
                                   );
                                 },
                                 child: CustomPersonHorizontalTile(
-                                  image: (snapshot.data[index].groupPicture !=
+                                  image: (snapshot.data![index].groupPicture !=
                                           null)
-                                      ? snapshot.data[index].groupPicture
+                                      ? snapshot.data![index].groupPicture
                                       : null,
                                   title:
-                                      snapshot.data[index].displayName ?? ' ',
+                                      snapshot.data![index].displayName ?? ' ',
                                   subTitle:
-                                      '${snapshot.data[index].members.length} members',
+                                      '${snapshot.data![index].members.length} members',
                                 ),
                               );
                             }),
@@ -169,7 +171,7 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      Uint8List groupPicture;
+      Uint8List? groupPicture;
       if (group.groupPicture != null) {
         List<int> intList = group.groupPicture.cast<int>();
         groupPicture = Uint8List.fromList(intList);

@@ -1,5 +1,6 @@
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/node/marker_cluster_node.dart';
+import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 
 class MarkerNode implements Marker {
@@ -12,7 +13,7 @@ class MarkerNode implements Marker {
   Anchor get anchor => marker.anchor;
 
   @override
-  get builder => marker.builder;
+  WidgetBuilder get builder => marker.builder;
 
   @override
   double get height => marker.height;
