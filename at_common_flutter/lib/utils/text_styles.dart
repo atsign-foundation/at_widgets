@@ -2,6 +2,7 @@ import 'package:at_common_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
+/// Common text styles used in the widgets.
 class CustomTextStyles {
   CustomTextStyles._();
   static CustomTextStyles _instance = CustomTextStyles._();

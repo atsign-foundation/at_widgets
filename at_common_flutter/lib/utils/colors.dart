@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A common class for theme colors and custom colors used in the widgets
 class ColorConstants {
   static const Color fontPrimary = Color(0xff131219);
   static const Color appBarColor = Colors.white;

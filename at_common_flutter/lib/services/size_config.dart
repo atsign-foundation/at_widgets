@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// A class defined to get dimensions for the screen size displayed,
+/// using the proportion of the designed screen size.
 class SizeConfig {
   SizeConfig._();
 
@@ -88,6 +90,7 @@ class SizeConfig {
   }
 }
 
+/// A shorthand usage of the functions defined in [SizeConfig].
 extension SizeUtils on num {
   double get toWidth => SizeConfig().getWidthRatio(this.toDouble());
 
