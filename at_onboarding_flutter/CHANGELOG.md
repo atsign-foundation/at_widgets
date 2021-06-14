@@ -14,4 +14,5 @@
 - upgraded some packages to resolve dependency issues
 
 ## 1.0.0+5
-- supports .zip/.atKeys files of @signs.
+- supports .zip/.atKeys files of @signs
+- can generate free @signs.

@@ -29,14 +29,6 @@ dependencies:
   at_backupkey_flutter: ^1.0.0+3
   
 
-  # at_utils: ^1.0.1+7
-  # at_client:  ^1.0.1+9
-  # at_client_mobile: ^1.0.0+10
-  # at_commons: ^1.0.1+7
-  # at_server_status: ^0.1.0+1
-  # at_backupkey_flutter: ^1.0.0+3
-  
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
