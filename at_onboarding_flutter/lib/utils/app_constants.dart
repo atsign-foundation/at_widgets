@@ -1,7 +1,15 @@
+import 'dart:io';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 class AppConstants {
   static String _rootDomain = 'root.atsign.org';
+  static String devApiKey = '477b-876u-bcez-c42z-6a3d';
+  static String prodApiKey = '400b-806u-bzez-z42z-6a3p';
+  static dynamic contentType = 'application/json';
+  static String getFreeAtsign = 'get-free-atsign';
+  static String registerPerson = 'register-person';
+  static String validatePerson = 'validate-person';
   static String website;
   static String package = 'at_onboarding_flutter';
   static String encryptKeys = '_encrypt_keys';

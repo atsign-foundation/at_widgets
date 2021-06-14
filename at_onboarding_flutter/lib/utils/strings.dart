@@ -1,6 +1,7 @@
 class Strings {
   //atsign texts
-  static const String enterAtsignTitle = 'Enter your @sign to pair';
+  static const String enterAtsignTitle = 'Enter your @sign';
+  static const String freeAtsignTitle = 'Free @sign';
   static const String atsignHintText = 'alice';
   static const String submitButton = 'Submit';
   static const String cancelButton = 'Cancel';
@@ -23,13 +24,14 @@ class Strings {
   static const String backupKeyDescription =
       'Upload your backup key file from stored location which was generated during the pairing process of your @sign.';
   static const String uploadZipTitle = 'Upload backup key file';
-  static const String saveBackupKeyTitle = 'Save your Backup key file';
+  static const String saveBackupKeyTitle = 'Save your key';
   static const String saveImportantTitle = 'IMPORTANT!';
   static const String saveBackupDescription =
-      'Please save your private key. For security reasons, it\'s highly recommended to save it in GDrive/iCloudDrive.';
+      'Please save your key in a secure location (we recommend Google Drive or iCloud Drive). You will need it to sign back in AND use other @platform apps.';
   static const String saveButtonTitle = 'SAVE';
   static const String declaration = 'Yes I\'ve saved my backupkey file';
   static const String coninueButtonTitle = 'CONTINUE';
+  static const String emailNote = 'Note: We do not share your personal information or use it for financial gain.';
 
   //custom dialog texts
   static const String errorTitle = 'Error';
@@ -42,5 +44,5 @@ class Strings {
   }
 
   static const String faqTitle = 'FAQ';
-  static const String faqUrl = 'https://atsign.com/faqs/';
+  static const String faqUrl = 'https://atsign.com/faqs/#atsigns';
 }
