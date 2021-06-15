@@ -1,3 +1,4 @@
+/// Model containing the [displayName], [state], [city], [suburb], [neighbourhood], [road] associated with the [lat],[long].
 class LocationModal {
   String lat, long;
   String displayName, state, city, suburb, neighbourhood, road;

@@ -17,13 +17,25 @@ import 'common_components/floating_icon.dart';
 import 'common_components/marker_cluster.dart';
 import 'common_components/popup.dart';
 
+/// A class defined to show markers based on current location of mentioned atsigns.
 // ignore: must_be_immutable
 class AtLocationFlutterPlugin extends StatefulWidget {
+  /// Atsigns whose location needs to be shown.
   final List<String> atsignsToTrack;
+
+  /// Padding for the markers.
   double left, right, top, bottom;
+
+  /// ETA will be calculated from this co-ordinate.
   LatLng etaFrom;
+
+  /// Text for the co-ordinate from where ETA is calculated.
   String textForCenter;
+
+  /// [calculateETA] if ETA needs to be calculated/displayed.
+  /// [addCurrentUserMarker] if logged in users current location should be added to the map.
   bool calculateETA, addCurrentUserMarker;
+
   AtLocationFlutterPlugin(this.atsignsToTrack,
       {this.left,
       this.right,

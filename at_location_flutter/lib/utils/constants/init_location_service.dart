@@ -10,6 +10,7 @@ import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+/// Function to initialise the package. Should be mandatorly called before accessing package functionalities.
 void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
     {String rootDomain = MixedConstants.ROOT_DOMAIN}) async {
@@ -26,21 +27,27 @@ void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
   KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
 }
 
+/// returns a Stream of 'KeyLocationModel' having all the shared and request location keys.
 Stream getAllNotification() {
   return KeyStreamService().atNotificationsStream;
 }
 
+/// sends a share location notification to the [atsign], with a 'ttl' of [minutes].
+/// before calling this [atsign] should be checked if valid or not.
 Future<bool> sendShareLocationNotification(String atsign, int minutes) async {
   var result = await SharingLocationService()
       .sendShareLocationEvent(atsign, false, minutes: minutes);
   return result;
 }
 
+/// sends a request location notification to the [atsign].
+/// before calling this [atsign] should be checked if valid or not.
 Future<bool> sendRequestLocationNotification(String atsign) async {
   var result = await RequestLocationService().sendRequestLocationEvent(atsign);
   return result;
 }
 
+/// deletes the location notification of the logged in atsign being shared with [locationNotificationModel].receiver
 Future<bool> deleteLocationData(
     LocationNotificationModel locationNotificationModel) async {
   var result =
@@ -48,10 +55,12 @@ Future<bool> deleteLocationData(
   return result;
 }
 
+/// deletes all the location notifications of the logged in atsign being shared with any atsign
 void deleteAllLocationData() {
   SendLocationNotification().deleteAllLocationKey();
 }
 
+/// returns the 'AtKey' of the [regexKey]
 AtKey getAtKey(String regexKey) {
   var atKey = AtKey.fromString(regexKey);
   atKey.metadata.ttr = -1;
