@@ -8,12 +8,19 @@ import 'map_content/flutter_map/flutter_map.dart';
 import 'map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
 import 'utils/constants/constants.dart';
 
+/// A class defined to show only one or no or a list of co-ordinates with custom marker.
 // ignore: must_be_immutable
 class ShowLocation extends StatefulWidget {
   @override
   Key key;
+
+  /// Co-ordinate on which marker needs to be shown.
   final LatLng location;
+
+  /// List of Co-ordinates on which markers needs to be shown.
   final List<LatLng> locationList;
+
+  /// Custom widget displayed as the marker.
   Widget locationListMarker;
   ShowLocation(this.key,
       {this.location, this.locationList, this.locationListMarker});
