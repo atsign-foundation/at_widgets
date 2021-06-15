@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
@@ -24,9 +25,9 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_utils/at_logger.dart';
 
 class PairAtsignWidget extends StatefulWidget {
-  final OnboardingStatus onboardStatus;
+  final OnboardingStatus? onboardStatus;
   final bool getAtSign;
-  PairAtsignWidget({Key key, this.onboardStatus, this.getAtSign = false})
+  PairAtsignWidget({Key? key, this.onboardStatus, this.getAtSign = false})
       : super(key: key);
   @override
   _PairAtsignWidgetState createState() => _PairAtsignWidgetState();
@@ -36,15 +37,15 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   var _onboardingService = OnboardingService.getInstance();
   AtSignLogger _logger = AtSignLogger('QR Scan');
 
-  QrReaderViewController _controller;
+  late QrReaderViewController _controller;
   bool loading = false;
   bool _isQR = false;
   bool _isBackup = false;
-  AtSignStatus _atsignStatus;
+  AtSignStatus? _atsignStatus;
 
   bool _isServerCheck = false;
   bool _isContinue = true;
-  String _pairingAtsign;
+  String? _pairingAtsign;
   bool isValidated = false;
   bool permissionGrated = false;
   bool scanCompleted = false;
@@ -75,7 +76,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
-  bool _isCram(String data) {
+  bool _isCram(String? data) {
     if (data == null || data == '' || !data.contains('@')) {
       return false;
     }
@@ -88,7 +89,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = true;
       });
-      var isExist = await _onboardingService.isExistingAtsign(atsign);
+      var isExist = await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
       if (isExist) {
         setState(() {
           loading = false;
@@ -110,7 +111,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => _onboardingService.nextScreen));
+                  builder: (context) => _onboardingService.nextScreen!));
         } else {
           Navigator.pushReplacement(
             context,
@@ -209,15 +210,15 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
       _isServerCheck = false;
       _isContinue = true;
-      String cramKey;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: false);
+      String? cramKey;
+      FilePickerResult result = await (FilePicker.platform
+          .pickFiles(type: FileType.any, allowMultiple: false) as FutureOr<FilePickerResult>);
       setState(() {
         loading = true;
       });
       for (var file in result.files) {
         if (cramKey == null) {
-          String result = await FlutterQrReader.imgScan(file.path);
+          String result = await FlutterQrReader.imgScan(file.path!);
           if (result.contains('@')) {
             cramKey = result;
             break;
@@ -225,7 +226,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         }
       }
       if (_isCram(cramKey)) {
-        List params = cramKey.split(':');
+        List params = cramKey!.split(':');
         if (params[1].length < 128) {
           _showAlertDialog(CustomStrings().invalidCram(params[0]));
         } else if (OnboardingService.getInstance().formatAtSign(params[0]) !=
@@ -252,7 +253,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
-  _processAESKey(String atsign, String aesKey, String contents) async {
+  _processAESKey(String? atsign, String? aesKey, String contents) async {
     assert(aesKey != null || aesKey != '');
     assert(atsign != null || atsign != '');
     assert(contents != null || contents != '');
@@ -260,7 +261,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       loading = true;
     });
     try {
-      var isExist = await _onboardingService.isExistingAtsign(atsign);
+      var isExist = await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
       if (isExist) {
         setState(() {
           loading = false;
@@ -281,7 +282,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => _onboardingService.nextScreen));
+                  builder: (context) => _onboardingService.nextScreen!));
         }
       }
     } catch (e) {
@@ -308,13 +309,13 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       _isServerCheck = false;
       _isContinue = true;
       var fileContents, aesKey, atsign;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true);
+      FilePickerResult result = await (FilePicker.platform
+          .pickFiles(type: FileType.any, allowMultiple: true) as FutureOr<FilePickerResult>);
       setState(() {
         loading = true;
       });
       for (var pickedFile in result.files) {
-        var path = pickedFile.path;
+        var path = pickedFile.path!;
         File selectedFile = File(path);
         var length = selectedFile.lengthSync();
         if (length < 10) {
@@ -405,7 +406,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   }
 
   _showAlertDialog(var errorMessage,
-      {bool isPkam, String title, bool getClose, Function onClose}) {
+      {bool? isPkam, String? title, bool? getClose, Function? onClose}) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -627,7 +628,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   _getAtsignForm() {
     loading = true;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -658,7 +659,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               _atsignStatus = atsignStatus ?? AtSignStatus.error;
               switch (_atsignStatus) {
                 case AtSignStatus.teapot:
-                  if (isExist) {
+                  if (isExist!) {
                     _showAlertDialog(CustomStrings().pairedAtsign(atsign),
                         getClose: true, onClose: _getAtsignForm);
                     break;
@@ -666,7 +667,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                   _isQR = true;
                   break;
                 case AtSignStatus.activated:
-                  if (isExist) {
+                  if (isExist!) {
                     _showAlertDialog(CustomStrings().pairedAtsign(atsign),
                         getClose: true, onClose: _getAtsignForm);
                     break;

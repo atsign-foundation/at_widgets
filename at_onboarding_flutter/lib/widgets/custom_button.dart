@@ -9,12 +9,12 @@ import 'package:at_onboarding_flutter/services/size_config.dart';
 class CustomButton extends StatelessWidget {
   final bool isInverted;
 
-  final Function() onPressed;
-  final String buttonText;
-  final double width;
-  final double height;
+  final Function()? onPressed;
+  final String? buttonText;
+  final double? width;
+  final double? height;
   CustomButton(
-      {Key key,
+      {Key? key,
       this.isInverted = false,
       this.buttonText,
       this.height,
@@ -34,7 +34,7 @@ class CustomButton extends StatelessWidget {
             color: (isInverted) ? Colors.white : ColorConstants.appColor),
         child: Center(
           child: Text(
-            buttonText,
+            buttonText!,
             textAlign: TextAlign.center,
             style: (isInverted)
                 ? CustomTextStyles.fontBold16primary
