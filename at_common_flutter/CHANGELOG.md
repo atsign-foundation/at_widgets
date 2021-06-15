@@ -1,3 +1,7 @@
+## [1.0.1] - 06/14/2021
+
+* Updated documentation
+
 ## [1.0.0] - 04/20/2021
 
 * Updated authentication in example app
