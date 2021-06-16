@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
@@ -218,7 +219,7 @@ class OnboardingService {
       await _getAtClientForAtsign()!.getSyncManager()!.sync(_done);
     }
   }
-  void _done() {
+  void _done(SyncManager syncManager) {
     _logger.finer('sync complete');
   }
 }
