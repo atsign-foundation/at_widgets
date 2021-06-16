@@ -1,3 +1,7 @@
+## [2.0.0] - 06/15/2021
+
+* Null safety support
+
 ## [1.0.1] - 06/14/2021
 
 * Updated documentation
