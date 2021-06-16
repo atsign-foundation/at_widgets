@@ -55,6 +55,42 @@ dependencies:
       ref: trunk
       version: ^1.0.0+3
   
+dependency_overrides:
+  cron: ^0.3.0
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: trunk
+      version: ^1.0.1+7
+  at_client:
+    path: /Users/apple/Desktop/client_projects/at_client_sdk_copy/at_client_sdk/at_client
+  at_client_mobile:
+    path: /Users/apple/Desktop/client_projects/at_client_sdk_copy/at_client_sdk/at_client_mobile
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_lookup
+      ref: dev_env
+      version: ^1.0.0+4
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_commons
+      ref: trunk
+      version: ^1.0.1+7
+  at_server_status:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_server_status
+      ref: trunk
+      version: ^0.1.0+1
+  at_backupkey_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_backupkey_flutter
+      ref: trunk
+      version: ^1.0.0+3
 
 dev_dependencies:
   flutter_test:
