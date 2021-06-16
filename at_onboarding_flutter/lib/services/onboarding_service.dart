@@ -11,6 +11,7 @@ class OnboardingService {
   static final OnboardingService _singleton = OnboardingService._internal();
 
   OnboardingService._internal();
+
   factory OnboardingService.getInstance() {
     return _singleton;
   }
@@ -30,6 +31,7 @@ class OnboardingService {
   ServerStatus serverStatus;
 
   set setLogo(Widget logo) => _applogo = logo;
+
   get logo => _applogo;
 
   get isPkam => _isPkam;
@@ -43,7 +45,9 @@ class OnboardingService {
   get atClientPreference => _atClientPreference;
 
   set namespace(String namespace) => _namespace = namespace;
+
   get appNamespace => _namespace;
+
   set setAtsign(String atsign) {
     atsign = formatAtSign(atsign);
     _atsign = atsign;
@@ -53,6 +57,7 @@ class OnboardingService {
 
   // next route set from using app
   Widget _nextScreen;
+
   set setNextScreen(Widget nextScreen) {
     _nextScreen = nextScreen;
   }
@@ -196,7 +201,7 @@ class OnboardingService {
   }
 
   Future<ServerStatus> _checkAtSignServerStatus(String atsign) async {
-    var atStatusImpl = AtStatusImpl(rootUrl: AppConstants.serverDomain);
+    var atStatusImpl = AtStatusImpl(atsign, rootUrl: AppConstants.serverDomain);
     var status = await atStatusImpl.get(atsign);
     return status.serverStatus;
   }
@@ -207,7 +212,7 @@ class OnboardingService {
       return null;
     }
     atsign = this.formatAtSign(atsign);
-    var atStatusImpl = AtStatusImpl(rootUrl: AppConstants.serverDomain);
+    var atStatusImpl = AtStatusImpl(atsign, rootUrl: AppConstants.serverDomain);
     var status = await atStatusImpl.get(atsign);
     return status.status();
   }
