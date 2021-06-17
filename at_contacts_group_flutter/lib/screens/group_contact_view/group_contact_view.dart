@@ -24,17 +24,22 @@ class GroupContactView extends StatefulWidget {
   final bool showGroups;
   final bool singleSelection;
   final bool asSelectionScreen;
+  final bool isDesktop;
+  Function? onBackArrowTap, onDoneTap;
 
   final ValueChanged<List<GroupContactsModel?>>? selectedList;
 
-  const GroupContactView(
-      {Key? key,
-      this.showContacts = false,
-      this.showGroups = false,
-      this.singleSelection = false,
-      this.asSelectionScreen = true,
-      this.selectedList})
-      : super(key: key);
+  GroupContactView({
+    Key? key,
+    this.showContacts = false,
+    this.showGroups = false,
+    this.singleSelection = false,
+    this.asSelectionScreen = true,
+    this.selectedList,
+    this.isDesktop = false,
+    this.onBackArrowTap,
+    this.onDoneTap,
+  }) : super(key: key);
   @override
   _GroupContactViewState createState() => _GroupContactViewState();
 }
@@ -61,6 +66,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   List<AtContact> selectedList = [];
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       bottomSheet: (widget.singleSelection)
           ? Container(
@@ -69,7 +75,9 @@ class _GroupContactViewState extends State<GroupContactView> {
           : (widget.asSelectionScreen)
               ? ContactSelectionBottomSheet(
                   onPressed: () {
-                    Navigator.pop(context);
+                    widget.isDesktop
+                        ? widget.onDoneTap!()
+                        : Navigator.pop(context);
                   },
                   selectedList: (s) {
                     widget.selectedList!(s);
@@ -79,12 +87,10 @@ class _GroupContactViewState extends State<GroupContactView> {
                   height: 0,
                 ),
       appBar: CustomAppBar(
+        isDesktop: widget.isDesktop,
         showTitle: true,
         titleText: 'Contacts',
-        onLeadingIconPressed: () {
-          _groupService.selectedGroupContacts = unmodifiedSelectedGroupContacts;
-          widget.selectedList!(unmodifiedSelectedGroupContacts);
-        },
+        onLeadingIconPressed: widget.onBackArrowTap,
         showBackButton: true,
         showLeadingIcon: true,
         // showTrailingIcon: widget.asSelectionScreen == null ||
@@ -243,10 +249,11 @@ class _GroupContactViewState extends State<GroupContactView> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Container(
-                                                child: (contactsForAlphabet[
-                                                                index]!
-                                                            .contact !=
-                                                        null)
+                                                child: ((contactsForAlphabet[
+                                                                    index]!
+                                                                .contact !=
+                                                            null) &&
+                                                        (!widget.isDesktop))
                                                     ? Slidable(
                                                         actionPane:
                                                             SlidableDrawerActionPane(),

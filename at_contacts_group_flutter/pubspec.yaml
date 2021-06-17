@@ -21,8 +21,12 @@ dependencies:
 
   at_client_mobile: ^1.0.0+10
   at_commons: ^1.0.1+7
-  at_common_flutter: ^1.0.0
-  at_contacts_flutter: ^1.0.1
+  at_common_flutter: 
+    # ^1.0.0
+    path: ../at_common_flutter
+  at_contacts_flutter: 
+  # ^1.0.1
+    path: ../at_contacts_flutter
   at_contact: ^1.0.0+4
   
 dev_dependencies:
