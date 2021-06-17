@@ -21,7 +21,6 @@ import 'package:at_contacts_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_flutter/widgets/horizontal_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import '../services/contact_service.dart';
 
 class ContactsScreen extends StatefulWidget {
