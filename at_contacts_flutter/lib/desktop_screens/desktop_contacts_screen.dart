@@ -83,7 +83,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                   width: 30,
                 ),
                 Text(
-                  'All Contacts',
+                  widget.isBlockedScreen ? 'Blocked Contacts' : 'All Contacts',
                   style: CustomTextStyles.desktopPrimaryRegular24,
                 ),
                 SizedBox(
@@ -94,7 +94,9 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                       textInputAction: TextInputAction.search,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Search Contact',
+                        hintText: widget.isBlockedScreen
+                            ? 'Search Blocked Contacts'
+                            : 'Search Contact',
                         hintStyle: TextStyle(
                           fontSize: 16,
                           color: ColorConstants.greyText,
@@ -314,7 +316,9 @@ class ContactListTile extends StatefulWidget {
 }
 
 class _ContactListTileState extends State<ContactListTile> {
-  bool isBlockingContact = false, isUnblockingContact = false;
+  bool isBlockingContact = false,
+      isUnblockingContact = false,
+      isDeletingContact = false;
   ContactService? _contactService;
   late AtContact contact;
   @override
@@ -332,26 +336,45 @@ class _ContactListTileState extends State<ContactListTile> {
   Widget _forContactsScreen() {
     return Row(
       children: [
-        InkWell(
-          onTap: () async {
-            setState(() {
-              isBlockingContact = true;
-            });
-            // ignore: unawaited_futures
-
-            await _contactService!
-                .blockUnblockContact(contact: contact, blockAction: true);
-            setState(() {
-              isBlockingContact = false;
-            });
-          },
-          child: isBlockingContact
-              ? CircularProgressIndicator()
-              : Icon(
+        isBlockingContact
+            ? SizedBox(
+                width: 25, height: 25, child: CircularProgressIndicator())
+            : InkWell(
+                onTap: () async {
+                  setState(() {
+                    isBlockingContact = true;
+                  });
+                  await _contactService!
+                      .blockUnblockContact(contact: contact, blockAction: true);
+                  setState(() {
+                    isBlockingContact = false;
+                  });
+                },
+                child: Icon(
                   Icons.block,
                   color: ColorConstants.orangeColor,
                 ),
+              ),
+        SizedBox(
+          width: 50,
         ),
+        isDeletingContact
+            ? SizedBox(
+                width: 25, height: 25, child: CircularProgressIndicator())
+            : InkWell(
+                onTap: () async {
+                  setState(() {
+                    isDeletingContact = true;
+                  });
+                  await _contactService!.deleteAtSign(atSign: contact.atSign);
+                  setState(() {
+                    isDeletingContact = false;
+                  });
+                },
+                child: Icon(
+                  Icons.delete,
+                ),
+              ),
         SizedBox(
           width: 50,
         ),
@@ -364,26 +387,25 @@ class _ContactListTileState extends State<ContactListTile> {
   }
 
   Widget _forBlockScreen() {
-    return InkWell(
-      onTap: () async {
-        setState(() {
-          isUnblockingContact = true;
-        });
+    return isUnblockingContact
+        ? SizedBox(width: 25, height: 25, child: CircularProgressIndicator())
+        : InkWell(
+            onTap: () async {
+              setState(() {
+                isUnblockingContact = true;
+              });
 
-        await _contactService!
-            .blockUnblockContact(contact: contact, blockAction: false);
+              await _contactService!
+                  .blockUnblockContact(contact: contact, blockAction: false);
 
-        setState(() {
-          isUnblockingContact = false;
-          Navigator.pop(context);
-        });
-      },
-      child: isUnblockingContact
-          ? CircularProgressIndicator()
-          : Text(
+              setState(() {
+                isUnblockingContact = false;
+              });
+            },
+            child: Text(
               'Unblock',
               style: CustomTextStyles.blueNormal20,
             ),
-    );
+          );
   }
 }
