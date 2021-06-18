@@ -16,7 +16,7 @@ class FreeAtsignService {
   var _http;
   bool initialized = false;
   var api;
-  var path = '/api/app/v1/';
+  var path = '/api/app/v2/';
   var apiKey;
 
   _init() {

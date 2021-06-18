@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
 import 'package:at_onboarding_flutter/screens/private_key_qrcode_generator.dart';
 import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
@@ -45,6 +46,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   bool _isServerCheck = false;
   bool _isContinue = true;
   String _pairingAtsign;
+  String _loadingMessage;
   bool isValidated = false;
   bool permissionGrated = false;
   bool scanCompleted = false;
@@ -458,9 +460,17 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                       SizedBox(
                         height: SizeConfig().screenHeight * 0.25,
                       ),
-                      Text(Strings.backupKeyDescription,
-                          style: CustomTextStyles.fontR16primary,
-                          textAlign: TextAlign.center),
+                      RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                              style: CustomTextStyles.fontR16primary,
+                              children: [
+                                TextSpan(
+                                    text: _pairingAtsign + ', ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                TextSpan(text: Strings.backupKeyDescription)
+                              ])),
                       SizedBox(
                         height: 25.toHeight,
                       ),
@@ -536,16 +546,29 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                             height: SizeConfig().screenHeight * 0.6,
                             width: SizeConfig().screenWidth,
                             child: Center(
-                                child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [
-                              CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      ColorConstants.appColor)),
-                              SizedBox(height: 20.toHeight),
-                              isValidated
-                                  ? Text(
-                                      'Getting your @sign ready. Please wait...',style: TextStyle(fontSize: 15.toFont,fontWeight: FontWeight.w500),)
-                                  : Text('')
-                            ])),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                  CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          ColorConstants.appColor)),
+                                  SizedBox(height: 20.toHeight),
+                                  if (_loadingMessage != null)
+                                    Text(
+                                      _loadingMessage,
+                                      style: TextStyle(
+                                          fontSize: 15.toFont,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  // isValidated
+                                  //     ? Text(
+                                  //         'Getting your @sign ready. Please wait...',
+                                  //         style: TextStyle(
+                                  //             fontSize: 15.toFont,
+                                  //             fontWeight: FontWeight.w500),
+                                  //       )
+                                  //     : Text('')
+                                ])),
                           )
                     : SizedBox()
               ],
@@ -639,59 +662,75 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           },
           child: CustomDialog(
             isAtsignForm: true,
+            onLimitExceed: (atsignsList, message) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => AtsignListScreen(
+                            atsigns: atsignsList,
+                            message: message,
+                          ))).then((value) async {
+                print('value is $value');
+                value == null ? _getAtsignForm() : await _onAtSignSubmit(value);
+              });
+            },
             onValidate: (atsign, secret) async {
-              isValidated = true;
+              _loadingMessage = Strings.loadingAtsignReady;
               setState(() {});
               await _processSharedSecret(atsign, secret);
-              
             },
-            onSubmit: (atsign) async {
-              var isExist = await OnboardingService.getInstance()
-                  .isExistingAtsign(atsign)
-                  .catchError((error) {
-                _showAlertDialog(error);
-              });
-              var atsignStatus = await OnboardingService.getInstance()
-                  .checkAtsignStatus(atsign: atsign);
-              _pairingAtsign =
-                  OnboardingService.getInstance().formatAtSign(atsign);
-              _atsignStatus = atsignStatus ?? AtSignStatus.error;
-              switch (_atsignStatus) {
-                case AtSignStatus.teapot:
-                  if (isExist) {
-                    _showAlertDialog(CustomStrings().pairedAtsign(atsign),
-                        getClose: true, onClose: _getAtsignForm);
-                    break;
-                  }
-                  _isQR = true;
-                  break;
-                case AtSignStatus.activated:
-                  if (isExist) {
-                    _showAlertDialog(CustomStrings().pairedAtsign(atsign),
-                        getClose: true, onClose: _getAtsignForm);
-                    break;
-                  }
-                  _isBackup = true;
-                  break;
-                case AtSignStatus.unavailable:
-                case AtSignStatus.notFound:
-                  _showAlertDialog(Strings.atsignNotFound,
-                      getClose: true, onClose: _getAtsignForm);
-                  break;
-                case AtSignStatus.error:
-                  _showAlertDialog(Strings.atsignNull,
-                      getClose: true, onClose: _getAtsignForm);
-                  break;
-                default:
-                  break;
-              }
-              setState(() {
-                loading = false;
-              });
-            },
+            onSubmit: (atsign) async => await _onAtSignSubmit,
           ),
         ),
       );
+    });
+  }
+
+  Future<void> _onAtSignSubmit(String atsign) async {
+    setState(() {
+      _loadingMessage = Strings.loadingAtsignStatus;
+    });
+    var isExist = await OnboardingService.getInstance()
+        .isExistingAtsign(atsign)
+        .catchError((error) {
+      _showAlertDialog(error);
+    });
+    var atsignStatus =
+        await OnboardingService.getInstance().checkAtsignStatus(atsign: atsign);
+    _pairingAtsign = OnboardingService.getInstance().formatAtSign(atsign);
+    _atsignStatus = atsignStatus ?? AtSignStatus.error;
+    switch (_atsignStatus) {
+      case AtSignStatus.teapot:
+        if (isExist) {
+          _showAlertDialog(CustomStrings().pairedAtsign(atsign),
+              getClose: true, onClose: _getAtsignForm);
+          break;
+        }
+        _isQR = true;
+        break;
+      case AtSignStatus.activated:
+        if (isExist) {
+          _showAlertDialog(CustomStrings().pairedAtsign(atsign),
+              getClose: true, onClose: _getAtsignForm);
+          break;
+        }
+        _isBackup = true;
+        break;
+      case AtSignStatus.unavailable:
+      case AtSignStatus.notFound:
+        _showAlertDialog(Strings.atsignNotFound,
+            getClose: true, onClose: _getAtsignForm);
+        break;
+      case AtSignStatus.error:
+        _showAlertDialog(Strings.atsignNull,
+            getClose: true, onClose: _getAtsignForm);
+        break;
+      default:
+        break;
+    }
+    setState(() {
+      loading = false;
+      _loadingMessage = null;
     });
   }
 }

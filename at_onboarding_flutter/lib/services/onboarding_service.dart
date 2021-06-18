@@ -174,20 +174,15 @@ class OnboardingService {
     return atsign;
   }
 
+  ///checks whether the [atsign] is paired with device or not.
+  ///Returns `true` if paired.
   Future<bool> isExistingAtsign(String atsign) async {
     if (atsign == null) {
       return null;
     }
     atsign = this.formatAtSign(atsign);
     var atSignsList = await getAtsignList();
-    var status = await _checkAtSignServerStatus(atsign).timeout(
-        Duration(seconds: AppConstants.responseTimeLimit),
-        onTimeout: () => throw ResponseStatus.TIME_OUT);
-    var isExist = atSignsList != null ? atSignsList.contains(atsign) : false;
-    if (status == ServerStatus.teapot) {
-      isExist = false;
-    }
-    return isExist;
+    return atSignsList != null ? atSignsList.contains(atsign) : false;
   }
 
   Future<List<String>> getAtsignList() async {
