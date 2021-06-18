@@ -14,6 +14,8 @@ class ColorConstants {
   static const Color inputFieldColor = Color(0xFFF7F7FF);
   static const Color appBarCloseColor = Color(0xff03A2E0);
   static const Color orangeColor = Color(0xffF05E3F);
+  static const Color listBackground = Color(0xffF7F7FF);
+  static const Color fadedbackground = Color(0xFFFDF9F9);
 }
 
 class ContactInitialsColors {
