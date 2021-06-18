@@ -66,11 +66,10 @@ class SDKService {
       fromDate = fromDate.split(' ')[0];
     }
     var response = await _atClientServiceInstance.atClient.notifyList(
-        regex:
-            ('${AppConstants.following}|${AppConstants.followers}|${AppConstants.followersKey}|${AppConstants.followingKey}'),
+        regex: ('${AppConstants.following}|${AppConstants.followers}'),
         fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
-    if (response == 'null' || response == null) {
+    if (response == 'null') {
       return [];
     }
     List<AtNotification> notificationList = AtNotification.fromJsonList(
@@ -122,21 +121,6 @@ class SDKService {
             onTimeout: () => _onTimeOut());
     AtFollowsValue value =
         scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
-    //migrates to newnamespace
-    if (scanKey.isNotEmpty &&
-        _isOldKey(scanKey[0].key) &&
-        value.value != null) {
-      var newKey = AtKey()..metadata = scanKey[0].metadata;
-      newKey.key = scanKey[0].key.contains('following')
-          ? AppConstants.followingKey
-          : AppConstants.followersKey;
-      await this.put(newKey, value.value);
-      value = await this.get(newKey);
-      if (value != null && value.value != null) {
-        await this.delete(scanKey[0]);
-      }
-    }
-
     return value;
   }
 
@@ -178,10 +162,5 @@ class SDKService {
     response = response.toString().replaceAll(RegExp('[|]'), '');
     response = response.replaceAll('notification:', '').trim();
     return AtNotification.fromJson(jsonDecode(response));
-  }
-
-  ///Returns `true` if key is old key else `false`.
-  bool _isOldKey(String key) {
-    return !key.contains(AppConstants.libraryNamespace);
   }
 }

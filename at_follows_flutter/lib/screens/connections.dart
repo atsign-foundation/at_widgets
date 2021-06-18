@@ -146,7 +146,11 @@ class _ConnectionsState extends State<Connections> {
                       TextField(
                         style: CustomTextStyles.fontR16primary,
                         onChanged: (value) {
-                          setState(() {});
+                          if (value == '') {
+                            FocusScope.of(context).unfocus();
+                          } else {
+                            setState(() {});
+                          }
                         },
                         textInputAction: TextInputAction.search,
                         controller: searchController,

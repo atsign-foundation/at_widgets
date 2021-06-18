@@ -23,7 +23,7 @@ dependencies:
 
   at_utils: ^1.0.1+8
   at_client: ^1.0.1+10
-  at_client_mobile: ^1.0.0+10
+  at_client_mobile: ^1.0.0+11
   at_commons: ^1.0.1+8
   at_server_status: ^0.1.0+1
   at_backupkey_flutter: ^1.0.0+3

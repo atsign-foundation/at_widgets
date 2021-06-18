@@ -73,10 +73,10 @@ class ConnectionsService {
         if (notification.operation == Operation.update) {
           await this.updateFollowers(notification, isSetStatus: false);
         } else if (notification.operation == Operation.delete &&
-            notification.key.contains(AppConstants.containsFollowing)) {
+            notification.key.contains(AppConstants.following)) {
           await this.deleteFollowers(notification, isSetStatus: false);
         } else if (notification.operation == Operation.delete &&
-            notification.key.contains(AppConstants.containsFollowers)) {
+            notification.key.contains(AppConstants.followers)) {
           await this.deleteFollowing(notification, isSetStatus: false);
         }
       }
@@ -214,6 +214,7 @@ class ConnectionsService {
       }
       followers.add(notification.fromAtSign);
       await _sdkService.put(atKey, followers.toString());
+      await _sdkService.sync();
       var atsignData = await _getAtsignData(
         notification.fromAtSign,
         isNew: true,
@@ -287,8 +288,7 @@ class ConnectionsService {
   Future<void> createLists({bool isFollowing}) async {
     // for following list followers list is not required.
     if (!isFollowing) {
-      var followersValue = await _sdkService
-          .scanAndGet('${AppConstants.followers}|${AppConstants.followersKey}');
+      var followersValue = await _sdkService.scanAndGet(AppConstants.followers);
       this.followers.create(followersValue);
       if (followersValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
@@ -298,8 +298,7 @@ class ConnectionsService {
     } else {
       // for followers list following list is required to show the status of follow button.
 
-      var followingValue = await _sdkService
-          .scanAndGet('${AppConstants.following}|${AppConstants.followingKey}');
+      var followingValue = await _sdkService.scanAndGet(AppConstants.following);
       this.following.create(followingValue);
 
       if (followingValue.metadata != null) {
@@ -317,13 +316,13 @@ class ConnectionsService {
       var atMetadata = Metadata()..isPublic = !following.isPrivate;
       atKey = AtKey()
         ..metadata = atMetadata
-        ..key = AppConstants.followingKey
+        ..key = AppConstants.following
         ..sharedWith = atMetadata.isPublic ? null : atSign;
     } else {
       var atMetadata = Metadata()..isPublic = !followers.isPrivate;
       atKey = AtKey()
         ..metadata = atMetadata
-        ..key = AppConstants.followersKey
+        ..key = AppConstants.followers
         ..sharedWith = atMetadata.isPublic ? null : atSign;
     }
     return atKey;
@@ -415,15 +414,15 @@ class ConnectionsService {
         'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.fromAtSign} to:${notification.toAtSign}');
     if (notification.operation == Operation.update &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key.contains(AppConstants.containsFollowing)) {
+        notification.key.contains(AppConstants.following)) {
       await updateFollowers(notification);
     } else if (notification.operation == Operation.delete &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key.contains(AppConstants.containsFollowing)) {
+        notification.key.contains(AppConstants.following)) {
       await deleteFollowers(notification);
     } else if (notification.operation == Operation.delete &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key.contains(AppConstants.containsFollowers)) {
+        notification.key.contains(AppConstants.followers)) {
       await deleteFollowing(notification);
     }
   }
