@@ -14,8 +14,12 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 class DesktopContactsScreen extends StatefulWidget {
   final bool isBlockedScreen;
-  DesktopContactsScreen(Key key, {this.isBlockedScreen = false})
-      : super(key: key);
+  final Function onBackArrowTap;
+  DesktopContactsScreen(
+    Key key,
+    this.onBackArrowTap, {
+    this.isBlockedScreen = false,
+  }) : super(key: key);
 
   @override
   _DesktopContactsScreenState createState() => _DesktopContactsScreenState();
@@ -71,7 +75,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    // DesktopSetupRoutes.nested_pop();
+                    widget.onBackArrowTap();
                   },
                   child: Icon(Icons.arrow_back, size: 25, color: Colors.black),
                 ),
@@ -114,29 +118,31 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                       onChanged: (s) {
                         setState(() {
                           searchText = s;
-                          print('search text: ${searchText}');
+                          _filteredList = [];
                         });
                       }),
                 ),
                 SizedBox(
-                  width: 30,
+                  width: widget.isBlockedScreen ? 0 : 30,
                 ),
-                CommonButton(
-                  'Add Contact',
-                  () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AddContactDialog(),
-                    );
-                  },
-                  leading: Icon(Icons.add, size: 25, color: Colors.white),
-                  color: ColorConstants.orangeColor,
-                  border: 3,
-                  height: 45,
-                  width: 170,
-                  fontSize: 18,
-                  removePadding: true,
-                )
+                widget.isBlockedScreen
+                    ? SizedBox()
+                    : CommonButton(
+                        'Add Contact',
+                        () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AddContactDialog(),
+                          );
+                        },
+                        leading: Icon(Icons.add, size: 25, color: Colors.white),
+                        color: ColorConstants.orangeColor,
+                        border: 3,
+                        height: 45,
+                        width: 170,
+                        fontSize: 18,
+                        removePadding: true,
+                      )
               ],
             ),
             SizedBox(
@@ -158,13 +164,35 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                           return ListView.separated(
                             itemCount: itemCount,
                             itemBuilder: (context, index) {
+                              // var contact = snapshot.data![index]!;
+                              // return contacts_tile(contact);
                               var contact = snapshot.data![index]!;
-                              return contacts_tile(contact);
+
+                              if (contact.atSign.contains(searchText)) {
+                                _filteredList.add(contact);
+                                return contacts_tile(contact);
+                              } else {
+                                _filteredList.remove(contact);
+
+                                if (_filteredList.isEmpty &&
+                                    searchText.trim().isNotEmpty &&
+                                    index == itemCount - 1) {
+                                  return Center(
+                                    child: Text('No Contacts found'),
+                                  );
+                                }
+
+                                return SizedBox();
+                              }
                             },
                             separatorBuilder: (context, index) {
-                              return Divider(
-                                thickness: 0.2,
-                              );
+                              var contact = snapshot.data![index]!;
+                              if (contact.atSign.contains(searchText)) {
+                                return Divider(
+                                  thickness: 0.2,
+                                );
+                              }
+                              return SizedBox();
                             },
                           );
                         } else
@@ -204,9 +232,13 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                               }
                             },
                             separatorBuilder: (context, index) {
-                              return Divider(
-                                thickness: 0.2,
-                              );
+                              var contact = snapshot.data![index]!;
+                              if (contact.atSign.contains(searchText)) {
+                                return Divider(
+                                  thickness: 0.2,
+                                );
+                              }
+                              return SizedBox();
                             },
                           );
                         } else
@@ -249,12 +281,15 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           SizedBox(
             width: 15,
           ),
-          Text(
-            name ?? contact.atSign,
-            style: CustomTextStyles.primaryNormal20,
+          SizedBox(
+            width: 250,
+            child: Text(
+              name ?? contact.atSign,
+              style: CustomTextStyles.primaryNormal20,
+            ),
           ),
           SizedBox(
-            width: 200,
+            width: 70,
           ),
           Text(contact.atSign,
               style: CustomTextStyles.desktopSecondaryRegular18),
