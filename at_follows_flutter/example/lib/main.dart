@@ -19,10 +19,10 @@ class _MyAppState extends State<MyApp> {
   // final _formKey = GlobalKey<FormState>();
   // final _atsignController = TextEditingController();
   AtService atService = AtService.getInstance();
-  NotificationService _notificationService;
+  late NotificationService _notificationService;
   bool _loading = false;
   // List<String> _atsignsList = [];
-  String _atsign;
+  String? _atsign;
   @override
   void initState() {
     super.initState();
@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
                                     setState(() {
                                       _loading = true;
                                     });
-                                    await atService.deleteAtsign(_atsign);
+                                    await atService.deleteAtsign(_atsign!);
                                     _atsign = null;
                                     setState(() {
                                       _loading = false;
@@ -134,7 +134,7 @@ class _MyAppState extends State<MyApp> {
       context: context,
       onboard: (value, atsign) async {
         atService.atClientServiceInstance = value[atsign];
-        atService.atClientInstance = atService.atClientServiceInstance.atClient;
+        atService.atClientInstance = atService.atClientServiceInstance!.atClient as AtClientImpl?;
         _atsign = await atService.getAtSign();
         Future.delayed(Duration(milliseconds: 300), () {
           setState(() {});
