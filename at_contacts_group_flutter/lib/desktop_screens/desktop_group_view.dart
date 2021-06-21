@@ -20,9 +20,9 @@ class _DesktopGroupViewState extends State<DesktopGroupView> {
           //   child: DesktopGroupList(),
           // ),
           Container(
-            width: SizeConfig().screenWidth / 2 - 35,
-            child: DesktopGroupDetail(),
-          )
+              width: SizeConfig().screenWidth / 2 - 35, child: Text('Commented')
+              // DesktopGroupDetail(),
+              )
         ],
       ),
     );

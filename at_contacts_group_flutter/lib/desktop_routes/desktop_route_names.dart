@@ -17,6 +17,7 @@ class DesktopRoutes {
   /// Group left half routes
   static const String DESKTOP_GROUP_LEFT_INITIAL = 'desktop_group_left_initial';
   static const String DESKTOP_GROUP_LIST = 'desktop_group_list';
+  static const String DESKTOP_GROUP_CONTACT_VIEW = 'desktop_group_contact_view';
 
   /// Group right half routes
   static const String DESKTOP_GROUP_RIGHT_INITIAL =

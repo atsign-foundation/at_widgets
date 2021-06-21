@@ -1,4 +1,7 @@
+import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
+import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_custom_input_field.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_header.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_person_horizontal_tile.dart';
@@ -6,8 +9,9 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class DesktopGroupList extends StatefulWidget {
-  final Function onDone;
-  DesktopGroupList(this.onDone);
+  final Function onAdd;
+  final List<AtGroup> groups;
+  DesktopGroupList(this.onAdd, this.groups);
   @override
   _DesktopGroupListState createState() => _DesktopGroupListState();
 }
@@ -36,7 +40,10 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
               SizedBox(width: 15),
               TextButton(
                 onPressed: () {
-                  widget.onDone();
+                  // widget.onAdd();
+                  // Navigator.of(
+                  //         NavService.groupPckgRightHalfNavKey.currentContext!)
+                  //     .pushNamed(DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW);
                 },
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -61,7 +68,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
           SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-              itemCount: 30,
+              itemCount: widget.groups.length,
               itemBuilder: (context, index) {
                 return Row(
                   children: [
@@ -75,8 +82,8 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                         padding: const EdgeInsets.only(
                             top: 15.0, bottom: 15, left: 15, right: 15),
                         child: DesktopCustomPersonHorizontalTile(
-                          title: '@AlexaTeam',
-                          subTitle: '25 members',
+                          title: widget.groups[0].groupName,
+                          subTitle: widget.groups[0].members.length.toString(),
                         ),
                       ),
                     ),

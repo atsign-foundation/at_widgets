@@ -1,6 +1,7 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/images.dart';
+import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_person_vertical_tile.dart';
@@ -8,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
 class DesktopGroupDetail extends StatefulWidget {
+  final AtGroup group;
+  DesktopGroupDetail(this.group);
+
   @override
   _DesktopGroupDetailState createState() => _DesktopGroupDetailState();
 }
@@ -24,7 +28,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
               Column(
                 children: [
                   Image.asset(
-                    ImageConstants.groupPhoto,
+                    AllImages().GROUP_PHOTO,
                     height: 272,
                     width: double.infinity,
                     fit: BoxFit.fitWidth,
@@ -38,7 +42,8 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                     runAlignment: WrapAlignment.start,
                     runSpacing: 10.0,
                     spacing: 30.0,
-                    children: List.generate(20, (index) {
+                    children:
+                        List.generate(widget.group.members.length, (index) {
                       return InkWell(
                         onTap: () {
                           // showDialog(
@@ -51,10 +56,11 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                           // );
                         },
                         child: DesktopCustomPersonVerticalTile(
-                          title: 'title',
-                          subTitle: '@kevin',
+                          title: 'Title',
+                          subTitle:
+                              widget.group.members.elementAt(index).atSign,
                           isAssetImage: true,
-                          atsign: '@levina',
+                          atsign: widget.group.members.elementAt(index).atSign,
                         ),
                       );
                     }),
@@ -104,7 +110,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                   width: 250.toWidth,
                                   child: RichText(
                                     text: TextSpan(
-                                      text: 'Group name   ',
+                                      text: '${widget.group.groupName}   ',
                                       style: TextStyle(
                                         color: ColorConstants.fontPrimary,
                                         fontSize: 16.toFont,
@@ -122,7 +128,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                   ),
                                 ),
                                 Text(
-                                  '10 members',
+                                  '${widget.group.members.length} members',
                                   style:
                                       CustomTextStyles.desktopPrimaryRegular14,
                                 ),
@@ -142,17 +148,17 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                   ),
                 ),
               ),
-              Positioned(
-                  top: 30.toHeight,
-                  left: 10.toWidth,
-                  child: InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.black,
-                      size: 25.toFont,
-                    ),
-                  )),
+              // Positioned(
+              //     top: 30.toHeight,
+              //     left: 10.toWidth,
+              //     child: InkWell(
+              //       onTap: () => Navigator.pop(context),
+              //       child: Icon(
+              //         Icons.arrow_back,
+              //         color: Colors.black,
+              //         size: 25.toFont,
+              //       ),
+              //     )),
               Positioned(
                 top: 30.toHeight,
                 right: 10.toWidth,

@@ -17,161 +17,77 @@ import 'package:at_common_flutter/services/size_config.dart';
 /// and empty widget inturn has nested widgets, so it thriws error
 
 class DesktopEmptyGroup extends StatefulWidget {
+  final bool createBtnTapped;
+  final Function onCreateBtnTap;
+
+  DesktopEmptyGroup(this.createBtnTapped, this.onCreateBtnTap);
   @override
   _DesktopEmptyGroupState createState() => _DesktopEmptyGroupState();
 }
 
 class _DesktopEmptyGroupState extends State<DesktopEmptyGroup> {
-  bool createBtnTapped = false;
-  List<AtContact?> selectedContactList = [];
-  bool showAddGroupIcon = false, errorOcurred = false;
+  // bool createBtnTapped = false;
+  // List<AtContact?> selectedContactList = [];
+  // bool showAddGroupIcon = false, errorOcurred = false;
 
-  @override
-  void initState() {
-    try {
-      super.initState();
-      GroupService().getAllGroupsDetails();
-      GroupService().atGroupStream.listen((groupList) {
-        if (groupList.isNotEmpty) {
-          showAddGroupIcon = true;
-        } else {
-          showAddGroupIcon = false;
-        }
-        if (mounted) setState(() {});
-      });
-    } catch (e) {
-      print('Error in init of Group_list $e');
-      if (mounted) {
-        setState(() {
-          errorOcurred = true;
-        });
-      }
-    }
-  }
+  // @override
+  // void initState() {
+  //   try {
+  //     super.initState();
+  //     GroupService().getAllGroupsDetails();
+  //     GroupService().atGroupStream.listen((groupList) {
+  //       if (groupList.isNotEmpty) {
+  //         showAddGroupIcon = true;
+  //       } else {
+  //         showAddGroupIcon = false;
+  //       }
+  //       if (mounted) setState(() {});
+  //     });
+  //   } catch (e) {
+  //     print('Error in init of Group_list $e');
+  //     if (mounted) {
+  //       setState(() {
+  //         errorOcurred = true;
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return Container(
-      width: SizeConfig().screenWidth - TextConstants.SIDEBAR_WIDTH,
-      color: Color(0xFFF7F7FF),
-      child: StreamBuilder(
-        stream: GroupService().atGroupStream,
-        builder: (BuildContext context, AsyncSnapshot<List<AtGroup>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else {
-            if (snapshot.hasError) {
-              return ErrorScreen(onPressed: () {
-                GroupService().getAllGroupsDetails();
-              });
-            } else {
-              if (snapshot.hasData) {
-                if (snapshot.data!.isEmpty) {
-                  showAddGroupIcon = false;
-                  return createBtnTapped ? nested_navigators() : _emptyGroup();
-                } else {
-                  return nested_navigators();
-                }
-              } else {
-                return _emptyGroup();
-              }
-            }
-          }
-        },
-      ),
-    );
-  }
-
-  Widget nested_navigators() {
-    return SizedBox(
-      width: SizeConfig().screenWidth - TextConstants.SIDEBAR_WIDTH,
-      child: Row(
-        children: [
-          Expanded(
-            child: Navigator(
-              key: NavService.groupPckgLeftHalfNavKey,
-              initialRoute: DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL,
-              onGenerateRoute: (routeSettings) {
-                var routeBuilders = DesktopSetupRoutes.groupLeftRouteBuilders(
-                    context, routeSettings);
-                return MaterialPageRoute(builder: (context) {
-                  return routeBuilders[routeSettings.name]!(context);
-                });
-              },
-            ),
-          ),
-          Expanded(
-            child: Navigator(
-              key: NavService.groupPckgRightHalfNavKey,
-              initialRoute: DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL,
-              onGenerateRoute: (routeSettings) {
-                var routeBuilders = DesktopSetupRoutes.groupRightRouteBuilders(
-                  context,
-                  routeSettings,
-                  initialRouteOnArrowBackTap: () {
-                    setState(() {
-                      createBtnTapped = false;
-                    });
-                  },
-                  initialRouteOnDoneTap:
-                      _navigator(DesktopRoutes.DESKTOP_NEW_GROUP),
-                );
-                return MaterialPageRoute(builder: (context) {
-                  return routeBuilders[routeSettings.name]!(context);
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  _navigator(String _route) {
-    switch (_route) {
-      case DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL:
-        return () {
-          Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
-              .pushNamed(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL);
-        };
-      case DesktopRoutes.DESKTOP_GROUP_LIST:
-        return () {
-          Navigator.of(NavService.groupPckgLeftHalfNavKey.currentContext!)
-              .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_LIST,
-                  arguments: {
-                'onDone': _navigator(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL),
-              });
-        };
-      case DesktopRoutes.DESKTOP_GROUP_DETAIL:
-        return () {
-          Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
-              .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
-                  arguments: {});
-        };
-
-      case DesktopRoutes.DESKTOP_NEW_GROUP:
-        return () {
-          Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
-              .pushNamed(DesktopRoutes.DESKTOP_NEW_GROUP, arguments: {
-            'onPop': () {
-              Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
-                  .pop();
-            },
-            'onDone': () {
-              Navigator.of(NavService.groupPckgLeftHalfNavKey.currentContext!)
-                  .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_LIST,
-                      arguments: {
-                    'onDone':
-                        _navigator(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL),
-                  });
-              Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
-                  .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
-                      arguments: {});
-            }
-          });
-        };
-    }
+    return _emptyGroup();
+    // SizeConfig().init(context);
+    // return Container(
+    //   width: SizeConfig().screenWidth - TextConstants.SIDEBAR_WIDTH,
+    //   color: Color(0xFFF7F7FF),
+    //   child: StreamBuilder(
+    //     stream: GroupService().atGroupStream,
+    //     builder: (BuildContext context, AsyncSnapshot<List<AtGroup>> snapshot) {
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return Center(child: CircularProgressIndicator());
+    //       } else {
+    //         if (snapshot.hasError) {
+    //           return ErrorScreen(onPressed: () {
+    //             GroupService().getAllGroupsDetails();
+    //           });
+    //         } else {
+    //           if (snapshot.hasData) {
+    //             if (snapshot.data!.isEmpty) {
+    //               print('snapshot.data!.isEmpty');
+    //               showAddGroupIcon = false;
+    //               return createBtnTapped ? nested_navigators() : _emptyGroup();
+    //             } else {
+    //               print('!snapshot.data!.isEmpty');
+    //               return nested_navigators();
+    //             }
+    //           } else {
+    //             return _emptyGroup();
+    //           }
+    //         }
+    //       }
+    //     },
+    //   ),
+    // );
   }
 
   Widget _emptyGroup() {
@@ -201,11 +117,11 @@ class _DesktopEmptyGroupState extends State<DesktopEmptyGroup> {
           height: 20.toHeight,
         ),
         TextButton(
-          onPressed: () {
-            setState(() {
-              createBtnTapped = true;
-            });
-          },
+          onPressed: widget.createBtnTapped
+              ? null
+              : () {
+                  widget.onCreateBtnTap();
+                },
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
