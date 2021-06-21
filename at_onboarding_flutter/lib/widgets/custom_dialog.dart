@@ -62,7 +62,7 @@ class CustomDialog extends StatelessWidget {
       this.title,
       this.isAtsignForm = false,
       this.showClose = false,
-      this.atsign,
+      this.atsign ='',
       this.isQR = false,
       this.onSubmit,
       this.onValidate,
@@ -496,12 +496,12 @@ class CustomDialog extends StatelessWidget {
                                                     loading = true;
                                                     stateSet(() {});
 
-                                                    String result;
+                                                    String? result;
                                                     if (isQR) {
                                                       result =
                                                           await validatewithAtsign(
                                                               atsign,
-                                                              verificationCode,
+                                                              verificationCode!,
                                                               context);
                                                     } else {
                                                       result =
@@ -769,7 +769,7 @@ class CustomDialog extends StatelessWidget {
       String atsign, String otp, BuildContext context,
       {bool isConfirmation = false}) async {
     var data;
-    String cramSecret;
+    String cramSecret ='';
     List<String> atsigns = [];
     // String atsign;
 
