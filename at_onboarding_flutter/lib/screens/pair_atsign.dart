@@ -1,4 +1,8 @@
+
+import 'dart:convert';
+
 import 'dart:async';
+
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
@@ -6,6 +10,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
 import 'package:at_onboarding_flutter/screens/private_key_qrcode_generator.dart';
 import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
+import 'package:at_onboarding_flutter/services/freeAtsignService.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
@@ -37,6 +42,7 @@ class PairAtsignWidget extends StatefulWidget {
 class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   var _onboardingService = OnboardingService.getInstance();
   AtSignLogger _logger = AtSignLogger('QR Scan');
+  final FreeAtsignService _freeAtsignService = FreeAtsignService();
 
   late QrReaderViewController _controller;
   bool loading = false;
@@ -460,7 +466,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (_isQR) ..._getQRWidget(deviceTextFactor),
+                    // if (_isQR) ...
+                    //    CustomDi
+                    // ,
                     if (_isBackup) ...[
                       SizedBox(
                         height: SizeConfig().screenHeight * 0.25,
@@ -676,7 +684,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               setState(() {});
               await _processSharedSecret(atsign, secret);
             },
-            onSubmit: (atsign) async => await _onAtSignSubmit(atsign),
+            onSubmit: (atsign) async {
+              await _onAtSignSubmit(atsign);
+            },
           ),
         ),
       );
@@ -704,6 +714,28 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           break;
         }
         _isQR = true;
+        if (_isQR) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (_) => WillPopScope(
+                  onWillPop: () async {
+                    int ct = 0;
+                    Navigator.of(context).popUntil((_) => ct++ >= 2);
+                    return true;
+                  },
+                  child: CustomDialog(
+                    onValidate: (atsign, secret) async {
+                      _loadingMessage = Strings.loadingAtsignReady;
+                      setState(() {});
+                      await _processSharedSecret(atsign, secret);
+                    },
+                    isAtsignForm: true,
+                    isQR: true,
+                    atsign: atsign,
+                  )));
+        }
+
         break;
       case AtSignStatus.activated:
         if (isExist!) {
@@ -725,9 +757,50 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       default:
         break;
     }
+    if (_isQR) {
+      bool status = await loginWithAtsign(atsign, context);
+    }
     setState(() {
       loading = false;
       _loadingMessage = null;
     });
+  }
+
+  //It will validate the person with atsign, email and the OTP.
+  //If the validation is successful, it will return a cram secret for the user to login
+  Future<bool> loginWithAtsign(String atsign, BuildContext context) async {
+    var data;
+    bool status = false;
+
+    dynamic response = await _freeAtsignService.loginWithAtsign(atsign);
+    if (response.statusCode == 200) {
+      data = response.body;
+      data = jsonDecode(data);
+
+      print(data);
+      status = true;
+      // atsign = data['data']['atsign'];
+    } else {
+      data = response.body;
+      data = jsonDecode(data);
+      String errorMessage = data['message'];
+      showErrorDialog(context, errorMessage);
+    }
+    return status;
+  }
+
+  showErrorDialog(BuildContext context, String errorMessage) {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return CustomDialog(
+            isErrorDialog: true,
+            showClose: true,
+            context: context,
+            message: errorMessage,
+            onClose: () {},
+          );
+        });
   }
 }

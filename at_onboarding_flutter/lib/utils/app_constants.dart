@@ -8,6 +8,8 @@ class AppConstants {
   static String prodApiKey = '400b-806u-bzez-z42z-6a3p';
   static dynamic contentType = 'application/json';
   static String getFreeAtsign = 'get-free-atsign';
+  static String authWithAtsign = 'login/atsign';
+  static String validationWithAtsign = 'login/atsign/validate';
   static String registerPerson = 'register-person';
   static String validatePerson = 'validate-person';
   static String? website;
