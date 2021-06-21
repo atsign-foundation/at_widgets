@@ -13,15 +13,15 @@ class WebViewScreen extends StatefulWidget {
   final String title;
 
   WebViewScreen({
-    @required this.url,
-    @required this.title,
+    required this.url,
+    required this.title,
   });
   @override
   _WebViewScreenState createState() => _WebViewScreenState();
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-  bool isLoading;
+  late bool isLoading;
   var _logger = AtSignLogger('WebView Widget');
 
   @override
@@ -64,7 +64,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           isLoading
               ? Center(
                   child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
+                      valueColor: AlwaysStoppedAnimation<Color?>(
                     ColorConstants.activeColor,
                   )),
                 )

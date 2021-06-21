@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
-  final String title;
+  final String? title;
   final double elevation;
   final bool showBackButton;
   final List<Widget> actionItems;
@@ -29,7 +29,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       automaticallyImplyLeading: this.showBackButton,
       backgroundColor: ColorConstants.appColor,
       centerTitle: true,
-      title: Text(this.title, style: CustomTextStyles.fontR16secondary),
+      title: Text(this.title!, style: CustomTextStyles.fontR16secondary),
       actions: this.actionItems.isEmpty ? null : actionItems,
     );
   }

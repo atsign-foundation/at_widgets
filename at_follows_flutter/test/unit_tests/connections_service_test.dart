@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -29,29 +30,30 @@ void main() {
       String receiverAtsign = '@bob🛠';
 
       var receiverAtClientService = await setUpFunc(receiverAtsign);
-      await receiverAtClientService.atClient.startMonitor(
-          receiverAtClientService.atClient.preference.privateKey,
-          monitorCallBack);
-      Atsign atsign = await _connectionsService.follow(receiverAtsign);
+      await receiverAtClientService.atClient!
+          .startMonitor(monitorCallBack, _onMonitorError, MonitorPreference());
+      Atsign atsign = await (_connectionsService.follow(receiverAtsign)
+          as FutureOr<Atsign>);
       expect(atsign.title, receiverAtsign);
       expect(
-          _connectionsService.following.list.contains(receiverAtsign), isTrue);
+          _connectionsService.following.list!.contains(receiverAtsign), isTrue);
     });
 
     test('with same @sign', () async {
-      Atsign atsign = await _connectionsService.follow(senderAtsign);
+      Atsign? atsign = await _connectionsService.follow(senderAtsign);
       expect(atsign, null);
       expect(
-          _connectionsService.following.list.contains(senderAtsign), isFalse);
+          _connectionsService.following.list!.contains(senderAtsign), isFalse);
     });
 
     test('with existing @sign', () async {
       String receiverAtsign = '@bob🛠';
-      Atsign atsign = await _connectionsService.follow(receiverAtsign);
+      Atsign atsign = await (_connectionsService.follow(receiverAtsign)
+          as FutureOr<Atsign>);
       expect(atsign.title, receiverAtsign);
       expect(
-          _connectionsService.following.list.contains(receiverAtsign), isTrue);
-      Atsign atsign1 = await _connectionsService.follow(receiverAtsign);
+          _connectionsService.following.list!.contains(receiverAtsign), isTrue);
+      Atsign? atsign1 = await _connectionsService.follow(receiverAtsign);
       expect(atsign1, null);
     });
 
@@ -68,8 +70,8 @@ void main() {
         ..key = 'lastname.persona'
         ..metadata = metadata;
 
-      await bobClientService.atClient.put(bobFirstname, 'Bob');
-      await bobClientService.atClient.put(bobLastname, 'Geller');
+      await bobClientService.atClient!.put(bobFirstname, 'Bob');
+      await bobClientService.atClient!.put(bobLastname, 'Geller');
 
       var secondAtSign = '@colin🛠';
       var colinClientService = await setUpFunc(secondAtSign);
@@ -81,16 +83,19 @@ void main() {
         ..key = 'lastname'
         ..metadata = metadata1;
 
-      await colinClientService.atClient.put(colinFirstname, 'Colin');
-      await colinClientService.atClient.put(colinLastname, 'Felton');
+      await colinClientService.atClient!.put(colinFirstname, 'Colin');
+      await colinClientService.atClient!.put(colinLastname, 'Felton');
 
-      Atsign atsign = await _connectionsService.follow(firstAtSign);
+      Atsign atsign =
+          await (_connectionsService.follow(firstAtSign) as FutureOr<Atsign>);
       expect(atsign.subtitle, 'Bob Geller');
-      expect(_connectionsService.following.list.contains(firstAtSign), isTrue);
+      expect(_connectionsService.following.list!.contains(firstAtSign), isTrue);
 
-      Atsign atsign1 = await _connectionsService.follow(secondAtSign);
+      Atsign atsign1 =
+          await (_connectionsService.follow(secondAtSign) as FutureOr<Atsign>);
       expect(atsign1.subtitle, 'Colin Felton');
-      expect(_connectionsService.following.list.contains(secondAtSign), isTrue);
+      expect(
+          _connectionsService.following.list!.contains(secondAtSign), isTrue);
     });
   });
 
@@ -98,29 +103,25 @@ void main() {
     test('with existing @sign', () async {
       String receiverAtsign = '@bob🛠';
       _connectionsService.following.add(receiverAtsign);
-      var receiverAtClientService = await setUpFunc(receiverAtsign);
-      await receiverAtClientService.atClient.startMonitor(
-          receiverAtClientService.atClient.preference.privateKey,
-          monitorCallBack);
       bool result = await _connectionsService.unfollow(receiverAtsign);
       expect(result, true);
-      expect(
-          _connectionsService.following.list.contains(receiverAtsign), isFalse);
+      expect(_connectionsService.following.list!.contains(receiverAtsign),
+          isFalse);
     });
 
     test('with same @sign', () async {
       bool result = await _connectionsService.unfollow(senderAtsign);
       expect(result, false);
       expect(
-          _connectionsService.following.list.contains(senderAtsign), isFalse);
+          _connectionsService.following.list!.contains(senderAtsign), isFalse);
     });
 
     test('with non existing @sign', () async {
       String receiverAtsign = '@bob🛠';
       bool result = await _connectionsService.unfollow(receiverAtsign);
       expect(result, false);
-      expect(
-          _connectionsService.following.list.contains(receiverAtsign), isFalse);
+      expect(_connectionsService.following.list!.contains(receiverAtsign),
+          isFalse);
     });
   });
 
@@ -129,79 +130,37 @@ void main() {
       var connectionProvider = ConnectionProvider();
       await _connectionsService.getAtsignsList();
       String receiverAtsign = '@bob🛠';
-      Atsign atsign = await _connectionsService.follow(receiverAtsign);
+      Atsign atsign = await (_connectionsService.follow(receiverAtsign)
+          as FutureOr<Atsign>);
       expect(atsign.title, receiverAtsign);
       expect(
-          _connectionsService.following.list.contains(receiverAtsign), isTrue);
+          _connectionsService.following.list!.contains(receiverAtsign), isTrue);
       expect(
           connectionProvider.connectionslistStatus.isFollowingPrivate, false);
       var result = await _connectionsService.changeListPublicStatus(true, true);
       expect(result, true);
-      expect(
-          _connectionsService.following.getKey.atKey.metadata.isPublic, false);
+      expect(_connectionsService.following.getKey!.atKey.metadata!.isPublic,
+          false);
     });
     test('change from private to public', () async {
       await _connectionsService.getAtsignsList();
       var connectionProvider = ConnectionProvider();
       String receiverAtsign = '@kevin🛠';
-      Atsign atsign = await _connectionsService.follow(receiverAtsign);
+      Atsign atsign = await (_connectionsService.follow(receiverAtsign)
+          as FutureOr<Atsign>);
       expect(atsign.title, receiverAtsign);
       expect(
-          _connectionsService.following.list.contains(receiverAtsign), isTrue);
+          _connectionsService.following.list!.contains(receiverAtsign), isTrue);
       connectionProvider.connectionslistStatus.isFollowingPrivate = true;
       var result =
           await _connectionsService.changeListPublicStatus(true, false);
       expect(result, true);
       expect(
-          _connectionsService.following.getKey.atKey.metadata.isPublic, true);
+          _connectionsService.following.getKey!.atKey.metadata!.isPublic, true);
     });
   });
 
-  group('test at_follows namespace migration', () {
-    test('fetch keys list', () async {
-      //oldnamespace keys
-      var metadata = Metadata()..isPublic = true;
-      var atKey = AtKey()
-        ..key = AppConstants.followers
-        ..metadata = metadata;
-      await _sdkService.put(atKey, '@bob🛠,@colin🛠');
-      var atKey1 = AtKey()
-        ..key = AppConstants.following
-        ..metadata = metadata;
-      await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
-
-      var followersValue = await _sdkService
-          .scanAndGet('${AppConstants.followers}|${AppConstants.followersKey}');
-      expect(followersValue.value.isNotEmpty, true);
-
-      var oldKeyfollowersValue =
-          await _sdkService.scanAndGet(AppConstants.followers);
-      expect(oldKeyfollowersValue.value, null);
-
-      var followingValue = await _sdkService
-          .scanAndGet('${AppConstants.following}|${AppConstants.followingKey}');
-      expect(followingValue.value.isNotEmpty, true);
-
-      var oldKeyfollowingValue =
-          await _sdkService.scanAndGet(AppConstants.following);
-      expect(oldKeyfollowingValue.value, null);
-    });
-
-    test('follow functionality', () async {
-      var metadata = Metadata()..isPublic = true;
-      var atKey1 = AtKey()
-        ..key = AppConstants.following
-        ..metadata = metadata;
-      await _sdkService.put(atKey1, '@sitaram🛠');
-
-      await _connectionsService.getAtsignsList();
-      expect(_connectionsService.following.contains('@sitaram🛠'), true);
-      Atsign atsign = await _connectionsService.follow('@sameeraja🛠');
-      expect(atsign.title, '@sameeraja🛠');
-      expect(
-          _connectionsService.following.list.contains('@sameeraja🛠'), isTrue);
-    });
-
+  group('test namespace migration for wavi and persona', () {
     test('follow functioanlity with wavi and persona namespace support',
         () async {
       var firstAtSign = '@bob🛠';
@@ -216,8 +175,8 @@ void main() {
         ..key = 'lastname.persona'
         ..metadata = metadata;
 
-      await bobClientService.atClient.put(bobFirstname, 'Bob');
-      await bobClientService.atClient.put(bobLastname, 'Geller');
+      await bobClientService.atClient!.put(bobFirstname, 'Bob');
+      await bobClientService.atClient!.put(bobLastname, 'Geller');
 
       var secondAtSign = '@colin🛠';
       var colinClientService = await setUpFunc(secondAtSign);
@@ -229,8 +188,8 @@ void main() {
         ..key = 'lastname'
         ..metadata = metadata1;
 
-      await colinClientService.atClient.put(colinFirstname, 'Colin');
-      await colinClientService.atClient.put(colinLastname, 'Felton');
+      await colinClientService.atClient!.put(colinFirstname, 'Colin');
+      await colinClientService.atClient!.put(colinLastname, 'Felton');
 
       var atMetadata = Metadata()..isPublic = true;
       var atKey1 = AtKey()
@@ -238,17 +197,20 @@ void main() {
         ..metadata = atMetadata;
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
 
-      var followingValue = await _sdkService
-          .scanAndGet('${AppConstants.following}|${AppConstants.followingKey}');
+      var followingValue =
+          await _sdkService.scanAndGet('${AppConstants.following}');
       expect(followingValue.value.isNotEmpty, true);
 
-      Atsign atsign = await _connectionsService.follow(firstAtSign);
+      Atsign atsign =
+          await (_connectionsService.follow(firstAtSign) as FutureOr<Atsign>);
       expect(atsign.subtitle, 'Bob Geller');
-      expect(_connectionsService.following.list.contains(firstAtSign), isTrue);
+      expect(_connectionsService.following.list!.contains(firstAtSign), isTrue);
 
-      Atsign atsign1 = await _connectionsService.follow(secondAtSign);
+      Atsign atsign1 =
+          await (_connectionsService.follow(secondAtSign) as FutureOr<Atsign>);
       expect(atsign1.subtitle, 'Colin Felton');
-      expect(_connectionsService.following.list.contains(secondAtSign), isTrue);
+      expect(
+          _connectionsService.following.list!.contains(secondAtSign), isTrue);
     });
 
     test('unfollow functionality', () async {
@@ -259,16 +221,16 @@ void main() {
         ..metadata = atMetadata;
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
 
-      var followingValue = await _sdkService
-          .scanAndGet('${AppConstants.following}|${AppConstants.followingKey}');
+      var followingValue =
+          await _sdkService.scanAndGet('${AppConstants.following}');
       expect(followingValue.value.isNotEmpty, true);
       _connectionsService.following.add('@sameeraja🛠');
       _connectionsService.following.add('@sitaram🛠');
 
       bool result = await _connectionsService.unfollow('@sameeraja🛠');
       expect(result, true);
-      expect(
-          _connectionsService.following.list.contains('@sameeraja🛠'), isFalse);
+      expect(_connectionsService.following.list!.contains('@sameeraja🛠'),
+          isFalse);
     });
 
     test('change liststatus from public to private', () async {
@@ -280,11 +242,11 @@ void main() {
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
       await _connectionsService.getAtsignsList();
       expect(
-          _connectionsService.following.getKey.atKey.metadata.isPublic, true);
+          _connectionsService.following.getKey!.atKey.metadata!.isPublic, true);
       var result = await _connectionsService.changeListPublicStatus(true, true);
       expect(result, true);
-      expect(
-          _connectionsService.following.getKey.atKey.metadata.isPublic, false);
+      expect(_connectionsService.following.getKey!.atKey.metadata!.isPublic,
+          false);
     });
 
     test('change liststatus from private to public', () async {
@@ -296,8 +258,8 @@ void main() {
         ..metadata = atMetadata;
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
       await _connectionsService.getAtsignsList();
-      expect(
-          _connectionsService.following.getKey.atKey.metadata.isPublic, false);
+      expect(_connectionsService.following.getKey!.atKey.metadata!.isPublic,
+          false);
 
       var result =
           await _connectionsService.changeListPublicStatus(true, false);
@@ -319,14 +281,16 @@ Future<AtClientService> setUpFunc(String atsign) async {
   AtClientService atClientService = AtClientService();
 
   await AtClientImpl.createClient(atsign, 'wavi', preference);
-  var atClient = await AtClientImpl.getClient(atsign);
+  var atClient = await (AtClientImpl.getClient(atsign) as FutureOr<AtClient>);
   atClientService.atClient = atClient;
-  atClient.getSyncManager().init(atsign, preference,
-      atClient.getRemoteSecondary(), atClient.getLocalSecondary());
-  await atClient.getSyncManager().sync();
-  await setEncryptionKeys(atClient, atsign);
+  await atClient.getSyncManager()!.sync(_onDone);
+  await setEncryptionKeys(atClient as AtClientImpl, atsign);
   return atClientService;
 }
+
+void _onDone() {}
+
+void _onMonitorError(var error) {}
 
 monitorCallBack(var response) {
   if (response == null) {
@@ -355,18 +319,18 @@ setEncryptionKeys(AtClientImpl atClient, String atsign) async {
     metadata.namespaceAware = false;
     var result;
     // set pkam private key
-    result = await atClient.getLocalSecondary().putValue(AT_PKAM_PRIVATE_KEY,
-        demo_data.pkamPrivateKeyMap[atsign]); // set pkam public key
+    result = await atClient.getLocalSecondary()!.putValue(AT_PKAM_PRIVATE_KEY,
+        demo_data.pkamPrivateKeyMap[atsign]!); // set pkam public key
     result = await atClient
-        .getLocalSecondary()
-        .putValue(AT_PKAM_PUBLIC_KEY, demo_data.pkamPublicKeyMap[atsign]);
+        .getLocalSecondary()!
+        .putValue(AT_PKAM_PUBLIC_KEY, demo_data.pkamPublicKeyMap[atsign]!);
     // set encryption private key
-    result = await atClient.getLocalSecondary().putValue(
-        AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]);
+    result = await atClient.getLocalSecondary()!.putValue(
+        AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]!);
     //set aesKey
     result = await atClient
-        .getLocalSecondary()
-        .putValue(AT_ENCRYPTION_SELF_KEY, demo_data.aesKeyMap[atsign]);
+        .getLocalSecondary()!
+        .putValue(AT_ENCRYPTION_SELF_KEY, demo_data.aesKeyMap[atsign]!);
 
     // set encryption public key. should be synced
     metadata.isPublic = true;
