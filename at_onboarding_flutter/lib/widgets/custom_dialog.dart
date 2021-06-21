@@ -693,10 +693,9 @@ class CustomDialog extends StatelessWidget {
                         newAtsign: responseData['newAtsign'],
                       ))).then((value) async {
             if (value == responseData['newAtsign']) {
-              var cramsecret = await this.validatePerson(
-                  value, email, otp, context,
+              cramSecret = await this.validatePerson(value, email, otp, context,
                   isConfirmation: true);
-              return cramsecret;
+              return cramSecret;
             } else {
               Navigator.pop(context);
 
