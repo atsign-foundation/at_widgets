@@ -7,11 +7,10 @@ import 'package:at_onboarding_flutter/services/size_config.dart';
 
 class AtsignListScreen extends StatefulWidget {
   final List<String> atsigns;
-  final String message;
-  final String newAtsign;
+  final String? message;
+  final String? newAtsign;
 
-  const AtsignListScreen(
-      {@required this.atsigns, this.message, this.newAtsign});
+  const AtsignListScreen({required this.atsigns, this.message, this.newAtsign});
 
   @override
   _AtsignListScreenState createState() => _AtsignListScreenState();
@@ -19,7 +18,7 @@ class AtsignListScreen extends StatefulWidget {
 
 class _AtsignListScreenState extends State<AtsignListScreen> {
   var lastSelectedIndex;
-  String message;
+  late String message;
   @override
   void initState() {
     super.initState();
@@ -50,7 +49,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                   setState(() {
                     lastSelectedIndex = value;
                   });
-                  _showAlert(widget.newAtsign, context);
+                  _showAlert(widget.newAtsign!, context);
                 },
                 value: 'new',
                 activeColor: ColorConstants.appColor,

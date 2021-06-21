@@ -13,9 +13,9 @@ class FreeAtsignService {
 
   factory FreeAtsignService() => freeAtsignService;
 
-  var _http;
+  late var _http;
   bool initialized = false;
-  var api;
+  late var api;
   var path = '/api/app/v2/';
   var apiKey;
 
@@ -61,7 +61,7 @@ class FreeAtsignService {
 //To register the person with the provided atsign and email
 //It will send an OTP to the registered email
   Future<dynamic> registerPerson(String atsign, String email,
-      {String oldEmail}) async {
+      {String? oldEmail}) async {
     if (!initialized) {
       _init();
     }
@@ -83,7 +83,7 @@ class FreeAtsignService {
 
 //It will validate the person with atsign, email and the OTP.
 //If the validation is successful, it will return a cram secret for the user to login
-  Future<dynamic> validatePerson(String atsign, String email, String otp,
+  Future<dynamic> validatePerson(String atsign, String email, String? otp,
       {bool confirmation = false}) async {
     if (!initialized) {
       _init();
