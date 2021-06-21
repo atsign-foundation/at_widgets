@@ -5,7 +5,10 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/widgets/common_button.dart';
+import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
+import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
@@ -23,7 +26,7 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
   List<AtContact?>? selectedContacts;
   String groupName = '';
   Uint8List? selectedImageByteData;
-  bool isKeyBoardVisible = false, showEmojiPicker = false;
+  bool isKeyBoardVisible = false, showEmojiPicker = false, processing = false;
   TextEditingController textController = TextEditingController();
   UniqueKey key = UniqueKey();
   FocusNode textFieldFocus = FocusNode();
@@ -47,6 +50,10 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
     groupName = textController.text;
     // ignore: unnecessary_null_comparison
     if (groupName != null) {
+      setState(() {
+        processing = true;
+      });
+
       // if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
       //   CustomToast().show(TextConstants().INVALID_NAME, context);
       //   return;
@@ -70,7 +77,29 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
 
         if (result is AtGroup) {
           // Navigator.of(context).pop();
+
           widget.onDone!();
+
+          setState(() {
+            processing = false;
+          });
+
+          await Navigator.of(
+                  NavService.groupPckgRightHalfNavKey.currentContext!)
+              .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
+                  arguments: {
+                'group': result,
+              });
+
+          await Navigator.of(NavService.groupPckgLeftHalfNavKey.currentContext!)
+              .pushReplacementNamed(
+            DesktopRoutes.DESKTOP_GROUP_LIST,
+            arguments: {
+              'group': result,
+            },
+          );
+
+          print('navigated');
         } else if (result != null) {
           if (result.runtimeType == AlreadyExistsException) {
             CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context,
@@ -88,6 +117,10 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
       } else {
         CustomToast().show(TextConstants().EMPTY_NAME, context, gravity: 0);
       }
+
+      setState(() {
+        processing = false;
+      });
     } else {
       CustomToast().show(TextConstants().EMPTY_NAME, context, gravity: 0);
     }
@@ -110,11 +143,15 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                 ),
                 CommonButton(
                   'Done',
-                  () async {
-                    await createGroup();
-                    widget.onDone!();
-                  },
-                  color: ColorConstants.orangeColor,
+                  processing
+                      ? () {}
+                      : () async {
+                          await createGroup();
+                          // widget.onDone!();
+                        },
+                  color: processing
+                      ? ColorConstants.greyText
+                      : ColorConstants.orangeColor,
                   border: 3,
                   height: 45,
                   width: 130,
