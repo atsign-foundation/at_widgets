@@ -679,7 +679,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               setState(() {});
               await _processSharedSecret(atsign, secret);
             },
-            onSubmit: (atsign) async => await _onAtSignSubmit,
+            onSubmit: (atsign) async => await _onAtSignSubmit(atsign),
           ),
         ),
       );

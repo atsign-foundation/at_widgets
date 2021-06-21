@@ -657,24 +657,27 @@ class CustomDialog extends StatelessWidget {
   //It will validate the person with atsign, email and the OTP.
   //If the validation is successful, it will return a cram secret for the user to login
   Future<String> validatePerson(
-      String atsign, String email, String otp, BuildContext context) async {
+      String atsign, String email, String otp, BuildContext context,
+      {bool isConfirmation = false}) async {
     var data;
     String cramSecret;
     List<String> atsigns = [];
     // String atsign;
 
-    dynamic response =
-        await _freeAtsignService.validatePerson(atsign, email, otp);
+    dynamic response = await _freeAtsignService
+        .validatePerson(atsign, email, otp, confirmation: isConfirmation);
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
       print(data['data']);
       //check for the atsign list and display them.
-      if (data['data'].length == 2 && data['status'] != 'error') {
+      if (data['data'] != null &&
+          data['data'].length == 2 &&
+          data['status'] != 'error') {
         var responseData = data['data'];
         atsigns.addAll(List<String>.from(responseData['atsigns']));
 
-        if (responseData['newAtsign'] != null) {
+        if (responseData['newAtsign'] == null) {
           Navigator.pop(context);
 
           this.onLimitExceed(atsigns, responseData['message']);
@@ -682,14 +685,24 @@ class CustomDialog extends StatelessWidget {
         }
         //displays list of atsign along with newAtsign
         else {
-          Navigator.push(
+          await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (_) => AtsignListScreen(
                         atsigns: atsigns,
                         newAtsign: responseData['newAtsign'],
-                      ))).then((value) {
-            cramSecret = data['cramkey'];
+                      ))).then((value) async {
+            if (value == responseData['newAtsign']) {
+              var cramsecret = await this.validatePerson(
+                  value, email, otp, context,
+                  isConfirmation: true);
+              return cramsecret;
+            } else {
+              Navigator.pop(context);
+
+              this.onSubmit(value);
+              return null;
+            }
           });
         }
       } else if (data['status'] != 'error') {

@@ -98,7 +98,12 @@ class FreeAtsignService {
         'confirmation': true
       };
     } else {
-      data = {'email': '$email', 'atsign': "$atsign", 'otp': '$otp'};
+      data = {
+        'email': '$email',
+        'atsign': "$atsign",
+        'otp': '$otp',
+        'confirmation': confirmation
+      };
     }
     String body = json.encode(data);
     var response = await _http.post(url, body: body, headers: {
