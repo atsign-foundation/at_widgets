@@ -181,7 +181,14 @@ class OnboardingService {
     }
     atsign = this.formatAtSign(atsign);
     var atSignsList = await getAtsignList();
-    return atSignsList != null ? atSignsList.contains(atsign) : false;
+    var status = await _checkAtSignServerStatus(atsign!).timeout(
+        Duration(seconds: AppConstants.responseTimeLimit),
+        onTimeout: () => throw ResponseStatus.TIME_OUT);
+    var isExist = atSignsList != null ? atSignsList.contains(atsign) : false;
+    if (status == ServerStatus.teapot) {
+      isExist = false;
+    }
+    return isExist;
   }
 
   Future<List<String>?> getAtsignList() async {

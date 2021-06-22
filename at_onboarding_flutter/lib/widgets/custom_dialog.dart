@@ -36,6 +36,12 @@ class CustomDialog extends StatelessWidget {
   ///title of the dialog.
   final String? title;
 
+  ///reference for the dialog if the atsign not activated.
+  final bool isQR;
+
+  ///Entered atsign.
+  final String atsign;
+
   ///Returns a valid atsign if atsignForm is made true.
   final Function(String)? onSubmit;
 
@@ -56,6 +62,8 @@ class CustomDialog extends StatelessWidget {
       this.title,
       this.isAtsignForm = false,
       this.showClose = false,
+      this.atsign ='',
+      this.isQR = false,
       this.onSubmit,
       this.onValidate,
       this.onLimitExceed,
@@ -77,6 +85,11 @@ class CustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (this.isQR) {
+      otp = true;
+      pair = true;
+      isfreeAtsign = true;
+    }
     return StatefulBuilder(builder: (context, stateSet) {
       return Stack(children: [
         Opacity(
@@ -118,7 +131,9 @@ class CustomDialog extends StatelessWidget {
                                         Flexible(
                                           child: Text(
                                             !isfreeAtsign
-                                                ? Strings.enterAtsignTitle
+                                                ? isQR
+                                                    ? 'Enter Verification code'
+                                                    : Strings.enterAtsignTitle
                                                 : !pair
                                                     ? 'Free @sign'
                                                     : !otp
@@ -149,7 +164,9 @@ class CustomDialog extends StatelessWidget {
                                     ),
                                     otp
                                         ? Text(
-                                            'A verification code has been sent to ${_emailController.text}',
+                                            !this.isQR
+                                                ? 'A verification code has been sent to ${_emailController.text}'
+                                                : 'A verification code has been sent to your registered email.',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 13.toFont),
@@ -247,7 +264,7 @@ class CustomDialog extends StatelessWidget {
                                               verificationCode = v;
                                             },
                                           )),
-                                if (!isfreeAtsign) ...[
+                                if (!isfreeAtsign && !isQR) ...[
                                   SizedBox(height: 15.toHeight),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -460,29 +477,43 @@ class CustomDialog extends StatelessWidget {
                                                 style: ButtonStyle(
                                                     backgroundColor: MaterialStateProperty
                                                         .all((_emailController
-                                                                        .text !=
-                                                                    '' &&
-                                                                _emailController
-                                                                        .text !=
-                                                                    null)
+                                                                            .text !=
+                                                                        '' &&
+                                                                    _emailController
+                                                                            .text !=
+                                                                        null ||
+                                                                isQR)
                                                             ? Colors.grey[800]
                                                             : Colors
                                                                 .grey[400])),
                                                 onPressed: () async {
-                                                  if (_emailController.text !=
-                                                          '' &&
-                                                      _emailController.text !=
-                                                          null) {
+                                                  if ((_emailController.text !=
+                                                              '' &&
+                                                          _emailController
+                                                                  .text !=
+                                                              null) ||
+                                                      isQR) {
                                                     loading = true;
                                                     stateSet(() {});
-                                                    String? result =
-                                                        await validatePerson(
-                                                            _atsignController
-                                                                .text,
-                                                            _emailController
-                                                                .text,
-                                                            verificationCode,
-                                                            context);
+
+                                                    String? result;
+                                                    if (isQR) {
+                                                      result =
+                                                          await validatewithAtsign(
+                                                              atsign,
+                                                              verificationCode!,
+                                                              context);
+                                                    } else {
+                                                      result =
+                                                          await validatePerson(
+                                                              _atsignController
+                                                                  .text,
+                                                              _emailController
+                                                                  .text,
+                                                              verificationCode,
+                                                              context);
+                                                    }
+
                                                     loading = false;
                                                     stateSet(() {});
                                                     if (result != null &&
@@ -507,18 +538,26 @@ class CustomDialog extends StatelessWidget {
                                           SizedBox(height: 10.toHeight),
                                           TextButton(
                                               onPressed: () async {
-                                                if (_emailController.text !=
-                                                        '' &&
-                                                    _emailController.text !=
-                                                        null) {
+                                                if ((_emailController.text !=
+                                                            '' &&
+                                                        _emailController.text !=
+                                                            null) ||
+                                                    isQR) {
                                                   loading = true;
                                                   stateSet(() {});
-                                                  bool status =
-                                                      await registerPersona(
-                                                          _atsignController
-                                                              .text,
-                                                          _emailController.text,
-                                                          context);
+                                                  if (isQR) {
+                                                    bool status =
+                                                        await loginWithAtsign(
+                                                            atsign, context);
+                                                  } else {
+                                                    bool status =
+                                                        await registerPersona(
+                                                            _atsignController
+                                                                .text,
+                                                            _emailController
+                                                                .text,
+                                                            context);
+                                                  }
 
                                                   loading = false;
                                                   stateSet(() {});
@@ -531,19 +570,20 @@ class CustomDialog extends StatelessWidget {
                                                         .appColor),
                                               )),
                                           SizedBox(height: 10.toHeight),
-                                          TextButton(
-                                              onPressed: () {
-                                                otp = false;
-                                                wrongEmail = true;
-                                                oldEmail =
-                                                    _emailController.text;
-                                                stateSet(() {});
-                                              },
-                                              child: Text(
-                                                'Wrong email?',
-                                                style: TextStyle(
-                                                    color: Colors.grey),
-                                              ))
+                                          if (!isQR)
+                                            TextButton(
+                                                onPressed: () {
+                                                  otp = false;
+                                                  wrongEmail = true;
+                                                  oldEmail =
+                                                      _emailController.text;
+                                                  stateSet(() {});
+                                                },
+                                                child: Text(
+                                                  'Wrong email?',
+                                                  style: TextStyle(
+                                                      color: Colors.grey),
+                                                ))
                                         ]),
                                   if (!pair) ...[
                                     SizedBox(height: 15.toHeight),
@@ -721,6 +761,62 @@ class CustomDialog extends StatelessWidget {
       showErrorDialog(context, errorMessage);
     }
     return cramSecret;
+  }
+
+  //It will validate the person with atsign, email and the OTP.
+  //If the validation is successful, it will return a cram secret for the user to login
+  Future<String> validatewithAtsign(
+      String atsign, String otp, BuildContext context,
+      {bool isConfirmation = false}) async {
+    var data;
+    String cramSecret ='';
+    List<String> atsigns = [];
+    // String atsign;
+
+    dynamic response =
+        await _freeAtsignService.verificationWithAtsign(atsign, otp);
+    if (response.statusCode == 200) {
+      data = response.body;
+      data = jsonDecode(data);
+      print(data['data']);
+      //check for the atsign list and display them.
+      if (data['message'] == "Verified") {
+        cramSecret = data['cramkey'];
+      } else {
+        String errorMessage = data['message'];
+        showErrorDialog(context, errorMessage);
+      }
+      // atsign = data['data']['atsign'];
+    } else {
+      data = response.body;
+      data = jsonDecode(data);
+      String errorMessage = data['message'];
+      showErrorDialog(context, errorMessage);
+    }
+    return cramSecret;
+  }
+
+  //It will validate the person with atsign, email and the OTP.
+  //If the validation is successful, it will return a cram secret for the user to login
+  Future<bool> loginWithAtsign(String atsign, BuildContext context) async {
+    var data;
+    bool status = false;
+
+    dynamic response = await _freeAtsignService.loginWithAtsign(atsign);
+    if (response.statusCode == 200) {
+      data = response.body;
+      data = jsonDecode(data);
+
+      print(data);
+      status = true;
+      // atsign = data['data']['atsign'];
+    } else {
+      data = response.body;
+      data = jsonDecode(data);
+      String errorMessage = data['message'];
+      showErrorDialog(context, errorMessage);
+    }
+    return status;
   }
 
   ///Returns corresponding errorMessage for [error].

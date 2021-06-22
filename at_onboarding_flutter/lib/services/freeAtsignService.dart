@@ -42,6 +42,44 @@ class FreeAtsignService {
     }
   }
 
+  //To login with an @sign
+  Future<dynamic> loginWithAtsign(String atsign) async {
+    // if init was not called earlier, call here to initialize the http
+    if (!initialized) {
+      _init();
+    }
+    Map data = {'atsign': "$atsign"};
+
+    String body = json.encode(data);
+    var url = Uri.https(api, '$path${AppConstants.authWithAtsign}');
+
+    var response = await _http.post(url, body:body, headers: {
+      "Authorization": '$apiKey',
+      "Content-Type": "application/json"
+    });
+
+    return response;
+  }
+
+  //validating atsign with verification code
+  Future<dynamic> verificationWithAtsign(
+      String atsign, String verificationCode) async {
+    // if init was not called earlier, call here to initialize the http
+    if (!initialized) {
+      _init();
+    }
+    var url = Uri.https(api, '$path${AppConstants.validationWithAtsign}');
+    Map data = {'atsign': "$atsign", 'otp': "$verificationCode"};
+
+    String body = json.encode(data);
+    var response = await _http.post(url,body: body, headers: {
+      "Authorization": '$apiKey',
+      "Content-Type": "application/json"
+    });
+
+    return response;
+  }
+
 //To get free @sign from the server
   Future<dynamic> getFreeAtsigns() async {
     // if init was not called earlier, call here to initialize the http
