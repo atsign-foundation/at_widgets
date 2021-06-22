@@ -1,3 +1,4 @@
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
 import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
@@ -17,11 +18,17 @@ class AtsignListScreen extends StatefulWidget {
 }
 
 class _AtsignListScreenState extends State<AtsignListScreen> {
+  late final List<String>? pairedAtsignsList;
   var lastSelectedIndex;
   late String message;
+  late int greyStartIndex;
   @override
   void initState() {
     super.initState();
+    OnboardingService.getInstance().getAtsignList().then((value) {
+      pairedAtsignsList = value!;
+      setState(() {});
+    });
     message = widget.message ??
         'You already have some existing atsigns. Please select an @sign or else continue with the new one.';
   }
@@ -36,51 +43,76 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.toFont),
-        child: Column(
-          children: [
-            Text(this.message, style: CustomTextStyles.fontBold14primary),
-            SizedBox(height: 10),
-            if (widget.newAtsign != null) ...[
-              Divider(thickness: 0.8),
-              RadioListTile(
-                controlAffinity: ListTileControlAffinity.trailing,
-                groupValue: lastSelectedIndex,
-                onChanged: (value) {
-                  setState(() {
-                    lastSelectedIndex = value;
-                  });
-                  _showAlert(widget.newAtsign!, context);
-                },
-                value: 'new',
-                activeColor: ColorConstants.appColor,
-                title: Text('${widget.newAtsign}',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-              )
-            ],
-            Divider(thickness: 0.8),
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.atsigns.length,
-                itemBuilder: (ctxt, index) {
-                  return RadioListTile(
-                    controlAffinity: ListTileControlAffinity.trailing,
-                    groupValue: lastSelectedIndex,
-                    onChanged: (value) {
-                      setState(() {
-                        lastSelectedIndex = value;
-                      });
-                      _showAlert(widget.atsigns[lastSelectedIndex], context);
-                    },
-                    value: index,
-                    activeColor: ColorConstants.appColor,
-                    title: Text('${widget.atsigns[index]}',
-                        style: TextStyle(fontWeight: FontWeight.normal)),
-                  );
-                },
+        child: this.pairedAtsignsList == null
+            ? Center(
+                child: Column(
+                children: [
+                  Text(
+                    'Loading atsigns',
+                    style: CustomTextStyles.fontBold16dark,
+                  ),
+                  CircularProgressIndicator(
+                    color: ColorConstants.appColor,
+                  )
+                ],
+              ))
+            : Column(
+                children: [
+                  Text(this.message, style: CustomTextStyles.fontBold14primary),
+                  SizedBox(height: 10),
+                  if (widget.newAtsign != null) ...[
+                    Divider(thickness: 0.8),
+                    RadioListTile(
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      groupValue: lastSelectedIndex,
+                      onChanged: (value) {
+                        setState(() {
+                          lastSelectedIndex = value;
+                        });
+                        _showAlert(widget.newAtsign!, context);
+                      },
+                      value: 'new',
+                      activeColor: ColorConstants.appColor,
+                      title: Text('@${widget.newAtsign}',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    )
+                  ],
+                  Divider(thickness: 0.8),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: widget.atsigns.length,
+                      itemBuilder: (ctxt, index) {
+                        var currentItem = '@' + widget.atsigns[index];
+                        var isExist =
+                            this.pairedAtsignsList!.contains(currentItem);
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.0.toFont),
+                          child: RadioListTile(
+                            controlAffinity: ListTileControlAffinity.trailing,
+                            groupValue: lastSelectedIndex,
+                            onChanged: isExist
+                                ? null
+                                : (value) {
+                                    setState(() {
+                                      lastSelectedIndex = value;
+                                    });
+                                    _showAlert(
+                                        widget.atsigns[lastSelectedIndex],
+                                        context);
+                                  },
+                            value: index,
+                            activeColor: ColorConstants.appColor,
+                            title: Text('${currentItem}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                )),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
