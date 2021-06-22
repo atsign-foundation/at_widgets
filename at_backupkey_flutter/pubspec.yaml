@@ -14,68 +14,13 @@ dependencies:
   share: ^2.0.4
   permission_handler: ^8.1.1
   path_provider: ^2.0.2
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_utils
-      ref: trunk
-      version: ^1.0.1+7
+  at_utils: ^2.0.0
   at_client_mobile:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: at_client_mobile
       ref: trunk
-      version: ^1.0.0+10
-
-dependency_overrides:
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_utils
-      ref: sdk_refactoring
-      version: ^2.0.0
-  at_client:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client
-      ref: sdk_refactoring
-      version: ^3.0.0
-  at_persistence_spec:
-    git:
-      url: https://github.com/atsign-foundation/at_server.git
-      path: at_persistence/at_persistence_spec
-      ref: sdk_refactoring
-      version: ^2.0.0
-  at_persistence_secondary_server:
-    git:
-      url: https://github.com/atsign-foundation/at_server.git
-      path: at_secondary/at_persistence_secondary_server
-      ref: sdk_refactoring
-      version: ^2.0.0
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: sdk_refactoring
-      version: ^3.0.0
-  at_commons:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_commons
-      ref: sdk_refactoring
-      version: ^2.0.1
-  at_lookup:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: at_lookup
-      ref: sdk_refactoring
-      version: ^2.0.1
-  dart_utf7:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: dart_utf7
-      ref: trunk
-      version: 0.2.1-null-safety
+      version: ^1.1.0
   
 dev_dependencies:
   flutter_test:

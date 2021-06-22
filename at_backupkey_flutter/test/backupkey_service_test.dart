@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:at_backupkey_flutter/at_backupkey_flutter.dart';
 import 'package:at_backupkey_flutter/utils/strings.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'at_demo_credentials.dart' as demo_data;
 import 'package:at_commons/at_commons.dart';
@@ -81,17 +81,13 @@ Future<void> setUpFunc(String atsign) async {
 
   await AtClientImpl.createClient(atsign, 'persona', preference);
   var atClient = await AtClientImpl.getClient(atsign);
-  if(atClient == null) {
+  if (atClient == null) {
     return;
   }
-  await atClient.getSyncManager()!.sync(_done);
+  await atClient.getSyncManager()!.sync();
   // To setup encryption keys
   await atClient.getLocalSecondary()!.putValue(
       AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]!);
-}
-
-void _done() {
-
 }
 
 AtClientPreference getAtSignPreference(String atsign) {
