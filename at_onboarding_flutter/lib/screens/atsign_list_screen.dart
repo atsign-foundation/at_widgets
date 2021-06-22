@@ -18,7 +18,7 @@ class AtsignListScreen extends StatefulWidget {
 }
 
 class _AtsignListScreenState extends State<AtsignListScreen> {
-  late final List<String>? pairedAtsignsList;
+  List<String>? pairedAtsignsList = [];
   var lastSelectedIndex;
   late String message;
   late int greyStartIndex;
