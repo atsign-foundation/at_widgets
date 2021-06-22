@@ -34,6 +34,12 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
     }
   }
 
+  void deleteAll(List<AtGroup> grp) {
+    // grp.forEach((element) {
+    //   GroupService().deleteGroup(element);
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -73,7 +79,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
                           shouldUpdate: shouldUpdate,
                           key: UniqueKey(),
                         )
-                      : DesktopEmptyGroup(createBtnTapped, () {
+                      : DesktopEmptyGroup(createBtnTapped, onCreateBtnTap: () {
                           setState(() {
                             createBtnTapped = true;
                           });
@@ -91,7 +97,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
                   );
                 }
               } else {
-                return DesktopEmptyGroup(createBtnTapped, () {
+                return DesktopEmptyGroup(createBtnTapped, onCreateBtnTap: () {
                   setState(() {
                     createBtnTapped = true;
                   });

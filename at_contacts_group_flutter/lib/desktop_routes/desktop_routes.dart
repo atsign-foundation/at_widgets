@@ -25,7 +25,7 @@ class DesktopGroupSetupRoutes {
     return {
       DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL: (context) {
         if (_data.length == 0) {
-          return DesktopEmptyGroup(false, () {});
+          return DesktopEmptyGroup(true);
         } else {
           return DesktopGroupList(
             _data,

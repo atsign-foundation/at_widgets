@@ -18,9 +18,9 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 class DesktopEmptyGroup extends StatefulWidget {
   final bool createBtnTapped;
-  final Function onCreateBtnTap;
+  final Function? onCreateBtnTap;
 
-  DesktopEmptyGroup(this.createBtnTapped, this.onCreateBtnTap);
+  DesktopEmptyGroup(this.createBtnTapped, {this.onCreateBtnTap});
   @override
   _DesktopEmptyGroupState createState() => _DesktopEmptyGroupState();
 }
@@ -120,12 +120,14 @@ class _DesktopEmptyGroupState extends State<DesktopEmptyGroup> {
           onPressed: widget.createBtnTapped
               ? null
               : () {
-                  widget.onCreateBtnTap();
+                  widget.onCreateBtnTap!();
                 },
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
-              return ColorConstants.orangeColor;
+              return widget.createBtnTapped
+                  ? ColorConstants.dullText
+                  : ColorConstants.orangeColor;
             },
           ), fixedSize: MaterialStateProperty.resolveWith<Size>(
             (Set<MaterialState> states) {
