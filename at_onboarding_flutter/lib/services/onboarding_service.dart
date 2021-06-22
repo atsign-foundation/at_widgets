@@ -215,11 +215,7 @@ class OnboardingService {
 
   _sync() async {
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
-      await _getAtClientForAtsign()!.getSyncManager()!.sync(_done);
+      await _getAtClientForAtsign()!.getSyncManager()!.sync();
     }
-  }
-
-  void _done(syncManager) {
-    _logger.finer('sync complete');
   }
 }
