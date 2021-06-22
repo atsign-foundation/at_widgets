@@ -198,15 +198,20 @@ class GroupService {
     }
   }
 
-  Future<dynamic> updateGroupData(AtGroup group, BuildContext context) async {
+  Future<dynamic> updateGroupData(AtGroup group, BuildContext context,
+      {bool isDesktop = false}) async {
     try {
       var result = await updateGroup(group);
-      if (result is AtGroup) {
-        Navigator.of(context).pop();
-      } else if (result == null) {
-        CustomToast().show(TextConstants().SERVICE_ERROR, context);
+      if (isDesktop) {
+        return result;
       } else {
-        CustomToast().show(result.toString(), context);
+        if (result is AtGroup) {
+          Navigator.of(context).pop();
+        } else if (result == null) {
+          CustomToast().show(TextConstants().SERVICE_ERROR, context);
+        } else {
+          CustomToast().show(result.toString(), context);
+        }
       }
     } catch (e) {
       return e;

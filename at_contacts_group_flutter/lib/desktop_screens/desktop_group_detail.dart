@@ -1,6 +1,8 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/images.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
@@ -17,6 +19,20 @@ class DesktopGroupDetail extends StatefulWidget {
 }
 
 class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
+  bool isEditingName = false, loading = false;
+  TextEditingController? textController;
+
+  @override
+  void initState() {
+    textController = TextEditingController.fromValue(
+      TextEditingValue(
+        text: widget.group.groupName,
+        selection: TextSelection.collapsed(offset: -1),
+      ),
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -98,45 +114,135 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            child: Column(
+                      isEditingName
+                          ? Row(
+                              children: [
+                                SizedBox(
+                                  width: 150,
+                                  child: TextField(
+                                    textInputAction: TextInputAction.search,
+                                    controller: textController,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'Change name',
+                                      hintStyle: TextStyle(
+                                        fontSize: 16,
+                                        color: ColorConstants.greyText,
+                                      ),
+                                      filled: true,
+                                      // fillColor: ColorConstants.scaffoldColor,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 15, horizontal: 5),
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: ColorConstants.fontPrimary,
+                                    ),
+                                    onChanged: (s) {},
+                                  ),
+                                ),
+                                loading
+                                    ? SizedBox(
+                                        width: 25,
+                                        height: 25,
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : InkWell(
+                                        onTap: () async {
+                                          setState(() {
+                                            loading = true;
+                                          });
+
+                                          if (textController!.text !=
+                                              widget.group.groupName) {
+                                            var _group = widget.group;
+                                            widget.group.groupName =
+                                                textController!.text;
+                                            var result = await GroupService()
+                                                .updateGroupData(
+                                                    _group, context,
+                                                    isDesktop: true);
+
+                                            if (result is AtGroup) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          'Name updated')));
+                                            } else if (result == null) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          TextConstants()
+                                                              .SERVICE_ERROR)));
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          result.toString())));
+                                            }
+                                          }
+
+                                          setState(() {
+                                            loading = false;
+                                            isEditingName = false;
+                                          });
+                                        },
+                                        child: Icon(
+                                          Icons.done,
+                                          color: Colors.black,
+                                          size: 20,
+                                        ),
+                                      )
+                              ],
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width: 250.toWidth,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: '${widget.group.groupName}   ',
-                                      style: TextStyle(
-                                        color: ColorConstants.fontPrimary,
-                                        fontSize: 16.toFont,
-                                      ),
-                                      children: [
-                                        WidgetSpan(
-                                          child: Icon(
-                                            Icons.edit,
-                                            color: Colors.black,
-                                            size: 20,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 250.toWidth,
+                                        child: RichText(
+                                          text: TextSpan(
+                                            text:
+                                                '${widget.group.groupName}   ',
+                                            style: TextStyle(
+                                              color: ColorConstants.fontPrimary,
+                                              fontSize: 16.toFont,
+                                            ),
+                                            children: [
+                                              WidgetSpan(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      isEditingName = true;
+                                                    });
+                                                  },
+                                                  child: Icon(
+                                                    Icons.edit,
+                                                    color: Colors.black,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                        )
-                                      ],
-                                    ),
+                                        ),
+                                      ),
+                                      Text(
+                                        '${widget.group.members.length} members',
+                                        style: CustomTextStyles
+                                            .desktopPrimaryRegular14,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Text(
-                                  '${widget.group.members.length} members',
-                                  style:
-                                      CustomTextStyles.desktopPrimaryRegular14,
-                                ),
+                                )
                               ],
                             ),
-                          )
-                        ],
-                      ),
                       InkWell(
                         onTap: () async {},
                         child: Icon(

@@ -1,4 +1,5 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_empty_group.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -20,28 +21,16 @@ class DesktopGroupInitialScreen extends StatefulWidget {
 class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
   bool createBtnTapped = false;
   List<AtContact?> selectedContactList = [];
-  bool showAddGroupIcon = false, errorOcurred = false;
+  bool shouldUpdate = false;
+  List<AtGroup>? previousData;
 
   @override
   void initState() {
     try {
       super.initState();
       GroupService().getAllGroupsDetails();
-      GroupService().atGroupStream.listen((groupList) {
-        if (groupList.isNotEmpty) {
-          showAddGroupIcon = true;
-        } else {
-          showAddGroupIcon = false;
-        }
-        if (mounted) setState(() {});
-      });
     } catch (e) {
       print('Error in init of Group_list $e');
-      if (mounted) {
-        setState(() {
-          errorOcurred = true;
-        });
-      }
     }
   }
 
@@ -63,19 +52,43 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
               });
             } else {
               if (snapshot.hasData) {
+                if ((previousData == null) ||
+                    (previousData?.length != snapshot.data?.length)) {
+                  shouldUpdate = true;
+                } else {
+                  shouldUpdate = false;
+                }
+
+                previousData = snapshot.data;
+
                 if (snapshot.data!.isEmpty) {
-                  print('snapshot.data!.isEmpty');
-                  showAddGroupIcon = false;
                   return createBtnTapped
-                      ? nestednavigators(snapshot.data)
+                      ? NestedNavigators(
+                          snapshot.data!,
+                          () {
+                            setState(() {
+                              createBtnTapped = false;
+                            });
+                          },
+                          shouldUpdate: shouldUpdate,
+                          key: UniqueKey(),
+                        )
                       : DesktopEmptyGroup(createBtnTapped, () {
                           setState(() {
                             createBtnTapped = true;
                           });
                         });
                 } else {
-                  print('!snapshot.data!.isEmpty');
-                  return nestednavigators(snapshot.data);
+                  return NestedNavigators(
+                    snapshot.data!,
+                    () {
+                      setState(() {
+                        createBtnTapped = false;
+                      });
+                    },
+                    shouldUpdate: shouldUpdate,
+                    key: UniqueKey(),
+                  );
                 }
               } else {
                 return DesktopEmptyGroup(createBtnTapped, () {
@@ -90,13 +103,38 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
       ),
     );
   }
+}
 
-  Widget nestednavigators(_data) {
+class NestedNavigators extends StatefulWidget {
+  final List<AtGroup> data;
+  final Function initialRouteOnArrowBackTap;
+  final bool shouldUpdate;
+  NestedNavigators(this.data, this.initialRouteOnArrowBackTap,
+      {Key? key, this.shouldUpdate = false})
+      : super(key: key);
+
+  @override
+  _NestedNavigatorsState createState() => _NestedNavigatorsState();
+}
+
+class _NestedNavigatorsState extends State<NestedNavigators> {
+  @override
+  void initState() {
+    print('widget.shouldUpdate ${widget.shouldUpdate}');
+    if (widget.shouldUpdate) {
+      NavService.resetKeys();
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
       width: SizeConfig().screenWidth - TextConstants.SIDEBAR_WIDTH,
       child: Row(
         children: [
           Expanded(
+            key: UniqueKey(),
             child: Navigator(
               key: NavService.groupPckgLeftHalfNavKey,
               initialRoute: DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL,
@@ -104,7 +142,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
                 var routeBuilders = DesktopSetupRoutes.groupLeftRouteBuilders(
                   context,
                   routeSettings,
-                  _data,
+                  widget.data,
                 );
                 return MaterialPageRoute(builder: (context) {
                   return routeBuilders[routeSettings.name]!(context);
@@ -113,6 +151,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
             ),
           ),
           Expanded(
+            key: UniqueKey(),
             child: Navigator(
               key: NavService.groupPckgRightHalfNavKey,
               initialRoute: DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL,
@@ -120,12 +159,8 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
                 var routeBuilders = DesktopSetupRoutes.groupRightRouteBuilders(
                   context,
                   routeSettings,
-                  _data,
-                  initialRouteOnArrowBackTap: () {
-                    setState(() {
-                      createBtnTapped = false;
-                    });
-                  },
+                  widget.data,
+                  initialRouteOnArrowBackTap: widget.initialRouteOnArrowBackTap,
                   initialRouteOnDoneTap: DesktopSetupRoutes.navigator(
                       DesktopRoutes.DESKTOP_NEW_GROUP),
                 );
