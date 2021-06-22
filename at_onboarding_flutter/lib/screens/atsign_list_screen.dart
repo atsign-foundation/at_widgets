@@ -47,13 +47,13 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
             ? Center(
                 child: Column(
                 children: [
+                  CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          ColorConstants.appColor)),
                   Text(
                     'Loading atsigns',
                     style: CustomTextStyles.fontBold16dark,
                   ),
-                  CircularProgressIndicator(
-                    color: ColorConstants.appColor,
-                  )
                 ],
               ))
             : Column(
