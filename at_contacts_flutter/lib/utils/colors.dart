@@ -17,6 +17,7 @@ class ColorConstants {
   static const Color listBackground = Color(0xffF7F7FF);
   static const Color fadedbackground = Color(0xFFFDF9F9);
   static const Color MILD_GREY = Color(0xFFE4E4E4);
+  static const Color fadedGreyBackground = Color(0xFFDBDBDB);
 }
 
 class ContactInitialsColors {

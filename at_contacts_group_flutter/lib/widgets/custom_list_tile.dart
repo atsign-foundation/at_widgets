@@ -183,6 +183,10 @@ class _CustomListTileState extends State<CustomListTile> {
               } else {
                 widget.onTap!();
               }
+
+              if (widget.item != null) {
+                GroupService().addRecentContacts(widget.item!);
+              }
             },
             title: Text(
               widget.item!.contact == null

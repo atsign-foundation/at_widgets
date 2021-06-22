@@ -51,6 +51,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   List<GroupContactsModel?> unmodifiedSelectedGroupContacts = [];
   late ContactService _contactService;
   bool deletingContact = false;
+  ContactTabs contactTabs = ContactTabs.ALL;
 
   @override
   void initState() {
@@ -107,10 +108,82 @@ class _GroupContactViewState extends State<GroupContactView> {
         },
       ),
       body: Container(
-        padding: EdgeInsets.all(16.toHeight),
+        padding: EdgeInsets.only(
+            left: 16.toHeight, right: 16.toHeight, bottom: 16.toHeight),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            widget.isDesktop
+                ? Row(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: contactTabs == ContactTabs.RECENT
+                              ? ColorConstants.orangeColor
+                              : ColorConstants.fadedGreyBackground,
+                          borderRadius: BorderRadius.circular(30.toWidth),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              contactTabs = ContactTabs.RECENT;
+                            });
+                          },
+                          child: Text(
+                            'Recent',
+                            style: contactTabs == ContactTabs.RECENT
+                                ? TextStyle(color: Colors.white)
+                                : null,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 15.toHeight),
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: contactTabs == ContactTabs.FAVS
+                              ? ColorConstants.orangeColor
+                              : ColorConstants.fadedGreyBackground,
+                          borderRadius: BorderRadius.circular(30.toWidth),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              contactTabs = ContactTabs.FAVS;
+                            });
+                          },
+                          child: Text('Favourites',
+                              style: contactTabs == ContactTabs.FAVS
+                                  ? TextStyle(color: Colors.white)
+                                  : null),
+                        ),
+                      ),
+                      SizedBox(width: 15.toHeight),
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: contactTabs == ContactTabs.ALL
+                              ? ColorConstants.orangeColor
+                              : ColorConstants.fadedGreyBackground,
+                          borderRadius: BorderRadius.circular(30.toWidth),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              contactTabs = ContactTabs.ALL;
+                            });
+                          },
+                          child: Text('All Members',
+                              style: contactTabs == ContactTabs.ALL
+                                  ? TextStyle(color: Colors.white)
+                                  : null),
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+            SizedBox(height: widget.isDesktop ? 20.toHeight : 0),
             ContactSearchField(
               TextStrings().searchContact,
               (text) => setState(() {
@@ -163,6 +236,15 @@ class _GroupContactViewState extends State<GroupContactView> {
                                   _filteredList.add(c);
                                 }
                               });
+
+                              if (contactTabs == ContactTabs.FAVS) {
+                                _filteredList.removeWhere((groupContact) =>
+                                    groupContact!.contact!.favourite == false);
+                              } else if (contactTabs == ContactTabs.RECENT) {
+                                _filteredList = <GroupContactsModel>[];
+                                _filteredList = GroupService().recentContacts;
+                              }
+
                               var contactsForAlphabet = <GroupContactsModel?>[];
                               var currentChar =
                                   String.fromCharCode(alphabetIndex + 65)
