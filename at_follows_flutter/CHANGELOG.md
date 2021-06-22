@@ -8,4 +8,4 @@
 - upgraded some packages to resolve dependency issues
 
 ## 1.0.0+3
-- support for .wavi keys and minor bug fixes
+- support for .wavi keys, remove an @sign from followers and following list and minor bug fixes.

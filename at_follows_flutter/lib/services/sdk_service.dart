@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
@@ -31,15 +30,17 @@ class SDKService {
     this._atsign = _atClientServiceInstance.atClient!.getCurrentAtSign();
     Strings.rootdomain =
         _atClientServiceInstance.atClient!.getPreference().rootDomain;
+    AppConstants.appNamespace =
+        _atClientServiceInstance.atClient!.getPreference().namespace!;
   }
 
   get atsign => this._atsign;
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await _atClientServiceInstance.getPkamPrivateKey(atsign)
-        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
-            onTimeout: () => _onTimeOut());
+    return await _atClientServiceInstance.getPkamPrivateKey(atsign).timeout(
+        Duration(seconds: AppConstants.responseTimeLimit),
+        onTimeout: () => _onTimeOut());
   }
 
   ///Returns `true` on deleting [atKey].
@@ -70,7 +71,7 @@ class SDKService {
             ('${AppConstants.following}|${AppConstants.followers}|${AppConstants.followersKey}|${AppConstants.followingKey}'),
         fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
-    if (response == 'null' || response == null) {
+    if (response == 'null') {
       return [];
     }
     List<AtNotification> notificationList = AtNotification.fromJsonList(
@@ -106,14 +107,15 @@ class SDKService {
   }
 
   ///Returns `true` on notifying [key] with [value], [operation].
-  Future<void> notify(AtKey key, String value, OperationEnum operation,Function onDone, Function onError) async {
+  Future<void> notify(AtKey key, String value, OperationEnum operation,
+      Function onDone, Function onError) async {
     return await _atClientServiceInstance.atClient!
-        .notify(key, value, operation,onDone, onError,
-            notifier: _atClientServiceInstance.atClient!.getPreference().namespace)
+        .notify(key, value, operation, onDone, onError,
+            notifier:
+                _atClientServiceInstance.atClient!.getPreference().namespace)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
   }
-
 
   ///Returns `AtFollowsValue` after scan with [regex], fetching data for that key.
   Future<AtFollowsValue> scanAndGet(String regex) async {
@@ -121,19 +123,23 @@ class SDKService {
         .getAtKeys(regex: regex)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
-    AtFollowsValue value =
-        scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
+    AtFollowsValue value = scanKey.isNotEmpty
+        ? await this.get(_formKeysFromScanKey(scanKey[0]))
+        : AtFollowsValue();
     //migrates to newnamespace
     if (scanKey.isNotEmpty &&
         _isOldKey(scanKey[0].key!) &&
         value.value != null) {
-      var newKey = AtKey()..metadata = scanKey[0].metadata;
+      var metadata = scanKey[0].metadata;
+      metadata!.namespaceAware = false;
+      var newKey = AtKey()..metadata = metadata;
       newKey.key = scanKey[0].key!.contains('following')
           ? AppConstants.followingKey
           : AppConstants.followersKey;
       await this.put(newKey, value.value);
       value = await this.get(newKey);
-      if (value != null && value.value != null) {
+      if (value.value != null) {
+        scanKey[0].metadata!.namespaceAware = true;
         await this.delete(scanKey[0]);
       }
     }
@@ -144,10 +150,10 @@ class SDKService {
   ///Returns `true` on starting monitor and passes [callback].
   Future<bool> startMonitor(Function callback) async {
     if (!monitorConnectionMap.containsKey(_atsign)) {
-      String? privateKey = await getPrivateKey(_atsign!);
       // ignore: await_only_futures
       var monitorPreference = MonitorPreference();
-      await _atClientServiceInstance.atClient!.startMonitor(callback, _onMonitorError, monitorPreference);
+      await _atClientServiceInstance.atClient!
+          .startMonitor(callback, _onMonitorError, monitorPreference);
       monitorConnectionMap.putIfAbsent(_atsign, () => true);
       _logger.info('Monitor Started for $_atsign!');
     }
@@ -169,11 +175,14 @@ class SDKService {
   sync() async {
     if (_atClientServiceInstance.atClient!.getPreference().syncStrategy ==
         SyncStrategy.ONDEMAND)
-      await _atClientServiceInstance.atClient!.getSyncManager()!.sync(_onSyncDone);
+      await _atClientServiceInstance.atClient!
+          .getSyncManager()!
+          .sync(_onSyncDone);
   }
-   void _onSyncDone(SyncManager syncManager) {
+
+  void _onSyncDone(var syncManager) {
     _logger.finer('sync done');
-   }
+  }
 
   ///Throws [ResponseTimeOutException].
   _onTimeOut() {
@@ -191,5 +200,13 @@ class SDKService {
   ///Returns `true` if key is old key else `false`.
   bool _isOldKey(String key) {
     return !key.contains(AppConstants.libraryNamespace);
+  }
+
+  //Returns AtKey by formatting scanned [atKey].
+  AtKey _formKeysFromScanKey(AtKey atkey) {
+    var atKey = atkey;
+    atKey.key = atKey.key! + '.' + atKey.namespace!;
+    atKey.metadata!.namespaceAware = false;
+    return atKey;
   }
 }

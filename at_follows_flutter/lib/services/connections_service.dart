@@ -50,8 +50,8 @@ class ConnectionsService {
         var atsignData = await this.follow(this.followAtsign);
         if (atsignData != null) {
           connectionProvider.followingList!.add(atsignData);
+          this.followAtsign = null;
         }
-        this.followAtsign = null;
       }
     }
     await _sdkService.sync();
@@ -79,8 +79,8 @@ class ConnectionsService {
             notification.key!.contains(AppConstants.containsFollowers)) {
           await this.deleteFollowing(notification, isSetStatus: false);
         }
+        await _sdkService.sync();
       }
-      await _sdkService.sync();
     }
   }
 
@@ -194,9 +194,8 @@ class ConnectionsService {
         : followers.isPrivate = isPrivate;
     var atFollowsValue = AtFollowsValue()
       ..atKey = _formKey(isFollowing: isFollowing);
-    bool result = await this
-        ._sdkService
-        .delete(isFollowing ? following.getKey!.atKey : followers.getKey!.atKey);
+    bool result = await this._sdkService.delete(
+        isFollowing ? following.getKey!.atKey : followers.getKey!.atKey);
     isFollowing
         ? following.setKey = atFollowsValue
         : followers.setKey = atFollowsValue;
@@ -326,13 +325,17 @@ class ConnectionsService {
     var atKey;
     var atSign = atsign ?? _sdkService.atsign;
     if (isFollowing) {
-      var atMetadata = Metadata()..isPublic = !following.isPrivate;
+      var atMetadata = Metadata()
+        ..isPublic = !following.isPrivate
+        ..namespaceAware = false;
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followingKey
         ..sharedWith = atMetadata.isPublic! ? null : atSign;
     } else {
-      var atMetadata = Metadata()..isPublic = !followers.isPrivate;
+      var atMetadata = Metadata()
+        ..isPublic = !followers.isPrivate
+        ..namespaceAware = false;
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followersKey
