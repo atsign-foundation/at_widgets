@@ -7,6 +7,7 @@ class DesktopHeader extends StatelessWidget {
   final String? title;
   final ValueChanged<bool>? onFilter;
   List<Widget>? actions;
+  Function onBackTap;
   List<String> options = [
     'By type',
     'By name',
@@ -16,7 +17,8 @@ class DesktopHeader extends StatelessWidget {
   ];
   bool showBackIcon, isTitleCentered;
   DesktopHeader(
-      {this.title,
+      {required this.onBackTap,
+      this.title,
       this.showBackIcon = true,
       this.onFilter,
       this.actions,
@@ -31,7 +33,7 @@ class DesktopHeader extends StatelessWidget {
           showBackIcon
               ? InkWell(
                   onTap: () {
-                    // DesktopSetupRoutes.nested_pop();
+                    onBackTap();
                   },
                   child: Icon(Icons.arrow_back),
                 )
@@ -61,10 +63,12 @@ class DesktopHeader extends StatelessWidget {
                 )
               : SizedBox(),
           SizedBox(width: 15),
-          !isTitleCentered ? Expanded(child: SizedBox()) : SizedBox(),
+          // !isTitleCentered ? Expanded(child: SizedBox()) : SizedBox(),
           actions != null
-              ? Row(
-                  children: actions!,
+              ? Expanded(
+                  child: Row(
+                    children: actions!,
+                  ),
                 )
               : SizedBox()
         ],

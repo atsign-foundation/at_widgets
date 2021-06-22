@@ -139,7 +139,8 @@ class _NestedNavigatorsState extends State<NestedNavigators> {
               key: NavService.groupPckgLeftHalfNavKey,
               initialRoute: DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL,
               onGenerateRoute: (routeSettings) {
-                var routeBuilders = DesktopSetupRoutes.groupLeftRouteBuilders(
+                var routeBuilders =
+                    DesktopGroupSetupRoutes.groupLeftRouteBuilders(
                   context,
                   routeSettings,
                   widget.data,
@@ -156,12 +157,13 @@ class _NestedNavigatorsState extends State<NestedNavigators> {
               key: NavService.groupPckgRightHalfNavKey,
               initialRoute: DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL,
               onGenerateRoute: (routeSettings) {
-                var routeBuilders = DesktopSetupRoutes.groupRightRouteBuilders(
+                var routeBuilders =
+                    DesktopGroupSetupRoutes.groupRightRouteBuilders(
                   context,
                   routeSettings,
                   widget.data,
                   initialRouteOnArrowBackTap: widget.initialRouteOnArrowBackTap,
-                  initialRouteOnDoneTap: DesktopSetupRoutes.navigator(
+                  initialRouteOnDoneTap: DesktopGroupSetupRoutes.navigator(
                       DesktopRoutes.DESKTOP_NEW_GROUP),
                 );
                 return MaterialPageRoute(builder: (context) {

@@ -21,6 +21,9 @@ class DesktopGroupList extends StatefulWidget {
 
 class _DesktopGroupListState extends State<DesktopGroupList> {
   int _selectedIndex = 0;
+  String searchText = '';
+  var _filteredList = <AtGroup>[];
+
   @override
   void initState() {
     _selectedIndex = widget.expandIndex;
@@ -29,7 +32,14 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
 
   @override
   Widget build(BuildContext context) {
-    print('${widget.groups[widget.groups.length - 1].groupName}');
+    if (searchText != '') {
+      _filteredList = widget.groups.where((grp) {
+        return grp.groupName.contains(searchText);
+      }).toList();
+    } else {
+      _filteredList = widget.groups;
+    }
+
     return Container(
       color: Color(0xFFF7F7FF),
       child: Column(
@@ -39,14 +49,25 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
           ),
           DesktopHeader(
             title: 'Groups',
-            isTitleCentered: true,
+            isTitleCentered: false,
+            onBackTap: () {
+              DesktopGroupSetupRoutes.exitGroupPackage();
+            },
             actions: [
-              DesktopCustomInputField(
-                backgroundColor: Colors.white,
-                hintText: 'Search...',
-                icon: Icons.search,
-                height: 45,
-                iconColor: ColorConstants.greyText,
+              Expanded(
+                child: DesktopCustomInputField(
+                  backgroundColor: Colors.white,
+                  hintText: 'Search...',
+                  icon: Icons.search,
+                  height: 45,
+                  iconColor: ColorConstants.greyText,
+                  value: (str) {
+                    setState(() {
+                      searchText = str;
+                    });
+                  },
+                  initialValue: searchText,
+                ),
               ),
               SizedBox(width: 15),
               TextButton(
@@ -99,23 +120,17 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
           SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-              itemCount: widget.groups.length,
+              itemCount: _filteredList.length,
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap:
-                      // DesktopSetupRoutes.navigator(
-                      //     DesktopRoutes.DESKTOP_GROUP_DETAIL,
-                      //     arguments: {
-                      //       'group': widget.groups[index],
-                      //     }),
-                      () {
+                  onTap: () {
                     setState(() {
                       _selectedIndex = index;
                     });
-                    DesktopSetupRoutes.navigator(
+                    DesktopGroupSetupRoutes.navigator(
                         DesktopRoutes.DESKTOP_GROUP_DETAIL,
                         arguments: {
-                          'group': widget.groups[index],
+                          'group': _filteredList[index],
                         })();
                   },
                   child: Container(
@@ -134,8 +149,10 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                             padding: const EdgeInsets.only(
                                 top: 15.0, bottom: 15, left: 15, right: 15),
                             child: DesktopCustomPersonHorizontalTile(
-                              title: widget.groups[index].groupName,
-                              subTitle: widget.groups[index].members.length
+                              title: _filteredList[index].groupName,
+                              subTitle: _filteredList[index]
+                                  .members
+                                  .length
                                   .toString(),
                             ),
                           ),

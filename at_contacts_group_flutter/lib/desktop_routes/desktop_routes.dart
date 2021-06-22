@@ -13,7 +13,13 @@ import 'package:flutter/material.dart';
 
 import 'desktop_route_names.dart';
 
-class DesktopSetupRoutes {
+class DesktopGroupSetupRoutes {
+  static late Function exitGroupPackage;
+
+  static void setExitFunction(Function _exitGroupPackage) {
+    exitGroupPackage = _exitGroupPackage;
+  }
+
   static Map<String, WidgetBuilder> groupLeftRouteBuilders(
       BuildContext context, RouteSettings routeSettings, List<AtGroup> _data) {
     return {
