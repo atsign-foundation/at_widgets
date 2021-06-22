@@ -84,6 +84,9 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
             processing = false;
           });
 
+          /// empty list
+          GroupService().setSelectedContacts([]);
+
           await Navigator.of(
                   NavService.groupPckgRightHalfNavKey.currentContext!)
               .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
@@ -142,7 +145,7 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                   style: CustomTextStyles.primaryRegular20,
                 ),
                 CommonButton(
-                  'Done',
+                  processing ? 'Creating...' : 'Done',
                   processing
                       ? () {}
                       : () async {
@@ -150,7 +153,7 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                           // widget.onDone!();
                         },
                   color: processing
-                      ? ColorConstants.greyText
+                      ? ColorConstants.dullText
                       : ColorConstants.orangeColor,
                   border: 3,
                   height: 45,
