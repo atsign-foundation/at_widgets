@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'dart:async';
@@ -69,6 +68,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     if (widget.onboardStatus != null) {
       if (widget.onboardStatus == OnboardingStatus.ACTIVATE) {
         _isQR = true;
+        loading = true;
+        _getLoginWithAtsignDialog(context);
       }
       if (widget.onboardStatus == OnboardingStatus.RESTORE) {
         _isBackup = true;
@@ -466,9 +467,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // if (_isQR) ...
-                    //    CustomDi
-                    // ,
+                    // if (_isQR) ..._getLoginWithAtsignDialog(context),
                     if (_isBackup) ...[
                       SizedBox(
                         height: SizeConfig().screenHeight * 0.25,
@@ -580,6 +579,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             ),
           ),
         ));
+  }
+
+  _getLoginWithAtsignDialog(BuildContext context) {
+    loginWithAtsignAfterReset(context);
   }
 
   _getQRWidget(deviceTextFactor) {
@@ -764,6 +767,55 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       loading = false;
       _loadingMessage = null;
     });
+  }
+
+  //It will validate the person with atsign, email and the OTP.
+  //If the validation is successful, it will return a cram secret for the user to login
+  Future<bool> loginWithAtsignAfterReset(BuildContext context) async {
+    String? atsign = _onboardingService.currentAtsign;
+    if (atsign == null) {
+      atsign = await _onboardingService.getAtSign();
+    }
+    if (atsign != null) {
+      atsign = atsign.split('@').last;
+    }
+    var data;
+    bool status = false;
+
+    dynamic response = await _freeAtsignService.loginWithAtsign(atsign!);
+    if (response.statusCode == 200) {
+      data = response.body;
+      data = jsonDecode(data);
+
+      print(data);
+      status = true;
+      // atsign = data['data']['atsign'];
+    } else {
+      data = response.body;
+      data = jsonDecode(data);
+      String errorMessage = data['message'];
+      showErrorDialog(context, errorMessage);
+    }
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => WillPopScope(
+            onWillPop: () async {
+              int ct = 0;
+              Navigator.of(context).popUntil((_) => ct++ >= 2);
+              return true;
+            },
+            child: CustomDialog(
+              onValidate: (atsign, secret) async {
+                _loadingMessage = Strings.loadingAtsignReady;
+                setState(() {});
+                await _processSharedSecret(atsign, secret);
+              },
+              isAtsignForm: true,
+              isQR: true,
+              atsign: atsign!,
+            )));
+    return status;
   }
 
   //It will validate the person with atsign, email and the OTP.
