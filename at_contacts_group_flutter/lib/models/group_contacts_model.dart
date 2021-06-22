@@ -68,3 +68,4 @@ class GroupContactsModel {
 }
 
 enum ContactsType { CONTACT, GROUP }
+enum ContactTabs { RECENT, FAVS, ALL }

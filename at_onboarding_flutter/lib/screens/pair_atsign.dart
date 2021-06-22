@@ -316,7 +316,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       // result = FilePickerResult();
       // for (var pickedFile in result.files) {
       // var path = pickedFile.path;
-      var path = '/Users/apple/Desktop/@new52plum_key.atKeys';
+      // var path = '/Users/apple/Desktop/@new52plum_key.atKeys';
+      var path =
+          '/Users/sachinsingh/Desktop/atKeys2/@blindtahugejrot_key(1).atKeys';
       File selectedFile = File(path);
       var length = selectedFile.lengthSync();
       if (length < 10) {

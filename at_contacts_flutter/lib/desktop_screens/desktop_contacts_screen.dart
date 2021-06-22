@@ -273,7 +273,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
               ? CustomCircleAvatar(
                   byteImage: image,
                   nonAsset: true,
-                  size: 30,
+                  size: 50,
                 )
               : ContactInitial(
                   initials: contact.atSign,
@@ -309,7 +309,10 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
 class ContactListTile extends StatefulWidget {
   AtContact? contact;
   bool isBlockedScreen;
-  ContactListTile(this.contact, {this.isBlockedScreen = false});
+  ContactListTile(
+    this.contact, {
+    this.isBlockedScreen = false,
+  });
 
   @override
   _ContactListTileState createState() => _ContactListTileState();
@@ -318,7 +321,8 @@ class ContactListTile extends StatefulWidget {
 class _ContactListTileState extends State<ContactListTile> {
   bool isBlockingContact = false,
       isUnblockingContact = false,
-      isDeletingContact = false;
+      isDeletingContact = false,
+      isMarkingFav = false;
   ContactService? _contactService;
   late AtContact contact;
   @override
@@ -336,6 +340,31 @@ class _ContactListTileState extends State<ContactListTile> {
   Widget _forContactsScreen() {
     return Row(
       children: [
+        InkWell(
+          onTap: () async {
+            setState(() {
+              isMarkingFav = true;
+            });
+            await _contactService?.markFavContact(contact);
+            setState(() {
+              isMarkingFav = false;
+            });
+          },
+          child: isMarkingFav
+              ? SizedBox(
+                  width: 25, height: 25, child: CircularProgressIndicator())
+              : Container(
+                  child: contact.favourite
+                      ? Icon(
+                          Icons.star,
+                          color: ColorConstants.orangeColor,
+                        )
+                      : Icon(Icons.star_border),
+                ),
+        ),
+        SizedBox(
+          width: 50,
+        ),
         isBlockingContact
             ? SizedBox(
                 width: 25, height: 25, child: CircularProgressIndicator())
