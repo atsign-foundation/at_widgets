@@ -1,12 +1,15 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/images.dart';
+import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_person_vertical_tile.dart';
+import 'package:at_contacts_group_flutter/widgets/remove_trusted_contact_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
@@ -62,14 +65,18 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                         List.generate(widget.group.members.length, (index) {
                       return InkWell(
                         onTap: () {
-                          // showDialog(
-                          //   context: context,
-                          //   barrierDismissible: false,
-                          //   builder: (context) => RemoveTrustedContact(
-                          //     TextStrings().removeGroupMember,
-                          //     contact: AtContact(atSign: '@kevin'),
-                          //   ),
-                          // );
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) => RemoveTrustedContact(
+                              'Remove ${widget.group.members.elementAt(index).atSign}  ',
+                              contact: AtContact(
+                                  atSign: widget.group.members
+                                      .elementAt(index)
+                                      .atSign),
+                              atGroup: widget.group,
+                            ),
+                          );
                         },
                         child: DesktopCustomPersonVerticalTile(
                           title: 'Title',
@@ -244,7 +251,31 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                               ],
                             ),
                       InkWell(
-                        onTap: () async {},
+                        onTap: () async {
+                          await Navigator.pushNamed(
+                              NavService
+                                  .groupPckgRightHalfNavKey.currentContext!,
+                              DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW,
+                              arguments: {
+                                'onBackArrowTap': () {
+                                  Navigator.of(NavService
+                                          .groupPckgRightHalfNavKey
+                                          .currentContext!)
+                                      .pop();
+                                },
+                                'onDoneTap': () async {
+                                  var result = await GroupService()
+                                      .addGroupMembers(
+                                          GroupService().selecteContactList!,
+                                          widget.group);
+
+                                  Navigator.of(NavService
+                                          .groupPckgRightHalfNavKey
+                                          .currentContext!)
+                                      .pop();
+                                }
+                              });
+                        },
                         child: Icon(
                           Icons.add,
                           size: 30.toFont,

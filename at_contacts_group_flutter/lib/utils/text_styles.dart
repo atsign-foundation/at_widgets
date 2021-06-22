@@ -70,4 +70,23 @@ class CustomTextStyles {
       fontSize: 12.toFont,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
+
+  static TextStyle secondaryRegular16 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 16.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle secondaryRegular14 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 14.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle primaryBold16 = TextStyle(
+    color: ColorConstants.fontPrimary,
+    fontSize: 16.toFont,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w700,
+  );
 }
