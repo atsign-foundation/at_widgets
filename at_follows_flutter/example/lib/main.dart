@@ -134,7 +134,8 @@ class _MyAppState extends State<MyApp> {
       context: context,
       onboard: (value, atsign) async {
         atService.atClientServiceInstance = value[atsign];
-        atService.atClientInstance = atService.atClientServiceInstance!.atClient as AtClientImpl?;
+        atService.atClientInstance =
+            atService.atClientServiceInstance!.atClient;
         _atsign = await atService.getAtSign();
         Future.delayed(Duration(milliseconds: 300), () {
           setState(() {});

@@ -26,9 +26,9 @@ class SDKService {
 
   set setClientService(AtClientService service) {
     this._atClientServiceInstance = service;
-    this._atsign = _atClientServiceInstance.atClient!.getCurrentAtSign();
+    this._atsign = _atClientServiceInstance.atClient!.currentAtSign;
     Strings.rootdomain =
-        _atClientServiceInstance.atClient!.getPreference().rootDomain;
+        _atClientServiceInstance.atClient!.preference!.rootDomain;
   }
 
   get atsign => this._atsign;
@@ -103,12 +103,11 @@ class SDKService {
   }
 
   ///Returns `true` on notifying [key] with [value], [operation].
-  Future<void> notify(AtKey key, String value, OperationEnum operation,
+  Future<bool> notify(AtKey key, String value, OperationEnum operation,
       Function onDone, Function onError) async {
     return await _atClientServiceInstance.atClient!
-        .notify(key, value, operation, onDone, onError,
-            notifier:
-                _atClientServiceInstance.atClient!.getPreference().namespace)
+        .notify(key, value, operation,
+            notifier: _atClientServiceInstance.atClient!.preference!.namespace)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
   }
@@ -128,17 +127,16 @@ class SDKService {
   Future<bool> startMonitor(Function callback) async {
     if (!monitorConnectionMap.containsKey(_atsign)) {
       // ignore: await_only_futures
-      var monitorPreference = MonitorPreference();
-      await _atClientServiceInstance.atClient!
-          .startMonitor(callback, _onMonitorError, monitorPreference);
+      final String privateKey =
+          await _atClientServiceInstance.getPkamPrivateKey(_atsign);
+      await _atClientServiceInstance.atClient!.startMonitor(
+        privateKey,
+        callback,
+      );
       monitorConnectionMap.putIfAbsent(_atsign, () => true);
       _logger.info('Monitor Started for $_atsign!');
     }
     return true;
-  }
-
-  void _onMonitorError(var error) {
-    _logger.severe('Error on monitor call: ${error.toString()}');
   }
 
   ///Returns `AtSignStatus` for [atsign].
@@ -150,15 +148,9 @@ class SDKService {
 
   ///Performs sync for current @sign if syncStrategy is [SyncStrategy.ONDEMAND].
   sync() async {
-    if (_atClientServiceInstance.atClient!.getPreference().syncStrategy ==
+    if (_atClientServiceInstance.atClient!.preference!.syncStrategy ==
         SyncStrategy.ONDEMAND)
-      await _atClientServiceInstance.atClient!
-          .getSyncManager()!
-          .sync(_onSyncDone);
-  }
-
-  void _onSyncDone(var syncManager) {
-    _logger.finer('sync done');
+      await _atClientServiceInstance.atClient!.getSyncManager()!.sync();
   }
 
   ///Throws [ResponseTimeOutException].

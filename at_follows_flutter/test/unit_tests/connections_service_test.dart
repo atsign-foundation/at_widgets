@@ -30,8 +30,9 @@ void main() {
       String receiverAtsign = '@bob🛠';
 
       var receiverAtClientService = await setUpFunc(receiverAtsign);
+      final String privateKey = demo_data.pkamPrivateKeyMap[receiverAtsign]!;
       await receiverAtClientService.atClient!
-          .startMonitor(monitorCallBack, _onMonitorError, MonitorPreference());
+          .startMonitor(privateKey, monitorCallBack);
       Atsign atsign = await (_connectionsService.follow(receiverAtsign)
           as FutureOr<Atsign>);
       expect(atsign.title, receiverAtsign);
@@ -282,15 +283,11 @@ Future<AtClientService> setUpFunc(String atsign) async {
 
   await AtClientImpl.createClient(atsign, 'wavi', preference);
   var atClient = await (AtClientImpl.getClient(atsign) as FutureOr<AtClient>);
-  atClientService.atClient = atClient;
-  await atClient.getSyncManager()!.sync(_onDone);
-  await setEncryptionKeys(atClient as AtClientImpl, atsign);
+  atClientService.atClient = atClient as AtClientImpl;
+  await atClient.getSyncManager()!.sync();
+  await setEncryptionKeys(atClient, atsign);
   return atClientService;
 }
-
-void _onDone() {}
-
-void _onMonitorError(var error) {}
 
 monitorCallBack(var response) {
   if (response == null) {

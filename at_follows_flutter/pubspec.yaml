@@ -17,71 +17,36 @@ dependencies:
   webview_flutter: ^2.0.8
   url_launcher: ^6.0.6
   collection: ^1.15.0-nullsafety.4
-  at_utils: ^1.0.1+8
-  at_client_mobile: ^1.0.0+11
-  at_commons: ^1.0.1+8
-  at_server_status: ^0.1.0+1
-  
-
-
-  
-
-
-dependency_overrides:
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_utils
-      ref: sdk_refactoring
-      version: ^2.0.0
+  at_utils: ^2.0.0
+  at_commons: ^2.0.0
   at_client_mobile:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: at_client_mobile
-      ref: sdk_refactoring
-      version: ^3.0.0
+      ref: trunk
+      version: ^2.0.0
   at_server_status:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: at_server_status
-      ref: sdk_refactoring
-      version: ^2.0.0
-  at_commons:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_commons
-      ref: sdk_refactoring
-      version: ^2.0.1
-  at_lookup:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: at_lookup
-      ref: sdk_refactoring
-      version: ^2.0.1
-  dart_utf7:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: dart_utf7
       ref: trunk
-      version: 0.2.1-null-safety
-  at_client:
+      version: ^0.2.0
+  
+
+dependency_overrides:
+  at_client_mobile:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client
-      ref: sdk_refactoring
-      version: ^3.0.0
-  at_persistence_spec:
-    git:
-      url: https://github.com/atsign-foundation/at_server.git
-      path: at_persistence/at_persistence_spec
-      ref: sdk_refactoring
+      path: at_client_mobile
+      ref: trunk
       version: ^2.0.0
-  at_persistence_secondary_server:
+  at_server_status:
     git:
-      url: https://github.com/atsign-foundation/at_server.git
-      path: at_secondary/at_persistence_secondary_server
-      ref: sdk_refactoring
-      version: ^2.0.0
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_server_status
+      ref: trunk
+      version: ^0.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
