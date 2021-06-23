@@ -53,7 +53,7 @@ class FreeAtsignService {
     String body = json.encode(data);
     var url = Uri.https(api, '$path${AppConstants.authWithAtsign}');
 
-    var response = await _http.post(url, body:body, headers: {
+    var response = await _http.post(url, body: body, headers: {
       "Authorization": '$apiKey',
       "Content-Type": "application/json"
     });
@@ -72,7 +72,7 @@ class FreeAtsignService {
     Map data = {'atsign': "$atsign", 'otp': "$verificationCode"};
 
     String body = json.encode(data);
-    var response = await _http.post(url,body: body, headers: {
+    var response = await _http.post(url, body: body, headers: {
       "Authorization": '$apiKey',
       "Content-Type": "application/json"
     });
@@ -133,7 +133,7 @@ class FreeAtsignService {
         'email': '$email',
         'atsign': "$atsign",
         'otp': '$otp',
-        'confirmation': true
+        'confirmation': confirmation
       };
     } else {
       data = {
