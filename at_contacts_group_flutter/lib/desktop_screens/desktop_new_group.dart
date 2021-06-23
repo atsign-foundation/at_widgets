@@ -105,20 +105,22 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
           print('navigated');
         } else if (result != null) {
           if (result.runtimeType == AlreadyExistsException) {
-            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context,
-                gravity: 0);
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
           } else if (result.runtimeType == InvalidAtSignException) {
-            CustomToast().show(result.message, context, gravity: 0);
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(result.message)));
           } else {
-            CustomToast()
-                .show(TextConstants().SERVICE_ERROR, context, gravity: 0);
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
           }
         } else {
-          CustomToast()
-              .show(TextConstants().SERVICE_ERROR, context, gravity: 0);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
         }
       } else {
-        CustomToast().show(TextConstants().EMPTY_NAME, context, gravity: 0);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(TextConstants().EMPTY_NAME)));
       }
 
       setState(() {

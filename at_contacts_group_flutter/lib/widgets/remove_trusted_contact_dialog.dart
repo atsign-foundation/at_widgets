@@ -33,6 +33,7 @@ class RemoveTrustedContact extends StatefulWidget {
 class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
   Uint8List? image;
   bool loading = false;
+  String? _error;
 
   @override
   void initState() {
@@ -62,7 +63,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
         ],
       ),
       content: Container(
-        height: 260.toHeight,
+        height: 280.toHeight,
         child: Column(
           children: [
             Row(
@@ -146,7 +147,10 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                               if (result is bool) {
                                 result ? Navigator.of(context).pop() : null;
                               } else if (result == null) {
-                              } else {}
+                                _error = 'Something went wrong';
+                              } else {
+                                _error = result.toString();
+                              }
 
                               if (mounted) {
                                 setState(() {
@@ -166,6 +170,13 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                           Navigator.of(context).pop();
                         },
                       ),
+                      SizedBox(height: 10.toHeight),
+                      _error != null
+                          ? Text(
+                              _error!,
+                              style: CustomTextStyles.error14,
+                            )
+                          : SizedBox(),
                     ],
                   )
           ],

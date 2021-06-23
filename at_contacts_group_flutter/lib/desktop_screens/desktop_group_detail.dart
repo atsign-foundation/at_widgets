@@ -150,9 +150,13 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                 ),
                                 loading
                                     ? SizedBox(
-                                        width: 25,
+                                        width: 35,
                                         height: 25,
-                                        child: CircularProgressIndicator(),
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: CircularProgressIndicator(),
+                                        ),
                                       )
                                     : InkWell(
                                         onTap: () async {
@@ -194,10 +198,14 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                             isEditingName = false;
                                           });
                                         },
-                                        child: Icon(
-                                          Icons.done,
-                                          color: Colors.black,
-                                          size: 20,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Icon(
+                                            Icons.done,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ),
                                         ),
                                       )
                               ],
