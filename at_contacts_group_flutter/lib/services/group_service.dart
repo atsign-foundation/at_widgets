@@ -23,6 +23,7 @@ class GroupService {
   int? rootPort;
   int length = 0;
   bool? showLoader;
+  List<GroupContactsModel> _recentContacts = [];
 
 // group list stream
   final _atGroupStreamController = StreamController<List<AtGroup>>.broadcast();
@@ -59,6 +60,8 @@ class GroupService {
   String? get currentAtsign => _atsign;
 
   AtGroup? get currentSelectedGroup => selectedGroup;
+
+  List<GroupContactsModel> get recentContacts => _recentContacts;
 
   // ignore: always_declare_return_types
   setSelectedContacts(List<AtContact?>? list) {
@@ -198,15 +201,20 @@ class GroupService {
     }
   }
 
-  Future<dynamic> updateGroupData(AtGroup group, BuildContext context) async {
+  Future<dynamic> updateGroupData(AtGroup group, BuildContext context,
+      {bool isDesktop = false}) async {
     try {
       var result = await updateGroup(group);
-      if (result is AtGroup) {
-        Navigator.of(context).pop();
-      } else if (result == null) {
-        CustomToast().show(TextConstants().SERVICE_ERROR, context);
+      if (isDesktop) {
+        return result;
       } else {
-        CustomToast().show(result.toString(), context);
+        if (result is AtGroup) {
+          Navigator.of(context).pop();
+        } else if (result == null) {
+          CustomToast().show(TextConstants().SERVICE_ERROR, context);
+        } else {
+          CustomToast().show(result.toString(), context);
+        }
       }
     } catch (e) {
       return e;
@@ -304,6 +312,17 @@ class GroupService {
       selectedContactsSink.add(selectedGroupContacts);
     } catch (e) {
       print(e);
+    }
+  }
+
+  void addRecentContacts(GroupContactsModel groupContact) {
+    _recentContacts.removeWhere((element) {
+      return element.contact!.atSign.toLowerCase() ==
+          groupContact.contact!.atSign.toLowerCase();
+    });
+    _recentContacts.insert(0, groupContact);
+    if (_recentContacts.length > 10) {
+      _recentContacts.removeRange(10, _recentContacts.length);
     }
   }
 

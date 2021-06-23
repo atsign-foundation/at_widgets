@@ -28,6 +28,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// This displays `CLOSE` instead of trailing icon.
   final bool closeOnRight;
 
+  /// If used in a desktop screen.
+  final bool isDesktop;
+
   /// takes in a trailing widget.
   final Widget? trailingIcon;
 
@@ -67,6 +70,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.titleTextStyle,
     this.onLeadingIconPressed,
     this.closeOnRight = false,
+    this.isDesktop = false,
   });
   @override
   Size get preferredSize => Size.fromHeight(70.toHeight);
@@ -86,12 +90,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: ColorConstants.fontPrimary,
                     size: 15.toFont,
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    if (onLeadingIconPressed != null) {
-                      onLeadingIconPressed!();
-                    }
-                  })
+                  onPressed: isDesktop
+                      ? () {
+                          onLeadingIconPressed!();
+                        }
+                      : () {
+                          Navigator.pop(context);
+                          if (onLeadingIconPressed != null) {
+                            onLeadingIconPressed!();
+                          }
+                        })
               : leadingIcon
           : Container(),
       title: Row(

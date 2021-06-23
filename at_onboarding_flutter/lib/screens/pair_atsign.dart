@@ -172,21 +172,21 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   }
 
   checkPermissions() async {
-    var cameraStatus = await Permission.camera.status;
-    var storageStatus = await Permission.storage.status;
-    _logger.info("camera status => $cameraStatus");
-    _logger.info('storage status is $storageStatus');
-    if (cameraStatus.isRestricted && storageStatus.isRestricted) {
-      await askPermissions(Permission.unknown);
-    } else if (cameraStatus.isRestricted || cameraStatus.isDenied) {
-      await askPermissions(Permission.camera);
-    } else if (storageStatus.isRestricted || storageStatus.isDenied) {
-      await askPermissions(Permission.storage);
-    } else if (cameraStatus.isGranted && storageStatus.isGranted) {
-      setState(() {
-        permissionGrated = true;
-      });
-    }
+    // var cameraStatus = await Permission.camera.status;
+    // var storageStatus = await Permission.storage.status;
+    // _logger.info("camera status => $cameraStatus");
+    // _logger.info('storage status is $storageStatus');
+    // if (cameraStatus.isRestricted && storageStatus.isRestricted) {
+    //   await askPermissions(Permission.unknown);
+    // } else if (cameraStatus.isRestricted || cameraStatus.isDenied) {
+    //   await askPermissions(Permission.camera);
+    // } else if (storageStatus.isRestricted || storageStatus.isDenied) {
+    //   await askPermissions(Permission.storage);
+    // } else if (cameraStatus.isGranted && storageStatus.isGranted) {
+    setState(() {
+      permissionGrated = true;
+    });
+    // }
   }
 
   askPermissions(Permission type) async {
@@ -302,67 +302,71 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   void _uploadKeyFile() async {
     try {
-      if (!permissionGrated) {
-        await checkPermissions();
-      }
+      // if (!permissionGrated) {
+      //   await checkPermissions();
+      // }
       _isServerCheck = false;
       _isContinue = true;
       var fileContents, aesKey, atsign;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true);
+      // FilePickerResult result = await FilePicker.platform
+      //     .pickFiles(type: FileType.any, allowMultiple: true);
       setState(() {
         loading = true;
       });
-      for (var pickedFile in result.files) {
-        var path = pickedFile.path;
-        File selectedFile = File(path);
-        var length = selectedFile.lengthSync();
-        if (length < 10) {
-          _showAlertDialog(_incorrectKeyFile);
-          return;
-        }
-
-        if (pickedFile.extension == 'zip') {
-          var bytes = selectedFile.readAsBytesSync();
-          final archive = ZipDecoder().decodeBytes(bytes);
-          for (var file in archive) {
-            if (file.name.contains('atKeys')) {
-              fileContents = String.fromCharCodes(file.content);
-            } else if (aesKey == null &&
-                atsign == null &&
-                file.name.contains('_private_key.png')) {
-              var path = (await path_provider.getTemporaryDirectory()).path;
-              String result = await FlutterQrReader.imgScan(path);
-              List<String> params = result.replaceAll('"', '').split(':');
-              atsign = params[0];
-              aesKey = params[1];
-              //read scan QRcode and extract atsign,aeskey
-            }
-          }
-        } else if (pickedFile.name.contains('atKeys')) {
-          fileContents = File(path).readAsStringSync();
-        } else if (aesKey == null &&
-            atsign == null &&
-            pickedFile.name.contains('_private_key.png')) {
-          //read scan QRcode and extract atsign,aeskey
-          String result = await FlutterQrReader.imgScan(path);
-          List<String> params = result.split(':');
-          atsign = params[0];
-          aesKey = params[1];
-        } else {
-          var result1 = selectedFile.readAsBytesSync();
-          fileContents = String.fromCharCodes(result1);
-          var result = _validatePickedFileContents(fileContents);
-          _logger.finer('result after extracting data is......$result');
-          if (!result) {
-            _showAlertDialog(_incorrectKeyFile);
-            setState(() {
-              loading = false;
-            });
-            return;
-          }
-        }
+      // result = FilePickerResult();
+      // for (var pickedFile in result.files) {
+      // var path = pickedFile.path;
+      // var path = '/Users/apple/Desktop/@new52plum_key.atKeys';
+      var path =
+          '/Users/sachinsingh/Desktop/atKeys2/@blindtahugejrot_key(1).atKeys';
+      File selectedFile = File(path);
+      var length = selectedFile.lengthSync();
+      if (length < 10) {
+        _showAlertDialog(_incorrectKeyFile);
+        return;
       }
+
+      // if (pickedFile.extension == 'zip') {
+      //   var bytes = selectedFile.readAsBytesSync();
+      //   final archive = ZipDecoder().decodeBytes(bytes);
+      //   for (var file in archive) {
+      //     if (file.name.contains('atKeys')) {
+      //       fileContents = String.fromCharCodes(file.content);
+      //     } else if (aesKey == null &&
+      //         atsign == null &&
+      //         file.name.contains('_private_key.png')) {
+      //       var path = (await path_provider.getTemporaryDirectory()).path;
+      //       String result = await FlutterQrReader.imgScan(path);
+      //       List<String> params = result.replaceAll('"', '').split(':');
+      //       atsign = params[0];
+      //       aesKey = params[1];
+      //       //read scan QRcode and extract atsign,aeskey
+      //     }
+      //   }
+      // } else if (pickedFile.name.contains('atKeys')) {
+      fileContents = File(path).readAsStringSync();
+      // } else if (aesKey == null &&
+      //     atsign == null &&
+      //     pickedFile.name.contains('_private_key.png')) {
+      //   //read scan QRcode and extract atsign,aeskey
+      //   String result = await FlutterQrReader.imgScan(path);
+      //   List<String> params = result.split(':');
+      //   atsign = params[0];
+      //   aesKey = params[1];
+      // } else {
+      //   var result1 = selectedFile.readAsBytesSync();
+      //   fileContents = String.fromCharCodes(result1);
+      //   var result = _validatePickedFileContents(fileContents);
+      //   _logger.finer('result after extracting data is......$result');
+      //   if (!result) {
+      //     _showAlertDialog(_incorrectKeyFile);
+      //     setState(() {
+      //       loading = false;
+      //     });
+      //     return;
+      //   }
+      // }
+      // }
       if (aesKey == null && atsign == null && fileContents != null) {
         var keyData = fileContents.split(',"@');
         List<String> params = keyData[1]

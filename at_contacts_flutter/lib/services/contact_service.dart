@@ -123,6 +123,18 @@ class ContactService {
   }
 
   // ignore: always_declare_return_types
+  markFavContact(AtContact contact) async {
+    try {
+      contact.favourite = !contact.favourite;
+      await atContactImpl.update(contact);
+      await fetchBlockContactList();
+      await fetchContacts();
+    } catch (error) {
+      print('error in marking fav: $error');
+    }
+  }
+
+  // ignore: always_declare_return_types
   fetchBlockContactList() async {
     try {
       blockContactList = [];
@@ -291,7 +303,7 @@ class ContactService {
       }
 
       // profile picture
-      key.metadata.isBinary = true;
+      key.metadata?.isBinary = true;
       key.key = contactFields[2];
       result = await atClientInstance!.get(key);
       var image = result.value;
