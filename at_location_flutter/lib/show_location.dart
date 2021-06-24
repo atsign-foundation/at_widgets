@@ -100,7 +100,9 @@ class _ShowLocationState extends State<ShowLocation> {
             fitBoundsOptions: FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
-            markers: markerList ?? showMarker ? [marker] : [],
+            markers:
+                // ignore: prefer_if_null_operators
+                markerList != null ? markerList : (showMarker ? [marker] : []),
             builder: (context, markers) {
               return buildMarkerCluster(markers);
             },

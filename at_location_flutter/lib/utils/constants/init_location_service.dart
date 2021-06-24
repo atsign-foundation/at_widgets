@@ -9,11 +9,24 @@ import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:meta/meta.dart';
 
 /// Function to initialise the package. Should be mandatorly called before accessing package functionalities.
+///
+/// [mapKey] is needed to access maps.
+///
+/// [apiKey] is needed to calculate ETA.
+///
+/// Steps to get [mapKey]/[apiKey] available in README.
 void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
-    {String rootDomain = MixedConstants.ROOT_DOMAIN}) async {
+    {@required String mapKey,
+    @required String apiKey,
+    String rootDomain = MixedConstants.ROOT_DOMAIN}) async {
+  /// initialise keys
+  MixedConstants.setApiKey(apiKey);
+  MixedConstants.setMapKey(mapKey);
+
   try {
     /// So that we have the permission status beforehand & later we dont get
     /// PlatformException(PermissionHandler.PermissionManager) => Multiple Permissions exception

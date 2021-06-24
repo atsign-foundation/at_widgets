@@ -27,9 +27,13 @@ class _SecondScreenState extends State<SecondScreen> {
       activeAtSign =
           clientSdkService.atClientServiceInstance.atClient.currentAtSign;
       initializeLocationService(
-          clientSdkService.atClientServiceInstance.atClient,
-          activeAtSign,
-          NavService.navKey);
+        clientSdkService.atClientServiceInstance.atClient,
+        activeAtSign,
+        NavService.navKey,
+        mapKey: '',
+        apiKey: '',
+      );
+
       newStream = getAllNotification();
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
