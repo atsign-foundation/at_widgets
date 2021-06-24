@@ -7,5 +7,9 @@
 ## 1.0.0+2
 - upgraded some packages to resolve dependency issues
 
-## 1.0.0+3
-- support for .wavi keys, remove an @sign from followers and following list and minor bug fixes.
+## 2.0.0
+- support for .wavi keys and minor bug fixes
+- null-safety migration
+
+## 2.0.1
+- support for both library and app namespaces

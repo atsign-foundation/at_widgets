@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:html';
-
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
@@ -88,7 +86,7 @@ class OnboardingService {
     var atClientServiceInstance = _getClientServiceForAtsign(_atsign)!;
     var result = await atClientServiceInstance.onboard(
         atClientPreference: _atClientPreference, atsign: _atsign);
-    if(_atsign == null) {
+    if (_atsign == null) {
       _atsign = await this.getAtSign();
     }
     atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
@@ -160,7 +158,8 @@ class OnboardingService {
   }
 
   Future<Map<String, String?>> getEncryptedKeys(String atsign) async {
-    Map<String, String?> result = await atClientServiceMap[atsign]!.getEncryptedKeys(atsign);
+    Map<String, String?> result =
+        await atClientServiceMap[atsign]!.getEncryptedKeys(atsign);
     result[atsign] = await this.getAESKey(atsign);
     return result;
   }
@@ -219,7 +218,8 @@ class OnboardingService {
       await _getAtClientForAtsign()!.getSyncManager()!.sync(_done);
     }
   }
-  void _done(SyncManager syncManager) {
+
+  void _done(syncManager) {
     _logger.finer('sync complete');
   }
 }

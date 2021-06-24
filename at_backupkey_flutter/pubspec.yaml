@@ -14,18 +14,18 @@ dependencies:
   share: ^2.0.4
   permission_handler: ^8.1.1
   path_provider: ^2.0.2
-#  at_utils:
-#    git:
-#      url: https://github.com/atsign-foundation/at_tools.git
-#      path: at_utils
-#      ref: trunk
-#      version: ^1.0.1+7
-#  at_client_mobile:
-#    git:
-#      url: https://github.com/atsign-foundation/at_client_sdk.git
-#      path: at_client_mobile
-#      ref: trunk
-#      version: ^1.0.0+10
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: trunk
+      version: ^1.0.1+7
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: at_client_mobile
+      ref: trunk
+      version: ^1.0.0+10
 
 dependency_overrides:
   at_utils:

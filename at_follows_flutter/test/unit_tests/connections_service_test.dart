@@ -103,10 +103,6 @@ void main() {
     test('with existing @sign', () async {
       String receiverAtsign = '@bob🛠';
       _connectionsService.following.add(receiverAtsign);
-      var receiverAtClientService = await setUpFunc(receiverAtsign);
-//      await receiverAtClientService.atClient.startMonitor(
-//          receiverAtClientService.atClient.preference.privateKey,
-//          monitorCallBack);
       bool result = await _connectionsService.unfollow(receiverAtsign);
       expect(result, true);
       expect(_connectionsService.following.list!.contains(receiverAtsign),
@@ -250,8 +246,8 @@ void main() {
         ..metadata = atMetadata;
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
 
-      var followingValue = await _sdkService
-          .scanAndGet('${AppConstants.following}|${AppConstants.followingKey}');
+      var followingValue =
+          await _sdkService.scanAndGet('${AppConstants.following}');
       expect(followingValue.value.isNotEmpty, true);
 
       Atsign atsign =
@@ -274,8 +270,8 @@ void main() {
         ..metadata = atMetadata;
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
 
-      var followingValue = await _sdkService
-          .scanAndGet('${AppConstants.following}|${AppConstants.followingKey}');
+      var followingValue =
+          await _sdkService.scanAndGet('${AppConstants.following}');
       expect(followingValue.value.isNotEmpty, true);
       _connectionsService.following.add('@sameeraja🛠');
       _connectionsService.following.add('@sitaram🛠');
@@ -334,14 +330,16 @@ Future<AtClientService> setUpFunc(String atsign) async {
   AtClientService atClientService = AtClientService();
 
   await AtClientImpl.createClient(atsign, 'wavi', preference);
-  var atClient = await (AtClientImpl.getClient(atsign) as FutureOr<AtClient>);
+  var atClient = await (AtClientImpl.getClient(atsign));
   atClientService.atClient = atClient;
-  await atClient.getSyncManager()!.sync(_onDone);
+  await atClient!.getSyncManager()!.sync(_onDone);
   await setEncryptionKeys(atClient as AtClientImpl, atsign);
   return atClientService;
 }
 
-void _onDone() {}
+void _onDone(value) {
+  print('sync done: $value');
+}
 
 void _onMonitorError(var error) {}
 

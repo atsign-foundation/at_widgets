@@ -89,7 +89,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = true;
       });
-      var isExist = await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
+      var isExist =
+          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
       if (isExist) {
         setState(() {
           loading = false;
@@ -211,8 +212,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       _isServerCheck = false;
       _isContinue = true;
       String? cramKey;
-      FilePickerResult result = await (FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: false) as FutureOr<FilePickerResult>);
+      FilePickerResult result = await (FilePicker.platform.pickFiles(
+          type: FileType.any,
+          allowMultiple: false) as FutureOr<FilePickerResult>);
       setState(() {
         loading = true;
       });
@@ -261,7 +263,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       loading = true;
     });
     try {
-      var isExist = await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
+      var isExist =
+          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
       if (isExist) {
         setState(() {
           loading = false;
@@ -309,8 +312,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       _isServerCheck = false;
       _isContinue = true;
       var fileContents, aesKey, atsign;
-      FilePickerResult result = await (FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true) as FutureOr<FilePickerResult>);
+      FilePickerResult result = await (FilePicker.platform.pickFiles(
+          type: FileType.any,
+          allowMultiple: true) as FutureOr<FilePickerResult>);
       setState(() {
         loading = true;
       });
@@ -537,16 +541,22 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                             height: SizeConfig().screenHeight * 0.6,
                             width: SizeConfig().screenWidth,
                             child: Center(
-                                child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [
-                              CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      ColorConstants.appColor)),
-                              SizedBox(height: 20.toHeight),
-                              isValidated
-                                  ? Text(
-                                      'Getting your @sign ready. Please wait...',style: TextStyle(fontSize: 15.toFont,fontWeight: FontWeight.w500),)
-                                  : Text('')
-                            ])),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                  CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          ColorConstants.appColor)),
+                                  SizedBox(height: 20.toHeight),
+                                  isValidated
+                                      ? Text(
+                                          'Getting your @sign ready. Please wait...',
+                                          style: TextStyle(
+                                              fontSize: 15.toFont,
+                                              fontWeight: FontWeight.w500),
+                                        )
+                                      : Text('')
+                                ])),
                           )
                     : SizedBox()
               ],
@@ -644,7 +654,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               isValidated = true;
               setState(() {});
               await _processSharedSecret(atsign, secret);
-              
             },
             onSubmit: (atsign) async {
               var isExist = await OnboardingService.getInstance()

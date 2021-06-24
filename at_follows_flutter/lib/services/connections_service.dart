@@ -217,6 +217,7 @@ class ConnectionsService {
       }
       followers.add(notification.fromAtSign);
       await _sdkService.put(atKey, followers.toString());
+      await _sdkService.sync();
       var atsignData = await _getAtsignData(
         notification.fromAtSign,
         isNew: true,
@@ -290,8 +291,8 @@ class ConnectionsService {
   Future<void> createLists({required bool isFollowing}) async {
     // for following list followers list is not required.
     if (!isFollowing) {
-      var followersValue = await _sdkService
-          .scanAndGet('${AppConstants.followers}|${AppConstants.followersKey}');
+      var followersValue =
+          await _sdkService.scanAndGet(AppConstants.containsFollowers);
       this.followers.create(followersValue);
       if (followersValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
@@ -301,8 +302,8 @@ class ConnectionsService {
     } else {
       // for followers list following list is required to show the status of follow button.
 
-      var followingValue = await _sdkService
-          .scanAndGet('${AppConstants.following}|${AppConstants.followingKey}');
+      var followingValue =
+          await _sdkService.scanAndGet(AppConstants.containsFollowing);
       this.following.create(followingValue);
 
       if (followingValue.metadata != null) {
@@ -325,17 +326,13 @@ class ConnectionsService {
     var atKey;
     var atSign = atsign ?? _sdkService.atsign;
     if (isFollowing) {
-      var atMetadata = Metadata()
-        ..isPublic = !following.isPrivate
-        ..namespaceAware = false;
+      var atMetadata = Metadata()..isPublic = !following.isPrivate;
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followingKey
         ..sharedWith = atMetadata.isPublic! ? null : atSign;
     } else {
-      var atMetadata = Metadata()
-        ..isPublic = !followers.isPrivate
-        ..namespaceAware = false;
+      var atMetadata = Metadata()..isPublic = !followers.isPrivate;
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followersKey

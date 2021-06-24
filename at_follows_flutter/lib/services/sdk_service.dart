@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
@@ -68,7 +67,7 @@ class SDKService {
     }
     var response = await _atClientServiceInstance.atClient!.notifyList(
         regex:
-            ('${AppConstants.following}|${AppConstants.followers}|${AppConstants.followersKey}|${AppConstants.followingKey}'),
+            ('${AppConstants.containsFollowing}|${AppConstants.containsFollowers}'),
         fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
     if (response == 'null') {
