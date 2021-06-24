@@ -21,32 +21,32 @@ class BackupKeyWidget extends StatelessWidget {
   final bool isButton;
 
   ///set to `true` for using widget as an icon.
-  final bool isIcon;
+  final bool? isIcon;
 
   ///[required] to provide backupkeys.
   final atClientService;
 
   ///takes a `String` and displays on button. set [isButton] to `true` to use this.
-  final String buttonText;
+  final String? buttonText;
 
   ///Color of the icon can be set if [isIcon] is set as `true`.
-  final Color iconColor;
+  final Color? iconColor;
 
   ///any double value for customizing width of button if [isButton] sets to `true`.
-  final double buttonWidth;
+  final double? buttonWidth;
 
   ///any double value for customizing height of a button if [isButton] sets to `true`.
-  final double buttonHeight;
+  final double? buttonHeight;
 
   ///any double value for customizing size of the icon if [isIcon] sets to `true`.
-  final double iconSize;
+  final double? iconSize;
 
   ///Customize the button color if [isButton] sets to `true`.
-  final Color buttonColor;
+  final Color? buttonColor;
 
   BackupKeyWidget(
-      {@required this.atsign,
-      @required this.atClientService,
+      {required this.atsign,
+      required this.atClientService,
       this.isButton = false,
       this.isIcon,
       this.buttonText,
@@ -79,7 +79,7 @@ class BackupKeyWidget extends StatelessWidget {
                       ? Colors.black
                       : this.buttonColor),
               child: Center(
-                child: Text(buttonText,
+                child: Text(buttonText!,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 16.toFont,

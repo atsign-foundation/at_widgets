@@ -10,7 +10,7 @@ class AppConstants {
   static String getFreeAtsign = 'get-free-atsign';
   static String registerPerson = 'register-person';
   static String validatePerson = 'validate-person';
-  static String website;
+  static String? website;
   static String package = 'at_onboarding_flutter';
   static String encryptKeys = '_encrypt_keys';
   static String backupFileExtension = '.atKeys';
@@ -20,7 +20,7 @@ class AppConstants {
 
   static get serverDomain => _rootDomain;
 
-  static set rootDomain(String domain) {
+  static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';
     website = _rootDomain == 'root.atsign.org'
         ? 'https://atsign.com'

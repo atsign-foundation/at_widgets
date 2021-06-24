@@ -9,15 +9,15 @@ class CustomButton extends StatefulWidget {
   final text;
   final highLightColor;
   final providerStatus;
-  final double height;
+  final double? height;
   final double width;
   final Function onPressedCallBack;
   final bool showCount;
-  final String count;
+  final String? count;
   // final highlightColor;
   CustomButton(
-      {@required this.text,
-      @required this.onPressedCallBack,
+      {required this.text,
+      required this.onPressedCallBack,
       this.providerStatus,
       textstyle,
       highLightColor,
@@ -50,7 +50,7 @@ class _CustomButtonState extends State<CustomButton> {
       },
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0.toFont),
-          side: BorderSide(color: ColorConstants.borderColor)),
+          side: BorderSide(color: ColorConstants.borderColor!)),
       color: widget.isActive
           ? ColorConstants.buttonHighLightColor
           : ColorConstants.secondary,

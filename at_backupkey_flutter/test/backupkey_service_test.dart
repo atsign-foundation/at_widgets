@@ -22,7 +22,7 @@ void main() {
 
     test('for unregistered @sign', () async {
       MockDataService _mockDataService = MockDataService(atsign + '123');
-      String aesKey = _mockDataService.getAESKey;
+      String? aesKey = _mockDataService.getAESKey;
       expect(aesKey, null);
     });
   });
@@ -81,12 +81,17 @@ Future<void> setUpFunc(String atsign) async {
 
   await AtClientImpl.createClient(atsign, 'persona', preference);
   var atClient = await AtClientImpl.getClient(atsign);
-  atClient.getSyncManager().init(atsign, preference,
-      atClient.getRemoteSecondary(), atClient.getLocalSecondary());
-  await atClient.getSyncManager().sync();
+  if(atClient == null) {
+    return;
+  }
+  await atClient.getSyncManager()!.sync(_done);
   // To setup encryption keys
-  await atClient.getLocalSecondary().putValue(
-      AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]);
+  await atClient.getLocalSecondary()!.putValue(
+      AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]!);
+}
+
+void _done() {
+
 }
 
 AtClientPreference getAtSignPreference(String atsign) {
@@ -125,7 +130,7 @@ class MockDataService {
 
     try {
       // encrypt pkamPublicKey with AES key
-      var pkamPublicKey = demo_data.pkamPublicKeyMap[atsign];
+      var pkamPublicKey = demo_data.pkamPublicKeyMap[atsign]!;
       var aesEncryptionKey = getAESKey;
       var encryptedPkamPublicKey =
           EncryptionUtil.encryptValue(pkamPublicKey, aesEncryptionKey);
@@ -133,21 +138,21 @@ class MockDataService {
           encryptedPkamPublicKey;
 
       // encrypt pkamPrivateKey with AES key
-      var pkamPrivateKey = demo_data.pkamPrivateKeyMap[atsign];
+      var pkamPrivateKey = demo_data.pkamPrivateKeyMap[atsign]!;
       var encryptedPkamPrivateKey =
           EncryptionUtil.encryptValue(pkamPrivateKey, aesEncryptionKey);
       aesEncryptedKeys[BackupKeyConstants.PKAM_PRIVATE_KEY_FROM_KEY_FILE] =
           encryptedPkamPrivateKey;
 
       // encrypt encryption public key with AES key
-      var encryptionPublicKey = demo_data.encryptionPublicKeyMap[atsign];
+      var encryptionPublicKey = demo_data.encryptionPublicKeyMap[atsign]!;
       var encryptedEncryptionPublicKey =
           EncryptionUtil.encryptValue(encryptionPublicKey, aesEncryptionKey);
       aesEncryptedKeys[BackupKeyConstants.ENCRYPTION_PUBLIC_KEY_FROM_FILE] =
           encryptedEncryptionPublicKey;
 
       // encrypt encryption private key with AES key
-      var encryptionPrivateKey = demo_data.encryptionPrivateKeyMap[atsign];
+      var encryptionPrivateKey = demo_data.encryptionPrivateKeyMap[atsign]!;
       var encryptedEncryptionPrivateKey =
           EncryptionUtil.encryptValue(encryptionPrivateKey, aesEncryptionKey);
       aesEncryptedKeys[BackupKeyConstants.ENCRYPTION_PRIVATE_KEY_FROM_FILE] =

@@ -9,9 +9,9 @@ class BackUpKeyService {
     return _singleton;
   }
 
-  AtClientService atClientService;
+  late AtClientService atClientService;
 
-  Future<String> _getAESKey(String atsign) async {
+  Future<String?> _getAESKey(String atsign) async {
     return await atClientService.getAESKey(atsign);
   }
 

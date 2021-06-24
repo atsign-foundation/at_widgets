@@ -23,7 +23,7 @@ class _QrScanState extends State<QrScan> {
   bool permissionGrated = false;
   bool loading = false;
   bool _scanCompleted = false;
-  QrReaderViewController _controller;
+  QrReaderViewController? _controller;
   bool _isScan = false;
 
   @override
@@ -57,7 +57,7 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
-  Future<bool> _validateFollowingAtsign(String atsign,
+  Future<bool> _validateFollowingAtsign(String? atsign,
       [bool isScan = false]) async {
     if (ConnectionProvider().containsFollowing(atsign)) {
       _showFollowersAlertDialog(context, atsign, isScan: isScan);
@@ -71,7 +71,7 @@ class _QrScanState extends State<QrScan> {
           message: Strings.invalidAtsignMessage, isScan: isScan);
       return false;
     }
-    var atSignStatus = await SDKService().checkAtSignStatus(atsign);
+    var atSignStatus = await SDKService().checkAtSignStatus(atsign!);
     if (atSignStatus == AtSignStatus.teapot ||
         atSignStatus == AtSignStatus.activated) {
       return true;
@@ -151,7 +151,7 @@ class _QrScanState extends State<QrScan> {
                                     height: 350.toHeight,
                                     callback: (container) async {
                                       this._controller = container;
-                                      await _controller
+                                      await _controller!
                                           .startCamera((data, offsets) async {
                                         if (!_scanCompleted) {
                                           _controller?.stopCamera();
@@ -190,7 +190,7 @@ class _QrScanState extends State<QrScan> {
                       width: SizeConfig().screenWidth,
                       child: Center(
                         child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
+                            valueColor: AlwaysStoppedAnimation<Color?>(
                                 ColorConstants.buttonHighLightColor)),
                       ),
                     )
@@ -227,13 +227,13 @@ class _QrScanState extends State<QrScan> {
                       prefixText: '@',
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: ColorConstants.buttonHighLightColor))),
+                              color: ColorConstants.buttonHighLightColor!))),
                 ),
               ),
               actions: [
                 TextButton(
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       this.setState(() {
                         loading = true;
                       });
@@ -266,8 +266,8 @@ class _QrScanState extends State<QrScan> {
         });
   }
 
-  _showFollowersAlertDialog(BuildContext context, String atsign,
-      {String message, bool isScan = false}) {
+  _showFollowersAlertDialog(BuildContext context, String? atsign,
+      {String? message, bool isScan = false}) {
     showDialog(
         context: context,
         builder: (context) {
@@ -283,7 +283,7 @@ class _QrScanState extends State<QrScan> {
                 onPressed: () {
                   Navigator.pop(context);
                   if (isScan) {
-                    _controller.startCamera((data1, offsets1) {
+                    _controller!.startCamera((data1, offsets1) {
                       if (!_scanCompleted) {
                         onScan(data1, offsets1, context);
                         _scanCompleted = true;

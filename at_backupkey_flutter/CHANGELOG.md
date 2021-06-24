@@ -9,3 +9,6 @@
 
 ## 1.0.0+3
 - upgraded some packages to resolve dependency issues
+
+## 2.0.0
+- null-safety migration

@@ -1,4 +1,5 @@
 class AppConstants {
+  static String appNamespace = '';
   static final String libraryNamespace = 'at_follows';
   static final String following = 'at_following_by_self';
   static final String followers = 'at_followers_of_self';

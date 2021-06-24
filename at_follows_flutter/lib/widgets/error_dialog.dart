@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class CustomErrorDialog extends StatelessWidget {
   final error;
-  CustomErrorDialog({@required this.error});
+  CustomErrorDialog({required this.error});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class ErrorDialog {
     return _singleton;
   }
 
-  void show(var error, {@required BuildContext context}) {
+  void show(var error, {required BuildContext context}) {
     showDialog(
         context: context,
         builder: (_) {

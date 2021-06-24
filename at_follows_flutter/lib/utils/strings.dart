@@ -5,6 +5,7 @@ class Strings {
   static const String Following = 'Following';
   static const String Follow = 'Follow';
   static const String Unfollow = 'Unfollow';
+  static const String Remove = 'Remove';
   static const String BackButton = 'Back';
   static const String Title = 'Connections';
   static const String Search = 'Filter @signs';
@@ -18,8 +19,8 @@ class Strings {
 
   //public content
   static const String publicContentAppbarTitle = 'Public Content';
-  static String directoryUrl;
-  static String rootdomain;
+  static String? directoryUrl;
+  static String? rootdomain;
 
   static const String privateFollowersList =
       'Public cannot see your followers list when it’s set to private';
@@ -34,7 +35,7 @@ class Strings {
   //follow texts
   static const String followBack = 'Follow Back';
   static const String cancel = 'Cancel';
-  static String followBackDescription(String atsign) {
+  static String followBackDescription(String? atsign) {
     return '$atsign is following you. Tap on follow back to get connected.';
   }
 
@@ -53,7 +54,7 @@ class Strings {
   static const String invalidAtsignMessage =
       'Please provide or scan a valid @sign to follow';
   // static const String atSignStatusMessage = 'This @sing is unreachable. P'
-  static String getAtSignStatusMessage(AtSignStatus status) {
+  static String getAtSignStatusMessage(AtSignStatus? status) {
     status ??= AtSignStatus.error;
     switch (status) {
       case AtSignStatus.unavailable:
@@ -74,6 +75,11 @@ class Strings {
   static const String closeButton = 'Close';
 
   //loading texts
-  static const String loadingDescription =
-      'Please wait while loading your data';
+  static const String getAtSignList =
+      'Please wait and don\'t go back while fetching your data';
+  static const String statusCheck = 'Fetching @sign status...';
+  static const String followMessage =
+      'Please wait while adding @sign to your following list';
+  static const String unfollowMessage =
+      'Please wait while removing @sign from list';
 }

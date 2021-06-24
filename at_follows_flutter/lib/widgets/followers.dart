@@ -13,9 +13,9 @@ import 'package:provider/provider.dart';
 import 'package:at_utils/at_logger.dart';
 
 class Followers extends StatefulWidget {
-  final String searchText;
+  final String? searchText;
   final bool isFollowing;
-  final Function count;
+  final Function? count;
   Followers({
     this.searchText,
     this.isFollowing = false,
@@ -26,7 +26,7 @@ class Followers extends StatefulWidget {
 }
 
 class _FollowersState extends State<Followers> {
-  List<Atsign> atsignsList = [];
+  List<Atsign>? atsignsList = [];
   ConnectionsService _connectionsService = ConnectionsService();
   final _logger = AtSignLogger('Follows Widget');
   bool _isDialogOpen = false;
@@ -57,18 +57,24 @@ class _FollowersState extends State<Followers> {
                   height: 50.toHeight,
                   width: 50.toHeight,
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
+                    valueColor: AlwaysStoppedAnimation<Color?>(
                         ColorConstants.buttonHighLightColor),
                   ),
                 ),
                 SizedBox(height: 5.0.toHeight),
+                if (provider.message != null)
+                  Text(
+                    provider.message!,
+                    style: CustomTextStyles.fontBold14primary,
+                    textAlign: TextAlign.center,
+                  )
               ],
             ),
           ),
         );
       } else if (provider.status == Status.done) {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          widget.count();
+        WidgetsBinding.instance!.addPostFrameCallback((_) async {
+          widget.count!();
         });
         if (_connectionsService.followerAtsign != null) {
           _followAtsign(context);
@@ -79,7 +85,7 @@ class _FollowersState extends State<Followers> {
         atsignsList = widget.isFollowing
             ? provider.followingList
             : provider.followersList;
-        if (atsignsList.isEmpty) {
+        if (atsignsList!.isEmpty) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,12 +98,12 @@ class _FollowersState extends State<Followers> {
             ],
           );
         }
-        var tempAtsignList = [...atsignsList];
-        if (widget.searchText.isNotEmpty) {
+        var tempAtsignList = [...atsignsList!];
+        if (widget.searchText!.isNotEmpty) {
           tempAtsignList.retainWhere((atsign) {
-            return atsign.title
+            return atsign.title!
                 .toUpperCase()
-                .contains(widget.searchText.toUpperCase());
+                .contains(widget.searchText!.toUpperCase());
           });
         }
         return Expanded(
@@ -131,13 +137,13 @@ class _FollowersState extends State<Followers> {
                         String.fromCharCode(alphabetIndex + 65).toUpperCase();
 
                     tempAtsignList.forEach((atsign) {
-                      var index = atsign.title.indexOf(RegExp('[A-Z]|[a-z]'));
-                      if (atsign.title[index].toUpperCase() ==
+                      var index = atsign.title!.indexOf(RegExp('[A-Z]|[a-z]'));
+                      if (atsign.title![index].toUpperCase() ==
                           currentAlphabet) {
                         if (widget.searchText != null &&
-                            atsign.title
+                            atsign.title!
                                 .toUpperCase()
-                                .contains(widget.searchText.toUpperCase())) {
+                                .contains(widget.searchText!.toUpperCase())) {
                           sortedListWithAlphabet.add(atsign);
                         }
                       }
@@ -198,45 +204,71 @@ class _FollowersState extends State<Followers> {
                                             color: Colors.black,
                                             size: 25.toFont),
                                   ),
-                                  title: Text(currentAtsign.title,
-                                      style: CustomTextStyles.fontR16primary),
+                                  title: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    // mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Flexible(
+                                        // flex: 3,
+                                        // fit: FlexFit.loose,
+                                        child: Text((currentAtsign.title!),
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: false,
+                                            style: CustomTextStyles
+                                                .fontR16primary),
+                                      ),
+                                      Text(' \u2022 ',
+                                          style: TextStyle(
+                                            fontSize: 25.toFont,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                      currentAtsign.isFollowing!
+                                          ? GestureDetector(
+                                              onTap: () async {
+                                                widget.isFollowing
+                                                    ? await provider.unfollow(
+                                                        currentAtsign.title)
+                                                    : await provider.delete(
+                                                        currentAtsign.title!);
+                                                sortedListWithAlphabet[index]
+                                                    .isFollowing = false;
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                  widget.isFollowing
+                                                      ? Strings.Following
+                                                      : Strings.Remove,
+                                                  style: TextStyle(
+                                                      fontSize: 14.toFont,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.grey)),
+                                            )
+                                          : GestureDetector(
+                                              onTap: () async {
+                                                provider.follow(
+                                                    currentAtsign.title);
+                                                sortedListWithAlphabet[index]
+                                                    .isFollowing = true;
+                                                setState(() {});
+                                              },
+                                              child: Text(Strings.Follow,
+                                                  style: TextStyle(
+                                                      fontSize: 14.toFont,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: ColorConstants
+                                                          .activeColor)),
+                                            )
+                                    ],
+                                  ),
                                   subtitle: currentAtsign.subtitle != null
-                                      ? Text(currentAtsign.subtitle,
+                                      ? Text(currentAtsign.subtitle!,
                                           style:
                                               CustomTextStyles.fontR14primary)
                                       : null,
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CustomButton(
-                                          height: 35.toHeight,
-                                          // width: 70.toWidth,
-                                          // width: 150.toWidth,
-                                          isActive: !currentAtsign.isFollowing,
-                                          onPressedCallBack: (value) async {
-                                            if (value) {
-                                              provider.unfollow(
-                                                  currentAtsign.title);
-                                            } else {
-                                              provider
-                                                  .follow(currentAtsign.title);
-                                            }
-                                            sortedListWithAlphabet[index]
-                                                .isFollowing = !value;
-                                            setState(() {});
-                                          },
-                                          text: currentAtsign.isFollowing
-                                              ? Strings.Unfollow
-                                              : Strings.Follow),
-                                      // IconButton(
-                                      //     iconSize: 20.toFont,
-                                      //     icon: Icon(Icons.delete),
-                                      //     onPressed: () async {
-                                      //       await provider
-                                      //           .delete(currentAtsign.title);
-                                      //     }),
-                                    ],
-                                  ),
                                 ),
                               );
                             },
@@ -254,9 +286,10 @@ class _FollowersState extends State<Followers> {
           ),
         );
       } else if (provider.status == Status.error) {
+        _logger.severe('Loading throws ${provider.error}');
         return AtExceptionHandler().handle(provider.error, context);
       } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
+        WidgetsBinding.instance!.addPostFrameCallback((_) async {
           await provider.getAtsignsList(isFollowing: widget.isFollowing);
         });
         return SizedBox();
@@ -272,7 +305,7 @@ class _FollowersState extends State<Followers> {
 
       return;
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       _isDialogOpen = true;
       showDialog(
           context: context,
@@ -283,7 +316,7 @@ class _FollowersState extends State<Followers> {
                       style: CustomTextStyles.fontR14dark),
                   actions: [
                     CustomButton(
-                      width: SizeConfig().screenWidth * 0.23,
+                      width: SizeConfig().screenWidth! * 0.23,
                       isActive: false,
                       onPressedCallBack: (value) {
                         _connectionsService.followerAtsign = null;
@@ -295,7 +328,7 @@ class _FollowersState extends State<Followers> {
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.17),
                     CustomButton(
-                      width: SizeConfig().screenWidth * 0.23,
+                      width: SizeConfig().screenWidth! * 0.23,
                       isActive: true,
                       onPressedCallBack: (value) async {
                         _connectionsService.followerAtsign = null;

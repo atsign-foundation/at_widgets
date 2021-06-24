@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -15,13 +16,13 @@ class AtService {
     return _singleton;
   }
 
-  String _atsign;
+  String? _atsign;
 
-  AtClientService atClientServiceInstance;
-  AtClientImpl atClientInstance;
-  Function monitorCallBack;
+  AtClientService? atClientServiceInstance;
+  AtClientImpl? atClientInstance;
+  Function? monitorCallBack;
 
-  Future<AtClientPreference> getAtClientPreference({String cramSecret}) async {
+  Future<AtClientPreference> getAtClientPreference({String? cramSecret}) async {
     final appDocumentDirectory =
         await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
@@ -36,51 +37,51 @@ class AtService {
     return _atClientPreference;
   }
 
-  Future<bool> put({String key, var value}) async {
+  Future<bool> put({String? key, var value}) async {
     var atKey = at_commons.AtKey()..key = key;
     // ..metadata = metaData;
-    return await atClientInstance.put(atKey, value);
+    return await atClientInstance!.put(atKey, value);
   }
 
-  Future<bool> delete({String key}) async {
+  Future<bool> delete({String? key}) async {
     var atKey = at_commons.AtKey()..key = key;
-    return await atClientInstance.delete(atKey);
+    return await atClientInstance!.delete(atKey);
   }
 
   Future<List<String>> get() async {
-    return await atClientInstance.getKeys(regex: AppConstants.regex);
+    return await atClientInstance!.getKeys(regex: AppConstants.regex);
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    return await atClientServiceInstance.getPrivateKey(atsign);
+  Future<String?> getPrivateKey(String atsign) async {
+    return await atClientServiceInstance!.getPrivateKey(atsign);
   }
 
   ///Fetches publickey for [atsign] from device keychain.
-  Future<String> getPublicKey(String atsign) async {
-    return await atClientServiceInstance.getPublicKey(atsign);
+  Future<String?> getPublicKey(String atsign) async {
+    return await atClientServiceInstance!.getPublicKey(atsign);
   }
 
   ///Fetches atsign from device keychain.
-  Future<String> getAtSign() async {
-    return await atClientServiceInstance.getAtSign();
+  Future<String?> getAtSign() async {
+    return await atClientServiceInstance!.getAtSign();
   }
 
   ///Fetches atsign list from device keychain.
-  Future<List<String>> getAtSignList() async {
-    return await atClientServiceInstance.getAtsignList();
+  Future<List<String>?> getAtSignList() async {
+    return await atClientServiceInstance!.getAtsignList();
   }
 
   Future<void> deleteAtsign(String atsign) async {
-    return await atClientServiceInstance.deleteAtSignFromKeychain(atsign);
+    return await atClientServiceInstance!.deleteAtSignFromKeychain(atsign);
   }
 
   // startMonitor needs to be called at the beginning of session
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
-    String privateKey = await getPrivateKey(_atsign);
+    String privateKey = await (getPrivateKey(_atsign!) as FutureOr<String>);
     // ignore: await_only_futures
-    await atClientInstance.startMonitor(privateKey, (response) {
+    await atClientInstance!.startMonitor(privateKey, (response) {
       acceptStream(response);
     });
     print("Monitor started");
@@ -95,13 +96,13 @@ class AtService {
 }
 
 class AtNotification {
-  String id;
-  String from;
-  String to;
-  String key;
-  String value;
-  String operation;
-  int dateTime;
+  String? id;
+  String? from;
+  String? to;
+  String? key;
+  String? value;
+  String? operation;
+  int? dateTime;
 
   AtNotification(
       {this.id,

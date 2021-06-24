@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
-  final String url;
-  final String title;
+  final String? url;
+  final String? title;
 
   WebViewScreen({this.url, this.title});
   @override
@@ -15,7 +15,7 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-  bool isLoading;
+  late bool isLoading;
 
   @override
   void initState() {

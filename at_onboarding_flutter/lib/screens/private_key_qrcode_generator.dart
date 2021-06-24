@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class PrivateKeyQRCodeGenScreen extends StatefulWidget {
-  PrivateKeyQRCodeGenScreen({Key key}) : super(key: key);
+  PrivateKeyQRCodeGenScreen({Key? key}) : super(key: key);
 
   @override
   _PrivateKeyQRCodeGenScreenState createState() =>
@@ -21,7 +21,7 @@ class PrivateKeyQRCodeGenScreen extends StatefulWidget {
 }
 
 class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
-  String atsign;
+  String? atsign;
   var aesKey;
   var _onboardingService = OnboardingService.getInstance();
   @override
@@ -96,7 +96,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                       .atClientServiceMap[atsign],
                   isButton: true,
                   buttonWidth: 230.toWidth,
-                  atsign: atsign,
+                  atsign: atsign!,
                   buttonColor: ColorConstants.appColor,
                   buttonText: Strings.saveButtonTitle,
                 ),
@@ -118,7 +118,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                           MaterialPageRoute(
                               builder: (context) =>
                                   OnboardingService.getInstance()
-                                      .fistTimeAuthScreen));
+                                      .fistTimeAuthScreen!));
                     } else if (OnboardingService.getInstance().nextScreen !=
                         null) {
                       _onboardingService.onboardFunc(
@@ -128,7 +128,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  OnboardingService.getInstance().nextScreen));
+                                  OnboardingService.getInstance().nextScreen!));
                     } else {
                       Navigator.pop(context);
                       _onboardingService.onboardFunc(

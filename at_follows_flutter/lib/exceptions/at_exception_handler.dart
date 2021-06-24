@@ -7,7 +7,7 @@ import 'package:at_follows_flutter/services/size_config.dart';
 
 class AtExceptionHandler {
   handle(var exception, BuildContext context) {
-    var message = this.errorMessage(exception);
+    var message = this.errorMessage(exception)!;
 
     return Center(
         child: Padding(
@@ -20,7 +20,7 @@ class AtExceptionHandler {
     ));
   }
 
-  String errorMessage(var exception) {
+  String? errorMessage(var exception) {
     switch (exception.runtimeType) {
       case AtClientException:
         return 'Unable to perform this action. Please try again.';

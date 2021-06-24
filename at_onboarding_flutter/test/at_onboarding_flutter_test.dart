@@ -8,9 +8,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_material_app.dart';
 
 void main() {
-  BuildContext ctxt;
+  BuildContext? ctxt;
 
-  Widget _homeWidget({@required Widget home}) {
+  Widget _homeWidget({required Widget home}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       ctxt = context;
@@ -19,7 +19,7 @@ void main() {
   }
 
   group('test @sign form widget', () {
-    String _atsign;
+    String? _atsign;
     AppConstants.rootDomain = 'vip.ve.atsign.zone';
     Key uniqueKey = Key(Strings.submitButton);
 
@@ -54,7 +54,7 @@ void main() {
       await tester.enterText(find.byType(TextFormField), 'alice🛠');
       expect(
           find.byWidgetPredicate((widget) =>
-              widget is TextFormField && widget.controller.text == 'alice🛠'),
+              widget is TextFormField && widget.controller!.text == 'alice🛠'),
           findsOneWidget);
       expect(find.byType(CustomDialog), findsOneWidget);
       await tester.tap(find.byKey(uniqueKey));

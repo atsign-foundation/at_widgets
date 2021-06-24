@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -32,19 +33,19 @@ class CustomDialog extends StatelessWidget {
   final bool isAtsignForm;
 
   ///title of the dialog.
-  final String title;
+  final String? title;
 
   ///Returns a valid atsign if atsignForm is made true.
-  final Function(String) onSubmit;
+  final Function(String)? onSubmit;
 
   ///Returns a valid atsign if atsignForm is made true.
-  final Function(String, String) onValidate;
+  final Function(String, String)? onValidate;
 
   ///The context to open this widget.
   final context;
 
   ///function call on close button press.
-  final Function onClose;
+  final Function? onClose;
 
   CustomDialog(
       {this.isErrorDialog = false,
@@ -61,14 +62,14 @@ class CustomDialog extends StatelessWidget {
    TextEditingController _emailController = TextEditingController();
    TextEditingController _otpController = TextEditingController();
   final FreeAtsignService _freeAtsignService = FreeAtsignService();
-  String freeAtsign;
+  String? freeAtsign;
   bool otp = false;
   bool pair = false;
   bool isfreeAtsign = false;
-  String verificationCode;
+  String? verificationCode;
   bool loading = false;
   bool wrongEmail = false;
-  String oldEmail;
+  String? oldEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -153,10 +154,10 @@ class CustomDialog extends StatelessWidget {
                                   ]))
                           : this.title != null
                               ? Text(
-                                  title,
+                                  title!,
                                   style: CustomTextStyles.fontR16primary,
                                 )
-                              : this.title,
+                              : this.title as Widget?,
                   content: isAtsignForm
                       ? Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
@@ -267,10 +268,10 @@ class CustomDialog extends StatelessWidget {
                                                     ColorConstants.appColor)),
                                         key: Key('${Strings.submitButton}'),
                                         onPressed: () async {
-                                          if (_formKey.currentState
+                                          if (_formKey.currentState!
                                               .validate()) {
                                             Navigator.pop(context);
-                                            this.onSubmit(
+                                            this.onSubmit!(
                                                 _atsignController.text);
                                           }
                                         },
@@ -300,7 +301,7 @@ class CustomDialog extends StatelessWidget {
                                           freeAtsign =
                                               await getFreeAtsign(context);
                                           if (freeAtsign != null) {
-                                            _atsignController.text = freeAtsign;
+                                            _atsignController.text = freeAtsign!;
                                             isfreeAtsign = true;
                                           }
                                           loading = false;
@@ -333,8 +334,8 @@ class CustomDialog extends StatelessWidget {
                                                   loading = true;
                                                   stateSet(() {});
                                                   _atsignController.text =
-                                                      await getFreeAtsign(
-                                                          context);
+                                                      await (getFreeAtsign(
+                                                          context) as FutureOr<String>);
                                                   loading = false;
                                                   stateSet(() {});
                                                 },
@@ -468,7 +469,7 @@ class CustomDialog extends StatelessWidget {
                                                           null) {
                                                     loading = true;
                                                     stateSet(() {});
-                                                    String result =
+                                                    String? result =
                                                         await validatePerson(
                                                             _atsignController
                                                                 .text,
@@ -482,7 +483,7 @@ class CustomDialog extends StatelessWidget {
                                                       List params =
                                                           result.split(':');
                                                       Navigator.pop(context);
-                                                      this.onValidate(
+                                                      this.onValidate!(
                                                           params[0], params[1]);
                                                     }
                                                   }
@@ -584,7 +585,7 @@ class CustomDialog extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);
-                              this.onClose();
+                              this.onClose!();
                             },
                             child: Text(
                               Strings.closeTitle,
@@ -601,9 +602,9 @@ class CustomDialog extends StatelessWidget {
   }
 
   //to get free atsign from the server
-  Future<String> getFreeAtsign(BuildContext context) async {
+  Future<String?> getFreeAtsign(BuildContext context) async {
     var data;
-    String atsign;
+    String? atsign;
     dynamic response = await _freeAtsignService.getFreeAtsigns();
     if (response.statusCode == 200) {
       data = response.body;
@@ -612,7 +613,7 @@ class CustomDialog extends StatelessWidget {
     } else {
       data = response.body;
       data = jsonDecode(data);
-      String errorMessage = data['message'];
+      String? errorMessage = data['message'];
       showErrorDialog(context, errorMessage);
     }
     return atsign;
@@ -622,7 +623,7 @@ class CustomDialog extends StatelessWidget {
 //It will send an OTP to the registered email
   Future<bool> registerPersona(
       String atsign, String email, BuildContext context,
-      {String oldEmail}) async {
+      {String? oldEmail}) async {
     var data;
     bool status = false;
     // String atsign;
@@ -652,10 +653,10 @@ class CustomDialog extends StatelessWidget {
 
   //It will validate the person with atsign, email and the OTP.
   //If the validation is successful, it will return a cram secret for the user to login
-  Future<String> validatePerson(
-      String atsign, String email, String otp, BuildContext context) async {
+  Future<String?> validatePerson(
+      String atsign, String email, String? otp, BuildContext context) async {
     var data;
-    String cramSecret;
+    String? cramSecret;
     // String atsign;
 
     dynamic response =
@@ -667,21 +668,21 @@ class CustomDialog extends StatelessWidget {
       if (data['status'] != 'error') {
         cramSecret = data['cramkey'];
       } else {
-        String errorMessage = data['message'];
+        String? errorMessage = data['message'];
         showErrorDialog(context, errorMessage);
       }
       // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
-      String errorMessage = data['message'];
+      String? errorMessage = data['message'];
       showErrorDialog(context, errorMessage);
     }
     return cramSecret;
   }
 
   ///Returns corresponding errorMessage for [error].
-  String _getErrorMessage(var error) {
+  String? _getErrorMessage(var error) {
     var _onboardingService = OnboardingService.getInstance();
     switch (error.runtimeType) {
       case AtClientException:
@@ -741,7 +742,7 @@ class CustomDialog extends StatelessWidget {
     }
   }
 
-  String _getServerStatusMessage(ServerStatus message) {
+  String _getServerStatusMessage(ServerStatus? message) {
     switch (message) {
       case ServerStatus.unavailable:
       case ServerStatus.stopped:
@@ -756,7 +757,7 @@ class CustomDialog extends StatelessWidget {
     }
   }
 
-  showErrorDialog(BuildContext context, String errorMessage) {
+  showErrorDialog(BuildContext context, String? errorMessage) {
     return showDialog(
         barrierDismissible: false,
         context: context,
@@ -824,8 +825,8 @@ class CustomDialog extends StatelessWidget {
         });
   }
 
-  Widget _getMessage(var message, bool isErrorDialog) {
-    String highLightText = message == ResponseStatus.TIME_OUT
+  Widget? _getMessage(var message, bool isErrorDialog) {
+    String? highLightText = message == ResponseStatus.TIME_OUT
         ? '${AppConstants.contactAddress}'
         : AppConstants.website;
     if (message == null) {
@@ -839,7 +840,7 @@ class CustomDialog extends StatelessWidget {
     }
     int startIndex = message.indexOf(highLightText);
     var text1 = message.substring(0, startIndex),
-        text3 = message.substring(startIndex + highLightText.length);
+        text3 = message.substring(startIndex + highLightText!.length);
 
     return RichText(
       text: TextSpan(style: CustomTextStyles.fontR16primary, children: [
