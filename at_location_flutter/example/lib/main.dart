@@ -100,6 +100,25 @@ class _MyAppState extends State<MyApp> {
                         },
                         child: Text('Already authenticated',
                             style: TextStyle(color: Colors.black)))),
+                TextButton(
+                  onPressed: () async {
+                    var _keyChainManager = KeyChainManager.getInstance();
+                    var _atSignsList =
+                        await _keyChainManager.getAtSignListFromKeychain();
+                    _atSignsList?.forEach((element) {
+                      _keyChainManager.deleteAtSignFromKeychain(element);
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                      'Keychain cleaned',
+                      textAlign: TextAlign.center,
+                    )));
+                  },
+                  child: Text(
+                    'Reset keychain',
+                    style: TextStyle(color: Colors.blueGrey),
+                  ),
+                )
               ],
             ),
           )),
