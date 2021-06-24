@@ -9,6 +9,7 @@ import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
+import 'package:collection/collection.dart';
 
 class DesktopGroupInitialScreen extends StatefulWidget {
   DesktopGroupInitialScreen({Key? key}) : super(key: key);
@@ -58,14 +59,15 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
               });
             } else {
               if (snapshot.hasData) {
+                print(
+                    'previousData != snapshot.data ${areListsEqual(previousData, snapshot.data)} ');
                 if ((previousData == null) ||
-                    (previousData?.length != snapshot.data?.length)) {
+                    (!areListsEqual(previousData, snapshot.data))) {
                   shouldUpdate = true;
+                  previousData = snapshot.data;
                 } else {
                   shouldUpdate = false;
                 }
-
-                previousData = snapshot.data;
 
                 if (snapshot.data!.isEmpty) {
                   return createBtnTapped
@@ -183,3 +185,5 @@ class _NestedNavigatorsState extends State<NestedNavigators> {
     );
   }
 }
+
+Function areListsEqual = const DeepCollectionEquality.unordered().equals;

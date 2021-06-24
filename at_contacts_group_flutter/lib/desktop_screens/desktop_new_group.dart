@@ -13,6 +13,7 @@ import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/dektop_custom_person_tile.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_image_picker.dart';
 import 'package:flutter/material.dart';
 
 class DesktopNewGroup extends StatefulWidget {
@@ -178,7 +179,6 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                     clipBehavior: Clip.none,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 15),
                         width: 100.toWidth,
                         height: 100.toWidth,
                         decoration: BoxDecoration(
@@ -186,21 +186,31 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                           shape: BoxShape.circle,
                         ),
                         child: Center(
-                          child: false
+                          child: selectedImageByteData != null
                               ? SizedBox(
-                                  width: 68.toWidth,
-                                  height: 68.toWidth,
-                                  // child: CircleAvatar(
-                                  //   backgroundImage:
-                                  //       Image.memory().image,
-                                  // ),
+                                  width: 98.toWidth,
+                                  height: 98.toWidth,
+                                  child: CircleAvatar(
+                                    backgroundImage:
+                                        Image.memory(selectedImageByteData!)
+                                            .image,
+                                  ),
                                 )
                               : SizedBox(),
                         ),
                       ),
                       Positioned(
-                          bottom: -5,
-                          right: -5,
+                        bottom: -5,
+                        right: -5,
+                        child: InkWell(
+                          onTap: () async {
+                            var _imageBytes = await desktopImagePicker();
+                            if (_imageBytes != null) {
+                              setState(() {
+                                selectedImageByteData = _imageBytes;
+                              });
+                            }
+                          },
                           child: Container(
                               width: 30,
                               height: 30,
@@ -208,7 +218,9 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                                 color: ColorConstants.fadedbackground,
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(Icons.image)))
+                              child: Icon(Icons.image)),
+                        ),
+                      )
                     ],
                   ),
                 ),

@@ -20,6 +20,10 @@ dependencies:
   pedantic: ^1.11.0
   flutter_toastr: ^1.0.2
 
+  # desktop - dependencies
+  file_selector: ^0.7.0
+  file_selector_macos: ^0.0.3
+
   at_client_mobile: ^1.0.0+10
   at_commons: ^1.0.1+7
   at_common_flutter: 
@@ -34,6 +38,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+dependency_overrides:
+  plugin_platform_interface: ^2.0.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
