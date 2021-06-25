@@ -82,6 +82,17 @@ class SendLocationNotification {
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
+      /// The stream doesnt run until 100m is covered
+      /// So, we send data once
+      var _currentMyLatLng = await getMyLocation();
+
+      await Future.forEach(atsignsToShareLocationWith, (notification) async {
+        // ignore: await_only_futures
+        await prepareLocationDataAndSend(notification,
+            LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
+      });
+
+      ///
       positionStream = Geolocator.getPositionStream(distanceFilter: 100)
           .listen((myLocation) async {
         await Future.forEach(atsignsToShareLocationWith, (notification) async {
