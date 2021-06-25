@@ -22,7 +22,7 @@ class Strings {
   static const String stopButtonTitle = 'stop';
   //backuzip file save texts
   static const String backupKeyDescription =
-      'Upload your backup key file from stored location which was generated during the pairing process of your @sign.';
+      'upload your backup key file from stored location which was generated during the pairing process of your @sign.';
   static const String uploadZipTitle = 'Upload backup key file';
   static const String saveBackupKeyTitle = 'Save your key';
   static const String saveImportantTitle = 'IMPORTANT!';
@@ -31,13 +31,20 @@ class Strings {
   static const String saveButtonTitle = 'SAVE';
   static const String declaration = 'Yes I\'ve saved my backupkey file';
   static const String coninueButtonTitle = 'CONTINUE';
-  static const String emailNote = 'Note: We do not share your personal information or use it for financial gain.';
+  static const String emailNote =
+      'Note: We do not share your personal information or use it for financial gain.';
 
   //custom dialog texts
   static const String errorTitle = 'Error';
   static const String closeTitle = 'Close';
   static const String mailUrlquery = 'subject=Issue from @persona app';
   static const String mailUrlScheme = 'mailto';
+
+  //loading messages
+  static const String loadingAtsignReady =
+      'Getting your @sign ready. Please wait...';
+  static const String loadingAtsignStatus =
+      'Please wait while fetching @sign status';
 
   static String backupFileName(String atsign) {
     return atsign + '_encrypt_keys.atKeys';

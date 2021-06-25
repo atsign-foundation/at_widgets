@@ -8,9 +8,11 @@ class AppConstants {
   static String prodApiKey = '400b-806u-bzez-z42z-6a3p';
   static dynamic contentType = 'application/json';
   static String getFreeAtsign = 'get-free-atsign';
+  static String authWithAtsign = 'login/atsign';
+  static String validationWithAtsign = 'login/atsign/validate';
   static String registerPerson = 'register-person';
   static String validatePerson = 'validate-person';
-  static String website;
+  static String? website;
   static String package = 'at_onboarding_flutter';
   static String encryptKeys = '_encrypt_keys';
   static String backupFileExtension = '.atKeys';
@@ -20,7 +22,7 @@ class AppConstants {
 
   static get serverDomain => _rootDomain;
 
-  static set rootDomain(String domain) {
+  static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';
     website = _rootDomain == 'root.atsign.org'
         ? 'https://atsign.com'

@@ -1,12 +1,12 @@
 import 'package:at_follows_flutter/services/connections_service.dart';
 
 class Atsign {
-  String title;
+  String? title;
   dynamic profilePicture;
-  String subtitle;
-  bool isFollowing;
+  String? subtitle;
+  bool? isFollowing;
 
-  bool _isValid(String value) {
+  bool _isValid(String? value) {
     return value != null && value != '' && value != 'null';
   }
 
@@ -23,7 +23,7 @@ class Atsign {
       case PublicData.lastname:
       case PublicData.lastnamePersona:
         subtitle = _isValid(followsValue.value)
-            ? subtitle + followsValue.value
+            ? subtitle! + followsValue.value
             : subtitle;
         break;
       default:
@@ -40,9 +40,9 @@ class Atsign {
 
   factory Atsign.fromJson(Map<String, dynamic> json) {
     return Atsign(
-        title: json['title'] as String,
-        subtitle: json['subtitle'] as String,
-        isFollowing: json['isFollowing'] as bool,
+        title: json['title'] as String?,
+        subtitle: json['subtitle'] as String?,
+        isFollowing: json['isFollowing'] as bool?,
         profilePicture: json['profilePicture'] as dynamic);
   }
 }

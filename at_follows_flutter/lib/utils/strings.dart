@@ -18,8 +18,8 @@ class Strings {
 
   //public content
   static const String publicContentAppbarTitle = 'Public Content';
-  static String directoryUrl;
-  static String rootdomain;
+  static String? directoryUrl;
+  static String? rootdomain;
 
   static const String privateFollowersList =
       'Public cannot see your followers list when it’s set to private';
@@ -34,7 +34,7 @@ class Strings {
   //follow texts
   static const String followBack = 'Follow Back';
   static const String cancel = 'Cancel';
-  static String followBackDescription(String atsign) {
+  static String followBackDescription(String? atsign) {
     return '$atsign is following you. Tap on follow back to get connected.';
   }
 
@@ -53,7 +53,7 @@ class Strings {
   static const String invalidAtsignMessage =
       'Please provide or scan a valid @sign to follow';
   // static const String atSignStatusMessage = 'This @sing is unreachable. P'
-  static String getAtSignStatusMessage(AtSignStatus status) {
+  static String getAtSignStatusMessage(AtSignStatus? status) {
     status ??= AtSignStatus.error;
     switch (status) {
       case AtSignStatus.unavailable:

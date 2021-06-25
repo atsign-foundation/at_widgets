@@ -13,10 +13,10 @@ class FreeAtsignService {
 
   factory FreeAtsignService() => freeAtsignService;
 
-  var _http;
+  late var _http;
   bool initialized = false;
-  var api;
-  var path = '/api/app/v1/';
+  late var api;
+  var path = '/api/app/v2/';
   var apiKey;
 
   _init() {
@@ -42,6 +42,44 @@ class FreeAtsignService {
     }
   }
 
+  //To login with an @sign
+  Future<dynamic> loginWithAtsign(String atsign) async {
+    // if init was not called earlier, call here to initialize the http
+    if (!initialized) {
+      _init();
+    }
+    Map data = {'atsign': "$atsign"};
+
+    String body = json.encode(data);
+    var url = Uri.https(api, '$path${AppConstants.authWithAtsign}');
+
+    var response = await _http.post(url, body: body, headers: {
+      "Authorization": '$apiKey',
+      "Content-Type": "application/json"
+    });
+
+    return response;
+  }
+
+  //validating atsign with verification code
+  Future<dynamic> verificationWithAtsign(
+      String atsign, String verificationCode) async {
+    // if init was not called earlier, call here to initialize the http
+    if (!initialized) {
+      _init();
+    }
+    var url = Uri.https(api, '$path${AppConstants.validationWithAtsign}');
+    Map data = {'atsign': "$atsign", 'otp': "$verificationCode"};
+
+    String body = json.encode(data);
+    var response = await _http.post(url, body: body, headers: {
+      "Authorization": '$apiKey',
+      "Content-Type": "application/json"
+    });
+
+    return response;
+  }
+
 //To get free @sign from the server
   Future<dynamic> getFreeAtsigns() async {
     // if init was not called earlier, call here to initialize the http
@@ -61,7 +99,7 @@ class FreeAtsignService {
 //To register the person with the provided atsign and email
 //It will send an OTP to the registered email
   Future<dynamic> registerPerson(String atsign, String email,
-      {String oldEmail}) async {
+      {String? oldEmail}) async {
     if (!initialized) {
       _init();
     }
@@ -83,7 +121,7 @@ class FreeAtsignService {
 
 //It will validate the person with atsign, email and the OTP.
 //If the validation is successful, it will return a cram secret for the user to login
-  Future<dynamic> validatePerson(String atsign, String email, String otp,
+  Future<dynamic> validatePerson(String atsign, String email, String? otp,
       {bool confirmation = false}) async {
     if (!initialized) {
       _init();
@@ -95,10 +133,15 @@ class FreeAtsignService {
         'email': '$email',
         'atsign': "$atsign",
         'otp': '$otp',
-        'confirmation': true
+        'confirmation': confirmation
       };
     } else {
-      data = {'email': '$email', 'atsign': "$atsign", 'otp': '$otp'};
+      data = {
+        'email': '$email',
+        'atsign': "$atsign",
+        'otp': '$otp',
+        'confirmation': confirmation
+      };
     }
     String body = json.encode(data);
     var response = await _http.post(url, body: body, headers: {
