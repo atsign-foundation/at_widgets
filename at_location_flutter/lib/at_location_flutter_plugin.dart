@@ -192,7 +192,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                     );
                   }
                 } else {
-                  return ShowLocation(UniqueKey());
+                  return showLocation(UniqueKey());
                 }
               }),
           Positioned(

@@ -68,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Stack(
         children: [
           (myLatLng != null)
-              ? ShowLocation(UniqueKey(), location: myLatLng)
-              : ShowLocation(
+              ? showLocation(UniqueKey(), location: myLatLng)
+              : showLocation(
                   UniqueKey(),
                 ),
           Positioned(
