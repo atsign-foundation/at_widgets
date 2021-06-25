@@ -30,12 +30,7 @@ dependencies:
       ref: trunk_changes
       version: ^2.0.0
   at_client_mobile: ^2.0.0
-  at_server_status:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: at_server_status
-      ref: trunk
-      version: ^0.2.0
+  at_server_status: ^1.0.0
  
 
 dev_dependencies:

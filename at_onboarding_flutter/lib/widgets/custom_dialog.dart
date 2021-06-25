@@ -62,7 +62,7 @@ class CustomDialog extends StatelessWidget {
       this.title,
       this.isAtsignForm = false,
       this.showClose = false,
-      this.atsign ='',
+      this.atsign = '',
       this.isQR = false,
       this.onSubmit,
       this.onValidate,
@@ -740,9 +740,10 @@ class CustomDialog extends StatelessWidget {
                   isConfirmation: true);
               return cramSecret;
             } else {
-              Navigator.pop(context);
-
-              this.onSubmit!(value);
+              if (value != null) {
+                Navigator.pop(context);
+                this.onSubmit!(value);
+              }
               return null;
             }
           });
@@ -769,7 +770,7 @@ class CustomDialog extends StatelessWidget {
       String atsign, String otp, BuildContext context,
       {bool isConfirmation = false}) async {
     var data;
-    String cramSecret ='';
+    String cramSecret = '';
     List<String> atsigns = [];
     // String atsign;
 
