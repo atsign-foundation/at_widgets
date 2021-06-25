@@ -228,7 +228,7 @@ class SharingLocationService {
         await AtLocationNotificationListener().atClientInstance.getKeys(
               regex: '',
             );
-    response.forEach((key) async {
+    await Future.forEach(response, (key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);

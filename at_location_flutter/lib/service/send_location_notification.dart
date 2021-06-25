@@ -84,7 +84,7 @@ class SendLocationNotification {
         (permission == LocationPermission.whileInUse))) {
       positionStream = Geolocator.getPositionStream(distanceFilter: 100)
           .listen((myLocation) async {
-        atsignsToShareLocationWith.forEach((notification) async {
+        await Future.forEach(atsignsToShareLocationWith, (notification) async {
           prepareLocationDataAndSend(
               notification, LatLng(myLocation.latitude, myLocation.longitude));
         });
@@ -150,7 +150,7 @@ class SendLocationNotification {
     var response = await atClient.getKeys(
       regex: '$locationKey',
     );
-    response.forEach((key) async {
+    await Future.forEach(response, (key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);

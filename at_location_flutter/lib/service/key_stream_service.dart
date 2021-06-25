@@ -166,7 +166,7 @@ class KeyStreamService {
   }
 
   void updateEventAccordingToAcknowledgedData() async {
-    allLocationNotifications.forEach((notification) async {
+    await Future.forEach((allLocationNotifications), (notification) async {
       if (notification.key.contains(MixedConstants.SHARE_LOCATION)) {
         if ((notification.locationNotificationModel.atsignCreator ==
                 currentAtSign) &&
