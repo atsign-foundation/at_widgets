@@ -4,6 +4,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
+import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'at_location_notification_listener.dart';
@@ -87,12 +88,17 @@ class SharingLocationService {
             DateTime.now().add(Duration(minutes: minutes));
       }
       result = await AtLocationNotificationListener().atClientInstance.put(
-          atKey,
-          LocationNotificationModel.convertLocationNotificationToJson(
-              locationNotificationModel));
+            atKey,
+            LocationNotificationModel.convertLocationNotificationToJson(
+                locationNotificationModel),
+            isDedicated: MixedConstants.isDedicated,
+          );
       print('sendLocationNotification:$result');
 
       if (result) {
+        if (MixedConstants.isDedicated) {
+          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        }
         await KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
@@ -115,10 +121,17 @@ class SharingLocationService {
       locationNotificationModel.isExited = !isAccepted;
 
       var result = await AtLocationNotificationListener().atClientInstance.put(
-          atKey,
-          LocationNotificationModel.convertLocationNotificationToJson(
-              locationNotificationModel));
+            atKey,
+            LocationNotificationModel.convertLocationNotificationToJson(
+                locationNotificationModel),
+            isDedicated: MixedConstants.isDedicated,
+          );
       print('sendLocationNotificationAcknowledgment:$result');
+      if (result) {
+        if (MixedConstants.isDedicated) {
+          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        }
+      }
       return result;
     } catch (e) {
       print('sending share awk failed $e');
@@ -162,10 +175,15 @@ class SharingLocationService {
         key.metadata.expiresAt = locationNotificationModel.to;
       }
 
-      var result = await AtLocationNotificationListener()
-          .atClientInstance
-          .put(key, notification);
+      var result = await AtLocationNotificationListener().atClientInstance.put(
+            key,
+            notification,
+            isDedicated: MixedConstants.isDedicated,
+          );
       if (result) {
+        if (MixedConstants.isDedicated) {
+          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        }
         KeyStreamService()
             .mapUpdatedLocationDataToWidget(locationNotificationModel);
       }
@@ -211,9 +229,13 @@ class SharingLocationService {
 
       locationNotificationModel.isAcknowledgment = true;
 
-      var result =
-          await AtLocationNotificationListener().atClientInstance.delete(key);
+      var result = await AtLocationNotificationListener()
+          .atClientInstance
+          .delete(key, isDedicated: MixedConstants.isDedicated);
       if (result) {
+        if (MixedConstants.isDedicated) {
+          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        }
         KeyStreamService().removeData(key.key);
       }
       return result;
@@ -234,10 +256,14 @@ class SharingLocationService {
         var atKey = getAtKey(key);
         var result = await AtLocationNotificationListener()
             .atClientInstance
-            .delete(atKey);
+            .delete(atKey, isDedicated: MixedConstants.isDedicated);
         print('$key is deleted ? $result');
       }
     });
+
+    if (MixedConstants.isDedicated) {
+      await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+    }
   }
 
   AtKey newAtKey(int ttr, String key, String sharedWith,

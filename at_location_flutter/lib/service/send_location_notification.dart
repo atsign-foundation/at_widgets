@@ -4,6 +4,8 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/my_location.dart';
+import 'package:at_location_flutter/service/sync_secondary.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
@@ -91,6 +93,10 @@ class SendLocationNotification {
         await prepareLocationDataAndSend(notification,
             LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
       });
+      if (MixedConstants.isDedicated) {
+        // ignore: unawaited_futures
+        SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+      }
 
       ///
       positionStream = Geolocator.getPositionStream(distanceFilter: 100)
@@ -99,6 +105,10 @@ class SendLocationNotification {
           prepareLocationDataAndSend(
               notification, LatLng(myLocation.latitude, myLocation.longitude));
         });
+        if (MixedConstants.isDedicated) {
+          // ignore: unawaited_futures
+          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        }
       });
     }
   }
@@ -137,9 +147,11 @@ class SendLocationNotification {
         ..key = 'locationnotify-$atkeyMicrosecondId';
       try {
         await atClient.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                newLocationNotificationModel));
+          atKey,
+          LocationNotificationModel.convertLocationNotificationToJson(
+              newLocationNotificationModel),
+          isDedicated: MixedConstants.isDedicated,
+        );
       } catch (e) {
         print('error in sending location: $e');
       }
@@ -152,8 +164,14 @@ class SendLocationNotification {
         locationNotificationModel.key.split('-')[1].split('@')[0];
     var atKey = newAtKey(-1, 'locationnotify-$atkeyMicrosecondId',
         locationNotificationModel.receiver);
-    var result = await atClient.delete(atKey);
+    var result =
+        await atClient.delete(atKey, isDedicated: MixedConstants.isDedicated);
     print('$atKey delete operation $result');
+    if (result) {
+      if (MixedConstants.isDedicated) {
+        await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+      }
+    }
     return result;
   }
 
@@ -165,10 +183,15 @@ class SendLocationNotification {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);
-        var result = await atClient.delete(atKey);
+        var result = await atClient.delete(atKey,
+            isDedicated: MixedConstants.isDedicated);
         print('$key is deleted ? $result');
       }
     });
+
+    if (MixedConstants.isDedicated) {
+      await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+    }
   }
 
   AtKey newAtKey(int ttr, String key, String sharedWith, {int ttl}) {

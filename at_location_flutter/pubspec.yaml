@@ -28,8 +28,8 @@ dependencies:
   http: ^0.13.1
 
   at_client_mobile: ^1.0.0+10
-  at_lookup: ^1.0.0+7
-  at_commons: ^1.0.1+7
+  at_lookup: ^2.0.1
+  at_commons: ^2.0.1
   at_contact: ^1.0.0+4
   at_common_flutter: ^1.0.0
   pedantic: ^1.11.0
@@ -37,6 +37,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  logging: ^1.0.1
+  at_utils: ^1.0.1+8
+  at_commons: ^2.0.1
+  at_lookup: ^2.0.1
+  at_client: 
+    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
