@@ -16,7 +16,6 @@ void main() {
     test('for registered @sign', () async {
       MockDataService _mockDataService = MockDataService(atsign);
       String aesKey = _mockDataService.getAESKey;
-      expect(aesKey != null, true);
       expect(aesKey.length == 44, true);
     });
 
@@ -31,7 +30,7 @@ void main() {
     test('for registerd @sign', () async {
       MockDataService _mockDataService = MockDataService(atsign);
       var map = _mockDataService.getEncryptedKeys();
-      expect(map != null, true);
+      expect(map.length, greaterThan(0));
     });
 
     test('for unregisterd @sign', () async {

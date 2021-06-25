@@ -59,13 +59,10 @@ class Strings {
       case AtSignStatus.unavailable:
       case AtSignStatus.notFound:
         return '@sign is not registered yet. Please try with the registered one.';
-        break;
       case AtSignStatus.error:
         return '@sign and the server is unreachable. Please try again';
-        break;
       default:
         return 'Unknown status. Please try again later.';
-        break;
     }
   }
 

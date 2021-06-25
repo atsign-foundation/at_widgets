@@ -71,7 +71,7 @@ class OnboardingService {
   AtClientImpl? _getAtClientForAtsign({String? atsign}) {
     atsign ??= _atsign;
     if (atClientServiceMap.containsKey(atsign)) {
-      return atClientServiceMap[atsign]!.atClient as AtClientImpl?;
+      return atClientServiceMap[atsign]!.atClient;
     }
     return null;
   }

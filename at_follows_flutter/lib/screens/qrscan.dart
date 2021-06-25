@@ -89,7 +89,7 @@ class _QrScanState extends State<QrScan> {
       loading = true;
     });
     _logger.info('received data is $data');
-    if (data != null || data != '') {
+    if (data != '') {
       var formattedAtsign = ConnectionsService().formatAtSign(data);
       var result = await _validateFollowingAtsign(formattedAtsign, true);
 

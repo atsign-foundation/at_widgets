@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 class AppConstants {
@@ -35,19 +33,15 @@ extension customMessages on OnboardingStatus {
     switch (this) {
       case (OnboardingStatus.ACTIVATE):
         return 'Your atsign got reactivated. Please activate with the new QRCode available on ${AppConstants.serverDomain} website.';
-        break;
       case (OnboardingStatus.ENCRYPTION_PRIVATE_KEY_NOT_FOUND):
       case (OnboardingStatus.ENCRYPTION_PUBLIC_KEY_NOT_FOUND):
       case (OnboardingStatus.PKAM_PRIVATE_KEY_NOT_FOUND):
       case (OnboardingStatus.PKAM_PUBLIC_KEY_NOT_FOUND):
         return 'Fatal error occurred. Please contact support@atsign.com';
-        break;
       case (OnboardingStatus.RESTORE):
         return 'Please restore it with the available backup zip file as the local keys were missing.';
-        break;
       default:
         return '';
-        break;
     }
   }
 }

@@ -12,7 +12,6 @@ import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
 import 'package:at_onboarding_flutter/services/freeAtsignService.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
-import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
 import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
@@ -213,57 +212,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     });
   }
 
-  void _uploadCramKeyFile() async {
-    try {
-      if (!permissionGrated) {
-        await checkPermissions();
-      }
-      _isServerCheck = false;
-      _isContinue = true;
-      String? cramKey;
-      FilePickerResult result = await (FilePicker.platform.pickFiles(
-          type: FileType.any,
-          allowMultiple: false) as FutureOr<FilePickerResult>);
-      setState(() {
-        loading = true;
-      });
-      for (var file in result.files) {
-        if (cramKey == null) {
-          String result = await FlutterQrReader.imgScan(file.path!);
-          if (result.contains('@')) {
-            cramKey = result;
-            break;
-          } //read scan QRcode and extract atsign,aeskey
-        }
-      }
-      if (_isCram(cramKey)) {
-        List params = cramKey!.split(':');
-        if (params[1].length < 128) {
-          _showAlertDialog(CustomStrings().invalidCram(params[0]));
-        } else if (OnboardingService.getInstance().formatAtSign(params[0]) !=
-                _pairingAtsign &&
-            _pairingAtsign != null) {
-          _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
-        } else if (params[1].length == 128) {
-          await this._processSharedSecret(params[0], params[1]);
-        } else {
-          _showAlertDialog(CustomStrings().invalidData);
-        }
-      } else {
-        _showAlertDialog(CustomStrings().invalidData);
-      }
-      setState(() {
-        loading = false;
-      });
-    } catch (error) {
-      _logger.severe('Uploading activation qr code throws $error');
-      setState(() {
-        loading = false;
-      });
-      _showAlertDialog(error);
-    }
-  }
-
   _processAESKey(String? atsign, String? aesKey, String contents) async {
     assert(aesKey != null || aesKey != '');
     assert(atsign != null || atsign != '');
@@ -437,7 +385,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
 
     return Scaffold(
         backgroundColor: ColorConstants.light,
@@ -585,64 +532,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     loginWithAtsignAfterReset(context);
   }
 
-  _getQRWidget(deviceTextFactor) {
-    return <Widget>[
-      SizedBox(height: 70.toHeight),
-      RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-              style: TextStyle(
-                  fontSize: 16, color: ColorConstants.lightBackgroundColor),
-              children: [
-                TextSpan(text: Strings.scanQrMessage),
-                TextSpan(text: AppConstants.website)
-              ])),
-      SizedBox(
-        height: 25.toHeight,
-      ),
-      Builder(
-        builder: (context) => Container(
-          alignment: Alignment.center,
-          width: 300.toWidth,
-          height: 350.toHeight,
-          color: Colors.black,
-          child: !permissionGrated
-              ? SizedBox()
-              : Stack(
-                  children: [
-                    QrReaderView(
-                      width: 300.toWidth,
-                      height: 350.toHeight,
-                      callback: (container) {
-                        this._controller = container;
-                        _controller.startCamera((data, offsets) {
-                          if (!scanCompleted) {
-                            onScan(data, offsets, context);
-                            scanCompleted = true;
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
-        ),
-      ),
-      SizedBox(
-        height: 25.toHeight,
-      ),
-      Center(child: Text('OR')),
-      SizedBox(
-        height: 25.toHeight,
-      ),
-      CustomButton(
-        width: 230.toWidth,
-        height: 50.toHeight * deviceTextFactor,
-        buttonText: Strings.uploadQRTitle,
-        onPressed: _uploadCramKeyFile,
-      ),
-    ];
-  }
-
   bool _validatePickedFileContents(String fileContents) {
     var result = fileContents
             .contains(BackupKeyConstants.PKAM_PRIVATE_KEY_FROM_KEY_FILE) &&
@@ -761,7 +650,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         break;
     }
     if (_isQR) {
-      bool status = await loginWithAtsign(atsign, context);
+      await loginWithAtsign(atsign, context);
     }
     setState(() {
       loading = false;

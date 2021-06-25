@@ -102,7 +102,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                                   },
                             value: index,
                             activeColor: ColorConstants.appColor,
-                            title: Text('${currentItem}',
+                            title: Text('$currentItem',
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                 )),

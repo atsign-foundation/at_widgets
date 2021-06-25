@@ -46,8 +46,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
             initialUrl: widget.url,
             javascriptMode: JavascriptMode.unrestricted,
             navigationDelegate: (NavigationRequest navReq) async {
-              if (navReq.url.startsWith(AppConstants.appUrl) &&
-                  AppConstants.appUrl != null) {
+              if (navReq.url.startsWith(AppConstants.appUrl)) {
                 _logger.info('Navigation decision is taken by urlLauncher');
                 await _launchURL(navReq.url);
                 return NavigationDecision.prevent;

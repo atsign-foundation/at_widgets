@@ -24,39 +24,28 @@ class AtExceptionHandler {
     switch (exception.runtimeType) {
       case AtClientException:
         return 'Unable to perform this action. Please try again.';
-        break;
       case UnAuthenticatedException:
         return 'Unable to authenticate. Please try again.';
-        break;
       case NoSuchMethodError:
         return 'Failed in processing. Please try again.';
-        break;
       case AtConnectException:
         return 'Unable to connect server. Please try again later.';
-        break;
       case AtIOException:
         return 'Unable to perform read/write operation. Please try again.';
-        break;
       case AtServerException:
         return 'Unable to activate server. Please contact admin.';
-        break;
       case SecondaryNotFoundException:
         return 'Server is unavailable. Please try again later.';
-        break;
       case SecondaryConnectException:
         return 'Unable to connect. Please check with network connection and try again.';
-        break;
       case InvalidAtSignException:
         return 'Invalid atsign is provided. Please contact admin.';
-        break;
       case String:
         return exception;
-        break;
       case ResponseTimeOutException:
         return 'Server response timed out!\nPlease check your network connection and try again. Contact support@atsign.com if the issue still persists.';
       default:
         return 'Unknown error.';
-        break;
     }
   }
 }

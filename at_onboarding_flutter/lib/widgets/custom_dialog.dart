@@ -20,6 +20,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class CustomDialog extends StatelessWidget {
   ///will display the dialog with the [title] and the error details if set to true else displays the [message]. By default it is set to true.
   final bool isErrorDialog;
@@ -389,25 +390,20 @@ class CustomDialog extends StatelessWidget {
                                                       .width,
                                                   child: ElevatedButton(
                                                     style: ButtonStyle(
-                                                        backgroundColor: MaterialStateProperty
-                                                            .all((_emailController
+                                                        backgroundColor:
+                                                            MaterialStateProperty.all(
+                                                                (_emailController
                                                                             .text !=
-                                                                        '' &&
-                                                                    _emailController
-                                                                            .text !=
-                                                                        null)
-                                                                ? Colors
-                                                                    .grey[800]
-                                                                : Colors.grey[
-                                                                    400])),
+                                                                        '')
+                                                                    ? Colors.grey[
+                                                                        800]
+                                                                    : Colors.grey[
+                                                                        400])),
                                                     // key: Key(''),
                                                     onPressed: () async {
                                                       if (_emailController
-                                                                  .text !=
-                                                              '' &&
-                                                          _emailController
-                                                                  .text !=
-                                                              null) {
+                                                              .text !=
+                                                          '') {
                                                         loading = true;
                                                         stateSet(() {});
                                                         bool status = false;
@@ -475,23 +471,19 @@ class CustomDialog extends StatelessWidget {
                                                   .width,
                                               child: ElevatedButton(
                                                 style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty
-                                                        .all((_emailController
+                                                    backgroundColor:
+                                                        MaterialStateProperty.all(
+                                                            (_emailController
                                                                             .text !=
-                                                                        '' &&
-                                                                    _emailController
-                                                                            .text !=
-                                                                        null ||
-                                                                isQR)
-                                                            ? Colors.grey[800]
-                                                            : Colors
-                                                                .grey[400])),
+                                                                        '' ||
+                                                                    isQR)
+                                                                ? Colors
+                                                                    .grey[800]
+                                                                : Colors.grey[
+                                                                    400])),
                                                 onPressed: () async {
                                                   if ((_emailController.text !=
-                                                              '' &&
-                                                          _emailController
-                                                                  .text !=
-                                                              null) ||
+                                                          '') ||
                                                       isQR) {
                                                     loading = true;
                                                     stateSet(() {});
@@ -539,24 +531,18 @@ class CustomDialog extends StatelessWidget {
                                           TextButton(
                                               onPressed: () async {
                                                 if ((_emailController.text !=
-                                                            '' &&
-                                                        _emailController.text !=
-                                                            null) ||
+                                                        '') ||
                                                     isQR) {
                                                   loading = true;
                                                   stateSet(() {});
                                                   if (isQR) {
-                                                    bool status =
-                                                        await loginWithAtsign(
-                                                            atsign, context);
+                                                    await loginWithAtsign(
+                                                        atsign, context);
                                                   } else {
-                                                    bool status =
-                                                        await registerPersona(
-                                                            _atsignController
-                                                                .text,
-                                                            _emailController
-                                                                .text,
-                                                            context);
+                                                    await registerPersona(
+                                                        _atsignController.text,
+                                                        _emailController.text,
+                                                        context);
                                                   }
 
                                                   loading = false;
@@ -771,8 +757,6 @@ class CustomDialog extends StatelessWidget {
       {bool isConfirmation = false}) async {
     var data;
     String cramSecret = '';
-    List<String> atsigns = [];
-    // String atsign;
 
     dynamic response =
         await _freeAtsignService.verificationWithAtsign(atsign, otp);
@@ -826,37 +810,26 @@ class CustomDialog extends StatelessWidget {
     switch (error.runtimeType) {
       case AtClientException:
         return 'Unable to perform this action. Please try again.';
-        break;
       case UnAuthenticatedException:
         return 'Unable to authenticate. Please try again.';
-        break;
       case NoSuchMethodError:
         return 'Failed in processing. Please try again.';
-        break;
       case AtConnectException:
         return 'Unable to connect server. Please try again later.';
-        break;
       case AtIOException:
         return 'Unable to perform read/write operation. Please try again.';
-        break;
       case AtServerException:
         return 'Unable to activate server. Please contact admin.';
-        break;
       case SecondaryNotFoundException:
         return 'Server is unavailable. Please try again later.';
-        break;
       case SecondaryConnectException:
         return 'Unable to connect. Please check with network connection and try again.';
-        break;
       case InvalidAtSignException:
         return 'Invalid atsign is provided. Please contact admin.';
-        break;
       case ServerStatus:
         return _getServerStatusMessage(error);
-        break;
       case OnboardingStatus:
         return error.message;
-        break;
       case ResponseStatus:
         if (error == ResponseStatus.AUTH_FAILED) {
           if (_onboardingService.isPkam) {
@@ -871,13 +844,10 @@ class CustomDialog extends StatelessWidget {
         } else {
           return '';
         }
-        break;
       case String:
         return error;
-        break;
       default:
         return 'Unknown error.';
-        break;
     }
   }
 
@@ -886,13 +856,10 @@ class CustomDialog extends StatelessWidget {
       case ServerStatus.unavailable:
       case ServerStatus.stopped:
         return 'Server is unavailable. Please try again later.';
-        break;
       case ServerStatus.error:
         return 'Unable to connect. Please check with network connection and try again.';
-        break;
       default:
         return '';
-        break;
     }
   }
 
@@ -936,7 +903,6 @@ class CustomDialog extends StatelessWidget {
                     recognizer: new TapGestureRecognizer()
                       ..onTap = () async {
                         var url = 'https://my.atsign.com';
-                        String errorMessage = 'Cannot launch $url';
                         if (await canLaunch(url)) {
                           await launch(url);
                         }
