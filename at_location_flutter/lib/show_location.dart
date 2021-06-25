@@ -15,9 +15,8 @@ import 'utils/constants/constants.dart';
 /// [locationList] List of Co-ordinates on which markers needs to be shown.
 ///
 /// [locationListMarker] Custom widget displayed as the marker.
-Widget showLocation(Key key,
+Widget showLocation(Key key, MapController mapController,
     {LatLng location, List<LatLng> locationList, Widget locationListMarker}) {
-  final mapController = MapController();
   bool showMarker;
   Marker marker;
   List<Marker> markerList;
@@ -27,6 +26,9 @@ Widget showLocation(Key key,
   print('widget.location $location');
   if (location != null) {
     marker = buildMarker(HybridModel(latLng: location), singleMarker: true);
+    if (mapController != null) {
+      mapController.move(location, 8);
+    }
   } else {
     marker =
         buildMarker(HybridModel(latLng: LatLng(45, 45)), singleMarker: true);
@@ -58,7 +60,7 @@ Widget showLocation(Key key,
             ? 5
             : (location != null)
                 ? 8
-                : 2,
+                : 4,
         plugins: [MarkerClusterPlugin(UniqueKey())],
       ),
       layers: [

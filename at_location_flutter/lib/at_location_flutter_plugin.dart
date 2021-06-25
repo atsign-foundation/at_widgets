@@ -29,22 +29,27 @@ class AtLocationFlutterPlugin extends StatefulWidget {
   /// ETA will be calculated from this co-ordinate.
   LatLng etaFrom;
 
-  /// Text for the co-ordinate from where ETA is calculated.
-  String textForCenter;
+  /// [textForCenter] Text for the co-ordinate from where ETA is calculated.
+  ///
+  /// [focusMapOn] Atsign of user whom to focus on.
+  String textForCenter, focusMapOn;
 
   /// [calculateETA] if ETA needs to be calculated/displayed.
   /// [addCurrentUserMarker] if logged in users current location should be added to the map.
   bool calculateETA, addCurrentUserMarker;
 
-  AtLocationFlutterPlugin(this.atsignsToTrack,
-      {this.left,
-      this.right,
-      this.top,
-      this.bottom,
-      this.calculateETA = false,
-      this.addCurrentUserMarker = false,
-      this.textForCenter = 'Centre',
-      this.etaFrom});
+  AtLocationFlutterPlugin(
+    this.atsignsToTrack, {
+    this.left,
+    this.right,
+    this.top,
+    this.bottom,
+    this.calculateETA = false,
+    this.addCurrentUserMarker = false,
+    this.textForCenter = 'Centre',
+    this.etaFrom,
+    this.focusMapOn,
+  });
   @override
   _AtLocationFlutterPluginState createState() =>
       _AtLocationFlutterPluginState();
@@ -56,13 +61,14 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   MapController mapController;
   List<LatLng> points;
   bool isEventAdmin = false;
-  bool showMarker;
+  bool showMarker, mapAdjustedOnce;
   BuildContext globalContext;
 
   @override
   void initState() {
     super.initState();
     showMarker = true;
+    mapAdjustedOnce = false;
     mapController = MapController();
     LocationService().init(widget.atsignsToTrack,
         etaFrom: widget.etaFrom,
@@ -121,8 +127,31 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                     });
 
                     try {
-                      if ((markers.isNotEmpty) && (mapController != null)) {
-                        mapController.move(markers[0].point, 4);
+                      if (widget.focusMapOn == null) {
+                        if ((markers.isNotEmpty) && (mapController != null)) {
+                          mapController.move(markers[0].point, 10);
+                        }
+                      } else {
+                        if ((!mapAdjustedOnce) &&
+                            (markers.isNotEmpty) &&
+                            (mapController != null)) {
+                          var indexOfUser = users.indexWhere((element) =>
+                              element.displayName == widget.focusMapOn);
+
+                          if (indexOfUser > -1) {
+                            mapController.move(markers[indexOfUser].point, 10);
+
+                            /// If we want the map to only update once
+                            /// And not keep the focus on user sharing his location
+                            /// then uncomment
+                            //
+                            // mapAdjustedOnce = true;
+                          } else {
+                            /// It moves the focus to logged in user,
+                            /// when other user is not sharing location
+                            mapController.move(markers[0].point, 10);
+                          }
+                        }
                       }
                     } catch (e) {
                       print('$e');
@@ -192,7 +221,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                     );
                   }
                 } else {
-                  return showLocation(UniqueKey());
+                  return showLocation(UniqueKey(), mapController);
                 }
               }),
           Positioned(
