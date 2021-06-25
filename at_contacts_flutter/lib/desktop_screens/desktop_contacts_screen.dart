@@ -282,8 +282,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                 )
               : ContactInitial(
                   initials: contact.contact!.atSign,
-                  maxSize: 50,
-                  minSize: 50,
+                  size: 50,
                 ),
           SizedBox(
             width: 15,
@@ -301,7 +300,11 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           Text(contact.contact!.atSign,
               style: CustomTextStyles.desktopSecondaryRegular18),
           Spacer(),
-          ContactListTile(contact, isBlockedScreen: widget.isBlockedScreen),
+          ContactListTile(
+            contact,
+            isBlockedScreen: widget.isBlockedScreen,
+            key: UniqueKey(),
+          ),
           SizedBox(
             width: 50,
           ),
@@ -314,8 +317,10 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
 class ContactListTile extends StatefulWidget {
   BaseContact? baseContact;
   bool isBlockedScreen;
+  UniqueKey? key;
   ContactListTile(
     this.baseContact, {
+    this.key,
     this.isBlockedScreen = false,
   });
 
