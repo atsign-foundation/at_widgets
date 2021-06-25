@@ -201,7 +201,7 @@ class ConnectionsService {
         : followers.setKey = atFollowsValue;
     String value = isFollowing ? following.toString() : followers.toString();
     result = await this._sdkService.put(atFollowsValue.atKey, value);
-    _sdkService.sync();
+    await _sdkService.sync();
     return result;
   }
 

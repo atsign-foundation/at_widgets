@@ -126,11 +126,10 @@ class SDKService {
   ///Returns `true` on starting monitor and passes [callback].
   Future<bool> startMonitor(Function callback) async {
     if (!monitorConnectionMap.containsKey(_atsign)) {
-      // ignore: await_only_futures
-      final String privateKey =
-          await _atClientServiceInstance.getPkamPrivateKey(_atsign);
+      var privateKey =
+          await _atClientServiceInstance.getPkamPrivateKey(_atsign!);
       await _atClientServiceInstance.atClient!.startMonitor(
-        privateKey,
+        privateKey!,
         callback,
       );
       monitorConnectionMap.putIfAbsent(_atsign, () => true);

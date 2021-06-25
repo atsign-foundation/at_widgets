@@ -90,7 +90,7 @@ class OnboardingService {
       _atsign = await this.getAtSign();
     }
     atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
-    _sync();
+    await _sync();
     return result;
   }
 
