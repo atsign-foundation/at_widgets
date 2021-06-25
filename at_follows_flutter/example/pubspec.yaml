@@ -13,12 +13,7 @@ dependencies:
     sdk: flutter
   path_provider: ^2.0.2
   flutter_local_notifications: ^5.0.0+4
-  at_onboarding_flutter: 
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_onboarding_flutter
-      ref: trunk_changes
-      version: ^2.0.0
+  at_onboarding_flutter: ^2.0.0
 
 
   at_follows_flutter:
