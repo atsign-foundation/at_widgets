@@ -21,6 +21,7 @@ class SendLocationNotification {
   final String locationKey = 'locationnotify';
   List<LocationNotificationModel> atsignsToShareLocationWith = [];
   StreamSubscription<Position> positionStream;
+  bool masterSwitchState = true;
 
   AtClientImpl atClient;
 
@@ -32,6 +33,13 @@ class SendLocationNotification {
         'atsignsToShareLocationWith length - ${atsignsToShareLocationWith.length}');
     if (positionStream != null) positionStream.cancel();
     findAtSignsToShareLocationWith();
+  }
+
+  void setMasterSwitchState(bool _state) {
+    masterSwitchState = _state;
+    if (!_state) {
+      deleteAllLocationKey();
+    }
   }
 
   void findAtSignsToShareLocationWith() {
@@ -57,7 +65,14 @@ class SendLocationNotification {
     }
 
     var myLocation = await getMyLocation();
-    prepareLocationDataAndSend(notification, myLocation);
+    if (myLocation != null) {
+      if (masterSwitchState) {
+        prepareLocationDataAndSend(notification, myLocation);
+      }
+    } else {
+      // CustomToast().show(
+      //     'Location permission not granted', NavService.navKey.currentContext);
+    }
 
     // add
     atsignsToShareLocationWith.add(notification);
@@ -88,26 +103,31 @@ class SendLocationNotification {
       /// So, we send data once
       var _currentMyLatLng = await getMyLocation();
 
-      await Future.forEach(atsignsToShareLocationWith, (notification) async {
-        // ignore: await_only_futures
-        await prepareLocationDataAndSend(notification,
-            LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
-      });
-      if (MixedConstants.isDedicated) {
-        // ignore: unawaited_futures
-        SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+      if (_currentMyLatLng != null && masterSwitchState) {
+        await Future.forEach(atsignsToShareLocationWith, (notification) async {
+          // ignore: await_only_futures
+          await prepareLocationDataAndSend(notification,
+              LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
+        });
+        if (MixedConstants.isDedicated) {
+          // ignore: unawaited_futures
+          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        }
       }
 
       ///
       positionStream = Geolocator.getPositionStream(distanceFilter: 100)
           .listen((myLocation) async {
-        await Future.forEach(atsignsToShareLocationWith, (notification) async {
-          prepareLocationDataAndSend(
-              notification, LatLng(myLocation.latitude, myLocation.longitude));
-        });
-        if (MixedConstants.isDedicated) {
-          // ignore: unawaited_futures
-          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        if (masterSwitchState) {
+          await Future.forEach(atsignsToShareLocationWith,
+              (notification) async {
+            prepareLocationDataAndSend(notification,
+                LatLng(myLocation.latitude, myLocation.longitude));
+          });
+          if (MixedConstants.isDedicated) {
+            // ignore: unawaited_futures
+            SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+          }
         }
       });
     }

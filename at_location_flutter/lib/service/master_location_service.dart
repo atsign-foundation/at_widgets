@@ -43,9 +43,9 @@ class MasterLocationService {
 
     if (newGetAtValueFromMainApp != null) {
       getAtValueFromMainApp = newGetAtValueFromMainApp;
+    } else {
+      getAtValueFromMainApp = getAtValue;
     }
-
-    getAtValueFromMainApp = getAtValue;
 
     getAllLocationData();
   }

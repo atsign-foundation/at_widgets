@@ -22,7 +22,8 @@ void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
     {@required String mapKey,
     @required String apiKey,
-    String rootDomain = MixedConstants.ROOT_DOMAIN}) async {
+    String rootDomain = MixedConstants.ROOT_DOMAIN,
+    Function getAtValue}) async {
   /// initialise keys
   MixedConstants.setApiKey(apiKey);
   MixedConstants.setMapKey(mapKey);
@@ -35,8 +36,9 @@ void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     print('Error in initializeLocationService $e');
   }
 
-  AtLocationNotificationListener()
-      .init(atClientImpl, currentAtSign, navKey, rootDomain);
+  AtLocationNotificationListener().init(
+      atClientImpl, currentAtSign, navKey, rootDomain,
+      newGetAtValueFromMainApp: getAtValue);
   KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
 }
 
