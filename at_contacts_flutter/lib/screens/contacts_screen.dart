@@ -56,20 +56,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
   void initState() {
     _contactService = ContactService();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      // try {
-      //   _contactService.fetchContacts();
-      // } catch (e) {
-      //   print('error in Contacts_screen init : $e');
-      //   if (mounted)
-      //     setState(() {
-      //       errorOcurred = true;
-      //     });
-      // }
       var _result = await _contactService!.fetchContacts();
       print('$_result = true');
 
       if (_result == null) {
-        print('_result = true');
         if (mounted) {
           setState(() {
             errorOcurred = true;
