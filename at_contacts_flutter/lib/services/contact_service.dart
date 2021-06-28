@@ -186,6 +186,7 @@ class ContactService {
       blockContactList = await atContactImpl.listBlockedContacts();
       compareBlockedContactListForUpdatedState();
       blockedContactSink.add(baseBlockedList);
+      return blockContactList;
     } catch (error) {
       print('error in fetching contact list:$error');
     }
