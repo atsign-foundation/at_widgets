@@ -19,11 +19,11 @@ dependencies:
   flutter_image_compress: ^1.0.0
   pedantic: ^1.11.0
 
-  at_client_mobile: ^1.0.0+10
-  at_commons: ^1.0.1+7
+  at_client_mobile: ^2.0.0
+  at_commons: ^2.0.1
   at_common_flutter: ^1.0.0
   at_contacts_flutter: ^1.0.1
-  at_contact: ^1.0.0+4
+  at_contact: ^1.0.0+5
   
 dev_dependencies:
   flutter_test:
