@@ -17,21 +17,21 @@ class SendLocationNotification {
   static final SendLocationNotification _instance =
       SendLocationNotification._();
   factory SendLocationNotification() => _instance;
-  Timer timer;
+  Timer? timer;
   final String locationKey = 'locationnotify';
-  List<LocationNotificationModel> atsignsToShareLocationWith = [];
-  StreamSubscription<Position> positionStream;
+  List<LocationNotificationModel?> atsignsToShareLocationWith = [];
+  StreamSubscription<Position>? positionStream;
   bool masterSwitchState = true;
 
-  AtClientImpl atClient;
+  AtClientImpl? atClient;
 
-  void init(AtClientImpl newAtClient) {
-    if ((timer != null) && (timer.isActive)) timer.cancel();
+  void init(AtClientImpl? newAtClient) {
+    if ((timer != null) && (timer!.isActive)) timer!.cancel();
     atClient = newAtClient;
     atsignsToShareLocationWith = [];
     print(
         'atsignsToShareLocationWith length - ${atsignsToShareLocationWith.length}');
-    if (positionStream != null) positionStream.cancel();
+    if (positionStream != null) positionStream!.cancel();
     findAtSignsToShareLocationWith();
   }
 
@@ -45,11 +45,11 @@ class SendLocationNotification {
   void findAtSignsToShareLocationWith() {
     atsignsToShareLocationWith = [];
     KeyStreamService().allLocationNotifications.forEach((notification) {
-      if ((notification.locationNotificationModel.atsignCreator ==
-              atClient.currentAtSign) &&
-          (notification.locationNotificationModel.isSharing) &&
-          (notification.locationNotificationModel.isAccepted) &&
-          (!notification.locationNotificationModel.isExited)) {
+      if ((notification.locationNotificationModel!.atsignCreator ==
+              atClient!.currentAtSign) &&
+          (notification.locationNotificationModel!.isSharing) &&
+          (notification.locationNotificationModel!.isAccepted) &&
+          (!notification.locationNotificationModel!.isExited)) {
         atsignsToShareLocationWith.add(notification.locationNotificationModel);
       }
     });
@@ -57,9 +57,9 @@ class SendLocationNotification {
     sendLocation();
   }
 
-  Future<void> addMember(LocationNotificationModel notification) async {
+  Future<void> addMember(LocationNotificationModel? notification) async {
     if (atsignsToShareLocationWith
-            .indexWhere((element) => element.key == notification.key) >
+            .indexWhere((element) => element!.key == notification!.key) >
         -1) {
       return;
     }
@@ -67,7 +67,7 @@ class SendLocationNotification {
     var myLocation = await getMyLocation();
     if (myLocation != null) {
       if (masterSwitchState) {
-        prepareLocationDataAndSend(notification, myLocation);
+        prepareLocationDataAndSend(notification!, myLocation);
       }
     } else {
       // CustomToast().show(
@@ -80,14 +80,14 @@ class SendLocationNotification {
         'after adding atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
   }
 
-  void removeMember(String key) async {
-    LocationNotificationModel locationNotificationModel;
+  void removeMember(String? key) async {
+    LocationNotificationModel? locationNotificationModel;
     atsignsToShareLocationWith.removeWhere((element) {
-      if (key.contains(element.key)) locationNotificationModel = element;
-      return key.contains(element.key);
+      if (key!.contains(element!.key!)) locationNotificationModel = element;
+      return key.contains(element.key!);
     });
     if (locationNotificationModel != null) {
-      await sendNull(locationNotificationModel);
+      await sendNull(locationNotificationModel!);
     }
 
     print(
@@ -104,7 +104,7 @@ class SendLocationNotification {
       var _currentMyLatLng = await getMyLocation();
 
       if (_currentMyLatLng != null && masterSwitchState) {
-        await Future.forEach(atsignsToShareLocationWith, (notification) async {
+        await Future.forEach(atsignsToShareLocationWith, (dynamic notification) async {
           // ignore: await_only_futures
           await prepareLocationDataAndSend(notification,
               LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
@@ -120,7 +120,7 @@ class SendLocationNotification {
           .listen((myLocation) async {
         if (masterSwitchState) {
           await Future.forEach(atsignsToShareLocationWith,
-              (notification) async {
+              (dynamic notification) async {
             prepareLocationDataAndSend(notification,
                 LatLng(myLocation.latitude, myLocation.longitude));
           });
@@ -139,17 +139,17 @@ class SendLocationNotification {
 
     if (notification.to == null) {
       isSend = true;
-    } else if ((DateTime.now().difference(notification.from) >
+    } else if ((DateTime.now().difference(notification.from!) >
             Duration(seconds: 0)) &&
-        (notification.to.difference(DateTime.now()) > Duration(seconds: 0))) {
+        (notification.to!.difference(DateTime.now()) > Duration(seconds: 0))) {
       isSend = true;
     }
     if (isSend) {
-      var atkeyMicrosecondId = notification.key.split('-')[1].split('@')[0];
+      var atkeyMicrosecondId = notification.key!.split('-')[1].split('@')[0];
       var atKey = newAtKey(
           5000, 'locationnotify-$atkeyMicrosecondId', notification.receiver,
           ttl: (notification.to != null)
-              ? notification.to.difference(DateTime.now()).inMilliseconds
+              ? notification.to!.difference(DateTime.now()).inMilliseconds
               : null);
 
       var newLocationNotificationModel = LocationNotificationModel()
@@ -166,7 +166,7 @@ class SendLocationNotification {
         ..long = myLocation.longitude
         ..key = 'locationnotify-$atkeyMicrosecondId';
       try {
-        await atClient.put(
+        await atClient!.put(
           atKey,
           LocationNotificationModel.convertLocationNotificationToJson(
               newLocationNotificationModel),
@@ -181,11 +181,11 @@ class SendLocationNotification {
   Future<bool> sendNull(
       LocationNotificationModel locationNotificationModel) async {
     var atkeyMicrosecondId =
-        locationNotificationModel.key.split('-')[1].split('@')[0];
+        locationNotificationModel.key!.split('-')[1].split('@')[0];
     var atKey = newAtKey(-1, 'locationnotify-$atkeyMicrosecondId',
         locationNotificationModel.receiver);
     var result =
-        await atClient.delete(atKey, isDedicated: MixedConstants.isDedicated);
+        await atClient!.delete(atKey, isDedicated: MixedConstants.isDedicated);
     print('$atKey delete operation $result');
     if (result) {
       if (MixedConstants.isDedicated) {
@@ -196,14 +196,14 @@ class SendLocationNotification {
   }
 
   void deleteAllLocationKey() async {
-    var response = await atClient.getKeys(
+    var response = await atClient!.getKeys(
       regex: '$locationKey',
     );
-    await Future.forEach(response, (key) async {
+    await Future.forEach(response, (dynamic key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);
-        var result = await atClient.delete(atKey,
+        var result = await atClient!.delete(atKey,
             isDedicated: MixedConstants.isDedicated);
         print('$key is deleted ? $result');
       }
@@ -214,15 +214,15 @@ class SendLocationNotification {
     }
   }
 
-  AtKey newAtKey(int ttr, String key, String sharedWith, {int ttl}) {
+  AtKey newAtKey(int ttr, String key, String? sharedWith, {int? ttl}) {
     var atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata.ttr = ttr
-      ..metadata.ccd = true
+      ..metadata!.ttr = ttr
+      ..metadata!.ccd = true
       ..key = key
       ..sharedWith = sharedWith
-      ..sharedBy = atClient.currentAtSign;
-    if (ttl != null) atKey.metadata.ttl = ttl;
+      ..sharedBy = atClient!.currentAtSign;
+    if (ttl != null) atKey.metadata!.ttl = ttl;
     return atKey;
   }
 }

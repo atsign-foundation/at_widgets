@@ -4,7 +4,7 @@ import 'package:at_location_flutter/map_content/flutter_map/src/layer/marker_lay
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_event.dart';
 
 class PopupController {
-  StreamController<PopupEvent> streamController;
+  StreamController<PopupEvent>? streamController;
 
   /// Hide the popup if it is showing.
   void hidePopup() {
@@ -12,13 +12,13 @@ class PopupController {
   }
 
   /// Hide the popup but only if it is showing for one of the given markers.
-  void hidePopupIfShowingFor(List<Marker> markers) {
+  void hidePopupIfShowingFor(List<Marker?> markers) {
     streamController?.add(PopupEvent.hideInList(markers));
   }
 
   /// Hide the popup if it is showing for the given marker, otherwise show it
   /// for that marker.
-  void togglePopup(Marker marker) {
+  void togglePopup(Marker? marker) {
     streamController?.add(PopupEvent.toggle(marker));
   }
 

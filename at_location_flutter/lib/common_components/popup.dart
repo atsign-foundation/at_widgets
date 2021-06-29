@@ -10,7 +10,7 @@ Widget buildPopup(HybridModel user) {
   var showEtaSection = true;
   if (LocationService().etaFrom != null) {
     if (user.latLng == LocationService().etaFrom) showEtaSection = false;
-  } else if (user.latLng == LocationService().myData.latLng) {
+  } else if (user.latLng == LocationService().myData!.latLng) {
     showEtaSection = false;
   }
 
@@ -20,7 +20,7 @@ Widget buildPopup(HybridModel user) {
       Positioned(bottom: 0, child: pointedBottom()),
       Container(
         width:
-            ((LocationService().calculateETA) && (showEtaSection)) ? 200 : 140,
+            (LocationService().calculateETA! && (showEtaSection)) ? 200 : 140,
         height: 82,
         alignment: Alignment.topCenter,
         child: ClipRRect(
@@ -30,11 +30,11 @@ Widget buildPopup(HybridModel user) {
             height: 76,
             child: Row(
               mainAxisAlignment:
-                  ((LocationService().calculateETA) && (showEtaSection))
+                  (LocationService().calculateETA! && (showEtaSection))
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.center,
               children: [
-                ((LocationService().calculateETA) && (showEtaSection))
+                (LocationService().calculateETA! && (showEtaSection))
                     ? Expanded(
                         child: Container(
                           padding: EdgeInsets.all(10),

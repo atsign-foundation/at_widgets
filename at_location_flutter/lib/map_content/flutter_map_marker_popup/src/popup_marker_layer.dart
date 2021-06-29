@@ -11,33 +11,33 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/pop
 class PopupMarkerLayer extends StatelessWidget {
   /// For normal layer behaviour
   final PopupMarkerLayerOptions layerOpts;
-  final MapState map;
+  final MapState? map;
   final Stream<Null> stream;
 
   PopupMarkerLayer(this.layerOpts, this.map, this.stream);
 
   bool _boundsContainsMarker(Marker marker) {
-    var pixelPoint = map.project(marker.point);
+    var pixelPoint = map!.project(marker.point);
 
     final width = marker.width - marker.anchor.left;
     final height = marker.height - marker.anchor.top;
 
     var sw = CustomPoint(pixelPoint.x + width, pixelPoint.y - height);
     var ne = CustomPoint(pixelPoint.x - width, pixelPoint.y + height);
-    return map.pixelBounds.containsPartialBounds(Bounds(sw, ne));
+    return map!.pixelBounds!.containsPartialBounds(Bounds(sw, ne));
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<int>(
+    return StreamBuilder<int?>(
       stream: stream, // a Stream<int> or null
-      builder: (BuildContext _, AsyncSnapshot<int> __) {
+      builder: (BuildContext _, AsyncSnapshot<int?> __) {
         var markers = <Widget>[];
 
         for (var markerOpt in layerOpts.markers) {
-          var pos = map.project(markerOpt.point);
-          pos = pos.multiplyBy(map.getZoomScale(map.zoom, map.zoom)) -
-              map.getPixelOrigin();
+          var pos = map!.project(markerOpt.point);
+          pos = pos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) -
+              map!.getPixelOrigin()!;
 
           var pixelPosX =
               (pos.x - (markerOpt.width - markerOpt.anchor.left)).toDouble();
@@ -48,10 +48,10 @@ class PopupMarkerLayer extends StatelessWidget {
             continue;
           }
 
-          var bottomPos = map.pixelBounds.max;
+          var bottomPos = map!.pixelBounds!.max;
           bottomPos =
-              bottomPos.multiplyBy(map.getZoomScale(map.zoom, map.zoom)) -
-                  map.getPixelOrigin();
+              bottomPos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) -
+                  map!.getPixelOrigin()!;
 
           markers.add(
             Positioned(
@@ -61,7 +61,7 @@ class PopupMarkerLayer extends StatelessWidget {
               top: pixelPosY,
               child: GestureDetector(
                 onTap: () => layerOpts.popupController.togglePopup(markerOpt),
-                child: markerOpt.builder(context),
+                child: markerOpt.builder!(context),
               ),
             ),
           );

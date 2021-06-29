@@ -17,10 +17,10 @@ class RequestLocationService {
     return _singleton;
   }
 
-  List checkForAlreadyExisting(String atsign) {
+  List checkForAlreadyExisting(String? atsign) {
     var index = KeyStreamService().allLocationNotifications.indexWhere((e) =>
-        ((e.locationNotificationModel.atsignCreator == atsign) &&
-            (e.locationNotificationModel.key
+        ((e.locationNotificationModel!.atsignCreator == atsign) &&
+            (e.locationNotificationModel!.key!
                 .contains(MixedConstants.REQUEST_LOCATION))));
     if (index > -1) {
       return [
@@ -34,7 +34,7 @@ class RequestLocationService {
     }
   }
 
-  Future<bool> sendRequestLocationEvent(String atsign) async {
+  Future<bool?> sendRequestLocationEvent(String? atsign) async {
     try {
       var alreadyExists = checkForAlreadyExisting(atsign);
       var result;
@@ -57,9 +57,9 @@ class RequestLocationService {
         ..key = atKey.key
         ..isRequest = true
         ..receiver =
-            AtLocationNotificationListener().atClientInstance.currentAtSign;
+            AtLocationNotificationListener().atClientInstance!.currentAtSign;
 
-      result = await AtLocationNotificationListener().atClientInstance.put(
+      result = await AtLocationNotificationListener().atClientInstance!.put(
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
@@ -81,9 +81,9 @@ class RequestLocationService {
 
   Future<bool> requestLocationAcknowledgment(
       LocationNotificationModel locationNotificationModel, bool isAccepted,
-      {int minutes, bool isSharing}) async {
+      {int? minutes, bool? isSharing}) async {
     try {
-      var atkeyMicrosecondId = locationNotificationModel.key
+      var atkeyMicrosecondId = locationNotificationModel.key!
           .split('requestlocation-')[1]
           .split('@')[0];
       AtKey atKey;
@@ -108,7 +108,7 @@ class RequestLocationService {
             DateTime.now().add(Duration(minutes: minutes));
       }
 
-      var result = await AtLocationNotificationListener().atClientInstance.put(
+      var result = await AtLocationNotificationListener().atClientInstance!.put(
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
@@ -122,7 +122,7 @@ class RequestLocationService {
         }
       }
 
-      if ((result) && (!isSharing)) {
+      if ((result) && (!isSharing!)) {
         KeyStreamService().removeData(atKey.key);
       }
 
@@ -136,27 +136,27 @@ class RequestLocationService {
     LocationNotificationModel locationNotificationModel,
   ) async {
     try {
-      var atkeyMicrosecondId = locationNotificationModel.key
+      var atkeyMicrosecondId = locationNotificationModel.key!
           .split('requestlocation-')[1]
           .split('@')[0];
 
       var response =
-          await AtLocationNotificationListener().atClientInstance.getKeys(
+          await AtLocationNotificationListener().atClientInstance!.getKeys(
                 regex: 'requestlocation-$atkeyMicrosecondId',
               );
 
       var key = getAtKey(response[0]);
 
       if (locationNotificationModel.isAccepted) {
-        key.metadata.ttl = locationNotificationModel.to
-                .difference(locationNotificationModel.from)
+        key.metadata!.ttl = locationNotificationModel.to!
+                .difference(locationNotificationModel.from!)
                 .inMinutes *
             60000;
-        key.metadata.ttr = locationNotificationModel.to
-                .difference(locationNotificationModel.from)
+        key.metadata!.ttr = locationNotificationModel.to!
+                .difference(locationNotificationModel.from!)
                 .inMinutes *
             60000;
-        key.metadata.expiresAt = locationNotificationModel.to;
+        key.metadata!.expiresAt = locationNotificationModel.to;
       }
 
       locationNotificationModel.isAcknowledgment = true;
@@ -165,7 +165,7 @@ class RequestLocationService {
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel);
       var result;
-      result = await AtLocationNotificationListener().atClientInstance.put(
+      result = await AtLocationNotificationListener().atClientInstance!.put(
             key,
             notification,
             isDedicated: MixedConstants.isDedicated,
@@ -190,7 +190,7 @@ class RequestLocationService {
   Future<bool> sendDeleteAck(
       LocationNotificationModel locationNotificationModel) async {
     try {
-      var atkeyMicrosecondId = locationNotificationModel.key
+      var atkeyMicrosecondId = locationNotificationModel.key!
           .split('requestlocation-')[1]
           .split('@')[0];
       AtKey atKey;
@@ -200,7 +200,7 @@ class RequestLocationService {
         locationNotificationModel.receiver,
       );
 
-      var result = await AtLocationNotificationListener().atClientInstance.put(
+      var result = await AtLocationNotificationListener().atClientInstance!.put(
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
@@ -221,12 +221,12 @@ class RequestLocationService {
 
   Future<bool> deleteKey(
       LocationNotificationModel locationNotificationModel) async {
-    var atkeyMicrosecondId = locationNotificationModel.key
+    var atkeyMicrosecondId = locationNotificationModel.key!
         .split('requestlocation-')[1]
         .split('@')[0];
 
     var response =
-        await AtLocationNotificationListener().atClientInstance.getKeys(
+        await AtLocationNotificationListener().atClientInstance!.getKeys(
               regex: 'requestlocation-$atkeyMicrosecondId',
             );
 
@@ -234,7 +234,7 @@ class RequestLocationService {
 
     locationNotificationModel.isAcknowledgment = true;
 
-    var result = await AtLocationNotificationListener().atClientInstance.delete(
+    var result = await AtLocationNotificationListener().atClientInstance!.delete(
           key,
           isDedicated: MixedConstants.isDedicated,
         );
@@ -249,18 +249,18 @@ class RequestLocationService {
     return result;
   }
 
-  AtKey newAtKey(int ttr, String key, String sharedWith,
-      {int ttl, DateTime expiresAt}) {
+  AtKey newAtKey(int ttr, String key, String? sharedWith,
+      {int? ttl, DateTime? expiresAt}) {
     var atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata.ttr = ttr
-      ..metadata.ccd = true
+      ..metadata!.ttr = ttr
+      ..metadata!.ccd = true
       ..key = key
       ..sharedWith = sharedWith
       ..sharedBy =
-          AtLocationNotificationListener().atClientInstance.currentAtSign;
-    if (ttl != null) atKey.metadata.ttl = ttl;
-    if (expiresAt != null) atKey.metadata.expiresAt = expiresAt;
+          AtLocationNotificationListener().atClientInstance!.currentAtSign;
+    if (ttl != null) atKey.metadata!.ttl = ttl;
+    if (expiresAt != null) atKey.metadata!.expiresAt = expiresAt;
 
     return atKey;
   }

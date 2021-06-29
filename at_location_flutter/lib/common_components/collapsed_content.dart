@@ -18,28 +18,29 @@ import 'package:at_common_flutter/services/size_config.dart';
 // ignore: must_be_immutable
 class CollapsedContent extends StatefulWidget {
   bool expanded;
-  LocationNotificationModel userListenerKeyword;
-  AtClientImpl atClientInstance;
-  String currentAtSign;
+  LocationNotificationModel? userListenerKeyword;
+  AtClientImpl? atClientInstance;
+  String? currentAtSign;
   CollapsedContent(this.expanded, this.atClientInstance,
-      {Key key, this.userListenerKeyword, @required this.currentAtSign});
+      {Key? key, this.userListenerKeyword, required this.currentAtSign});
   @override
   _CollapsedContentState createState() => _CollapsedContentState();
 }
 
 class _CollapsedContentState extends State<CollapsedContent> {
-  bool isCreator, isSharing, locationAvailable = false;
+  late bool isSharing;
+  bool locationAvailable = false;
   @override
   void initState() {
     super.initState();
-    isSharing = widget.userListenerKeyword.isSharing;
+    isSharing = widget.userListenerKeyword!.isSharing;
 
     LocationService().atHybridUsersStream.listen((e) {
       setState(() {
         locationAvailable = false;
       });
-      for (var i = 0; i < e.length; i++) {
-        if (e[i].displayName == widget.userListenerKeyword.atsignCreator) {
+      for (var i = 0; i < e!.length; i++) {
+        if (e[i].displayName == widget.userListenerKeyword!.atsignCreator) {
           setState(() {
             locationAvailable = true;
           });
@@ -51,22 +52,22 @@ class _CollapsedContentState extends State<CollapsedContent> {
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.userListenerKeyword.atsignCreator.contains('@')) {
-      widget.userListenerKeyword.atsignCreator =
-          '@' + widget.userListenerKeyword.atsignCreator;
+    if (!widget.userListenerKeyword!.atsignCreator!.contains('@')) {
+      widget.userListenerKeyword!.atsignCreator =
+          '@' + widget.userListenerKeyword!.atsignCreator!;
     }
 
-    if (!widget.currentAtSign.contains('@')) {
-      widget.currentAtSign = '@' + widget.currentAtSign;
+    if (!widget.currentAtSign!.contains('@')) {
+      widget.currentAtSign = '@' + widget.currentAtSign!;
     }
 
     var amICreator =
-        widget.userListenerKeyword.atsignCreator == widget.currentAtSign;
-    var to = widget.userListenerKeyword.to;
+        widget.userListenerKeyword!.atsignCreator == widget.currentAtSign;
+    var to = widget.userListenerKeyword!.to;
     String time;
     if (to != null) {
       time =
-          'until ${timeOfDayToString(TimeOfDay.fromDateTime(widget.userListenerKeyword.to))} today';
+          'until ${timeOfDayToString(TimeOfDay.fromDateTime(widget.userListenerKeyword!.to!))} today';
     } else {
       time = '';
     }
@@ -112,15 +113,15 @@ class _CollapsedContentState extends State<CollapsedContent> {
                       children: [
                         DisplayTile(
                             title: amICreator
-                                ? '${widget.userListenerKeyword.receiver}'
-                                : '${widget.userListenerKeyword.atsignCreator}',
+                                ? '${widget.userListenerKeyword!.receiver}'
+                                : '${widget.userListenerKeyword!.atsignCreator}',
                             showName: true,
                             atsignCreator: amICreator
-                                ? '${widget.userListenerKeyword.receiver}'
-                                : '${widget.userListenerKeyword.atsignCreator}',
+                                ? '${widget.userListenerKeyword!.receiver}'
+                                : '${widget.userListenerKeyword!.atsignCreator}',
                             subTitle: amICreator
-                                ? '${widget.userListenerKeyword.receiver}'
-                                : '${widget.userListenerKeyword.atsignCreator}'),
+                                ? '${widget.userListenerKeyword!.receiver}'
+                                : '${widget.userListenerKeyword!.atsignCreator}'),
                         Text(
                           amICreator
                               ? 'This user does not share their location'
@@ -180,21 +181,21 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                         onChanged: (value) async {
                                           LoadingDialog().show();
                                           try {
-                                            var result;
-                                            if (widget.userListenerKeyword.key
+                                            late var result;
+                                            if (widget.userListenerKeyword!.key!
                                                 .contains('sharelocation')) {
                                               result = await SharingLocationService()
                                                   .updateWithShareLocationAcknowledge(
                                                       widget
-                                                          .userListenerKeyword,
+                                                          .userListenerKeyword!,
                                                       isSharing: value);
                                             } else if (widget
-                                                .userListenerKeyword.key
+                                                .userListenerKeyword!.key!
                                                 .contains('requestlocation')) {
                                               result = await RequestLocationService()
                                                   .requestLocationAcknowledgment(
                                                       widget
-                                                          .userListenerKeyword,
+                                                          .userListenerKeyword!,
                                                       true,
                                                       isSharing: value);
                                             }
@@ -202,7 +203,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                               if (!value) {
                                                 await SendLocationNotification()
                                                     .sendNull(widget
-                                                        .userListenerKeyword);
+                                                        .userListenerKeyword!);
                                               }
                                               setState(() {
                                                 isSharing = value;
@@ -233,7 +234,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                         var result =
                                             await RequestLocationService()
                                                 .sendRequestLocationEvent(widget
-                                                    .userListenerKeyword
+                                                    .userListenerKeyword!
                                                     .receiver);
                                         if (result == true) {
                                           CustomToast().show(
@@ -264,25 +265,25 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                     onTap: () async {
                                       LoadingDialog().show();
                                       try {
-                                        var result;
-                                        if (widget.userListenerKeyword.key
+                                        late var result;
+                                        if (widget.userListenerKeyword!.key!
                                             .contains('sharelocation')) {
                                           result =
                                               await SharingLocationService()
                                                   .deleteKey(widget
-                                                      .userListenerKeyword);
+                                                      .userListenerKeyword!);
                                         } else if (widget
-                                            .userListenerKeyword.key
+                                            .userListenerKeyword!.key!
                                             .contains('requestlocation')) {
                                           result =
                                               await RequestLocationService()
                                                   .sendDeleteAck(widget
-                                                      .userListenerKeyword);
+                                                      .userListenerKeyword!);
                                         }
                                         if (result) {
                                           await SendLocationNotification()
                                               .sendNull(
-                                                  widget.userListenerKeyword);
+                                                  widget.userListenerKeyword!);
                                           LoadingDialog().hide();
 
                                           Navigator.pop(context);

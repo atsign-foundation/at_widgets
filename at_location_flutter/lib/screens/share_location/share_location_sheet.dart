@@ -10,16 +10,16 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
 class ShareLocationSheet extends StatefulWidget {
-  final Function onTap;
+  final Function? onTap;
   ShareLocationSheet({this.onTap});
   @override
   _ShareLocationSheetState createState() => _ShareLocationSheetState();
 }
 
 class _ShareLocationSheetState extends State<ShareLocationSheet> {
-  AtContact selectedContact;
-  bool isLoading;
-  String selectedOption, textField;
+  AtContact? selectedContact;
+  late bool isLoading;
+  String? selectedOption, textField;
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
             width: 330.toWidth,
             height: 50,
             hintText: 'Type @sign ',
-            initialValue: textField,
+            initialValue: textField!,
             value: (str) {
               if (!str.contains('@')) {
                 str = '@' + str;
@@ -87,7 +87,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
                   child: Text(option),
                 );
               }).toList(),
-              onChanged: (value) {
+              onChanged: (dynamic value) {
                 setState(() {
                   textField = textField;
                   selectedOption = value;
@@ -162,7 +162,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     }
   }
 
-  Future<bool> checkAtsign(String atSign) async {
+  Future<bool> checkAtsign(String? atSign) async {
     if (atSign == null) {
       return false;
     } else if (!atSign.contains('@')) {

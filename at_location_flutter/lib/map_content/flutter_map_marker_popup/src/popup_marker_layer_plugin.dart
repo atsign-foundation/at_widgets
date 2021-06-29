@@ -8,8 +8,8 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/pop
 class PopupMarkerPlugin extends MapPlugin {
   @override
   Widget createLayer(
-      LayerOptions options, MapState mapState, Stream<void> stream) {
-    return PopupMarkerLayer(options, mapState, stream);
+      LayerOptions options, MapState? mapState, Stream<void> stream) {
+    return PopupMarkerLayer(options as PopupMarkerLayerOptions, mapState, stream as Stream<Null>);
   }
 
   @override

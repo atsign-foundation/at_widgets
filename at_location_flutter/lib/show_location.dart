@@ -15,11 +15,11 @@ import 'utils/constants/constants.dart';
 /// [locationList] List of Co-ordinates on which markers needs to be shown.
 ///
 /// [locationListMarker] Custom widget displayed as the marker.
-Widget showLocation(Key key, MapController mapController,
-    {LatLng location, List<LatLng> locationList, Widget locationListMarker}) {
+Widget showLocation(Key key, MapController? mapController,
+    {LatLng? location, List<LatLng>? locationList, Widget? locationListMarker}) {
   bool showMarker;
   Marker marker;
-  List<Marker> markerList;
+  List<Marker>? markerList;
 
   /// init
   showMarker = true;
@@ -40,7 +40,7 @@ Widget showLocation(Key key, MapController mapController,
     locationList.forEach((location) {
       var marker = buildMarker(HybridModel(latLng: location),
           singleMarker: true, marker: locationListMarker);
-      markerList.add(marker);
+      markerList!.add(marker);
     });
   }
 

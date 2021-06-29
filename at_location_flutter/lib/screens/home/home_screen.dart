@@ -29,7 +29,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   PanelController pc = PanelController();
-  LatLng myLatLng;
+  LatLng? myLatLng;
 
   @override
   void initState() {
@@ -109,9 +109,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           minHeight: 267.toHeight,
                           maxHeight: 530.toHeight,
                           panelBuilder: (scrollController) {
-                            if (snapshot.data.isNotEmpty) {
+                            if (snapshot.data!.isNotEmpty) {
                               return collapsedContent(false, scrollController,
-                                  getListView(snapshot.data, scrollController));
+                                  getListView(snapshot.data!, scrollController));
                             } else {
                               return collapsedContent(false, scrollController,
                                   emptyWidget('No Data Found!!'));
@@ -167,17 +167,17 @@ class _HomeScreenState extends State<HomeScreen> {
             InkWell(
               onTap: () {
                 HomeScreenService()
-                    .onLocationModelTap(notification.locationNotificationModel);
+                    .onLocationModelTap(notification.locationNotificationModel!);
               },
               child: DisplayTile(
                 atsignCreator:
-                    notification.locationNotificationModel.atsignCreator ==
+                    notification.locationNotificationModel!.atsignCreator ==
                             AtLocationNotificationListener().currentAtSign
-                        ? notification.locationNotificationModel.receiver
-                        : notification.locationNotificationModel.atsignCreator,
-                title: getTitle(notification.locationNotificationModel),
-                subTitle: getSubTitle(notification.locationNotificationModel),
-                semiTitle: getSemiTitle(notification.locationNotificationModel),
+                        ? notification.locationNotificationModel!.receiver
+                        : notification.locationNotificationModel!.atsignCreator,
+                title: getTitle(notification.locationNotificationModel!),
+                subTitle: getSubTitle(notification.locationNotificationModel!),
+                semiTitle: getSemiTitle(notification.locationNotificationModel!),
               ),
             ),
             Divider()

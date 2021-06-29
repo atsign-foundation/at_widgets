@@ -37,11 +37,11 @@ packages:
     source: hosted
     version: "1.0.0"
   at_client:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "/Users/apple/Desktop/client_projects/at_client_sdk/at_client"
-      relative: false
-    source: path
+      name: at_client
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "2.0.1"
   at_client_mobile:
     dependency: "direct main"
@@ -49,7 +49,7 @@ packages:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+11"
+    version: "2.0.0"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -70,7 +70,7 @@ packages:
       name: at_contact
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+5"
+    version: "2.0.0"
   at_lookup:
     dependency: "direct main"
     description:
@@ -100,12 +100,12 @@ packages:
     source: hosted
     version: "1.0.0"
   at_utils:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+8"
+    version: "2.0.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -243,7 +243,7 @@ packages:
       name: flutter_keychain
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "2.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -302,7 +302,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.1"
+    version: "0.17.0"
   js:
     dependency: transitive
     description:
@@ -622,7 +622,7 @@ packages:
       name: yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "3.1.0"
 sdks:
   dart: ">=2.13.0 <3.0.0"
   flutter: ">=1.24.0-10.2.pre"

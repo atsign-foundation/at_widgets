@@ -22,7 +22,7 @@ class PopupMarkerLayerOptions extends LayerOptions {
   PopupMarkerLayerOptions({
     this.markers = const [],
     this.popupSnap = PopupSnap.top,
-    @required this.popupBuilder,
+    required this.popupBuilder,
     popupController,
     rebuild,
   })  : popupController = popupController ?? PopupController(),

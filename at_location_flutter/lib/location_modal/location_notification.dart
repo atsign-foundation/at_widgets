@@ -5,10 +5,10 @@ import 'package:latlong/latlong.dart';
 /// Model containing all the information needed for location sharing.
 class LocationNotificationModel {
   /// [atsignCreator] who shares their location, [receiver] who receives the location.
-  String atsignCreator, receiver, key;
+  String? atsignCreator, receiver, key;
 
   /// [lat],[long] co-ordinates being shared.
-  double lat, long;
+  double? lat, long;
 
   /// [isAccepted] if this notification is accepted,
   /// [isSharing] if currently sharing for this notification,
@@ -26,8 +26,8 @@ class LocationNotificationModel {
 
   /// start sharing location [from],
   /// stop sharing location [to].
-  DateTime from, to;
-  AtContact atContact;
+  DateTime? from, to;
+  AtContact? atContact;
   LocationNotificationModel({
     this.lat,
     this.long,
@@ -48,7 +48,7 @@ class LocationNotificationModel {
     atContact = AtContact(atSign: receiver);
   }
 
-  LatLng get getLatLng => LatLng(this.lat, this.long);
+  LatLng get getLatLng => LatLng(this.lat!, this.long!);
   LocationNotificationModel.fromJson(Map<String, dynamic> json)
       : atsignCreator = json['atsignCreator'],
         receiver = json['receiver'],
@@ -89,10 +89,10 @@ class LocationNotificationModel {
       'long': locationNotificationModel.long.toString(),
       'key': locationNotificationModel.key.toString(),
       'from': locationNotificationModel.from != null
-          ? locationNotificationModel.from.toUtc().toString()
+          ? locationNotificationModel.from!.toUtc().toString()
           : null.toString(),
       'to': locationNotificationModel.to != null
-          ? locationNotificationModel.to.toUtc().toString()
+          ? locationNotificationModel.to!.toUtc().toString()
           : null.toString(),
       'isAcknowledgment': locationNotificationModel.isAcknowledgment.toString(),
       'isRequest': locationNotificationModel.isRequest.toString(),

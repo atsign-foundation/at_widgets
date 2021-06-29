@@ -17,9 +17,9 @@ class SyncSecondary {
   /// Called to sync with secondary
   Future<void> callSyncSecondary(
     SyncOperation _syncOperation, {
-    AtKey atKey,
-    String notification,
-    OperationEnum operation,
+    AtKey? atKey,
+    String? notification,
+    OperationEnum? operation,
     bool isDedicated = MixedConstants.isDedicated,
   }) async {
     _operations.insert(
@@ -64,8 +64,8 @@ class SyncSecondary {
         var _syncOperationDetails = _operations.removeLast();
         if (_syncOperationDetails.syncOperation == SyncOperation.notifyAll) {
           await _notifyAllInSync(
-            _syncOperationDetails.atKey,
-            _syncOperationDetails.notification,
+            _syncOperationDetails.atKey!,
+            _syncOperationDetails.notification!,
             _syncOperationDetails.operation,
           );
         } else {
@@ -82,16 +82,16 @@ class SyncSecondary {
   void _executeAfterSynced(List<SyncOperationDetails> _tempPriorityOperations) {
     _tempPriorityOperations.forEach((e) {
       if (e.response != null) {
-        e.afterSync();
+        e.afterSync!();
       }
     });
   }
 
   Future<void> _notifyAllInSync(
-      AtKey atKey, String notification, OperationEnum operation,
+      AtKey atKey, String notification, OperationEnum? operation,
       {bool isDedicated = MixedConstants.isDedicated}) async {
     var notifyAllResult = await AtLocationNotificationListener()
-        .atClientInstance
+        .atClientInstance!
         .notifyAll(atKey, notification, OperationEnum.update,
             isDedicated: isDedicated);
 
@@ -101,7 +101,7 @@ class SyncSecondary {
   Future<void> _syncSecondary() async {
     try {
       var syncManager =
-          AtLocationNotificationListener().atClientInstance.getSyncManager();
+          AtLocationNotificationListener().atClientInstance!.getSyncManager()!;
       var isSynced = await syncManager.isInSync();
       print('already synced: $isSynced');
       if (isSynced is bool && isSynced) {
@@ -117,12 +117,12 @@ class SyncSecondary {
 
 class SyncOperationDetails {
   SyncOperation syncOperation;
-  AtKey atKey;
-  String notification;
-  OperationEnum operation;
-  bool isDedicated;
-  String response;
-  Function afterSync;
+  AtKey? atKey;
+  String? notification;
+  OperationEnum? operation;
+  bool? isDedicated;
+  String? response;
+  Function? afterSync;
 
   SyncOperationDetails(
     this.syncOperation, {
