@@ -384,7 +384,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
             .map((markerNode) => markerNode.marker)
             .toList();
 
-        _spiderfyController
+        _spiderfyController!
           ..stop()
           ..reverse().then((_) => setState(() {
                 _spiderfyCluster = null;
@@ -496,7 +496,8 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
           widget.options.onMarkersClustered!(markersGettingClustered);
         }
       } else if (_zoomController!.isAnimating &&
-          (_currentZoom! > _previousZoom! && layer.parent!.point != layer.point)) {
+          (_currentZoom! > _previousZoom! &&
+              layer.parent!.point != layer.point)) {
         // cluster
         layers.add(_buildCluster(
             layer,
@@ -534,7 +535,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       _previousZoom = _currentZoom;
       _currentZoom = zoom;
 
-      _zoomController
+      _zoomController!
         ..reset()
         ..forward().then((_) => setState(() {
               _hidePolygon();
@@ -621,7 +622,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       _fitBoundController!.addListener(listener);
 
       _fitBoundController!.forward().then((_) {
-        _fitBoundController
+        _fitBoundController!
           ..removeListener(listener)
           ..reset();
       });
@@ -664,7 +665,8 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
           _fitBoundController!.isAnimating) return null;
 
       if (widget.options.popupOptions != null) {
-        widget.options.popupOptions!.popupController!.togglePopup(marker.marker);
+        widget.options.popupOptions!.popupController!
+            .togglePopup(marker.marker);
       }
 
       // This is handled as an optional callback rather than leaving the package
@@ -698,7 +700,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       _centerMarkerController!.addListener(listener);
 
       _centerMarkerController!.forward().then((_) {
-        _centerMarkerController
+        _centerMarkerController!
           ..removeListener(listener)
           ..reset();
       });

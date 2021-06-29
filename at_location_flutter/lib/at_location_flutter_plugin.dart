@@ -61,7 +61,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   MapController? mapController;
   List<LatLng?>? points;
   bool isEventAdmin = false;
-  bool showMarker, mapAdjustedOnce;
+  late bool showMarker, mapAdjustedOnce;
   BuildContext? globalContext;
 
   @override
@@ -139,7 +139,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                               element.displayName == widget.focusMapOn);
 
                           if (indexOfUser > -1) {
-                            mapController!.move(markers[indexOfUser]!.point, 10);
+                            mapController!
+                                .move(markers[indexOfUser]!.point, 10);
 
                             /// If we want the map to only update once
                             /// And not keep the focus on user sharing his location
@@ -207,8 +208,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                                 return _popupController
                                         .streamController!.isClosed
                                     ? Text('Closed')
-                                    : buildPopup(
-                                        snapshot.data![markers.indexOf(marker)]);
+                                    : buildPopup(snapshot
+                                        .data![markers.indexOf(marker)]);
                               }),
                           builder: (context, markers) {
                             return (false)

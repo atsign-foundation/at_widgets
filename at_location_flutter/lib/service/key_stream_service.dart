@@ -81,7 +81,7 @@ class KeyStreamService {
     });
 
     for (var i = 0; i < allLocationNotifications.length; i++) {
-      AtValue? value = await (getAtValue(allLocationNotifications[i].atKey!) as FutureOr<AtValue?>);
+      AtValue? value = await (getAtValue(allLocationNotifications[i].atKey!));
       if (value != null) {
         allLocationNotifications[i].atValue = value;
       }
@@ -166,7 +166,8 @@ class KeyStreamService {
   }
 
   void updateEventAccordingToAcknowledgedData() async {
-    await Future.forEach((allLocationNotifications), (dynamic notification) async {
+    await Future.forEach((allLocationNotifications),
+        (dynamic notification) async {
       if (notification.key.contains(MixedConstants.SHARE_LOCATION)) {
         if ((notification.locationNotificationModel.atsignCreator ==
                 currentAtSign) &&
@@ -269,7 +270,8 @@ class KeyStreamService {
       LocationNotificationModel locationNotificationModel) async {
     String newLocationDataKeyId;
     String tempKey;
-    if (locationNotificationModel.key!.contains(MixedConstants.SHARE_LOCATION)) {
+    if (locationNotificationModel.key!
+        .contains(MixedConstants.SHARE_LOCATION)) {
       newLocationDataKeyId = locationNotificationModel.key!
           .split('sharelocation-')[1]
           .split('@')[0];
@@ -306,7 +308,7 @@ class KeyStreamService {
 
     tempHyridNotificationModel.atKey = getAtKey(key[0]);
     tempHyridNotificationModel.atValue =
-        await (getAtValue(tempHyridNotificationModel.atKey!) as FutureOr<AtValue?>);
+        await (getAtValue(tempHyridNotificationModel.atKey!));
     tempHyridNotificationModel.locationNotificationModel =
         locationNotificationModel;
     allLocationNotifications.add(tempHyridNotificationModel);

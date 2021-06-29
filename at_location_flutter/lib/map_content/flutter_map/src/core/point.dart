@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 class CustomPoint<T extends num> extends math.Point<T> {
-  const CustomPoint(num x, num y) : super((x as T*), (y as T*));
+  const CustomPoint(num x, num y) : super((x as T), (y as T));
 
   CustomPoint<T> operator /(num /*T|int*/ factor) {
     return CustomPoint<T>(x / factor, y / factor);

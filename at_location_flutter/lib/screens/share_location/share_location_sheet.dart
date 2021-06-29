@@ -52,7 +52,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
             width: 330.toWidth,
             height: 50,
             hintText: 'Type @sign ',
-            initialValue: textField!,
+            initialValue: textField ?? '',
             value: (str) {
               if (!str.contains('@')) {
                 str = '@' + str;

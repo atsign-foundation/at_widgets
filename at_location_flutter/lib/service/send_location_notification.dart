@@ -104,7 +104,8 @@ class SendLocationNotification {
       var _currentMyLatLng = await getMyLocation();
 
       if (_currentMyLatLng != null && masterSwitchState) {
-        await Future.forEach(atsignsToShareLocationWith, (dynamic notification) async {
+        await Future.forEach(atsignsToShareLocationWith,
+            (dynamic notification) async {
           // ignore: await_only_futures
           await prepareLocationDataAndSend(notification,
               LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
@@ -121,6 +122,7 @@ class SendLocationNotification {
         if (masterSwitchState) {
           await Future.forEach(atsignsToShareLocationWith,
               (dynamic notification) async {
+            // ignore: unawaited_futures
             prepareLocationDataAndSend(notification,
                 LatLng(myLocation.latitude, myLocation.longitude));
           });
@@ -133,7 +135,7 @@ class SendLocationNotification {
     }
   }
 
-  void prepareLocationDataAndSend(
+  Future<void> prepareLocationDataAndSend(
       LocationNotificationModel notification, LatLng myLocation) async {
     var isSend = false;
 
@@ -203,8 +205,8 @@ class SendLocationNotification {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);
-        var result = await atClient!.delete(atKey,
-            isDedicated: MixedConstants.isDedicated);
+        var result = await atClient!
+            .delete(atKey, isDedicated: MixedConstants.isDedicated);
         print('$key is deleted ? $result');
       }
     });

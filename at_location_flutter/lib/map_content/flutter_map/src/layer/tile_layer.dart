@@ -778,23 +778,23 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     // wrapping
     _wrapX = crs.wrapLng;
     if (_wrapX != null) {
-      var first =
-          (map.project(LatLng(0.0, crs.wrapLng!.item1), tileZoom).x / tileSize!.x)
-              .floorToDouble();
-      var second =
-          (map.project(LatLng(0.0, crs.wrapLng!.item2), tileZoom).x / tileSize.y)
-              .ceilToDouble();
+      var first = (map.project(LatLng(0.0, crs.wrapLng!.item1), tileZoom).x /
+              tileSize!.x)
+          .floorToDouble();
+      var second = (map.project(LatLng(0.0, crs.wrapLng!.item2), tileZoom).x /
+              tileSize.y)
+          .ceilToDouble();
       _wrapX = Tuple2(first, second);
     }
 
     _wrapY = crs.wrapLat;
     if (_wrapY != null) {
-      var first =
-          (map.project(LatLng(crs.wrapLat!.item1, 0.0), tileZoom).y / tileSize!.x)
-              .floorToDouble();
-      var second =
-          (map.project(LatLng(crs.wrapLat!.item2, 0.0), tileZoom).y / tileSize.y)
-              .ceilToDouble();
+      var first = (map.project(LatLng(crs.wrapLat!.item1, 0.0), tileZoom).y /
+              tileSize!.x)
+          .floorToDouble();
+      var second = (map.project(LatLng(crs.wrapLat!.item2, 0.0), tileZoom).y /
+              tileSize.y)
+          .ceilToDouble();
       _wrapY = Tuple2(first, second);
     }
   }
@@ -871,7 +871,8 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
       var c = tile.coords;
 
       if (tile.current == true &&
-          (c!.z != _tileZoom || !noPruneRange.contains(CustomPoint(c.x, c.y)))) {
+          (c!.z != _tileZoom ||
+              !noPruneRange.contains(CustomPoint(c.x, c.y)))) {
         tile.current = false;
       }
     }
@@ -967,7 +968,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     tile.loadTileImage();
   }
 
-  void _tileReady(Coords<double> coords, dynamic error, Tile? tile) {
+  void _tileReady(Coords<double>? coords, dynamic error, Tile? tile) {
     if (null != error) {
       print(error);
 
@@ -980,7 +981,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
       tile!.loadError = false;
     }
 
-    var key = _tileCoordsToKey(coords);
+    var key = _tileCoordsToKey(coords!);
     tile = _tiles[key];
     if (null == tile) {
       return;
