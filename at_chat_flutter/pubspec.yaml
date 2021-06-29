@@ -11,11 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  at_contact: ^1.0.0+4
+  at_contact: ^2.0.0
   at_common_flutter: ^1.0.0
-  at_commons: ^1.0.1+7
-  at_client_mobile: ^1.0.0+10
-  at_lookup: ^1.0.0+7
+  at_commons: ^2.0.1
+  at_client_mobile: ^2.0.0
+  at_lookup: ^2.0.1
   pedantic: ^1.11.0
 
 dev_dependencies:

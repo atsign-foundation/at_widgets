@@ -61,7 +61,8 @@ class ChatService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    return await atClientInstance.getPrivateKey(atsign);
+    String? privateKey = await atClientInstance.getPrivateKey(atsign);
+    return privateKey!;
   }
 
   void _notificationCallback(dynamic notification) async {
@@ -82,7 +83,7 @@ class ChatService {
             notificationKey.startsWith(chatKey + groupChatId!) &&
             groupChatMembers!.contains(fromAtsign))) {
       var message = responseJson['value'];
-      var decryptedMessage = await atClientInstance.encryptionService
+      var decryptedMessage = await atClientInstance.encryptionService!
           .decrypt(message, fromAtsign)
           .catchError((e) {
         print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
@@ -214,7 +215,7 @@ class ChatService {
 
     var atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata.ttr = -1
+      ..metadata?.ttr = -1
       ..key = chatKey +
           (isGroupChat ? groupChatId! : '') +
           DateTime.now().millisecondsSinceEpoch.toString();
