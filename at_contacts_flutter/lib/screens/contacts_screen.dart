@@ -176,7 +176,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         } else {
                           var _filteredList = <AtContact?>[];
                           snapshot.data!.forEach((c) {
-                            if (c!.atSign
+                            if (c!.atSign!
                                 .toUpperCase()
                                 .contains(searchText.toUpperCase())) {
                               _filteredList.add(c);
@@ -202,13 +202,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
                               if (alphabetIndex == 26) {
                                 currentChar = 'Others';
                                 _filteredList.forEach((c) {
-                                  if (int.tryParse(c!.atSign[1]) != null) {
+                                  if (int.tryParse(c!.atSign![1]) != null) {
                                     contactsForAlphabet.add(c);
                                   }
                                 });
                               } else {
                                 _filteredList.forEach((c) {
-                                  if (c!.atSign[1].toUpperCase() ==
+                                  if (c!.atSign![1].toUpperCase() ==
                                       currentChar) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -331,7 +331,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                             atSign:
                                                                 contactsForAlphabet[
                                                                         index]!
-                                                                    .atSign);
+                                                                    .atSign!);
                                                     setState(() {
                                                       deletingContact = false;
                                                       Navigator.pop(context);

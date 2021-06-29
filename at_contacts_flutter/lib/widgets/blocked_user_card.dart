@@ -35,8 +35,8 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
   Widget build(BuildContext context) {
     Widget contactImage;
     if (widget.blockeduser!.tags != null &&
-        widget.blockeduser!.tags['image'] != null) {
-      List<int> intList = widget.blockeduser!.tags['image'].cast<int>();
+        widget.blockeduser!.tags!['image'] != null) {
+      List<int> intList = widget.blockeduser!.tags!['image'].cast<int>();
       var image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
@@ -44,7 +44,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
       );
     } else {
       contactImage = ContactInitial(
-        initials: widget.blockeduser!.atSign,
+        initials: widget.blockeduser!.atSign!,
       );
     }
     return ListTile(
@@ -55,7 +55,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.blockeduser!.atSign.substring(1).toString(),
+              widget.blockeduser!.atSign!.substring(1).toString(),
               style: CustomTextStyles.primaryRegular16,
             ),
             Text(
