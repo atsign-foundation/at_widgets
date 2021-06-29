@@ -4,6 +4,7 @@ import 'package:at_location_flutter/common_components/display_tile.dart';
 import 'package:at_location_flutter/common_components/floating_icon.dart';
 import 'package:at_location_flutter/common_components/tasks.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
+import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/screens/request_location/request_location_sheet.dart';
 import 'package:at_location_flutter/screens/share_location/share_location_sheet.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
@@ -60,6 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  MapController mapController = MapController();
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -68,9 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Stack(
         children: [
           (myLatLng != null)
-              ? ShowLocation(UniqueKey(), location: myLatLng)
-              : ShowLocation(
+              ? showLocation(UniqueKey(), mapController, location: myLatLng)
+              : showLocation(
                   UniqueKey(),
+                  mapController,
                 ),
           Positioned(
             top: 30,

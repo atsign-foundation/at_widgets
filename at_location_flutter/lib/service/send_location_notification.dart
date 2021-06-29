@@ -4,6 +4,8 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/my_location.dart';
+import 'package:at_location_flutter/service/sync_secondary.dart';
+import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
@@ -19,6 +21,7 @@ class SendLocationNotification {
   final String locationKey = 'locationnotify';
   List<LocationNotificationModel> atsignsToShareLocationWith = [];
   StreamSubscription<Position> positionStream;
+  bool masterSwitchState = true;
 
   AtClientImpl atClient;
 
@@ -30,6 +33,13 @@ class SendLocationNotification {
         'atsignsToShareLocationWith length - ${atsignsToShareLocationWith.length}');
     if (positionStream != null) positionStream.cancel();
     findAtSignsToShareLocationWith();
+  }
+
+  void setMasterSwitchState(bool _state) {
+    masterSwitchState = _state;
+    if (!_state) {
+      deleteAllLocationKey();
+    }
   }
 
   void findAtSignsToShareLocationWith() {
@@ -55,7 +65,14 @@ class SendLocationNotification {
     }
 
     var myLocation = await getMyLocation();
-    prepareLocationDataAndSend(notification, myLocation);
+    if (myLocation != null) {
+      if (masterSwitchState) {
+        prepareLocationDataAndSend(notification, myLocation);
+      }
+    } else {
+      // CustomToast().show(
+      //     'Location permission not granted', NavService.navKey.currentContext);
+    }
 
     // add
     atsignsToShareLocationWith.add(notification);
@@ -82,12 +99,36 @@ class SendLocationNotification {
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
+      /// The stream doesnt run until 100m is covered
+      /// So, we send data once
+      var _currentMyLatLng = await getMyLocation();
+
+      if (_currentMyLatLng != null && masterSwitchState) {
+        await Future.forEach(atsignsToShareLocationWith, (notification) async {
+          // ignore: await_only_futures
+          await prepareLocationDataAndSend(notification,
+              LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
+        });
+        if (MixedConstants.isDedicated) {
+          // ignore: unawaited_futures
+          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        }
+      }
+
+      ///
       positionStream = Geolocator.getPositionStream(distanceFilter: 100)
           .listen((myLocation) async {
-        atsignsToShareLocationWith.forEach((notification) async {
-          prepareLocationDataAndSend(
-              notification, LatLng(myLocation.latitude, myLocation.longitude));
-        });
+        if (masterSwitchState) {
+          await Future.forEach(atsignsToShareLocationWith,
+              (notification) async {
+            prepareLocationDataAndSend(notification,
+                LatLng(myLocation.latitude, myLocation.longitude));
+          });
+          if (MixedConstants.isDedicated) {
+            // ignore: unawaited_futures
+            SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+          }
+        }
       });
     }
   }
@@ -126,9 +167,11 @@ class SendLocationNotification {
         ..key = 'locationnotify-$atkeyMicrosecondId';
       try {
         await atClient.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                newLocationNotificationModel));
+          atKey,
+          LocationNotificationModel.convertLocationNotificationToJson(
+              newLocationNotificationModel),
+          isDedicated: MixedConstants.isDedicated,
+        );
       } catch (e) {
         print('error in sending location: $e');
       }
@@ -141,8 +184,14 @@ class SendLocationNotification {
         locationNotificationModel.key.split('-')[1].split('@')[0];
     var atKey = newAtKey(-1, 'locationnotify-$atkeyMicrosecondId',
         locationNotificationModel.receiver);
-    var result = await atClient.delete(atKey);
+    var result =
+        await atClient.delete(atKey, isDedicated: MixedConstants.isDedicated);
     print('$atKey delete operation $result');
+    if (result) {
+      if (MixedConstants.isDedicated) {
+        await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+      }
+    }
     return result;
   }
 
@@ -150,14 +199,19 @@ class SendLocationNotification {
     var response = await atClient.getKeys(
       regex: '$locationKey',
     );
-    response.forEach((key) async {
+    await Future.forEach(response, (key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);
-        var result = await atClient.delete(atKey);
+        var result = await atClient.delete(atKey,
+            isDedicated: MixedConstants.isDedicated);
         print('$key is deleted ? $result');
       }
     });
+
+    if (MixedConstants.isDedicated) {
+      await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+    }
   }
 
   AtKey newAtKey(int ttr, String key, String sharedWith, {int ttl}) {

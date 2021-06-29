@@ -36,6 +36,8 @@ class AllColors {
   Color MILD_GREY = Color(0xFFE4E4E4);
   // ignore: non_constant_identifier_names
   Color LIGHT_GREY_LABEL = Color(0xFFB3B6BE);
+  // ignore: non_constant_identifier_names
+  Color RED = Color(0xFFe34040);
 }
 
 class ContactInitialsColors {

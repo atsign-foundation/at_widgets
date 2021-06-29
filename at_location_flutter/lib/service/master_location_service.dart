@@ -43,9 +43,9 @@ class MasterLocationService {
 
     if (newGetAtValueFromMainApp != null) {
       getAtValueFromMainApp = newGetAtValueFromMainApp;
+    } else {
+      getAtValueFromMainApp = getAtValue;
     }
-
-    getAtValueFromMainApp = getAtValue;
 
     getAllLocationData();
   }
@@ -112,8 +112,8 @@ class MasterLocationService {
         .removeWhere((element) => tempArray.contains(element));
   }
 
-  void createHybridFromKeyLocationModel() {
-    allLocationNotifications.forEach((keyLocationModel) async {
+  void createHybridFromKeyLocationModel() async {
+    await Future.forEach(allLocationNotifications, (keyLocationModel) async {
       var _image = await getImageOfAtsignNew(
           keyLocationModel.locationNotificationModel.atsignCreator);
       var user = HybridModel(

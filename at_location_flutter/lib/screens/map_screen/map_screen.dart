@@ -53,6 +53,7 @@ class _MapScreenState extends State<MapScreen> {
                 atsignsToTrack,
                 calculateETA: true,
                 addCurrentUserMarker: true,
+                focusMapOn: widget.userListenerKeyword.atsignCreator,
                 // etaFrom: LatLng(44, -112),
                 // textForCenter: 'Final',
               ),
@@ -81,9 +82,12 @@ class _MapScreenState extends State<MapScreen> {
                             : 130.toHeight)
                     : 431.toHeight,
                 panel: CollapsedContent(
-                    true, AtLocationNotificationListener().atClientInstance,
-                    userListenerKeyword: widget.userListenerKeyword,
-                    currentAtSign: widget.currentAtSign),
+                  true,
+                  AtLocationNotificationListener().atClientInstance,
+                  userListenerKeyword: widget.userListenerKeyword,
+                  currentAtSign: widget.currentAtSign,
+                  key: UniqueKey(),
+                ),
               )
             ],
           )),
