@@ -88,8 +88,8 @@ class ContactService {
       var tempContactList = <AtContact?>[...contactList];
       var range = contactList.length;
       for (var i = 0; i < range; i++) {
-        allContactsList.add(contactList[i]!.atSign);
-        if (contactList[i]!.blocked) {
+        allContactsList.add(contactList[i]!.atSign!);
+        if (contactList[i]!.blocked!) {
           tempContactList.remove(contactList[i]);
         }
       }
@@ -291,7 +291,7 @@ class ContactService {
       }
 
       // profile picture
-      key.metadata!.isBinary = true;
+      key.metadata?.isBinary = true;
       key.key = contactFields[2];
       result = await atClientInstance!.get(key);
       var image = result.value;
