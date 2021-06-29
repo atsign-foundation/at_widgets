@@ -4,6 +4,7 @@ import 'package:at_location_flutter/common_components/display_tile.dart';
 import 'package:at_location_flutter/common_components/floating_icon.dart';
 import 'package:at_location_flutter/common_components/tasks.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
+import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/screens/request_location/request_location_sheet.dart';
 import 'package:at_location_flutter/screens/share_location/share_location_sheet.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
@@ -28,7 +29,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   PanelController pc = PanelController();
-  LatLng myLatLng;
+  LatLng? myLatLng;
 
   @override
   void initState() {
@@ -60,6 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  MapController mapController = MapController();
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -68,9 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Stack(
         children: [
           (myLatLng != null)
-              ? ShowLocation(UniqueKey(), location: myLatLng)
-              : ShowLocation(
+              ? showLocation(UniqueKey(), mapController, location: myLatLng)
+              : showLocation(
                   UniqueKey(),
+                  mapController,
                 ),
           Positioned(
             top: 30,
@@ -105,9 +109,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           minHeight: 267.toHeight,
                           maxHeight: 530.toHeight,
                           panelBuilder: (scrollController) {
-                            if (snapshot.data.isNotEmpty) {
+                            if (snapshot.data!.isNotEmpty) {
                               return collapsedContent(false, scrollController,
-                                  getListView(snapshot.data, scrollController));
+                                  getListView(snapshot.data!, scrollController));
                             } else {
                               return collapsedContent(false, scrollController,
                                   emptyWidget('No Data Found!!'));
@@ -163,17 +167,17 @@ class _HomeScreenState extends State<HomeScreen> {
             InkWell(
               onTap: () {
                 HomeScreenService()
-                    .onLocationModelTap(notification.locationNotificationModel);
+                    .onLocationModelTap(notification.locationNotificationModel!);
               },
               child: DisplayTile(
                 atsignCreator:
-                    notification.locationNotificationModel.atsignCreator ==
+                    notification.locationNotificationModel!.atsignCreator ==
                             AtLocationNotificationListener().currentAtSign
-                        ? notification.locationNotificationModel.receiver
-                        : notification.locationNotificationModel.atsignCreator,
-                title: getTitle(notification.locationNotificationModel),
-                subTitle: getSubTitle(notification.locationNotificationModel),
-                semiTitle: getSemiTitle(notification.locationNotificationModel),
+                        ? notification.locationNotificationModel!.receiver
+                        : notification.locationNotificationModel!.atsignCreator,
+                title: getTitle(notification.locationNotificationModel!),
+                subTitle: getSubTitle(notification.locationNotificationModel!),
+                semiTitle: getSemiTitle(notification.locationNotificationModel!),
               ),
             ),
             Divider()

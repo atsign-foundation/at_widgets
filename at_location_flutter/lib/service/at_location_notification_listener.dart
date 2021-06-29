@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -16,15 +17,15 @@ class AtLocationNotificationListener {
   static final _instance = AtLocationNotificationListener._();
   factory AtLocationNotificationListener() => _instance;
   final String locationKey = 'locationnotify';
-  AtClientImpl atClientInstance;
-  String currentAtSign;
-  GlobalKey<NavigatorState> navKey;
+  AtClientImpl? atClientInstance;
+  String? currentAtSign;
+  late GlobalKey<NavigatorState> navKey;
   // ignore: non_constant_identifier_names
-  String ROOT_DOMAIN;
+  String? ROOT_DOMAIN;
 
   void init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
       GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
-      {Function newGetAtValueFromMainApp}) {
+      {Function? newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     navKey = navKeyFromMainApp;
@@ -35,15 +36,15 @@ class AtLocationNotificationListener {
   }
 
   Future<bool> startMonitor() async {
-    var privateKey = await getPrivateKey(currentAtSign);
-    await atClientInstance.startMonitor(privateKey, _notificationCallback);
+    var privateKey = await (getPrivateKey(currentAtSign!) as FutureOr<String>);
+    await atClientInstance!.startMonitor(privateKey, _notificationCallback);
     print('Monitor started in location package');
     return true;
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    return await atClientInstance.getPrivateKey(atsign);
+  Future<String?> getPrivateKey(String atsign) async {
+    return await atClientInstance!.getPrivateKey(atsign);
   }
 
   void _notificationCallback(dynamic notification) async {
@@ -84,7 +85,7 @@ class AtLocationNotificationListener {
       }
     }
 
-    var decryptedMessage = await atClientInstance.encryptionService
+    var decryptedMessage = await atClientInstance!.encryptionService!
         .decrypt(value, fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) => print('error in decrypting: $e'));
@@ -162,9 +163,9 @@ class AtLocationNotificationListener {
   }
 
   Future<void> showMyDialog(
-      String fromAtSign, LocationNotificationModel locationData) async {
+      String? fromAtSign, LocationNotificationModel locationData) async {
     return showDialog<void>(
-      context: navKey.currentContext,
+      context: navKey.currentContext!,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return NotificationDialog(

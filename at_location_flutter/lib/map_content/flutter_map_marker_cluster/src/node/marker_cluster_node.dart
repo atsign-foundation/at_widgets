@@ -6,12 +6,12 @@ import 'package:latlong/latlong.dart';
 
 class MarkerClusterNode {
   final int zoom;
-  final MapState map;
+  final MapState? map;
   final List<dynamic> children;
   LatLngBounds bounds;
-  MarkerClusterNode parent;
-  int addCount;
-  int removeCount;
+  MarkerClusterNode? parent;
+  int? addCount;
+  int? removeCount;
 
   List<MarkerNode> get markers {
     var markers = <MarkerNode>[];
@@ -27,16 +27,16 @@ class MarkerClusterNode {
   }
 
   MarkerClusterNode({
-    @required this.zoom,
-    @required this.map,
+    required this.zoom,
+    required this.map,
   })  : bounds = LatLngBounds(),
         children = [],
         parent = null;
 
-  LatLng get point {
-    var swPoint = map.project(bounds.southWest);
-    var nePoint = map.project(bounds.northEast);
-    return map.unproject((swPoint + nePoint) / 2);
+  LatLng? get point {
+    var swPoint = map!.project(bounds.southWest);
+    var nePoint = map!.project(bounds.northEast);
+    return map!.unproject((swPoint + nePoint) / 2);
   }
 
   void addChild(dynamic child) {
@@ -66,8 +66,8 @@ class MarkerClusterNode {
   }
 
   void recursively(
-      int zoomLevel, int disableClusteringAtZoom, Function(dynamic) fn) {
-    if (zoom == zoomLevel && zoomLevel <= disableClusteringAtZoom) {
+      int? zoomLevel, int disableClusteringAtZoom, Function(dynamic) fn) {
+    if (zoom == zoomLevel && zoomLevel! <= disableClusteringAtZoom) {
       fn(this);
       return;
     }

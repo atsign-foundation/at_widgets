@@ -10,8 +10,8 @@ class MarkerClusterPlugin extends MapPlugin {
   MarkerClusterPlugin(this.key);
   @override
   Widget createLayer(
-      LayerOptions options, MapState mapState, Stream<void> stream) {
-    return MarkerClusterLayer(options, mapState, stream, key);
+      LayerOptions options, MapState? mapState, Stream<void> stream) {
+    return MarkerClusterLayer(options as MarkerClusterLayerOptions, mapState, stream, key);
   }
 
   @override

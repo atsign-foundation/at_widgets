@@ -16,7 +16,7 @@ class LoadingDialog {
       _showing = true;
       AtLocationNotificationListener()
           .navKey
-          .currentState
+          .currentState!
           .push(CustomPopupRoutes(
               pageBuilder: (_, __, ___) {
                 print('building loader');
@@ -32,7 +32,7 @@ class LoadingDialog {
   void hide() {
     print('hide called');
     if (_showing) {
-      AtLocationNotificationListener().navKey.currentState.pop();
+      AtLocationNotificationListener().navKey.currentState!.pop();
       _showing = false;
     }
   }
