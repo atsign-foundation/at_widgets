@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'client_sdk_service.dart';
 import 'second_screen.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
 void main() {
   runApp(MyApp());

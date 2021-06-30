@@ -151,7 +151,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 if (widget.showGroups &&
                                     c!.group != null &&
                                     c.group!.displayName != null &&
-                                    c.group!.displayName
+                                    c.group!.displayName!
                                         .toUpperCase()
                                         .contains(searchText.toUpperCase())) {
                                   _filteredList.add(c);
@@ -167,7 +167,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showContacts &&
                                       c!.contact != null &&
-                                      int.tryParse(c.contact!.atSign[1]) !=
+                                      int.tryParse(c.contact!.atSign![1]) !=
                                           null) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -175,7 +175,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showGroups &&
                                       c!.group != null &&
-                                      int.tryParse(c.group!.displayName[0]) !=
+                                      int.tryParse(c.group!.displayName![0]) !=
                                           null) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -184,7 +184,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showContacts &&
                                       c!.contact != null &&
-                                      c.contact?.atSign[1].toUpperCase() ==
+                                      c.contact?.atSign![1].toUpperCase() ==
                                           currentChar) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -192,7 +192,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 _filteredList.forEach((c) {
                                   if (widget.showGroups &&
                                       c!.group != null &&
-                                      c.group?.displayName[0].toUpperCase() ==
+                                      c.group?.displayName![0].toUpperCase() ==
                                           currentChar) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -342,7 +342,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                                                   atSign: contactsForAlphabet[
                                                                           index]!
                                                                       .contact!
-                                                                      .atSign);
+                                                                      .atSign!);
                                                               await _groupService
                                                                   .fetchGroupsAndContacts();
                                                               setState(() {

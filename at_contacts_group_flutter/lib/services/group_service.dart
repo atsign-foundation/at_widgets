@@ -95,12 +95,12 @@ class GroupService {
   // ignore: always_declare_return_types
   getAllGroupsDetails() async {
     try {
-      List<String> groupIds = await atContactImpl.listGroupIds();
+      var groupIds = await atContactImpl.listGroupIds();
       var groupList = <AtGroup>[];
 
       for (var i = 0; i < groupIds.length; i++) {
         var groupDetail =
-            await (getGroupDetail(groupIds[i]) as FutureOr<AtGroup>);
+            await (getGroupDetail(groupIds[i]!) as FutureOr<AtGroup>);
         // ignore: unnecessary_null_comparison
         if (groupDetail != null) groupList.add(groupDetail);
       }
@@ -118,7 +118,7 @@ class GroupService {
   // ignore: always_declare_return_types
   listAllGroupNames() async {
     try {
-      List<String> groupNames = await atContactImpl.listGroupNames();
+      var groupNames = await atContactImpl.listGroupNames();
       return groupNames;
     } catch (e) {
       return e;
@@ -127,7 +127,7 @@ class GroupService {
 
   Future<AtGroup?> getGroupDetail(String groupId) async {
     try {
-      AtGroup group = await atContactImpl.getGroup(groupId);
+      var group = await atContactImpl.getGroup(groupId);
       return group;
     } catch (e) {
       print('error in getting group details : $e');
@@ -138,8 +138,7 @@ class GroupService {
   Future<dynamic> deletGroupMembers(
       List<AtContact> contacts, AtGroup group) async {
     try {
-      bool result =
-          await atContactImpl.deleteMembers(Set.from(contacts), group);
+      var result = await atContactImpl.deleteMembers(Set.from(contacts), group);
       if (result is bool) {
         await updateGroupStreams(group);
         return result;
@@ -153,7 +152,7 @@ class GroupService {
   Future<dynamic> addGroupMembers(
       List<AtContact?> contacts, AtGroup group) async {
     try {
-      bool result = await atContactImpl.addMembers(Set.from(contacts), group);
+      var result = await atContactImpl.addMembers(Set.from(contacts), group);
       if (result is bool) {
         await updateGroupStreams(group);
         return result;
@@ -166,7 +165,7 @@ class GroupService {
 
   Future<dynamic> updateGroup(AtGroup group) async {
     try {
-      AtGroup updatedGroup = await atContactImpl.updateGroup(group);
+      var updatedGroup = await atContactImpl.updateGroup(group);
       if (updatedGroup is AtGroup) {
         updateGroupStreams(updatedGroup);
         return updatedGroup;
@@ -182,7 +181,7 @@ class GroupService {
   // ignore: always_declare_return_types
   updateGroupStreams(AtGroup group) async {
     AtGroup? groupDetail =
-        await (getGroupDetail(group.groupId) as FutureOr<AtGroup>);
+        await (getGroupDetail(group.groupId!) as FutureOr<AtGroup>);
     if (groupDetail is AtGroup) groupViewSink.add(groupDetail);
     await getAllGroupsDetails();
   }
@@ -241,7 +240,7 @@ class GroupService {
           if (groupContact!.contactType == ContactsType.CONTACT) {
             length++;
           } else if (groupContact.contactType == ContactsType.GROUP) {
-            length = length + groupContact.group!.members.length;
+            length = length + groupContact.group!.members!.length;
           }
         });
       }
@@ -257,7 +256,7 @@ class GroupService {
       if (item!.contactType == ContactsType.CONTACT) {
         length--;
       } else if (item.contactType == ContactsType.GROUP) {
-        length -= item.group!.members.length;
+        length -= item.group!.members!.length;
       }
 
       selectedContactsSink.add(selectedGroupContacts);
@@ -276,7 +275,7 @@ class GroupService {
           if (groupContact!.contactType == ContactsType.CONTACT) {
             length++;
           } else if (groupContact.contactType == ContactsType.GROUP) {
-            length = length + groupContact.group!.members.length;
+            length = length + groupContact.group!.members!.length;
           }
         });
       }
@@ -298,7 +297,7 @@ class GroupService {
       if (item!.contactType == ContactsType.CONTACT) {
         length++;
       } else if (item.contactType == ContactsType.GROUP) {
-        length += item.group!.members.length;
+        length += item.group!.members!.length;
       }
 
       selectedContactsSink.add(selectedGroupContacts);

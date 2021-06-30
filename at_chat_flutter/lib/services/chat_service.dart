@@ -215,7 +215,7 @@ class ChatService {
 
     var atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata!.ttr = -1
+      ..metadata?.ttr = -1
       ..key = chatKey +
           (isGroupChat ? groupChatId! : '') +
           DateTime.now().millisecondsSinceEpoch.toString();
