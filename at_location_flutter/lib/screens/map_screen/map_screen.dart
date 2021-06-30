@@ -9,8 +9,8 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 // ignore: must_be_immutable
 class MapScreen extends StatefulWidget {
-  final LocationNotificationModel userListenerKeyword;
-  String currentAtSign;
+  final LocationNotificationModel? userListenerKeyword;
+  String? currentAtSign;
 
   MapScreen({this.currentAtSign, this.userListenerKeyword});
 
@@ -20,25 +20,25 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final PanelController pc = PanelController();
-  GlobalKey<ScaffoldState> scaffoldKey;
-  List<String> atsignsToTrack;
+  GlobalKey<ScaffoldState>? scaffoldKey;
+  List<String?>? atsignsToTrack;
 
   @override
   void initState() {
     super.initState();
     scaffoldKey = GlobalKey<ScaffoldState>();
     atsignsToTrack =
-        widget.userListenerKeyword.atsignCreator == widget.currentAtSign
+        widget.userListenerKeyword!.atsignCreator == widget.currentAtSign
             ? []
-            : [widget.userListenerKeyword.atsignCreator];
+            : [widget.userListenerKeyword!.atsignCreator];
 
-    if (!widget.userListenerKeyword.atsignCreator.contains('@')) {
-      widget.userListenerKeyword.atsignCreator =
-          '@' + widget.userListenerKeyword.atsignCreator;
+    if (!widget.userListenerKeyword!.atsignCreator!.contains('@')) {
+      widget.userListenerKeyword!.atsignCreator =
+          '@' + widget.userListenerKeyword!.atsignCreator!;
     }
 
-    if (!widget.currentAtSign.contains('@')) {
-      widget.currentAtSign = '@' + widget.currentAtSign;
+    if (!widget.currentAtSign!.contains('@')) {
+      widget.currentAtSign = '@' + widget.currentAtSign!;
     }
   }
 
@@ -53,6 +53,7 @@ class _MapScreenState extends State<MapScreen> {
                 atsignsToTrack,
                 calculateETA: true,
                 addCurrentUserMarker: true,
+                focusMapOn: widget.userListenerKeyword!.atsignCreator,
                 // etaFrom: LatLng(44, -112),
                 // textForCenter: 'Final',
               ),
@@ -73,7 +74,7 @@ class _MapScreenState extends State<MapScreen> {
                         : 130.toHeight
                     : 205.toHeight,
                 maxHeight: widget.userListenerKeyword != null
-                    ? ((widget.userListenerKeyword.atsignCreator ==
+                    ? ((widget.userListenerKeyword!.atsignCreator ==
                             widget.currentAtSign)
                         ? 291.toHeight
                         : 130.toHeight < 130
@@ -81,9 +82,12 @@ class _MapScreenState extends State<MapScreen> {
                             : 130.toHeight)
                     : 431.toHeight,
                 panel: CollapsedContent(
-                    true, AtLocationNotificationListener().atClientInstance,
-                    userListenerKeyword: widget.userListenerKeyword,
-                    currentAtSign: widget.currentAtSign),
+                  true,
+                  AtLocationNotificationListener().atClientInstance,
+                  userListenerKeyword: widget.userListenerKeyword,
+                  currentAtSign: widget.currentAtSign,
+                  key: UniqueKey(),
+                ),
               )
             ],
           )),

@@ -1,6 +1,7 @@
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
+import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/screens/home/home_screen.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
@@ -20,6 +21,8 @@ class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
   String activeAtSign, receiver;
   Stream<List<KeyLocationModel>> newStream;
+  MapController mapController = MapController();
+
   @override
   void initState() {
     try {
@@ -148,7 +151,7 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () async {
                 await Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      ShowLocation(UniqueKey(), locationList: [
+                      showLocation(UniqueKey(), mapController, locationList: [
                     LatLng(30, 45),
                     LatLng(40, 45),
                   ]),

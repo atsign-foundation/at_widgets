@@ -23,7 +23,7 @@ class SearchLocationService {
 
     List addresses = jsonDecode(response.body);
     var share = <LocationModal>[];
-    for (Map ad in addresses) {
+    for (Map ad in addresses as Iterable<Map<dynamic, dynamic>>) {
       share.add(LocationModal.fromJson(ad));
     }
 

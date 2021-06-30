@@ -16,9 +16,9 @@ abstract class TileProvider {
 
   String getTileUrl(Coords coords, TileLayerOptions options) {
     var urlTemplate = (options.wmsOptions != null)
-        ? options.wmsOptions
+        ? options.wmsOptions!
             .getUrl(coords, options.tileSize.toInt(), options.retinaMode)
-        : options.urlTemplate;
+        : options.urlTemplate!;
 
     var z = _getZoomForUrl(coords, options);
 
@@ -38,7 +38,7 @@ abstract class TileProvider {
   }
 
   double _getZoomForUrl(Coords coords, TileLayerOptions options) {
-    var zoom = coords.z;
+    var zoom = coords.z!;
 
     if (options.zoomReverse) {
       zoom = options.maxZoom - zoom;
@@ -100,7 +100,7 @@ class FileTileProvider extends TileProvider {
 class CustomTileProvider extends TileProvider {
   String Function(Coords coors, TileLayerOptions options) customTileUrl;
 
-  CustomTileProvider({@required this.customTileUrl});
+  CustomTileProvider({required this.customTileUrl});
 
   @override
   String getTileUrl(Coords coords, TileLayerOptions options) {

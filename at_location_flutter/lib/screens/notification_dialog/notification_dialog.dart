@@ -16,11 +16,11 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 // ignore: must_be_immutable
 class NotificationDialog extends StatefulWidget {
-  String userName;
-  final LocationNotificationModel locationData;
+  String? userName;
+  final LocationNotificationModel? locationData;
   final bool showMembersCount;
 
-  int minutes;
+  int? minutes;
   NotificationDialog(
       {this.locationData, this.userName, this.showMembersCount = false});
 
@@ -29,17 +29,17 @@ class NotificationDialog extends StatefulWidget {
 }
 
 class _NotificationDialogState extends State<NotificationDialog> {
-  int minutes;
-  AtContact contact;
-  Uint8List image;
-  String locationUserImageToShow;
+  int? minutes;
+  AtContact? contact;
+  Uint8List? image;
+  String? locationUserImageToShow;
 
   @override
   void initState() {
-    locationUserImageToShow = (widget.locationData.atsignCreator ==
+    locationUserImageToShow = (widget.locationData!.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
-        ? widget.locationData.receiver
-        : widget.locationData.atsignCreator);
+        ? widget.locationData!.receiver
+        : widget.locationData!.atsignCreator);
 
     widget.userName = locationUserImageToShow;
     getEventCreator();
@@ -50,11 +50,11 @@ class _NotificationDialogState extends State<NotificationDialog> {
   void getEventCreator() async {
     var contact = await getAtSignDetails(locationUserImageToShow);
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
+      if (contact.tags != null && contact.tags!['image'] != null) {
+        List<int>? intList = contact.tags!['image'].cast<int>();
         if (mounted) {
           setState(() {
-            image = Uint8List.fromList(intList);
+            image = Uint8List.fromList(intList!);
           });
         }
       }
@@ -74,7 +74,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                      ((!widget.locationData.isRequest)
+                      ((!widget.locationData!.isRequest)
                           ? '${widget.userName} wants to share their location with you. Are you sure you want to accept their location?'
                           : '${widget.userName} wants you to share your location. Are you sure you want to share?'),
                       style: CustomTextStyles().grey16,
@@ -87,7 +87,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(30)),
                               child: Image.memory(
-                                image,
+                                image!,
                                 width: 50,
                                 height: 50,
                                 fit: BoxFit.fill,
@@ -122,12 +122,12 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   CustomButton(
                     onPressed: () => () async {
                       // ignore: unnecessary_statements
-                      ((!widget.locationData.isRequest)
+                      ((!widget.locationData!.isRequest)
                           ? {
                               print('accept share location'),
                               SharingLocationService()
                                   .shareLocationAcknowledgment(
-                                      widget.locationData, true),
+                                      widget.locationData!, true),
                               Navigator.of(context).pop(),
                             }
                           : {
@@ -145,18 +145,18 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   CustomButton(
                     onPressed: () => () async {
                       // ignore: unnecessary_statements
-                      ((!widget.locationData.isRequest)
+                      ((!widget.locationData!.isRequest)
                           ? {
                               print('accept share location'),
                               SharingLocationService()
                                   .shareLocationAcknowledgment(
-                                      widget.locationData, false),
+                                      widget.locationData!, false),
                               Navigator.of(context).pop(),
                             }
                           : {
                               RequestLocationService()
                                   .requestLocationAcknowledgment(
-                                      widget.locationData, false),
+                                      widget.locationData!, false),
                               Navigator.of(context).pop(),
                             });
                     }(),
@@ -176,7 +176,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
   }
 
   void timeSelect(BuildContext context) {
-    int result;
+    int? result;
     bottomSheet(
         context,
         TextTileRepeater(
@@ -192,7 +192,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
         ),
         350, onSheetCLosed: () {
       RequestLocationService().requestLocationAcknowledgment(
-          widget.locationData, true,
+          widget.locationData!, true,
           minutes: result);
       return result;
     });

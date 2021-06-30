@@ -40,8 +40,8 @@ class AnimationsOptions {
 }
 
 class PopupOptions {
-  final PopupBuilder popupBuilder;
-  final PopupController popupController;
+  final PopupBuilder? popupBuilder;
+  final PopupController? popupController;
   final PopupSnap popupSnap;
 
   const PopupOptions({
@@ -52,23 +52,23 @@ class PopupOptions {
 }
 
 typedef ClusterWidgetBuilder = Widget Function(
-    BuildContext context, List<Marker> markers);
+    BuildContext context, List<Marker?> markers);
 
 class MarkerClusterLayerOptions extends LayerOptions {
   /// Cluster builder
   final ClusterWidgetBuilder builder;
 
   /// List of markers
-  final List<Marker> markers;
+  final List<Marker?> markers;
 
   /// Cluster size
   final Size size;
 
   /// Cluster compute size
-  final Size Function(List<Marker>) computeSize;
+  final Size Function(List<Marker?>)? computeSize;
 
   /// Cluster anchor
-  final AnchorPos anchor;
+  final AnchorPos? anchor;
 
   /// A cluster will cover at most this many pixels from its center
   final int maxClusterRadius;
@@ -99,7 +99,7 @@ class MarkerClusterLayerOptions extends LayerOptions {
   final int circleSpiralSwitchover;
 
   /// Make it possible to provide custom function to calculate spiderfy shape positions
-  final List<Point> Function(int, Point) spiderfyShapePositions;
+  final List<Point> Function(int, Point)? spiderfyShapePositions;
 
   /// If true show polygon then tap on cluster
   final bool showPolygon;
@@ -108,19 +108,19 @@ class MarkerClusterLayerOptions extends LayerOptions {
   final PolygonOptions polygonOptions;
 
   /// Function to call when a Marker is tapped
-  final void Function(Marker) onMarkerTap;
+  final void Function(Marker?)? onMarkerTap;
 
   /// Function to call when markers are clustered
-  final void Function(List<Marker>) onMarkersClustered;
+  final void Function(List<Marker?>)? onMarkersClustered;
 
   /// Function to call when a cluster Marker is tapped
-  final void Function(MarkerClusterNode) onClusterTap;
+  final void Function(MarkerClusterNode)? onClusterTap;
 
   /// Popup's options that show when tapping markers or via the PopupController.
-  final PopupOptions popupOptions;
+  final PopupOptions? popupOptions;
 
   MarkerClusterLayerOptions({
-    @required this.builder,
+    required this.builder,
     this.markers = const [],
     this.size = const Size(30, 30),
     this.computeSize,

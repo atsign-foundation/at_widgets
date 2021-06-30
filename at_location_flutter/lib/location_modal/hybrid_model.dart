@@ -4,11 +4,11 @@ import 'package:latlong/latlong.dart';
 
 /// Model containing the [displayName], [image], [eta], [marker] associated with the [latLng].
 class HybridModel {
-  String displayName;
-  Uint8List image;
-  LatLng latLng;
-  String eta = '?';
-  Marker marker;
+  String? displayName;
+  Uint8List? image;
+  LatLng? latLng;
+  String? eta = '?';
+  Marker? marker;
   HybridModel({
     this.displayName,
     this.eta,

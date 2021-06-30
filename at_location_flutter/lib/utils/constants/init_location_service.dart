@@ -20,9 +20,10 @@ import 'package:meta/meta.dart';
 /// Steps to get [mapKey]/[apiKey] available in README.
 void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
-    {@required String mapKey,
-    @required String apiKey,
-    String rootDomain = MixedConstants.ROOT_DOMAIN}) async {
+    {required String mapKey,
+    required String apiKey,
+    String rootDomain = MixedConstants.ROOT_DOMAIN,
+    Function? getAtValue}) async {
   /// initialise keys
   MixedConstants.setApiKey(apiKey);
   MixedConstants.setMapKey(mapKey);
@@ -35,8 +36,9 @@ void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     print('Error in initializeLocationService $e');
   }
 
-  AtLocationNotificationListener()
-      .init(atClientImpl, currentAtSign, navKey, rootDomain);
+  AtLocationNotificationListener().init(
+      atClientImpl, currentAtSign, navKey, rootDomain,
+      newGetAtValueFromMainApp: getAtValue);
   KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
 }
 
@@ -47,7 +49,7 @@ Stream getAllNotification() {
 
 /// sends a share location notification to the [atsign], with a 'ttl' of [minutes].
 /// before calling this [atsign] should be checked if valid or not.
-Future<bool> sendShareLocationNotification(String atsign, int minutes) async {
+Future<bool?> sendShareLocationNotification(String atsign, int minutes) async {
   var result = await SharingLocationService()
       .sendShareLocationEvent(atsign, false, minutes: minutes);
   return result;
@@ -55,7 +57,7 @@ Future<bool> sendShareLocationNotification(String atsign, int minutes) async {
 
 /// sends a request location notification to the [atsign].
 /// before calling this [atsign] should be checked if valid or not.
-Future<bool> sendRequestLocationNotification(String atsign) async {
+Future<bool?> sendRequestLocationNotification(String atsign) async {
   var result = await RequestLocationService().sendRequestLocationEvent(atsign);
   return result;
 }
@@ -76,6 +78,6 @@ void deleteAllLocationData() {
 /// returns the 'AtKey' of the [regexKey]
 AtKey getAtKey(String regexKey) {
   var atKey = AtKey.fromString(regexKey);
-  atKey.metadata.ttr = -1;
+  atKey.metadata!.ttr = -1;
   return atKey;
 }

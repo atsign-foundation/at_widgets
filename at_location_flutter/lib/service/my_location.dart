@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 
-Future<LatLng> getMyLocation() async {
+Future<LatLng?> getMyLocation() async {
   try {
     bool serviceEnabled;
     LocationPermission permission;

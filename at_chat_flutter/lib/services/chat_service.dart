@@ -61,8 +61,8 @@ class ChatService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    String? privateKey = await atClientInstance.getPrivateKey(atsign);
-    return privateKey!;
+    var str = await atClientInstance.getPrivateKey(atsign);
+    return str!;
   }
 
   void _notificationCallback(dynamic notification) async {
