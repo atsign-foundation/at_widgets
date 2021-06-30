@@ -19,7 +19,7 @@ import 'package:at_events_flutter/screens/select_location.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
-import 'package:at_location_flutter/utils/constants/constants.dart';
+import 'package:at_events_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 

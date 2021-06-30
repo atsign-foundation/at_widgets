@@ -47,27 +47,27 @@ Future<bool> createEvent(EventNotificationModel eventData) async {
   }
 }
 
-Future<bool> updateEvent(EventNotificationModel eventData, String key) async {
-  String regexKey;
-  EventNotificationModel currentEventData;
-  regexKey = await getRegexKeyFromKey(key);
-  if (regexKey == null) {
-    throw Exception('Event key not found');
-  }
-  currentEventData = await getValue(regexKey);
-  eventData.atsignCreator = currentEventData.atsignCreator;
+// Future<bool> updateEvent(EventNotificationModel eventData, String key) async {
+//   String regexKey;
+//   EventNotificationModel currentEventData;
+//   regexKey = await getRegexKeyFromKey(key);
+//   if (regexKey == null) {
+//     throw Exception('Event key not found');
+//   }
+//   currentEventData = await getValue(regexKey);
+//   eventData.atsignCreator = currentEventData.atsignCreator;
 
-  try {
-    var atKey = EventService().getAtKey(regexKey);
-    var eventJson =
-        EventNotificationModel.convertEventNotificationToJson(eventData);
-    var result = await EventService().atClientInstance.put(atKey, eventJson);
-    return result;
-  } catch (e) {
-    print('error in creating event:$e');
-    return false;
-  }
-}
+//   try {
+//     var atKey = EventService().getAtKey(regexKey);
+//     var eventJson =
+//         EventNotificationModel.convertEventNotificationToJson(eventData);
+//     var result = await EventService().atClientInstance.put(atKey, eventJson);
+//     return result;
+//   } catch (e) {
+//     print('error in creating event:$e');
+//     return false;
+//   }
+// }
 
 Future<bool> deleteEvent(String key) async {
   String regexKey, currentAtsign;

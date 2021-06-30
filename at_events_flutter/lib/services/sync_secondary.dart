@@ -1,6 +1,6 @@
 // ignore: implementation_imports
 import 'package:at_commons/at_commons.dart';
-import 'package:at_location_flutter/utils/constants/constants.dart';
+import 'package:at_events_flutter/utils/constants.dart';
 
 import 'at_event_notification_listener.dart';
 
