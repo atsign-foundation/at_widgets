@@ -67,65 +67,65 @@ class EventService {
     atClientInstance = _atClientInstance;
     currentAtSign = atClientInstance.currentAtSign;
     this.rootDomain = rootDomain;
-    startMonitor();
+    // startMonitor();
   }
 
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
-  Future<bool> startMonitor() async {
-    var privateKey = await getPrivateKey(currentAtSign);
-    // ignore: await_only_futures
-    await atClientInstance.startMonitor(privateKey, _notificationCallback);
-    print('Monitor started');
-    return true;
-  }
+  // Future<bool> startMonitor() async {
+  //   var privateKey = await getPrivateKey(currentAtSign);
+  //   // ignore: await_only_futures
+  //   await atClientInstance.startMonitor(privateKey, _notificationCallback);
+  //   print('Monitor started');
+  //   return true;
+  // }
 
-  ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    return await atClientInstance.getPrivateKey(atsign);
-  }
+  // ///Fetches privatekey for [atsign] from device keychain.
+  // Future<String> getPrivateKey(String atsign) async {
+  //   return await atClientInstance.getPrivateKey(atsign);
+  // }
 
-  void _notificationCallback(dynamic response) async {
-    print('fnCallBack called in event service');
-    response = response.replaceFirst('notification:', '');
-    var responseJson = jsonDecode(response);
-    var value = responseJson['value'];
-    var notificationKey = responseJson['key'];
-    var fromAtSign = responseJson['from'];
-    var atKey = notificationKey.split(':')[1];
-    var operation = responseJson['operation'];
-    print('_notificationCallback opeartion $operation');
-    if ((operation == 'delete') &&
-        atKey.toString().toLowerCase().contains('createevent')) {
-      removeDeletedEventFromList(notificationKey);
-      return;
-    }
+  // void _notificationCallback(dynamic response) async {
+  //   print('fnCallBack called in event service');
+  //   response = response.replaceFirst('notification:', '');
+  //   var responseJson = jsonDecode(response);
+  //   var value = responseJson['value'];
+  //   var notificationKey = responseJson['key'];
+  //   var fromAtSign = responseJson['from'];
+  //   var atKey = notificationKey.split(':')[1];
+  //   var operation = responseJson['operation'];
+  //   print('_notificationCallback opeartion $operation');
+  //   if ((operation == 'delete') &&
+  //       atKey.toString().toLowerCase().contains('createevent')) {
+  //     removeDeletedEventFromList(notificationKey);
+  //     return;
+  //   }
 
-    var decryptedMessage = await atClientInstance.encryptionService
-        .decrypt(value, fromAtSign)
-        .catchError((e) {
-      print('error in decrypting: $e');
-    });
-    print('decrypted message:$decryptedMessage');
-    if (atKey.toString().contains('createevent')) {
-      var eventData =
-          EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
-      if (eventData.isUpdate != null && eventData.isUpdate == false) {
-        // new event received
-        // show dialog
-        // add in event list
-        addNewEventInEventList(eventData);
-      } else if (eventData.isUpdate) {
-        // event updated received
-        // update event list
-        onUpdatedEventReceived(eventData);
-      }
-    } else if (atKey.toString().contains('eventacknowledged')) {
-      var msg = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
-      print('event acknowledge received:${msg.group} , ${msg.title}');
-      createEventAcknowledged(msg, fromAtSign, atKey);
-    }
-  }
+  //   var decryptedMessage = await atClientInstance.encryptionService
+  //       .decrypt(value, fromAtSign)
+  //       .catchError((e) {
+  //     print('error in decrypting: $e');
+  //   });
+  //   print('decrypted message:$decryptedMessage');
+  //   if (atKey.toString().contains('createevent')) {
+  //     var eventData =
+  //         EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
+  //     if (eventData.isUpdate != null && eventData.isUpdate == false) {
+  //       // new event received
+  //       // show dialog
+  //       // add in event list
+  //       addNewEventInEventList(eventData);
+  //     } else if (eventData.isUpdate) {
+  //       // event updated received
+  //       // update event list
+  //       onUpdatedEventReceived(eventData);
+  //     }
+  //   } else if (atKey.toString().contains('eventacknowledged')) {
+  //     var msg = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
+  //     print('event acknowledge received:${msg.group} , ${msg.title}');
+  //     createEventAcknowledged(msg, fromAtSign, atKey);
+  //   }
+  // }
 
   void createEventAcknowledged(EventNotificationModel acknowledgedEvent,
       String fromAtSign, String key) async {

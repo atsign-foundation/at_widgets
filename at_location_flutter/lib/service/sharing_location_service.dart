@@ -38,27 +38,27 @@ class SharingLocationService {
   Future<bool?> sendShareLocationEvent(String? atsign, bool isAcknowledgment,
       {int? minutes}) async {
     try {
-      var alreadyExists = checkForAlreadyExisting(atsign);
+      // var alreadyExists = checkForAlreadyExisting(atsign);
       var result;
-      if (alreadyExists[0]) {
-        var newLocationNotificationModel = LocationNotificationModel.fromJson(
-            jsonDecode(
-                LocationNotificationModel.convertLocationNotificationToJson(
-                    alreadyExists[1])));
+      // if (alreadyExists[0]) {
+      //   var newLocationNotificationModel = LocationNotificationModel.fromJson(
+      //       jsonDecode(
+      //           LocationNotificationModel.convertLocationNotificationToJson(
+      //               alreadyExists[1])));
 
-        newLocationNotificationModel.to =
-            DateTime.now().add(Duration(minutes: minutes!));
+      //   newLocationNotificationModel.to =
+      //       DateTime.now().add(Duration(minutes: minutes!));
 
-        await locationPromptDialog(
-            text:
-                'You are already sharing your location with $atsign. Would you like to update it ?',
-            locationNotificationModel: newLocationNotificationModel,
-            isShareLocationData: true,
-            isRequestLocationData: false,
-            yesText: 'Yes! Update',
-            noText: 'No');
-        return null;
-      }
+      //   await locationPromptDialog(
+      //       text:
+      //           'You are already sharing your location with $atsign. Would you like to update it ?',
+      //       locationNotificationModel: newLocationNotificationModel,
+      //       isShareLocationData: true,
+      //       isRequestLocationData: false,
+      //       yesText: 'Yes! Update',
+      //       noText: 'No');
+      //   return null;
+      // }
 
       AtKey atKey;
       if (minutes != null) {

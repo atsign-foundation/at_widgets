@@ -38,6 +38,8 @@ class SendLocationNotification {
   void setMasterSwitchState(bool _state) {
     masterSwitchState = _state;
     if (!_state) {
+      findAtSignsToShareLocationWith();
+    } else {
       deleteAllLocationKey();
     }
   }

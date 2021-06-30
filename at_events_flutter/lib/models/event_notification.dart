@@ -1,10 +1,14 @@
 import 'dart:convert';
-
 import 'package:at_contact/at_contact.dart';
+import 'package:latlong/latlong.dart';
 
 class EventNotificationModel {
   EventNotificationModel();
   String atsignCreator;
+  LatLng locationOfCreator;
+  double lat;
+  double long;
+
   bool isCancelled;
   String title;
   Venue venue;
@@ -20,6 +24,12 @@ class EventNotificationModel {
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
     isUpdate = data['isUpdate'] == 'true' ? true : false;
+    lat = data['lat'] != 'null' && data['lat'] != null
+        ? double.parse(data['lat'])
+        : null;
+    long = data['long'] != 'null' && data['long'] != null
+        ? double.parse(data['long'])
+        : null;
     if (data['venue'] != null) {
       venue = Venue.fromJson(jsonDecode(data['venue']));
     }
@@ -31,10 +41,10 @@ class EventNotificationModel {
 
     if (data['group'] != null) {
       data['group'] = jsonDecode(data['group']);
-      group = AtGroup(data['group']['name']);
+      group = new AtGroup(data['group']['name']);
 
       data['group']['members'].forEach((contact) {
-        var newContact = AtContact(atSign: contact['atSign']);
+        AtContact newContact = AtContact(atSign: contact['atSign']);
         newContact.tags = {};
         newContact.tags['isAccepted'] = contact['tags']['isAccepted'];
         newContact.tags['isSharing'] = contact['tags']['isSharing'];
@@ -49,18 +59,16 @@ class EventNotificationModel {
             : -1;
         newContact.tags['lat'] =
             contact['tags']['lat'] != null && contact['tags']['lat'] != 'null'
-                ? contact['tags']['lat']
-                : 0;
+                ? double.parse(contact['tags']['lat'].toString())
+                : null;
         newContact.tags['long'] =
             contact['tags']['long'] != null && contact['tags']['long'] != 'null'
-                ? contact['tags']['long']
-                : 0;
+                ? double.parse(contact['tags']['long'].toString())
+                : null;
         group.members.add(newContact);
       });
     }
   }
-
-
 
   static String convertEventNotificationToJson(
       EventNotificationModel eventNotification) {
@@ -74,6 +82,9 @@ class EventNotificationModel {
       'atsignCreator': eventNotification.atsignCreator.toString(),
       'key': '${eventNotification.key}',
       'group': json.encode(eventNotification.group),
+      'lat': eventNotification.lat.toString(),
+      'long': eventNotification.long.toString(),
+      // TODO: Update ['group']['updatedAt'] with DateTime.now()
       'venue': json.encode({
         'latitude': eventNotification.venue.latitude.toString(),
         'longitude': eventNotification.venue.longitude.toString(),
@@ -126,25 +137,12 @@ class Event {
   DateTime endEventOnDate;
   int endEventAfterOccurance;
   Event.fromJson(Map<String, dynamic> data) {
-    // data['startTime'] = data['startTime'] != 'null'
-    //     ? data['startTime'].substring(10, 15)
-    //     : null;
-    // data['endTime'] =
-    //     data['endTime'] != 'null' ? data['endTime'].substring(10, 15) : null;
     startTime = data['startTime'] != null
         ? DateTime.parse(data['startTime']).toLocal()
         : null;
-    //  TimeOfDay(
-    //     hour: int.parse(data['startTime'].split(":")[0]),
-    //     minute: int.parse(data['startTime'].split(":")[1]))
-    // : null;
     endTime = data['endTime'] != null
         ? DateTime.parse(data['endTime']).toLocal()
         : null;
-    // ? TimeOfDay(
-    //     hour: int.parse(data['endTime'].split(":")[0]),
-    //     minute: int.parse(data['endTime'].split(":")[1]))
-    // : null;
     isRecurring = data['isRecurring'] == 'true' ? true : false;
     if (!isRecurring) {
       date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
@@ -201,7 +199,6 @@ class Event {
               : null;
           break;
         case EndsOn.NEVER:
-          // endEventOn = null;
           break;
       }
     }
@@ -212,6 +209,7 @@ enum RepeatCycle { WEEK, MONTH }
 enum Week { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
 enum EndsOn { NEVER, ON, AFTER }
 
+// ignore: missing_return
 Week getWeekEnum(String weekday) {
   switch (weekday) {
     case 'Monday':
@@ -229,9 +227,9 @@ Week getWeekEnum(String weekday) {
     case 'Sunday':
       return Week.SUNDAY;
   }
-  return null;
 }
 
+// ignore: missing_return
 String getWeekString(Week weekday) {
   switch (weekday) {
     case Week.MONDAY:
@@ -249,16 +247,17 @@ String getWeekString(Week weekday) {
     case Week.SUNDAY:
       return 'Sunday';
   }
-  return null;
 }
 
 String timeOfDayToString(DateTime time) {
-  var hhmm = '${time.hour}:${time.minute}';
-  return hhmm;
+  int minute = time.minute;
+  if (minute < 10) return '${time.hour}: 0${time.minute}';
+
+  return '${time.hour}: ${time.minute}';
 }
 
 String dateToString(DateTime date) {
-  var dateString = '${date.day}/${date.month}/${date.year}';
+  String dateString = '${date.day}/${date.month}/${date.year}';
   return dateString;
 }
 
@@ -274,3 +273,18 @@ List<String> get occursOnWeekOptions => [
     ];
 
 enum ATKEY_TYPE_ENUM { CREATEEVENT, ACKNOWLEDGEEVENT }
+
+Map<String, dynamic> get monthsList => {
+      '1': {'month': 'jan', 'days': 31, 'count': 1},
+      '2': {'month': 'feb', 'days': 28, 'count': 2},
+      '3': {'month': 'mar', 'days': 31, 'count': 3},
+      '4': {'month': 'apr', 'days': 30, 'count': 4},
+      '5': {'month': 'may', 'days': 31, 'count': 5},
+      '6': {'month': 'jun', 'days': 30, 'count': 6},
+      '7': {'month': 'jul', 'days': 31, 'count': 7},
+      '8': {'month': 'aug', 'days': 31, 'count': 8},
+      '9': {'month': 'sept', 'days': 30, 'count': 9},
+      '10': {'month': 'oct', 'days': 31, 'count': 10},
+      '11': {'month': 'nov', 'days': 30, 'count': 11},
+      '12': {'month': 'dec', 'days': 31, 'count': 12},
+    };

@@ -27,19 +27,24 @@ class KeyStreamService {
   List<AtContact> contactList = [];
 
   // ignore: close_sinks
-  StreamController _atNotificationsController =
+  StreamController atNotificationsController =
       StreamController<List<KeyLocationModel>>.broadcast();
   Stream<List<KeyLocationModel>> get atNotificationsStream =>
-      _atNotificationsController.stream as Stream<List<KeyLocationModel>>;
+      atNotificationsController.stream as Stream<List<KeyLocationModel>>;
   StreamSink<List<KeyLocationModel>> get atNotificationsSink =>
-      _atNotificationsController.sink as StreamSink<List<KeyLocationModel>>;
+      atNotificationsController.sink as StreamSink<List<KeyLocationModel>>;
 
-  void init(AtClientImpl? clientInstance) async {
+  Function(List<KeyLocationModel>)? streamAlternative;
+
+  void init(AtClientImpl? clientInstance,
+      {Function(List<KeyLocationModel>)? streamAlternative}) async {
     loggedInUserDetails = null;
     atClientInstance = clientInstance;
     currentAtSign = atClientInstance!.currentAtSign;
     allLocationNotifications = [];
-    _atNotificationsController =
+    this.streamAlternative = streamAlternative;
+
+    atNotificationsController =
         StreamController<List<KeyLocationModel>>.broadcast();
     getAllNotifications();
 
@@ -345,6 +350,14 @@ class KeyStreamService {
   }
 
   void notifyListeners() {
+    // print('notifyListeners');
+    // allLocationNotifications.forEach((element) {
+    //   print(LocationNotificationModel.convertLocationNotificationToJson(
+    //       element.locationNotificationModel!));
+    // });
+    if (streamAlternative != null) {
+      streamAlternative!(allLocationNotifications);
+    }
     atNotificationsSink.add(allLocationNotifications);
   }
 }
