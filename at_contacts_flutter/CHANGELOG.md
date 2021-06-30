@@ -1,3 +1,8 @@
+## [2.0.0] - 06/30/2021
+
+* Null safe version
+* Updated dependencies
+
 ## [1.0.2] - 05/27/2021
 
 * Fix to prevent adding self to contact list
