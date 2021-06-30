@@ -4,6 +4,7 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:at_events_flutter_example/constants.dart';
 import 'client_sdk_service.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,6 +27,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light(),
+      key: NavService.navKey,
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Plugin example app'),
@@ -110,4 +112,8 @@ class _MyAppState extends State<MyApp> {
           )),
     );
   }
+}
+
+class NavService {
+  static GlobalKey<NavigatorState> navKey = GlobalKey();
 }

@@ -3,12 +3,16 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
+import 'package:at_events_flutter/services/at_event_notification_listener.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:flutter/cupertino.dart';
 
-void initialiseEventService(AtClientImpl atClientInstance,
+void initialiseEventService(
+    AtClientImpl atClientInstance, GlobalKey<NavigatorState> navKeyFromMainApp,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
-  EventService().initializeAtContactImpl(atClientInstance, rootDomain);
+  // EventService().initializeAtContactImpl(atClientInstance, rootDomain);
+  AtEventNotificationListener().init(atClientInstance,
+      atClientInstance.currentAtSign, navKeyFromMainApp, rootDomain);
 }
 
 Future<bool> createEvent(EventNotificationModel eventData) async {
@@ -84,8 +88,8 @@ Future<bool> deleteEvent(String key) async {
     var atKey = EventService().getAtKey(regexKey);
     var result = await EventService().atClientInstance.delete(atKey);
     if (result != null && result) {
-      EventService().allEvents.removeWhere((element) => element.key == key);
-      EventService().eventListSink.add(EventService().allEvents);
+      // EventService().allEvents.removeWhere((element) => element.key == key);
+      // EventService().eventListSink.add(EventService().allEvents);
     }
     return result;
   } catch (e) {
@@ -121,8 +125,8 @@ Future<List<EventNotificationModel>> getEvents() async {
       );
 
   if (regexList.isEmpty) {
-    EventService().allEvents = allEvents;
-    EventService().eventListSink.add(allEvents);
+    // EventService().allEvents = allEvents;
+    // EventService().eventListSink.add(allEvents);
     return [];
   }
 
@@ -137,8 +141,8 @@ Future<List<EventNotificationModel>> getEvents() async {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      EventService().allEvents = allEvents;
-      EventService().eventListSink.add(allEvents);
+      // EventService().allEvents = allEvents;
+      // EventService().eventListSink.add(allEvents);
     });
     return allEvents;
   } catch (e) {

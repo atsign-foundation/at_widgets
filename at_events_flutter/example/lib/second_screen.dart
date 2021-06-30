@@ -1,6 +1,7 @@
 import 'package:at_events_flutter/screens/create_event.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
 import 'package:at_events_flutter_example/event_list.dart';
+import 'package:at_events_flutter_example/main.dart';
 import 'package:flutter/material.dart';
 import 'client_sdk_service.dart';
 import 'constants.dart';
@@ -67,7 +68,9 @@ class _SecondScreenState extends State<SecondScreen> {
           TextButton(
             onPressed: () {
               bottomSheet(
-                  CreateEvent(), MediaQuery.of(context).size.height * 0.9);
+                  CreateEvent(
+                      clientSdkService.atClientServiceInstance.atClient),
+                  MediaQuery.of(context).size.height * 0.9);
             },
             child: Container(
               height: 40,
@@ -98,7 +101,8 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void initializeEventService() {
-    initialiseEventService(clientSdkService.atClientServiceInstance.atClient,
+    initialiseEventService(
+        clientSdkService.atClientServiceInstance.atClient, NavService.navKey,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 

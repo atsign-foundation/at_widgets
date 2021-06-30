@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class AtEventNotificationListener {
   void init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
       GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       {Function newGetAtValueFromMainApp}) {
+    initializeContactsService(atClientInstance, currentAtSignFromApp);
+
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     navKey = navKeyFromMainApp;
@@ -50,7 +53,7 @@ class AtEventNotificationListener {
     print('_notificationCallback opeartion $operation');
     if ((operation == 'delete') &&
         atKey.toString().toLowerCase().contains('createevent')) {
-      EventService().removeDeletedEventFromList(notificationKey);
+      // EventService().removeDeletedEventFromList(notificationKey);
       return;
     }
 
@@ -67,16 +70,16 @@ class AtEventNotificationListener {
         // new event received
         // show dialog
         // add in event list
-        EventService().addNewEventInEventList(eventData);
+        // EventService().addNewEventInEventList(eventData);
       } else if (eventData.isUpdate) {
         // event updated received
         // update event list
-        EventService().onUpdatedEventReceived(eventData);
+        // EventService().onUpdatedEventReceived(eventData);
       }
     } else if (atKey.toString().contains('eventacknowledged')) {
       var msg = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
       print('event acknowledge received:${msg.group} , ${msg.title}');
-      EventService().createEventAcknowledged(msg, fromAtSign, atKey);
+      // EventService().createEventAcknowledged(msg, fromAtSign, atKey);
     }
   }
 }
