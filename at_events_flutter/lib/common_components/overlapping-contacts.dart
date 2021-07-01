@@ -59,8 +59,8 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                       child: (widget.selectedList[index].tags != null &&
                               widget.selectedList[index].tags['image'] != null)
                           ? CustomCircleAvatar(
-                              byteImage: image,
-                              nonAsset: true,
+                              memoryImage: image,
+                              isMemoryImage: true,
                             )
                           : ContactInitial(
                               initials: widget.selectedList[index].atSign,
@@ -177,8 +177,8 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                     widget.selectedList[index].tags['image'] !=
                                         null)
                                 ? CustomCircleAvatar(
-                                    byteImage: image,
-                                    nonAsset: true,
+                                    memoryImage: image,
+                                    isMemoryImage: true,
                                   )
                                 : ContactInitial(
                                     initials: widget.selectedList[index].atSign,

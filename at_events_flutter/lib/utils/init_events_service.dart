@@ -2,17 +2,24 @@ import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
+import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:flutter/cupertino.dart';
 
 void initialiseEventService(
     AtClientImpl atClientInstance, GlobalKey<NavigatorState> navKeyFromMainApp,
-    {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
+    {rootDomain = 'root.atsign.wtf',
+    rootPort = 64,
+    dynamic Function(List<EventKeyLocationModel>) streamAlternative}) {
   // EventService().initializeAtContactImpl(atClientInstance, rootDomain);
   AtEventNotificationListener().init(atClientInstance,
       atClientInstance.currentAtSign, navKeyFromMainApp, rootDomain);
+
+  EventKeyStreamService()
+      .init(atClientInstance, streamAlternative: streamAlternative);
 }
 
 Future<bool> createEvent(EventNotificationModel eventData) async {

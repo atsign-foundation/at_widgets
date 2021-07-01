@@ -1,3 +1,4 @@
+import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/screens/create_event.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
 import 'package:at_events_flutter_example/event_list.dart';
@@ -16,6 +17,7 @@ class _SecondScreenState extends State<SecondScreen> {
   String activeAtSign;
   GlobalKey<ScaffoldState> scaffoldKey;
   bool isAuthenticated;
+  List<EventKeyLocationModel> events = [];
 
   @override
   void initState() {
@@ -39,6 +41,12 @@ class _SecondScreenState extends State<SecondScreen> {
         );
       });
     }
+  }
+
+  updateEvents(List<EventKeyLocationModel> _events) {
+    setState(() {
+      events = _events;
+    });
   }
 
   @override
@@ -86,7 +94,7 @@ class _SecondScreenState extends State<SecondScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EventList(),
+                  builder: (context) => EventList(events),
                 ),
               );
             },
@@ -103,7 +111,8 @@ class _SecondScreenState extends State<SecondScreen> {
   void initializeEventService() {
     initialiseEventService(
         clientSdkService.atClientServiceInstance.atClient, NavService.navKey,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+        rootDomain: MixedConstants.ROOT_DOMAIN,
+        streamAlternative: updateEvents);
   }
 
   void bottomSheet(

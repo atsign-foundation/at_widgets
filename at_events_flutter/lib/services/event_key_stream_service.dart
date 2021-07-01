@@ -95,6 +95,8 @@ class EventKeyStreamService {
 
     await checkForPendingEvents();
 
+    notifyListeners();
+
     // ignore: unawaited_futures
     updateEventDataAccordingToAcknowledgedData();
   }
@@ -585,6 +587,11 @@ class EventKeyStreamService {
   }
 
   void notifyListeners() {
+    print('allEventNotifications');
+    allEventNotifications.forEach((element) {
+      print(EventNotificationModel.convertEventNotificationToJson(
+          element.eventNotificationModel));
+    });
     if (streamAlternative != null) {
       streamAlternative(allEventNotifications);
     }
