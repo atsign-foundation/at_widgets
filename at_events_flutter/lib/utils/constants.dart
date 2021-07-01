@@ -9,6 +9,8 @@ class MixedConstants {
   static const bool isDedicated = true;
   static const String CREATE_EVENT = 'createevent';
 
+  static const String EVENT_MEMBER_LOCATION_KEY = 'updateeventlocation';
+
   static List<String> startTimeOptions = [
     '2 hours before the event',
     '60 minutes before the event',
