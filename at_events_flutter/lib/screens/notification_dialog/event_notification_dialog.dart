@@ -26,7 +26,7 @@ class EventNotificationDialog extends StatefulWidget {
 
   int minutes;
   EventNotificationDialog(
-      {this.eventData,
+      {@required this.eventData,
       this.event,
       this.invitedPeopleCount,
       this.timeAndDate,
@@ -107,7 +107,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                      '${widget.userName} wants to share an event with you. Are you sure you want to join and share your location with the group?',
+                      '${widget.eventData.atsignCreator} wants to share an event with you. Are you sure you want to join and share your location with the group?',
                       style: CustomTextStyles().grey16,
                       textAlign: TextAlign.center),
                   SizedBox(height: 30),
@@ -267,7 +267,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                     }),
                                 400);
                           }(),
-                          bgColor: Theme.of(context).primaryColor,
+                          bgColor: AllColors().Black,
                           width: 164,
                           height: 48.toHeight,
                           child: Text('Yes',

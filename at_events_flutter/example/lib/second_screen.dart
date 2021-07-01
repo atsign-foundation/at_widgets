@@ -1,3 +1,4 @@
+import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/screens/create_event.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
@@ -6,6 +7,7 @@ import 'package:at_events_flutter_example/main.dart';
 import 'package:flutter/material.dart';
 import 'client_sdk_service.dart';
 import 'constants.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -43,7 +45,7 @@ class _SecondScreenState extends State<SecondScreen> {
     }
   }
 
-  updateEvents(List<EventKeyLocationModel> _events) {
+  void updateEvents(List<EventKeyLocationModel> _events) {
     setState(() {
       events = _events;
     });
@@ -51,6 +53,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -89,20 +92,46 @@ class _SecondScreenState extends State<SecondScreen> {
           SizedBox(
             height: 20.0,
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EventList(events),
-                ),
-              );
-            },
-            child: Container(
-              height: 40,
-              child: Text('Event list', style: TextStyle(color: Colors.black)),
-            ),
-          ),
+          Expanded(
+            child: ListView.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () {
+                      HomeEventService().onEventModelTap(
+                          events[index].eventNotificationModel,
+                          events[index].haveResponded);
+                    },
+                    child: DisplayTile(
+                      atsignCreator:
+                          events[index].eventNotificationModel.atsignCreator,
+                      number: events[index]
+                          .eventNotificationModel
+                          .group
+                          .members
+                          .length,
+                      title: 'Event - ' +
+                          events[index].eventNotificationModel.title,
+                      subTitle: HomeEventService()
+                          .getSubTitle(events[index].eventNotificationModel),
+                      semiTitle: HomeEventService().getSemiTitle(
+                          events[index].eventNotificationModel,
+                          events[index].haveResponded),
+                      showRetry:
+                          HomeEventService().calculateShowRetry(events[index]),
+                      onRetryTapped: () {
+                        HomeEventService().onEventModelTap(
+                            events[index].eventNotificationModel, false);
+                      },
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider(
+                    color: Colors.grey,
+                  );
+                },
+                itemCount: events.length),
+          )
         ],
       ),
     );

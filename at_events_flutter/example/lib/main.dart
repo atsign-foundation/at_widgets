@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light(),
-      key: NavService.navKey,
+      navigatorKey: NavService.navKey,
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Plugin example app'),
