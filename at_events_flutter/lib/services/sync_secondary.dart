@@ -40,9 +40,9 @@ class SyncSecondary {
     }
   }
 
-  void completePrioritySync(String _response) {
-    _priorityOperations.add(
-        SyncOperationDetails(SyncOperation.syncSecondary, response: _response));
+  void completePrioritySync(String _response, {Function afterSync}) {
+    _priorityOperations.add(SyncOperationDetails(SyncOperation.syncSecondary,
+        response: _response, afterSync: afterSync));
     if (!syncing) {
       _startSyncing();
     }
@@ -83,7 +83,7 @@ class SyncSecondary {
   void _executeAfterSynced(List<SyncOperationDetails> _tempPriorityOperations) {
     _tempPriorityOperations.forEach((e) {
       if (e.response != null) {
-        e.afterSync();
+        e.afterSync(e.response);
       }
     });
   }

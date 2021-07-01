@@ -230,7 +230,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                             options:
                                                 MixedConstants.endTimeOptions,
                                             onSelectionChanged:
-                                                (dynamic endTime) {
+                                                (dynamic endTime) async {
                                               widget.eventData.group.members
                                                   .forEach((groupMember) {
                                                 if (groupMember.atSign ==
@@ -240,10 +240,9 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                       endTime.toString();
                                                 }
                                               });
-                                              Navigator.of(context).pop();
 
                                               // updateEvent(widget.eventData);
-                                              EventKeyStreamService()
+                                              await EventKeyStreamService()
                                                   .actionOnEvent(
                                                       widget.eventData,
                                                       ATKEY_TYPE_ENUM
@@ -251,17 +250,20 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                       isAccepted: true,
                                                       isSharing: true,
                                                       isExited: false);
+
+                                              /// For inner bottomsheet
+                                              Navigator.of(context).pop();
+
+                                              /// For outer bottomsheet
+                                              Navigator.of(context).pop();
+
+                                              /// For dialog box
+                                              Navigator.of(context).pop();
                                             },
                                           ),
                                           400);
                                     }),
                                 400);
-
-                            /// For outer bottomsheet
-                            Navigator.of(context).pop();
-
-                            /// For dialog box
-                            Navigator.of(context).pop();
 
                             stopLoading();
                           }(),

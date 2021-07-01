@@ -12,6 +12,8 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
+import 'event_key_stream_service.dart';
+
 class EventService {
   EventService._();
   static EventService _instance = EventService._();
@@ -100,6 +102,9 @@ class EventService {
         isDedicated: MixedConstants.isDedicated,
       );
 
+      EventKeyStreamService()
+          .mapUpdatedEventDataToWidget(eventNotificationModel);
+
       /// Dont need to sync here as notifyAll is called
       if (onEventSaved != null) {
         onEventSaved(eventNotificationModel);
@@ -147,6 +152,8 @@ class EventService {
       );
 
       /// Dont need to sync as notifyAll is called
+      var _result =
+          await EventKeyStreamService().addDataToList(eventNotificationModel);
 
       eventNotificationModel = eventNotification;
       if (onEventSaved != null) {

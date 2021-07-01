@@ -3,7 +3,11 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
+import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
+import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
+import 'package:at_events_flutter/services/event_key_stream_service.dart';
+import 'package:at_events_flutter/services/sync_secondary.dart';
 import 'package:flutter/material.dart';
 
 class AtEventNotificationListener {
@@ -31,7 +35,7 @@ class AtEventNotificationListener {
   Future<bool> startMonitor() async {
     var privateKey = await getPrivateKey(currentAtSign);
     // ignore: await_only_futures
-    await atClientInstance.startMonitor(privateKey, _notificationCallback);
+    await atClientInstance.startMonitor(privateKey, fnCallBack);
     print('Monitor started');
     return true;
   }
@@ -39,6 +43,12 @@ class AtEventNotificationListener {
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
     return await atClientInstance.getPrivateKey(atsign);
+  }
+
+  void fnCallBack(var response) async {
+    print('fnCallBack called');
+    SyncSecondary()
+        .completePrioritySync(response, afterSync: _notificationCallback);
   }
 
   void _notificationCallback(dynamic response) async {
@@ -70,16 +80,30 @@ class AtEventNotificationListener {
         // new event received
         // show dialog
         // add in event list
-        // EventService().addNewEventInEventList(eventData);
+        var _result = await EventKeyStreamService().addDataToList(eventData);
+        if (_result is EventKeyLocationModel) {
+          await showMyDialog(eventNotificationModel: eventData);
+        }
       } else if (eventData.isUpdate) {
         // event updated received
         // update event list
-        // EventService().onUpdatedEventReceived(eventData);
+        EventKeyStreamService().mapUpdatedEventDataToWidget(eventData);
       }
     } else if (atKey.toString().contains('eventacknowledged')) {
       var msg = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
-      print('event acknowledge received:${msg.group} , ${msg.title}');
-      // EventService().createEventAcknowledged(msg, fromAtSign, atKey);
+
+      EventKeyStreamService().createEventAcknowledge(msg, atKey, fromAtSign);
     }
+  }
+
+  Future<void> showMyDialog(
+      {EventNotificationModel eventNotificationModel}) async {
+    return showDialog<void>(
+      context: navKey.currentContext,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return EventNotificationDialog(eventData: eventNotificationModel);
+      },
+    );
   }
 }

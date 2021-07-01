@@ -60,6 +60,8 @@ class EventKeyStreamService {
   }
 
   void getAllEventNotifications() async {
+    await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+
     var response = await atClientInstance.getKeys(
       regex: 'createevent-',
     );
@@ -299,6 +301,55 @@ class EventKeyStreamService {
     }
   }
 
+  Future<dynamic> addDataToList(
+      EventNotificationModel eventNotificationModel) async {
+    String newLocationDataKeyId;
+    String tempKey;
+    String key;
+    newLocationDataKeyId =
+        eventNotificationModel.key.split('createevent-')[1].split('@')[0];
+
+    var keys = <String>[];
+    keys = await atClientInstance.getKeys(
+      regex: 'createevent-',
+    );
+
+    keys.forEach((regex) {
+      if (regex.contains('$newLocationDataKeyId')) {
+        key = regex;
+      }
+    });
+
+    print('key $key');
+
+    if (key == null) {
+      return;
+    }
+
+    var tempEventKeyLocationModel = EventKeyLocationModel(key: key);
+    // eventNotificationModel.key = key;
+    tempEventKeyLocationModel.atKey = EventService().getAtKey(key);
+    tempEventKeyLocationModel.atValue =
+        await getAtValue(tempEventKeyLocationModel.atKey);
+    tempEventKeyLocationModel.eventNotificationModel = eventNotificationModel;
+    allEventNotifications.add(tempEventKeyLocationModel);
+
+    notifyListeners();
+
+    /// TODO: Start sharing location, if satisfies conditions
+
+    // if ((tempHyridNotificationModel.locationNotificationModel!.isSharing)) {
+    //   if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==
+    //       currentAtSign) {
+    //     // ignore: unawaited_futures
+    //     SendLocationNotification()
+    //         .addMember(tempHyridNotificationModel.locationNotificationModel);
+    //   }
+    // }
+
+    return tempEventKeyLocationModel;
+  }
+
   void mapUpdatedEventDataToWidget(EventNotificationModel eventData,
       {Map<dynamic, dynamic> tags,
       String tagOfAtsign,
@@ -448,8 +499,6 @@ class EventKeyStreamService {
       var result = await atClientInstance.put(key, notification,
           isDedicated: MixedConstants.isDedicated);
 
-      print('actionOnEvent put = $result');
-
       if (MixedConstants.isDedicated) {
         await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
       }
@@ -478,6 +527,8 @@ class EventKeyStreamService {
         }
       }
 
+      notifyListeners();
+
       return result;
     } catch (e) {
       print('error in updating event $e');
@@ -485,9 +536,112 @@ class EventKeyStreamService {
     }
   }
 
+  createEventAcknowledge(EventNotificationModel acknowledgedEvent, String atKey,
+      String fromAtSign) async {
+    try {
+      var eventId =
+          acknowledgedEvent.key.split('createevent-')[1].split('@')[0];
+      eventId = eventId.replaceAll('.rrive', '');
+
+      EventNotificationModel presentEventData;
+      allEventNotifications.forEach((element) {
+        if (element.key.contains('createevent-$eventId')) {
+          presentEventData = EventNotificationModel.fromJson(jsonDecode(
+              EventNotificationModel.convertEventNotificationToJson(
+                  element.eventNotificationModel)));
+        }
+      });
+
+      /// Old approach
+      var response = await atClientInstance.getKeys(
+        regex: 'createevent-$eventId',
+      );
+
+      var key = EventService().getAtKey(response[0]);
+
+      /// New approach
+
+      // var key = EventService().getAtKey(presentEventData.key);
+
+      Map<dynamic, dynamic> tags;
+
+      presentEventData.group.members.forEach((presentGroupMember) {
+        acknowledgedEvent.group.members.forEach((acknowledgedGroupMember) {
+          if (acknowledgedGroupMember.atSign[0] != '@') {
+            acknowledgedGroupMember.atSign =
+                '@' + acknowledgedGroupMember.atSign;
+          }
+
+          if (presentGroupMember.atSign[0] != '@') {
+            presentGroupMember.atSign = '@' + presentGroupMember.atSign;
+          }
+
+          if (fromAtSign[0] != '@') fromAtSign = '@' + fromAtSign;
+
+          // print(
+          //     'acknowledgedGroupMember.atSign ${acknowledgedGroupMember.atSign}, presentGroupMember.atSign ${presentGroupMember.atSign}, fromAtSign $fromAtSign');
+
+          if (acknowledgedGroupMember.atSign.toLowerCase() ==
+                  presentGroupMember.atSign.toLowerCase() &&
+              acknowledgedGroupMember.atSign.toLowerCase() ==
+                  fromAtSign.toLowerCase()) {
+            // print(
+            //     'acknowledgedGroupMember.tags ${acknowledgedGroupMember.tags}');
+            presentGroupMember.tags = acknowledgedGroupMember.tags;
+            tags = presentGroupMember.tags;
+          }
+        });
+        // print('presentGroupMember.tags ${presentGroupMember.tags}');
+      });
+
+      presentEventData.isUpdate = true;
+      var allAtsignList = <String>[];
+      presentEventData.group.members.forEach((element) {
+        allAtsignList.add(element.atSign);
+      });
+
+      var notification = EventNotificationModel.convertEventNotificationToJson(
+          presentEventData);
+
+      // print('notification $notification');
+
+      var result = await atClientInstance.put(key, notification,
+          isDedicated: MixedConstants.isDedicated);
+
+      key.sharedWith = jsonEncode(allAtsignList);
+
+      var notifyAllResult = await SyncSecondary().callSyncSecondary(
+        SyncOperation.notifyAll,
+        atKey: key,
+        notification: notification,
+        operation: OperationEnum.update,
+        isDedicated: MixedConstants.isDedicated,
+      );
+
+      /// Dont sync as notifyAll is called
+
+      if (result is bool && result) {
+        //   mapUpdatedDataToWidget(
+        //       convertEventToHybrid(NotificationType.Event,
+        //           eventNotificationModel: presentEventData),
+        //       tags: tags,
+        //       tagOfAtsign: fromAtSign);
+
+        mapUpdatedEventDataToWidget(presentEventData,
+            tags: tags, tagOfAtsign: fromAtSign);
+        // print('acknowledgement for $fromAtSign completed');
+      }
+    } catch (e) {
+      print('error in event acknowledgement: $e');
+    }
+  }
+
   void updatePendingStatus(EventNotificationModel notificationModel) async {
     for (var i = 0; i < allEventNotifications.length; i++) {
-      allEventNotifications[i].haveResponded = true;
+      if (allEventNotifications[i].eventNotificationModel.key ==
+          notificationModel.key) {
+        allEventNotifications[i].haveResponded = true;
+      }
     }
   }
 
@@ -588,10 +742,10 @@ class EventKeyStreamService {
 
   void notifyListeners() {
     print('allEventNotifications');
-    allEventNotifications.forEach((element) {
-      print(EventNotificationModel.convertEventNotificationToJson(
-          element.eventNotificationModel));
-    });
+    // allEventNotifications.forEach((element) {
+    //   print(EventNotificationModel.convertEventNotificationToJson(
+    //       element.eventNotificationModel));
+    // });
     if (streamAlternative != null) {
       streamAlternative(allEventNotifications);
     }
