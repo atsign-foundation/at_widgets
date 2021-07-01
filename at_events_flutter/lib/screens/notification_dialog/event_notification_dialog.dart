@@ -241,6 +241,12 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                 }
                                               });
 
+                                              /// For inner bottomsheet
+                                              Navigator.of(context).pop();
+
+                                              /// For outer bottomsheet
+                                              Navigator.of(context).pop();
+
                                               // updateEvent(widget.eventData);
                                               await EventKeyStreamService()
                                                   .actionOnEvent(
@@ -251,11 +257,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                       isSharing: true,
                                                       isExited: false);
 
-                                              /// For inner bottomsheet
-                                              Navigator.of(context).pop();
-
-                                              /// For outer bottomsheet
-                                              Navigator.of(context).pop();
+                                              stopLoading();
 
                                               /// For dialog box
                                               Navigator.of(context).pop();
@@ -264,8 +266,6 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                           400);
                                     }),
                                 400);
-
-                            stopLoading();
                           }(),
                           bgColor: Theme.of(context).primaryColor,
                           width: 164,
