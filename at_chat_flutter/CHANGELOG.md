@@ -1,3 +1,7 @@
+## [2.0.0] - 07/01/2021
+
+* Null safe version
+
 ## [1.0.2] - 06/10/2021
 
 * Fix for key saving failure
