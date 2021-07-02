@@ -1,3 +1,4 @@
+import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
@@ -115,61 +116,11 @@ class HomeEventService {
     eventNotificationModel.isUpdate = true;
 
     /// Move to map screen
-    // Navigator.push(
-    //   NavService.navKey.currentContext,
-    //   MaterialPageRoute(
-    //     builder: (context) => AtLocationFlutterPlugin(
-    //         BackendService.getInstance().atClientServiceInstance.atClient,
-    //         allUsersList: LocationNotificationListener().allUsersList,
-    //         onEventCancel: () async {
-    //       await provider.cancelEvent(eventNotificationModel);
-    //     }, onEventExit: (
-    //             {bool isExited,
-    //             bool isSharing,
-    //             ATKEY_TYPE_ENUM keyType,
-    //             EventNotificationModel eventData}) async {
-    //       bool isNullSent = false;
-    //       var result = await provider.actionOnEvent(
-    //         eventData != null ? eventData : eventNotificationModel,
-    //         keyType,
-    //         isExited: isExited,
-    //         isSharing: isSharing,
-    //       );
-
-    //       bool isAdmin = BackendService.getInstance()
-    //                   .atClientServiceInstance
-    //                   .atClient
-    //                   .currentAtSign ==
-    //               eventNotificationModel.atsignCreator
-    //           ? true
-    //           : false;
-    //       LocationNotificationModel locationNotificationModel =
-    //           LocationNotificationModel()
-    //             ..key = eventNotificationModel.key
-    //             ..receiver = isAdmin
-    //                 ? eventNotificationModel.group.members.elementAt(0).atSign
-    //                 : eventNotificationModel.atsignCreator
-    //             ..atsignCreator = !isAdmin
-    //                 ? eventNotificationModel.group.members.elementAt(0).atSign
-    //                 : eventNotificationModel.atsignCreator;
-    //       if (isSharing != null) {
-    //         if (!isSharing && result) {
-    //           Provider.of<HybridProvider>(NavService.navKey.currentContext,
-    //                   listen: false)
-    //               .removeLocationSharing(locationNotificationModel.key);
-    //         }
-    //       }
-    //       if ((isExited != null) && (isExited && result)) {
-    //         Provider.of<HybridProvider>(NavService.navKey.currentContext,
-    //                 listen: false)
-    //             .removeLocationSharing(locationNotificationModel.key);
-    //       }
-
-    //       return result;
-    //     }, onEventUpdate: (EventNotificationModel eventData) {
-    //       provider.mapUpdatedEventDataToWidget(eventData);
-    //     }, eventListenerKeyword: eventNotificationModel),
-    //   ),
-    // );
+    Navigator.push(
+      AtEventNotificationListener().navKey.currentContext,
+      MaterialPageRoute(
+        builder: (context) => EventsMapScreen(eventNotificationModel),
+      ),
+    );
   }
 }

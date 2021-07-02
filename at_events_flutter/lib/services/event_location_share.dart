@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
+import 'package:at_events_flutter/models/enums_model.dart';
 import 'package:at_events_flutter/models/event_member_location.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
@@ -29,9 +30,53 @@ class EventLocationShare {
   /// Doubt, whetherwe should have some kind of list which will send
   /// Or should we use the entire events list and use it
 
-  Future<void> addMember() async {}
+  void init() {
+    eventsToShareLocationWith = EventKeyStreamService()
+        .allEventNotifications
+        .map((e) => e.eventNotificationModel)
+        .toList();
 
-  void removeMember() async {}
+    print('EventLocationShare init');
+    eventsToShareLocationWith.forEach((e) => print('${e.key}'));
+    sendLocation();
+  }
+
+  /// Will be called from addDataToList or mapUpdatedEventDataToWidget
+  Future<void> addMember(EventNotificationModel _newData) async {
+    if (eventsToShareLocationWith
+            .indexWhere((element) => element.key == _newData.key) >
+        -1) {
+      return;
+    }
+
+    var myLocation = await getMyLocation();
+    if (myLocation != null) {
+      if (masterSwitchState) {
+        await prepareLocationDataAndSend(_newData, myLocation);
+        if (MixedConstants.isDedicated) {
+          // ignore: unawaited_futures
+          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        }
+      }
+    } else {
+      // CustomToast().show(
+      //     'Location permission not granted', NavService.navKey.currentContext);
+    }
+
+    // add
+    eventsToShareLocationWith.add(_newData);
+    print(
+        'after adding atsignsToShareLocationWith length ${eventsToShareLocationWith.length}');
+  }
+
+  /// Will be called from addDataToList or mapUpdatedEventDataToWidget
+  void removeMember(String key) async {
+    eventsToShareLocationWith
+        .removeWhere((element) => key.contains(element.key));
+
+    print(
+        'after deleting atsignsToShareLocationWith length ${eventsToShareLocationWith.length}');
+  }
 
   void sendLocation() async {
     var permission = await Geolocator.checkPermission();
@@ -79,41 +124,66 @@ class EventLocationShare {
       LatLng _myLocation) async {
     if (_eventNotificationModel.atsignCreator ==
         AtEventNotificationListener().currentAtSign) {
-      var _event = EventNotificationModel.fromJson(jsonDecode(
-          EventNotificationModel.convertEventNotificationToJson(
-              _eventNotificationModel)));
+      var _from = _eventNotificationModel.event.startTime;
+      var _to = _eventNotificationModel.event.endTime;
 
-      _event.lat = _myLocation.latitude;
-      _event.long = _myLocation.longitude;
+      if ((DateTime.now().difference(_from) > Duration(seconds: 0)) &&
+          (_to.difference(DateTime.now()) > Duration(seconds: 0))) {
+        var _event = EventNotificationModel.fromJson(jsonDecode(
+            EventNotificationModel.convertEventNotificationToJson(
+                _eventNotificationModel)));
 
-      await EventKeyStreamService()
-          .actionOnEvent(_eventNotificationModel, ATKEY_TYPE_ENUM.CREATEEVENT);
+        _event.lat = _myLocation.latitude;
+        _event.long = _myLocation.longitude;
+
+        await EventKeyStreamService()
+            .actionOnEvent(_event, ATKEY_TYPE_ENUM.CREATEEVENT);
+      }
     } else {
-      var _data = EventMemberLocation(
-          fromAtSign: AtEventNotificationListener().currentAtSign,
-          receiver: _eventNotificationModel.atsignCreator,
-          key: _eventNotificationModel.key,
-          lat: _myLocation.latitude,
-          long: _myLocation.longitude);
+      var currentGroupMember;
 
-      /// TODO: check this
-      var atkeyMicrosecondId =
-          _eventNotificationModel.key.split('-')[1].split('@')[0];
+      _eventNotificationModel.group.members.forEach((groupMember) {
+        // sending location to other group members
+        if (groupMember.atSign == AtEventNotificationListener().currentAtSign) {
+          currentGroupMember = groupMember;
+        }
+      });
 
-      var atKey = newAtKey(
-          5000,
-          '${MixedConstants.EVENT_MEMBER_LOCATION_KEY}-$atkeyMicrosecondId',
-          _eventNotificationModel.atsignCreator);
+      var _from = startTimeEnumToTimeOfDay(
+          currentGroupMember.tags['shareFrom'].toString(),
+          _eventNotificationModel.event.startTime);
+      var _to = endTimeEnumToTimeOfDay(
+          currentGroupMember.tags['shareTo'].toString(),
+          _eventNotificationModel.event.endTime);
 
-      try {
-        await AtEventNotificationListener().atClientInstance.put(
-            atKey,
-            EventMemberLocation.convertLocationNotificationToJson(
-              _data,
-            ),
-            isDedicated: MixedConstants.isDedicated);
-      } catch (e) {
-        print('error in sending location: $e');
+      if ((DateTime.now().difference(_from) > Duration(seconds: 0)) &&
+          (_to.difference(DateTime.now()) > Duration(seconds: 0))) {
+        var _data = EventMemberLocation(
+            fromAtSign: AtEventNotificationListener().currentAtSign,
+            receiver: _eventNotificationModel.atsignCreator,
+            key: _eventNotificationModel.key,
+            lat: _myLocation.latitude,
+            long: _myLocation.longitude);
+
+        /// TODO: check this
+        var atkeyMicrosecondId =
+            _eventNotificationModel.key.split('-')[1].split('@')[0];
+
+        var atKey = newAtKey(
+            5000,
+            '${MixedConstants.EVENT_MEMBER_LOCATION_KEY}-$atkeyMicrosecondId',
+            _eventNotificationModel.atsignCreator);
+
+        try {
+          await AtEventNotificationListener().atClientInstance.put(
+              atKey,
+              EventMemberLocation.convertLocationNotificationToJson(
+                _data,
+              ),
+              isDedicated: MixedConstants.isDedicated);
+        } catch (e) {
+          print('error in sending location: $e');
+        }
       }
     }
   }

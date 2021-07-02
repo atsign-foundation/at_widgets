@@ -8,6 +8,7 @@ import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
+import 'package:at_events_flutter/services/event_location_share.dart';
 import 'package:at_events_flutter/services/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
@@ -67,8 +68,8 @@ class EventKeyStreamService {
     );
 
     if (response.isEmpty) {
-      // TODO:
-      //   SendLocationNotification().init(atClientInstance);
+      /// TODO:
+      EventLocationShare().init();
       return;
     }
 
@@ -98,6 +99,8 @@ class EventKeyStreamService {
     await checkForPendingEvents();
 
     notifyListeners();
+
+    EventLocationShare().init();
 
     // ignore: unawaited_futures
     updateEventDataAccordingToAcknowledgedData();
