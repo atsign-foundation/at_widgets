@@ -6,6 +6,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
+import 'package:at_events_flutter/models/event_member_location.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
 import 'package:at_events_flutter/services/event_location_share.dart';
@@ -536,6 +537,87 @@ class EventKeyStreamService {
     } catch (e) {
       print('error in updating event $e');
       return false;
+    }
+  }
+
+  void updateLocationData(
+      EventMemberLocation locationData, String atKey, String fromAtSign) async {
+    try {
+      var eventId =
+          locationData.key.split('-')[1].split('@')[0]; // TODO: Might be wrong
+
+      EventNotificationModel presentEventData;
+
+      for (var i = 0; i < allEventNotifications.length; i++) {
+        if (allEventNotifications[i].key.contains('createevent-$eventId')) {
+          presentEventData = EventNotificationModel.fromJson(jsonDecode(
+              EventNotificationModel.convertEventNotificationToJson(
+                  allEventNotifications[i].eventNotificationModel)));
+          // print(
+          //     'presentEventData ${EventNotificationModel.convertEventNotificationToJson(presentEventData)}');
+          break;
+        }
+      }
+
+      if (presentEventData == null) {
+        return;
+      }
+
+      Map<dynamic, dynamic> tags;
+
+      for (var i = 0; i < presentEventData.group.members.length; i++) {
+        var presentGroupMember = presentEventData.group.members.elementAt(i);
+        if (presentGroupMember.atSign[0] != '@') {
+          presentGroupMember.atSign = '@' + presentGroupMember.atSign;
+        }
+
+        if (fromAtSign[0] != '@') fromAtSign = '@' + fromAtSign;
+
+        if (presentGroupMember.atSign.toLowerCase() ==
+            fromAtSign.toLowerCase()) {
+          presentGroupMember.tags['lat'] = locationData.lat;
+          presentGroupMember.tags['long'] = locationData.long;
+
+          tags = presentGroupMember.tags;
+
+          break;
+        }
+
+        // print('presentGroupMember ${presentGroupMember.tags}');
+      }
+
+      presentEventData.isUpdate = true;
+
+      var allAtsignList = <String>[];
+      presentEventData.group.members.forEach((element) {
+        allAtsignList.add(element.atSign);
+      });
+
+      var notification = EventNotificationModel.convertEventNotificationToJson(
+          presentEventData);
+
+      var key = EventService().getAtKey(presentEventData.key);
+
+      var result = await atClientInstance.put(key, notification,
+          isDedicated: MixedConstants.isDedicated);
+
+      key.sharedWith = jsonEncode(allAtsignList);
+
+      await SyncSecondary().callSyncSecondary(
+        SyncOperation.notifyAll,
+        atKey: key,
+        notification: notification,
+        operation: OperationEnum.update,
+        isDedicated: MixedConstants.isDedicated,
+      );
+
+      /// Dont sync as notifyAll is called
+
+      if (result is bool && result) {
+        mapUpdatedEventDataToWidget(presentEventData);
+      }
+    } catch (e) {
+      print('error in event acknowledgement: $e');
     }
   }
 

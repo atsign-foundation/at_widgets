@@ -4,10 +4,12 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
+import 'package:at_events_flutter/models/event_member_location.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_events_flutter/services/sync_secondary.dart';
+import 'package:at_events_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class AtEventNotificationListener {
@@ -73,6 +75,7 @@ class AtEventNotificationListener {
       print('error in decrypting: $e');
     });
     print('decrypted message:$decryptedMessage');
+
     if (atKey.toString().contains('createevent')) {
       var eventData =
           EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
@@ -89,10 +92,22 @@ class AtEventNotificationListener {
         // update event list
         EventKeyStreamService().mapUpdatedEventDataToWidget(eventData);
       }
-    } else if (atKey.toString().contains('eventacknowledged')) {
+
+      return;
+    }
+
+    if (atKey.toString().contains('eventacknowledged')) {
       var msg = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
 
       EventKeyStreamService().createEventAcknowledge(msg, atKey, fromAtSign);
+      return;
+    }
+
+    if (atKey.toString().contains(MixedConstants.EVENT_MEMBER_LOCATION_KEY)) {
+      var msg = EventMemberLocation.fromJson(jsonDecode(decryptedMessage));
+
+      EventKeyStreamService().updateLocationData(msg, atKey, fromAtSign);
+      return;
     }
   }
 
