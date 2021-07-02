@@ -184,7 +184,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 await Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AtLoginDashboardWidget(
+                      builder: (context) => AtLoginDashboard(
                           atClientPreference: _atClientPrefernce,
                           atSign: atSign,
                           nextScreen: HomeWidget(),
@@ -238,7 +238,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       domain: AppConstants.rootDomain,
       context: ctxt,
       atClientPreference: preference,
-      nextScreen: AtLoginDashboardWidget(
+      nextScreen: AtLoginDashboard(
         atClientPreference:preference,
         atSign: await _myAppService.getAtSign(),
         nextScreen: HomeWidget(),

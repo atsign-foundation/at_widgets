@@ -5,7 +5,7 @@ import 'package:at_login_flutter/services/at_login_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_login_flutter/utils/strings.dart';
 
-class AtLoginDashboardWidget extends StatefulWidget {
+class AtLoginDashboard extends StatefulWidget {
   final AtClientPreference atClientPreference;
 
   ///color to match with your app theme. Defaults to [orange].
@@ -16,7 +16,7 @@ class AtLoginDashboardWidget extends StatefulWidget {
   final Widget nextScreen;
 
 
-  AtLoginDashboardWidget(
+  AtLoginDashboard(
       {
         Key key,
         @required this.atClientPreference,
@@ -26,12 +26,12 @@ class AtLoginDashboardWidget extends StatefulWidget {
       }): super(key: key);
 
   @override
-  _AtLoginDashboardWidgetState createState() => _AtLoginDashboardWidgetState(this.atSign);
+  _AtLoginDashboardState createState() => _AtLoginDashboardState(this.atSign);
 }
 
-class _AtLoginDashboardWidgetState extends State<AtLoginDashboardWidget> {
+class _AtLoginDashboardState extends State<AtLoginDashboard> {
   String atSign;
-  _AtLoginDashboardWidgetState(atSign) {
+  _AtLoginDashboardState(atSign) {
     print('atSign is $atSign');
     this.atSign = atSign;
   }
