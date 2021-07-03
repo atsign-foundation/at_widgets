@@ -350,6 +350,8 @@ class EventKeyStreamService {
     //         .addMember(tempHyridNotificationModel.locationNotificationModel);
     //   }
     // }
+    checkLocationSharingForEventData(
+        tempEventKeyLocationModel.eventNotificationModel);
 
     return tempEventKeyLocationModel;
   }
@@ -399,6 +401,9 @@ class EventKeyStreamService {
         /// TODO: Update the map screen, with common components
         // LocationService().updateEventWithNewData(
         //     allHybridNotifications[i].eventNotificationModel);
+
+        checkLocationSharingForEventData(
+            allEventNotifications[i].eventNotificationModel);
       }
     }
     notifyListeners();
@@ -411,6 +416,38 @@ class EventKeyStreamService {
     // } else {
     //   SendLocationNotification().removeMember(eventData.key);
     // }
+  }
+
+  void checkLocationSharingForEventData(
+      EventNotificationModel eventNotificationModel) {
+    if ((eventNotificationModel.atsignCreator == currentAtSign)) {
+      if (eventNotificationModel.isSharing) {
+        // ignore: unawaited_futures
+        EventLocationShare().addMember(eventNotificationModel);
+      } else {
+        EventLocationShare().removeMember(eventNotificationModel.key);
+      }
+    } else {
+      AtContact currentGroupMember;
+      for (var i = 0; i < eventNotificationModel.group.members.length; i++) {
+        if (eventNotificationModel.group.members.elementAt(i).atSign ==
+            currentAtSign) {
+          currentGroupMember =
+              eventNotificationModel.group.members.elementAt(i);
+          break;
+        }
+      }
+
+      if (currentGroupMember != null &&
+          currentGroupMember.tags['isAccepted'] == true &&
+          currentGroupMember.tags['isSharing'] == true &&
+          currentGroupMember.tags['isExited'] == false) {
+        // ignore: unawaited_futures
+        EventLocationShare().addMember(eventNotificationModel);
+      } else {
+        EventLocationShare().removeMember(eventNotificationModel.key);
+      }
+    }
   }
 
   Future<dynamic> updateEvent(
@@ -738,15 +775,12 @@ class EventKeyStreamService {
         AtKey atKey;
 
         /// TODO: Was in main app, uncomment if error
-        // List<HybridNotificationModel> allEventsNotfication =
-        //     HomeEventService().getAllEvents;
-        // allEventsNotfication.forEach((event) {
-        //   if (event.notificationType == NotificationType.Event &&
-        //       event.key == eventData.key) {
-        //     atKey = EventService().getAtKey(event.key);
-        //   }
-        // });
-        atKey = EventService().getAtKey(eventData.key);
+
+        allEventNotifications.forEach((event) {
+          if (event.eventNotificationModel.key == eventData.key) {
+            atKey = EventService().getAtKey(event.key);
+          }
+        });
         return atKey;
         break;
 
@@ -828,8 +862,10 @@ class EventKeyStreamService {
   void notifyListeners() {
     print('allEventNotifications');
     // allEventNotifications.forEach((element) {
-    //   print(EventNotificationModel.convertEventNotificationToJson(
-    //       element.eventNotificationModel));
+    //   print(
+    //       'element.atKey: ${element.atKey}, ${element.atValue}, , ${element.key}, ');
+    //   print('element.key: ${element.key}, ');
+    //   print('element.atValue: ${element.atValue}');
     // });
     if (streamAlternative != null) {
       streamAlternative(allEventNotifications);

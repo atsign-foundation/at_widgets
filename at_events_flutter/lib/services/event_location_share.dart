@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_events_flutter/models/enums_model.dart';
 import 'package:at_events_flutter/models/event_member_location.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -31,14 +32,48 @@ class EventLocationShare {
   /// Or should we use the entire events list and use it
 
   void init() {
-    eventsToShareLocationWith = EventKeyStreamService()
-        .allEventNotifications
-        .map((e) => e.eventNotificationModel)
-        .toList();
+    ///TODO: filter out events which have not been responded
+
+    _initialiseEventData();
 
     print('EventLocationShare init');
     eventsToShareLocationWith.forEach((e) => print('${e.key}'));
     sendLocation();
+  }
+
+  /// TODO: We can form EventMemberLocation objects here, do that we need not loop later while sending
+  void _initialiseEventData() {
+    for (var i = 0;
+        i < EventKeyStreamService().allEventNotifications.length;
+        i++) {
+      var eventNotificationModel = EventKeyStreamService()
+          .allEventNotifications[i]
+          .eventNotificationModel;
+
+      if ((eventNotificationModel.atsignCreator ==
+          AtEventNotificationListener().currentAtSign)) {
+        if (eventNotificationModel.isSharing) {
+          eventsToShareLocationWith.add(eventNotificationModel);
+        }
+      } else {
+        AtContact currentGroupMember;
+        for (var i = 0; i < eventNotificationModel.group.members.length; i++) {
+          if (eventNotificationModel.group.members.elementAt(i).atSign ==
+              AtEventNotificationListener().currentAtSign) {
+            currentGroupMember =
+                eventNotificationModel.group.members.elementAt(i);
+            break;
+          }
+        }
+
+        if (currentGroupMember != null &&
+            currentGroupMember.tags['isAccepted'] == true &&
+            currentGroupMember.tags['isSharing'] == true &&
+            currentGroupMember.tags['isExited'] == false) {
+          eventsToShareLocationWith.add(eventNotificationModel);
+        }
+      }
+    }
   }
 
   /// Will be called from addDataToList or mapUpdatedEventDataToWidget
@@ -142,6 +177,7 @@ class EventLocationShare {
     } else {
       var currentGroupMember;
 
+      /// TODO: Optimise this, dont do this on every loop. Do only once
       _eventNotificationModel.group.members.forEach((groupMember) {
         // sending location to other group members
         if (groupMember.atSign == AtEventNotificationListener().currentAtSign) {
