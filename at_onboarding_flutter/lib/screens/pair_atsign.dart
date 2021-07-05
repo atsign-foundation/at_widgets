@@ -1,12 +1,17 @@
+import 'dart:convert';
+
+import 'dart:async';
+
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
 import 'package:at_onboarding_flutter/screens/private_key_qrcode_generator.dart';
 import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
+import 'package:at_onboarding_flutter/services/freeAtsignService.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
-import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
 import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
@@ -24,9 +29,9 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_utils/at_logger.dart';
 
 class PairAtsignWidget extends StatefulWidget {
-  final OnboardingStatus onboardStatus;
+  final OnboardingStatus? onboardStatus;
   final bool getAtSign;
-  PairAtsignWidget({Key key, this.onboardStatus, this.getAtSign = false})
+  PairAtsignWidget({Key? key, this.onboardStatus, this.getAtSign = false})
       : super(key: key);
   @override
   _PairAtsignWidgetState createState() => _PairAtsignWidgetState();
@@ -35,17 +40,19 @@ class PairAtsignWidget extends StatefulWidget {
 class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   var _onboardingService = OnboardingService.getInstance();
   AtSignLogger _logger = AtSignLogger('QR Scan');
+  final FreeAtsignService _freeAtsignService = FreeAtsignService();
 
-  QrReaderViewController _controller;
+  late QrReaderViewController _controller;
   bool loading = false;
   bool _isQR = false;
   bool _isBackup = false;
-  AtSignStatus _atsignStatus;
+  AtSignStatus? _atsignStatus;
 
   bool _isServerCheck = false;
   bool _isContinue = true;
-  String _pairingAtsign;
-
+  String? _pairingAtsign;
+  String? _loadingMessage;
+  bool isValidated = false;
   bool permissionGrated = false;
   bool scanCompleted = false;
   String _incorrectKeyFile =
@@ -60,6 +67,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     if (widget.onboardStatus != null) {
       if (widget.onboardStatus == OnboardingStatus.ACTIVATE) {
         _isQR = true;
+        loading = true;
+        _getLoginWithAtsignDialog(context);
       }
       if (widget.onboardStatus == OnboardingStatus.RESTORE) {
         _isBackup = true;
@@ -75,7 +84,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
-  bool _isCram(String data) {
+  bool _isCram(String? data) {
     if (data == null || data == '' || !data.contains('@')) {
       return false;
     }
@@ -88,7 +97,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = true;
       });
-      var isExist = await _onboardingService.isExistingAtsign(atsign);
+      var isExist =
+          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
       if (isExist) {
         setState(() {
           loading = false;
@@ -110,7 +120,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => _onboardingService.nextScreen));
+                  builder: (context) => _onboardingService.nextScreen!));
         } else {
           Navigator.pushReplacement(
             context,
@@ -202,65 +212,16 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     });
   }
 
-  void _uploadCramKeyFile() async {
-    try {
-      if (!permissionGrated) {
-        await checkPermissions();
-      }
-      _isServerCheck = false;
-      _isContinue = true;
-      String cramKey;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: false);
-      setState(() {
-        loading = true;
-      });
-      for (var file in result.files) {
-        if (cramKey == null) {
-          String result = await FlutterQrReader.imgScan(file.path);
-          if (result.contains('@')) {
-            cramKey = result;
-            break;
-          } //read scan QRcode and extract atsign,aeskey
-        }
-      }
-      if (_isCram(cramKey)) {
-        List params = cramKey.split(':');
-        if (params[1].length < 128) {
-          _showAlertDialog(CustomStrings().invalidCram(params[0]));
-        } else if (OnboardingService.getInstance().formatAtSign(params[0]) !=
-                _pairingAtsign &&
-            _pairingAtsign != null) {
-          _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
-        } else if (params[1].length == 128) {
-          await this._processSharedSecret(params[0], params[1]);
-        } else {
-          _showAlertDialog(CustomStrings().invalidData);
-        }
-      } else {
-        _showAlertDialog(CustomStrings().invalidData);
-      }
-      setState(() {
-        loading = false;
-      });
-    } catch (error) {
-      _logger.severe('Uploading activation qr code throws $error');
-      setState(() {
-        loading = false;
-      });
-      _showAlertDialog(error);
-    }
-  }
-
-  _processAESKey(String atsign, String aesKey, String contents) async {
+  _processAESKey(String? atsign, String? aesKey, String contents) async {
     assert(aesKey != null || aesKey != '');
     assert(atsign != null || atsign != '');
-    assert(contents != null || contents != '');
+    assert(contents != '');
     setState(() {
       loading = true;
     });
     try {
-      var isExist = await _onboardingService.isExistingAtsign(atsign);
+      var isExist =
+          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
       if (isExist) {
         setState(() {
           loading = false;
@@ -281,7 +242,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => _onboardingService.nextScreen));
+                  builder: (context) => _onboardingService.nextScreen!));
         }
       }
     } catch (e) {
@@ -308,13 +269,14 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       _isServerCheck = false;
       _isContinue = true;
       var fileContents, aesKey, atsign;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true);
+      FilePickerResult result = await (FilePicker.platform.pickFiles(
+          type: FileType.any,
+          allowMultiple: true) as FutureOr<FilePickerResult>);
       setState(() {
         loading = true;
       });
       for (var pickedFile in result.files) {
-        var path = pickedFile.path;
+        var path = pickedFile.path!;
         File selectedFile = File(path);
         var length = selectedFile.lengthSync();
         if (length < 10) {
@@ -331,11 +293,15 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             } else if (aesKey == null &&
                 atsign == null &&
                 file.name.contains('_private_key.png')) {
+              var bytes = file.content as List<int>;
               var path = (await path_provider.getTemporaryDirectory()).path;
-              String result = await FlutterQrReader.imgScan(path);
+              var file1 = await File('$path' + 'test').create();
+              file1.writeAsBytesSync(bytes);
+              String result = await FlutterQrReader.imgScan(file1.path);
               List<String> params = result.replaceAll('"', '').split(':');
               atsign = params[0];
               aesKey = params[1];
+              await File(path + 'test').delete();
               //read scan QRcode and extract atsign,aeskey
             }
           }
@@ -344,7 +310,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         } else if (aesKey == null &&
             atsign == null &&
             pickedFile.name.contains('_private_key.png')) {
-          //read scan QRcode and extract atsign,aeskey
+//read scan QRcode and extract atsign,aeskey
           String result = await FlutterQrReader.imgScan(path);
           List<String> params = result.split(':');
           atsign = params[0];
@@ -401,7 +367,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   }
 
   _showAlertDialog(var errorMessage,
-      {bool isPkam, String title, bool getClose, Function onClose}) {
+      {bool? isPkam, String? title, bool? getClose, Function? onClose}) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -419,7 +385,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
 
     return Scaffold(
         backgroundColor: ColorConstants.light,
@@ -449,14 +414,22 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (_isQR) ..._getQRWidget(deviceTextFactor),
+                    // if (_isQR) ..._getLoginWithAtsignDialog(context),
                     if (_isBackup) ...[
                       SizedBox(
                         height: SizeConfig().screenHeight * 0.25,
                       ),
-                      Text(Strings.backupKeyDescription,
-                          style: CustomTextStyles.fontR16primary,
-                          textAlign: TextAlign.center),
+                      RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                              style: CustomTextStyles.fontR16primary,
+                              children: [
+                                TextSpan(
+                                    text: _pairingAtsign! + ', ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                TextSpan(text: Strings.backupKeyDescription)
+                              ])),
                       SizedBox(
                         height: 25.toHeight,
                       ),
@@ -532,10 +505,21 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                             height: SizeConfig().screenHeight * 0.6,
                             width: SizeConfig().screenWidth,
                             child: Center(
-                              child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      ColorConstants.appColor)),
-                            ),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                  CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          ColorConstants.appColor)),
+                                  SizedBox(height: 20.toHeight),
+                                  if (_loadingMessage != null)
+                                    Text(
+                                      _loadingMessage!,
+                                      style: TextStyle(
+                                          fontSize: 15.toFont,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                ])),
                           )
                     : SizedBox()
               ],
@@ -544,62 +528,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         ));
   }
 
-  _getQRWidget(deviceTextFactor) {
-    return <Widget>[
-      SizedBox(height: 70.toHeight),
-      RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-              style: TextStyle(
-                  fontSize: 16, color: ColorConstants.lightBackgroundColor),
-              children: [
-                TextSpan(text: Strings.scanQrMessage),
-                TextSpan(text: AppConstants.website)
-              ])),
-      SizedBox(
-        height: 25.toHeight,
-      ),
-      Builder(
-        builder: (context) => Container(
-          alignment: Alignment.center,
-          width: 300.toWidth,
-          height: 350.toHeight,
-          color: Colors.black,
-          child: !permissionGrated
-              ? SizedBox()
-              : Stack(
-                  children: [
-                    QrReaderView(
-                      width: 300.toWidth,
-                      height: 350.toHeight,
-                      callback: (container) {
-                        this._controller = container;
-                        _controller.startCamera((data, offsets) {
-                          if (!scanCompleted) {
-                            onScan(data, offsets, context);
-                            scanCompleted = true;
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
-        ),
-      ),
-      SizedBox(
-        height: 25.toHeight,
-      ),
-      Center(child: Text('OR')),
-      SizedBox(
-        height: 25.toHeight,
-      ),
-      CustomButton(
-        width: 230.toWidth,
-        height: 50.toHeight * deviceTextFactor,
-        buttonText: Strings.uploadQRTitle,
-        onPressed: _uploadCramKeyFile,
-      ),
-    ];
+  _getLoginWithAtsignDialog(BuildContext context) {
+    loginWithAtsignAfterReset(context);
   }
 
   bool _validatePickedFileContents(String fileContents) {
@@ -617,7 +547,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   _getAtsignForm() {
     loading = true;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -629,53 +559,189 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           },
           child: CustomDialog(
             isAtsignForm: true,
+            onLimitExceed: (atsignsList, message) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => AtsignListScreen(
+                            atsigns: atsignsList,
+                            message: message,
+                          ))).then((value) async {
+                print('value is $value');
+                value == null ? _getAtsignForm() : await _onAtSignSubmit(value);
+              });
+            },
+            onValidate: (atsign, secret) async {
+              _loadingMessage = Strings.loadingAtsignReady;
+              setState(() {});
+              await _processSharedSecret(atsign, secret);
+            },
             onSubmit: (atsign) async {
-              var isExist = await OnboardingService.getInstance()
-                  .isExistingAtsign(atsign)
-                  .catchError((error) {
-                _showAlertDialog(error);
-              });
-              var atsignStatus = await OnboardingService.getInstance()
-                  .checkAtsignStatus(atsign: atsign);
-              _pairingAtsign =
-                  OnboardingService.getInstance().formatAtSign(atsign);
-              _atsignStatus = atsignStatus ?? AtSignStatus.error;
-              switch (_atsignStatus) {
-                case AtSignStatus.teapot:
-                  if (isExist) {
-                    _showAlertDialog(CustomStrings().pairedAtsign(atsign),
-                        getClose: true, onClose: _getAtsignForm);
-                    break;
-                  }
-                  _isQR = true;
-                  break;
-                case AtSignStatus.activated:
-                  if (isExist) {
-                    _showAlertDialog(CustomStrings().pairedAtsign(atsign),
-                        getClose: true, onClose: _getAtsignForm);
-                    break;
-                  }
-                  _isBackup = true;
-                  break;
-                case AtSignStatus.unavailable:
-                case AtSignStatus.notFound:
-                  _showAlertDialog(Strings.atsignNotFound,
-                      getClose: true, onClose: _getAtsignForm);
-                  break;
-                case AtSignStatus.error:
-                  _showAlertDialog(Strings.atsignNull,
-                      getClose: true, onClose: _getAtsignForm);
-                  break;
-                default:
-                  break;
-              }
-              setState(() {
-                loading = false;
-              });
+              await _onAtSignSubmit(atsign);
             },
           ),
         ),
       );
     });
+  }
+
+  Future<void> _onAtSignSubmit(String atsign) async {
+    setState(() {
+      _loadingMessage = Strings.loadingAtsignStatus;
+    });
+    var isExist = await OnboardingService.getInstance()
+        .isExistingAtsign(atsign)
+        .catchError((error) {
+      _showAlertDialog(error);
+    });
+    var atsignStatus =
+        await OnboardingService.getInstance().checkAtsignStatus(atsign: atsign);
+    _pairingAtsign = OnboardingService.getInstance().formatAtSign(atsign);
+    _atsignStatus = atsignStatus ?? AtSignStatus.error;
+    switch (_atsignStatus) {
+      case AtSignStatus.teapot:
+        if (isExist!) {
+          _showAlertDialog(CustomStrings().pairedAtsign(atsign),
+              getClose: true, onClose: _getAtsignForm);
+          break;
+        }
+        _isQR = true;
+        if (_isQR) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (_) => WillPopScope(
+                  onWillPop: () async {
+                    int ct = 0;
+                    Navigator.of(context).popUntil((_) => ct++ >= 2);
+                    return true;
+                  },
+                  child: CustomDialog(
+                    onValidate: (atsign, secret) async {
+                      _loadingMessage = Strings.loadingAtsignReady;
+                      setState(() {});
+                      await _processSharedSecret(atsign, secret);
+                    },
+                    isAtsignForm: true,
+                    isQR: true,
+                    atsign: atsign,
+                  )));
+        }
+
+        break;
+      case AtSignStatus.activated:
+        if (isExist!) {
+          _showAlertDialog(CustomStrings().pairedAtsign(atsign),
+              getClose: true, onClose: _getAtsignForm);
+          break;
+        }
+        _isBackup = true;
+        break;
+      case AtSignStatus.unavailable:
+      case AtSignStatus.notFound:
+        _showAlertDialog(Strings.atsignNotFound,
+            getClose: true, onClose: _getAtsignForm);
+        break;
+      case AtSignStatus.error:
+        _showAlertDialog(Strings.atsignNull,
+            getClose: true, onClose: _getAtsignForm);
+        break;
+      default:
+        break;
+    }
+    if (_isQR) {
+      await loginWithAtsign(atsign, context);
+    }
+    setState(() {
+      loading = false;
+      _loadingMessage = null;
+    });
+  }
+
+  //It will validate the person with atsign, email and the OTP.
+  //If the validation is successful, it will return a cram secret for the user to login
+  Future<bool> loginWithAtsignAfterReset(BuildContext context) async {
+    String? atsign = _onboardingService.currentAtsign;
+    if (atsign == null) {
+      atsign = await _onboardingService.getAtSign();
+    }
+    if (atsign != null) {
+      atsign = atsign.split('@').last;
+    }
+    var data;
+    bool status = false;
+
+    dynamic response = await _freeAtsignService.loginWithAtsign(atsign!);
+    if (response.statusCode == 200) {
+      data = response.body;
+      data = jsonDecode(data);
+
+      print(data);
+      status = true;
+      // atsign = data['data']['atsign'];
+    } else {
+      data = response.body;
+      data = jsonDecode(data);
+      String errorMessage = data['message'];
+      showErrorDialog(context, errorMessage);
+    }
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => WillPopScope(
+            onWillPop: () async {
+              int ct = 0;
+              Navigator.of(context).popUntil((_) => ct++ >= 2);
+              return true;
+            },
+            child: CustomDialog(
+              onValidate: (atsign, secret) async {
+                _loadingMessage = Strings.loadingAtsignReady;
+                setState(() {});
+                await _processSharedSecret(atsign, secret);
+              },
+              isAtsignForm: true,
+              isQR: true,
+              atsign: atsign!,
+            )));
+    return status;
+  }
+
+  //It will validate the person with atsign, email and the OTP.
+  //If the validation is successful, it will return a cram secret for the user to login
+  Future<bool> loginWithAtsign(String atsign, BuildContext context) async {
+    var data;
+    bool status = false;
+
+    dynamic response = await _freeAtsignService.loginWithAtsign(atsign);
+    if (response.statusCode == 200) {
+      data = response.body;
+      data = jsonDecode(data);
+
+      print(data);
+      status = true;
+      // atsign = data['data']['atsign'];
+    } else {
+      data = response.body;
+      data = jsonDecode(data);
+      String errorMessage = data['message'];
+      showErrorDialog(context, errorMessage);
+    }
+    return status;
+  }
+
+  showErrorDialog(BuildContext context, String errorMessage) {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return CustomDialog(
+            isErrorDialog: true,
+            showClose: true,
+            context: context,
+            message: errorMessage,
+            onClose: () {},
+          );
+        });
   }
 }

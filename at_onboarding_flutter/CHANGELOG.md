@@ -12,3 +12,8 @@
 
 ## 1.0.0+4
 - upgraded some packages to resolve dependency issues
+
+## 2.0.0
+- supports .zip/.atKeys files of @signs
+- can generate free @signs
+- null-safety migration

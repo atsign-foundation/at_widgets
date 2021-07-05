@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:at_follows_flutter/domain/atsign.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
 
@@ -14,15 +15,15 @@ class ConnectionProvider extends ChangeNotifier {
   factory ConnectionProvider() {
     return _singleton;
   }
-  List<Atsign> followersList;
-  List<Atsign> followingList;
-  List<Atsign> atsignsList;
-  Status status;
+  List<Atsign>? followersList;
+  List<Atsign>? followingList;
+  List<Atsign>? atsignsList;
+  Status? status;
   var error;
 
-  ConnectionsService _connectionsService;
-  bool _disposed;
-  ListStatus connectionslistStatus;
+  late ConnectionsService _connectionsService;
+  late bool _disposed;
+  late ListStatus connectionslistStatus;
 
   @override
   void dispose() {
@@ -47,7 +48,7 @@ class ConnectionProvider extends ChangeNotifier {
     this.setStatus(null);
   }
 
-  setStatus(Status value) {
+  setStatus(Status? value) {
     status = value;
     notifyListeners();
   }
@@ -93,13 +94,13 @@ class ConnectionProvider extends ChangeNotifier {
     return c.future;
   }
 
-  Future follow(String atsign) async {
+  Future follow(String? atsign) async {
     Completer c = Completer();
     try {
       setStatus(Status.loading);
       var data = await _connectionsService.follow(atsign);
       if (data != null) {
-        followingList.add(data);
+        followingList!.add(data);
         _modifyFollowersList(atsign, true);
       }
       setStatus(Status.done);
@@ -115,13 +116,13 @@ class ConnectionProvider extends ChangeNotifier {
     return c.future;
   }
 
-  Future unfollow(String atsign) async {
+  Future unfollow(String? atsign) async {
     Completer c = Completer();
     try {
       setStatus(Status.loading);
       var result = await _connectionsService.unfollow(atsign);
       if (result) {
-        followingList.removeWhere((element) => element.title == atsign);
+        followingList!.removeWhere((element) => element.title == atsign);
         _modifyFollowersList(atsign, false);
       }
       setStatus(Status.done);
@@ -143,8 +144,8 @@ class ConnectionProvider extends ChangeNotifier {
       setStatus(Status.loading);
       var result = await _connectionsService.delete(atsign);
       if (result) {
-        followingList.removeWhere((element) => element.title == atsign);
-        followersList.removeWhere((element) => element.title == atsign);
+        followingList!.removeWhere((element) => element.title == atsign);
+        followersList!.removeWhere((element) => element.title == atsign);
       }
       setStatus(Status.done);
       c.complete(true);
@@ -156,30 +157,28 @@ class ConnectionProvider extends ChangeNotifier {
     }
   }
 
-  _modifyFollowersList(String atsign, bool follow) {
-    var index = followersList.indexWhere((element) => element.title == atsign);
+  _modifyFollowersList(String? atsign, bool follow) {
+    var index = followersList!.indexWhere((element) => element.title == atsign);
     if (index != -1) {
-      var data = followersList[index];
-      followersList[index] = data..isFollowing = follow;
+      var data = followersList![index];
+      followersList![index] = data..isFollowing = follow;
     }
   }
 
-  bool containsFollowing(String atsign) {
-    var index = this.followingList.indexWhere((data) => data.title == atsign);
+  bool containsFollowing(String? atsign) {
+    var index = this.followingList!.indexWhere((data) => data.title == atsign);
     return index != -1;
   }
 
   ///Returns data with the title = [atsign] from either followers/following list based on [isFollowing].
-  Atsign getData(bool isFollowing, String atsign) {
+  Atsign? getData(bool isFollowing, String? atsign) {
     if (isFollowing) {
-      return this.followingList.firstWhere(
+      return this.followingList!.firstWhereOrNull(
             (data) => data.title == atsign,
-            orElse: () => null,
           );
     }
-    return this.followersList.firstWhere(
+    return this.followersList!.firstWhereOrNull(
           (data) => data.title == atsign,
-          orElse: () => null,
         );
   }
 }

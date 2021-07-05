@@ -6,19 +6,14 @@ description: Demonstrates how to use the at_follows_flutter plugin.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^2.0.1
-  flutter_local_notifications: ^5.0.0+1
-  at_onboarding_flutter: 
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_onboarding_flutter
-      ref: trunk
-      version: ^1.0.0+4
+  path_provider: ^2.0.2
+  flutter_local_notifications: ^5.0.0+4
+  at_onboarding_flutter: ^2.0.0
 
 
   at_follows_flutter:
@@ -31,7 +26,8 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.0
+  cupertino_icons: ^1.0.3
+
 
 dev_dependencies:
   flutter_test:
