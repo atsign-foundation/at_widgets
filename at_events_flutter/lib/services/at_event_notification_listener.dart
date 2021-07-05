@@ -18,6 +18,7 @@ class AtEventNotificationListener {
   static final _instance = AtEventNotificationListener._();
   factory AtEventNotificationListener() => _instance;
   AtClientImpl atClientInstance;
+  bool monitorStarted = false;
   String currentAtSign;
   GlobalKey<NavigatorState> navKey;
   // ignore: non_constant_identifier_names
@@ -36,10 +37,14 @@ class AtEventNotificationListener {
   }
 
   Future<bool> startMonitor() async {
-    var privateKey = await getPrivateKey(currentAtSign);
-    // ignore: await_only_futures
-    await atClientInstance.startMonitor(privateKey, fnCallBack);
-    print('Monitor started');
+    if (!monitorStarted) {
+      var privateKey = await getPrivateKey(currentAtSign);
+      // ignore: await_only_futures
+      await atClientInstance.startMonitor(privateKey, fnCallBack);
+      print('Monitor started');
+      monitorStarted = true;
+    }
+
     return true;
   }
 

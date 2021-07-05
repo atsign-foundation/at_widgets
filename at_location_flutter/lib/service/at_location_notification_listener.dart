@@ -19,26 +19,39 @@ class AtLocationNotificationListener {
   final String locationKey = 'locationnotify';
   AtClientImpl? atClientInstance;
   String? currentAtSign;
+  bool monitorStarted = false;
+  late bool showDialogBox;
   late GlobalKey<NavigatorState> navKey;
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
 
-  void init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
-      GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
+  void init(
+      AtClientImpl atClientInstanceFromApp,
+      String currentAtSignFromApp,
+      GlobalKey<NavigatorState> navKeyFromMainApp,
+      String rootDomain,
+      bool showDialogBox,
       {Function? newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     navKey = navKeyFromMainApp;
+    this.showDialogBox = showDialogBox;
     ROOT_DOMAIN = rootDomain;
     MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
         newGetAtValueFromMainApp: newGetAtValueFromMainApp);
+
+    /// TODO: start only once
     startMonitor();
   }
 
   Future<bool> startMonitor() async {
-    var privateKey = await (getPrivateKey(currentAtSign!) as FutureOr<String>);
-    await atClientInstance!.startMonitor(privateKey, _notificationCallback);
-    print('Monitor started in location package');
+    if (!monitorStarted) {
+      var privateKey =
+          await (getPrivateKey(currentAtSign!) as FutureOr<String>);
+      await atClientInstance!.startMonitor(privateKey, _notificationCallback);
+      print('Monitor started in location package');
+      monitorStarted = true;
+    }
     return true;
   }
 
@@ -164,15 +177,18 @@ class AtLocationNotificationListener {
 
   Future<void> showMyDialog(
       String? fromAtSign, LocationNotificationModel locationData) async {
-    return showDialog<void>(
-      context: navKey.currentContext!,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return NotificationDialog(
-          userName: fromAtSign,
-          locationData: locationData,
-        );
-      },
-    );
+    print('showMyDialog called');
+    if (showDialogBox) {
+      return showDialog<void>(
+        context: navKey.currentContext!,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return NotificationDialog(
+            userName: fromAtSign,
+            locationData: locationData,
+          );
+        },
+      );
+    }
   }
 }
