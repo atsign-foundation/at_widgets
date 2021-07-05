@@ -109,9 +109,13 @@ class SharingLocationService {
   }
 
   Future<bool> shareLocationAcknowledgment(
-      LocationNotificationModel locationNotificationModel,
+      LocationNotificationModel originalLocationNotificationModel,
       bool isAccepted) async {
     try {
+      var locationNotificationModel = LocationNotificationModel.fromJson(
+          jsonDecode(
+              LocationNotificationModel.convertLocationNotificationToJson(
+                  originalLocationNotificationModel)));
       var atkeyMicrosecondId = locationNotificationModel.key!
           .split('sharelocation-')[1]
           .split('@')[0];
@@ -140,9 +144,14 @@ class SharingLocationService {
   }
 
   Future<bool> updateWithShareLocationAcknowledge(
-      LocationNotificationModel locationNotificationModel,
+      LocationNotificationModel originalLocationNotificationModel,
       {bool? isSharing}) async {
     try {
+      var locationNotificationModel = LocationNotificationModel.fromJson(
+          jsonDecode(
+              LocationNotificationModel.convertLocationNotificationToJson(
+                  originalLocationNotificationModel)));
+
       var atkeyMicrosecondId = locationNotificationModel.key!
           .split('sharelocation-')[1]
           .split('@')[0];
