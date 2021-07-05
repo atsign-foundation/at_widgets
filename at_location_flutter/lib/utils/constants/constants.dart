@@ -18,7 +18,7 @@ class MixedConstants {
   static const String REQUEST_LOCATION_ACK = 'requestlocationacknowledged';
   static const String DELETE_REQUEST_LOCATION_ACK = 'deleterequestacklocation';
 
-  static const bool isDedicated = false;
+  static const bool isDedicated = true;
 
   static String? _map_key;
   static String setMapKey(String _key) => _map_key = _key;

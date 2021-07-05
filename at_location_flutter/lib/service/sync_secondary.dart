@@ -81,7 +81,7 @@ class SyncSecondary {
 
   void _executeAfterSynced(List<SyncOperationDetails> _tempPriorityOperations) {
     _tempPriorityOperations.forEach((e) {
-      if (e.response != null) {
+      if ((e.response != null) && (e.afterSync != null)) {
         e.afterSync!(e.response);
       }
     });

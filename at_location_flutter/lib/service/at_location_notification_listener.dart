@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
 import 'sharing_location_service.dart';
+import 'sync_secondary.dart';
 
 class AtLocationNotificationListener {
   AtLocationNotificationListener._();
@@ -48,7 +49,7 @@ class AtLocationNotificationListener {
     if (!_monitorStarted) {
       var privateKey =
           await (getPrivateKey(currentAtSign!) as FutureOr<String>);
-      await atClientInstance!.startMonitor(privateKey, _notificationCallback);
+      await atClientInstance!.startMonitor(privateKey, fnCallBack);
       print('Monitor started in location package');
       _monitorStarted = true;
     }
@@ -58,6 +59,12 @@ class AtLocationNotificationListener {
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
     return await atClientInstance!.getPrivateKey(atsign);
+  }
+
+  void fnCallBack(var response) async {
+    print('fnCallBack called');
+    SyncSecondary()
+        .completePrioritySync(response, afterSync: _notificationCallback);
   }
 
   void _notificationCallback(dynamic notification) async {

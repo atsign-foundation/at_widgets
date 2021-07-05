@@ -13,6 +13,7 @@ import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'contact_service.dart';
 import 'send_location_notification.dart';
 import 'sharing_location_service.dart';
+import 'sync_secondary.dart';
 
 class KeyStreamService {
   KeyStreamService._();
@@ -58,6 +59,8 @@ class KeyStreamService {
   }
 
   void getAllNotifications() async {
+    await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+
     var allResponse = await atClientInstance!.getKeys(
       regex: 'sharelocation-',
     );
