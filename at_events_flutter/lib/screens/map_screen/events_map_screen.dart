@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_events_flutter/common_components/floating_icon.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
@@ -147,47 +148,58 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        child: ValueListenableBuilder(
-          valueListenable: EventsMapScreenData()._eventNotifier,
-          builder: (BuildContext context, EventNotificationModel _event,
-              Widget child) {
-            print('ValueListenableBuilder called');
-            var _locationList = EventsMapScreenData().markers;
-            var _membersSharingLocation = [];
-            _locationList.forEach((e) => {
-                  if ((e.displayName !=
-                          AtEventNotificationListener().currentAtSign) &&
-                      (e.displayName != _event.venue.label))
-                    {_membersSharingLocation.add(e.displayName)}
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          alignment: Alignment.center,
+          child: ValueListenableBuilder(
+            valueListenable: EventsMapScreenData()._eventNotifier,
+            builder: (BuildContext context, EventNotificationModel _event,
+                Widget child) {
+              print('ValueListenableBuilder called');
+              var _locationList = EventsMapScreenData().markers;
+              var _membersSharingLocation = [];
+              _locationList.forEach((e) => {
+                    if ((e.displayName !=
+                            AtEventNotificationListener().currentAtSign) &&
+                        (e.displayName != _event.venue.label))
+                      {_membersSharingLocation.add(e.displayName)}
+                  });
+
+              print('_locationList $_locationList');
+
+              if (_membersSharingLocation.isNotEmpty) {
+                Future.delayed(Duration(seconds: 1), () {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(_membersSharingLocation.length > 1
+                          ? '${_listToString(_membersSharingLocation)} are sharing their locations'
+                          : '${_listToString(_membersSharingLocation)} is sharing their location')));
                 });
+              }
 
-            print('_locationList $_locationList');
-
-            if (_membersSharingLocation.isNotEmpty) {
-              Future.delayed(Duration(seconds: 1), () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(_membersSharingLocation.length > 1
-                        ? '${_listToString(_membersSharingLocation)} are sharing their locations'
-                        : '${_listToString(_membersSharingLocation)} is sharing their location')));
-              });
-            }
-
-            return Stack(
-              children: [
-                eventShowLocation(_locationList,
-                    LatLng(_event.venue.latitude, _event.venue.longitude)),
-                SlidingUpPanel(
-                  controller: pc,
-                  minHeight: 205.toHeight,
-                  maxHeight: 431.toHeight,
-                  panel: eventsCollapsedContent(_event),
-                )
-              ],
-            );
-          },
+              return Stack(
+                children: [
+                  eventShowLocation(_locationList,
+                      LatLng(_event.venue.latitude, _event.venue.longitude)),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: FloatingIcon(
+                      icon: Icons.arrow_back,
+                      isTopLeft: true,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  SlidingUpPanel(
+                    controller: pc,
+                    minHeight: 205.toHeight,
+                    maxHeight: 431.toHeight,
+                    panel: eventsCollapsedContent(_event),
+                  )
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
