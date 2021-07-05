@@ -16,7 +16,9 @@ import 'utils/constants/constants.dart';
 ///
 /// [locationListMarker] Custom widget displayed as the marker.
 Widget showLocation(Key key, MapController? mapController,
-    {LatLng? location, List<LatLng>? locationList, Widget? locationListMarker}) {
+    {LatLng? location,
+    List<LatLng>? locationList,
+    Widget? locationListMarker}) {
   bool showMarker;
   Marker marker;
   List<Marker>? markerList;
@@ -27,7 +29,7 @@ Widget showLocation(Key key, MapController? mapController,
   if (location != null) {
     marker = buildMarker(HybridModel(latLng: location), singleMarker: true);
     if (mapController != null) {
-      mapController.move(location, 8);
+      // mapController.move(location, 8);
     }
   } else {
     marker =
@@ -49,6 +51,7 @@ Widget showLocation(Key key, MapController? mapController,
   return SafeArea(
     child: Scaffold(
         body: FlutterMap(
+      key: UniqueKey(),
       mapController: mapController,
       options: MapOptions(
         center: markerList != null

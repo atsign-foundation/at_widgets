@@ -19,7 +19,7 @@ class AtLocationNotificationListener {
   final String locationKey = 'locationnotify';
   AtClientImpl? atClientInstance;
   String? currentAtSign;
-  bool monitorStarted = false;
+  bool _monitorStarted = false;
   late bool showDialogBox;
   late GlobalKey<NavigatorState> navKey;
   // ignore: non_constant_identifier_names
@@ -45,12 +45,12 @@ class AtLocationNotificationListener {
   }
 
   Future<bool> startMonitor() async {
-    if (!monitorStarted) {
+    if (!_monitorStarted) {
       var privateKey =
           await (getPrivateKey(currentAtSign!) as FutureOr<String>);
       await atClientInstance!.startMonitor(privateKey, _notificationCallback);
       print('Monitor started in location package');
-      monitorStarted = true;
+      _monitorStarted = true;
     }
     return true;
   }

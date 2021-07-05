@@ -23,6 +23,7 @@ void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
     {required String mapKey,
     required String apiKey,
+    bool showDialogBox = false,
     String rootDomain = MixedConstants.ROOT_DOMAIN,
     Function? getAtValue,
     Function(List<KeyLocationModel>)? streamAlternative}) async {
@@ -39,7 +40,7 @@ void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
   }
 
   AtLocationNotificationListener().init(
-      atClientImpl, currentAtSign, navKey, rootDomain,
+      atClientImpl, currentAtSign, navKey, rootDomain, showDialogBox,
       newGetAtValueFromMainApp: getAtValue);
   KeyStreamService().init(AtLocationNotificationListener().atClientInstance,
       streamAlternative: streamAlternative);
