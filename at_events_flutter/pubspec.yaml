@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   latlong: ^0.6.1
   fluttertoast: ^8.0.5
+  sliding_up_panel: ^1.0.2
+
 
   at_common_flutter: ^2.0.0
   at_location_flutter: 

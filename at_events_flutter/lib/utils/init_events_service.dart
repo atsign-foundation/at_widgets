@@ -7,6 +7,8 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_events_flutter/services/event_services.dart';
+import 'package:at_events_flutter/utils/constants.dart';
+import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:flutter/cupertino.dart';
 
 void initialiseEventService(
@@ -15,6 +17,17 @@ void initialiseEventService(
     rootPort = 64,
     dynamic Function(List<EventKeyLocationModel>) streamAlternative}) {
   // EventService().initializeAtContactImpl(atClientInstance, rootDomain);
+
+  initializeLocationService(
+      atClientInstance, atClientInstance.currentAtSign, navKeyFromMainApp,
+      apiKey: MixedConstants.API_KEY, mapKey: MixedConstants.MAP_KEY);
+
+  /// To have eta in events
+  AtLocationFlutterPlugin(
+    [],
+    calculateETA: true,
+  );
+
   AtEventNotificationListener().init(atClientInstance,
       atClientInstance.currentAtSign, navKeyFromMainApp, rootDomain);
 
