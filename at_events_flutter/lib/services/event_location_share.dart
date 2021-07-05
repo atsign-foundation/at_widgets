@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/models/enums_model.dart';
 import 'package:at_events_flutter/models/event_member_location.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -27,6 +28,7 @@ class EventLocationShare {
   bool masterSwitchState = true;
   StreamSubscription<Position> positionStream;
   List<EventNotificationModel> eventsToShareLocationWith = [];
+  Function locationPromptDialog;
 
   /// TODO:
   /// Doubt, whetherwe should have some kind of list which will send
@@ -40,6 +42,20 @@ class EventLocationShare {
     print('EventLocationShare init');
     eventsToShareLocationWith.forEach((e) => print('${e.key}'));
     sendLocation();
+  }
+
+  void setLocationPrompt(Function _locationPrompt) {
+    locationPromptDialog = _locationPrompt;
+  }
+
+  void setMasterSwitchState(bool _state) {
+    masterSwitchState = _state;
+    if (!_state) {
+      init();
+    } else {
+      /// TODO: Turn off location in all events
+      // deleteAllLocationKey();
+    }
   }
 
   /// TODO: We can form EventMemberLocation objects here, do that we need not loop later while sending
@@ -93,10 +109,21 @@ class EventLocationShare {
           // ignore: unawaited_futures
           SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
         }
+      } else {
+        /// method from main app
+        if (locationPromptDialog != null) {
+          eventsToShareLocationWith.add(_newData);
+          locationPromptDialog();
+
+          /// return as when main switch is turned on, it will send location to all.
+          return;
+        }
       }
     } else {
-      // CustomToast().show(
-      //     'Location permission not granted', NavService.navKey.currentContext);
+      if (AtEventNotificationListener().navKey != null) {
+        CustomToast().show('Location permission not granted',
+            AtEventNotificationListener().navKey.currentContext);
+      }
     }
 
     // add

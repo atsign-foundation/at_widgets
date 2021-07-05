@@ -15,12 +15,15 @@ void initialiseEventService(
     AtClientImpl atClientInstance, GlobalKey<NavigatorState> navKeyFromMainApp,
     {rootDomain = 'root.atsign.wtf',
     rootPort = 64,
-    dynamic Function(List<EventKeyLocationModel>) streamAlternative}) {
+    dynamic Function(List<EventKeyLocationModel>) streamAlternative,
+    bool initLocation = true}) {
   // EventService().initializeAtContactImpl(atClientInstance, rootDomain);
 
-  initializeLocationService(
-      atClientInstance, atClientInstance.currentAtSign, navKeyFromMainApp,
-      apiKey: MixedConstants.API_KEY, mapKey: MixedConstants.MAP_KEY);
+  if (initLocation) {
+    initializeLocationService(
+        atClientInstance, atClientInstance.currentAtSign, null,
+        apiKey: MixedConstants.API_KEY, mapKey: MixedConstants.MAP_KEY);
+  }
 
   /// To have eta in events
   AtLocationFlutterPlugin(
