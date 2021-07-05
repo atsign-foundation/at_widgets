@@ -478,9 +478,12 @@ class EventKeyStreamService {
     }
   }
 
-  Future<void> actionOnEvent(
+  Future<bool> actionOnEvent(
       EventNotificationModel event, ATKEY_TYPE_ENUM keyType,
-      {bool isAccepted, bool isSharing, bool isExited}) async {
+      {bool isAccepted,
+      bool isSharing,
+      bool isExited,
+      bool isCancelled}) async {
     var eventData = EventNotificationModel.fromJson(jsonDecode(
         EventNotificationModel.convertEventNotificationToJson(event)));
 
@@ -500,6 +503,11 @@ class EventKeyStreamService {
         if (isSharing == false) {
           eventData.lat = null;
           eventData.long = null;
+        }
+
+        /// TODO: check
+        if (isCancelled == true) {
+          eventData.isCancelled = true;
         }
       } else {
         eventData.group.members.forEach((member) {
@@ -663,6 +671,8 @@ class EventKeyStreamService {
     try {
       var eventId =
           acknowledgedEvent.key.split('createevent-')[1].split('@')[0];
+
+      /// TODO: replace appNameSpace
       eventId = eventId.replaceAll('.rrive', '');
 
       EventNotificationModel presentEventData;
@@ -798,6 +808,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// TODO: Change the model
   Future<dynamic> geteventData(String regex) async {
     var acknowledgedAtKey = EventService().getAtKey(regex);
 
@@ -870,6 +881,8 @@ class EventKeyStreamService {
     if (streamAlternative != null) {
       streamAlternative(allEventNotifications);
     }
+
+    EventsMapScreenData().updateEventdataFromList(allEventNotifications);
     atNotificationsSink.add(allEventNotifications);
   }
 }

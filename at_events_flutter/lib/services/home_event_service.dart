@@ -116,11 +116,6 @@ class HomeEventService {
     eventNotificationModel.isUpdate = true;
 
     /// Move to map screen
-    Navigator.push(
-      AtEventNotificationListener().navKey.currentContext,
-      MaterialPageRoute(
-        builder: (context) => EventsMapScreen(eventNotificationModel),
-      ),
-    );
+    EventsMapScreenData().moveToEventScreen(eventNotificationModel);
   }
 }

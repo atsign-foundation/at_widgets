@@ -1,6 +1,6 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_events_flutter/services/at_event_notification_listener.dart';
 import 'package:at_events_flutter/utils/colors.dart';
-import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_popup_route.dart';
@@ -17,7 +17,7 @@ class LoadingDialog {
   void show({String text}) {
     if (!_showing) {
       _showing = true;
-      AtLocationNotificationListener()
+      AtEventNotificationListener()
           .navKey
           .currentState
           .push(CustomPopupRoutes(
@@ -57,7 +57,7 @@ class LoadingDialog {
   void hide() {
     print('hide called');
     if (_showing) {
-      AtLocationNotificationListener().navKey.currentState.pop();
+      AtEventNotificationListener().navKey.currentState.pop();
       _showing = false;
     }
   }
