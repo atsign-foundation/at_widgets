@@ -821,9 +821,8 @@ class EventKeyStreamService {
       return;
     }
 
-    var eventData =
-        LocationNotificationModel.fromJson(jsonDecode(result.value));
-    var obj = EventUserLocation(eventData.atsignCreator, eventData.getLatLng);
+    var eventData = EventMemberLocation.fromJson(jsonDecode(result.value));
+    var obj = EventUserLocation(eventData.fromAtSign, eventData.getLatLng);
 
     return obj;
   }
