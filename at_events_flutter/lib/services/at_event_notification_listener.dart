@@ -8,7 +8,8 @@ import 'package:at_events_flutter/models/event_member_location.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
-import 'package:at_events_flutter/services/sync_secondary.dart';
+// import 'package:at_events_flutter/services/sync_secondary.dart';
+import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
 
