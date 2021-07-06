@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -27,7 +28,7 @@ class AtEventNotificationListener {
   void init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
       GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       {Function? newGetAtValueFromMainApp}) {
-    initializeContactsService(atClientInstance!, currentAtSignFromApp);
+    initializeContactsService(atClientInstanceFromApp, currentAtSignFromApp);
 
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
@@ -38,7 +39,8 @@ class AtEventNotificationListener {
 
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
-      var privateKey = await (getPrivateKey(currentAtSign!) as FutureOr<String>);
+      var privateKey =
+          await (getPrivateKey(currentAtSign!) as FutureOr<String>);
       // ignore: await_only_futures
       await atClientInstance!.startMonitor(privateKey, fnCallBack);
       print('Monitor started in events package');

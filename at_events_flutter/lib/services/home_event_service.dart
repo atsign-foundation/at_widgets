@@ -12,7 +12,7 @@ class HomeEventService {
   factory HomeEventService() => _instance;
 
   bool isActionRequired(EventNotificationModel event) {
-    if (event.isCancelled) return true;
+    if (event.isCancelled!) return true;
 
     var isRequired = true;
     var currentAtsign =
@@ -38,7 +38,7 @@ class HomeEventService {
   }
 
   String getActionString(EventNotificationModel event, bool haveResponded) {
-    if (event.isCancelled) return 'Cancelled';
+    if (event.isCancelled!) return 'Cancelled';
     var label = 'Action required';
     var currentAtsign =
         AtEventNotificationListener().atClientInstance!.currentAtSign;
@@ -100,7 +100,7 @@ class HomeEventService {
   onEventModelTap(
       EventNotificationModel eventNotificationModel, bool haveResponded) {
     if (isActionRequired(eventNotificationModel) &&
-        !eventNotificationModel.isCancelled) {
+        !eventNotificationModel.isCancelled!) {
       if (haveResponded) {
         return null;
       }

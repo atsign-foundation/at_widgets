@@ -83,7 +83,8 @@ class _CreateEventState extends State<CreateEvent> {
                     StreamBuilder(
                         stream: EventService().eventStream,
                         builder: (BuildContext context, snapshot) {
-                          EventNotificationModel? eventData = snapshot.data;
+                          var eventData =
+                              snapshot.data as EventNotificationModel?;
 
                           if (eventData != null && snapshot.hasData) {
                             return Container(
@@ -247,7 +248,8 @@ class _CreateEventState extends State<CreateEvent> {
                                                       ? 'Event today (${timeOfDayToString(eventData.event!.startTime!)})'
                                                       : 'Event on ${(dateToString(eventData.event!.date!) != dateToString(DateTime.now()) ? dateToString(eventData.event!.date!) : dateToString(DateTime.now()))} (${timeOfDayToString(eventData.event!.startTime!)})') +
                                                   ((dateToString(eventData
-                                                              .event!.endDate!) ==
+                                                              .event!
+                                                              .endDate!) ==
                                                           dateToString(eventData
                                                               .event!.date!))
                                                       ? ' to'
@@ -370,7 +372,7 @@ class _CreateEventState extends State<CreateEvent> {
       return;
     }
 
-    bool isOverlap = EventService().showConcurrentEventDialog(
+    var isOverlap = EventService().showConcurrentEventDialog(
         widget.createdEvents, EventService().eventNotificationModel, context)!;
 
     if (isOverlap) {

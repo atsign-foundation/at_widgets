@@ -92,8 +92,8 @@ class EventService {
 
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
-      var result = await atClientInstance!.put(atKey, eventData,
-          isDedicated: MixedConstants.isDedicated);
+      var result = await atClientInstance!
+          .put(atKey, eventData, isDedicated: MixedConstants.isDedicated);
       atKey.sharedWith = jsonEncode(allAtsignList);
       var notifyAllResult = await SyncSecondary().callSyncSecondary(
         SyncOperation.notifyAll,
@@ -117,54 +117,54 @@ class EventService {
   }
 
   sendEventNotification() async {
-    try {
-      EventNotificationModel eventNotification = eventNotificationModel!;
-      eventNotification.isUpdate = false;
-      eventNotification.isSharing = true;
+    // try {
+    EventNotificationModel eventNotification = eventNotificationModel!;
+    eventNotification.isUpdate = false;
+    eventNotification.isSharing = true;
 
-      eventNotification.key =
-          "createevent-${DateTime.now().microsecondsSinceEpoch}";
-      eventNotification.atsignCreator = atClientInstance!.currentAtSign;
-      var notification = EventNotificationModel.convertEventNotificationToJson(
-          EventService().eventNotificationModel!);
+    eventNotification.key =
+        "createevent-${DateTime.now().microsecondsSinceEpoch}";
+    eventNotification.atsignCreator = atClientInstance!.currentAtSign;
+    var notification = EventNotificationModel.convertEventNotificationToJson(
+        EventService().eventNotificationModel!);
 
-      print('shared contact atsigns:${selectedContactsAtSigns}');
+    print('shared contact atsigns:${selectedContactsAtSigns}');
 
-      AtKey atKey = AtKey()
-        ..metadata = Metadata()
-        ..metadata!.ttr = -1
-        ..metadata!.ccd = true
-        ..key = eventNotification.key
-        ..sharedBy = eventNotification.atsignCreator;
+    AtKey atKey = AtKey()
+      ..metadata = Metadata()
+      ..metadata!.ttr = -1
+      ..metadata!.ccd = true
+      ..key = eventNotification.key
+      ..sharedBy = eventNotification.atsignCreator;
 
-      var putResult = await atClientInstance!.put(atKey, notification,
-          isDedicated:
-              true); // creating a key and saving it for creator without adding any receiver atsign
+    var putResult = await atClientInstance!.put(atKey, notification,
+        isDedicated:
+            true); // creating a key and saving it for creator without adding any receiver atsign
 
-      atKey.sharedWith = jsonEncode(
-          [...selectedContactsAtSigns]); //adding event members in atkey
+    atKey.sharedWith = jsonEncode(
+        [...selectedContactsAtSigns]); //adding event members in atkey
 
-      var notifyAllResult = await SyncSecondary().callSyncSecondary(
-        SyncOperation.notifyAll,
-        atKey: atKey,
-        notification: notification,
-        operation: OperationEnum.update,
-        isDedicated: MixedConstants.isDedicated,
-      );
+    var notifyAllResult = await SyncSecondary().callSyncSecondary(
+      SyncOperation.notifyAll,
+      atKey: atKey,
+      notification: notification,
+      operation: OperationEnum.update,
+      isDedicated: MixedConstants.isDedicated,
+    );
 
-      /// Dont need to sync as notifyAll is called
-      var _result =
-          await EventKeyStreamService().addDataToList(eventNotificationModel!);
+    /// Dont need to sync as notifyAll is called
+    var _result =
+        await EventKeyStreamService().addDataToList(eventNotificationModel!);
 
-      eventNotificationModel = eventNotification;
-      if (onEventSaved != null) {
-        onEventSaved!(eventNotification);
-      }
-      return putResult;
-    } catch (e) {
-      print('error in SendEventNotification $e');
-      return e.toString();
+    eventNotificationModel = eventNotification;
+    if (onEventSaved != null) {
+      onEventSaved!(eventNotification);
     }
+    return putResult;
+    // } catch (e) {
+    //   print('error in SendEventNotification $e');
+    //   return e.toString();
+    // }
   }
 
   addNewGroupMembers(List<AtContact> selectedContactList) {
@@ -194,7 +194,11 @@ class EventService {
       } else if (element.group != null) {
         element.group!.members!.forEach((groupMember) {
           AtContact newContact = getGroupMemberContact(groupMember);
-          EventService().eventNotificationModel!.group!.members!.add(newContact);
+          EventService()
+              .eventNotificationModel!
+              .group!
+              .members!
+              .add(newContact);
           EventService().selectedContacts!.add(newContact);
           selectedContactsAtSigns.add(newContact.atSign);
         });
@@ -286,7 +290,8 @@ class EventService {
 
   dynamic createEventFormValidation() {
     EventNotificationModel eventData = EventService().eventNotificationModel!;
-    if (eventData.group!.members == null || eventData.group!.members!.length < 1) {
+    if (eventData.group!.members == null ||
+        eventData.group!.members!.length < 1) {
       return 'Add contacts';
     } else if (eventData.title == null || eventData.title!.trim().length < 1) {
       return 'Add title';

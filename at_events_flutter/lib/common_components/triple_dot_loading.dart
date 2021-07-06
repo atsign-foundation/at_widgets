@@ -88,14 +88,14 @@ class _TypingIndicatorState extends State<TypingIndicator>
   }
 
   void _showIndicator() {
-    _appearanceController
+    _appearanceController!
       ..duration = const Duration(milliseconds: 750)
       ..forward();
     _repeatingController.repeat();
   }
 
   void _hideIndicator() {
-    _appearanceController
+    _appearanceController!
       ..duration = const Duration(milliseconds: 150)
       ..reverse();
     _repeatingController.stop();

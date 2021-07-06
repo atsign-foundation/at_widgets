@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
@@ -129,7 +130,7 @@ class EventsMapScreenData {
           image: null);
       user.eta = await _calculateEta(
           user, LatLng(_event.venue!.latitude!, _event.venue!.longitude!));
-      user.image = await (_imageOfAtsign(_event.atsignCreator!) as FutureOr<Uint8List?>);
+      user.image = await (_imageOfAtsign(_event.atsignCreator!));
       user.marker = buildMarker(user);
       _tempMarkersList.add(user);
     }
@@ -147,7 +148,7 @@ class EventsMapScreenData {
         _user.eta = await _calculateEta(
             _user, LatLng(_event.venue!.latitude!, _event.venue!.longitude!));
 
-        _user.image = await (_imageOfAtsign(element.atSign) as FutureOr<Uint8List?>);
+        _user.image = await (_imageOfAtsign(element.atSign));
         _user.marker = buildMarker(_user);
 
         _tempMarkersList.add(_user);
@@ -240,8 +241,10 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
 
               return Stack(
                 children: [
-                  eventShowLocation(_locationList,
-                      LatLng(_event!.venue!.latitude!, _event.venue!.longitude!)),
+                  eventShowLocation(
+                      _locationList,
+                      LatLng(
+                          _event!.venue!.latitude!, _event.venue!.longitude!)),
                   Positioned(
                     top: 0,
                     left: 0,

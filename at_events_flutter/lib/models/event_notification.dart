@@ -9,7 +9,7 @@ class EventNotificationModel {
   double? lat;
   double? long;
 
-  late bool isCancelled;
+  bool? isCancelled;
   String? title;
   Venue? venue;
   Event? event;
@@ -226,6 +226,8 @@ Week getWeekEnum(String? weekday) {
       return Week.SATURDAY;
     case 'Sunday':
       return Week.SUNDAY;
+    default:
+      return Week.SUNDAY;
   }
 }
 
@@ -245,6 +247,8 @@ String getWeekString(Week? weekday) {
     case Week.SATURDAY:
       return 'Saturday';
     case Week.SUNDAY:
+      return 'Sunday';
+    default:
       return 'Sunday';
   }
 }

@@ -89,7 +89,7 @@ class EventKeyStreamService {
     // filterBlockedContactsforEvents();
 
     for (var i = 0; i < allEventNotifications.length; i++) {
-      AtValue? value = await (getAtValue(allEventNotifications[i].atKey!) as FutureOr<AtValue?>);
+      AtValue? value = await (getAtValue(allEventNotifications[i].atKey!));
       if (value != null) {
         allEventNotifications[i].atValue = value;
       }
@@ -153,7 +153,8 @@ class EventKeyStreamService {
 
   Future<void> checkForPendingEvents() async {
     allEventNotifications.forEach((notification) async {
-      notification.eventNotificationModel!.group!.members!.forEach((member) async {
+      notification.eventNotificationModel!.group!.members!
+          .forEach((member) async {
         if ((member.atSign == currentAtSign) &&
             (member.tags!['isAccepted'] == false) &&
             (member.tags!['isExited'] == false)) {
@@ -268,7 +269,8 @@ class EventKeyStreamService {
                 acknowledgedEvent.group!.members!.forEach((element) {
                   if (groupMember.atSign!.toLowerCase() ==
                           element.atSign!.toLowerCase() &&
-                      groupMember.atSign!.contains(acknowledgedAtKey.sharedBy!)) {
+                      groupMember.atSign!
+                          .contains(acknowledgedAtKey.sharedBy!)) {
                     groupMember.tags = element.tags;
                   }
                 });
@@ -335,7 +337,7 @@ class EventKeyStreamService {
     // eventNotificationModel.key = key;
     tempEventKeyLocationModel.atKey = EventService().getAtKey(key!);
     tempEventKeyLocationModel.atValue =
-        await (getAtValue(tempEventKeyLocationModel.atKey!) as FutureOr<AtValue?>);
+        await getAtValue(tempEventKeyLocationModel.atKey!);
     tempEventKeyLocationModel.eventNotificationModel = eventNotificationModel;
     allEventNotifications.add(tempEventKeyLocationModel);
 
@@ -363,8 +365,9 @@ class EventKeyStreamService {
       bool updateLatLng = false,
       bool updateOnlyCreator = false}) {
     String neweventDataKeyId;
-    neweventDataKeyId =
-        eventData.key!.split('${MixedConstants.CREATE_EVENT}-')[1].split('@')[0];
+    neweventDataKeyId = eventData.key!
+        .split('${MixedConstants.CREATE_EVENT}-')[1]
+        .split('@')[0];
 
     for (var i = 0; i < allEventNotifications.length; i++) {
       if (allEventNotifications[i].key!.contains(neweventDataKeyId)) {
@@ -457,8 +460,8 @@ class EventKeyStreamService {
       var notification =
           EventNotificationModel.convertEventNotificationToJson(eventData);
 
-      var result = await atClientInstance!.put(key, notification,
-          isDedicated: MixedConstants.isDedicated);
+      var result = await atClientInstance!
+          .put(key, notification, isDedicated: MixedConstants.isDedicated);
       if (result is bool) {
         if (result) {
           if (MixedConstants.isDedicated) {
@@ -546,8 +549,8 @@ class EventKeyStreamService {
 
       var notification =
           EventNotificationModel.convertEventNotificationToJson(eventData);
-      var result = await atClientInstance!.put(key, notification,
-          isDedicated: MixedConstants.isDedicated);
+      var result = await atClientInstance!
+          .put(key, notification, isDedicated: MixedConstants.isDedicated);
 
       if (MixedConstants.isDedicated) {
         await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
@@ -585,8 +588,8 @@ class EventKeyStreamService {
     }
   }
 
-  void updateLocationData(
-      EventMemberLocation locationData, String? atKey, String? fromAtSign) async {
+  void updateLocationData(EventMemberLocation locationData, String? atKey,
+      String? fromAtSign) async {
     try {
       var eventId =
           locationData.key!.split('-')[1].split('@')[0]; // TODO: Might be wrong
@@ -643,8 +646,8 @@ class EventKeyStreamService {
 
       var key = EventService().getAtKey(presentEventData.key!);
 
-      var result = await atClientInstance!.put(key, notification,
-          isDedicated: MixedConstants.isDedicated);
+      var result = await atClientInstance!
+          .put(key, notification, isDedicated: MixedConstants.isDedicated);
 
       key.sharedWith = jsonEncode(allAtsignList);
 
@@ -666,8 +669,8 @@ class EventKeyStreamService {
     }
   }
 
-  createEventAcknowledge(EventNotificationModel acknowledgedEvent, String? atKey,
-      String? fromAtSign) async {
+  createEventAcknowledge(EventNotificationModel acknowledgedEvent,
+      String? atKey, String? fromAtSign) async {
     try {
       var eventId =
           acknowledgedEvent.key!.split('createevent-')[1].split('@')[0];
@@ -738,8 +741,8 @@ class EventKeyStreamService {
 
       // print('notification $notification');
 
-      var result = await atClientInstance!.put(key, notification,
-          isDedicated: MixedConstants.isDedicated);
+      var result = await atClientInstance!
+          .put(key, notification, isDedicated: MixedConstants.isDedicated);
 
       key.sharedWith = jsonEncode(allAtsignList);
 
@@ -877,6 +880,8 @@ class EventKeyStreamService {
     //       'element.atKey: ${element.atKey}, ${element.atValue}, , ${element.key}, ');
     //   print('element.key: ${element.key}, ');
     //   print('element.atValue: ${element.atValue}');
+    //   print(
+    //       'element.eventNotificationModel: ${element.eventNotificationModel}');
     // });
     if (streamAlternative != null) {
       streamAlternative!(allEventNotifications);

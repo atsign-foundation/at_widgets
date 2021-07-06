@@ -25,7 +25,7 @@ void initialiseEventService(
 
   if (initLocation) {
     initializeLocationService(
-        atClientInstance, atClientInstance.currentAtSign!, null,
+        atClientInstance, atClientInstance.currentAtSign!, navKeyFromMainApp,
         apiKey: MixedConstants.API_KEY!, mapKey: MixedConstants.MAP_KEY!);
   }
 

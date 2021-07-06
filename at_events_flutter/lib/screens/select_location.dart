@@ -61,10 +61,10 @@ class _SelectLocationState extends State<SelectLocation> {
                     });
                     if ((nearMe == null) || (!nearMe!)) {
                       // ignore: await_only_futures
-                      await SearchLocationService().getAddressLatLng(str, null);
+                      SearchLocationService().getAddressLatLng(str, null);
                     } else {
                       // ignore: await_only_futures
-                      await SearchLocationService()
+                      SearchLocationService()
                           .getAddressLatLng(str, currentLocation!);
                     }
 
@@ -82,11 +82,10 @@ class _SelectLocationState extends State<SelectLocation> {
                     });
                     if ((nearMe == null) || (!nearMe!)) {
                       // ignore: await_only_futures
-                      await SearchLocationService()
-                          .getAddressLatLng(inputText, null);
+                      SearchLocationService().getAddressLatLng(inputText, null);
                     } else {
                       // ignore: await_only_futures
-                      await SearchLocationService()
+                      SearchLocationService()
                           .getAddressLatLng(inputText, currentLocation!);
                     }
                     setState(() {

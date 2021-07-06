@@ -24,9 +24,8 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
     }
   });
 
-  bool? isSharingEvent = false,
-      isAdmin = false,
-      currentAtSign = AtEventNotificationListener().currentAtSign as bool?;
+  bool? isSharingEvent = false, isAdmin = false;
+  var currentAtSign = AtEventNotificationListener().currentAtSign;
   isAdmin = eventListenerKeyword.atsignCreator == currentAtSign;
   if (isAdmin) {
     if (eventListenerKeyword.isSharing!) isSharingEvent = true;
@@ -305,7 +304,8 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                   child: InkWell(
                     onTap: () async {
                       var isExited = true;
-                      eventListenerKeyword.group!.members!.forEach((groupMember) {
+                      eventListenerKeyword.group!.members!
+                          .forEach((groupMember) {
                         if (groupMember.atSign == currentAtSign) {
                           if (groupMember.tags!['isExited'] == false) {
                             isExited = false;
@@ -355,7 +355,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
               ? Expanded(
                   child: InkWell(
                     onTap: () async {
-                      if (!eventListenerKeyword.isCancelled) {
+                      if (!eventListenerKeyword.isCancelled!) {
                         LoadingDialog().show(
                             text: isAdmin!
                                 ? 'Updating data'
@@ -384,7 +384,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                       }
                     },
                     child: Text(
-                      eventListenerKeyword.isCancelled
+                      eventListenerKeyword.isCancelled!
                           ? 'Event Cancelled'
                           : 'Cancel Event',
                       style: CustomTextStyles().orange16,

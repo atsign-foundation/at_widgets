@@ -97,9 +97,10 @@ class _SelectedLocationState extends State<SelectedLocation> {
                             width: 321.toWidth,
                             hintText: 'Save this address as',
                             initialValue: EventService()
-                                .eventNotificationModel!
-                                .venue!
-                                .label!,
+                                    .eventNotificationModel!
+                                    .venue!
+                                    .label ??
+                                '',
                             value: (String val) {
                               EventService()
                                   .eventNotificationModel!
