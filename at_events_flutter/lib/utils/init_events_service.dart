@@ -13,11 +13,15 @@ import 'package:flutter/cupertino.dart';
 
 void initialiseEventService(
     AtClientImpl atClientInstance, GlobalKey<NavigatorState> navKeyFromMainApp,
-    {rootDomain = 'root.atsign.wtf',
+    {@required String mapKey,
+    @required String apiKey,
+    rootDomain = 'root.atsign.wtf',
     rootPort = 64,
     dynamic Function(List<EventKeyLocationModel>) streamAlternative,
     bool initLocation = true}) {
-  // EventService().initializeAtContactImpl(atClientInstance, rootDomain);
+  /// initialise keys
+  MixedConstants.setApiKey(apiKey);
+  MixedConstants.setMapKey(mapKey);
 
   if (initLocation) {
     initializeLocationService(
