@@ -184,6 +184,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 subTitle: getSubTitle(notification.locationNotificationModel!),
                 semiTitle: getSemiTitle(notification.locationNotificationModel!,
                     notification.haveResponded!),
+                showRetry: calculateShowRetry(notification),
+                onRetryTapped: () {
+                  HomeScreenService().onLocationModelTap(
+                      notification.locationNotificationModel!, false);
+                },
               ),
             ),
             Divider()
