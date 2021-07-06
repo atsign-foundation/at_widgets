@@ -11,8 +11,8 @@ class NotificationService {
   }
 
   factory NotificationService() => notificationService;
-  InitializationSettings initializationSettings;
-  FlutterLocalNotificationsPlugin _notificationsPlugin;
+  late InitializationSettings initializationSettings;
+  late FlutterLocalNotificationsPlugin _notificationsPlugin;
 
   init() async {
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -26,7 +26,7 @@ class NotificationService {
 
   setOnNotificationClick(Function onNotificationClick) async {
     await _notificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String payload) async {
+        onSelectNotification: (String? payload) async {
       onNotificationClick(payload);
     });
   }
