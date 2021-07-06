@@ -8,6 +8,12 @@ class KeyLocationModel {
   AtKey? atKey;
   AtValue? atValue;
   LocationNotificationModel? locationNotificationModel;
+  bool? haveResponded;
+
   KeyLocationModel(
-      {this.key, this.atKey, this.atValue, this.locationNotificationModel});
+      {this.key,
+      this.atKey,
+      this.atValue,
+      this.locationNotificationModel,
+      this.haveResponded = false});
 }

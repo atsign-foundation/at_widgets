@@ -135,6 +135,7 @@ class SharingLocationService {
         if (MixedConstants.isDedicated) {
           await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
         }
+        KeyStreamService().updatePendingStatus(locationNotificationModel);
       }
       return result;
     } catch (e) {

@@ -1,3 +1,4 @@
+import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/screens/map_screen/map_screen.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
@@ -10,17 +11,25 @@ class HomeScreenService {
   static final HomeScreenService _instance = HomeScreenService._();
   factory HomeScreenService() => _instance;
 
-  void onLocationModelTap(LocationNotificationModel locationNotificationModel) {
+  void onLocationModelTap(
+      LocationNotificationModel locationNotificationModel, bool haveResponded) {
     var currentAtsign = AtLocationNotificationListener().currentAtSign;
 
-    if (locationNotificationModel.key!.contains(MixedConstants.SHARE_LOCATION)) {
+    if (locationNotificationModel.key!
+        .contains(MixedConstants.SHARE_LOCATION)) {
       locationNotificationModel.atsignCreator != currentAtsign
           // ignore: unnecessary_statements
           ? (locationNotificationModel.isAccepted
               ? navigatorPushToMap(locationNotificationModel)
-              : AtLocationNotificationListener().showMyDialog(
-                  locationNotificationModel.atsignCreator,
-                  locationNotificationModel))
+              : (locationNotificationModel.isExited
+                  ? AtLocationNotificationListener().showMyDialog(
+                      locationNotificationModel.atsignCreator,
+                      locationNotificationModel)
+                  : (haveResponded
+                      ? null
+                      : AtLocationNotificationListener().showMyDialog(
+                          locationNotificationModel.atsignCreator,
+                          locationNotificationModel))))
           : navigatorPushToMap(locationNotificationModel);
     } else if (locationNotificationModel.key!
         .contains(MixedConstants.REQUEST_LOCATION)) {
@@ -28,9 +37,15 @@ class HomeScreenService {
           // ignore: unnecessary_statements
           ? (locationNotificationModel.isAccepted
               ? navigatorPushToMap(locationNotificationModel)
-              : AtLocationNotificationListener().showMyDialog(
-                  locationNotificationModel.atsignCreator,
-                  locationNotificationModel))
+              : (locationNotificationModel.isExited
+                  ? AtLocationNotificationListener().showMyDialog(
+                      locationNotificationModel.atsignCreator,
+                      locationNotificationModel)
+                  : (haveResponded
+                      ? null
+                      : AtLocationNotificationListener().showMyDialog(
+                          locationNotificationModel.atsignCreator,
+                          locationNotificationModel))))
           // ignore: unnecessary_statements
           : (locationNotificationModel.isAccepted
               ? navigatorPushToMap(locationNotificationModel)
@@ -78,7 +93,8 @@ String getSubTitle(LocationNotificationModel locationNotificationModel) {
   }
 }
 
-String? getSemiTitle(LocationNotificationModel locationNotificationModel) {
+String? getSemiTitle(
+    LocationNotificationModel locationNotificationModel, bool haveResponded) {
   if (locationNotificationModel.key!.contains(MixedConstants.SHARE_LOCATION)) {
     return locationNotificationModel.atsignCreator !=
             AtLocationNotificationListener().currentAtSign
@@ -86,7 +102,7 @@ String? getSemiTitle(LocationNotificationModel locationNotificationModel) {
             ? null
             : locationNotificationModel.isExited
                 ? 'Received Share location rejected'
-                : 'Action required')
+                : (haveResponded ? 'Pending request' : 'Action required'))
         : (locationNotificationModel.isAccepted
             ? null
             : locationNotificationModel.isExited
@@ -96,7 +112,9 @@ String? getSemiTitle(LocationNotificationModel locationNotificationModel) {
     return locationNotificationModel.atsignCreator ==
             AtLocationNotificationListener().currentAtSign
         ? (!locationNotificationModel.isExited
-            ? (locationNotificationModel.isAccepted ? null : 'Action required')
+            ? (locationNotificationModel.isAccepted
+                ? null
+                : (haveResponded ? 'Pending request' : 'Action required'))
             : 'Request rejected')
         : (!locationNotificationModel.isExited
             ? (locationNotificationModel.isAccepted
@@ -117,6 +135,27 @@ String? getTitle(LocationNotificationModel locationNotificationModel) {
             AtLocationNotificationListener().currentAtSign
         ? locationNotificationModel.receiver
         : locationNotificationModel.atsignCreator;
+  }
+}
+
+bool calculateShowRetry(KeyLocationModel keyLocationModel) {
+  if (keyLocationModel.locationNotificationModel!.key!
+      .contains('sharelocation')) {
+    if ((keyLocationModel.locationNotificationModel!.atsignCreator !=
+            AtLocationNotificationListener().currentAtSign) &&
+        (!keyLocationModel.locationNotificationModel!.isAccepted) &&
+        (!keyLocationModel.locationNotificationModel!.isExited) &&
+        (keyLocationModel.haveResponded!)) return true;
+
+    return false;
+  } else {
+    if ((keyLocationModel.locationNotificationModel!.atsignCreator ==
+            AtLocationNotificationListener().currentAtSign) &&
+        (!keyLocationModel.locationNotificationModel!.isAccepted) &&
+        (!keyLocationModel.locationNotificationModel!.isExited) &&
+        (keyLocationModel.haveResponded!)) return true;
+
+    return false;
   }
 }
 

@@ -110,8 +110,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           maxHeight: 530.toHeight,
                           panelBuilder: (scrollController) {
                             if (snapshot.data!.isNotEmpty) {
-                              return collapsedContent(false, scrollController,
-                                  getListView(snapshot.data!, scrollController));
+                              return collapsedContent(
+                                  false,
+                                  scrollController,
+                                  getListView(
+                                      snapshot.data!, scrollController));
                             } else {
                               return collapsedContent(false, scrollController,
                                   emptyWidget('No Data Found!!'));
@@ -166,8 +169,9 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             InkWell(
               onTap: () {
-                HomeScreenService()
-                    .onLocationModelTap(notification.locationNotificationModel!);
+                HomeScreenService().onLocationModelTap(
+                    notification.locationNotificationModel!,
+                    notification.haveResponded!);
               },
               child: DisplayTile(
                 atsignCreator:
@@ -177,7 +181,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         : notification.locationNotificationModel!.atsignCreator,
                 title: getTitle(notification.locationNotificationModel!),
                 subTitle: getSubTitle(notification.locationNotificationModel!),
-                semiTitle: getSemiTitle(notification.locationNotificationModel!),
+                semiTitle: getSemiTitle(notification.locationNotificationModel!,
+                    notification.haveResponded!),
               ),
             ),
             Divider()

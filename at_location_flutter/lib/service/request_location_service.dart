@@ -129,6 +129,7 @@ class RequestLocationService {
         if (MixedConstants.isDedicated) {
           await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
         }
+        KeyStreamService().updatePendingStatus(locationNotificationModel);
       }
 
       if ((result) && (!isSharing!)) {

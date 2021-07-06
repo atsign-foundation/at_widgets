@@ -98,11 +98,63 @@ class KeyStreamService {
     convertJsonToLocationModel();
     filterData();
 
+    await checkForPendingLocations();
+
     notifyListeners();
     updateEventAccordingToAcknowledgedData();
     checkForDeleteRequestAck();
 
     SendLocationNotification().init(atClientInstance);
+  }
+
+  Future<void> checkForPendingLocations() async {
+    allLocationNotifications.forEach((notification) async {
+      if (notification.key!.contains(MixedConstants.SHARE_LOCATION)) {
+        if ((notification.locationNotificationModel!.atsignCreator !=
+                currentAtSign) &&
+            (!notification.locationNotificationModel!.isAccepted) &&
+            (!notification.locationNotificationModel!.isExited)) {
+          var atkeyMicrosecondId =
+              notification.key!.split('sharelocation-')[1].split('@')[0];
+          var acknowledgedKeyId =
+              'sharelocationacknowledged-$atkeyMicrosecondId';
+          var allRegexResponses =
+              await atClientInstance!.getKeys(regex: acknowledgedKeyId);
+          // ignore: unnecessary_null_comparison
+          if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
+            notification.haveResponded = true;
+          }
+        }
+      }
+
+      if (notification.key!.contains(MixedConstants.REQUEST_LOCATION)) {
+        if ((notification.locationNotificationModel!.atsignCreator ==
+                currentAtSign) &&
+            (!notification.locationNotificationModel!.isAccepted) &&
+            (!notification.locationNotificationModel!.isExited)) {
+          var atkeyMicrosecondId =
+              notification.key!.split('requestlocation-')[1].split('@')[0];
+          var acknowledgedKeyId =
+              'requestlocationacknowledged-$atkeyMicrosecondId';
+          var allRegexResponses =
+              await atClientInstance!.getKeys(regex: acknowledgedKeyId);
+          // ignore: unnecessary_null_comparison
+          if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
+            notification.haveResponded = true;
+          }
+        }
+      }
+    });
+  }
+
+  void updatePendingStatus(LocationNotificationModel notification) {
+    for (var i = 0; i < allLocationNotifications.length; i++) {
+      if ((allLocationNotifications[i].key!.contains(notification.key!))) {
+        allLocationNotifications[i].haveResponded = true;
+        break;
+      }
+    }
+    notifyListeners();
   }
 
   void checkForDeleteRequestAck() async {
