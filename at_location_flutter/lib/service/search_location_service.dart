@@ -20,7 +20,7 @@ class SearchLocationService {
   StreamSink<List<LocationModal>> get atLocationSink =>
       _atLocationStreamController.sink;
 
-  void getAddressLatLng(String address, LatLng currentLocation) async {
+  void getAddressLatLng(String address, LatLng? currentLocation) async {
     var url;
     // ignore: unnecessary_null_comparison
     if (currentLocation != null) {
