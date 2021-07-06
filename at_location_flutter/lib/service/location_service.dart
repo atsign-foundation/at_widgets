@@ -7,6 +7,7 @@ import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 import 'at_location_notification_listener.dart';
@@ -94,6 +95,7 @@ class LocationService {
         updateMyLatLng(_myData);
       });
     } else {
+      // ignore: unnecessary_null_comparison
       if (AtLocationNotificationListener().navKey != null) {
         CustomToast().show('Location permission not granted',
             AtLocationNotificationListener().navKey.currentContext!);
@@ -102,8 +104,9 @@ class LocationService {
   }
 
   void updateMyLatLng(HybridModel _myData) async {
-    if (etaFrom != null)
+    if (etaFrom != null) {
       _myData.eta = await (_calculateEta(_myData) as FutureOr<String?>);
+    }
 
     _myData.marker = buildMarker(_myData, singleMarker: true);
 

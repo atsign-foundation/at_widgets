@@ -41,6 +41,7 @@ class _DisplayTileState extends State<DisplayTile> {
 
   void getEventCreator() async {
     var contact = await getAtSignDetails(widget.atsignCreator);
+    // ignore: unnecessary_null_comparison
     if (contact != null) {
       if (contact.tags != null && contact.tags!['image'] != null) {
         List<int>? intList = contact.tags!['image'].cast<int>();

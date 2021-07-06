@@ -9,6 +9,7 @@ import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 import 'contact_service.dart';
@@ -99,7 +100,8 @@ class MasterLocationService {
       // ignore: unrelated_type_equality_checks
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
           (allLocationNotifications[i].locationNotificationModel == null) ||
-          ((allLocationNotifications[i].locationNotificationModel!.to != null) &&
+          ((allLocationNotifications[i].locationNotificationModel!.to !=
+                  null) &&
               (allLocationNotifications[i]
                       .locationNotificationModel!
                       .to!
@@ -113,7 +115,8 @@ class MasterLocationService {
   }
 
   void createHybridFromKeyLocationModel() async {
-    await Future.forEach(allLocationNotifications, (dynamic keyLocationModel) async {
+    await Future.forEach(allLocationNotifications,
+        (dynamic keyLocationModel) async {
       var _image = await getImageOfAtsignNew(
           keyLocationModel.locationNotificationModel.atsignCreator);
       var user = HybridModel(
@@ -178,6 +181,7 @@ class MasterLocationService {
       Uint8List? image;
       contact = await getAtSignDetails(atsign);
 
+      // ignore: unnecessary_null_comparison
       if (contact != null) {
         if (contact.tags != null && contact.tags!['image'] != null) {
           List<int> intList = contact.tags!['image'].cast<int>();
@@ -197,6 +201,7 @@ class MasterLocationService {
           // ignore: return_of_invalid_type_from_catch_error
           (e) => print('error in getAtValue in master location service : $e'));
 
+      // ignore: unnecessary_null_comparison
       if (atvalue != null) {
         return atvalue;
       } else {

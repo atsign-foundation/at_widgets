@@ -34,7 +34,9 @@ class SearchLocationService {
     var addresses = jsonDecode(response.body);
     List data = addresses['items'];
     var share = <LocationModal>[];
-    for (Map ad in data ?? []) {
+    //// Removed because of nulls safety
+    // for (Map ad in data ?? []) {
+    for (Map ad in data) {
       share.add(LocationModal.fromJson(ad));
     }
 

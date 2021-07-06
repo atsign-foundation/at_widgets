@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/point.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 import 'package:meta/meta.dart';
 import 'package:proj4dart/proj4dart.dart' as proj4;
@@ -182,10 +183,15 @@ class Proj4Crs extends Crs {
     required this.infinite,
     required List<Transformation>? transformations,
     required List<double?> scales,
+    // ignore: unnecessary_null_comparison
   })  : assert(null != code),
+        // ignore: unnecessary_null_comparison
         assert(null != projection),
+        // ignore: unnecessary_null_comparison
         assert(null != transformation || null != transformations),
+        // ignore: unnecessary_null_comparison
         assert(null != infinite),
+        // ignore: unnecessary_null_comparison
         assert(null != scales),
         _transformations = transformations,
         _scales = scales;
@@ -393,7 +399,8 @@ class _LonLat extends Projection {
 
   @override
   LatLng unproject(CustomPoint point) {
-    return LatLng(inclusiveLat(point.y as double), inclusiveLng(point.x as double));
+    return LatLng(
+        inclusiveLat(point.y as double), inclusiveLng(point.x as double));
   }
 }
 
@@ -443,8 +450,7 @@ class _Proj4Projection extends Projection {
   _Proj4Projection({
     required this.proj4Projection,
     required this.bounds,
-  })  : assert(null != proj4Projection),
-        epsg4326 = proj4.Projection.WGS84;
+  }) : epsg4326 = proj4.Projection.WGS84;
 
   @override
   CustomPoint project(LatLng? latlng) {
@@ -472,14 +478,16 @@ class Transformation {
   const Transformation(this.a, this.b, this.c, this.d);
 
   CustomPoint transform(CustomPoint<num> point, double scale) {
-    scale ??= 1.0;
+    //// Removed because of nulls safety
+    // scale ??= 1.0;
     var x = scale * (a * point.x + b);
     var y = scale * (c * point.y + d);
     return CustomPoint(x, y);
   }
 
   CustomPoint untransform(CustomPoint point, double scale) {
-    scale ??= 1.0;
+    //// Removed because of nulls safety
+    // scale ??= 1.0;
     var x = (point.x / scale - b) / a;
     var y = (point.y / scale - d) / c;
     return CustomPoint(x, y);

@@ -10,7 +10,6 @@ import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:meta/meta.dart';
 
 /// Function to initialise the package. Should be mandatorly called before accessing package functionalities.
 ///

@@ -252,6 +252,7 @@ class KeyStreamService {
     var allRegexResponses =
         await atClientInstance!.getKeys(regex: acknowledgedKeyId);
 
+    // ignore: unnecessary_null_comparison
     if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
       var acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
@@ -276,6 +277,7 @@ class KeyStreamService {
     var allRegexResponses =
         await atClientInstance!.getKeys(regex: acknowledgedKeyId);
 
+    // ignore: unnecessary_null_comparison
     if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
       var acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
@@ -393,6 +395,7 @@ class KeyStreamService {
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print('error in in key_stream_service get $e'));
 
+      // ignore: unnecessary_null_comparison
       if (atvalue != null) {
         return atvalue;
       } else {

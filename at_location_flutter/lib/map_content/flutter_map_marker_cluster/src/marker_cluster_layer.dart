@@ -11,6 +11,7 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/c
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/core/spiderfy.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/node/marker_cluster_node.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/node/marker_node.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 class MarkerClusterLayer extends StatefulWidget {
@@ -300,7 +301,11 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       cluster.markers.map((node) => node.marker).toList();
 
   Size getClusterSize(MarkerClusterNode cluster) =>
-      widget.options?.computeSize == null
+      //// Removed because of nulls safety
+      // widget.options?.computeSize == null
+      //     ? widget.options.size
+      //     : widget.options.computeSize!(getClusterMarkers(cluster));
+      widget.options.computeSize == null
           ? widget.options.size
           : widget.options.computeSize!(getClusterMarkers(cluster));
 

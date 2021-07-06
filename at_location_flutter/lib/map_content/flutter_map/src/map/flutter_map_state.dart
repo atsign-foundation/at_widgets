@@ -10,7 +10,9 @@ import 'package:at_location_flutter/map_content/flutter_map/src/layer/group_laye
 import 'package:at_location_flutter/map_content/flutter_map/src/layer/overlay_image_layer.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map_state_widget.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 
 class FlutterMapState extends MapGestureMixin {
@@ -21,8 +23,11 @@ class FlutterMapState extends MapGestureMixin {
   final _positionedTapController = PositionedTapController();
   double rotation = 0.0;
 
+  //// Removed because of nulls safety
+  // @override
+  // MapOptions get options => widget.options ?? MapOptions();
   @override
-  MapOptions get options => widget.options ?? MapOptions();
+  MapOptions get options => widget.options;
 
   @override
   MapState? mapState;
@@ -60,7 +65,7 @@ class FlutterMapState extends MapGestureMixin {
   }
 
   Stream<Null> _merge(LayerOptions options) {
-    if (options?.rebuild == null) return mapState!.onMoved;
+    if (options.rebuild == null) return mapState!.onMoved;
 
     var group = StreamGroup<Null>();
     group.add(mapState!.onMoved);
@@ -100,11 +105,17 @@ class FlutterMapState extends MapGestureMixin {
 
       var layerStack = Stack(
         key: _layerStackKey,
+        //// Removed because of nulls safety
+        // children: [
+        //   ...widget.children ?? [],
+        //   ...widget.layers.map(
+        //           ((layer) => _createLayer(layer, widget.options.plugins)!)) ??
+        //       [],
+        // ],
         children: [
-          ...widget.children ?? [],
-          ...widget.layers.map(
-                  ((layer) => _createLayer(layer, widget.options.plugins)!) as Widget Function(LayerOptions)) ??
-              [],
+          ...widget.children,
+          ...widget.layers
+              .map(((layer) => _createLayer(layer, widget.options.plugins)!)),
         ],
       );
 

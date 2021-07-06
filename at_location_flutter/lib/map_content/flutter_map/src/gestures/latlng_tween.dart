@@ -1,5 +1,7 @@
 import 'package:flutter/animation.dart';
+// ignore: unused_import
 import 'package:flutter/foundation.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 class LatLngTween extends Tween<LatLng> {
