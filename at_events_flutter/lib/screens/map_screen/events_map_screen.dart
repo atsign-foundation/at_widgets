@@ -14,6 +14,7 @@ import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'events_collapsed_content.dart';
 
+/// TODO: Sometimes updateEventdataFromList is called consecutively multiple times, so location data is not displayed consistently
 class EventsMapScreenData {
   EventsMapScreenData._();
   static final EventsMapScreenData _instance = EventsMapScreenData._();
@@ -21,52 +22,89 @@ class EventsMapScreenData {
 
   ValueNotifier<EventNotificationModel> _eventNotifier;
   List<HybridModel> markers;
-  // bool isMounted;
+  int count = 0;
 
   void moveToEventScreen(EventNotificationModel _eventNotificationModel) async {
+    markers = [];
     _eventNotifier = ValueNotifier(_eventNotificationModel);
-    markers = await _calculateHybridModelList(_eventNotificationModel);
-    await Navigator.push(
+    markers.add(addVenueMarker(_eventNotificationModel));
+
+    // ignore: unawaited_futures
+    Navigator.push(
       AtEventNotificationListener().navKey.currentContext,
       MaterialPageRoute(
         builder: (context) => _EventsMapScreen(),
       ),
     );
+
+    // markers =
+    var _hybridModelList =
+        await _calculateHybridModelList(_eventNotificationModel);
+    _hybridModelList.forEach((element) {
+      markers.add(element);
+    });
+    _eventNotifier.notifyListeners();
   }
 
-  void updateEventdata(EventNotificationModel _eventNotificationModel) async {
-    if (_eventNotificationModel.key == _eventNotifier.value.key) {
-      markers = await _calculateHybridModelList(_eventNotificationModel);
-      _eventNotifier.value = _eventNotificationModel;
+  List<List<EventKeyLocationModel>> _listOfLists = [];
+  bool _updating = false;
+  void updateEventdataFromList(List<EventKeyLocationModel> _list) async {
+    _listOfLists.add(_list);
+    if (!_updating) {
+      _startUpdating();
     }
   }
 
-  void updateEventdataFromList(List<EventKeyLocationModel> _list) async {
+  void _startUpdating() async {
+    _updating = true;
+    for (var i = 0; i < _listOfLists.length; i++) {
+      var _obj = _listOfLists.removeAt(0);
+      await _updateEventdataFromList(_obj);
+    }
+    _updating = false;
+  }
+
+  Future<void> _updateEventdataFromList(
+      List<EventKeyLocationModel> _list) async {
+    count++;
+    print('count++ $count');
     if (_eventNotifier != null) {
       for (var i = 0; i < _list.length; i++) {
         if (_list[i].eventNotificationModel.key == _eventNotifier.value.key) {
-          markers =
+          markers = [];
+
+          markers.add(addVenueMarker(_list[i].eventNotificationModel));
+
+          var _hybridModelList =
               await _calculateHybridModelList(_list[i].eventNotificationModel);
+          _hybridModelList.forEach((element) {
+            markers.add(element);
+          });
+
           _eventNotifier.value = _list[i].eventNotificationModel;
           _eventNotifier.notifyListeners();
+
+          count--;
+          print('count-- $count');
           break;
         }
       }
     }
   }
 
-  Future<List<HybridModel>> _calculateHybridModelList(
-      EventNotificationModel _event) async {
-    var _locationList = <HybridModel>[];
-
-    /// Event venue
+  HybridModel addVenueMarker(EventNotificationModel _event) {
     var _eventHybridModel = HybridModel(
         displayName: _event.venue.label,
         latLng: LatLng(_event.venue.latitude, _event.venue.longitude),
         eta: '?',
         image: null);
     _eventHybridModel.marker = buildMarker(_eventHybridModel);
-    _locationList.add(_eventHybridModel);
+    return _eventHybridModel;
+  }
+
+  Future<List<HybridModel>> _calculateHybridModelList(
+      EventNotificationModel _event) async {
+    var _tempMarkersList = <HybridModel>[];
 
     /// Event creator
     if (_event.lat != null && _event.long != null) {
@@ -75,10 +113,11 @@ class EventsMapScreenData {
           latLng: LatLng(_event.lat, _event.long),
           eta: '?',
           image: null);
-      user.eta = await _calculateEta(user, _eventHybridModel.latLng);
+      user.eta = await _calculateEta(
+          user, LatLng(_event.venue.latitude, _event.venue.longitude));
       user.image = await _imageOfAtsign(_event.atsignCreator);
       user.marker = buildMarker(user);
-      _locationList.add(user);
+      _tempMarkersList.add(user);
     }
 
     /// Event members
@@ -91,16 +130,17 @@ class EventsMapScreenData {
             latLng: LatLng(element.tags['lat'], element.tags['long']),
             eta: '?',
             image: null);
-        _user.eta = await _calculateEta(_user, _eventHybridModel.latLng);
+        _user.eta = await _calculateEta(
+            _user, LatLng(_event.venue.latitude, _event.venue.longitude));
 
         _user.image = await _imageOfAtsign(element.atSign);
         _user.marker = buildMarker(_user);
 
-        _locationList.add(_user);
+        _tempMarkersList.add(_user);
       }
     });
 
-    return _locationList;
+    return _tempMarkersList;
   }
 
   Future<String> _calculateEta(HybridModel user, LatLng etaFrom) async {
@@ -127,6 +167,7 @@ class EventsMapScreenData {
 
   void dispose() {
     _eventNotifier = null;
+    markers = [];
   }
 }
 
@@ -139,6 +180,7 @@ class _EventsMapScreen extends StatefulWidget {
 
 class _EventsMapScreenState extends State<_EventsMapScreen> {
   final PanelController pc = PanelController();
+  List _previousMembersSharingLocation = [];
 
   @override
   void dispose() {
@@ -168,12 +210,16 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
 
               print('_locationList $_locationList');
 
-              if (_membersSharingLocation.isNotEmpty) {
+              if (((_previousMembersSharingLocation.isEmpty) ||
+                      (_previousMembersSharingLocation !=
+                          _membersSharingLocation)) &&
+                  (_membersSharingLocation.isNotEmpty)) {
                 Future.delayed(Duration(seconds: 1), () {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(_membersSharingLocation.length > 1
                           ? '${_listToString(_membersSharingLocation)} are sharing their locations'
                           : '${_listToString(_membersSharingLocation)} is sharing their location')));
+                  _previousMembersSharingLocation = _membersSharingLocation;
                 });
               }
 
