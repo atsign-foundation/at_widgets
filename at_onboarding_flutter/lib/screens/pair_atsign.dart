@@ -425,7 +425,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                               style: CustomTextStyles.fontR16primary,
                               children: [
                                 TextSpan(
-                                    text: _pairingAtsign! + ', ',
+                                    text: _pairingAtsign ?? '' + ', ',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 TextSpan(text: Strings.backupKeyDescription)

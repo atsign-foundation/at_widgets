@@ -2,8 +2,6 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 
 class AppConstants {
   static String _rootDomain = 'root.atsign.org';
-  static String devApiKey = '477b-876u-bcez-c42z-6a3d';
-  static String prodApiKey = '400b-806u-bzez-z42z-6a3p';
   static dynamic contentType = 'application/json';
   static String getFreeAtsign = 'get-free-atsign';
   static String authWithAtsign = 'login/atsign';
@@ -11,6 +9,8 @@ class AppConstants {
   static String registerPerson = 'register-person';
   static String validatePerson = 'validate-person';
   static String? website;
+  static String apiEndPoint = 'my.atsign.wtf';
+  static String apiPath = '/api/app/v2/';
   static String package = 'at_onboarding_flutter';
   static String encryptKeys = '_encrypt_keys';
   static String backupFileExtension = '.atKeys';
@@ -22,10 +22,18 @@ class AppConstants {
 
   static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';
-    website = _rootDomain == 'root.atsign.org'
-        ? 'https://atsign.com'
-        : 'https://atsign.wtf';
+    if(_rootDomain == 'root.atsign.org') {
+      website = 'https://atsign.com';
+      apiEndPoint = 'my.atsign.com';
+    } else {
+      website = 'https://atsign.wtf';
+      apiEndPoint = 'my.atsign.wtf';
+    }
   }
+
+  static String? _apiKey;
+  static String setApiKey(String _key) => _apiKey = _key;
+  static String? get apiKey => _apiKey;
 }
 
 extension customMessages on OnboardingStatus {

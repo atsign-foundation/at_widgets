@@ -51,6 +51,7 @@ class _MyAppState extends State<MyApp> {
                       _logger.severe('Onboarding throws $error error');
                     },
                     nextScreen: DashBoard(),
+                    appAPIKey: AppConstants.devAPIKey
                   );
                 },
                 child: Text(AppStrings.scan_qr)),

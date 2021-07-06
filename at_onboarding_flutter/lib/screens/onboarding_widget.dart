@@ -43,6 +43,9 @@ class Onboarding {
   ///after first time succesful onboarding it will get redirected to this screen if not null.
   final Widget? fistTimeAuthNextScreen;
 
+  /// API authentication key for getting free atsigns
+  final String appAPIKey;
+
   final AtSignLogger _logger = AtSignLogger('At Onboarding Flutter');
 
   Onboarding(
@@ -56,7 +59,8 @@ class Onboarding {
       required this.atClientPreference,
       this.appColor,
       this.logo,
-      this.domain}) {
+      this.domain,
+      required this.appAPIKey}) {
     _show();
   }
   void _show() {
@@ -73,7 +77,8 @@ class Onboarding {
               atClientPreference: this.atClientPreference,
               appColor: this.appColor,
               logo: this.logo,
-              domain: this.domain));
+              domain: this.domain,
+              appAPIKey: this.appAPIKey));
     });
 
     _logger.info('Onboarding...!');
@@ -113,6 +118,9 @@ class OnboardingWidget extends StatefulWidget {
   ///else it redirects to nextScreen.
   final Widget? fistTimeAuthNextScreen;
 
+  /// API authentication key for getting free atsigns
+  final String appAPIKey;
+
   OnboardingWidget(
       {Key? key,
       this.atsign,
@@ -123,7 +131,8 @@ class OnboardingWidget extends StatefulWidget {
       required this.atClientPreference,
       this.appColor,
       this.logo,
-      this.domain});
+      this.domain,
+      required this.appAPIKey});
   @override
   _OnboardingWidgetState createState() => _OnboardingWidgetState();
 }
@@ -146,6 +155,8 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
     if (widget.atsign != '') {
       _future = _onboardingService.onboard();
     }
+
+    AppConstants.setApiKey(widget.appAPIKey);
 
     super.initState();
   }

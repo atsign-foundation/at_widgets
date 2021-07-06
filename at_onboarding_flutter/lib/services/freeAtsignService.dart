@@ -15,9 +15,6 @@ class FreeAtsignService {
 
   late var _http;
   bool initialized = false;
-  late var api;
-  var path = '/api/app/v2/';
-  var apiKey;
 
   _init() {
     final ioc = new HttpClient();
@@ -25,21 +22,6 @@ class FreeAtsignService {
         (X509Certificate cert, String host, int port) => true;
     _http = new IOClient(ioc);
     initialized = true;
-    setApi();
-  }
-
-  setApi() {
-    // for prod
-    if (AppConstants.serverDomain == 'root.atsign.org') {
-      api = 'my.atsign.com';
-      apiKey = AppConstants.prodApiKey;
-    }
-
-    // api for dev environment
-    if (AppConstants.serverDomain == 'root.atsign.wtf') {
-      api = 'my.atsign.wtf';
-      apiKey = AppConstants.devApiKey;
-    }
   }
 
   //To login with an @sign
@@ -50,13 +32,9 @@ class FreeAtsignService {
     }
     Map data = {'atsign': "$atsign"};
 
-    String body = json.encode(data);
-    var url = Uri.https(api, '$path${AppConstants.authWithAtsign}');
+    String path = AppConstants.apiPath + AppConstants.authWithAtsign;
 
-    var response = await _http.post(url, body: body, headers: {
-      "Authorization": '$apiKey',
-      "Content-Type": "application/json"
-    });
+    var response = await postRequest(path, data);
 
     return response;
   }
@@ -68,14 +46,10 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    var url = Uri.https(api, '$path${AppConstants.validationWithAtsign}');
+    String path = AppConstants.apiPath + AppConstants.validationWithAtsign;
     Map data = {'atsign': "$atsign", 'otp': "$verificationCode"};
 
-    String body = json.encode(data);
-    var response = await _http.post(url, body: body, headers: {
-      "Authorization": '$apiKey',
-      "Content-Type": "application/json"
-    });
+    var response = await postRequest(path, data);
 
     return response;
   }
@@ -86,10 +60,10 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    var url = Uri.https(api, '$path${AppConstants.getFreeAtsign}');
+    var url = Uri.https(AppConstants.apiEndPoint, '${AppConstants.apiPath}${AppConstants.getFreeAtsign}');
 
     var response = await _http.get(url, headers: {
-      "Authorization": '$apiKey',
+      "Authorization": '${AppConstants.apiKey}',
       "Content-Type": "application/json"
     });
 
@@ -104,18 +78,14 @@ class FreeAtsignService {
       _init();
     }
     Map data;
-    var url = Uri.https(api, '$path${AppConstants.registerPerson}');
+    String path = AppConstants.apiPath + AppConstants.registerPerson;
     if (oldEmail != null) {
       data = {'email': '$email', 'atsign': "$atsign", 'oldEmail': '$oldEmail'};
     } else {
       data = {'email': '$email', 'atsign': "$atsign"};
     }
 
-    String body = json.encode(data);
-    var response = await _http.post(url, body: body, headers: {
-      'Authorization': '$apiKey',
-      'Content-Type': 'application/json'
-    });
+    var response = await postRequest(path, data);
     return response;
   }
 
@@ -127,28 +97,26 @@ class FreeAtsignService {
       _init();
     }
     Map data;
-    var url = Uri.https(api, '$path${AppConstants.validatePerson}');
-    if (AppConstants.serverDomain == 'root.atsign.wtf') {
-      data = {
-        'email': '$email',
-        'atsign': "$atsign",
-        'otp': '$otp',
-        'confirmation': confirmation
-      };
-    } else {
-      data = {
-        'email': '$email',
-        'atsign': "$atsign",
-        'otp': '$otp',
-        'confirmation': confirmation
-      };
-    }
-    String body = json.encode(data);
-    var response = await _http.post(url, body: body, headers: {
-      'Authorization': '$apiKey',
-      'Content-Type': 'application/json'
-    });
+    String path = AppConstants.apiPath + AppConstants.validatePerson;
+    data = {
+      'email': '$email',
+      'atsign': "$atsign",
+      'otp': '$otp',
+      'confirmation': confirmation
+    };
+    var response = await postRequest(path, data);
 
     return response;
+  }
+
+  // common POST request call
+  Future<dynamic> postRequest(String path, Map data) async {
+    var url = Uri.https(AppConstants.apiEndPoint, '$path');
+
+    String body = json.encode(data);
+    return _http.post(url, body: body, headers: {
+      'Authorization': '${AppConstants.apiKey}',
+      'Content-Type': 'application/json'
+    });
   }
 }
