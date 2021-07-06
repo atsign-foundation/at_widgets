@@ -145,6 +145,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                       }).toList(),
                       onChanged: (String? selectedOption) {
                         var weekday = getWeekEnum(selectedOption);
+                        // ignore: unnecessary_null_comparison
                         if (weekday != null) {
                           eventData!.event!.occursOn = weekday;
                         }
@@ -200,7 +201,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                     final timePicked = await showTimePicker(
                         context: context,
                         initialTime: eventData!.event!.startTime != null
-                            ? TimeOfDay.fromDateTime(eventData!.event!.startTime!)
+                            ? TimeOfDay.fromDateTime(
+                                eventData!.event!.startTime!)
                             : TimeOfDay.now(),
                         initialEntryMode: TimePickerEntryMode.input);
 
@@ -303,7 +305,8 @@ class _RecurringEventState extends State<RecurringEvent> {
               onTap: () async {
                 final datePicked = await showDatePicker(
                   context: context,
-                  initialDate: eventData!.event!.endEventOnDate ?? DateTime.now(),
+                  initialDate:
+                      eventData!.event!.endEventOnDate ?? DateTime.now(),
                   firstDate: DateTime(2015, 8),
                   lastDate: DateTime(2101),
                 );

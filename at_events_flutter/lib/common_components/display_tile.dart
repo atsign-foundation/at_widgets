@@ -41,16 +41,19 @@ class _DisplayTileState extends State<DisplayTile> {
     getEventCreator();
   }
 
+  // ignore: always_declare_return_types
   getEventCreator() async {
-    AtContact contact = await getAtSignDetails(widget.atsignCreator!);
+    var contact = await getAtSignDetails(widget.atsignCreator!);
+    // ignore: unnecessary_null_comparison
     if (contact != null) {
       if (contact.tags != null && contact.tags!['image'] != null) {
         List<int>? intList = contact.tags!['image'].cast<int>();
-        if (mounted)
+        if (mounted) {
           setState(() {
             image = Uint8List.fromList(intList!);
             if (widget.showName) name = contact.tags!['name'].toString();
           });
+        }
       }
     }
   }

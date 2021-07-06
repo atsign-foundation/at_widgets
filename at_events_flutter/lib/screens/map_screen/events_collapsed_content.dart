@@ -30,15 +30,13 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
   if (isAdmin) {
     if (eventListenerKeyword.isSharing!) isSharingEvent = true;
   } else {
-    if (eventListenerKeyword != null) {
-      eventListenerKeyword.group!.members!.forEach((groupMember) {
-        if (groupMember.atSign == currentAtSign) {
-          if (groupMember.tags!['isSharing'] == true) {
-            isSharingEvent = true;
-          }
+    eventListenerKeyword.group!.members!.forEach((groupMember) {
+      if (groupMember.atSign == currentAtSign) {
+        if (groupMember.tags!['isSharing'] == true) {
+          isSharingEvent = true;
         }
-      });
-    }
+      }
+    });
   }
 
   /// TODO: remove extra columns
@@ -126,7 +124,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                   height: 3,
                 ),
                 Text(
-                  dateToString(eventListenerKeyword.event!.date!) ?? '',
+                  dateToString(eventListenerKeyword.event!.date!),
                   style: CustomTextStyles().darkGrey14,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -135,8 +133,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                   height: 3,
                 ),
                 Text(
-                  '${timeOfDayToString(eventListenerKeyword.event!.startTime!)} - ${timeOfDayToString(eventListenerKeyword.event!.endTime!)}' ??
-                      'Event timings',
+                  '${timeOfDayToString(eventListenerKeyword.event!.startTime!)} - ${timeOfDayToString(eventListenerKeyword.event!.endTime!)}',
                   style: CustomTextStyles().darkGrey14,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -144,8 +141,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                 Divider(),
                 DisplayTile(
                   title:
-                      '${eventListenerKeyword.atsignCreator} and ${eventListenerKeyword.group!.members!.length} more' ??
-                          'Event participants',
+                      '${eventListenerKeyword.atsignCreator} and ${eventListenerKeyword.group!.members!.length} more',
                   atsignCreator: eventListenerKeyword.atsignCreator,
                   semiTitle: (eventListenerKeyword.group!.members!.length == 1)
                       ? '${eventListenerKeyword.group!.members!.length} person'
@@ -237,7 +233,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
               style: CustomTextStyles().darkGrey16,
               children: [
                 TextSpan(
-                  text: ' ${eventListenerKeyword.venue!.label}' ?? ' ',
+                  text: ' ${eventListenerKeyword.venue!.label}',
                   style: CustomTextStyles().darkGrey14,
                 )
               ],

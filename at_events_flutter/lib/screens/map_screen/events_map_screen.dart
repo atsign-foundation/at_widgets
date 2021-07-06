@@ -11,6 +11,7 @@ import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/distance_calculate.dart';
 import 'package:at_location_flutter/event_show_location.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'events_collapsed_content.dart';
@@ -47,6 +48,8 @@ class EventsMapScreenData {
     _hybridModelList.forEach((element) {
       markers.add(element);
     });
+    // ignore: invalid_use_of_visible_for_testing_member
+    // ignore: invalid_use_of_protected_member
     eventNotifier!.notifyListeners();
   }
 
@@ -58,6 +61,7 @@ class EventsMapScreenData {
     });
   }
 
+  // ignore: prefer_final_fields
   List<List<EventKeyLocationModel>> _listOfLists = [];
   bool _updating = false;
   void updateEventdataFromList(List<EventKeyLocationModel> _list) async {
@@ -97,6 +101,8 @@ class EventsMapScreenData {
           });
 
           eventNotifier!.value = _list[i].eventNotificationModel;
+          // ignore: invalid_use_of_visible_for_testing_member
+          // ignore: invalid_use_of_protected_member
           eventNotifier!.notifyListeners();
 
           count--;
@@ -170,6 +176,7 @@ class EventsMapScreenData {
 
   Future<dynamic> _imageOfAtsign(String _atsign) async {
     var contact = await getAtSignDetails(_atsign);
+    // ignore: unnecessary_null_comparison
     if (contact != null) {
       if (contact.tags != null && contact.tags!['image'] != null) {
         List<int> intList = contact.tags!['image'].cast<int>();

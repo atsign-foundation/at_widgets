@@ -2,7 +2,6 @@ import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/screens/create_event.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
-import 'package:at_events_flutter_example/event_list.dart';
 import 'package:at_events_flutter_example/main.dart';
 import 'package:flutter/material.dart';
 import 'client_sdk_service.dart';
@@ -140,6 +139,8 @@ class _SecondScreenState extends State<SecondScreen> {
   void initializeEventService() {
     initialiseEventService(
         clientSdkService.atClientServiceInstance.atClient, NavService.navKey,
+        mapKey: '',
+        apiKey: '',
         rootDomain: MixedConstants.ROOT_DOMAIN,
         streamAlternative: updateEvents);
   }

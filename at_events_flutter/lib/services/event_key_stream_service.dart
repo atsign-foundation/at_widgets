@@ -13,7 +13,7 @@ import 'package:at_events_flutter/services/event_location_share.dart';
 // import 'package:at_events_flutter/services/sync_secondary.dart';
 import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
-import 'package:at_location_flutter/location_modal/location_notification.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 import 'contact_service.dart';
@@ -119,6 +119,7 @@ class EventKeyStreamService {
           var event = EventNotificationModel.fromJson(
               jsonDecode(allEventNotifications[i].atValue!.value));
 
+          // ignore: unnecessary_null_comparison
           if (event != null && event.group!.members!.isNotEmpty) {
             event.key = allEventNotifications[i].key;
 
@@ -163,8 +164,8 @@ class EventKeyStreamService {
           var acknowledgedKeyId = 'eventacknowledged-$atkeyMicrosecondId';
           var allRegexResponses =
               await atClientInstance!.getKeys(regex: acknowledgedKeyId);
-          // ignore: prefer_is_empty
-          if ((allRegexResponses != null) && (allRegexResponses.length > 0)) {
+          // ignore: unnecessary_null_comparison
+          if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
             notification.haveResponded = true;
           }
         }
@@ -230,6 +231,7 @@ class EventKeyStreamService {
                 // ignore: return_of_invalid_type_from_catch_error
                 .catchError((e) => print('error in get $e'));
 
+            // ignore: unnecessary_null_comparison
             if ((result == null) || (result.value == null)) {
               continue;
             }
@@ -311,7 +313,6 @@ class EventKeyStreamService {
   Future<dynamic> addDataToList(
       EventNotificationModel eventNotificationModel) async {
     String newLocationDataKeyId;
-    String tempKey;
     String? key;
     newLocationDataKeyId =
         eventNotificationModel.key!.split('createevent-')[1].split('@')[0];
@@ -471,6 +472,7 @@ class EventKeyStreamService {
         }
         print('event acknowledged:$result');
         return result;
+        // ignore: unnecessary_null_comparison
       } else if (result != null) {
         return result.toString();
       } else {
@@ -611,8 +613,6 @@ class EventKeyStreamService {
         return;
       }
 
-      Map<dynamic, dynamic>? tags;
-
       for (var i = 0; i < presentEventData.group!.members!.length; i++) {
         var presentGroupMember = presentEventData.group!.members!.elementAt(i);
         if (presentGroupMember.atSign![0] != '@') {
@@ -625,8 +625,6 @@ class EventKeyStreamService {
             fromAtSign.toLowerCase()) {
           presentGroupMember.tags!['lat'] = locationData.lat;
           presentGroupMember.tags!['long'] = locationData.long;
-
-          tags = presentGroupMember.tags;
 
           break;
         }
@@ -669,6 +667,7 @@ class EventKeyStreamService {
     }
   }
 
+  // ignore: always_declare_return_types
   createEventAcknowledge(EventNotificationModel acknowledgedEvent,
       String? atKey, String? fromAtSign) async {
     try {
@@ -746,7 +745,7 @@ class EventKeyStreamService {
 
       key.sharedWith = jsonEncode(allAtsignList);
 
-      var notifyAllResult = await SyncSecondary().callSyncSecondary(
+      await SyncSecondary().callSyncSecondary(
         SyncOperation.notifyAll,
         atKey: key,
         notification: notification,
@@ -796,7 +795,6 @@ class EventKeyStreamService {
           }
         });
         return atKey;
-        break;
 
       case ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT:
         var key = AtKey()
@@ -808,7 +806,6 @@ class EventKeyStreamService {
 
         key.key = 'eventacknowledged-$atkeyMicrosecondId';
         return key;
-        break;
     }
   }
 
@@ -821,6 +818,7 @@ class EventKeyStreamService {
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) => print('error in get $e'));
 
+    // ignore: unnecessary_null_comparison
     if ((result == null) || (result.value == null)) {
       return;
     }
@@ -862,6 +860,7 @@ class EventKeyStreamService {
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print('error in in key_stream_service get $e'));
 
+      // ignore: unnecessary_null_comparison
       if (atvalue != null) {
         return atvalue;
       } else {

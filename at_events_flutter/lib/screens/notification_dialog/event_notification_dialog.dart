@@ -62,6 +62,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     var contact = await getAtSignDetails(widget.eventData != null
         ? widget.eventData!.atsignCreator
         : locationUserImageToShow);
+    // ignore: unnecessary_null_comparison
     if (contact != null) {
       if (contact.tags != null && contact.tags!['image'] != null) {
         List<int>? intList = contact.tags!['image'].cast<int>();

@@ -9,6 +9,7 @@ import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 class SelectedLocation extends StatefulWidget {

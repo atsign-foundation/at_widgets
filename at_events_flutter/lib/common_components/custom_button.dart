@@ -29,11 +29,11 @@ class CustomButton extends StatelessWidget {
         width: width!.toWidth,
         height: height!.toHeight,
         padding: padding ?? EdgeInsets.all(0),
-        child: child,
         decoration: BoxDecoration(
             color: bgColor,
             border: border ?? Border(),
             borderRadius: BorderRadius.circular(radius ?? 30)),
+        child: child,
       ),
     );
   }

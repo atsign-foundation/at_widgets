@@ -29,6 +29,7 @@ class _ParticipantsState extends State<Participants> {
               Widget? child) {
             var _locationList = EventsMapScreenData().markers;
             untrackedAtsigns = [];
+            // ignore: unnecessary_null_comparison
             trackedAtsigns = _locationList != null
                 ? _locationList.map((e) => e.displayName).toList()
                 : [];
@@ -107,7 +108,8 @@ class _ParticipantsState extends State<Participants> {
                         : ((untrackedAtsigns[index] ==
                                 AtEventNotificationListener().currentAtSign)
                             ? ''
-                            : (isActionRequired(untrackedAtsigns[index], _event!)
+                            : (isActionRequired(
+                                    untrackedAtsigns[index], _event!)
                                 ? 'Action Required'
                                 : 'Location not received')),
                     style: CustomTextStyles().orange14,
@@ -129,8 +131,8 @@ class _ParticipantsState extends State<Participants> {
   bool isActionRequired(String? _atsign, EventNotificationModel _event) {
     var _atcontact =
         _event.group!.members!.where((element) => element.atSign == _atsign);
-    // ignore: prefer_is_empty
-    if ((_atcontact != null) && (_atcontact.length > 0)) {
+    // ignore: unnecessary_null_comparison
+    if ((_atcontact != null) && (_atcontact.isNotEmpty)) {
       if ((_atcontact.first.tags!['isAccepted'] == false) &&
           (_atcontact.first.tags!['isExited'] == false)) {
         return true;

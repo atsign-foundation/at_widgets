@@ -43,6 +43,7 @@ void initialiseEventService(
 }
 
 Future<bool> createEvent(EventNotificationModel eventData) async {
+  // ignore: unnecessary_null_comparison
   if (eventData == null) {
     throw Exception('Event cannot be null');
   }
@@ -114,6 +115,7 @@ Future<bool> deleteEvent(String key) async {
   try {
     var atKey = EventService().getAtKey(regexKey);
     var result = await EventService().atClientInstance!.delete(atKey);
+    // ignore: unnecessary_null_comparison
     if (result != null && result) {
       // EventService().allEvents.removeWhere((element) => element.key == key);
       // EventService().eventListSink.add(EventService().allEvents);
@@ -136,6 +138,7 @@ Future<EventNotificationModel?> getEventDetails(String key) async {
     var atvalue =
         await EventService().atClientInstance!.get(atkey).catchError((e) {
       print('error in get ${e.errorCode} ${e.errorMessage}');
+      // ignore: invalid_return_type_for_catch_error
       return null;
     });
     eventData = EventNotificationModel.fromJson(jsonDecode(atvalue.value));
@@ -183,7 +186,7 @@ Future<List<String>> getRegexKeys() async {
         regex: 'createevent-',
       );
 
-  return regexList ?? [];
+  return regexList;
 }
 
 Future<EventNotificationModel?> getValue(String key) async {

@@ -2,8 +2,6 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_common_flutter/widgets/custom_input_field.dart';
-import 'package:at_contacts_flutter/screens/contacts_screen.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_events_flutter/common_components/bottom_sheet.dart';
@@ -11,15 +9,11 @@ import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/common_components/error_screen.dart';
 import 'package:at_events_flutter/common_components/overlapping-contacts.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
-import 'package:at_events_flutter/models/hybrid_notifiation_model.dart';
 import 'package:at_events_flutter/screens/one_day_event.dart';
-import 'package:at_events_flutter/screens/recurring_event.dart';
 import 'package:at_events_flutter/common_components/custom_heading.dart';
 import 'package:at_events_flutter/screens/select_location.dart';
 import 'package:at_events_flutter/services/event_services.dart';
-import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
-import 'package:at_events_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
@@ -51,7 +45,9 @@ class _CreateEventState extends State<CreateEvent> {
     isLoading = false;
     EventService().init(
         widget.atClientInstance,
+        // ignore: prefer_if_null_operators
         widget.isUpdate != null ? widget.isUpdate : false,
+        // ignore: prefer_if_null_operators
         widget.eventData != null ? widget.eventData : null);
     if (widget.createdEvents != null) {
       EventService().createdEvents = widget.createdEvents;
@@ -116,6 +112,7 @@ class _CreateEventState extends State<CreateEvent> {
                                             selectedList: (s) {
                                               selectedGroupContact = s;
 
+                                              // ignore: prefer_is_empty
                                               if (selectedGroupContact.length >
                                                   0) {
                                                 EventService()
@@ -131,6 +128,7 @@ class _CreateEventState extends State<CreateEvent> {
                                   ),
                                   SizedBox(height: 25),
                                   (EventService().selectedContacts != null &&
+                                          // ignore: prefer_is_empty
                                           EventService()
                                                   .selectedContacts!
                                                   .length >
@@ -140,6 +138,7 @@ class _CreateEventState extends State<CreateEvent> {
                                               EventService().selectedContacts))
                                       : SizedBox(),
                                   (EventService().selectedContacts != null &&
+                                          // ignore: prefer_is_empty
                                           EventService()
                                                   .selectedContacts!
                                                   .length >
@@ -323,9 +322,11 @@ class _CreateEventState extends State<CreateEvent> {
                               child: ErrorScreen(
                                 onPressed: EventService().init(
                                     widget.atClientInstance,
+                                    // ignore: prefer_if_null_operators
                                     widget.isUpdate != null
                                         ? widget.isUpdate
                                         : false,
+                                    // ignore: prefer_if_null_operators
                                     widget.eventData != null
                                         ? widget.eventData
                                         : null),
@@ -358,6 +359,7 @@ class _CreateEventState extends State<CreateEvent> {
     );
   }
 
+  // ignore: always_declare_return_types
   onCreateEvent() async {
     setState(() {
       isLoading = true;

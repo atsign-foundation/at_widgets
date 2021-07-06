@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
+// ignore: unused_import
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_events_flutter/common_components/custom_circle_avatar.dart';
 import 'package:at_events_flutter/common_components/pop_button.dart';
 import 'package:at_events_flutter/utils/colors.dart';
@@ -33,15 +33,14 @@ class _InviteCardState extends State<InviteCard> {
     if (widget.atSign != null) getAtsignDetails();
   }
 
+  // ignore: always_declare_return_types
   getAtsignDetails() async {
-    AtContact contact = await getAtSignDetails(widget.atSign!);
-    if (contact != null) {
-      if (contact.tags != null && contact.tags!['image'] != null) {
-        List<int>? intList = contact.tags!['image'].cast<int>();
-        setState(() {
-          memoryImage = Uint8List.fromList(intList!);
-        });
-      }
+    var contact = await getAtSignDetails(widget.atSign!);
+    if (contact.tags != null && contact.tags!['image'] != null) {
+      List<int>? intList = contact.tags!['image'].cast<int>();
+      setState(() {
+        memoryImage = Uint8List.fromList(intList!);
+      });
     }
   }
 

@@ -8,6 +8,7 @@ import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/location_modal/location_modal.dart';
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 class SelectLocation extends StatefulWidget {
@@ -30,6 +31,7 @@ class _SelectLocationState extends State<SelectLocation> {
   /// nearMe == false => dont search nearme
   /// nearMe == true => search nearme
   /// nearMe == false && currentLocation == null =>dont search nearme
+  // ignore: always_declare_return_types
   calculateLocation() async {
     currentLocation = await getMyLocation();
     if (currentLocation != null) {
@@ -186,6 +188,7 @@ class _SelectLocationState extends State<SelectLocation> {
               return snapshot.connectionState == ConnectionState.waiting
                   ? SizedBox()
                   : snapshot.hasData
+                      // ignore: prefer_is_empty
                       ? snapshot.data!.length == 0
                           ? Text('No such location found')
                           : Expanded(

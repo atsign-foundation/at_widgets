@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 class EventNotificationModel {
@@ -41,10 +42,10 @@ class EventNotificationModel {
 
     if (data['group'] != null) {
       data['group'] = jsonDecode(data['group']);
-      group = new AtGroup(data['group']['name']);
+      group = AtGroup(data['group']['name']);
 
       data['group']['members'].forEach((contact) {
-        AtContact newContact = AtContact(atSign: contact['atSign']);
+        var newContact = AtContact(atSign: contact['atSign']);
         newContact.tags = {};
         newContact.tags!['isAccepted'] = contact['tags']['isAccepted'];
         newContact.tags!['isSharing'] = contact['tags']['isSharing'];
@@ -179,6 +180,8 @@ class Event {
         case RepeatCycle.MONTH:
           date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
           break;
+        default:
+          null;
       }
       endsOn = (data['endsOn'] == EndsOn.NEVER.toString()
           ? EndsOn.NEVER
@@ -200,6 +203,8 @@ class Event {
           break;
         case EndsOn.NEVER:
           break;
+        default:
+          null;
       }
     }
   }
@@ -254,14 +259,14 @@ String getWeekString(Week? weekday) {
 }
 
 String timeOfDayToString(DateTime time) {
-  int minute = time.minute;
+  var minute = time.minute;
   if (minute < 10) return '${time.hour}: 0${time.minute}';
 
   return '${time.hour}: ${time.minute}';
 }
 
 String dateToString(DateTime date) {
-  String dateString = '${date.day}/${date.month}/${date.year}';
+  var dateString = '${date.day}/${date.month}/${date.year}';
   return dateString;
 }
 
