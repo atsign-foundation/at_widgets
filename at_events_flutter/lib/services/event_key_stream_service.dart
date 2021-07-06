@@ -575,9 +575,8 @@ class EventKeyStreamService {
         if (result) {
           updatePendingStatus(eventData);
         }
+        notifyListeners();
       }
-
-      notifyListeners();
 
       return result;
     } catch (e) {
@@ -674,7 +673,8 @@ class EventKeyStreamService {
           acknowledgedEvent.key.split('createevent-')[1].split('@')[0];
 
       /// TODO: replace appNameSpace
-      eventId = eventId.replaceAll('.rrive', '');
+      eventId =
+          eventId.replaceAll('${atClientInstance.preference.syncRegex}', '');
 
       EventNotificationModel presentEventData;
       allEventNotifications.forEach((element) {
