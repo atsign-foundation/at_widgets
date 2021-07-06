@@ -17,17 +17,17 @@ class AtEventNotificationListener {
   AtEventNotificationListener._();
   static final _instance = AtEventNotificationListener._();
   factory AtEventNotificationListener() => _instance;
-  AtClientImpl atClientInstance;
+  AtClientImpl? atClientInstance;
   bool monitorStarted = false;
-  String currentAtSign;
-  GlobalKey<NavigatorState> navKey;
+  String? currentAtSign;
+  GlobalKey<NavigatorState>? navKey;
   // ignore: non_constant_identifier_names
-  String ROOT_DOMAIN;
+  String? ROOT_DOMAIN;
 
   void init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
       GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
-      {Function newGetAtValueFromMainApp}) {
-    initializeContactsService(atClientInstance, currentAtSignFromApp);
+      {Function? newGetAtValueFromMainApp}) {
+    initializeContactsService(atClientInstance!, currentAtSignFromApp);
 
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
@@ -38,9 +38,9 @@ class AtEventNotificationListener {
 
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
-      var privateKey = await getPrivateKey(currentAtSign);
+      var privateKey = await (getPrivateKey(currentAtSign!) as FutureOr<String>);
       // ignore: await_only_futures
-      await atClientInstance.startMonitor(privateKey, fnCallBack);
+      await atClientInstance!.startMonitor(privateKey, fnCallBack);
       print('Monitor started in events package');
       monitorStarted = true;
     }
@@ -49,8 +49,8 @@ class AtEventNotificationListener {
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    return await atClientInstance.getPrivateKey(atsign);
+  Future<String?> getPrivateKey(String atsign) async {
+    return await atClientInstance!.getPrivateKey(atsign);
   }
 
   void fnCallBack(var response) async {
@@ -75,7 +75,7 @@ class AtEventNotificationListener {
       return;
     }
 
-    var decryptedMessage = await atClientInstance.encryptionService
+    var decryptedMessage = await atClientInstance!.encryptionService!
         .decrypt(value, fromAtSign)
         .catchError((e) {
       print('error in decrypting: $e');
@@ -93,7 +93,7 @@ class AtEventNotificationListener {
         if (_result is EventKeyLocationModel) {
           await showMyDialog(eventNotificationModel: eventData);
         }
-      } else if (eventData.isUpdate) {
+      } else if (eventData.isUpdate!) {
         // event updated received
         // update event list
         EventKeyStreamService().mapUpdatedEventDataToWidget(eventData);
@@ -118,9 +118,9 @@ class AtEventNotificationListener {
   }
 
   Future<void> showMyDialog(
-      {EventNotificationModel eventNotificationModel}) async {
+      {EventNotificationModel? eventNotificationModel}) async {
     return showDialog<void>(
-      context: navKey.currentContext,
+      context: navKey!.currentContext!,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return EventNotificationDialog(eventData: eventNotificationModel);

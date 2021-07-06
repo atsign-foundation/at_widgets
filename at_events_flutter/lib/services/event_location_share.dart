@@ -26,9 +26,9 @@ class EventLocationShare {
   factory EventLocationShare() => _instance;
 
   bool masterSwitchState = true;
-  StreamSubscription<Position> positionStream;
+  StreamSubscription<Position>? positionStream;
   List<EventNotificationModel> eventsToShareLocationWith = [];
-  Function locationPromptDialog;
+  Function? locationPromptDialog;
 
   /// TODO:
   /// Doubt, whetherwe should have some kind of list which will send
@@ -65,28 +65,28 @@ class EventLocationShare {
         i++) {
       var eventNotificationModel = EventKeyStreamService()
           .allEventNotifications[i]
-          .eventNotificationModel;
+          .eventNotificationModel!;
 
       if ((eventNotificationModel.atsignCreator ==
           AtEventNotificationListener().currentAtSign)) {
-        if (eventNotificationModel.isSharing) {
+        if (eventNotificationModel.isSharing!) {
           eventsToShareLocationWith.add(eventNotificationModel);
         }
       } else {
-        AtContact currentGroupMember;
-        for (var i = 0; i < eventNotificationModel.group.members.length; i++) {
-          if (eventNotificationModel.group.members.elementAt(i).atSign ==
+        AtContact? currentGroupMember;
+        for (var i = 0; i < eventNotificationModel.group!.members!.length; i++) {
+          if (eventNotificationModel.group!.members!.elementAt(i).atSign ==
               AtEventNotificationListener().currentAtSign) {
             currentGroupMember =
-                eventNotificationModel.group.members.elementAt(i);
+                eventNotificationModel.group!.members!.elementAt(i);
             break;
           }
         }
 
         if (currentGroupMember != null &&
-            currentGroupMember.tags['isAccepted'] == true &&
-            currentGroupMember.tags['isSharing'] == true &&
-            currentGroupMember.tags['isExited'] == false) {
+            currentGroupMember.tags!['isAccepted'] == true &&
+            currentGroupMember.tags!['isSharing'] == true &&
+            currentGroupMember.tags!['isExited'] == false) {
           eventsToShareLocationWith.add(eventNotificationModel);
         }
       }
@@ -113,7 +113,7 @@ class EventLocationShare {
         /// method from main app
         if (locationPromptDialog != null) {
           eventsToShareLocationWith.add(_newData);
-          locationPromptDialog();
+          locationPromptDialog!();
 
           /// return as when main switch is turned on, it will send location to all.
           return;
@@ -122,7 +122,7 @@ class EventLocationShare {
     } else {
       if (AtEventNotificationListener().navKey != null) {
         CustomToast().show('Location permission not granted',
-            AtEventNotificationListener().navKey.currentContext);
+            AtEventNotificationListener().navKey!.currentContext);
       }
     }
 
@@ -133,9 +133,9 @@ class EventLocationShare {
   }
 
   /// Will be called from addDataToList or mapUpdatedEventDataToWidget
-  void removeMember(String key) async {
+  void removeMember(String? key) async {
     eventsToShareLocationWith
-        .removeWhere((element) => key.contains(element.key));
+        .removeWhere((element) => key!.contains(element.key!));
 
     print(
         'after deleting atsignsToShareLocationWith length ${eventsToShareLocationWith.length}');
@@ -187,11 +187,11 @@ class EventLocationShare {
       LatLng _myLocation) async {
     if (_eventNotificationModel.atsignCreator ==
         AtEventNotificationListener().currentAtSign) {
-      var _from = _eventNotificationModel.event.startTime;
-      var _to = _eventNotificationModel.event.endTime;
+      var _from = _eventNotificationModel.event!.startTime!;
+      var _to = _eventNotificationModel.event!.endTime;
 
       if ((DateTime.now().difference(_from) > Duration(seconds: 0)) &&
-          (_to.difference(DateTime.now()) > Duration(seconds: 0))) {
+          (_to!.difference(DateTime.now()) > Duration(seconds: 0))) {
         var _event = EventNotificationModel.fromJson(jsonDecode(
             EventNotificationModel.convertEventNotificationToJson(
                 _eventNotificationModel)));
@@ -203,10 +203,10 @@ class EventLocationShare {
             .actionOnEvent(_event, ATKEY_TYPE_ENUM.CREATEEVENT);
       }
     } else {
-      var currentGroupMember;
+      late var currentGroupMember;
 
       /// TODO: Optimise this, dont do this on every loop. Do only once
-      _eventNotificationModel.group.members.forEach((groupMember) {
+      _eventNotificationModel.group!.members!.forEach((groupMember) {
         // sending location to other group members
         if (groupMember.atSign == AtEventNotificationListener().currentAtSign) {
           currentGroupMember = groupMember;
@@ -215,13 +215,13 @@ class EventLocationShare {
 
       var _from = startTimeEnumToTimeOfDay(
           currentGroupMember.tags['shareFrom'].toString(),
-          _eventNotificationModel.event.startTime);
+          _eventNotificationModel.event!.startTime)!;
       var _to = endTimeEnumToTimeOfDay(
           currentGroupMember.tags['shareTo'].toString(),
-          _eventNotificationModel.event.endTime);
+          _eventNotificationModel.event!.endTime);
 
       if ((DateTime.now().difference(_from) > Duration(seconds: 0)) &&
-          (_to.difference(DateTime.now()) > Duration(seconds: 0))) {
+          (_to!.difference(DateTime.now()) > Duration(seconds: 0))) {
         var _data = EventMemberLocation(
             fromAtSign: AtEventNotificationListener().currentAtSign,
             receiver: _eventNotificationModel.atsignCreator,
@@ -231,7 +231,7 @@ class EventLocationShare {
 
         /// TODO: check this
         var atkeyMicrosecondId =
-            _eventNotificationModel.key.split('-')[1].split('@')[0];
+            _eventNotificationModel.key!.split('-')[1].split('@')[0];
 
         var atKey = newAtKey(
             5000,
@@ -239,7 +239,7 @@ class EventLocationShare {
             _eventNotificationModel.atsignCreator);
 
         try {
-          await AtEventNotificationListener().atClientInstance.put(
+          await AtEventNotificationListener().atClientInstance!.put(
               atKey,
               EventMemberLocation.convertLocationNotificationToJson(
                 _data,
@@ -252,12 +252,12 @@ class EventLocationShare {
     }
   }
 
-  AtKey newAtKey(int ttr, String key, String sharedWith) {
+  AtKey newAtKey(int ttr, String key, String? sharedWith) {
     var atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata.ttr = ttr
+      ..metadata!.ttr = ttr
       // ..metadata.ttl = MixedConstants.maxTTL
-      ..metadata.ccd = true
+      ..metadata!.ccd = true
       ..key = key
       ..sharedWith = sharedWith
       ..sharedBy = AtEventNotificationListener().currentAtSign;

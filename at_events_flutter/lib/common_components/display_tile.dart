@@ -9,15 +9,15 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'contacts_initials.dart';
 
 class DisplayTile extends StatefulWidget {
-  final String title, semiTitle, subTitle, atsignCreator, invitedBy;
-  final int number;
-  final Widget action;
+  final String? title, semiTitle, subTitle, atsignCreator, invitedBy;
+  final int? number;
+  final Widget? action;
   final bool showName, showRetry;
-  final Function onRetryTapped;
+  final Function? onRetryTapped;
   DisplayTile(
-      {@required this.title,
+      {required this.title,
       this.atsignCreator,
-      @required this.subTitle,
+      required this.subTitle,
       this.semiTitle,
       this.invitedBy,
       this.number,
@@ -31,10 +31,10 @@ class DisplayTile extends StatefulWidget {
 }
 
 class _DisplayTileState extends State<DisplayTile> {
-  Uint8List image;
-  AtContact contact;
-  AtContactsImpl atContact;
-  String name;
+  Uint8List? image;
+  AtContact? contact;
+  AtContactsImpl? atContact;
+  String? name;
   @override
   void initState() {
     super.initState();
@@ -42,14 +42,14 @@ class _DisplayTileState extends State<DisplayTile> {
   }
 
   getEventCreator() async {
-    AtContact contact = await getAtSignDetails(widget.atsignCreator);
+    AtContact contact = await getAtSignDetails(widget.atsignCreator!);
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
+      if (contact.tags != null && contact.tags!['image'] != null) {
+        List<int>? intList = contact.tags!['image'].cast<int>();
         if (mounted)
           setState(() {
-            image = Uint8List.fromList(intList);
-            if (widget.showName) name = contact.tags['name'].toString();
+            image = Uint8List.fromList(intList!);
+            if (widget.showName) name = contact.tags!['name'].toString();
           });
       }
     }
@@ -68,7 +68,7 @@ class _DisplayTileState extends State<DisplayTile> {
                       borderRadius:
                           BorderRadius.all(Radius.circular(30.toFont)),
                       child: Image.memory(
-                        image,
+                        image!,
                         width: 50.toFont,
                         height: 50.toFont,
                         fit: BoxFit.fill,
@@ -107,7 +107,7 @@ class _DisplayTileState extends State<DisplayTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name ?? widget.title,
+                    name ?? widget.title!,
                     style: TextStyle(
                         color: AllColors().Black, fontSize: 14.toFont),
                     maxLines: 1,
@@ -118,7 +118,7 @@ class _DisplayTileState extends State<DisplayTile> {
                   ),
                   widget.semiTitle != null
                       ? Text(
-                          widget.semiTitle,
+                          widget.semiTitle!,
                           style: (widget.semiTitle == 'Action required' ||
                                       widget.semiTitle == 'Request declined') ||
                                   (widget.semiTitle == 'Cancelled')
@@ -133,7 +133,7 @@ class _DisplayTileState extends State<DisplayTile> {
                   ),
                   (widget.subTitle != null)
                       ? Text(
-                          widget.subTitle,
+                          widget.subTitle!,
                           style: CustomTextStyles().darkGrey12,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -142,7 +142,7 @@ class _DisplayTileState extends State<DisplayTile> {
                   widget.invitedBy != null
                       ? Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: Text(widget.invitedBy,
+                          child: Text(widget.invitedBy!,
                               style: CustomTextStyles().grey14),
                         )
                       : SizedBox()
@@ -152,7 +152,7 @@ class _DisplayTileState extends State<DisplayTile> {
           ),
           widget.showRetry
               ? InkWell(
-                  onTap: widget.onRetryTapped,
+                  onTap: widget.onRetryTapped as void Function()?,
                   child: Text(
                     'Retry',
                     style: TextStyle(

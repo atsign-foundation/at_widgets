@@ -16,17 +16,17 @@ class Participants extends StatefulWidget {
 }
 
 class _ParticipantsState extends State<Participants> {
-  List<String> untrackedAtsigns = [];
+  List<String?> untrackedAtsigns = [];
 
-  List<String> trackedAtsigns = [];
+  List<String?> trackedAtsigns = [];
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: ValueListenableBuilder(
-          valueListenable: EventsMapScreenData().eventNotifier,
-          builder: (BuildContext context, EventNotificationModel _event,
-              Widget child) {
+          valueListenable: EventsMapScreenData().eventNotifier!,
+          builder: (BuildContext context, EventNotificationModel? _event,
+              Widget? child) {
             var _locationList = EventsMapScreenData().markers;
             untrackedAtsigns = [];
             trackedAtsigns = _locationList != null
@@ -34,12 +34,12 @@ class _ParticipantsState extends State<Participants> {
                 : [];
 
             /// for creator
-            trackedAtsigns.contains(_event.atsignCreator)
+            trackedAtsigns.contains(_event!.atsignCreator)
                 ? print('')
                 : untrackedAtsigns.add(_event.atsignCreator);
 
             /// for members
-            _event.group.members.forEach((element) => {
+            _event.group!.members!.forEach((element) => {
                   trackedAtsigns.contains(element.atSign)
                       ? print('')
                       : untrackedAtsigns.add(element.atSign)
@@ -50,7 +50,7 @@ class _ParticipantsState extends State<Participants> {
     );
   }
 
-  Widget builder(List<HybridModel> _markers, EventNotificationModel _event) {
+  Widget builder(List<HybridModel> _markers, EventNotificationModel? _event) {
     return Container(
       height: 422.toHeight,
       padding:
@@ -69,7 +69,7 @@ class _ParticipantsState extends State<Participants> {
               shrinkWrap: true,
               itemCount: _markers.length,
               itemBuilder: (BuildContext context, int index) {
-                return _markers[index].displayName == _event.venue.label
+                return _markers[index].displayName == _event!.venue!.label
                     ? SizedBox()
                     : DisplayTile(
                         title: _markers[index].displayName ?? '',
@@ -85,7 +85,7 @@ class _ParticipantsState extends State<Participants> {
                       );
               },
               separatorBuilder: (BuildContext context, int index) {
-                return _markers[index].displayName != _event.venue.label
+                return _markers[index].displayName != _event!.venue!.label
                     ? Divider()
                     : SizedBox();
               },
@@ -107,7 +107,7 @@ class _ParticipantsState extends State<Participants> {
                         : ((untrackedAtsigns[index] ==
                                 AtEventNotificationListener().currentAtSign)
                             ? ''
-                            : (isActionRequired(untrackedAtsigns[index], _event)
+                            : (isActionRequired(untrackedAtsigns[index], _event!)
                                 ? 'Action Required'
                                 : 'Location not received')),
                     style: CustomTextStyles().orange14,
@@ -126,13 +126,13 @@ class _ParticipantsState extends State<Participants> {
     );
   }
 
-  bool isActionRequired(String _atsign, EventNotificationModel _event) {
+  bool isActionRequired(String? _atsign, EventNotificationModel _event) {
     var _atcontact =
-        _event.group.members.where((element) => element.atSign == _atsign);
+        _event.group!.members!.where((element) => element.atSign == _atsign);
     // ignore: prefer_is_empty
     if ((_atcontact != null) && (_atcontact.length > 0)) {
-      if ((_atcontact.first.tags['isAccepted'] == false) &&
-          (_atcontact.first.tags['isExited'] == false)) {
+      if ((_atcontact.first.tags!['isAccepted'] == false) &&
+          (_atcontact.first.tags!['isExited'] == false)) {
         return true;
       }
     }

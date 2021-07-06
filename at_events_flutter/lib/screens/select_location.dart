@@ -18,8 +18,8 @@ class SelectLocation extends StatefulWidget {
 class _SelectLocationState extends State<SelectLocation> {
   String inputText = '';
   bool isLoader = false;
-  bool nearMe;
-  LatLng currentLocation;
+  bool? nearMe;
+  LatLng? currentLocation;
   @override
   void initState() {
     calculateLocation();
@@ -59,13 +59,13 @@ class _SelectLocationState extends State<SelectLocation> {
                     setState(() {
                       isLoader = true;
                     });
-                    if ((nearMe == null) || (!nearMe)) {
+                    if ((nearMe == null) || (!nearMe!)) {
                       // ignore: await_only_futures
                       await SearchLocationService().getAddressLatLng(str, null);
                     } else {
                       // ignore: await_only_futures
                       await SearchLocationService()
-                          .getAddressLatLng(str, currentLocation);
+                          .getAddressLatLng(str, currentLocation!);
                     }
 
                     setState(() {
@@ -80,14 +80,14 @@ class _SelectLocationState extends State<SelectLocation> {
                     setState(() {
                       isLoader = true;
                     });
-                    if ((nearMe == null) || (!nearMe)) {
+                    if ((nearMe == null) || (!nearMe!)) {
                       // ignore: await_only_futures
                       await SearchLocationService()
                           .getAddressLatLng(inputText, null);
                     } else {
                       // ignore: await_only_futures
                       await SearchLocationService()
-                          .getAddressLatLng(inputText, currentLocation);
+                          .getAddressLatLng(inputText, currentLocation!);
                     }
                     setState(() {
                       isLoader = false;
@@ -115,7 +115,7 @@ class _SelectLocationState extends State<SelectLocation> {
                 onChanged: (value) async {
                   if (nearMe == null) return;
 
-                  if (!nearMe) {
+                  if (!nearMe!) {
                     currentLocation = await getMyLocation();
                   }
 
@@ -128,7 +128,7 @@ class _SelectLocationState extends State<SelectLocation> {
                   }
 
                   setState(() {
-                    nearMe = !nearMe;
+                    nearMe = !nearMe!;
                   });
                 },
               ),
@@ -187,11 +187,11 @@ class _SelectLocationState extends State<SelectLocation> {
               return snapshot.connectionState == ConnectionState.waiting
                   ? SizedBox()
                   : snapshot.hasData
-                      ? snapshot.data.length == 0
+                      ? snapshot.data!.length == 0
                           ? Text('No such location found')
                           : Expanded(
                               child: ListView.separated(
-                                itemCount: snapshot.data.length,
+                                itemCount: snapshot.data!.length,
                                 separatorBuilder: (context, index) {
                                   return Column(
                                     children: [
@@ -206,17 +206,17 @@ class _SelectLocationState extends State<SelectLocation> {
                                       context,
                                       LatLng(
                                           double.parse(
-                                              snapshot.data[index].lat),
+                                              snapshot.data![index].lat!),
                                           double.parse(
-                                              snapshot.data[index].long)),
+                                              snapshot.data![index].long!)),
                                       displayName:
-                                          snapshot.data[index].displayName,
+                                          snapshot.data![index].displayName,
                                     ),
                                     child: LocationTile(
                                       icon: Icons.location_on,
-                                      title: snapshot.data[index].city,
+                                      title: snapshot.data![index].city,
                                       subTitle:
-                                          snapshot.data[index].displayName,
+                                          snapshot.data![index].displayName,
                                     ),
                                   );
                                 },
@@ -233,8 +233,8 @@ class _SelectLocationState extends State<SelectLocation> {
   }
 }
 
-void onLocationSelect(BuildContext context, LatLng point,
-    {String displayName}) {
+void onLocationSelect(BuildContext context, LatLng? point,
+    {String? displayName}) {
   Navigator.push(
       context,
       MaterialPageRoute(

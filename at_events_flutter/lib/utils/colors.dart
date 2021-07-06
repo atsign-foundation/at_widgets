@@ -70,7 +70,7 @@ class ContactInitialsColors {
     'Z': Color(0xFFFA0087),
   };
 
-  static Color getColor(String atsign) {
+  static Color? getColor(String atsign) {
     if (atsign[0] == '@') {
       return color['${atsign[1].toUpperCase()}'];
     }

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 
 class SelectedLocation extends StatefulWidget {
-  final LatLng point;
+  final LatLng? point;
   final String displayName;
   SelectedLocation(this.displayName, this.point);
   @override
@@ -97,13 +97,13 @@ class _SelectedLocationState extends State<SelectedLocation> {
                             width: 321.toWidth,
                             hintText: 'Save this address as',
                             initialValue: EventService()
-                                .eventNotificationModel
-                                .venue
-                                .label,
+                                .eventNotificationModel!
+                                .venue!
+                                .label!,
                             value: (String val) {
                               EventService()
-                                  .eventNotificationModel
-                                  .venue
+                                  .eventNotificationModel!
+                                  .venue!
                                   .label = val;
                             },
                           ),
@@ -117,24 +117,24 @@ class _SelectedLocationState extends State<SelectedLocation> {
                           buttonText: 'Save',
                           onPressed: () {
                             if ((EventService()
-                                        .eventNotificationModel
-                                        .venue
+                                        .eventNotificationModel!
+                                        .venue!
                                         .label !=
                                     null) &&
                                 (EventService()
-                                    .eventNotificationModel
-                                    .venue
-                                    .label
+                                    .eventNotificationModel!
+                                    .venue!
+                                    .label!
                                     .isNotEmpty)) {
                               EventService()
-                                  .eventNotificationModel
-                                  .venue
-                                  .latitude = widget.point.latitude;
+                                  .eventNotificationModel!
+                                  .venue!
+                                  .latitude = widget.point!.latitude;
 
                               EventService()
-                                  .eventNotificationModel
-                                  .venue
-                                  .longitude = widget.point.longitude;
+                                  .eventNotificationModel!
+                                  .venue!
+                                  .longitude = widget.point!.longitude;
 
                               EventService().update(
                                   eventData:

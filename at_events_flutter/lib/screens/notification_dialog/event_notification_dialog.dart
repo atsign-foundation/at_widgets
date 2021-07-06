@@ -20,13 +20,13 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class EventNotificationDialog extends StatefulWidget {
-  String event, invitedPeopleCount, timeAndDate, userName;
-  final EventNotificationModel eventData;
+  String? event, invitedPeopleCount, timeAndDate, userName;
+  final EventNotificationModel? eventData;
   bool showMembersCount;
 
-  int minutes;
+  int? minutes;
   EventNotificationDialog(
-      {@required this.eventData,
+      {required this.eventData,
       this.event,
       this.invitedPeopleCount,
       this.timeAndDate,
@@ -39,12 +39,12 @@ class EventNotificationDialog extends StatefulWidget {
 }
 
 class _EventNotificationDialogState extends State<EventNotificationDialog> {
-  int minutes;
-  EventNotificationModel concurrentEvent;
-  bool isOverlap = false, loading = false, result;
-  AtContact contact;
-  Uint8List image;
-  String locationUserImageToShow;
+  int? minutes;
+  EventNotificationModel? concurrentEvent;
+  bool? isOverlap = false, loading = false, result;
+  AtContact? contact;
+  Uint8List? image;
+  String? locationUserImageToShow;
 
   @override
   void initState() {
@@ -60,13 +60,13 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
   // ignore: always_declare_return_types
   getEventCreator() async {
     var contact = await getAtSignDetails(widget.eventData != null
-        ? widget.eventData.atsignCreator
+        ? widget.eventData!.atsignCreator
         : locationUserImageToShow);
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
+      if (contact.tags != null && contact.tags!['image'] != null) {
+        List<int>? intList = contact.tags!['image'].cast<int>();
         setState(() {
-          image = Uint8List.fromList(intList);
+          image = Uint8List.fromList(intList!);
         });
       }
     }
@@ -78,8 +78,8 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     dynamic overlapData = [];
 
     allSavedEvents.forEach((event) {
-      var keyMicrosecondId = event.key.split('createevent-')[1].split('@')[0];
-      if (!event.key.contains(keyMicrosecondId)) {
+      var keyMicrosecondId = event.key!.split('createevent-')[1].split('@')[0];
+      if (!event.key!.contains(keyMicrosecondId)) {
         allEventsExcludingCurrentEvent.add(event);
       }
     });
@@ -107,7 +107,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                      '${widget.eventData.atsignCreator} wants to share an event with you. Are you sure you want to join and share your location with the group?',
+                      '${widget.eventData!.atsignCreator} wants to share an event with you. Are you sure you want to join and share your location with the group?',
                       style: CustomTextStyles().grey16,
                       textAlign: TextAlign.center),
                   SizedBox(height: 30),
@@ -118,7 +118,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(30.toFont)),
                               child: Image.memory(
-                                image,
+                                image!,
                                 width: 50.toFont,
                                 height: 50.toFont,
                                 fit: BoxFit.fill,
@@ -126,7 +126,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                             )
                           : ContactInitial(
                               initials: widget.eventData != null
-                                  ? widget.eventData.atsignCreator
+                                  ? widget.eventData!.atsignCreator
                                   : locationUserImageToShow,
                               size: 60,
                             ),
@@ -144,7 +144,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                 ),
                                 child: Center(
                                     child: Text(
-                                  '+${widget.eventData.group.members.length}',
+                                  '+${widget.eventData!.group!.members!.length}',
                                   style: CustomTextStyles().black10,
                                 )),
                               ),
@@ -155,7 +155,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
                   widget.eventData != null
                       ? Text(
-                          widget.eventData.title,
+                          widget.eventData!.title!,
                           style: CustomTextStyles().black18,
                           textAlign: TextAlign.center,
                         )
@@ -163,21 +163,21 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                   SizedBox(height: widget.eventData != null ? 5.toHeight : 0),
                   widget.eventData != null
                       ? Text(
-                          (widget.eventData.group.members.length == 1)
-                              ? '${widget.eventData.group.members.length} person invited'
-                              : '${widget.eventData.group.members.length} people invited',
+                          (widget.eventData!.group!.members!.length == 1)
+                              ? '${widget.eventData!.group!.members!.length} person invited'
+                              : '${widget.eventData!.group!.members!.length} people invited',
                           style: CustomTextStyles().grey14)
                       : SizedBox(),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
                   widget.eventData != null
                       ? Text(
-                          '${timeOfDayToString(widget.eventData.event.startTime)} on ${dateToString(widget.eventData.event.date)}',
+                          '${timeOfDayToString(widget.eventData!.event!.startTime!)} on ${dateToString(widget.eventData!.event!.date!)}',
                           style: CustomTextStyles().black14)
                       : SizedBox(),
-                  isOverlap ? SizedBox(height: 10.toHeight) : SizedBox(),
-                  isOverlap ? Divider(height: 2) : SizedBox(),
+                  isOverlap! ? SizedBox(height: 10.toHeight) : SizedBox(),
+                  isOverlap! ? Divider(height: 2) : SizedBox(),
                   SizedBox(height: 10.toHeight),
-                  isOverlap
+                  isOverlap!
                       ? Text(
                           'You already have an event scheduled during this hour. Are you sure you want to accept another?',
                           textAlign: TextAlign.center,
@@ -185,19 +185,19 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                         )
                       : SizedBox(),
                   SizedBox(height: 10.toHeight),
-                  isOverlap
-                      ? Text(concurrentEvent.title,
+                  isOverlap!
+                      ? Text(concurrentEvent!.title!,
                           style: CustomTextStyles().black18)
                       : SizedBox(),
                   SizedBox(height: 5.toHeight),
                   SizedBox(height: 10.toHeight),
-                  isOverlap
+                  isOverlap!
                       ? Text(
-                          '${timeOfDayToString(concurrentEvent.event.startTime)} on ${dateToString(concurrentEvent.event.date)}',
+                          '${timeOfDayToString(concurrentEvent!.event!.startTime!)} on ${dateToString(concurrentEvent!.event!.date!)}',
                           style: CustomTextStyles().black14)
                       : SizedBox(),
                   SizedBox(height: 10.toHeight),
-                  loading
+                  loading!
                       ? CircularProgressIndicator()
                       : CustomButton(
                           onTap: () => () async {
@@ -211,12 +211,12 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                     isStartTime: true,
                                     options: MixedConstants.startTimeOptions,
                                     onSelectionChanged: (dynamic startTime) {
-                                      widget.eventData.group.members
+                                      widget.eventData!.group!.members!
                                           .forEach((groupMember) {
                                         if (groupMember.atSign ==
                                             AtEventNotificationListener()
                                                 .currentAtSign) {
-                                          groupMember.tags['shareFrom'] =
+                                          groupMember.tags!['shareFrom'] =
                                               startTime.toString();
                                         }
                                       });
@@ -231,12 +231,12 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                 MixedConstants.endTimeOptions,
                                             onSelectionChanged:
                                                 (dynamic endTime) async {
-                                              widget.eventData.group.members
+                                              widget.eventData!.group!.members!
                                                   .forEach((groupMember) {
                                                 if (groupMember.atSign ==
                                                     AtEventNotificationListener()
                                                         .currentAtSign) {
-                                                  groupMember.tags['shareTo'] =
+                                                  groupMember.tags!['shareTo'] =
                                                       endTime.toString();
                                                 }
                                               });
@@ -250,7 +250,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                               // updateEvent(widget.eventData);
                                               await EventKeyStreamService()
                                                   .actionOnEvent(
-                                                      widget.eventData,
+                                                      widget.eventData!,
                                                       ATKEY_TYPE_ENUM
                                                           .ACKNOWLEDGEEVENT,
                                                       isAccepted: true,
@@ -277,13 +277,13 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                   fontSize: 15.toFont)),
                         ),
                   SizedBox(height: 10.toHeight),
-                  loading
+                  loading!
                       ? SizedBox()
                       : InkWell(
                           onTap: () async {
                             startLoading();
                             await EventKeyStreamService().actionOnEvent(
-                                widget.eventData,
+                                widget.eventData!,
                                 ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
                                 isAccepted: false,
                                 isExited: true);

@@ -14,12 +14,12 @@ class LoadingDialog {
   factory LoadingDialog() => _instance;
   bool _showing = false;
 
-  void show({String text}) {
+  void show({String? text}) {
     if (!_showing) {
       _showing = true;
       AtEventNotificationListener()
-          .navKey
-          .currentState
+          .navKey!
+          .currentState!
           .push(CustomPopupRoutes(
               pageBuilder: (_, __, ___) {
                 print('building loader');
@@ -57,7 +57,7 @@ class LoadingDialog {
   void hide() {
     print('hide called');
     if (_showing) {
-      AtEventNotificationListener().navKey.currentState.pop();
+      AtEventNotificationListener().navKey!.currentState!.pop();
       _showing = false;
     }
   }

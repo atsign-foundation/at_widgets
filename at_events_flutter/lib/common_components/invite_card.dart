@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class InviteCard extends StatefulWidget {
-  final String event, invitedPeopleCount, timeAndDate, atSign, memberCount;
+  final String? event, invitedPeopleCount, timeAndDate, atSign, memberCount;
   final bool isStartTime;
   InviteCard(
       {this.event,
@@ -26,7 +26,7 @@ class InviteCard extends StatefulWidget {
 }
 
 class _InviteCardState extends State<InviteCard> {
-  Uint8List memoryImage;
+  Uint8List? memoryImage;
   @override
   void initState() {
     super.initState();
@@ -34,12 +34,12 @@ class _InviteCardState extends State<InviteCard> {
   }
 
   getAtsignDetails() async {
-    AtContact contact = await getAtSignDetails(widget.atSign);
+    AtContact contact = await getAtSignDetails(widget.atSign!);
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
+      if (contact.tags != null && contact.tags!['image'] != null) {
+        List<int>? intList = contact.tags!['image'].cast<int>();
         setState(() {
-          memoryImage = Uint8List.fromList(intList);
+          memoryImage = Uint8List.fromList(intList!);
         });
       }
     }
@@ -88,16 +88,16 @@ class _InviteCardState extends State<InviteCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 widget.event != null
-                    ? Text(widget.event, style: CustomTextStyles().black18)
+                    ? Text(widget.event!, style: CustomTextStyles().black18)
                     : SizedBox(),
                 SizedBox(height: 5.toHeight),
                 widget.invitedPeopleCount != null
-                    ? Text(widget.invitedPeopleCount,
+                    ? Text(widget.invitedPeopleCount!,
                         style: CustomTextStyles().grey14)
                     : SizedBox(),
                 SizedBox(height: 10.toHeight),
                 widget.timeAndDate != null
-                    ? Text(widget.timeAndDate,
+                    ? Text(widget.timeAndDate!,
                         style: CustomTextStyles().black14)
                     : SizedBox(),
               ],

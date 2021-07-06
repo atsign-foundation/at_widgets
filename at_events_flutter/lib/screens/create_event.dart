@@ -26,10 +26,10 @@ import 'package:at_contact/at_contact.dart';
 import '../at_events_flutter.dart';
 
 class CreateEvent extends StatefulWidget {
-  final AtClientImpl atClientInstance;
-  final EventNotificationModel eventData;
-  final ValueChanged<EventNotificationModel> onEventSaved;
-  final List<EventNotificationModel> createdEvents;
+  final AtClientImpl? atClientInstance;
+  final EventNotificationModel? eventData;
+  final ValueChanged<EventNotificationModel>? onEventSaved;
+  final List<EventNotificationModel>? createdEvents;
   final isUpdate;
   CreateEvent(this.atClientInstance,
       {this.isUpdate = false,
@@ -41,9 +41,9 @@ class CreateEvent extends StatefulWidget {
 }
 
 class _CreateEventState extends State<CreateEvent> {
-  List<AtContact> selectedContactList;
-  List<GroupContactsModel> selectedGroupContact;
-  bool isLoading;
+  List<AtContact>? selectedContactList;
+  late List<GroupContactsModel?> selectedGroupContact;
+  late bool isLoading;
 
   @override
   void initState() {
@@ -83,7 +83,7 @@ class _CreateEventState extends State<CreateEvent> {
                     StreamBuilder(
                         stream: EventService().eventStream,
                         builder: (BuildContext context, snapshot) {
-                          EventNotificationModel eventData = snapshot.data;
+                          EventNotificationModel? eventData = snapshot.data;
 
                           if (eventData != null && snapshot.hasData) {
                             return Container(
@@ -131,7 +131,7 @@ class _CreateEventState extends State<CreateEvent> {
                                   SizedBox(height: 25),
                                   (EventService().selectedContacts != null &&
                                           EventService()
-                                                  .selectedContacts
+                                                  .selectedContacts!
                                                   .length >
                                               0)
                                       ? (OverlappingContacts(
@@ -140,7 +140,7 @@ class _CreateEventState extends State<CreateEvent> {
                                       : SizedBox(),
                                   (EventService().selectedContacts != null &&
                                           EventService()
-                                                  .selectedContacts
+                                                  .selectedContacts!
                                                   .length >
                                               0)
                                       ? SizedBox(height: 25)
@@ -156,12 +156,12 @@ class _CreateEventState extends State<CreateEvent> {
                                     hintText: 'Title of the event',
                                     initialValue: eventData.title != null
                                         ? EventService()
-                                            .eventNotificationModel
-                                            .title
+                                            .eventNotificationModel!
+                                            .title!
                                         : '',
                                     value: (val) {
                                       EventService()
-                                          .eventNotificationModel
+                                          .eventNotificationModel!
                                           .title = val;
                                     },
                                   ),
@@ -174,8 +174,8 @@ class _CreateEventState extends State<CreateEvent> {
                                     height: 50.toHeight,
                                     isReadOnly: true,
                                     hintText: 'Start typing or select from map',
-                                    initialValue: eventData.venue.label != null
-                                        ? eventData.venue.label
+                                    initialValue: eventData.venue!.label != null
+                                        ? eventData.venue!.label!
                                         : '',
                                     onTap: () => bottomSheet(
                                         context,
@@ -201,13 +201,13 @@ class _CreateEventState extends State<CreateEvent> {
                                       ),
                                       Checkbox(
                                         value: (EventService()
-                                                        .eventNotificationModel
-                                                        .event
+                                                        .eventNotificationModel!
+                                                        .event!
                                                         .isRecurring !=
                                                     null &&
                                                 EventService()
-                                                        .eventNotificationModel
-                                                        .event
+                                                        .eventNotificationModel!
+                                                        .event!
                                                         .isRecurring ==
                                                     false)
                                             ? true
@@ -220,39 +220,39 @@ class _CreateEventState extends State<CreateEvent> {
                                     ],
                                   ),
                                   (EventService()
-                                              .eventNotificationModel
-                                              .event
+                                              .eventNotificationModel!
+                                              .event!
                                               .isRecurring ==
                                           false)
                                       ? (EventService()
-                                                      .eventNotificationModel
-                                                      .event
+                                                      .eventNotificationModel!
+                                                      .event!
                                                       .date !=
                                                   null &&
                                               EventService()
-                                                      .eventNotificationModel
-                                                      .event
+                                                      .eventNotificationModel!
+                                                      .event!
                                                       .startTime !=
                                                   null &&
                                               EventService()
-                                                      .eventNotificationModel
-                                                      .event
+                                                      .eventNotificationModel!
+                                                      .event!
                                                       .endTime !=
                                                   null)
                                           ? Text(
                                               ((dateToString(eventData
-                                                              .event.date) ==
+                                                              .event!.date!) ==
                                                           dateToString(
                                                               DateTime.now()))
-                                                      ? 'Event today (${timeOfDayToString(eventData.event.startTime)})'
-                                                      : 'Event on ${(dateToString(eventData.event.date) != dateToString(DateTime.now()) ? dateToString(eventData.event.date) : dateToString(DateTime.now()))} (${timeOfDayToString(eventData.event.startTime)})') +
+                                                      ? 'Event today (${timeOfDayToString(eventData.event!.startTime!)})'
+                                                      : 'Event on ${(dateToString(eventData.event!.date!) != dateToString(DateTime.now()) ? dateToString(eventData.event!.date!) : dateToString(DateTime.now()))} (${timeOfDayToString(eventData.event!.startTime!)})') +
                                                   ((dateToString(eventData
-                                                              .event.endDate) ==
+                                                              .event!.endDate!) ==
                                                           dateToString(eventData
-                                                              .event.date))
+                                                              .event!.date!))
                                                       ? ' to'
-                                                      : ' to ${dateToString(eventData.event.endDate)}') +
-                                                  (' (${timeOfDayToString(eventData.event.endTime)})'),
+                                                      : ' to ${dateToString(eventData.event!.endDate!)}') +
+                                                  (' (${timeOfDayToString(eventData.event!.endTime!)})'),
 
                                               ///
                                               // 'Event on ${dateToString(eventData.event.date)} (${timeOfDayToString(eventData.event.startTime)}- ${timeOfDayToString(eventData.event.endTime)})',
@@ -263,13 +263,13 @@ class _CreateEventState extends State<CreateEvent> {
                                       : SizedBox(),
                                   SizedBox(height: 20.toHeight),
                                   (EventService()
-                                                  .eventNotificationModel
-                                                  .event
+                                                  .eventNotificationModel!
+                                                  .event!
                                                   .isRecurring !=
                                               null &&
                                           EventService()
-                                                  .eventNotificationModel
-                                                  .event
+                                                  .eventNotificationModel!
+                                                  .event!
                                                   .isRecurring ==
                                               true)
                                       ? Container(
@@ -277,37 +277,37 @@ class _CreateEventState extends State<CreateEvent> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              (eventData.event.repeatCycle ==
+                                              (eventData.event!.repeatCycle ==
                                                           RepeatCycle.MONTH &&
-                                                      eventData.event.date !=
+                                                      eventData.event!.date !=
                                                           null &&
-                                                      eventData.event
+                                                      eventData.event!
                                                               .repeatDuration !=
                                                           null)
                                                   ? Text(
-                                                      'Repeats every ${eventData.event.repeatDuration} month on ${eventData.event.date.day} day')
-                                                  : (eventData.event
+                                                      'Repeats every ${eventData.event!.repeatDuration} month on ${eventData.event!.date!.day} day')
+                                                  : (eventData.event!
                                                                   .repeatCycle ==
                                                               RepeatCycle
                                                                   .WEEK &&
-                                                          eventData.event
+                                                          eventData.event!
                                                                   .occursOn !=
                                                               null)
                                                       ? Text(
-                                                          'Repeats every ${eventData.event.repeatDuration} week on ${getWeekString(eventData.event.occursOn)}')
+                                                          'Repeats every ${eventData.event!.repeatDuration} week on ${getWeekString(eventData.event!.occursOn)}')
                                                       : SizedBox(),
                                               EventService()
-                                                              .eventNotificationModel
-                                                              .event
+                                                              .eventNotificationModel!
+                                                              .event!
                                                               .endsOn !=
                                                           null &&
                                                       EventService()
-                                                              .eventNotificationModel
-                                                              .event
+                                                              .eventNotificationModel!
+                                                              .event!
                                                               .endsOn ==
                                                           EndsOn.AFTER
                                                   ? Text(
-                                                      'Ends after ${eventData.event.endEventAfterOccurance} occurrence')
+                                                      'Ends after ${eventData.event!.endEventAfterOccurance} occurrence')
                                                   : SizedBox(),
                                             ],
                                           ),
@@ -371,7 +371,7 @@ class _CreateEventState extends State<CreateEvent> {
     }
 
     bool isOverlap = EventService().showConcurrentEventDialog(
-        widget.createdEvents, EventService().eventNotificationModel, context);
+        widget.createdEvents, EventService().eventNotificationModel, context)!;
 
     if (isOverlap) {
       setState(() {

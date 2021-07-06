@@ -16,18 +16,18 @@ class HomeEventService {
 
     var isRequired = true;
     var currentAtsign =
-        AtEventNotificationListener().atClientInstance.currentAtSign;
+        AtEventNotificationListener().atClientInstance!.currentAtSign;
 
-    if (event.group.members.isEmpty) return true;
+    if (event.group!.members!.isEmpty) return true;
 
-    event.group.members.forEach((member) {
-      if (member.atSign[0] != '@') member.atSign = '@' + member.atSign;
-      if (currentAtsign[0] != '@') currentAtsign = '@' + currentAtsign;
+    event.group!.members!.forEach((member) {
+      if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
+      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
 
-      if ((member.tags['isAccepted'] != null &&
-              member.tags['isAccepted'] == true) &&
-          member.tags['isExited'] == false &&
-          member.atSign.toLowerCase() == currentAtsign.toLowerCase()) {
+      if ((member.tags!['isAccepted'] != null &&
+              member.tags!['isAccepted'] == true) &&
+          member.tags!['isExited'] == false &&
+          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
         isRequired = false;
       }
     });
@@ -41,23 +41,23 @@ class HomeEventService {
     if (event.isCancelled) return 'Cancelled';
     var label = 'Action required';
     var currentAtsign =
-        AtEventNotificationListener().atClientInstance.currentAtSign;
+        AtEventNotificationListener().atClientInstance!.currentAtSign;
 
-    if (event.group.members.isEmpty) return '';
+    if (event.group!.members!.isEmpty) return '';
 
-    event.group.members.forEach((member) {
-      if (member.atSign[0] != '@') member.atSign = '@' + member.atSign;
-      if (currentAtsign[0] != '@') currentAtsign = '@' + currentAtsign;
+    event.group!.members!.forEach((member) {
+      if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
+      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
 
-      if (member.tags['isExited'] != null &&
-          member.tags['isExited'] == true &&
-          member.atSign.toLowerCase() == currentAtsign.toLowerCase()) {
+      if (member.tags!['isExited'] != null &&
+          member.tags!['isExited'] == true &&
+          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
         label = 'Request declined';
-      } else if (member.tags['isExited'] != null &&
-          member.tags['isExited'] == false &&
-          member.tags['isAccepted'] != null &&
-          member.tags['isAccepted'] == false &&
-          member.atSign.toLowerCase() == currentAtsign.toLowerCase() &&
+      } else if (member.tags!['isExited'] != null &&
+          member.tags!['isExited'] == false &&
+          member.tags!['isAccepted'] != null &&
+          member.tags!['isAccepted'] == false &&
+          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase() &&
           haveResponded) {
         label = 'Pending request';
       }
@@ -68,13 +68,13 @@ class HomeEventService {
 
   String getSubTitle(EventNotificationModel _event) {
     return _event.event != null
-        ? _event.event.date != null
-            ? 'Event on ${dateToString(_event.event.date)}'
+        ? _event.event!.date != null
+            ? 'Event on ${dateToString(_event.event!.date!)}'
             : ''
         : '';
   }
 
-  String getSemiTitle(EventNotificationModel _event, bool _haveResponded) {
+  String? getSemiTitle(EventNotificationModel _event, bool _haveResponded) {
     return _event.group != null
         ? (isActionRequired(_event))
             ? getActionString(_event, _haveResponded)
@@ -83,10 +83,10 @@ class HomeEventService {
   }
 
   bool calculateShowRetry(EventKeyLocationModel _eventKeyModel) {
-    if ((_eventKeyModel.eventNotificationModel.group != null) &&
-        (isActionRequired(_eventKeyModel.eventNotificationModel)) &&
+    if ((_eventKeyModel.eventNotificationModel!.group != null) &&
+        (isActionRequired(_eventKeyModel.eventNotificationModel!)) &&
         (_eventKeyModel.haveResponded)) {
-      if (getActionString(_eventKeyModel.eventNotificationModel,
+      if (getActionString(_eventKeyModel.eventNotificationModel!,
               _eventKeyModel.haveResponded) ==
           'Pending request') {
         return true;
@@ -105,7 +105,7 @@ class HomeEventService {
         return null;
       }
       return showDialog<void>(
-        context: AtEventNotificationListener().navKey.currentContext,
+        context: AtEventNotificationListener().navKey!.currentContext!,
         barrierDismissible: true,
         builder: (BuildContext context) {
           return EventNotificationDialog(eventData: eventNotificationModel);

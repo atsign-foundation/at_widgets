@@ -3,7 +3,7 @@ import 'package:at_contact/at_contact.dart';
 
 import 'event_key_stream_service.dart';
 
-Future<AtContact> getAtSignDetails(String atSign) async {
+Future<AtContact> getAtSignDetails(String? atSign) async {
   var atContact = getCachedContactDetail(atSign);
   if (atContact == null) {
     var contactDetails = await getContactDetails(atSign);
@@ -15,7 +15,7 @@ Future<AtContact> getAtSignDetails(String atSign) async {
   return atContact;
 }
 
-AtContact getCachedContactDetail(String atsign) {
+AtContact? getCachedContactDetail(String? atsign) {
   if (atsign ==
       EventKeyStreamService().atContactImpl?.atClient?.currentAtSign) {
     return EventKeyStreamService().loggedInUserDetails;
@@ -53,14 +53,14 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
     // firstname
     key.key = contactFields[0];
     var result =
-        await EventKeyStreamService().atClientInstance.get(key).catchError(
+        await EventKeyStreamService().atClientInstance!.get(key).catchError(
             // ignore: return_of_invalid_type_from_catch_error
             (e) => print('error in get ${e.errorCode} ${e.errorMessage}'));
     var firstname = result.value;
 
     // lastname
     key.key = contactFields[1];
-    result = await EventKeyStreamService().atClientInstance.get(key);
+    result = await EventKeyStreamService().atClientInstance!.get(key);
     var lastname = result.value;
 
     // construct name
@@ -70,9 +70,9 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
     }
 
     // profile picture
-    key.metadata.isBinary = true;
+    key.metadata!.isBinary = true;
     key.key = contactFields[2];
-    result = await EventKeyStreamService().atClientInstance.get(key);
+    result = await EventKeyStreamService().atClientInstance!.get(key);
     var image = result.value;
     contactDetails['name'] = name;
     contactDetails['image'] = image;

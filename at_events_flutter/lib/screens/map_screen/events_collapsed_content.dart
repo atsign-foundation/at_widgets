@@ -15,26 +15,26 @@ import 'package:flutter/material.dart';
 import 'participants.dart';
 
 Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
-  var isExited = false;
+  bool? isExited = false;
 
-  eventListenerKeyword.group.members.forEach((groupMember) {
+  eventListenerKeyword.group!.members!.forEach((groupMember) {
     if (groupMember.atSign ==
-        AtEventNotificationListener().atClientInstance.currentAtSign) {
-      isExited = groupMember.tags['isExited'];
+        AtEventNotificationListener().atClientInstance!.currentAtSign) {
+      isExited = groupMember.tags!['isExited'];
     }
   });
 
-  var isSharingEvent = false,
+  bool? isSharingEvent = false,
       isAdmin = false,
-      currentAtSign = AtEventNotificationListener().currentAtSign;
+      currentAtSign = AtEventNotificationListener().currentAtSign as bool?;
   isAdmin = eventListenerKeyword.atsignCreator == currentAtSign;
   if (isAdmin) {
-    if (eventListenerKeyword.isSharing) isSharingEvent = true;
+    if (eventListenerKeyword.isSharing!) isSharingEvent = true;
   } else {
     if (eventListenerKeyword != null) {
-      eventListenerKeyword.group.members.forEach((groupMember) {
+      eventListenerKeyword.group!.members!.forEach((groupMember) {
         if (groupMember.atSign == currentAtSign) {
-          if (groupMember.tags['isSharing'] == true) {
+          if (groupMember.tags!['isSharing'] == true) {
             isSharingEvent = true;
           }
         }
@@ -75,7 +75,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                   children: [
                     Flexible(
                       child: Text(
-                        eventListenerKeyword.title,
+                        eventListenerKeyword.title!,
                         style: TextStyle(
                             color: AllColors().Black, fontSize: 18.toFont),
                         maxLines: 1,
@@ -87,8 +87,8 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                             onTap: () {
                               bottomSheet(
                                 AtEventNotificationListener()
-                                    .navKey
-                                    .currentContext,
+                                    .navKey!
+                                    .currentContext!,
                                 CreateEvent(
                                   AtEventNotificationListener()
                                       .atClientInstance,
@@ -127,7 +127,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                   height: 3,
                 ),
                 Text(
-                  dateToString(eventListenerKeyword.event.date) ?? '',
+                  dateToString(eventListenerKeyword.event!.date!) ?? '',
                   style: CustomTextStyles().darkGrey14,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -136,7 +136,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                   height: 3,
                 ),
                 Text(
-                  '${timeOfDayToString(eventListenerKeyword.event.startTime)} - ${timeOfDayToString(eventListenerKeyword.event.endTime)}' ??
+                  '${timeOfDayToString(eventListenerKeyword.event!.startTime!)} - ${timeOfDayToString(eventListenerKeyword.event!.endTime!)}' ??
                       'Event timings',
                   style: CustomTextStyles().darkGrey14,
                   maxLines: 1,
@@ -145,15 +145,15 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                 Divider(),
                 DisplayTile(
                   title:
-                      '${eventListenerKeyword.atsignCreator} and ${eventListenerKeyword.group.members.length} more' ??
+                      '${eventListenerKeyword.atsignCreator} and ${eventListenerKeyword.group!.members!.length} more' ??
                           'Event participants',
                   atsignCreator: eventListenerKeyword.atsignCreator,
-                  semiTitle: (eventListenerKeyword.group.members.length == 1)
-                      ? '${eventListenerKeyword.group.members.length} person'
-                      : '${eventListenerKeyword.group.members.length} people',
-                  number: eventListenerKeyword.group.members.length,
+                  semiTitle: (eventListenerKeyword.group!.members!.length == 1)
+                      ? '${eventListenerKeyword.group!.members!.length} person'
+                      : '${eventListenerKeyword.group!.members!.length} people',
+                  number: eventListenerKeyword.group!.members!.length,
                   subTitle:
-                      'Share my location from ${timeOfDayToString(eventListenerKeyword.event.startTime)} on ${dateToString(eventListenerKeyword.event.date)}',
+                      'Share my location from ${timeOfDayToString(eventListenerKeyword.event!.startTime!)} on ${dateToString(eventListenerKeyword.event!.date!)}',
                 ),
               ],
             ),
@@ -222,7 +222,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
           // children: [
           InkWell(
             onTap: () => bottomSheet(
-                AtEventNotificationListener().navKey.currentContext,
+                AtEventNotificationListener().navKey!.currentContext!,
                 Participants(),
                 422),
             child: Text(
@@ -238,7 +238,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
               style: CustomTextStyles().darkGrey16,
               children: [
                 TextSpan(
-                  text: ' ${eventListenerKeyword.venue.label}' ?? ' ',
+                  text: ' ${eventListenerKeyword.venue!.label}' ?? ' ',
                   style: CustomTextStyles().darkGrey14,
                 )
               ],
@@ -253,10 +253,10 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                 style: CustomTextStyles().darkGrey16,
               ),
               Switch(
-                  value: isSharingEvent,
+                  value: isSharingEvent!,
                   onChanged: (value) async {
                     LoadingDialog().show(
-                        text: isAdmin
+                        text: isAdmin!
                             ? 'Updating data'
                             : 'Sending request to update data');
                     try {
@@ -277,14 +277,14 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                           CustomToast().show(
                               'Request to update data is submitted',
                               AtEventNotificationListener()
-                                  .navKey
+                                  .navKey!
                                   .currentContext);
                         }
                       } else {
                         CustomToast().show(
                             'something went wrong , please try again.',
                             AtEventNotificationListener()
-                                .navKey
+                                .navKey!
                                 .currentContext);
                       }
                       LoadingDialog().hide();
@@ -292,7 +292,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                       print(e);
                       CustomToast().show(
                           'something went wrong , please try again.',
-                          AtEventNotificationListener().navKey.currentContext);
+                          AtEventNotificationListener().navKey!.currentContext);
                       LoadingDialog().hide();
                     }
                   })
@@ -305,9 +305,9 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                   child: InkWell(
                     onTap: () async {
                       var isExited = true;
-                      eventListenerKeyword.group.members.forEach((groupMember) {
+                      eventListenerKeyword.group!.members!.forEach((groupMember) {
                         if (groupMember.atSign == currentAtSign) {
-                          if (groupMember.tags['isExited'] == false) {
+                          if (groupMember.tags!['isExited'] == false) {
                             isExited = false;
                           }
                         }
@@ -318,34 +318,34 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                         try {
                           await EventKeyStreamService().actionOnEvent(
                             eventListenerKeyword,
-                            isAdmin
+                            isAdmin!
                                 ? ATKEY_TYPE_ENUM.CREATEEVENT
                                 : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
                             isExited: true,
                           );
                           LoadingDialog().hide();
                           Navigator.of(AtEventNotificationListener()
-                                  .navKey
-                                  .currentContext)
+                                  .navKey!
+                                  .currentContext!)
                               .pop();
                           CustomToast().show(
                               'Request to update data is submitted',
                               AtEventNotificationListener()
-                                  .navKey
+                                  .navKey!
                                   .currentContext);
                         } catch (e) {
                           print(e);
                           CustomToast().show(
                               'something went wrong , please try again.',
                               AtEventNotificationListener()
-                                  .navKey
+                                  .navKey!
                                   .currentContext);
                           LoadingDialog().hide();
                         }
                       }
                     },
                     child: Text(
-                      isExited ? 'Exited' : 'Exit Event',
+                      isExited! ? 'Exited' : 'Exit Event',
                       style: CustomTextStyles().orange16,
                     ),
                   ),
@@ -357,7 +357,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                     onTap: () async {
                       if (!eventListenerKeyword.isCancelled) {
                         LoadingDialog().show(
-                            text: isAdmin
+                            text: isAdmin!
                                 ? 'Updating data'
                                 : 'Sending request to update data');
                         try {
@@ -369,15 +369,15 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                           );
                           LoadingDialog().hide();
                           Navigator.of(AtEventNotificationListener()
-                                  .navKey
-                                  .currentContext)
+                                  .navKey!
+                                  .currentContext!)
                               .pop();
                         } catch (e) {
                           print(e);
                           CustomToast().show(
                               'something went wrong , please try again.',
                               AtEventNotificationListener()
-                                  .navKey
+                                  .navKey!
                                   .currentContext);
                           LoadingDialog().hide();
                         }

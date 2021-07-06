@@ -23,11 +23,11 @@ class MixedConstants {
     'At the end of the day'
   ];
 
-  static String _map_key;
+  static String? _map_key;
   static String setMapKey(String _key) => _map_key = _key;
-  static String get MAP_KEY => _map_key;
+  static String? get MAP_KEY => _map_key;
 
-  static String _api_key;
+  static String? _api_key;
   static String setApiKey(String _key) => _api_key = _key;
-  static String get API_KEY => _api_key;
+  static String? get API_KEY => _api_key;
 }

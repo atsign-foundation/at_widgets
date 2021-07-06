@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:latlong/latlong.dart';
 
 class EventMemberLocation {
-  double lat, long;
-  String key, fromAtSign, receiver;
-  DateTime startSharingFrom, shareUntil;
+  double? lat, long;
+  String? key, fromAtSign, receiver;
+  DateTime? startSharingFrom, shareUntil;
 
   EventMemberLocation(
       {this.lat,
@@ -15,7 +15,7 @@ class EventMemberLocation {
       this.startSharingFrom,
       this.shareUntil});
 
-  LatLng get getLatLng => LatLng(lat, long);
+  LatLng get getLatLng => LatLng(lat!, long!);
 
   EventMemberLocation.fromJson(Map<String, dynamic> json)
       : fromAtSign = json['fromAtSign'],
@@ -42,10 +42,10 @@ class EventMemberLocation {
       'lat': eventMemberLocation.lat.toString(),
       'long': eventMemberLocation.long.toString(),
       'startSharingFrom': eventMemberLocation.startSharingFrom != null
-          ? eventMemberLocation.startSharingFrom.toUtc().toString()
+          ? eventMemberLocation.startSharingFrom!.toUtc().toString()
           : null,
       'shareUntil': eventMemberLocation.shareUntil != null
-          ? eventMemberLocation.shareUntil.toUtc().toString()
+          ? eventMemberLocation.shareUntil!.toUtc().toString()
           : null,
       'key': eventMemberLocation.key.toString(),
     });
