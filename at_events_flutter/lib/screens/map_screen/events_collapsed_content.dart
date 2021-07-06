@@ -12,6 +12,8 @@ import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
+import 'participants.dart';
+
 Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
   var isExited = false;
 
@@ -218,6 +220,16 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
           //   crossAxisAlignment: CrossAxisAlignment.start,
           //   mainAxisSize: MainAxisSize.min,
           // children: [
+          InkWell(
+            onTap: () => bottomSheet(
+                AtEventNotificationListener().navKey.currentContext,
+                Participants(),
+                422),
+            child: Text(
+              'See Participants',
+              style: CustomTextStyles().orange14,
+            ),
+          ),
           Divider(),
           Flexible(
               child: RichText(

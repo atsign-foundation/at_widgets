@@ -20,13 +20,16 @@ class EventsMapScreenData {
   static final EventsMapScreenData _instance = EventsMapScreenData._();
   factory EventsMapScreenData() => _instance;
 
-  ValueNotifier<EventNotificationModel> _eventNotifier;
+  ValueNotifier<EventNotificationModel> eventNotifier;
   List<HybridModel> markers;
+  List<String> exitedAtSigns;
   int count = 0;
 
   void moveToEventScreen(EventNotificationModel _eventNotificationModel) async {
     markers = [];
-    _eventNotifier = ValueNotifier(_eventNotificationModel);
+    exitedAtSigns = [];
+    _calculateExitedAtsigns(_eventNotificationModel);
+    eventNotifier = ValueNotifier(_eventNotificationModel);
     markers.add(addVenueMarker(_eventNotificationModel));
 
     // ignore: unawaited_futures
@@ -43,7 +46,15 @@ class EventsMapScreenData {
     _hybridModelList.forEach((element) {
       markers.add(element);
     });
-    _eventNotifier.notifyListeners();
+    eventNotifier.notifyListeners();
+  }
+
+  void _calculateExitedAtsigns(EventNotificationModel _event) {
+    _event.group.members.forEach((element) {
+      if ((element.tags['isExited']) && (!element.tags['isAccepted'])) {
+        exitedAtSigns.add(element.atSign);
+      }
+    });
   }
 
   List<List<EventKeyLocationModel>> _listOfLists = [];
@@ -68,9 +79,12 @@ class EventsMapScreenData {
       List<EventKeyLocationModel> _list) async {
     count++;
     print('count++ $count');
-    if (_eventNotifier != null) {
+    if (eventNotifier != null) {
       for (var i = 0; i < _list.length; i++) {
-        if (_list[i].eventNotificationModel.key == _eventNotifier.value.key) {
+        if (_list[i].eventNotificationModel.key == eventNotifier.value.key) {
+          exitedAtSigns = [];
+          _calculateExitedAtsigns(_list[i].eventNotificationModel);
+
           markers = [];
 
           markers.add(addVenueMarker(_list[i].eventNotificationModel));
@@ -81,8 +95,8 @@ class EventsMapScreenData {
             markers.add(element);
           });
 
-          _eventNotifier.value = _list[i].eventNotificationModel;
-          _eventNotifier.notifyListeners();
+          eventNotifier.value = _list[i].eventNotificationModel;
+          eventNotifier.notifyListeners();
 
           count--;
           print('count-- $count');
@@ -166,8 +180,9 @@ class EventsMapScreenData {
   }
 
   void dispose() {
-    _eventNotifier = null;
+    eventNotifier = null;
     markers = [];
+    exitedAtSigns = [];
   }
 }
 
@@ -195,7 +210,7 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
         body: Container(
           alignment: Alignment.center,
           child: ValueListenableBuilder(
-            valueListenable: EventsMapScreenData()._eventNotifier,
+            valueListenable: EventsMapScreenData().eventNotifier,
             builder: (BuildContext context, EventNotificationModel _event,
                 Widget child) {
               print('ValueListenableBuilder called');
