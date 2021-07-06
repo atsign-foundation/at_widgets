@@ -27,7 +27,8 @@ class AtEventNotificationListener {
   void init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
       GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       {Function? newGetAtValueFromMainApp}) {
-    initializeContactsService(atClientInstanceFromApp, currentAtSignFromApp);
+    initializeContactsService(atClientInstanceFromApp, currentAtSignFromApp,
+        rootDomain: rootDomain);
 
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;

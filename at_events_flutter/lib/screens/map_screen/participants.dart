@@ -117,9 +117,7 @@ class _ParticipantsState extends State<Participants> {
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
-                print((_markers[index].displayName ==
-                    AtEventNotificationListener().currentAtSign));
-                return Divider();
+                return SizedBox();
               },
             )
           ],
