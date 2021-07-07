@@ -11,6 +11,17 @@ import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:flutter/cupertino.dart';
 
+/// Function to initialise the package. Should be mandatorily called before accessing package functionalities.
+///
+/// [mapKey] is needed to access maps.
+///
+/// [apiKey] is needed to calculate ETA.
+///
+/// Steps to get [mapKey]/[apiKey] available in README.
+///
+/// [initLocation] pass this as false if location package is initialised outside, so it is not initialised more than once.
+///
+/// [streamAlternative] a function which will return updated lists of [EventKeyLocationModel]
 void initialiseEventService(
     AtClientImpl atClientInstance, GlobalKey<NavigatorState> navKeyFromMainApp,
     {required String mapKey,

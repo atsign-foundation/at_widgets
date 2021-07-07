@@ -3,6 +3,12 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'at_location_notification_listener.dart';
 
+/// A class to manage all the server calls.
+/// [SyncSecondary] makes sure that server calls are not interfering with each other.
+///
+/// [callSyncSecondary] syncs to secondary or calls [notifyAll] based on [_syncOperation].
+///
+///
 class SyncSecondary {
   static final SyncSecondary _singleton = SyncSecondary._();
   SyncSecondary._();
@@ -15,6 +21,8 @@ class SyncSecondary {
   bool syncing = false;
 
   /// Called to sync with secondary
+  /// [_syncOperation] either sync to secondary or notifyAll
+  /// [atKey], [notification], [operation] needed for notifyAll
   Future<void> callSyncSecondary(
     SyncOperation _syncOperation, {
     AtKey? atKey,
@@ -39,6 +47,9 @@ class SyncSecondary {
     }
   }
 
+  /// Called to sync in priority
+  /// [afterSync] called after sync is complete
+  /// [_response], passed as a parameter to [afterSync]
   void completePrioritySync(String _response, {Function? afterSync}) {
     _priorityOperations.add(SyncOperationDetails(SyncOperation.syncSecondary,
         response: _response, afterSync: afterSync));

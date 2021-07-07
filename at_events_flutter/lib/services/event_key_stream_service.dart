@@ -70,7 +70,6 @@ class EventKeyStreamService {
     );
 
     if (response.isEmpty) {
-      /// TODO:
       EventLocationShare().init();
       return;
     }
@@ -200,7 +199,6 @@ class EventKeyStreamService {
         for (var j = 0; j < allEventUserLocationResponses.length; j++) {
           if (allEventUserLocationResponses[j] != null &&
               !allEventNotifications[i].key!.contains('cached')) {
-            // TODO: Now we'll send some other data, this model will change
             var eventData =
                 await geteventData(allEventUserLocationResponses[j]);
 
@@ -344,8 +342,6 @@ class EventKeyStreamService {
 
     notifyListeners();
 
-    /// TODO: Start sharing location, if satisfies conditions
-
     // if ((tempHyridNotificationModel.locationNotificationModel!.isSharing)) {
     //   if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==
     //       currentAtSign) {
@@ -403,7 +399,6 @@ class EventKeyStreamService {
         allEventNotifications[i].eventNotificationModel!.key =
             allEventNotifications[i].key;
 
-        /// TODO: Update the map screen, with common components
         // LocationService().updateEventWithNewData(
         //     allHybridNotifications[i].eventNotificationModel);
 
@@ -413,7 +408,6 @@ class EventKeyStreamService {
     }
     notifyListeners();
 
-    /// TODO: To Update location sharing
     // if ((eventData.isSharing) && (eventData.isAccepted)) {
     //   if (eventData.atsignCreator == currentAtSign) {
     //     SendLocationNotification().addMember(eventData);
@@ -511,7 +505,6 @@ class EventKeyStreamService {
           eventData.long = null;
         }
 
-        /// TODO: check
         if (isCancelled == true) {
           eventData.isCancelled = true;
         }
@@ -559,7 +552,6 @@ class EventKeyStreamService {
       }
       // if key type is createevent, we have to notify all members
       if (keyType == ATKEY_TYPE_ENUM.CREATEEVENT) {
-        /// TODO: check, added without testing
         mapUpdatedEventDataToWidget(eventData);
 
         var allAtsignList = <String?>[];
@@ -576,7 +568,7 @@ class EventKeyStreamService {
           isDedicated: MixedConstants.isDedicated,
         );
       } else {
-        /// TODO: update pending status is receiver, add more if checks like already responded
+        ///  update pending status if receiver, add more if checks like already responded
         if (result) {
           updatePendingStatus(eventData);
         }
@@ -593,8 +585,7 @@ class EventKeyStreamService {
   void updateLocationData(EventMemberLocation locationData, String? atKey,
       String? fromAtSign) async {
     try {
-      var eventId =
-          locationData.key!.split('-')[1].split('@')[0]; // TODO: Might be wrong
+      var eventId = locationData.key!.split('-')[1].split('@')[0];
 
       EventNotificationModel? presentEventData;
 
@@ -674,7 +665,6 @@ class EventKeyStreamService {
       var eventId =
           acknowledgedEvent.key!.split('createevent-')[1].split('@')[0];
 
-      /// TODO: replace appNameSpace
       eventId =
           eventId.replaceAll('${atClientInstance!.preference!.syncRegex}', '');
 
@@ -787,8 +777,6 @@ class EventKeyStreamService {
       case ATKEY_TYPE_ENUM.CREATEEVENT:
         AtKey? atKey;
 
-        /// TODO: Was in main app, uncomment if error
-
         allEventNotifications.forEach((event) {
           if (event.eventNotificationModel!.key == eventData.key) {
             atKey = EventService().getAtKey(event.key!);
@@ -809,7 +797,6 @@ class EventKeyStreamService {
     }
   }
 
-  /// TODO: Change the model
   Future<dynamic> geteventData(String regex) async {
     var acknowledgedAtKey = EventService().getAtKey(regex);
 

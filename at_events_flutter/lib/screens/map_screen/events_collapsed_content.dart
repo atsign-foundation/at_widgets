@@ -91,13 +91,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                                       .atClientInstance,
                                   isUpdate: true,
                                   eventData: eventListenerKeyword,
-                                  onEventSaved: (event) {
-                                    /// TODO:
-                                    // if (LocationService().onEventUpdate != null) {
-                                    //   LocationService().onEventUpdate(event);
-                                    //   LocationService().eventSink.add(event);
-                                    // }
-                                  },
+                                  onEventSaved: (event) {},
                                 ),
                                 SizeConfig().screenHeight * 0.9,
                               );
