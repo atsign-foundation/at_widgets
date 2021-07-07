@@ -41,7 +41,6 @@ class AtLocationNotificationListener {
     MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
         newGetAtValueFromMainApp: newGetAtValueFromMainApp);
 
-    /// TODO: start only once
     startMonitor();
   }
 
