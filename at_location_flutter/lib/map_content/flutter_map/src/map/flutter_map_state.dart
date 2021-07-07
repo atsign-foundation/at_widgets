@@ -11,9 +11,9 @@ import 'package:at_location_flutter/map_content/flutter_map/src/layer/overlay_im
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map_state_widget.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:positioned_tap_detector/positioned_tap_detector.dart';
+import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 
 class FlutterMapState extends MapGestureMixin {
   final Key _layerStackKey = GlobalKey();
@@ -124,7 +124,7 @@ class FlutterMapState extends MapGestureMixin {
       if (!options.interactive) {
         mapRoot = layerStack;
       } else {
-        mapRoot = PositionedTapDetector(
+        mapRoot = PositionedTapDetector2(
           key: _positionedTapDetectorKey,
           controller: _positionedTapController,
           onTap: handleTap,

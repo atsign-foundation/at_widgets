@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 /// Model containing all the information needed for location sharing.
 class LocationNotificationModel {

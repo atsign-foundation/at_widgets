@@ -1,6 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 Future<LatLng?> getMyLocation() async {
   try {
