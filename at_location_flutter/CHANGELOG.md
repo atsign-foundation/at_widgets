@@ -1,3 +1,7 @@
+## [2.0.0] - 07/07/2021
+
+* Null safe support
+
 ## [1.0.3] - 05/13/2021
 
 * Improved notification handling
