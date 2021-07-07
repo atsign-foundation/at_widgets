@@ -12,7 +12,7 @@ import 'package:at_location_flutter/service/distance_calculate.dart';
 import 'package:at_location_flutter/event_show_location.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'events_collapsed_content.dart';
 

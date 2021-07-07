@@ -14,7 +14,7 @@ import 'package:at_events_flutter/services/event_location_share.dart';
 import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'contact_service.dart';
 
