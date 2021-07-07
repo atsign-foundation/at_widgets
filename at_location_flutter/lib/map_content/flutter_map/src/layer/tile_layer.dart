@@ -10,6 +10,7 @@ import 'package:at_location_flutter/map_content/flutter_map/src/core/util.dart'
 import 'package:at_location_flutter/map_content/flutter_map/src/geo/crs/crs.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/layer/tile_provider/tile_provider.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 import 'package:tuple/tuple.dart';
 
@@ -584,8 +585,10 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     if (level == null) {
       level = _levels[zoom] = Level();
       level.zIndex = maxZoom;
-      level.origin = map!.project(map.unproject(map.getPixelOrigin()!), zoom) ??
-          CustomPoint(0.0, 0.0);
+      //// Removed because of nulls safety
+      // level.origin = map!.project(map.unproject(map.getPixelOrigin()!), zoom) ??
+      //     CustomPoint(0.0, 0.0);
+      level.origin = map!.project(map.unproject(map.getPixelOrigin()!), zoom);
       level.zoom = zoom;
 
       _setZoomTransform(level, map.center, map.zoom);
@@ -726,7 +729,9 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
 
   void _setView(LatLng? center, double zoom) {
     var tileZoom = _clampZoom(zoom.roundToDouble());
+    // ignore: unnecessary_null_comparison
     if ((options.maxZoom != null && tileZoom! > options.maxZoom) ||
+        // ignore: unnecessary_null_comparison
         (options.minZoom != null && tileZoom! < options.minZoom)) {
       tileZoom = null;
     }
@@ -805,7 +810,9 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     if (_tileZoom == null) {
       // if there is no _tileZoom available it means we are out within zoom level
       // we will restore fully via _setView call if we are back on trail
+      // ignore: unnecessary_null_comparison
       if ((options.maxZoom != null && tileZoom! <= options.maxZoom) &&
+          // ignore: unnecessary_null_comparison
           (options.minZoom != null && tileZoom >= options.minZoom)) {
         _tileZoom = tileZoom;
         setState(() {
@@ -885,8 +892,8 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     }
 
     // create a queue of coordinates to load tiles from
-    for (num j = tileRange.min.y; j <= tileRange.max.y; j++) {
-      for (num i = tileRange.min.x; i <= tileRange.max.x; i++) {
+    for (var j = tileRange.min.y; j <= tileRange.max.y; j++) {
+      for (var i = tileRange.min.x; i <= tileRange.max.x; i++) {
         var coords = Coords(i.toDouble(), j.toDouble());
         coords.z = _tileZoom;
 
@@ -1189,8 +1196,7 @@ class AnimatedTile extends StatefulWidget {
 
   AnimatedTile(
       {Key? key, required this.tile, this.errorImage, this.darkMode = false})
-      : assert(null != tile),
-        super(key: key);
+      : super(key: key);
 
   @override
   _AnimatedTileState createState() => _AnimatedTileState();

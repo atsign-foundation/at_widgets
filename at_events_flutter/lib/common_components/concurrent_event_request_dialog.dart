@@ -7,26 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ConcurrentEventRequest extends StatefulWidget {
-  final String reqEvent,
+  final String? reqEvent,
       reqInvitedPeopleCount,
       reqTimeAndDate,
       currentEvent,
       currentEventTimeAndDate;
-  final EventNotificationModel concurrentEvent;
+  final EventNotificationModel? concurrentEvent;
   ConcurrentEventRequest(
       {this.reqEvent,
       this.reqInvitedPeopleCount,
       this.reqTimeAndDate,
       this.currentEvent,
       this.currentEventTimeAndDate,
-      @required this.concurrentEvent});
+      required this.concurrentEvent});
 
   @override
   _ConcurrentEventRequestState createState() => _ConcurrentEventRequestState();
 }
 
 class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
-  bool isLoader;
+  late bool isLoader;
   @override
   void initState() {
     super.initState();
@@ -54,12 +54,12 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                   ),
                   SizedBox(height: 15.toHeight),
                   widget.concurrentEvent != null
-                      ? Text(widget.concurrentEvent.title,
+                      ? Text(widget.concurrentEvent!.title!,
                           style: CustomTextStyles().black16)
                       : SizedBox(),
                   widget.concurrentEvent != null
                       ? Text(
-                          '${timeOfDayToString(widget.concurrentEvent.event.startTime)} on ${dateToString(widget.concurrentEvent.event.date)}',
+                          '${timeOfDayToString(widget.concurrentEvent!.event!.startTime!)} on ${dateToString(widget.concurrentEvent!.event!.date!)}',
                           style: CustomTextStyles().black14)
                       : SizedBox(),
                   SizedBox(height: 20.toHeight),

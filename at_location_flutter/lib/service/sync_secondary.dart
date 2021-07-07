@@ -39,9 +39,9 @@ class SyncSecondary {
     }
   }
 
-  void completePrioritySync(String _response) {
-    _priorityOperations.add(
-        SyncOperationDetails(SyncOperation.syncSecondary, response: _response));
+  void completePrioritySync(String _response, {Function? afterSync}) {
+    _priorityOperations.add(SyncOperationDetails(SyncOperation.syncSecondary,
+        response: _response, afterSync: afterSync));
     if (!syncing) {
       _startSyncing();
     }
@@ -66,7 +66,7 @@ class SyncSecondary {
           await _notifyAllInSync(
             _syncOperationDetails.atKey!,
             _syncOperationDetails.notification!,
-            _syncOperationDetails.operation,
+            _syncOperationDetails.operation!,
           );
         } else {
           _operations.removeWhere((_operation) =>
@@ -81,14 +81,14 @@ class SyncSecondary {
 
   void _executeAfterSynced(List<SyncOperationDetails> _tempPriorityOperations) {
     _tempPriorityOperations.forEach((e) {
-      if (e.response != null) {
-        e.afterSync!();
+      if ((e.response != null) && (e.afterSync != null)) {
+        e.afterSync!(e.response);
       }
     });
   }
 
   Future<void> _notifyAllInSync(
-      AtKey atKey, String notification, OperationEnum? operation,
+      AtKey atKey, String notification, OperationEnum operation,
       {bool isDedicated = MixedConstants.isDedicated}) async {
     var notifyAllResult = await AtLocationNotificationListener()
         .atClientInstance!
@@ -101,8 +101,8 @@ class SyncSecondary {
   Future<void> _syncSecondary() async {
     try {
       var syncManager =
-          AtLocationNotificationListener().atClientInstance!.getSyncManager()!;
-      var isSynced = await syncManager.isInSync();
+          AtLocationNotificationListener().atClientInstance!.getSyncManager();
+      var isSynced = await syncManager!.isInSync();
       print('already synced: $isSynced');
       if (isSynced is bool && isSynced) {
       } else {

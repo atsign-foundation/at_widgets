@@ -17,6 +17,7 @@ import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -110,8 +111,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           maxHeight: 530.toHeight,
                           panelBuilder: (scrollController) {
                             if (snapshot.data!.isNotEmpty) {
-                              return collapsedContent(false, scrollController,
-                                  getListView(snapshot.data!, scrollController));
+                              return collapsedContent(
+                                  false,
+                                  scrollController,
+                                  getListView(
+                                      snapshot.data!, scrollController));
                             } else {
                               return collapsedContent(false, scrollController,
                                   emptyWidget('No Data Found!!'));
@@ -166,8 +170,9 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             InkWell(
               onTap: () {
-                HomeScreenService()
-                    .onLocationModelTap(notification.locationNotificationModel!);
+                HomeScreenService().onLocationModelTap(
+                    notification.locationNotificationModel!,
+                    notification.haveResponded!);
               },
               child: DisplayTile(
                 atsignCreator:
@@ -177,7 +182,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         : notification.locationNotificationModel!.atsignCreator,
                 title: getTitle(notification.locationNotificationModel!),
                 subTitle: getSubTitle(notification.locationNotificationModel!),
-                semiTitle: getSemiTitle(notification.locationNotificationModel!),
+                semiTitle: getSemiTitle(notification.locationNotificationModel!,
+                    notification.haveResponded!),
+                showRetry: calculateShowRetry(notification),
+                onRetryTapped: () {
+                  HomeScreenService().onLocationModelTap(
+                      notification.locationNotificationModel!, false);
+                },
               ),
             ),
             Divider()

@@ -4,11 +4,11 @@ import 'package:at_location_flutter/location_modal/location_notification.dart';
 
 class HybridNotificationModel {
   NotificationType notificationType;
-  EventNotificationModel eventNotificationModel;
-  LocationNotificationModel locationNotificationModel;
-  String key;
-  AtKey atKey;
-  AtValue atValue;
+  EventNotificationModel? eventNotificationModel;
+  LocationNotificationModel? locationNotificationModel;
+  String? key;
+  AtKey? atKey;
+  AtValue? atValue;
   HybridNotificationModel(this.notificationType,
       {this.eventNotificationModel,
       this.locationNotificationModel,

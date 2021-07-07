@@ -1,73 +1,216 @@
 PODS:
-  - at_chat_flutter (0.0.1):
+  - at_backupkey_flutter (0.0.1):
     - Flutter
   - at_contacts_flutter (0.0.1):
+    - Flutter
+  - at_contacts_group_flutter (0.0.1):
     - Flutter
   - at_events_flutter (0.0.1):
     - Flutter
   - at_location_flutter (0.0.1):
     - Flutter
+  - at_onboarding_flutter (0.0.1):
+    - Flutter
+  - DKImagePickerController/Core (4.3.2):
+    - DKImagePickerController/ImageDataManager
+    - DKImagePickerController/Resource
+  - DKImagePickerController/ImageDataManager (4.3.2)
+  - DKImagePickerController/PhotoGallery (4.3.2):
+    - DKImagePickerController/Core
+    - DKPhotoGallery
+  - DKImagePickerController/Resource (4.3.2)
+  - DKPhotoGallery (0.0.17):
+    - DKPhotoGallery/Core (= 0.0.17)
+    - DKPhotoGallery/Model (= 0.0.17)
+    - DKPhotoGallery/Preview (= 0.0.17)
+    - DKPhotoGallery/Resource (= 0.0.17)
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Core (0.0.17):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Preview
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Model (0.0.17):
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Preview (0.0.17):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Resource
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Resource (0.0.17):
+    - SDWebImage
+    - SwiftyGif
+  - emoji_picker (0.0.3):
+    - Flutter
+  - file_picker (0.0.1):
+    - DKImagePickerController/PhotoGallery
+    - Flutter
   - Flutter (1.0.0)
+  - flutter_image_compress (0.0.1):
+    - Flutter
+    - Mantle
+    - SDWebImageWebPCoder
   - flutter_keychain (0.0.1):
     - Flutter
+  - flutter_qr_reader (0.0.1):
+    - Flutter
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - location (0.0.1):
+  - geolocator (6.2.0):
     - Flutter
+  - libwebp (1.2.0):
+    - libwebp/demux (= 1.2.0)
+    - libwebp/mux (= 1.2.0)
+    - libwebp/webp (= 1.2.0)
+  - libwebp/demux (1.2.0):
+    - libwebp/webp
+  - libwebp/mux (1.2.0):
+    - libwebp/demux
+  - libwebp/webp (1.2.0)
+  - Mantle (2.1.6):
+    - Mantle/extobjc (= 2.1.6)
+  - Mantle/extobjc (2.1.6)
   - path_provider (0.0.1):
+    - Flutter
+  - "permission_handler (5.1.0+2)":
+    - Flutter
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
+  - SDWebImageWebPCoder (0.8.4):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.10)
+  - share (0.0.1):
+    - Flutter
+  - shared_preferences (0.0.1):
     - Flutter
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
+  - SwiftyGif (5.4.0)
+  - Toast (4.0.0)
+  - url_launcher (0.0.1):
+    - Flutter
+  - webview_flutter (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
-  - at_chat_flutter (from `.symlinks/plugins/at_chat_flutter/ios`)
+  - at_backupkey_flutter (from `.symlinks/plugins/at_backupkey_flutter/ios`)
   - at_contacts_flutter (from `.symlinks/plugins/at_contacts_flutter/ios`)
+  - at_contacts_group_flutter (from `.symlinks/plugins/at_contacts_group_flutter/ios`)
   - at_events_flutter (from `.symlinks/plugins/at_events_flutter/ios`)
   - at_location_flutter (from `.symlinks/plugins/at_location_flutter/ios`)
+  - at_onboarding_flutter (from `.symlinks/plugins/at_onboarding_flutter/ios`)
+  - emoji_picker (from `.symlinks/plugins/emoji_picker/ios`)
+  - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
+  - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_keychain (from `.symlinks/plugins/flutter_keychain/ios`)
-  - location (from `.symlinks/plugins/location/ios`)
+  - flutter_qr_reader (from `.symlinks/plugins/flutter_qr_reader/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - share (from `.symlinks/plugins/share/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
   trunk:
+    - DKImagePickerController
+    - DKPhotoGallery
     - FMDB
+    - libwebp
+    - Mantle
+    - SDWebImage
+    - SDWebImageWebPCoder
+    - SwiftyGif
+    - Toast
 
 EXTERNAL SOURCES:
-  at_chat_flutter:
-    :path: ".symlinks/plugins/at_chat_flutter/ios"
+  at_backupkey_flutter:
+    :path: ".symlinks/plugins/at_backupkey_flutter/ios"
   at_contacts_flutter:
     :path: ".symlinks/plugins/at_contacts_flutter/ios"
+  at_contacts_group_flutter:
+    :path: ".symlinks/plugins/at_contacts_group_flutter/ios"
   at_events_flutter:
     :path: ".symlinks/plugins/at_events_flutter/ios"
   at_location_flutter:
     :path: ".symlinks/plugins/at_location_flutter/ios"
+  at_onboarding_flutter:
+    :path: ".symlinks/plugins/at_onboarding_flutter/ios"
+  emoji_picker:
+    :path: ".symlinks/plugins/emoji_picker/ios"
+  file_picker:
+    :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
     :path: Flutter
+  flutter_image_compress:
+    :path: ".symlinks/plugins/flutter_image_compress/ios"
   flutter_keychain:
     :path: ".symlinks/plugins/flutter_keychain/ios"
-  location:
-    :path: ".symlinks/plugins/location/ios"
+  flutter_qr_reader:
+    :path: ".symlinks/plugins/flutter_qr_reader/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  geolocator:
+    :path: ".symlinks/plugins/geolocator/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
+  share:
+    :path: ".symlinks/plugins/share/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
+  webview_flutter:
+    :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
-  at_chat_flutter: 8df1b69f14a74f0360b21916b5dd6916c9ae7130
+  at_backupkey_flutter: 2fc3d01138175e41bce8b574387a47544c53e01b
   at_contacts_flutter: 11ad3deb3c2a8f1e9daf302ac5962dadd48e21fb
+  at_contacts_group_flutter: 31bc718fdb2baca1ae36509009e48cf33a23fa5f
   at_events_flutter: 88b4a1773db9a4cb48ade0a7b9f79a1b351337b4
   at_location_flutter: 11cdb9f57b41159f51d1ce151f78c31b9b292607
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  at_onboarding_flutter: e8219b6d0bfb236d3837ec3528871aebdcc56e8d
+  DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
+  DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
+  emoji_picker: 0e868059aa18f9473d234f3d0701fbd4d5fd310c
+  file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_image_compress: 082f8daaf6c1b0c9fe798251c750ef0ecd98d7ae
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
+  flutter_qr_reader: d930dde3b2cfe2b3d0bb7d66e5ff3e514300a5e5
+  fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  geolocator: f5e3de65e241caba7ce3e8a618803387bda73384
+  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
+  Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
+  share: 0b2c3e82132f5888bccca3351c504d0003b3b410
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  SwiftyGif: 5d4af95df24caf1c570dbbcb32a3b8a0763bc6d7
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: 67509bdfc9e7e3da0e68d53ab26669daba079215
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.1

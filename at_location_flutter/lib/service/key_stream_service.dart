@@ -13,6 +13,7 @@ import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'contact_service.dart';
 import 'send_location_notification.dart';
 import 'sharing_location_service.dart';
+import 'sync_secondary.dart';
 
 class KeyStreamService {
   KeyStreamService._();
@@ -27,19 +28,24 @@ class KeyStreamService {
   List<AtContact> contactList = [];
 
   // ignore: close_sinks
-  StreamController _atNotificationsController =
+  StreamController atNotificationsController =
       StreamController<List<KeyLocationModel>>.broadcast();
   Stream<List<KeyLocationModel>> get atNotificationsStream =>
-      _atNotificationsController.stream as Stream<List<KeyLocationModel>>;
+      atNotificationsController.stream as Stream<List<KeyLocationModel>>;
   StreamSink<List<KeyLocationModel>> get atNotificationsSink =>
-      _atNotificationsController.sink as StreamSink<List<KeyLocationModel>>;
+      atNotificationsController.sink as StreamSink<List<KeyLocationModel>>;
 
-  void init(AtClientImpl? clientInstance) async {
+  Function(List<KeyLocationModel>)? streamAlternative;
+
+  void init(AtClientImpl? clientInstance,
+      {Function(List<KeyLocationModel>)? streamAlternative}) async {
     loggedInUserDetails = null;
     atClientInstance = clientInstance;
     currentAtSign = atClientInstance!.currentAtSign;
     allLocationNotifications = [];
-    _atNotificationsController =
+    this.streamAlternative = streamAlternative;
+
+    atNotificationsController =
         StreamController<List<KeyLocationModel>>.broadcast();
     getAllNotifications();
 
@@ -53,6 +59,8 @@ class KeyStreamService {
   }
 
   void getAllNotifications() async {
+    await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+
     var allResponse = await atClientInstance!.getKeys(
       regex: 'sharelocation-',
     );
@@ -90,11 +98,63 @@ class KeyStreamService {
     convertJsonToLocationModel();
     filterData();
 
+    await checkForPendingLocations();
+
     notifyListeners();
     updateEventAccordingToAcknowledgedData();
     checkForDeleteRequestAck();
 
     SendLocationNotification().init(atClientInstance);
+  }
+
+  Future<void> checkForPendingLocations() async {
+    allLocationNotifications.forEach((notification) async {
+      if (notification.key!.contains(MixedConstants.SHARE_LOCATION)) {
+        if ((notification.locationNotificationModel!.atsignCreator !=
+                currentAtSign) &&
+            (!notification.locationNotificationModel!.isAccepted) &&
+            (!notification.locationNotificationModel!.isExited)) {
+          var atkeyMicrosecondId =
+              notification.key!.split('sharelocation-')[1].split('@')[0];
+          var acknowledgedKeyId =
+              'sharelocationacknowledged-$atkeyMicrosecondId';
+          var allRegexResponses =
+              await atClientInstance!.getKeys(regex: acknowledgedKeyId);
+          // ignore: unnecessary_null_comparison
+          if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
+            notification.haveResponded = true;
+          }
+        }
+      }
+
+      if (notification.key!.contains(MixedConstants.REQUEST_LOCATION)) {
+        if ((notification.locationNotificationModel!.atsignCreator ==
+                currentAtSign) &&
+            (!notification.locationNotificationModel!.isAccepted) &&
+            (!notification.locationNotificationModel!.isExited)) {
+          var atkeyMicrosecondId =
+              notification.key!.split('requestlocation-')[1].split('@')[0];
+          var acknowledgedKeyId =
+              'requestlocationacknowledged-$atkeyMicrosecondId';
+          var allRegexResponses =
+              await atClientInstance!.getKeys(regex: acknowledgedKeyId);
+          // ignore: unnecessary_null_comparison
+          if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
+            notification.haveResponded = true;
+          }
+        }
+      }
+    });
+  }
+
+  void updatePendingStatus(LocationNotificationModel notification) {
+    for (var i = 0; i < allLocationNotifications.length; i++) {
+      if ((allLocationNotifications[i].key!.contains(notification.key!))) {
+        allLocationNotifications[i].haveResponded = true;
+        break;
+      }
+    }
+    notifyListeners();
   }
 
   void checkForDeleteRequestAck() async {
@@ -192,6 +252,7 @@ class KeyStreamService {
     var allRegexResponses =
         await atClientInstance!.getKeys(regex: acknowledgedKeyId);
 
+    // ignore: unnecessary_null_comparison
     if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
       var acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
@@ -216,6 +277,7 @@ class KeyStreamService {
     var allRegexResponses =
         await atClientInstance!.getKeys(regex: acknowledgedKeyId);
 
+    // ignore: unnecessary_null_comparison
     if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
       var acknowledgedAtKey = getAtKey(allRegexResponses[0]);
 
@@ -333,6 +395,7 @@ class KeyStreamService {
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print('error in in key_stream_service get $e'));
 
+      // ignore: unnecessary_null_comparison
       if (atvalue != null) {
         return atvalue;
       } else {
@@ -345,6 +408,14 @@ class KeyStreamService {
   }
 
   void notifyListeners() {
+    // print('notifyListeners');
+    // allLocationNotifications.forEach((element) {
+    //   print(LocationNotificationModel.convertLocationNotificationToJson(
+    //       element.locationNotificationModel!));
+    // });
+    if (streamAlternative != null) {
+      streamAlternative!(allLocationNotifications);
+    }
     atNotificationsSink.add(allLocationNotifications);
   }
 }

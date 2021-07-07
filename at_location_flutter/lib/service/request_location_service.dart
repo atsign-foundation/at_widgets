@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
@@ -80,9 +82,16 @@ class RequestLocationService {
   }
 
   Future<bool> requestLocationAcknowledgment(
-      LocationNotificationModel locationNotificationModel, bool isAccepted,
-      {int? minutes, bool? isSharing}) async {
+      LocationNotificationModel originalLocationNotificationModel,
+      bool isAccepted,
+      {int? minutes,
+      bool? isSharing}) async {
     try {
+      var locationNotificationModel = LocationNotificationModel.fromJson(
+          jsonDecode(
+              LocationNotificationModel.convertLocationNotificationToJson(
+                  originalLocationNotificationModel)));
+
       var atkeyMicrosecondId = locationNotificationModel.key!
           .split('requestlocation-')[1]
           .split('@')[0];
@@ -120,6 +129,7 @@ class RequestLocationService {
         if (MixedConstants.isDedicated) {
           await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
         }
+        KeyStreamService().updatePendingStatus(locationNotificationModel);
       }
 
       if ((result) && (!isSharing!)) {
@@ -133,9 +143,14 @@ class RequestLocationService {
   }
 
   Future updateWithRequestLocationAcknowledge(
-    LocationNotificationModel locationNotificationModel,
+    LocationNotificationModel originalLocationNotificationModel,
   ) async {
     try {
+      var locationNotificationModel = LocationNotificationModel.fromJson(
+          jsonDecode(
+              LocationNotificationModel.convertLocationNotificationToJson(
+                  originalLocationNotificationModel)));
+
       var atkeyMicrosecondId = locationNotificationModel.key!
           .split('requestlocation-')[1]
           .split('@')[0];
@@ -234,10 +249,11 @@ class RequestLocationService {
 
     locationNotificationModel.isAcknowledgment = true;
 
-    var result = await AtLocationNotificationListener().atClientInstance!.delete(
-          key,
-          isDedicated: MixedConstants.isDedicated,
-        );
+    var result =
+        await AtLocationNotificationListener().atClientInstance!.delete(
+              key,
+              isDedicated: MixedConstants.isDedicated,
+            );
     print('$key delete operation $result');
 
     if (result) {

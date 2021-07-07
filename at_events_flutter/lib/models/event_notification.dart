@@ -1,18 +1,23 @@
 import 'dart:convert';
-
 import 'package:at_contact/at_contact.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong/latlong.dart';
 
 class EventNotificationModel {
   EventNotificationModel();
-  String atsignCreator;
-  bool isCancelled;
-  String title;
-  Venue venue;
-  Event event;
-  String key;
-  AtGroup group;
-  bool isSharing;
-  bool isUpdate; //when an event data is being updated , this should be true
+  String? atsignCreator;
+  LatLng? locationOfCreator;
+  double? lat;
+  double? long;
+
+  bool? isCancelled;
+  String? title;
+  Venue? venue;
+  Event? event;
+  String? key;
+  AtGroup? group;
+  bool? isSharing;
+  bool? isUpdate; //when an event data is being updated , this should be true
   EventNotificationModel.fromJson(Map<String, dynamic> data) {
     title = data['title'] ?? '';
     key = data['key'] ?? '';
@@ -20,6 +25,12 @@ class EventNotificationModel {
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
     isUpdate = data['isUpdate'] == 'true' ? true : false;
+    lat = data['lat'] != 'null' && data['lat'] != null
+        ? double.parse(data['lat'])
+        : null;
+    long = data['long'] != 'null' && data['long'] != null
+        ? double.parse(data['long'])
+        : null;
     if (data['venue'] != null) {
       venue = Venue.fromJson(jsonDecode(data['venue']));
     }
@@ -36,31 +47,29 @@ class EventNotificationModel {
       data['group']['members'].forEach((contact) {
         var newContact = AtContact(atSign: contact['atSign']);
         newContact.tags = {};
-        newContact.tags['isAccepted'] = contact['tags']['isAccepted'];
-        newContact.tags['isSharing'] = contact['tags']['isSharing'];
-        newContact.tags['isExited'] = contact['tags']['isExited'];
-        newContact.tags['shareFrom'] = contact['tags']['shareFrom'] != null &&
+        newContact.tags!['isAccepted'] = contact['tags']['isAccepted'];
+        newContact.tags!['isSharing'] = contact['tags']['isSharing'];
+        newContact.tags!['isExited'] = contact['tags']['isExited'];
+        newContact.tags!['shareFrom'] = contact['tags']['shareFrom'] != null &&
                 contact['tags']['shareFrom'] != 'null'
             ? contact['tags']['shareFrom']
             : -1;
-        newContact.tags['shareTo'] = contact['tags']['shareTo'] != null &&
+        newContact.tags!['shareTo'] = contact['tags']['shareTo'] != null &&
                 contact['tags']['shareTo'] != 'null'
             ? contact['tags']['shareTo']
             : -1;
-        newContact.tags['lat'] =
+        newContact.tags!['lat'] =
             contact['tags']['lat'] != null && contact['tags']['lat'] != 'null'
-                ? contact['tags']['lat']
-                : 0;
-        newContact.tags['long'] =
+                ? double.parse(contact['tags']['lat'].toString())
+                : null;
+        newContact.tags!['long'] =
             contact['tags']['long'] != null && contact['tags']['long'] != 'null'
-                ? contact['tags']['long']
-                : 0;
-        group.members.add(newContact);
+                ? double.parse(contact['tags']['long'].toString())
+                : null;
+        group!.members!.add(newContact);
       });
     }
   }
-
-
 
   static String convertEventNotificationToJson(
       EventNotificationModel eventNotification) {
@@ -74,28 +83,31 @@ class EventNotificationModel {
       'atsignCreator': eventNotification.atsignCreator.toString(),
       'key': '${eventNotification.key}',
       'group': json.encode(eventNotification.group),
+      'lat': eventNotification.lat.toString(),
+      'long': eventNotification.long.toString(),
+      // TODO: Update ['group']['updatedAt'] with DateTime.now()
       'venue': json.encode({
-        'latitude': eventNotification.venue.latitude.toString(),
-        'longitude': eventNotification.venue.longitude.toString(),
-        'label': eventNotification.venue.label
+        'latitude': eventNotification.venue!.latitude.toString(),
+        'longitude': eventNotification.venue!.longitude.toString(),
+        'label': eventNotification.venue!.label
       }),
       'event': json.encode({
-        'isRecurring': eventNotification.event.isRecurring.toString(),
-        'date': eventNotification.event.date.toString(),
-        'endDate': eventNotification.event.endDate.toString(),
-        'startTime': eventNotification.event.startTime != null
-            ? eventNotification.event.startTime.toUtc().toString()
+        'isRecurring': eventNotification.event!.isRecurring.toString(),
+        'date': eventNotification.event!.date.toString(),
+        'endDate': eventNotification.event!.endDate.toString(),
+        'startTime': eventNotification.event!.startTime != null
+            ? eventNotification.event!.startTime!.toUtc().toString()
             : null,
-        'endTime': eventNotification.event.endTime != null
-            ? eventNotification.event.endTime.toUtc().toString()
+        'endTime': eventNotification.event!.endTime != null
+            ? eventNotification.event!.endTime!.toUtc().toString()
             : null,
-        'repeatDuration': eventNotification.event.repeatDuration.toString(),
-        'repeatCycle': eventNotification.event.repeatCycle.toString(),
-        'occursOn': eventNotification.event.occursOn.toString(),
-        'endsOn': eventNotification.event.endsOn.toString(),
-        'endEventOnDate': eventNotification.event.endEventOnDate.toString(),
+        'repeatDuration': eventNotification.event!.repeatDuration.toString(),
+        'repeatCycle': eventNotification.event!.repeatCycle.toString(),
+        'occursOn': eventNotification.event!.occursOn.toString(),
+        'endsOn': eventNotification.event!.endsOn.toString(),
+        'endEventOnDate': eventNotification.event!.endEventOnDate.toString(),
         'endEventAfterOccurance':
-            eventNotification.event.endEventAfterOccurance.toString()
+            eventNotification.event!.endEventAfterOccurance.toString()
       })
     });
     return notification;
@@ -104,8 +116,8 @@ class EventNotificationModel {
 
 class Venue {
   Venue();
-  double latitude, longitude;
-  String label;
+  double? latitude, longitude;
+  String? label;
   Venue.fromJson(Map<String, dynamic> data)
       : latitude =
             data['latitude'] != 'null' ? double.parse(data['latitude']) : 0,
@@ -116,37 +128,24 @@ class Venue {
 
 class Event {
   Event();
-  bool isRecurring;
-  DateTime date, endDate;
-  DateTime startTime, endTime; //one day event
-  int repeatDuration;
-  RepeatCycle repeatCycle;
-  Week occursOn;
-  EndsOn endsOn;
-  DateTime endEventOnDate;
-  int endEventAfterOccurance;
+  bool? isRecurring;
+  DateTime? date, endDate;
+  DateTime? startTime, endTime; //one day event
+  int? repeatDuration;
+  RepeatCycle? repeatCycle;
+  Week? occursOn;
+  EndsOn? endsOn;
+  DateTime? endEventOnDate;
+  int? endEventAfterOccurance;
   Event.fromJson(Map<String, dynamic> data) {
-    // data['startTime'] = data['startTime'] != 'null'
-    //     ? data['startTime'].substring(10, 15)
-    //     : null;
-    // data['endTime'] =
-    //     data['endTime'] != 'null' ? data['endTime'].substring(10, 15) : null;
     startTime = data['startTime'] != null
         ? DateTime.parse(data['startTime']).toLocal()
         : null;
-    //  TimeOfDay(
-    //     hour: int.parse(data['startTime'].split(":")[0]),
-    //     minute: int.parse(data['startTime'].split(":")[1]))
-    // : null;
     endTime = data['endTime'] != null
         ? DateTime.parse(data['endTime']).toLocal()
         : null;
-    // ? TimeOfDay(
-    //     hour: int.parse(data['endTime'].split(":")[0]),
-    //     minute: int.parse(data['endTime'].split(":")[1]))
-    // : null;
     isRecurring = data['isRecurring'] == 'true' ? true : false;
-    if (!isRecurring) {
+    if (!isRecurring!) {
       date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
       endDate =
           data['endDate'] != 'null' ? DateTime.parse(data['endDate']) : null;
@@ -181,6 +180,8 @@ class Event {
         case RepeatCycle.MONTH:
           date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
           break;
+        default:
+          null;
       }
       endsOn = (data['endsOn'] == EndsOn.NEVER.toString()
           ? EndsOn.NEVER
@@ -201,8 +202,9 @@ class Event {
               : null;
           break;
         case EndsOn.NEVER:
-          // endEventOn = null;
           break;
+        default:
+          null;
       }
     }
   }
@@ -212,7 +214,8 @@ enum RepeatCycle { WEEK, MONTH }
 enum Week { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
 enum EndsOn { NEVER, ON, AFTER }
 
-Week getWeekEnum(String weekday) {
+// ignore: missing_return
+Week getWeekEnum(String? weekday) {
   switch (weekday) {
     case 'Monday':
       return Week.MONDAY;
@@ -228,11 +231,13 @@ Week getWeekEnum(String weekday) {
       return Week.SATURDAY;
     case 'Sunday':
       return Week.SUNDAY;
+    default:
+      return Week.SUNDAY;
   }
-  return null;
 }
 
-String getWeekString(Week weekday) {
+// ignore: missing_return
+String getWeekString(Week? weekday) {
   switch (weekday) {
     case Week.MONDAY:
       return 'Monday';
@@ -248,13 +253,16 @@ String getWeekString(Week weekday) {
       return 'Saturday';
     case Week.SUNDAY:
       return 'Sunday';
+    default:
+      return 'Sunday';
   }
-  return null;
 }
 
 String timeOfDayToString(DateTime time) {
-  var hhmm = '${time.hour}:${time.minute}';
-  return hhmm;
+  var minute = time.minute;
+  if (minute < 10) return '${time.hour}: 0${time.minute}';
+
+  return '${time.hour}: ${time.minute}';
 }
 
 String dateToString(DateTime date) {
@@ -274,3 +282,18 @@ List<String> get occursOnWeekOptions => [
     ];
 
 enum ATKEY_TYPE_ENUM { CREATEEVENT, ACKNOWLEDGEEVENT }
+
+Map<String, dynamic> get monthsList => {
+      '1': {'month': 'jan', 'days': 31, 'count': 1},
+      '2': {'month': 'feb', 'days': 28, 'count': 2},
+      '3': {'month': 'mar', 'days': 31, 'count': 3},
+      '4': {'month': 'apr', 'days': 30, 'count': 4},
+      '5': {'month': 'may', 'days': 31, 'count': 5},
+      '6': {'month': 'jun', 'days': 30, 'count': 6},
+      '7': {'month': 'jul', 'days': 31, 'count': 7},
+      '8': {'month': 'aug', 'days': 31, 'count': 8},
+      '9': {'month': 'sept', 'days': 30, 'count': 9},
+      '10': {'month': 'oct', 'days': 31, 'count': 10},
+      '11': {'month': 'nov', 'days': 30, 'count': 11},
+      '12': {'month': 'dec', 'days': 31, 'count': 12},
+    };

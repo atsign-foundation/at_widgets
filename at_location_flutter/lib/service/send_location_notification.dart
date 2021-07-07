@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 import 'key_stream_service.dart';
@@ -22,6 +25,7 @@ class SendLocationNotification {
   List<LocationNotificationModel?> atsignsToShareLocationWith = [];
   StreamSubscription<Position>? positionStream;
   bool masterSwitchState = true;
+  Function? locationPromptDialog;
 
   AtClientImpl? atClient;
 
@@ -35,9 +39,15 @@ class SendLocationNotification {
     findAtSignsToShareLocationWith();
   }
 
+  void setLocationPrompt(Function _locationPrompt) {
+    locationPromptDialog = _locationPrompt;
+  }
+
   void setMasterSwitchState(bool _state) {
     masterSwitchState = _state;
-    if (!_state) {
+    if (_state) {
+      findAtSignsToShareLocationWith();
+    } else {
       deleteAllLocationKey();
     }
   }
@@ -67,11 +77,28 @@ class SendLocationNotification {
     var myLocation = await getMyLocation();
     if (myLocation != null) {
       if (masterSwitchState) {
-        prepareLocationDataAndSend(notification!, myLocation);
+        await prepareLocationDataAndSend(notification!, myLocation);
+
+        if (MixedConstants.isDedicated) {
+          // ignore: unawaited_futures
+          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        }
+      } else {
+        /// method from main app
+        if (locationPromptDialog != null) {
+          atsignsToShareLocationWith.add(notification);
+          locationPromptDialog!();
+
+          /// return as when main switch is turned on, it will send location to all.
+          return;
+        }
       }
     } else {
-      // CustomToast().show(
-      //     'Location permission not granted', NavService.navKey.currentContext);
+      // ignore: unnecessary_null_comparison
+      if (AtLocationNotificationListener().navKey != null) {
+        CustomToast().show('Location permission not granted',
+            AtLocationNotificationListener().navKey.currentContext!);
+      }
     }
 
     // add

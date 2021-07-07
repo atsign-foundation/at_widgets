@@ -109,9 +109,13 @@ class SharingLocationService {
   }
 
   Future<bool> shareLocationAcknowledgment(
-      LocationNotificationModel locationNotificationModel,
+      LocationNotificationModel originalLocationNotificationModel,
       bool isAccepted) async {
     try {
+      var locationNotificationModel = LocationNotificationModel.fromJson(
+          jsonDecode(
+              LocationNotificationModel.convertLocationNotificationToJson(
+                  originalLocationNotificationModel)));
       var atkeyMicrosecondId = locationNotificationModel.key!
           .split('sharelocation-')[1]
           .split('@')[0];
@@ -131,6 +135,7 @@ class SharingLocationService {
         if (MixedConstants.isDedicated) {
           await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
         }
+        KeyStreamService().updatePendingStatus(locationNotificationModel);
       }
       return result;
     } catch (e) {
@@ -140,9 +145,14 @@ class SharingLocationService {
   }
 
   Future<bool> updateWithShareLocationAcknowledge(
-      LocationNotificationModel locationNotificationModel,
+      LocationNotificationModel originalLocationNotificationModel,
       {bool? isSharing}) async {
     try {
+      var locationNotificationModel = LocationNotificationModel.fromJson(
+          jsonDecode(
+              LocationNotificationModel.convertLocationNotificationToJson(
+                  originalLocationNotificationModel)));
+
       var atkeyMicrosecondId = locationNotificationModel.key!
           .split('sharelocation-')[1]
           .split('@')[0];

@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:core';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/common_components/build_marker.dart';
+import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
 import 'at_location_notification_listener.dart';
@@ -71,18 +73,18 @@ class LocationService {
   }
 
   Future addMyDetailsToHybridUsersList() async {
-    var _atsign = AtLocationNotificationListener().currentAtSign;
-    var mylatlng = await getMyLocation();
-    var _image = await MasterLocationService().getImageOfAtsignNew(_atsign);
-
-    var _myData = HybridModel(
-        displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
-
-    updateMyLatLng(_myData);
-
     var permission = await Geolocator.checkPermission();
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
+      var _atsign = AtLocationNotificationListener().currentAtSign;
+      var mylatlng = await getMyLocation();
+      var _image = await MasterLocationService().getImageOfAtsignNew(_atsign);
+
+      var _myData = HybridModel(
+          displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
+
+      updateMyLatLng(_myData);
+
       myLocationStream = Geolocator.getPositionStream(distanceFilter: 10)
           .listen((myLocation) async {
         var mylatlng = LatLng(myLocation.latitude, myLocation.longitude);
@@ -92,11 +94,19 @@ class LocationService {
 
         updateMyLatLng(_myData);
       });
+    } else {
+      // ignore: unnecessary_null_comparison
+      if (AtLocationNotificationListener().navKey != null) {
+        CustomToast().show('Location permission not granted',
+            AtLocationNotificationListener().navKey.currentContext!);
+      }
     }
   }
 
   void updateMyLatLng(HybridModel _myData) async {
-    if (etaFrom != null) _myData.eta = await (_calculateEta(_myData) as FutureOr<String?>);
+    if (etaFrom != null) {
+      _myData.eta = await (_calculateEta(_myData) as FutureOr<String?>);
+    }
 
     _myData.marker = buildMarker(_myData, singleMarker: true);
 
@@ -228,7 +238,8 @@ class LocationService {
           } else {
             mylatlng = await getMyLocation();
           }
-          _res = await DistanceCalculate().calculateETA(mylatlng!, user.latLng!);
+          _res =
+              await DistanceCalculate().calculateETA(mylatlng!, user.latLng!);
         }
 
         return _res;

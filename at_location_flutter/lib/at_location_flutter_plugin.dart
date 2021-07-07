@@ -11,6 +11,7 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/m
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_controller.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_snap.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'common_components/floating_icon.dart';
@@ -89,7 +90,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   @override
   void dispose() {
     LocationService().dispose();
-    _popupController?.streamController?.close();
+    _popupController.streamController?.close();
     super.dispose();
   }
 
@@ -168,6 +169,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                           widget.right ?? 20,
                           widget.bottom ?? 20,
                         )),
+                        // ignore: unnecessary_null_comparison
                         center: ((users != null) && (users.isNotEmpty))
                             ? users[0].latLng
                             : LatLng(45, 45),
@@ -212,10 +214,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                                         .data![markers.indexOf(marker)]);
                               }),
                           builder: (context, markers) {
-                            return (false)
-                                ? buildMarkerCluster(markers,
-                                    eventData: LocationService().eventData)
-                                : buildMarkerCluster(markers);
+                            return buildMarkerCluster(markers);
                           },
                         ),
                       ],

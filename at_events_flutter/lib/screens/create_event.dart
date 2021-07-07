@@ -1,20 +1,18 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_common_flutter/widgets/custom_input_field.dart';
-import 'package:at_contacts_flutter/screens/contacts_screen.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
+import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_events_flutter/common_components/bottom_sheet.dart';
 import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/common_components/error_screen.dart';
 import 'package:at_events_flutter/common_components/overlapping-contacts.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
-import 'package:at_events_flutter/models/hybrid_notifiation_model.dart';
 import 'package:at_events_flutter/screens/one_day_event.dart';
-import 'package:at_events_flutter/screens/recurring_event.dart';
 import 'package:at_events_flutter/common_components/custom_heading.dart';
 import 'package:at_events_flutter/screens/select_location.dart';
 import 'package:at_events_flutter/services/event_services.dart';
-import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
@@ -22,11 +20,12 @@ import 'package:at_contact/at_contact.dart';
 import '../at_events_flutter.dart';
 
 class CreateEvent extends StatefulWidget {
-  final EventNotificationModel eventData;
-  final ValueChanged<EventNotificationModel> onEventSaved;
-  final List<HybridNotificationModel> createdEvents;
+  final AtClientImpl? atClientInstance;
+  final EventNotificationModel? eventData;
+  final ValueChanged<EventNotificationModel>? onEventSaved;
+  final List<EventNotificationModel>? createdEvents;
   final isUpdate;
-  CreateEvent(
+  CreateEvent(this.atClientInstance,
       {this.isUpdate = false,
       this.eventData,
       this.onEventSaved,
@@ -36,16 +35,20 @@ class CreateEvent extends StatefulWidget {
 }
 
 class _CreateEventState extends State<CreateEvent> {
-  List<AtContact> selectedContactList;
-  bool isLoading, isValidAtsign = true;
-  String typedAtSign = '';
+  List<AtContact>? selectedContactList;
+  late List<GroupContactsModel?> selectedGroupContact;
+  late bool isLoading;
 
   @override
   void initState() {
     super.initState();
     isLoading = false;
-    EventService()
-        .init(isUpdate: widget.isUpdate ?? false, eventData: widget.eventData);
+    EventService().init(
+        widget.atClientInstance,
+        // ignore: prefer_if_null_operators
+        widget.isUpdate != null ? widget.isUpdate : false,
+        // ignore: prefer_if_null_operators
+        widget.eventData != null ? widget.eventData : null);
     if (widget.createdEvents != null) {
       EventService().createdEvents = widget.createdEvents;
     }
@@ -53,24 +56,17 @@ class _CreateEventState extends State<CreateEvent> {
     if (widget.onEventSaved != null) {
       EventService().onEventSaved = widget.onEventSaved;
     }
-    initContactPlugin();
-  }
-
-  void initContactPlugin() {
-    initializeContactsService(EventService().atClientInstance,
-        EventService().atClientInstance.currentAtSign,
-        rootDomain: EventService().rootDomain);
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      height: SizeConfig().screenHeight * 1,
+      height: SizeConfig().screenHeight,
       padding: EdgeInsets.fromLTRB(25, 25, 25, 10),
       child: SingleChildScrollView(
         child: Container(
-          height: SizeConfig().screenHeight * 0.83,
+          height: SizeConfig().screenHeight * 0.85,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +79,8 @@ class _CreateEventState extends State<CreateEvent> {
                     StreamBuilder(
                         stream: EventService().eventStream,
                         builder: (BuildContext context, snapshot) {
-                          EventNotificationModel eventData = snapshot.data;
+                          var eventData =
+                              snapshot.data as EventNotificationModel?;
 
                           if (eventData != null && snapshot.hasData) {
                             return Container(
@@ -91,78 +88,61 @@ class _CreateEventState extends State<CreateEvent> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   CustomHeading(
-                                      heading: EventService().isEventUpdate
-                                          ? 'Edit event'
-                                          : 'Create an event',
+                                      heading: 'Create an event',
                                       action: 'Cancel'),
                                   SizedBox(height: 25),
                                   Text('Send To',
                                       style: CustomTextStyles().greyLabel14),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
-                                      width: 330.toWidth,
-                                      height: 50,
-                                      // isReadOnly: true,
-                                      hintText:
-                                          'Type @sign or search from contact',
-                                      icon: Icons.contacts_rounded,
-                                      initialValue: typedAtSign,
-                                      onIconTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ContactsScreen(
-                                              asSelectionScreen: true,
-                                              asSingleSelectionScreen: true,
-                                              context: context,
-                                              selectedList: (selectedList) {
-                                                selectedContactList =
-                                                    selectedList;
+                                    width: SizeConfig().screenWidth * 0.95,
+                                    height: 50.toHeight,
+                                    isReadOnly: true,
+                                    hintText: 'Select @sign from contacts',
+                                    icon: Icons.contacts_rounded,
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              GroupContactView(
+                                            asSelectionScreen: true,
+                                            showGroups: true,
+                                            showContacts: true,
+                                            selectedList: (s) {
+                                              selectedGroupContact = s;
 
-                                                if (selectedContactList
-                                                    .isNotEmpty) {
-                                                  EventService()
-                                                      .addNewGroupMembers(
-                                                          selectedContactList);
-                                                  EventService().update();
-                                                  setState(() {
-                                                    isValidAtsign = true;
-                                                    typedAtSign =
-                                                        selectedContactList[0]
-                                                            .atSign;
-                                                  });
-                                                }
-                                              },
-                                            ),
+                                              // ignore: prefer_is_empty
+                                              if (selectedGroupContact.length >
+                                                  0) {
+                                                EventService()
+                                                    .addNewContactAndGroupMembers(
+                                                        selectedGroupContact);
+                                                EventService().update();
+                                              }
+                                            },
                                           ),
-                                        );
-                                      },
-                                      value: (String value) async {
-                                        typedAtSign = value;
-                                      }),
-                                  SizedBox(height: 20),
-                                  !isValidAtsign
-                                      ? Text(
-                                          'Enter a valid atsign',
-                                          style: TextStyle(color: Colors.red),
-                                        )
-                                      : SizedBox(),
-                                  !isValidAtsign
-                                      ? SizedBox(height: 25)
-                                      : SizedBox(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(height: 25),
                                   (EventService().selectedContacts != null &&
+                                          // ignore: prefer_is_empty
                                           EventService()
-                                              .selectedContacts
-                                              .isNotEmpty)
+                                                  .selectedContacts!
+                                                  .length >
+                                              0)
                                       ? (OverlappingContacts(
                                           selectedList:
                                               EventService().selectedContacts))
                                       : SizedBox(),
                                   (EventService().selectedContacts != null &&
+                                          // ignore: prefer_is_empty
                                           EventService()
-                                              .selectedContacts
-                                              .isNotEmpty)
+                                                  .selectedContacts!
+                                                  .length >
+                                              0)
                                       ? SizedBox(height: 25)
                                       : SizedBox(),
                                   Text(
@@ -171,15 +151,17 @@ class _CreateEventState extends State<CreateEvent> {
                                   ),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
-                                    width: 330.toWidth,
-                                    height: 50,
+                                    width: SizeConfig().screenWidth * 0.95,
+                                    height: 50.toHeight,
                                     hintText: 'Title of the event',
-                                    initialValue: eventData?.title != null
-                                        ? eventData.title
+                                    initialValue: eventData.title != null
+                                        ? EventService()
+                                            .eventNotificationModel!
+                                            .title!
                                         : '',
                                     value: (val) {
                                       EventService()
-                                          .eventNotificationModel
+                                          .eventNotificationModel!
                                           .title = val;
                                     },
                                   ),
@@ -188,11 +170,13 @@ class _CreateEventState extends State<CreateEvent> {
                                       style: CustomTextStyles().greyLabel14),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
-                                    width: 330.toWidth,
-                                    height: 50,
+                                    width: SizeConfig().screenWidth * 0.95,
+                                    height: 50.toHeight,
                                     isReadOnly: true,
                                     hintText: 'Start typing or select from map',
-                                    initialValue: eventData.venue.label ?? '',
+                                    initialValue: eventData.venue!.label != null
+                                        ? eventData.venue!.label!
+                                        : '',
                                     onTap: () => bottomSheet(
                                         context,
                                         SelectLocation(),
@@ -202,33 +186,33 @@ class _CreateEventState extends State<CreateEvent> {
                                   Row(
                                     children: <Widget>[
                                       Expanded(
-                                        child: Text('One Day Event',
-                                            style:
-                                                CustomTextStyles().greyLabel14),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            bottomSheet(
+                                                context,
+                                                OneDayEvent(),
+                                                SizeConfig().screenHeight *
+                                                    0.9);
+                                          },
+                                          child: Text('Select Times',
+                                              style: CustomTextStyles()
+                                                  .greyLabel14),
+                                        ),
                                       ),
                                       Checkbox(
                                         value: (EventService()
-                                                        .eventNotificationModel
-                                                        .event
+                                                        .eventNotificationModel!
+                                                        .event!
                                                         .isRecurring !=
                                                     null &&
                                                 EventService()
-                                                        .eventNotificationModel
-                                                        .event
+                                                        .eventNotificationModel!
+                                                        .event!
                                                         .isRecurring ==
                                                     false)
                                             ? true
                                             : false,
                                         onChanged: (value) {
-                                          print(value);
-
-                                          if (value) {
-                                            EventService()
-                                                .eventNotificationModel
-                                                .event
-                                                .isRecurring = !value;
-                                            EventService().update();
-                                          }
                                           bottomSheet(context, OneDayEvent(),
                                               SizeConfig().screenHeight * 0.9);
                                         },
@@ -236,74 +220,57 @@ class _CreateEventState extends State<CreateEvent> {
                                     ],
                                   ),
                                   (EventService()
-                                              .eventNotificationModel
-                                              .event
+                                              .eventNotificationModel!
+                                              .event!
                                               .isRecurring ==
                                           false)
                                       ? (EventService()
-                                                      .eventNotificationModel
-                                                      .event
+                                                      .eventNotificationModel!
+                                                      .event!
                                                       .date !=
                                                   null &&
                                               EventService()
-                                                      .eventNotificationModel
-                                                      .event
+                                                      .eventNotificationModel!
+                                                      .event!
                                                       .startTime !=
                                                   null &&
                                               EventService()
-                                                      .eventNotificationModel
-                                                      .event
+                                                      .eventNotificationModel!
+                                                      .event!
                                                       .endTime !=
                                                   null)
                                           ? Text(
-                                              'Event on ${dateToString(eventData.event.date)} (${timeOfDayToString(eventData.event.startTime)}- ${timeOfDayToString(eventData.event.endTime)})')
+                                              ((dateToString(eventData
+                                                              .event!.date!) ==
+                                                          dateToString(
+                                                              DateTime.now()))
+                                                      ? 'Event today (${timeOfDayToString(eventData.event!.startTime!)})'
+                                                      : 'Event on ${(dateToString(eventData.event!.date!) != dateToString(DateTime.now()) ? dateToString(eventData.event!.date!) : dateToString(DateTime.now()))} (${timeOfDayToString(eventData.event!.startTime!)})') +
+                                                  ((dateToString(eventData
+                                                              .event!
+                                                              .endDate!) ==
+                                                          dateToString(eventData
+                                                              .event!.date!))
+                                                      ? ' to'
+                                                      : ' to ${dateToString(eventData.event!.endDate!)}') +
+                                                  (' (${timeOfDayToString(eventData.event!.endTime!)})'),
+
+                                              ///
+                                              // 'Event on ${dateToString(eventData.event.date)} (${timeOfDayToString(eventData.event.startTime)}- ${timeOfDayToString(eventData.event.endTime)})',
+                                              style: CustomTextStyles()
+                                                  .greyLabel12,
+                                            )
                                           : SizedBox()
                                       : SizedBox(),
                                   SizedBox(height: 20.toHeight),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Text(
-                                          'Recurring Event',
-                                          style: CustomTextStyles().greyLabel14,
-                                        ),
-                                      ),
-                                      Checkbox(
-                                        value: (EventService()
-                                                        .eventNotificationModel
-                                                        .event
-                                                        .isRecurring !=
-                                                    null &&
-                                                EventService()
-                                                        .eventNotificationModel
-                                                        .event
-                                                        .isRecurring ==
-                                                    true)
-                                            ? true
-                                            : false,
-                                        onChanged: (value) {
-                                          if (value) {
-                                            EventService()
-                                                .eventNotificationModel
-                                                .event
-                                                .isRecurring = value;
-
-                                            EventService().update();
-                                          }
-                                          bottomSheet(context, RecurringEvent(),
-                                              SizeConfig().screenHeight * 0.9);
-                                        },
-                                      )
-                                    ],
-                                  ),
                                   (EventService()
-                                                  .eventNotificationModel
-                                                  .event
+                                                  .eventNotificationModel!
+                                                  .event!
                                                   .isRecurring !=
                                               null &&
                                           EventService()
-                                                  .eventNotificationModel
-                                                  .event
+                                                  .eventNotificationModel!
+                                                  .event!
                                                   .isRecurring ==
                                               true)
                                       ? Container(
@@ -311,37 +278,37 @@ class _CreateEventState extends State<CreateEvent> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              (eventData.event.repeatCycle ==
+                                              (eventData.event!.repeatCycle ==
                                                           RepeatCycle.MONTH &&
-                                                      eventData.event.date !=
+                                                      eventData.event!.date !=
                                                           null &&
-                                                      eventData.event
+                                                      eventData.event!
                                                               .repeatDuration !=
                                                           null)
                                                   ? Text(
-                                                      'Repeats every ${eventData.event.repeatDuration} month on ${eventData.event.date.day} day')
-                                                  : (eventData.event
+                                                      'Repeats every ${eventData.event!.repeatDuration} month on ${eventData.event!.date!.day} day')
+                                                  : (eventData.event!
                                                                   .repeatCycle ==
                                                               RepeatCycle
                                                                   .WEEK &&
-                                                          eventData.event
+                                                          eventData.event!
                                                                   .occursOn !=
                                                               null)
                                                       ? Text(
-                                                          'Repeats every ${eventData.event.repeatDuration} week on ${getWeekString(eventData.event.occursOn)}')
+                                                          'Repeats every ${eventData.event!.repeatDuration} week on ${getWeekString(eventData.event!.occursOn)}')
                                                       : SizedBox(),
                                               EventService()
-                                                              .eventNotificationModel
-                                                              .event
+                                                              .eventNotificationModel!
+                                                              .event!
                                                               .endsOn !=
                                                           null &&
                                                       EventService()
-                                                              .eventNotificationModel
-                                                              .event
+                                                              .eventNotificationModel!
+                                                              .event!
                                                               .endsOn ==
                                                           EndsOn.AFTER
                                                   ? Text(
-                                                      'Ends after ${eventData.event.endEventAfterOccurance} occurrence')
+                                                      'Ends after ${eventData.event!.endEventAfterOccurance} occurrence')
                                                   : SizedBox(),
                                             ],
                                           ),
@@ -353,11 +320,16 @@ class _CreateEventState extends State<CreateEvent> {
                           } else if (snapshot.hasError) {
                             return Center(
                               child: ErrorScreen(
-                                onPressed: () {
-                                  EventService().init(
-                                      isUpdate: widget.isUpdate ?? false,
-                                      eventData: widget.eventData);
-                                },
+                                onPressed: EventService().init(
+                                    widget.atClientInstance,
+                                    // ignore: prefer_if_null_operators
+                                    widget.isUpdate != null
+                                        ? widget.isUpdate
+                                        : false,
+                                    // ignore: prefer_if_null_operators
+                                    widget.eventData != null
+                                        ? widget.eventData
+                                        : null),
                               ),
                             );
                           } else {
@@ -374,16 +346,10 @@ class _CreateEventState extends State<CreateEvent> {
                         buttonText:
                             widget.isUpdate ? 'Save' : 'Create & Invite',
                         onPressed: onCreateEvent,
-                        width: 160,
-                        height: 48,
-                        buttonColor:
-                            Theme.of(context).brightness == Brightness.light
-                                ? AllColors().Black
-                                : AllColors().WHITE,
-                        fontColor:
-                            Theme.of(context).brightness == Brightness.light
-                                ? AllColors().WHITE
-                                : AllColors().Black,
+                        width: 160.toWidth,
+                        height: 50.toHeight,
+                        buttonColor: Theme.of(context).primaryColor,
+                        fontColor: Theme.of(context).scaffoldBackgroundColor,
                       ),
               ),
             ],
@@ -393,18 +359,11 @@ class _CreateEventState extends State<CreateEvent> {
     );
   }
 
-  void onCreateEvent() async {
+  // ignore: always_declare_return_types
+  onCreateEvent() async {
     setState(() {
       isLoading = true;
     });
-    var isValidAtsign = await isTypedAtSignValid();
-    if (!isValidAtsign) {
-      CustomToast().show('Invalid atsign entered', context);
-      setState(() {
-        isLoading = false;
-      });
-      return;
-    }
 
     var formValid = EventService().createEventFormValidation();
     if (formValid is String) {
@@ -416,7 +375,7 @@ class _CreateEventState extends State<CreateEvent> {
     }
 
     var isOverlap = EventService().showConcurrentEventDialog(
-        widget.createdEvents, EventService().eventNotificationModel, context);
+        widget.createdEvents, EventService().eventNotificationModel, context)!;
 
     if (isOverlap) {
       setState(() {
@@ -436,28 +395,10 @@ class _CreateEventState extends State<CreateEvent> {
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show('something went wrong , try again.', context);
+      CustomToast().show('Something went wrong ${result.toString()}', context);
       setState(() {
         isLoading = false;
       });
     }
-  }
-
-  Future<bool> isTypedAtSignValid() async {
-    if (typedAtSign.trim().isEmpty) return true;
-    var isValid = await EventService().checkAtsign(typedAtSign);
-    setState(() {
-      isValidAtsign = isValid;
-    });
-
-    if (typedAtSign[0] != '@') {
-      typedAtSign = '@' + typedAtSign;
-    }
-
-    if (isValid) {
-      EventService().addNewGroupMembers([AtContact(atSign: typedAtSign)]);
-      EventService().update();
-    }
-    return isValid;
   }
 }
