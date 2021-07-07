@@ -71,6 +71,7 @@ class EventKeyStreamService {
 
     if (response.isEmpty) {
       EventLocationShare().init();
+      notifyListeners();
       return;
     }
 
