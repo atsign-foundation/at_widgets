@@ -10,7 +10,7 @@ import 'package:at_location_flutter/map_content/flutter_map/src/map/flutter_map_
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/plugins/plugin.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 export 'package:at_location_flutter/map_content/flutter_map/src/core/point.dart';
 export 'package:at_location_flutter/map_content/flutter_map/src/geo/crs/crs.dart';

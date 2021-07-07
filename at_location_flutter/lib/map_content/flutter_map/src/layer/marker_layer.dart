@@ -3,7 +3,7 @@ import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 class MarkerLayerOptions extends LayerOptions {
   final List<Marker> markers;

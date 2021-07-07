@@ -10,7 +10,7 @@ import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'contact_service.dart';
 import 'location_service.dart';

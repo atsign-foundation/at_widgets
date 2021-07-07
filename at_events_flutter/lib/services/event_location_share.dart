@@ -14,7 +14,7 @@ import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 /// [masterSwitchState] will control whether location is sent to any user
 ///
