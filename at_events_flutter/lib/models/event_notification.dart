@@ -85,7 +85,8 @@ class EventNotificationModel {
       'group': json.encode(eventNotification.group),
       'lat': eventNotification.lat.toString(),
       'long': eventNotification.long.toString(),
-      // TODO: Update ['group']['updatedAt'] with DateTime.now()
+
+      /// Update ['group']['updatedAt'] with DateTime.now()
       'venue': json.encode({
         'latitude': eventNotification.venue!.latitude.toString(),
         'longitude': eventNotification.venue!.longitude.toString(),

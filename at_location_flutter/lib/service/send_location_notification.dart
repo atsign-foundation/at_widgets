@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
@@ -12,9 +11,14 @@ import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
-
 import 'key_stream_service.dart';
 
+/// [masterSwitchState] will control whether location is sent to any user
+///
+/// [locationPromptDialog] will be called whenever package is about to send location and [masterSwitchState] is false.
+///
+/// Make sure that [locationPromptDialog] is a dialog or a function which can ask the user to turn the [masterSwitchState]
+/// true if needed.
 class SendLocationNotification {
   SendLocationNotification._();
   static final SendLocationNotification _instance =

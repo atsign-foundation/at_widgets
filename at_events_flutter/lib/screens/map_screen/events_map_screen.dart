@@ -16,7 +16,6 @@ import 'package:latlong/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'events_collapsed_content.dart';
 
-/// TODO: Sometimes updateEventdataFromList is called consecutively multiple times, so location data is not displayed consistently
 class EventsMapScreenData {
   EventsMapScreenData._();
   static final EventsMapScreenData _instance = EventsMapScreenData._();

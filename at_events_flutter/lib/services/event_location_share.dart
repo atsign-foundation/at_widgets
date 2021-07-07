@@ -9,7 +9,6 @@ import 'package:at_events_flutter/models/event_member_location.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
-// import 'package:at_events_flutter/services/sync_secondary.dart';
 import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_location_flutter/service/my_location.dart';
@@ -17,10 +16,12 @@ import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong/latlong.dart';
 
-/// We cannot use same key for creating acknowledgments and sending location
-/// as if something goes wrong and our key containing our location reaches just after I send request to turn of my location
-/// Then it will again turn on my location
-/// as tags in the location key will be of the previous state
+/// [masterSwitchState] will control whether location is sent to any user
+///
+/// [locationPromptDialog] will be called whenever package is about to send location and [masterSwitchState] is false.
+///
+/// Make sure that [locationPromptDialog] is a dialog or a function which can ask the user to turn the [masterSwitchState]
+/// true if needed.
 class EventLocationShare {
   EventLocationShare._();
   static final EventLocationShare _instance = EventLocationShare._();
@@ -31,13 +32,7 @@ class EventLocationShare {
   List<EventNotificationModel> eventsToShareLocationWith = [];
   Function? locationPromptDialog;
 
-  /// TODO:
-  /// Doubt, whetherwe should have some kind of list which will send
-  /// Or should we use the entire events list and use it
-
   void init() {
-    ///TODO: filter out events which have not been responded
-
     _initialiseEventData();
 
     print('EventLocationShare init');
@@ -60,6 +55,8 @@ class EventLocationShare {
   }
 
   /// TODO: We can form EventMemberLocation objects here, do that we need not loop later while sending
+  ///
+  /// TODO: Can filter events for a specific time limit
   void _initialiseEventData() {
     for (var i = 0;
         i < EventKeyStreamService().allEventNotifications.length;
@@ -232,7 +229,6 @@ class EventLocationShare {
             lat: _myLocation.latitude,
             long: _myLocation.longitude);
 
-        /// TODO: check this
         var atkeyMicrosecondId =
             _eventNotificationModel.key!.split('-')[1].split('@')[0];
 

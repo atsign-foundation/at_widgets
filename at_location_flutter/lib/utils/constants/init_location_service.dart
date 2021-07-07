@@ -11,7 +11,7 @@ import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-/// Function to initialise the package. Should be mandatorly called before accessing package functionalities.
+/// Function to initialise the package. Should be mandatorily called before accessing package functionalities.
 ///
 /// [mapKey] is needed to access maps.
 ///
