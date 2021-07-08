@@ -43,7 +43,7 @@ class ConnectionsService {
       await createLists(isFollowing: true);
       if (following.list!.isNotEmpty) {
         connectionProvider.followingList =
-            await _formAtSignData(following.list!, isFollowing: true);
+        await _formAtSignData(following.list!, isFollowing: true);
       }
       if (!this.following.contains(this.followAtsign) &&
           this.followAtsign != null) {
@@ -59,7 +59,7 @@ class ConnectionsService {
       await createLists(isFollowing: false);
       if (followers.list!.isNotEmpty) {
         connectionProvider.followersList =
-            await _formAtSignData(followers.list!);
+        await _formAtSignData(followers.list!);
       }
     }
     if (isInit) {
@@ -67,7 +67,7 @@ class ConnectionsService {
           ? followers.getKey!.metadata?.updatedAt
           : null;
       var notificationsList =
-          await _sdkService.notifyList(fromDate: fromDate?.toString());
+      await _sdkService.notifyList(fromDate: fromDate?.toString());
       //filtering notifications which has only new followers
       for (var notification in notificationsList) {
         if (notification.operation == Operation.update) {
@@ -89,7 +89,7 @@ class ConnectionsService {
     List<Atsign> atsignList = [];
     for (var connection in connectionsList) {
       var atsignData =
-          await _getAtsignData(connection, isFollowing: isFollowing);
+      await _getAtsignData(connection, isFollowing: isFollowing);
       atsignList.add(atsignData);
     }
     atsignList.sort((a, b) => a.title![1].compareTo(b.title![1]));
@@ -108,6 +108,7 @@ class ConnectionsService {
     }
     following.add(atsign);
     var result = await _sdkService.put(atKey, following.toString());
+    await _sdkService.sync();
     //change metadata to private to notify
     if (result) {
       atKey..sharedWith = atsign;
@@ -117,7 +118,7 @@ class ConnectionsService {
           atKey, atsign!, OperationEnum.update, _onNotifyDone, _onNotifyError);
     }
     var atsignData =
-        await _getAtsignData(atsign, isNew: true, isFollowing: true);
+    await _getAtsignData(atsign, isNew: true, isFollowing: true);
     await _sdkService.sync();
     return atsignData;
   }
@@ -181,8 +182,10 @@ class ConnectionsService {
     atFollowsList.remove(atsign);
     if (atFollowsList.toString().isEmpty) {
       result = await _sdkService.put(atKey, 'null');
+      await _sdkService.sync();
     } else {
       result = await _sdkService.put(atKey, atFollowsList.toString());
+      await _sdkService.sync();
     }
     return result;
   }
@@ -295,7 +298,7 @@ class ConnectionsService {
       this.followers.create(followersValue);
       if (followersValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
-            !followersValue.metadata!.isPublic!;
+        !followersValue.metadata!.isPublic!;
         await _sdkService.sync();
       }
     } else {
@@ -306,7 +309,7 @@ class ConnectionsService {
 
       if (followingValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowingPrivate =
-            !followingValue.metadata!.isPublic!;
+        !followingValue.metadata!.isPublic!;
         await _sdkService.sync();
       }
     }
@@ -450,12 +453,12 @@ class AtNotification {
 
   AtNotification(
       {this.id,
-      this.fromAtSign,
-      this.toAtSign,
-      this.key,
-      this.value,
-      this.dateTime,
-      this.operation});
+        this.fromAtSign,
+        this.toAtSign,
+        this.key,
+        this.value,
+        this.dateTime,
+        this.operation});
 
   factory AtNotification.fromJson(Map<String, dynamic> json) {
     return AtNotification(
