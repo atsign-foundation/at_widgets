@@ -30,6 +30,7 @@
       <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/example/build" />
       <excludeFolder url="file://$MODULE_DIR$/at_location_flutter/.pub" />
