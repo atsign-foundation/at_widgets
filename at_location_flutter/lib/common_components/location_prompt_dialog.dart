@@ -152,7 +152,8 @@ class _LocationPromptState extends State<LocationPrompt> {
 
   Future<void> updateShareLocation() async {
     var update = await SharingLocationService()
-        .updateWithShareLocationAcknowledge(widget.locationNotificationModel!);
+        .updateWithShareLocationAcknowledge(widget.locationNotificationModel!,
+            rePrompt: widget.locationNotificationModel!.rePrompt);
 
     if (update) {
       CustomToast().show('Share Location Request sent', context);
@@ -163,7 +164,8 @@ class _LocationPromptState extends State<LocationPrompt> {
 
   Future<void> updateRequestLocation() async {
     var update = await RequestLocationService()
-        .updateWithRequestLocationAcknowledge(widget.locationNotificationModel!);
+        .updateWithRequestLocationAcknowledge(widget.locationNotificationModel!,
+            rePrompt: widget.locationNotificationModel!.rePrompt);
 
     if (update) {
       CustomToast().show('Prompted again', context);

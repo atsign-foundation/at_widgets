@@ -35,6 +35,16 @@ class SharingLocationService {
     }
   }
 
+  bool checkIfEventIsRejected(
+      LocationNotificationModel locationNotificationModel) {
+    if ((!locationNotificationModel.isAccepted) &&
+        (locationNotificationModel.isExited)) {
+      return true;
+    }
+
+    return false;
+  }
+
   Future<bool?> sendShareLocationEvent(String? atsign, bool isAcknowledgment,
       {int? minutes}) async {
     try {
@@ -46,16 +56,29 @@ class SharingLocationService {
                 LocationNotificationModel.convertLocationNotificationToJson(
                     alreadyExists[1])));
 
-        newLocationNotificationModel.to =
-            DateTime.now().add(Duration(minutes: minutes!));
+        var isRejected = checkIfEventIsRejected(newLocationNotificationModel);
+
+        if (minutes != null) {
+          newLocationNotificationModel.to =
+              DateTime.now().add(Duration(minutes: minutes));
+        } else {
+          newLocationNotificationModel.to = null;
+        }
+
+        if (isRejected) {
+          newLocationNotificationModel.rePrompt = true;
+        }
+
+        var msg = isRejected
+            ? 'Your share location request has been rejected by $atsign. Would you like to prompt them again & update your request ?'
+            : 'You already are sharing your location with $atsign. Would you like to update it ?';
 
         await locationPromptDialog(
-            text:
-                'You are already sharing your location with $atsign. Would you like to update it ?',
+            text: msg,
             locationNotificationModel: newLocationNotificationModel,
             isShareLocationData: true,
             isRequestLocationData: false,
-            yesText: 'Yes! Update',
+            yesText: isRejected ? 'Yes! Re-Prompt' : 'Yes! Update',
             noText: 'No');
         return null;
       }
@@ -146,7 +169,8 @@ class SharingLocationService {
 
   Future<bool> updateWithShareLocationAcknowledge(
       LocationNotificationModel originalLocationNotificationModel,
-      {bool? isSharing}) async {
+      {bool? isSharing,
+      bool rePrompt = false}) async {
     try {
       var locationNotificationModel = LocationNotificationModel.fromJson(
           jsonDecode(
@@ -165,6 +189,8 @@ class SharingLocationService {
       var key = getAtKey(response[0]);
 
       locationNotificationModel.isAcknowledgment = true;
+      locationNotificationModel.rePrompt =
+          rePrompt; // Dont show dialog box again
 
       if (isSharing != null) locationNotificationModel.isSharing = isSharing;
 
