@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:at_chat_flutter/at_chat_flutter.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/common_components/floating_icon.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
+import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/distance_calculate.dart';
@@ -29,6 +31,7 @@ class EventsMapScreenData {
   void moveToEventScreen(EventNotificationModel _eventNotificationModel) async {
     markers = [];
     exitedAtSigns = [];
+    _initChat(_eventNotificationModel);
     _calculateExitedAtsigns(_eventNotificationModel);
     eventNotifier = ValueNotifier(_eventNotificationModel);
     markers.add(addVenueMarker(_eventNotificationModel));
@@ -186,6 +189,43 @@ class EventsMapScreenData {
     return null;
   }
 
+  // ignore: always_declare_return_types
+  _initChat(EventNotificationModel _event) async {
+    await _getAtSignAndInitializeChat();
+    _setAtsignToChatWith(_event);
+  }
+
+  // ignore: always_declare_return_types
+  _getAtSignAndInitializeChat() async {
+    initializeChatService(AtEventNotificationListener().atClientInstance!,
+        AtEventNotificationListener().currentAtSign!,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
+  }
+
+  // ignore: always_declare_return_types
+  _setAtsignToChatWith(EventNotificationModel _event) {
+    var groupMembers = <String>[];
+    groupMembers.add(_event.atsignCreator!);
+    _event.group?.members?.forEach((member) {
+      groupMembers.add(member.atSign!);
+    });
+    groupMembers.remove(AtEventNotificationListener().currentAtSign);
+    var atkeyMicrosecondId = _event.key!.split('createevent-')[1].split('@')[0];
+    if ((AtEventNotificationListener().atClientInstance!.preference != null) &&
+        (AtEventNotificationListener()
+                .atClientInstance!
+                .preference!
+                .namespace !=
+            null)) {
+      atkeyMicrosecondId = atkeyMicrosecondId.replaceAll(
+          '.${AtEventNotificationListener().atClientInstance!.preference!.namespace!}',
+          '');
+    }
+    print('atkeyMicrosecondId $atkeyMicrosecondId');
+    setChatWithAtSign('',
+        isGroup: true, groupId: atkeyMicrosecondId, groupMembers: groupMembers);
+  }
+
   void dispose() {
     eventNotifier = null;
     markers = [];
@@ -202,7 +242,8 @@ class _EventsMapScreen extends StatefulWidget {
 
 class _EventsMapScreenState extends State<_EventsMapScreen> {
   final PanelController pc = PanelController();
-  List _previousMembersSharingLocation = [];
+  bool snackbarShownOnce = false;
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
@@ -214,6 +255,7 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: scaffoldKey,
         body: Container(
           alignment: Alignment.center,
           child: ValueListenableBuilder(
@@ -232,16 +274,16 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
 
               print('_locationList $_locationList');
 
-              if (((_previousMembersSharingLocation.isEmpty) ||
-                      (_previousMembersSharingLocation !=
-                          _membersSharingLocation)) &&
+              if ((!snackbarShownOnce) &&
                   (_membersSharingLocation.isNotEmpty)) {
                 Future.delayed(Duration(seconds: 1), () {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(_membersSharingLocation.length > 1
-                          ? '${_listToString(_membersSharingLocation)} are sharing their locations'
-                          : '${_listToString(_membersSharingLocation)} is sharing their location')));
-                  _previousMembersSharingLocation = _membersSharingLocation;
+                    content: Text(_membersSharingLocation.length > 1
+                        ? '${_listToString(_membersSharingLocation)} are sharing their locations'
+                        : '${_listToString(_membersSharingLocation)} is sharing their location'),
+                    dismissDirection: DismissDirection.horizontal,
+                  ));
+                  snackbarShownOnce = true;
                 });
               }
 
@@ -259,6 +301,16 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
                       isTopLeft: true,
                       onPressed: () => Navigator.pop(context),
                     ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: FloatingIcon(
+                        bgColor: Theme.of(context).primaryColor,
+                        icon: Icons.message_outlined,
+                        iconColor: Theme.of(context).scaffoldBackgroundColor,
+                        onPressed: () => scaffoldKey.currentState!
+                            .showBottomSheet((context) => ChatScreen())),
                   ),
                   SlidingUpPanel(
                     controller: pc,

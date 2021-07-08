@@ -26,11 +26,7 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   http: ^0.13.1
   fluttertoast: ^8.0.3
-
-  # null-safe versions
-  # positioned_tap_detector_2: ^1.0.0
-  # latlong2: ^0.8.0
-  # remove toast
+  at_chat_flutter: ^2.0.0
 
   at_client_mobile: ^2.0.0
   at_lookup: ^2.0.1
