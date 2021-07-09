@@ -50,7 +50,6 @@ class _SecondScreenState extends State<SecondScreen> {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => ContactsScreen(
                     context: context,
-                    asSelectionScreen: true,
                     selectedList: (s) {
                       print('selected list: $s');
                     },
