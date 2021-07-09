@@ -4,6 +4,7 @@ import 'package:at_location_flutter/common_components/collapsed_content.dart';
 import 'package:at_location_flutter/common_components/floating_icon.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
+import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -75,7 +76,7 @@ class _MapScreenState extends State<MapScreen> {
                 top: 0,
                 right: 0,
                 child: FloatingIcon(
-                    bgColor: Theme.of(context).primaryColor,
+                    bgColor: AllColors().Black,
                     icon: Icons.message_outlined,
                     iconColor: Theme.of(context).scaffoldBackgroundColor,
                     onPressed: () => scaffoldKey!.currentState!
