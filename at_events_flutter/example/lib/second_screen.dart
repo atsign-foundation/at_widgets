@@ -15,9 +15,9 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  String activeAtSign;
-  GlobalKey<ScaffoldState> scaffoldKey;
-  bool isAuthenticated;
+  String? activeAtSign;
+  GlobalKey<ScaffoldState>? scaffoldKey;
+  bool? isAuthenticated;
   List<EventKeyLocationModel> events = [];
 
   @override
@@ -27,13 +27,13 @@ class _SecondScreenState extends State<SecondScreen> {
 
     try {
       activeAtSign =
-          clientSdkService.atClientServiceInstance.atClient.currentAtSign;
+          clientSdkService.atClientServiceInstance!.atClient!.currentAtSign;
       initializeEventService();
       isAuthenticated = true;
     } catch (e) {
       isAuthenticated = false;
       print('not authenticated');
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -79,7 +79,7 @@ class _SecondScreenState extends State<SecondScreen> {
             onPressed: () {
               bottomSheet(
                   CreateEvent(
-                      clientSdkService.atClientServiceInstance.atClient),
+                      clientSdkService.atClientServiceInstance!.atClient),
                   MediaQuery.of(context).size.height * 0.9);
             },
             child: Container(
@@ -97,29 +97,29 @@ class _SecondScreenState extends State<SecondScreen> {
                   return InkWell(
                     onTap: () {
                       HomeEventService().onEventModelTap(
-                          events[index].eventNotificationModel,
+                          events[index].eventNotificationModel!,
                           events[index].haveResponded);
                     },
                     child: DisplayTile(
                       atsignCreator:
-                          events[index].eventNotificationModel.atsignCreator,
+                          events[index].eventNotificationModel!.atsignCreator,
                       number: events[index]
-                          .eventNotificationModel
-                          .group
-                          .members
+                          .eventNotificationModel!
+                          .group!
+                          .members!
                           .length,
                       title: 'Event - ' +
-                          events[index].eventNotificationModel.title,
+                          events[index].eventNotificationModel!.title!,
                       subTitle: HomeEventService()
-                          .getSubTitle(events[index].eventNotificationModel),
+                          .getSubTitle(events[index].eventNotificationModel!),
                       semiTitle: HomeEventService().getSemiTitle(
-                          events[index].eventNotificationModel,
+                          events[index].eventNotificationModel!,
                           events[index].haveResponded),
                       showRetry:
                           HomeEventService().calculateShowRetry(events[index]),
                       onRetryTapped: () {
                         HomeEventService().onEventModelTap(
-                            events[index].eventNotificationModel, false);
+                            events[index].eventNotificationModel!, false);
                       },
                     ),
                   );
@@ -138,7 +138,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
   void initializeEventService() {
     initialiseEventService(
-        clientSdkService.atClientServiceInstance.atClient, NavService.navKey,
+        clientSdkService.atClientServiceInstance!.atClient!, NavService.navKey,
         mapKey: '',
         apiKey: '',
         rootDomain: MixedConstants.ROOT_DOMAIN,

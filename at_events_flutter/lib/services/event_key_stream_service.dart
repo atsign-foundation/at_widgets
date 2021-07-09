@@ -666,8 +666,11 @@ class EventKeyStreamService {
       var eventId =
           acknowledgedEvent.key!.split('createevent-')[1].split('@')[0];
 
-      eventId = eventId.replaceAll(
-          '.${atClientInstance!.preference!.namespace!}', '');
+      if ((atClientInstance!.preference != null) &&
+          (atClientInstance!.preference!.namespace != null)) {
+        eventId = eventId.replaceAll(
+            '.${atClientInstance!.preference!.namespace!}', '');
+      }
 
       late EventNotificationModel presentEventData;
       allEventNotifications.forEach((element) {
