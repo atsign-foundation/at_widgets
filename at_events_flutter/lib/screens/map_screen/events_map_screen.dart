@@ -282,7 +282,6 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
                     content: Text(_membersSharingLocation.length > 1
                         ? '${_listToString(_membersSharingLocation)} are sharing their locations'
                         : '${_listToString(_membersSharingLocation)} is sharing their location'),
-                    dismissDirection: DismissDirection.horizontal,
                   ));
                   snackbarShownOnce = true;
                 });
