@@ -1,3 +1,6 @@
+## 2.1.1
+- updated packages and authentication bug fix
+
 ## 2.1.0
 - changes to get apiKey from app
 
