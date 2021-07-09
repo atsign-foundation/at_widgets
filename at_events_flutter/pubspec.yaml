@@ -24,14 +24,8 @@ dependencies:
   at_lookup: ^2.0.1
   pedantic: ^1.11.0
   geolocator: ^7.0.3
-  at_contacts_group_flutter: ^2.0.0
-  at_chat_flutter: 
-    path: /Users/apple/Desktop/client_projects/at_widgets/at_chat_flutter
-
-dependency_overrides:
-  at_client_mobile: ^2.0.2
-  at_chat_flutter: 
-    path: /Users/apple/Desktop/client_projects/at_widgets/at_chat_flutter
+  at_contacts_group_flutter: ^2.0.1
+  at_chat_flutter: ^2.0.1
 
 dev_dependencies:
   flutter_test:
