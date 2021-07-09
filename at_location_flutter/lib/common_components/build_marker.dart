@@ -14,7 +14,7 @@ Marker buildMarker(HybridModel user,
     anchorPos: AnchorPos.align(AnchorAlign.center),
     height: 75,
     width: 50,
-    point: user.latLng,
+    point: user.latLng!,
     // ignore: prefer_if_null_operators
     builder: (ctx) => marker != null
         ? marker

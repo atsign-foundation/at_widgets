@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  at_chat_flutter:
+    dependency: "direct main"
+    description:
+      name: at_chat_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   at_client:
     dependency: transitive
     description:
@@ -42,7 +49,7 @@ packages:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -222,7 +229,7 @@ packages:
       name: flutter_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "4.0.1"
   flutter_keychain:
     dependency: transitive
     description:
@@ -260,14 +267,14 @@ packages:
       name: geolocator_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   geolocator_web:
     dependency: transitive
     description:
       name: geolocator_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   hive:
     dependency: transitive
     description:
@@ -414,7 +421,7 @@ packages:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   pointycastle:
     dependency: transitive
     description:

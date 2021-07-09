@@ -16,7 +16,7 @@ dependencies:
   positioned_tap_detector_2: ^1.0.0
   transparent_image: ^2.0.0
   async: ^2.5.0
-  flutter_image: ^3.0.0
+  flutter_image: ^4.0.1
   cached_network_image: ^3.0.0
   path_provider: ^2.0.1
   vector_math: ^2.1.0
@@ -26,9 +26,8 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   http: ^0.13.1
   fluttertoast: ^8.0.3
-  at_chat_flutter: ^2.0.0
-
-  at_client_mobile: ^2.0.0
+  at_chat_flutter: ^2.0.1
+  at_client_mobile: ^2.0.2
   at_lookup: ^2.0.1
   at_commons: ^2.0.1
   at_contact: ^2.0.0
