@@ -1,5 +1,6 @@
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_contacts_group_flutter/screens/list/group_list.dart';
 import 'package:at_contacts_group_flutter_example/constants.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  String activeAtSign;
+  String? activeAtSign;
   @override
   void initState() {
     getAtSignAndInitializeContacts();
@@ -47,10 +48,30 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ContactsScreen(),
+                  builder: (BuildContext context) => ContactsScreen(
+                    context: context,
+                    selectedList: (s) {
+                      print('selected list: $s');
+                    },
+                  ),
                 ));
               },
               child: Text('Show contacts'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // any logic
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => GroupContactView(
+                      showContacts: true,
+                      showGroups: true,
+                      asSelectionScreen: true,
+                      selectedList: (List<GroupContactsModel?> s) {
+                        print('selected list: $s');
+                      }),
+                ));
+              },
+              child: Text('Show Group view contacts'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -78,15 +99,15 @@ class _SecondScreenState extends State<SecondScreen> {
 
   // ignore: always_declare_return_types
   getAtSignAndInitializeContacts() async {
-    var currentAtSign = await clientSdkService.getAtSign();
+    var currentAtSign = await (clientSdkService.getAtSign());
     setState(() {
       activeAtSign = currentAtSign;
     });
     initializeContactsService(
-        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        clientSdkService.atClientServiceInstance!.atClient!, currentAtSign!,
         rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(
-        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        clientSdkService.atClientServiceInstance!.atClient!, currentAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }

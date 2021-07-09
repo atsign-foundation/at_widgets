@@ -1,5 +1,6 @@
 import 'dart:math' as math;
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 class LatLngBounds {
   LatLng? _sw;

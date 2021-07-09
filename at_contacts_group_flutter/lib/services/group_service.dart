@@ -37,7 +37,7 @@ class GroupService {
 // all contacts stream
   final StreamController<List<GroupContactsModel?>>
       _allContactsStreamController =
-      StreamController<List<GroupContactsModel>>.broadcast();
+      StreamController<List<GroupContactsModel?>>.broadcast();
   Stream<List<GroupContactsModel?>> get allContactsStream =>
       _allContactsStreamController.stream;
   StreamSink<List<GroupContactsModel?>> get allContactsSink =>
@@ -45,8 +45,8 @@ class GroupService {
 
   // selected group contact stream
   final _selectedContactsStreamController =
-      StreamController<List<GroupContactsModel>>.broadcast();
-  Stream<List<GroupContactsModel>> get selectedContactsStream =>
+      StreamController<List<GroupContactsModel?>>.broadcast();
+  Stream<List<GroupContactsModel?>> get selectedContactsStream =>
       _selectedContactsStreamController.stream;
   StreamSink<List<GroupContactsModel?>> get selectedContactsSink =>
       _selectedContactsStreamController.sink;
@@ -99,8 +99,7 @@ class GroupService {
       var groupList = <AtGroup>[];
 
       for (var i = 0; i < groupIds.length; i++) {
-        var groupDetail =
-            await (getGroupDetail(groupIds[i]!) as FutureOr<AtGroup>);
+        var groupDetail = await (getGroupDetail(groupIds[i]!));
         // ignore: unnecessary_null_comparison
         if (groupDetail != null) groupList.add(groupDetail);
       }
@@ -180,8 +179,7 @@ class GroupService {
 
   // ignore: always_declare_return_types
   updateGroupStreams(AtGroup group) async {
-    AtGroup? groupDetail =
-        await (getGroupDetail(group.groupId!) as FutureOr<AtGroup>);
+    var groupDetail = await (getGroupDetail(group.groupId!));
     if (groupDetail is AtGroup) groupViewSink.add(groupDetail);
     await getAllGroupsDetails();
   }
@@ -217,9 +215,9 @@ class GroupService {
   fetchGroupsAndContacts() async {
     try {
       allContacts = [];
-      List<AtContact> contactList = await fetchContacts();
+      var contactList = await fetchContacts();
       // print('CONT====>$contactList');
-      contactList.forEach((AtContact contact) {
+      contactList.forEach((AtContact? contact) {
         allContacts.add(GroupContactsModel(
             contact: contact, contactType: ContactsType.CONTACT));
       });

@@ -3,6 +3,12 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'at_location_notification_listener.dart';
 
+/// A class to manage all the server calls.
+/// [SyncSecondary] makes sure that server calls are not interfering with each other.
+///
+/// [callSyncSecondary] syncs to secondary or calls [notifyAll] based on [_syncOperation].
+///
+///
 class SyncSecondary {
   static final SyncSecondary _singleton = SyncSecondary._();
   SyncSecondary._();
@@ -15,6 +21,8 @@ class SyncSecondary {
   bool syncing = false;
 
   /// Called to sync with secondary
+  /// [_syncOperation] either sync to secondary or notifyAll
+  /// [atKey], [notification], [operation] needed for notifyAll
   Future<void> callSyncSecondary(
     SyncOperation _syncOperation, {
     AtKey? atKey,
@@ -39,9 +47,12 @@ class SyncSecondary {
     }
   }
 
-  void completePrioritySync(String _response) {
-    _priorityOperations.add(
-        SyncOperationDetails(SyncOperation.syncSecondary, response: _response));
+  /// Called to sync in priority
+  /// [afterSync] called after sync is complete
+  /// [_response], passed as a parameter to [afterSync]
+  void completePrioritySync(String _response, {Function? afterSync}) {
+    _priorityOperations.add(SyncOperationDetails(SyncOperation.syncSecondary,
+        response: _response, afterSync: afterSync));
     if (!syncing) {
       _startSyncing();
     }
@@ -66,7 +77,7 @@ class SyncSecondary {
           await _notifyAllInSync(
             _syncOperationDetails.atKey!,
             _syncOperationDetails.notification!,
-            _syncOperationDetails.operation,
+            _syncOperationDetails.operation!,
           );
         } else {
           _operations.removeWhere((_operation) =>
@@ -81,14 +92,14 @@ class SyncSecondary {
 
   void _executeAfterSynced(List<SyncOperationDetails> _tempPriorityOperations) {
     _tempPriorityOperations.forEach((e) {
-      if (e.response != null) {
-        e.afterSync!();
+      if ((e.response != null) && (e.afterSync != null)) {
+        e.afterSync!(e.response);
       }
     });
   }
 
   Future<void> _notifyAllInSync(
-      AtKey atKey, String notification, OperationEnum? operation,
+      AtKey atKey, String notification, OperationEnum operation,
       {bool isDedicated = MixedConstants.isDedicated}) async {
     var notifyAllResult = await AtLocationNotificationListener()
         .atClientInstance!
@@ -101,8 +112,8 @@ class SyncSecondary {
   Future<void> _syncSecondary() async {
     try {
       var syncManager =
-          AtLocationNotificationListener().atClientInstance!.getSyncManager()!;
-      var isSynced = await syncManager.isInSync();
+          AtLocationNotificationListener().atClientInstance!.getSyncManager();
+      var isSynced = await syncManager!.isInSync();
       print('already synced: $isSynced');
       if (isSynced is bool && isSynced) {
       } else {

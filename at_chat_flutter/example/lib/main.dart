@@ -58,10 +58,11 @@ class _MyAppState extends State<MyApp> {
                             context: context,
                             atClientPreference:
                                 clientSdkService.atClientPreference,
+                            appAPIKey: MixedConstants.devAPIKey,
                             domain: MixedConstants.ROOT_DOMAIN,
                             appColor: Color.fromARGB(255, 240, 94, 62),
-                            onboard: (Map<String, AtClientService> value,
-                                String atsign) async {
+                            onboard: (Map<String?, AtClientService> value,
+                                String? atsign) async {
                               clientSdkService.atClientServiceInstance =
                                   value[atsign];
                               await Navigator.pushReplacement(

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
 import 'sharing_location_service.dart';
+import 'sync_secondary.dart';
 
 class AtLocationNotificationListener {
   AtLocationNotificationListener._();
@@ -19,32 +20,49 @@ class AtLocationNotificationListener {
   final String locationKey = 'locationnotify';
   AtClientImpl? atClientInstance;
   String? currentAtSign;
+  bool _monitorStarted = false;
+  late bool showDialogBox;
   late GlobalKey<NavigatorState> navKey;
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
 
-  void init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
-      GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
+  void init(
+      AtClientImpl atClientInstanceFromApp,
+      String currentAtSignFromApp,
+      GlobalKey<NavigatorState> navKeyFromMainApp,
+      String rootDomain,
+      bool showDialogBox,
       {Function? newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     navKey = navKeyFromMainApp;
+    this.showDialogBox = showDialogBox;
     ROOT_DOMAIN = rootDomain;
     MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
         newGetAtValueFromMainApp: newGetAtValueFromMainApp);
+
     startMonitor();
   }
 
   Future<bool> startMonitor() async {
-    var privateKey = await (getPrivateKey(currentAtSign!) as FutureOr<String>);
-    await atClientInstance!.startMonitor(privateKey, _notificationCallback);
-    print('Monitor started in location package');
+    if (!_monitorStarted) {
+      var privateKey = await (getPrivateKey(currentAtSign!));
+      await atClientInstance!.startMonitor(privateKey!, fnCallBack);
+      print('Monitor started in location package');
+      _monitorStarted = true;
+    }
     return true;
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
     return await atClientInstance!.getPrivateKey(atsign);
+  }
+
+  void fnCallBack(var response) async {
+    print('fnCallBack called');
+    SyncSecondary()
+        .completePrioritySync(response, afterSync: _notificationCallback);
   }
 
   void _notificationCallback(dynamic notification) async {
@@ -127,6 +145,9 @@ class AtLocationNotificationListener {
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
+        if (locationData.rePrompt) {
+          await showMyDialog(fromAtSign, locationData);
+        }
       } else {
         await KeyStreamService().addDataToList(locationData);
         await showMyDialog(fromAtSign, locationData);
@@ -154,6 +175,9 @@ class AtLocationNotificationListener {
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
+        if (locationData.rePrompt) {
+          await showMyDialog(fromAtSign, locationData);
+        }
       } else {
         await KeyStreamService().addDataToList(locationData);
         await showMyDialog(fromAtSign, locationData);
@@ -164,15 +188,18 @@ class AtLocationNotificationListener {
 
   Future<void> showMyDialog(
       String? fromAtSign, LocationNotificationModel locationData) async {
-    return showDialog<void>(
-      context: navKey.currentContext!,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return NotificationDialog(
-          userName: fromAtSign,
-          locationData: locationData,
-        );
-      },
-    );
+    print('showMyDialog called');
+    if (showDialogBox) {
+      return showDialog<void>(
+        context: navKey.currentContext!,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return NotificationDialog(
+            userName: fromAtSign,
+            locationData: locationData,
+          );
+        },
+      );
+    }
   }
 }

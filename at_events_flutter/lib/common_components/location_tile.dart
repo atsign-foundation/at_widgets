@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class LocationTile extends StatelessWidget {
-  final String title, subTitle;
-  final IconData icon;
+  final String? title, subTitle;
+  final IconData? icon;
 
   LocationTile({this.title = '', this.subTitle = '', this.icon});
 
@@ -20,8 +20,8 @@ class LocationTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(title, style: CustomTextStyles().greyLabel14),
-                Text(subTitle, style: CustomTextStyles().greyLabel12),
+                Text(title!, style: CustomTextStyles().greyLabel14),
+                Text(subTitle!, style: CustomTextStyles().greyLabel12),
               ],
             ),
           )

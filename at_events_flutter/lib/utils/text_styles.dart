@@ -17,6 +17,11 @@ class CustomTextStyles {
     fontSize: 14.toFont,
   );
 
+  TextStyle red12 = TextStyle(
+    color: AllColors().RED,
+    fontSize: 12.toFont,
+  );
+
   TextStyle greyLabel12 = TextStyle(
     color: AllColors().GREY_LABEL,
     fontSize: 14.toFont,

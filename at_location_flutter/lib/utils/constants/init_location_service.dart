@@ -1,5 +1,6 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
@@ -9,21 +10,26 @@ import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:meta/meta.dart';
 
-/// Function to initialise the package. Should be mandatorly called before accessing package functionalities.
+/// Function to initialise the package. Should be mandatorily called before accessing package functionalities.
 ///
 /// [mapKey] is needed to access maps.
 ///
 /// [apiKey] is needed to calculate ETA.
 ///
 /// Steps to get [mapKey]/[apiKey] available in README.
+///
+/// [showDialogBox] if false dialog box wont be shown.
+///
+/// [streamAlternative] a function which will return updated lists of [KeyLocationModel]
 void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
     {required String mapKey,
     required String apiKey,
+    bool showDialogBox = false,
     String rootDomain = MixedConstants.ROOT_DOMAIN,
-    Function? getAtValue}) async {
+    Function? getAtValue,
+    Function(List<KeyLocationModel>)? streamAlternative}) async {
   /// initialise keys
   MixedConstants.setApiKey(apiKey);
   MixedConstants.setMapKey(mapKey);
@@ -37,9 +43,10 @@ void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
   }
 
   AtLocationNotificationListener().init(
-      atClientImpl, currentAtSign, navKey, rootDomain,
+      atClientImpl, currentAtSign, navKey, rootDomain, showDialogBox,
       newGetAtValueFromMainApp: getAtValue);
-  KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
+  KeyStreamService().init(AtLocationNotificationListener().atClientInstance,
+      streamAlternative: streamAlternative);
 }
 
 /// returns a Stream of 'KeyLocationModel' having all the shared and request location keys.

@@ -23,21 +23,21 @@ class ContactService {
   late int rootPort;
   AtContact? loggedInUserDetails;
 
-  StreamController<List<AtContact>> contactStreamController =
-      StreamController<List<AtContact>>.broadcast();
+  StreamController<List<AtContact?>> contactStreamController =
+      StreamController<List<AtContact?>>.broadcast();
   Sink get contactSink => contactStreamController.sink;
-  Stream<List<AtContact>> get contactStream => contactStreamController.stream;
+  Stream<List<AtContact?>> get contactStream => contactStreamController.stream;
 
-  StreamController<List<AtContact>> blockedContactStreamController =
-      StreamController<List<AtContact>>.broadcast();
+  StreamController<List<AtContact?>> blockedContactStreamController =
+      StreamController<List<AtContact?>>.broadcast();
   Sink get blockedContactSink => blockedContactStreamController.sink;
-  Stream<List<AtContact>> get blockedContactStream =>
+  Stream<List<AtContact?>> get blockedContactStream =>
       blockedContactStreamController.stream;
 
-  StreamController<List<AtContact>> selectedContactStreamController =
-      StreamController<List<AtContact>>.broadcast();
+  StreamController<List<AtContact?>> selectedContactStreamController =
+      StreamController<List<AtContact?>>.broadcast();
   Sink get selectedContactSink => selectedContactStreamController.sink;
-  Stream<List<AtContact>> get selectedContactStream =>
+  Stream<List<AtContact?>> get selectedContactStream =>
       selectedContactStreamController.stream;
 
   void disposeControllers() {
@@ -79,7 +79,7 @@ class ContactService {
   }
 
   // ignore: always_declare_return_types
-  fetchContacts() async {
+  Future<List<AtContact?>> fetchContacts() async {
     selectedContacts = [];
     try {
       contactList = [];
@@ -106,6 +106,7 @@ class ContactService {
       return contactList;
     } catch (e) {
       print('error here => $e');
+      return [];
     }
   }
 

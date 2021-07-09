@@ -1,9 +1,11 @@
-import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
-import 'package:at_events_flutter_example/second_screen.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_events_flutter_example/client_sdk_service.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:at_events_flutter_example/constants.dart';
-import 'client_sdk_service.dart';
+import 'package:at_events_flutter_example/second_screen.dart';
+
+import 'constants.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,6 +28,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light(),
+      navigatorKey: NavService.navKey,
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Plugin example app'),
@@ -33,9 +36,6 @@ class _MyAppState extends State<MyApp> {
           body: Builder(
             builder: (context) => Column(
               children: [
-                SizedBox(
-                  height: 25,
-                ),
                 Container(
                     padding: EdgeInsets.all(10.0),
                     child: Center(
@@ -43,9 +43,6 @@ class _MyAppState extends State<MyApp> {
                           'A client service should create an atClient instance and call onboard method before navigating to QR scanner screen',
                           textAlign: TextAlign.center),
                     )),
-                SizedBox(
-                  height: 25,
-                ),
                 Center(
                     child: TextButton(
                         style: ButtonStyle(
@@ -59,8 +56,9 @@ class _MyAppState extends State<MyApp> {
                                 clientSdkService.atClientPreference,
                             domain: MixedConstants.ROOT_DOMAIN,
                             appColor: Color.fromARGB(255, 240, 94, 62),
-                            onboard: (Map<String, AtClientService> value,
-                                String atsign) async {
+                            appAPIKey: MixedConstants.devAPIKey,
+                            onboard: (Map<String?, AtClientService> value,
+                                String? atsign) async {
                               clientSdkService.atClientServiceInstance =
                                   value[atsign];
                               await Navigator.pushReplacement(
@@ -105,9 +103,32 @@ class _MyAppState extends State<MyApp> {
                         },
                         child: Text('Already authenticated',
                             style: TextStyle(color: Colors.black)))),
+                TextButton(
+                  onPressed: () async {
+                    var _keyChainManager = KeyChainManager.getInstance();
+                    var _atSignsList =
+                        await _keyChainManager.getAtSignListFromKeychain();
+                    _atSignsList?.forEach((element) {
+                      _keyChainManager.deleteAtSignFromKeychain(element);
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                      'Keychain cleaned',
+                      textAlign: TextAlign.center,
+                    )));
+                  },
+                  child: Text(
+                    'Reset keychain',
+                    style: TextStyle(color: Colors.blueGrey),
+                  ),
+                )
               ],
             ),
           )),
     );
   }
+}
+
+class NavService {
+  static GlobalKey<NavigatorState> navKey = GlobalKey();
 }

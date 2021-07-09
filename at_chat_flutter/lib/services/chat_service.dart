@@ -97,7 +97,7 @@ class ChatService {
     }
   }
 
-  void setAtsignToChatWith(String chatWithAtSignFromApp, bool isGroup,
+  void setAtsignToChatWith(String? chatWithAtSignFromApp, bool isGroup,
       String? groupId, List<String>? groupMembers) {
     if (isGroup) {
       isGroupChat = isGroup;
@@ -156,7 +156,7 @@ class ChatService {
   Future<void> checkForMissedMessages(String referenceKey) async {
     var result = await atClientInstance
         .getKeys(
-            sharedBy: chatWithAtSign!,
+            sharedBy: chatWithAtSign,
             sharedWith: currentAtSign!,
             regex: chatKey + (isGroupChat ? groupChatId! : ''))
         .catchError((e) {
@@ -182,7 +182,7 @@ class ChatService {
           message: result.value,
           sender: chatWithAtSign ?? missingAtkey.sharedBy,
           time: int.parse(missingKey
-              .replaceFirst(chatWithAtSign!, '')
+              .replaceFirst(chatWithAtSign ?? '', '')
               .replaceFirst(chatKey + (isGroupChat ? groupChatId! : ''), '')
               .split('.')[0]),
           type: MessageType.INCOMING));
@@ -224,11 +224,11 @@ class ChatService {
         if (member != currentAtSign) {
           atKey.sharedWith = member;
           var result = await atClientInstance.put(atKey, message);
-          print('send notification => $result');
+          print('send notification for groupChat => $result');
         }
       });
     } else {
-      atKey.sharedWith = chatWithAtSign!;
+      atKey.sharedWith = chatWithAtSign;
       var result = await atClientInstance.put(atKey, message);
       print('send notification => $result');
     }

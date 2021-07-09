@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_builder.dart';
@@ -142,5 +141,6 @@ class MarkerClusterLayerOptions extends LayerOptions {
     this.onClusterTap,
     this.onMarkersClustered,
     this.popupOptions,
+    // ignore: unnecessary_null_comparison
   }) : assert(builder != null);
 }

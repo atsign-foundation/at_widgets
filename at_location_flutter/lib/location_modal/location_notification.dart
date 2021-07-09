@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 /// Model containing all the information needed for location sharing.
 class LocationNotificationModel {
@@ -44,11 +45,12 @@ class LocationNotificationModel {
     this.rePrompt = false,
   });
 
+  // ignore: always_declare_return_types
   getAtContact() {
     atContact = AtContact(atSign: receiver);
   }
 
-  LatLng get getLatLng => LatLng(this.lat!, this.long!);
+  LatLng get getLatLng => LatLng(lat!, long!);
   LocationNotificationModel.fromJson(Map<String, dynamic> json)
       : atsignCreator = json['atsignCreator'],
         receiver = json['receiver'],

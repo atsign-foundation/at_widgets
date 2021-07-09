@@ -7,7 +7,8 @@ import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart
 import 'package:at_location_flutter/map_content/flutter_map/src/core/center_zoom.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/point.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map_state_widget.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 class MapControllerImpl implements MapController {
   final Completer<Null> _readyCompleter = Completer<Null>();
@@ -118,7 +119,7 @@ class MapState {
   }
 
   void forceRebuild() {
-    _onMoveSink?.add(null);
+    _onMoveSink.add(null);
   }
 
   void move(LatLng? center, double? zoom, {hasGesture = false}) {
@@ -227,7 +228,9 @@ class MapState {
 
   double getBoundsZoom(LatLngBounds bounds, CustomPoint<double> padding,
       {bool inside = false}) {
-    var zoom = this.zoom ?? 0.0;
+    //// Removed because of nulls safety
+    // var zoom = this.zoom ?? 0.0;
+    var zoom = this.zoom;
     var min = options.minZoom ?? 0.0;
     var max = options.maxZoom ?? double.infinity;
     var nw = bounds.northWest;
@@ -271,7 +274,9 @@ class MapState {
 
   double getScaleZoom(double scale, double fromZoom) {
     var crs = options.crs;
-    fromZoom = fromZoom ?? _zoom;
+    //// Removed because of nulls safety
+    // fromZoom = fromZoom ?? _zoom;
+    fromZoom = fromZoom;
     return crs.zoom(scale * crs.scale(fromZoom)!) as double;
   }
 
@@ -297,7 +302,9 @@ class MapState {
   }
 
   static MapState? of(BuildContext context, {bool nullOk = false}) {
+    // ignore: unnecessary_null_comparison
     assert(context != null);
+    // ignore: unnecessary_null_comparison
     assert(nullOk != null);
     final widget =
         context.dependOnInheritedWidgetOfExactType<MapStateInheritedWidget>();

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:at_location_flutter/utils/constants/constants.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 import 'api_service.dart';
 

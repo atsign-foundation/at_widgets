@@ -11,7 +11,8 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/m
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_controller.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_snap.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'common_components/floating_icon.dart';
 import 'common_components/marker_cluster.dart';
@@ -89,7 +90,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   @override
   void dispose() {
     LocationService().dispose();
-    _popupController?.streamController?.close();
+    _popupController.streamController?.close();
     super.dispose();
   }
 
@@ -103,7 +104,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         children: [
           StreamBuilder(
               stream: LocationService().atHybridUsersStream,
-              builder: (context, AsyncSnapshot<List<HybridModel>?> snapshot) {
+              builder: (context, AsyncSnapshot<List<HybridModel?>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasError) {
                     return Center(
@@ -116,11 +117,11 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                     print('FlutterMap called');
                     _popupController = PopupController();
                     var users = snapshot.data!;
-                    var markers = users.map((user) => user.marker).toList();
-                    points = users.map((user) => user.latLng).toList();
+                    var markers = users.map((user) => user!.marker).toList();
+                    points = users.map((user) => user!.latLng).toList();
                     print('markers length = ${markers.length}');
                     users.forEach((element) {
-                      print('displayanme - ${element.displayName}');
+                      print('displayanme - ${element!.displayName}');
                     });
                     markers.forEach((element) {
                       print('point - ${element!.point}');
@@ -136,7 +137,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                             (markers.isNotEmpty) &&
                             (mapController != null)) {
                           var indexOfUser = users.indexWhere((element) =>
-                              element.displayName == widget.focusMapOn);
+                              element!.displayName == widget.focusMapOn);
 
                           if (indexOfUser > -1) {
                             mapController!
@@ -168,8 +169,9 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                           widget.right ?? 20,
                           widget.bottom ?? 20,
                         )),
+                        // ignore: unnecessary_null_comparison
                         center: ((users != null) && (users.isNotEmpty))
-                            ? users[0].latLng
+                            ? users[0]!.latLng
                             : LatLng(45, 45),
                         zoom: markers.isNotEmpty ? 8 : 2,
                         plugins: [MarkerClusterPlugin(UniqueKey())],
@@ -209,13 +211,10 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                                         .streamController!.isClosed
                                     ? Text('Closed')
                                     : buildPopup(snapshot
-                                        .data![markers.indexOf(marker)]);
+                                        .data![markers.indexOf(marker)]!);
                               }),
                           builder: (context, markers) {
-                            return (false)
-                                ? buildMarkerCluster(markers,
-                                    eventData: LocationService().eventData)
-                                : buildMarkerCluster(markers);
+                            return buildMarkerCluster(markers);
                           },
                         ),
                       ],

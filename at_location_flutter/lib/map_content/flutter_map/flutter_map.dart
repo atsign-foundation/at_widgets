@@ -9,7 +9,8 @@ import 'package:at_location_flutter/map_content/flutter_map/src/geo/crs/crs.dart
 import 'package:at_location_flutter/map_content/flutter_map/src/map/flutter_map_state.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/plugins/plugin.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 export 'package:at_location_flutter/map_content/flutter_map/src/core/point.dart';
 export 'package:at_location_flutter/map_content/flutter_map/src/geo/crs/crs.dart';
@@ -54,7 +55,8 @@ class FlutterMap extends StatefulWidget {
     this.layers = const [],
     this.children = const [],
     MapController? mapController,
-  })  : _mapController = mapController as MapControllerImpl? ?? MapController() as MapControllerImpl,
+  })  : _mapController = mapController as MapControllerImpl? ??
+            MapController() as MapControllerImpl,
         super(key: key);
 
   @override
@@ -201,7 +203,8 @@ class MapOptions {
     } else {
       return LatLng(
         point!.latitude.clamp(swPanBoundary!.latitude, nePanBoundary!.latitude),
-        point.longitude.clamp(swPanBoundary!.longitude, nePanBoundary!.longitude),
+        point.longitude
+            .clamp(swPanBoundary!.longitude, nePanBoundary!.longitude),
       );
     }
   }

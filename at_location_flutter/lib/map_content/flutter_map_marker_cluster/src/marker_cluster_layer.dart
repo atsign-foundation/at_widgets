@@ -11,7 +11,8 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/c
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/core/spiderfy.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/node/marker_cluster_node.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/node/marker_node.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 class MarkerClusterLayer extends StatefulWidget {
   @override
@@ -158,7 +159,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
   void _addLayers() {
     for (var marker in widget.options.markers) {
-      _addLayer(MarkerNode(marker), widget.options.disableClusteringAtZoom);
+      if (marker != null) {
+        _addLayer(MarkerNode(marker), widget.options.disableClusteringAtZoom);
+      }
     }
 
     _topClusterLevel.recalculateBounds();
@@ -300,7 +303,11 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       cluster.markers.map((node) => node.marker).toList();
 
   Size getClusterSize(MarkerClusterNode cluster) =>
-      widget.options?.computeSize == null
+      //// Removed because of nulls safety
+      // widget.options?.computeSize == null
+      //     ? widget.options.size
+      //     : widget.options.computeSize!(getClusterMarkers(cluster));
+      widget.options.computeSize == null
           ? widget.options.size
           : widget.options.computeSize!(getClusterMarkers(cluster));
 
@@ -518,7 +525,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
     return layers;
   }
 
-  List<Widget?> _buildLayers() {
+  List<Widget> _buildLayers() {
     if (widget.map!.zoom != _previousZoomDouble) {
       _previousZoomDouble = widget.map!.zoom;
 
@@ -527,9 +534,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
     var zoom = widget.map!.zoom.ceil();
 
-    var layers = <Widget?>[];
+    var layers = <Widget>[];
 
-    if (_polygon != null) layers.add(_polygon);
+    if (_polygon != null) layers.add(_polygon!);
 
     if (zoom < _currentZoom! || zoom > _currentZoom!) {
       _previousZoom = _currentZoom;
@@ -594,7 +601,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
       if (!widget.options.zoomToBoundsOnClick) return null;
 
-      _showPolygon(cluster.markers.fold<List<LatLng?>>(
+      _showPolygon(cluster.markers.fold<List<LatLng>>(
           [], (result, marker) => result..add(marker.point)));
 
       final center = widget.map!.center!;
@@ -629,7 +636,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
     };
   }
 
-  void _showPolygon(List<LatLng?> points) {
+  void _showPolygon(List<LatLng> points) {
     if (widget.options.showPolygon) {
       setState(() {
         _polygon = PolygonLayer(
@@ -759,7 +766,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       builder: (BuildContext context, _) {
         return Container(
           child: Stack(
-            children: _buildLayers() as List<Widget>,
+            children: _buildLayers(),
           ),
         );
       },

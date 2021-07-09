@@ -3,7 +3,8 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
-import 'package:latlong/latlong.dart' hide Path; // conflict with Path from UI
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart' hide Path; // conflict with Path from UI
 
 class CircleLayerOptions extends LayerOptions {
   final List<CircleMarker> circles;
@@ -112,8 +113,11 @@ class CirclePainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..color = circle.color;
 
-    _paintCircle(canvas, circle.offset,
-        circle.useRadiusInMeter ? circle.realRadius as double : circle.radius!, paint);
+    _paintCircle(
+        canvas,
+        circle.offset,
+        circle.useRadiusInMeter ? circle.realRadius as double : circle.radius!,
+        paint);
 
     if (circle.borderStrokeWidth > 0) {
       final paint = Paint()
@@ -121,8 +125,13 @@ class CirclePainter extends CustomPainter {
         ..color = circle.borderColor
         ..strokeWidth = circle.borderStrokeWidth;
 
-      _paintCircle(canvas, circle.offset,
-          circle.useRadiusInMeter ? circle.realRadius as double : circle.radius!, paint);
+      _paintCircle(
+          canvas,
+          circle.offset,
+          circle.useRadiusInMeter
+              ? circle.realRadius as double
+              : circle.radius!,
+          paint);
     }
   }
 

@@ -4,7 +4,8 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
-import 'package:latlong/latlong.dart' hide Path; // conflict with Path from UI
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart' hide Path; // conflict with Path from UI
 
 class PolygonLayerOptions extends LayerOptions {
   final List<Polygon> polygons;
@@ -103,7 +104,9 @@ class PolygonLayer extends StatelessWidget {
           _fillOffsets(polygon.offsets, polygon.points!);
 
           if (null != polygon.holePointsList) {
-            for (var i = 0, len = polygon.holePointsList!.length; i < len; ++i) {
+            for (var i = 0, len = polygon.holePointsList!.length;
+                i < len;
+                ++i) {
               _fillOffsets(
                   polygon.holeOffsetsList![i], polygon.holePointsList![i]);
             }

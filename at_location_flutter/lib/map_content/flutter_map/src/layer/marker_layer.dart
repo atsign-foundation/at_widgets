@@ -2,7 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 class MarkerLayerOptions extends LayerOptions {
   final List<Marker> markers;
@@ -75,15 +76,15 @@ enum AnchorAlign {
 }
 
 class Marker {
-  final LatLng? point;
-  final WidgetBuilder? builder;
+  final LatLng point;
+  final WidgetBuilder builder;
   final double width;
   final double height;
   final Anchor anchor;
 
   Marker({
-    this.point,
-    this.builder,
+    required this.point,
+    required this.builder,
     this.width = 30.0,
     this.height = 30.0,
     AnchorPos? anchorPos,
@@ -147,7 +148,7 @@ class MarkerLayer extends StatelessWidget {
               height: markerOpt.height,
               left: pixelPosX,
               top: pixelPosY,
-              child: markerOpt.builder!(context),
+              child: markerOpt.builder(context),
             ),
           );
         }

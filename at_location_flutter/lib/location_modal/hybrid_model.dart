@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 /// Model containing the [displayName], [image], [eta], [marker] associated with the [latLng].
 class HybridModel {

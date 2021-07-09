@@ -221,8 +221,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     });
     try {
       var isExist =
-          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
-      if (isExist) {
+          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool?>);
+      if (isExist != null && isExist) {
         setState(() {
           loading = false;
         });
@@ -244,7 +244,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               MaterialPageRoute(
                   builder: (context) => _onboardingService.nextScreen!));
         }
-      }
+      }    
     } catch (e) {
       setState(() {
         loading = false;
@@ -257,6 +257,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         _showAlertDialog(e, isPkam: true, title: 'Auth Failed');
       } else if (e == ResponseStatus.TIME_OUT) {
         _showAlertDialog(e, title: 'Response Time out');
+      } else{
+        print(e);
       }
     }
   }
@@ -269,13 +271,13 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       _isServerCheck = false;
       _isContinue = true;
       var fileContents, aesKey, atsign;
-      FilePickerResult result = await (FilePicker.platform.pickFiles(
+      FilePickerResult? result = await (FilePicker.platform.pickFiles(
           type: FileType.any,
-          allowMultiple: true) as FutureOr<FilePickerResult>);
+          allowMultiple: true) as FutureOr<FilePickerResult?>);
       setState(() {
         loading = true;
       });
-      for (var pickedFile in result.files) {
+      for (var pickedFile in result?.files ?? []) {
         var path = pickedFile.path!;
         File selectedFile = File(path);
         var length = selectedFile.lengthSync();

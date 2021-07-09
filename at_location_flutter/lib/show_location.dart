@@ -1,6 +1,7 @@
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_layer_options.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 import 'common_components/build_marker.dart';
 import 'common_components/marker_cluster.dart';
 import 'location_modal/hybrid_model.dart';
@@ -16,7 +17,9 @@ import 'utils/constants/constants.dart';
 ///
 /// [locationListMarker] Custom widget displayed as the marker.
 Widget showLocation(Key key, MapController? mapController,
-    {LatLng? location, List<LatLng>? locationList, Widget? locationListMarker}) {
+    {LatLng? location,
+    List<LatLng>? locationList,
+    Widget? locationListMarker}) {
   bool showMarker;
   Marker marker;
   List<Marker>? markerList;
@@ -27,7 +30,7 @@ Widget showLocation(Key key, MapController? mapController,
   if (location != null) {
     marker = buildMarker(HybridModel(latLng: location), singleMarker: true);
     if (mapController != null) {
-      mapController.move(location, 8);
+      // mapController.move(location, 8);
     }
   } else {
     marker =
@@ -49,6 +52,7 @@ Widget showLocation(Key key, MapController? mapController,
   return SafeArea(
     child: Scaffold(
         body: FlutterMap(
+      key: UniqueKey(),
       mapController: mapController,
       options: MapOptions(
         center: markerList != null
