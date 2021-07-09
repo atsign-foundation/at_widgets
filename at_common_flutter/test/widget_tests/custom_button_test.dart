@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _homeWidget({@required Widget home}) {
+  Widget _homeWidget({required Widget home}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return home;
@@ -49,7 +49,7 @@ void main() {
       expect(color, Colors.orange);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-              widget is Text && widget.style.color == Colors.white),
+              widget is Text && widget.style!.color == Colors.white),
           findsOneWidget);
     });
 
@@ -79,7 +79,7 @@ void main() {
       expect(color, Colors.orange);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-              widget is Text && widget.style.color == Colors.white),
+              widget is Text && widget.style!.color == Colors.white),
           findsNothing);
     });
     testWidgets('CustomButton with buttonColor not passed and fontColor passed',
@@ -99,7 +99,7 @@ void main() {
       expect(color, Colors.black);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-              widget is Text && widget.style.color == Colors.red),
+              widget is Text && widget.style!.color == Colors.red),
           findsOneWidget);
     });
     testWidgets('CustomButton with onPressed', (WidgetTester tester) async {
@@ -110,7 +110,7 @@ void main() {
       )));
       final customButton =
           tester.widget<CustomButton>(find.byType(CustomButton));
-      expect(customButton.onPressed.call(), null);
+      expect(customButton.onPressed!.call(), null);
     });
 
     testWidgets('CustomButton with onPressed not called',
