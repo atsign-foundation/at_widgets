@@ -31,13 +31,14 @@ class LocationService {
   Function? showToast;
   StreamSubscription<Position>? myLocationStream;
 
-  List<HybridModel?>? hybridUsersList;
+  List<HybridModel?> hybridUsersList = [];
 
-  late StreamController _atHybridUsersController;
-  Stream<List<HybridModel>?> get atHybridUsersStream =>
-      _atHybridUsersController.stream as Stream<List<HybridModel>?>;
-  StreamSink<List<HybridModel>?> get atHybridUsersSink =>
-      _atHybridUsersController.sink as StreamSink<List<HybridModel>?>;
+  late StreamController _atHybridUsersController =
+      StreamController<List<HybridModel?>>.broadcast();
+  Stream<List<HybridModel?>> get atHybridUsersStream =>
+      _atHybridUsersController.stream as Stream<List<HybridModel?>>;
+  StreamSink<List<HybridModel?>> get atHybridUsersSink =>
+      _atHybridUsersController.sink as StreamSink<List<HybridModel?>>;
 
   void init(List<String?>? atsignsToTrackFromApp,
       {LatLng? etaFrom,
@@ -46,7 +47,7 @@ class LocationService {
       String? textForCenter,
       Function? showToast}) async {
     hybridUsersList = [];
-    _atHybridUsersController = StreamController<List<HybridModel>?>.broadcast();
+    _atHybridUsersController = StreamController<List<HybridModel?>>.broadcast();
     atsignsToTrack = atsignsToTrackFromApp;
     this.etaFrom = etaFrom;
     this.calculateETA = calculateETA;
