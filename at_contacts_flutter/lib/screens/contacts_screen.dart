@@ -51,7 +51,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   bool deletingContact = false;
   bool blockingContact = false;
   bool errorOcurred = false;
-  List<AtContact> selectedList = [];
+  List<AtContact?> selectedList = [];
   @override
   void initState() {
     _contactService = ContactService();
@@ -92,13 +92,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   onPressed: () {
                     Navigator.pop(widget.context!);
                     if (widget.saveGroup != null) {
-                      widget.saveGroup!();
                       ContactService().clearAtSigns();
                     }
                   },
-                  selectedList: (s) {
-                    selectedList = s as List<AtContact>;
-                    widget.selectedList!(selectedList);
+                  selectedList: (List<AtContact?>? s) {
+                    if (widget.selectedList != null) {
+                      widget.selectedList!(s!);
+                    }
+                    if (widget.saveGroup != null) {
+                      widget.saveGroup!();
+                    }
                   },
                 )
           : Container(
@@ -351,8 +354,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                   contact: contactsForAlphabet[
                                                       index],
                                                   selectedList: (s) {
-                                                    selectedList =
-                                                        s as List<AtContact>;
+                                                    selectedList = s!;
                                                     widget.selectedList!(
                                                         selectedList);
                                                   },

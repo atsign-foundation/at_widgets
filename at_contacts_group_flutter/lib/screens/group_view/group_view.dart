@@ -256,7 +256,8 @@ class _GroupViewState extends State<GroupView> {
                               builder: (context) => ContactsScreen(
                                 asSelectionScreen: true,
                                 context: context,
-                                selectedList: (selectedList) async {
+                                selectedList:
+                                    (List<AtContact?> selectedList) async {
                                   GroupService().selecteContactList =
                                       selectedList;
                                 },
