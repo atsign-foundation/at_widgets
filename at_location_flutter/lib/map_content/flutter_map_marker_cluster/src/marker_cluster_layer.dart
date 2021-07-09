@@ -159,7 +159,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
   void _addLayers() {
     for (var marker in widget.options.markers) {
-      _addLayer(MarkerNode(marker), widget.options.disableClusteringAtZoom);
+      if (marker != null) {
+        _addLayer(MarkerNode(marker), widget.options.disableClusteringAtZoom);
+      }
     }
 
     _topClusterLevel.recalculateBounds();
@@ -599,7 +601,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
       if (!widget.options.zoomToBoundsOnClick) return null;
 
-      _showPolygon(cluster.markers.fold<List<LatLng?>>(
+      _showPolygon(cluster.markers.fold<List<LatLng>>(
           [], (result, marker) => result..add(marker.point)));
 
       final center = widget.map!.center!;
@@ -634,7 +636,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
     };
   }
 
-  void _showPolygon(List<LatLng?> points) {
+  void _showPolygon(List<LatLng> points) {
     if (widget.options.showPolygon) {
       setState(() {
         _polygon = PolygonLayer(
