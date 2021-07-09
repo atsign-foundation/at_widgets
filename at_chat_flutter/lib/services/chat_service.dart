@@ -97,7 +97,7 @@ class ChatService {
     }
   }
 
-  void setAtsignToChatWith(String chatWithAtSignFromApp, bool isGroup,
+  void setAtsignToChatWith(String? chatWithAtSignFromApp, bool isGroup,
       String? groupId, List<String>? groupMembers) {
     if (isGroup) {
       isGroupChat = isGroup;
