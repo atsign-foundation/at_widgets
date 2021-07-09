@@ -79,7 +79,7 @@ class ContactService {
   }
 
   // ignore: always_declare_return_types
-  fetchContacts() async {
+  Future<List<AtContact?>> fetchContacts() async {
     selectedContacts = [];
     try {
       contactList = [];
@@ -106,6 +106,7 @@ class ContactService {
       return contactList;
     } catch (e) {
       print('error here => $e');
+      return [];
     }
   }
 

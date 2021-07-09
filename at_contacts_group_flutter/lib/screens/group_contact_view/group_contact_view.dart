@@ -61,6 +61,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   List<AtContact> selectedList = [];
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       bottomSheet: (widget.singleSelection)
           ? Container(

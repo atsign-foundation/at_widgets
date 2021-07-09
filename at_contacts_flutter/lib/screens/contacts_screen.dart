@@ -96,8 +96,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
                     }
                   },
                   selectedList: (List<AtContact?>? s) {
-                    widget.selectedList!(s!);
-                    widget.saveGroup!();
+                    if (widget.selectedList != null) {
+                      widget.selectedList!(s!);
+                    }
+                    if (widget.saveGroup != null) {
+                      widget.saveGroup!();
+                    }
                   },
                 )
           : Container(
