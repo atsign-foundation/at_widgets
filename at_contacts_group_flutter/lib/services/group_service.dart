@@ -99,8 +99,7 @@ class GroupService {
       var groupList = <AtGroup>[];
 
       for (var i = 0; i < groupIds.length; i++) {
-        var groupDetail =
-            await (getGroupDetail(groupIds[i]!) as FutureOr<AtGroup>);
+        var groupDetail = await (getGroupDetail(groupIds[i]!));
         // ignore: unnecessary_null_comparison
         if (groupDetail != null) groupList.add(groupDetail);
       }
@@ -180,8 +179,7 @@ class GroupService {
 
   // ignore: always_declare_return_types
   updateGroupStreams(AtGroup group) async {
-    AtGroup? groupDetail =
-        await (getGroupDetail(group.groupId!) as FutureOr<AtGroup>);
+    var groupDetail = await (getGroupDetail(group.groupId!));
     if (groupDetail is AtGroup) groupViewSink.add(groupDetail);
     await getAllGroupsDetails();
   }

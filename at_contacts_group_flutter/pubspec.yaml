@@ -14,15 +14,17 @@ dependencies:
 
   fluttertoast: ^8.0.5
   file_picker: ^3.0.1
-  emoji_picker: ^0.1.0
+  emoji_picker_flutter: ^1.0.6
   flutter_slidable: ^0.6.0
   flutter_image_compress: ^1.0.0
   pedantic: ^1.11.0
 
-  at_client_mobile: ^2.0.0
+  at_client_mobile: ^2.0.2
   at_commons: ^2.0.1
   at_common_flutter: ^2.0.0
-  at_contacts_flutter: ^2.0.0
+  # at_contacts_flutter: ^2.0.0
+  at_contacts_flutter: 
+    path: ../at_contacts_flutter
   at_contact: ^2.0.0
   
 dev_dependencies:

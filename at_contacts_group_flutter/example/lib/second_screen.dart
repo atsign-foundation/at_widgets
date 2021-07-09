@@ -14,7 +14,7 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  String activeAtSign;
+  String? activeAtSign;
   @override
   void initState() {
     getAtSignAndInitializeContacts();
@@ -78,15 +78,15 @@ class _SecondScreenState extends State<SecondScreen> {
 
   // ignore: always_declare_return_types
   getAtSignAndInitializeContacts() async {
-    var currentAtSign = await clientSdkService.getAtSign();
+    var currentAtSign = await (clientSdkService.getAtSign());
     setState(() {
       activeAtSign = currentAtSign;
     });
     initializeContactsService(
-        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        clientSdkService.atClientServiceInstance!.atClient!, currentAtSign!,
         rootDomain: MixedConstants.ROOT_DOMAIN);
     initializeGroupService(
-        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        clientSdkService.atClientServiceInstance!.atClient!, currentAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }
