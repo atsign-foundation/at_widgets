@@ -523,7 +523,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
     return layers;
   }
 
-  List<Widget?> _buildLayers() {
+  List<Widget> _buildLayers() {
     if (widget.map!.zoom != _previousZoomDouble) {
       _previousZoomDouble = widget.map!.zoom;
 
@@ -532,9 +532,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
     var zoom = widget.map!.zoom.ceil();
 
-    var layers = <Widget?>[];
+    var layers = <Widget>[];
 
-    if (_polygon != null) layers.add(_polygon);
+    if (_polygon != null) layers.add(_polygon!);
 
     if (zoom < _currentZoom! || zoom > _currentZoom!) {
       _previousZoom = _currentZoom;
@@ -764,7 +764,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       builder: (BuildContext context, _) {
         return Container(
           child: Stack(
-            children: _buildLayers() as List<Widget>,
+            children: _buildLayers(),
           ),
         );
       },
