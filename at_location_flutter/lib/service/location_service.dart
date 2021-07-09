@@ -8,7 +8,7 @@ import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'at_location_notification_listener.dart';
 import 'distance_calculate.dart';

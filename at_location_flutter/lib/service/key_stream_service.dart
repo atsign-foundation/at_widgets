@@ -73,6 +73,7 @@ class KeyStreamService {
 
     if (allResponse.isEmpty) {
       SendLocationNotification().init(atClientInstance);
+      notifyListeners();
       return;
     }
 

@@ -18,7 +18,7 @@ import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomeScreen extends StatefulWidget {

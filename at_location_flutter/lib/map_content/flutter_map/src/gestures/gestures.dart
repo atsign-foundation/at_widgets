@@ -6,9 +6,9 @@ import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/gestures/latlng_tween.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:positioned_tap_detector/positioned_tap_detector.dart';
+import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 abstract class MapGestureMixin extends State<FlutterMap>
@@ -119,7 +119,7 @@ abstract class MapGestureMixin extends State<FlutterMap>
     if (options.onTap == null) {
       return;
     }
-    final latlng = _offsetToCrs(position.relative);
+    final latlng = _offsetToCrs(position.relative!);
     // emit the event
     options.onTap!(latlng);
   }
@@ -130,7 +130,7 @@ abstract class MapGestureMixin extends State<FlutterMap>
     if (options.onLongPress == null) {
       return;
     }
-    final latlng = _offsetToCrs(position.relative);
+    final latlng = _offsetToCrs(position.relative!);
     // emit the event
     options.onLongPress!(latlng);
   }
@@ -159,7 +159,7 @@ abstract class MapGestureMixin extends State<FlutterMap>
       return;
     } // so that it doesnt black out if user keeps on zooming
     final focalDelta = _getDoubleTapFocalDelta(
-        centerPos, tapPosition.relative, newZoom - map!.zoom);
+        centerPos, tapPosition.relative!, newZoom - map!.zoom);
     final newCenter = _offsetToCrs(centerPos + focalDelta);
     _startDoubleTapAnimation(newZoom, newCenter);
   }

@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/point.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:meta/meta.dart';
 import 'package:proj4dart/proj4dart.dart' as proj4;
 import 'package:tuple/tuple.dart';

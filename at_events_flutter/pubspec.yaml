@@ -11,28 +11,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  latlong: ^0.6.1
+  latlong2: ^0.8.0
   fluttertoast: ^8.0.5
   sliding_up_panel: ^2.0.0+1
-
-
   at_common_flutter: ^2.0.0
   at_location_flutter: 
-    # ^1.0.3
     path: ../at_location_flutter
   at_contacts_flutter: ^2.0.0
-    # path: ../at_contacts_flutter
   at_commons: ^2.0.1
   at_client_mobile: ^2.0.0
   at_contact: ^2.0.0
   at_lookup: ^2.0.1
   pedantic: ^1.11.0
   geolocator: ^7.0.3
-  at_contacts_group_flutter: 
-    path: /Users/apple/Desktop/client_projects/at_widgets/at_contacts_group_flutter
+  at_contacts_group_flutter: ^2.0.0
+  at_chat_flutter: ^2.0.0
 
 dependency_overrides:
-  logging: ^1.0.1
+  at_chat_flutter: 
+    path: /Users/apple/Desktop/client_projects/at_widgets/at_chat_flutter
 
 dev_dependencies:
   flutter_test:

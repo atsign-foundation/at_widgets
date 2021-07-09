@@ -12,7 +12,7 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/c
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/node/marker_cluster_node.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/node/marker_node.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 class MarkerClusterLayer extends StatefulWidget {
   @override
