@@ -22,9 +22,7 @@ dependencies:
     # the parent directory to use the current plugin's version.
     path: ../
   # atsign_authentication_helper: ^0.0.5
-  # at_onboarding_flutter: ^2.0.0
-  at_onboarding_flutter:
-    path: ../../at_onboarding_flutter
+  at_onboarding_flutter: ^2.1.1
 
 
   # The following adds the Cupertino Icons font to your application.
