@@ -10,5 +10,9 @@ class EventKeyLocationModel {
   EventNotificationModel? eventNotificationModel;
   bool haveResponded;
   EventKeyLocationModel(
-      {this.key, this.atKey, this.atValue, this.eventNotificationModel, this.haveResponded = false});
+      {this.key,
+      this.atKey,
+      this.atValue,
+      this.eventNotificationModel,
+      this.haveResponded = false});
 }

@@ -62,6 +62,7 @@ class EventKeyStreamService {
     contactList = await atContactImpl!.listContacts();
   }
 
+  /// adds all 'createevent' notifications to [atNotificationsSink]
   void getAllEventNotifications() async {
     await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
 
@@ -137,6 +138,7 @@ class EventKeyStreamService {
         .removeWhere((element) => tempRemoveEventArray.contains(element));
   }
 
+  /// Removes past notifications and notification where data is null.
   void filterPastEventsFromList() {
     for (var i = 0; i < allEventNotifications.length; i++) {
       if (allEventNotifications[i]
@@ -152,6 +154,7 @@ class EventKeyStreamService {
         .removeWhere((element) => allPastEventNotifications.contains(element));
   }
 
+  /// Updates any received notification with [haveResponded] true, if already responded.
   Future<void> checkForPendingEvents() async {
     allEventNotifications.forEach((notification) async {
       notification.eventNotificationModel!.group!.members!
@@ -173,6 +176,7 @@ class EventKeyStreamService {
     });
   }
 
+  /// Checks for any missed notifications and updates respective notification
   Future<void> updateEventDataAccordingToAcknowledgedData() async {
     // var allEventKey = await atClientInstance.getKeys(
     //   regex: 'createevent-',
@@ -309,6 +313,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// Adds new [EventKeyLocationModel] data for new received notification
   Future<dynamic> addDataToList(
       EventNotificationModel eventNotificationModel) async {
     String newLocationDataKeyId;
@@ -357,6 +362,7 @@ class EventKeyStreamService {
     return tempEventKeyLocationModel;
   }
 
+  /// Updates any [EventKeyLocationModel] data for updated data
   void mapUpdatedEventDataToWidget(EventNotificationModel eventData,
       {Map<dynamic, dynamic>? tags,
       String? tagOfAtsign,
@@ -418,6 +424,7 @@ class EventKeyStreamService {
     // }
   }
 
+  /// Checks current status of [currentAtSign] in an event and updates [EventLocationShare] location sending list.
   void checkLocationSharingForEventData(
       EventNotificationModel eventNotificationModel) {
     if ((eventNotificationModel.atsignCreator == currentAtSign)) {
@@ -479,6 +486,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// Processes any kind of update in an event and notifies creator/members
   Future<bool> actionOnEvent(
       EventNotificationModel event, ATKEY_TYPE_ENUM keyType,
       {bool? isAccepted,
@@ -583,6 +591,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// Updates event data with received [locationData] of [fromAtSign]
   void updateLocationData(EventMemberLocation locationData, String? atKey,
       String? fromAtSign) async {
     try {
@@ -659,6 +668,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// Updates data of members of an event
   // ignore: always_declare_return_types
   createEventAcknowledge(EventNotificationModel acknowledgedEvent,
       String? atKey, String? fromAtSign) async {
