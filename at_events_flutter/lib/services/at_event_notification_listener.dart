@@ -40,8 +40,7 @@ class AtEventNotificationListener {
 
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
-      var privateKey =
-          await (getPrivateKey(currentAtSign!) as FutureOr<String>);
+      var privateKey = (await (getPrivateKey(currentAtSign!))) ?? '';
       // ignore: await_only_futures
       await atClientInstance!.startMonitor(privateKey, fnCallBack);
       print('Monitor started in events package');

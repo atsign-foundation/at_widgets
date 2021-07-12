@@ -1,3 +1,7 @@
+## [2.0.1] - 07/09/2021
+
+* Updated dependencies
+
 ## [2.0.0] - 06/30/2021
 
 * Null safe version
