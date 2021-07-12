@@ -32,7 +32,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
   void initState() {
     textController = TextEditingController.fromValue(
       TextEditingValue(
-        text: widget.group.groupName,
+        text: widget.group.groupName ?? '',
         selection: TextSelection.collapsed(offset: -1),
       ),
     );
@@ -96,16 +96,16 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                     runSpacing: 10.0,
                     spacing: 30.0,
                     children:
-                        List.generate(widget.group.members.length, (index) {
+                        List.generate(widget.group.members!.length, (index) {
                       return InkWell(
                         onTap: () {
                           showDialog(
                             context: context,
                             barrierDismissible: true,
                             builder: (context) => RemoveTrustedContact(
-                              'Remove ${widget.group.members.elementAt(index).atSign}  ',
+                              'Remove ${widget.group.members!.elementAt(index).atSign}  ',
                               contact: AtContact(
-                                  atSign: widget.group.members
+                                  atSign: widget.group.members!
                                       .elementAt(index)
                                       .atSign),
                               atGroup: widget.group,
@@ -115,9 +115,9 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                         child: DesktopCustomPersonVerticalTile(
                           title: 'Title',
                           subTitle:
-                              widget.group.members.elementAt(index).atSign,
+                              widget.group.members!.elementAt(index).atSign,
                           isAssetImage: true,
-                          atsign: widget.group.members.elementAt(index).atSign,
+                          atsign: widget.group.members!.elementAt(index).atSign,
                         ),
                       );
                     }),
@@ -302,7 +302,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                         ),
                                       ),
                                       Text(
-                                        '${widget.group.members.length} members',
+                                        '${widget.group.members!.length} members',
                                         style: CustomTextStyles
                                             .desktopPrimaryRegular14,
                                       ),

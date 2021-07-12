@@ -34,7 +34,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
   Widget build(BuildContext context) {
     if (searchText != '') {
       _filteredList = widget.groups.where((grp) {
-        return grp.groupName.contains(searchText);
+        return grp.groupName!.contains(searchText);
       }).toList();
     } else {
       _filteredList = widget.groups;
@@ -151,7 +151,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                             child: DesktopCustomPersonHorizontalTile(
                               title: _filteredList[index].groupName,
                               subTitle: _filteredList[index]
-                                  .members
+                                  .members!
                                   .length
                                   .toString(),
                             ),

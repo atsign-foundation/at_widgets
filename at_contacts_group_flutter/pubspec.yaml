@@ -21,19 +21,16 @@ dependencies:
   flutter_toastr: ^1.0.2
 
   # desktop - dependencies
-  file_selector: ^0.7.0
+  file_selector: ^0.8.2
   file_selector_macos: ^0.0.3
 
-  at_client_mobile: ^1.0.0+10
-  at_commons: ^1.0.1+7
-  at_common_flutter: 
-    # ^1.0.0
-    path: ../at_common_flutter
+  at_client_mobile: ^2.0.0
+  at_commons: ^2.0.1
+  at_common_flutter: ^2.0.0
+  at_contact: ^2.0.0
   at_contacts_flutter: 
-  # ^1.0.1
     path: ../at_contacts_flutter
-  at_contact: ^1.0.0+4
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
