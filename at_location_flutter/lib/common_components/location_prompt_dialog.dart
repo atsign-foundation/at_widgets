@@ -10,15 +10,15 @@ import 'package:flutter/material.dart';
 import 'custom_toast.dart';
 
 Future<void> locationPromptDialog(
-    {String text,
-    String yesText,
-    String noText,
-    @required bool isShareLocationData,
-    @required bool isRequestLocationData,
+    {String? text,
+    String? yesText,
+    String? noText,
+    required bool isShareLocationData,
+    required bool isRequestLocationData,
     bool onlyText = false,
-    LocationNotificationModel locationNotificationModel}) {
+    LocationNotificationModel? locationNotificationModel}) {
   var value = showDialog<void>(
-    context: AtLocationNotificationListener().navKey.currentContext,
+    context: AtLocationNotificationListener().navKey.currentContext!,
     barrierDismissible: true,
     builder: (BuildContext context) {
       return LocationPrompt(
@@ -35,17 +35,17 @@ Future<void> locationPromptDialog(
 }
 
 class LocationPrompt extends StatefulWidget {
-  final String text, yesText, noText;
+  final String? text, yesText, noText;
   final bool isShareLocationData, isRequestLocationData, onlyText;
-  final LocationNotificationModel locationNotificationModel;
+  final LocationNotificationModel? locationNotificationModel;
 
   LocationPrompt(
       {this.text,
       this.yesText,
       this.noText,
       this.onlyText = false,
-      @required this.isShareLocationData,
-      @required this.isRequestLocationData,
+      required this.isShareLocationData,
+      required this.isRequestLocationData,
       this.locationNotificationModel});
 
   @override
@@ -53,7 +53,7 @@ class LocationPrompt extends StatefulWidget {
 }
 
 class _LocationPromptState extends State<LocationPrompt> {
-  bool loading;
+  late bool loading;
 
   @override
   void initState() {
@@ -90,7 +90,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                 : Column(
                     children: <Widget>[
                       Text(
-                        widget.text,
+                        widget.text!,
                         style: CustomTextStyles().grey16,
                         textAlign: TextAlign.center,
                       ),
@@ -119,7 +119,7 @@ class _LocationPromptState extends State<LocationPrompt> {
 
                                 Navigator.of(AtLocationNotificationListener()
                                         .navKey
-                                        .currentContext)
+                                        .currentContext!)
                                     .pop();
                               },
                               buttonText: widget.yesText ?? 'Yes!',
@@ -152,7 +152,8 @@ class _LocationPromptState extends State<LocationPrompt> {
 
   Future<void> updateShareLocation() async {
     var update = await SharingLocationService()
-        .updateWithShareLocationAcknowledge(widget.locationNotificationModel);
+        .updateWithShareLocationAcknowledge(widget.locationNotificationModel!,
+            rePrompt: widget.locationNotificationModel!.rePrompt);
 
     if (update) {
       CustomToast().show('Share Location Request sent', context);
@@ -163,7 +164,8 @@ class _LocationPromptState extends State<LocationPrompt> {
 
   Future<void> updateRequestLocation() async {
     var update = await RequestLocationService()
-        .updateWithRequestLocationAcknowledge(widget.locationNotificationModel);
+        .updateWithRequestLocationAcknowledge(widget.locationNotificationModel!,
+            rePrompt: widget.locationNotificationModel!.rePrompt);
 
     if (update) {
       CustomToast().show('Prompted again', context);

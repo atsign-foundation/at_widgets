@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CircleMarkerPainter extends CustomPainter {
-  Color color;
-  PaintingStyle paintingStyle;
+  Color? color;
+  PaintingStyle? paintingStyle;
   CircleMarkerPainter({this.color, this.paintingStyle});
   final _paint = Paint()
     ..color = Colors.orange

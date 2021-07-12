@@ -148,7 +148,7 @@ class _GroupListState extends State<GroupList> {
                                   title:
                                       snapshot.data![index].displayName ?? ' ',
                                   subTitle:
-                                      '${snapshot.data![index].members.length} members',
+                                      '${snapshot.data![index].members!.length} members',
                                 ),
                               );
                             }),

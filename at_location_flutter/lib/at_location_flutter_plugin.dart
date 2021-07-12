@@ -11,7 +11,8 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/m
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_controller.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_snap.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'common_components/floating_icon.dart';
 import 'common_components/marker_cluster.dart';
@@ -21,30 +22,35 @@ import 'common_components/popup.dart';
 // ignore: must_be_immutable
 class AtLocationFlutterPlugin extends StatefulWidget {
   /// Atsigns whose location needs to be shown.
-  final List<String> atsignsToTrack;
+  final List<String?>? atsignsToTrack;
 
   /// Padding for the markers.
-  double left, right, top, bottom;
+  double? left, right, top, bottom;
 
   /// ETA will be calculated from this co-ordinate.
-  LatLng etaFrom;
+  LatLng? etaFrom;
 
-  /// Text for the co-ordinate from where ETA is calculated.
-  String textForCenter;
+  /// [textForCenter] Text for the co-ordinate from where ETA is calculated.
+  ///
+  /// [focusMapOn] Atsign of user whom to focus on.
+  String? textForCenter, focusMapOn;
 
   /// [calculateETA] if ETA needs to be calculated/displayed.
   /// [addCurrentUserMarker] if logged in users current location should be added to the map.
   bool calculateETA, addCurrentUserMarker;
 
-  AtLocationFlutterPlugin(this.atsignsToTrack,
-      {this.left,
-      this.right,
-      this.top,
-      this.bottom,
-      this.calculateETA = false,
-      this.addCurrentUserMarker = false,
-      this.textForCenter = 'Centre',
-      this.etaFrom});
+  AtLocationFlutterPlugin(
+    this.atsignsToTrack, {
+    this.left,
+    this.right,
+    this.top,
+    this.bottom,
+    this.calculateETA = false,
+    this.addCurrentUserMarker = false,
+    this.textForCenter = 'Centre',
+    this.etaFrom,
+    this.focusMapOn,
+  });
   @override
   _AtLocationFlutterPluginState createState() =>
       _AtLocationFlutterPluginState();
@@ -53,16 +59,17 @@ class AtLocationFlutterPlugin extends StatefulWidget {
 class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   PanelController pc = PanelController();
   PopupController _popupController = PopupController();
-  MapController mapController;
-  List<LatLng> points;
+  MapController? mapController;
+  List<LatLng?>? points;
   bool isEventAdmin = false;
-  bool showMarker;
-  BuildContext globalContext;
+  late bool showMarker, mapAdjustedOnce;
+  BuildContext? globalContext;
 
   @override
   void initState() {
     super.initState();
     showMarker = true;
+    mapAdjustedOnce = false;
     mapController = MapController();
     LocationService().init(widget.atsignsToTrack,
         etaFrom: widget.etaFrom,
@@ -70,20 +77,20 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         addCurrentUserMarker: widget.addCurrentUserMarker,
         textForCenter: widget.textForCenter,
         showToast: showToast);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       LocationService().mapInitialized();
       LocationService().notifyListeners();
     });
   }
 
   void showToast(String msg) {
-    if (globalContext != null) CustomToast().show(msg, globalContext);
+    if (globalContext != null) CustomToast().show(msg, globalContext!);
   }
 
   @override
   void dispose() {
     LocationService().dispose();
-    _popupController?.streamController?.close();
+    _popupController.streamController?.close();
     super.dispose();
   }
 
@@ -97,7 +104,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         children: [
           StreamBuilder(
               stream: LocationService().atHybridUsersStream,
-              builder: (context, AsyncSnapshot<List<HybridModel>> snapshot) {
+              builder: (context, AsyncSnapshot<List<HybridModel?>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasError) {
                     return Center(
@@ -109,20 +116,44 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                   } else {
                     print('FlutterMap called');
                     _popupController = PopupController();
-                    var users = snapshot.data;
-                    var markers = users.map((user) => user.marker).toList();
-                    points = users.map((user) => user.latLng).toList();
+                    var users = snapshot.data!;
+                    var markers = users.map((user) => user!.marker).toList();
+                    points = users.map((user) => user!.latLng).toList();
                     print('markers length = ${markers.length}');
                     users.forEach((element) {
-                      print('displayanme - ${element.displayName}');
+                      print('displayanme - ${element!.displayName}');
                     });
                     markers.forEach((element) {
-                      print('point - ${element.point}');
+                      print('point - ${element!.point}');
                     });
 
                     try {
-                      if ((markers.isNotEmpty) && (mapController != null)) {
-                        mapController.move(markers[0].point, 4);
+                      if (widget.focusMapOn == null) {
+                        if ((markers.isNotEmpty) && (mapController != null)) {
+                          mapController!.move(markers[0]!.point, 10);
+                        }
+                      } else {
+                        if ((!mapAdjustedOnce) &&
+                            (markers.isNotEmpty) &&
+                            (mapController != null)) {
+                          var indexOfUser = users.indexWhere((element) =>
+                              element!.displayName == widget.focusMapOn);
+
+                          if (indexOfUser > -1) {
+                            mapController!
+                                .move(markers[indexOfUser]!.point, 10);
+
+                            /// If we want the map to only update once
+                            /// And not keep the focus on user sharing his location
+                            /// then uncomment
+                            //
+                            // mapAdjustedOnce = true;
+                          } else {
+                            /// It moves the focus to logged in user,
+                            /// when other user is not sharing location
+                            mapController!.move(markers[0]!.point, 10);
+                          }
+                        }
                       }
                     } catch (e) {
                       print('$e');
@@ -138,8 +169,9 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                           widget.right ?? 20,
                           widget.bottom ?? 20,
                         )),
+                        // ignore: unnecessary_null_comparison
                         center: ((users != null) && (users.isNotEmpty))
-                            ? users[0].latLng
+                            ? users[0]!.latLng
                             : LatLng(45, 45),
                         zoom: markers.isNotEmpty ? 8 : 2,
                         plugins: [MarkerClusterPlugin(UniqueKey())],
@@ -176,23 +208,20 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                               popupController: _popupController,
                               popupBuilder: (_, marker) {
                                 return _popupController
-                                        .streamController.isClosed
+                                        .streamController!.isClosed
                                     ? Text('Closed')
-                                    : buildPopup(
-                                        snapshot.data[markers.indexOf(marker)]);
+                                    : buildPopup(snapshot
+                                        .data![markers.indexOf(marker)]!);
                               }),
                           builder: (context, markers) {
-                            return (false)
-                                ? buildMarkerCluster(markers,
-                                    eventData: LocationService().eventData)
-                                : buildMarkerCluster(markers);
+                            return buildMarkerCluster(markers);
                           },
                         ),
                       ],
                     );
                   }
                 } else {
-                  return ShowLocation(UniqueKey());
+                  return showLocation(UniqueKey(), mapController);
                 }
               }),
           Positioned(
@@ -208,7 +237,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   void zoomOutFn() {
     _popupController.hidePopup();
     if (LocationService().hybridUsersList.isNotEmpty) {
-      mapController.move(LocationService().hybridUsersList[0].latLng, 4);
+      mapController!.move(LocationService().hybridUsersList[0]!.latLng, 4);
     }
     // LocationService().hybridUsersList.isNotEmpty
     //     ? mapController.move(LocationService().hybridUsersList[0].latLng, 4)

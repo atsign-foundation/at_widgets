@@ -11,19 +11,19 @@ class ClientSdkService {
   factory ClientSdkService.getInstance() {
     return _singleton;
   }
-  AtClientService atClientServiceInstance;
-  AtClientImpl atClientInstance;
+  AtClientService? atClientServiceInstance;
+  AtClientImpl? atClientInstance;
 
-  AtClientPreference atClientPreference;
-  String _atsign;
-  String get currentAtsign => _atsign;
+  late AtClientPreference atClientPreference;
+  String? _atsign;
+  String? get currentAtsign => _atsign;
   set setAtsign(String atSign) {
     _atsign = atSign;
   }
 
-  Future<bool> onboard({String atsign}) async {
+  Future<bool> onboard({String? atsign}) async {
     atClientServiceInstance = AtClientService();
-    Directory downloadDirectory;
+    Directory? downloadDirectory;
     if (Platform.isIOS) {
       downloadDirectory =
           await path_provider.getApplicationDocumentsDirectory();
@@ -41,8 +41,8 @@ class ClientSdkService {
     atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
     atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
-    atClientPreference.downloadPath = downloadDirectory.path;
-    var result = await atClientServiceInstance
+    atClientPreference.downloadPath = downloadDirectory!.path;
+    var result = await atClientServiceInstance!
         .onboard(atClientPreference: atClientPreference, atsign: atsign)
         .catchError((e) {
       print('Error in Onboarding: $e');
@@ -51,7 +51,7 @@ class ClientSdkService {
   }
 
   ///Fetches atsign from device keychain.
-  Future<String> getAtSign() async {
-    return await atClientServiceInstance.getAtSign();
+  Future<String?> getAtSign() async {
+    return await atClientServiceInstance!.getAtSign();
   }
 }

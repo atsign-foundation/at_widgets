@@ -1,6 +1,6 @@
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CustomToast {
   CustomToast._();
@@ -8,14 +8,14 @@ class CustomToast {
   factory CustomToast() => _instance;
 
   void show(String text, BuildContext context,
-      {Color bgColor, Color textColor, int duration = 3}) {
-    Toast.show(
-      text,
-      context,
-      duration: duration,
-      gravity: Toast.BOTTOM,
-      backgroundColor: bgColor ?? AllColors().ORANGE,
-      textColor: textColor ?? Colors.white,
-    );
+      {Color? bgColor, Color? textColor, int duration = 3}) {
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: bgColor ?? AllColors().ORANGE,
+        textColor: textColor ?? Colors.white,
+        fontSize: 16.0);
   }
 }

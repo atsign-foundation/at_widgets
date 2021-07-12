@@ -47,15 +47,15 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
 
     // ignore: unnecessary_null_comparison
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int>? intList = contact.tags['image'].cast<int>();
+      if (contact.tags != null && contact.tags!['image'] != null) {
+        List<int>? intList = contact.tags!['image'].cast<int>();
         setState(() {
           image = Uint8List.fromList(intList!);
         });
       }
-      if (contact.tags != null && contact.tags['name'] != null) {
+      if (contact.tags != null && contact.tags!['name'] != null) {
         setState(() {
-          contactName = contact.tags['name'];
+          contactName = contact.tags!['name'];
         });
       }
     }

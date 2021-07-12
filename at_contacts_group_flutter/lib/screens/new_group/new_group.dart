@@ -15,7 +15,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/src/exception/at_exceptions.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:emoji_picker/emoji_picker.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 class NewGroup extends StatefulWidget {
   @override
@@ -263,14 +263,29 @@ class _NewGroupState extends State<NewGroup> {
             ),
             showEmojiPicker
                 ? Container(
+                    height: 250,
                     margin: EdgeInsets.only(bottom: 70.toHeight),
                     child: EmojiPicker(
                       key: UniqueKey(),
-                      rows: 5,
-                      columns: 8,
-                      buttonMode: ButtonMode.MATERIAL,
-                      numRecommended: 10,
-                      onEmojiSelected: (emoji, category) {
+                      config: Config(
+                          columns: 7,
+                          emojiSizeMax: 32.0,
+                          verticalSpacing: 0,
+                          horizontalSpacing: 0,
+                          initCategory: Category.RECENT,
+                          bgColor: Color(0xFFF2F2F2),
+                          indicatorColor: Colors.blue,
+                          iconColor: Colors.grey,
+                          iconColorSelected: Colors.blue,
+                          progressIndicatorColor: Colors.blue,
+                          showRecentsTab: true,
+                          recentsLimit: 28,
+                          noRecentsText: 'No Recents',
+                          noRecentsStyle: const TextStyle(
+                              fontSize: 20, color: Colors.black26),
+                          categoryIcons: const CategoryIcons(),
+                          buttonMode: ButtonMode.MATERIAL),
+                      onEmojiSelected: (category, emoji) {
                         textController.text += emoji.emoji;
                       },
                     ),

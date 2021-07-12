@@ -9,7 +9,8 @@ import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 import 'contact_service.dart';
 import 'location_service.dart';
@@ -18,34 +19,34 @@ class MasterLocationService {
   MasterLocationService._();
   static final MasterLocationService _instance = MasterLocationService._();
   factory MasterLocationService() => _instance;
-  AtClientImpl atClientInstance;
-  Function getAtValueFromMainApp;
+  late AtClientImpl atClientInstance;
+  late Function getAtValueFromMainApp;
 
-  String currentAtSign;
-  List<HybridModel> allReceivedUsersList;
+  String? currentAtSign;
+  List<HybridModel>? allReceivedUsersList;
   List<KeyLocationModel> allLocationNotifications = [];
 
   final String locationKey = 'locationnotify';
 
-  StreamController _allReceivedUsersController;
-  Stream<List<HybridModel>> get allReceivedUsersStream =>
-      _allReceivedUsersController.stream;
-  StreamSink<List<HybridModel>> get allReceivedUsersSink =>
-      _allReceivedUsersController.sink;
+  late StreamController _allReceivedUsersController;
+  Stream<List<HybridModel>?> get allReceivedUsersStream =>
+      _allReceivedUsersController.stream as Stream<List<HybridModel>?>;
+  StreamSink<List<HybridModel>?> get allReceivedUsersSink =>
+      _allReceivedUsersController.sink as StreamSink<List<HybridModel>?>;
 
   void init(String currentAtSignFromApp, AtClientImpl atClientInstanceFromApp,
-      {Function newGetAtValueFromMainApp}) {
+      {Function? newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     allReceivedUsersList = [];
     _allReceivedUsersController =
-        StreamController<List<HybridModel>>.broadcast();
+        StreamController<List<HybridModel>?>.broadcast();
 
     if (newGetAtValueFromMainApp != null) {
       getAtValueFromMainApp = newGetAtValueFromMainApp;
+    } else {
+      getAtValueFromMainApp = getAtValue;
     }
-
-    getAtValueFromMainApp = getAtValue;
 
     getAllLocationData();
   }
@@ -59,10 +60,10 @@ class MasterLocationService {
       return;
     }
 
-    await Future.forEach(response, (key) async {
+    await Future.forEach(response, (dynamic key) async {
       if ('@$key'.contains('cached')) {
         var atKey = getAtKey(key);
-        AtValue value = await getAtValueFromMainApp(atKey);
+        AtValue? value = await getAtValueFromMainApp(atKey);
         if (value != null) {
           var tempKeyLocationModel =
               KeyLocationModel(key: key, atKey: atKey, atValue: value);
@@ -80,10 +81,10 @@ class MasterLocationService {
   void convertJsonToLocationModel() {
     for (var i = 0; i < allLocationNotifications.length; i++) {
       try {
-        if ((allLocationNotifications[i].atValue.value != null) &&
-            (allLocationNotifications[i].atValue.value != 'null')) {
+        if ((allLocationNotifications[i].atValue!.value != null) &&
+            (allLocationNotifications[i].atValue!.value != 'null')) {
           var locationNotificationModel = LocationNotificationModel.fromJson(
-              jsonDecode(allLocationNotifications[i].atValue.value));
+              jsonDecode(allLocationNotifications[i].atValue!.value));
           allLocationNotifications[i].locationNotificationModel =
               locationNotificationModel;
         }
@@ -99,10 +100,11 @@ class MasterLocationService {
       // ignore: unrelated_type_equality_checks
       if ((allLocationNotifications[i].locationNotificationModel == 'null') ||
           (allLocationNotifications[i].locationNotificationModel == null) ||
-          ((allLocationNotifications[i].locationNotificationModel.to != null) &&
+          ((allLocationNotifications[i].locationNotificationModel!.to !=
+                  null) &&
               (allLocationNotifications[i]
-                      .locationNotificationModel
-                      .to
+                      .locationNotificationModel!
+                      .to!
                       .difference(DateTime.now())
                       .inMinutes <
                   0))) tempArray.add(allLocationNotifications[i]);
@@ -112,8 +114,9 @@ class MasterLocationService {
         .removeWhere((element) => tempArray.contains(element));
   }
 
-  void createHybridFromKeyLocationModel() {
-    allLocationNotifications.forEach((keyLocationModel) async {
+  void createHybridFromKeyLocationModel() async {
+    await Future.forEach(allLocationNotifications,
+        (dynamic keyLocationModel) async {
       var _image = await getImageOfAtsignNew(
           keyLocationModel.locationNotificationModel.atsignCreator);
       var user = HybridModel(
@@ -122,18 +125,18 @@ class MasterLocationService {
           image: _image,
           eta: '?');
 
-      allReceivedUsersList.add(user);
+      allReceivedUsersList!.add(user);
     });
     allReceivedUsersSink.add(allReceivedUsersList);
   }
 
   void updateHybridList(LocationNotificationModel newUser) async {
     var contains = false;
-    int index;
-    allReceivedUsersList.forEach((user) {
+    late int index;
+    allReceivedUsersList!.forEach((user) {
       if (user.displayName == newUser.atsignCreator) {
         contains = true;
-        index = allReceivedUsersList.indexOf(user);
+        index = allReceivedUsersList!.indexOf(user);
       }
     });
     if (!contains) {
@@ -149,7 +152,7 @@ class MasterLocationService {
             image: _image,
             eta: '?');
 
-        allReceivedUsersList.add(user);
+        allReceivedUsersList!.add(user);
         _allReceivedUsersController.add(allReceivedUsersList);
         allReceivedUsersSink.add(allReceivedUsersList);
         LocationService().newList();
@@ -157,30 +160,31 @@ class MasterLocationService {
     } else {
       print('contains from main app');
 
-      allReceivedUsersList[index].latLng = newUser.getLatLng;
-      allReceivedUsersList[index].eta = '?';
+      allReceivedUsersList![index].latLng = newUser.getLatLng;
+      allReceivedUsersList![index].eta = '?';
       _allReceivedUsersController.add(allReceivedUsersList);
       allReceivedUsersSink.add(allReceivedUsersList);
       LocationService().newList();
     }
   }
 
-  void deleteReceivedData(String atsign) {
-    allReceivedUsersList
+  void deleteReceivedData(String? atsign) {
+    allReceivedUsersList!
         .removeWhere((element) => element.displayName == atsign);
     LocationService().removeUser(atsign);
     allReceivedUsersSink.add(allReceivedUsersList);
   }
 
-  Future<Uint8List> getImageOfAtsignNew(String atsign) async {
+  Future<Uint8List?> getImageOfAtsignNew(String? atsign) async {
     try {
       AtContact contact;
-      Uint8List image;
+      Uint8List? image;
       contact = await getAtSignDetails(atsign);
 
+      // ignore: unnecessary_null_comparison
       if (contact != null) {
-        if (contact.tags != null && contact.tags['image'] != null) {
-          List<int> intList = contact.tags['image'].cast<int>();
+        if (contact.tags != null && contact.tags!['image'] != null) {
+          List<int> intList = contact.tags!['image'].cast<int>();
           image = Uint8List.fromList(intList);
         }
       }
@@ -197,6 +201,7 @@ class MasterLocationService {
           // ignore: return_of_invalid_type_from_catch_error
           (e) => print('error in getAtValue in master location service : $e'));
 
+      // ignore: unnecessary_null_comparison
       if (atvalue != null) {
         return atvalue;
       } else {

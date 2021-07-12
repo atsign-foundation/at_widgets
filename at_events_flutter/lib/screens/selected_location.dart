@@ -7,11 +7,13 @@ import 'package:at_events_flutter/services/event_services.dart';
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
+import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 class SelectedLocation extends StatefulWidget {
-  final LatLng point;
+  final LatLng? point;
   final String displayName;
   SelectedLocation(this.displayName, this.point);
   @override
@@ -19,13 +21,14 @@ class SelectedLocation extends StatefulWidget {
 }
 
 class _SelectedLocationState extends State<SelectedLocation> {
+  var mapController = MapController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Stack(
           children: <Widget>[
-            ShowLocation(UniqueKey(), location: LatLng(20, 30)),
+            showLocation(UniqueKey(), mapController, location: LatLng(20, 30)),
             Positioned(
               top: 0,
               left: 0,
@@ -95,13 +98,14 @@ class _SelectedLocationState extends State<SelectedLocation> {
                             width: 321.toWidth,
                             hintText: 'Save this address as',
                             initialValue: EventService()
-                                .eventNotificationModel
-                                .venue
-                                .label,
+                                    .eventNotificationModel!
+                                    .venue!
+                                    .label ??
+                                '',
                             value: (String val) {
                               EventService()
-                                  .eventNotificationModel
-                                  .venue
+                                  .eventNotificationModel!
+                                  .venue!
                                   .label = val;
                             },
                           ),
@@ -115,24 +119,24 @@ class _SelectedLocationState extends State<SelectedLocation> {
                           buttonText: 'Save',
                           onPressed: () {
                             if ((EventService()
-                                        .eventNotificationModel
-                                        .venue
+                                        .eventNotificationModel!
+                                        .venue!
                                         .label !=
                                     null) &&
                                 (EventService()
-                                    .eventNotificationModel
-                                    .venue
-                                    .label
+                                    .eventNotificationModel!
+                                    .venue!
+                                    .label!
                                     .isNotEmpty)) {
                               EventService()
-                                  .eventNotificationModel
-                                  .venue
-                                  .latitude = widget.point.latitude;
+                                  .eventNotificationModel!
+                                  .venue!
+                                  .latitude = widget.point!.latitude;
 
                               EventService()
-                                  .eventNotificationModel
-                                  .venue
-                                  .longitude = widget.point.longitude;
+                                  .eventNotificationModel!
+                                  .venue!
+                                  .longitude = widget.point!.longitude;
 
                               EventService().update(
                                   eventData:

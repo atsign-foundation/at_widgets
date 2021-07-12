@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ColorConstants {
-  static bool _isDarkTheme;
+  static late bool _isDarkTheme;
 
-  static Color _highLightColor;
+  static Color? _highLightColor;
 
   ///white for darktheme, black for lightTheme.
   static Color primary = Colors.black;
@@ -15,9 +15,9 @@ class ColorConstants {
   static Color secondary = Colors.white;
 
   ///shade of grey
-  static Color fillColor = Colors.grey[300];
+  static Color? fillColor = Colors.grey[300];
 
-  static Color borderColor;
+  static Color? borderColor;
 
   static const Color redText = Color(0xFFF05E3E);
 
@@ -26,11 +26,11 @@ class ColorConstants {
 
   static Color light = Colors.white;
 
-  static Color backgroundColor;
+  static Color? backgroundColor;
 
-  static Color lightBackgroundColor = Colors.grey[600];
+  static Color? lightBackgroundColor = Colors.grey[600];
 
-  static set setAppColor(Color color) => _highLightColor = color;
+  static set setAppColor(Color? color) => _highLightColor = color;
   static get appColor => _highLightColor ?? Colors.black;
 
   static set darkTheme(bool value) {

@@ -50,7 +50,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   bool deletingContact = false;
   bool blockingContact = false;
   bool errorOcurred = false;
-  List<AtContact> selectedList = [];
+  List<AtContact?> selectedList = [];
   @override
   void initState() {
     _contactService = ContactService();
@@ -91,13 +91,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   onPressed: () {
                     Navigator.pop(widget.context!);
                     if (widget.saveGroup != null) {
-                      widget.saveGroup!();
                       ContactService().clearAtSigns();
                     }
                   },
-                  selectedList: (s) {
-                    selectedList = s as List<AtContact>;
-                    widget.selectedList!(selectedList);
+                  selectedList: (List<AtContact?>? s) {
+                    if (widget.selectedList != null) {
+                      widget.selectedList!(s!);
+                    }
+                    if (widget.saveGroup != null) {
+                      widget.saveGroup!();
+                    }
                   },
                 )
           : Container(
@@ -175,7 +178,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         } else {
                           var _filteredList = <AtContact?>[];
                           snapshot.data!.forEach((c) {
-                            if (c!.atSign
+                            if (c!.atSign!
                                 .toUpperCase()
                                 .contains(searchText.toUpperCase())) {
                               _filteredList.add(c);
@@ -201,13 +204,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
                               if (alphabetIndex == 26) {
                                 currentChar = 'Others';
                                 _filteredList.forEach((c) {
-                                  if (int.tryParse(c!.atSign[1]) != null) {
+                                  if (int.tryParse(c!.atSign![1]) != null) {
                                     contactsForAlphabet.add(c);
                                   }
                                 });
                               } else {
                                 _filteredList.forEach((c) {
-                                  if (c!.atSign[1].toUpperCase() ==
+                                  if (c!.atSign![1].toUpperCase() ==
                                       currentChar) {
                                     contactsForAlphabet.add(c);
                                   }
@@ -330,7 +333,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                             atSign:
                                                                 contactsForAlphabet[
                                                                         index]!
-                                                                    .atSign);
+                                                                    .atSign!);
                                                     setState(() {
                                                       deletingContact = false;
                                                       Navigator.pop(context);
@@ -350,8 +353,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                   contact: contactsForAlphabet[
                                                       index],
                                                   selectedList: (s) {
-                                                    selectedList =
-                                                        s as List<AtContact>;
+                                                    selectedList = s!;
                                                     widget.selectedList!(
                                                         selectedList);
                                                   },

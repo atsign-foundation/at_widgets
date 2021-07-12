@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _homeWidget({@required Widget home}) {
+  Widget _homeWidget({required Widget home}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return Material(child: home);
@@ -32,13 +32,13 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       expect(
           find.byWidgetPredicate((widget) =>
-              widget is TextField && widget.controller.text == 'Welcome'),
+              widget is TextField && widget.controller!.text == 'Welcome'),
           findsOneWidget);
       await tester.enterText(find.byType(CustomInputField), 'I am logged in');
       expect(
           find.byWidgetPredicate((widget) =>
               widget is TextField &&
-              widget.controller.text == 'I am logged in'),
+              widget.controller!.text == 'I am logged in'),
           findsOneWidget);
     });
 
@@ -73,7 +73,7 @@ void main() {
       final inputField =
           tester.widget<CustomInputField>(find.byType(CustomInputField));
       expect(inputField.iconColor, Colors.blue);
-      expect(inputField.onIconTap.call(), null);
+      expect(inputField.onIconTap!.call(), null);
       expect(inputField.icon, Icons.person);
     });
 

@@ -133,13 +133,13 @@ class _GroupViewState extends State<GroupView> {
                                       ((SizeConfig().screenWidth * 0.25) /
                                           (SizeConfig().screenHeight * 0.2)),
                                   children: List.generate(
-                                      groupData.members.length, (index) {
+                                      groupData.members!.length, (index) {
                                     return InkWell(
                                       onTap: () {
-                                        if (index < groupData.members.length) {
+                                        if (index < groupData.members!.length) {
                                           showMyDialog(
                                               context,
-                                              groupData.members
+                                              groupData.members!
                                                   .elementAt(index),
                                               widget.group);
                                         } else {
@@ -149,19 +149,19 @@ class _GroupViewState extends State<GroupView> {
                                       },
                                       child: CustomPersonVerticalTile(
                                         imageLocation: null,
-                                        title: groupData.members
+                                        title: groupData.members!
                                                     .elementAt(index)
                                                     .tags !=
                                                 null
-                                            ? groupData.members
+                                            ? groupData.members!
                                                 .elementAt(index)
-                                                .tags['name']
+                                                .tags!['name']
                                             : null,
-                                        subTitle: groupData.members
+                                        subTitle: groupData.members!
                                             .elementAt(index)
                                             .atSign,
                                         isAssetImage: false,
-                                        atsign: groupData.members
+                                        atsign: groupData.members!
                                             .elementAt(index)
                                             .atSign,
                                       ),
@@ -225,7 +225,7 @@ class _GroupViewState extends State<GroupView> {
                                         Container(
                                           width: 250.toWidth,
                                           child: Text(
-                                            groupData.displayName,
+                                            groupData.displayName!,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                             // softWrap: false,
@@ -236,7 +236,7 @@ class _GroupViewState extends State<GroupView> {
                                           ),
                                         ),
                                         Text(
-                                          '${groupData.members.length} members',
+                                          '${groupData.members!.length} members',
                                           style: CustomTextStyles().grey14,
                                         ),
                                       ],
@@ -256,7 +256,8 @@ class _GroupViewState extends State<GroupView> {
                               builder: (context) => ContactsScreen(
                                 asSelectionScreen: true,
                                 context: context,
-                                selectedList: (selectedList) async {
+                                selectedList:
+                                    (List<AtContact?> selectedList) async {
                                   GroupService().selecteContactList =
                                       selectedList;
                                 },
@@ -342,7 +343,7 @@ class _GroupViewState extends State<GroupView> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return ConfirmationDialog(
-          title: contact.atSign,
+          title: contact.atSign!,
           heading: 'Are you sure you want to remove from the group?',
           onYesPressed: () async {
             var result =

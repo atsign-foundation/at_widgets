@@ -19,8 +19,9 @@ class ContactInitial extends StatelessWidget {
       this.minSize});
   @override
   Widget build(BuildContext context) {
-    if (initials.length < 3) {
-      index = initials.length;
+    var encodedInitials = initials.runes;
+    if (encodedInitials.length < 3) {
+      index = encodedInitials.length;
     } else {
       index = 3;
     }
@@ -40,9 +41,12 @@ class ContactInitial extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          initials.substring((index == 1) ? 0 : 1, index).toUpperCase(),
-          style: CustomTextStyles.whiteBold(
-            size: (size ~/ 3).toInt(),
+          String.fromCharCodes(encodedInitials, (index == 1) ? 0 : 1, index)
+              .toUpperCase(),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.toFont,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),

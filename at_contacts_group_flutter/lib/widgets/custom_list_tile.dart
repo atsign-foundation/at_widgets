@@ -98,19 +98,19 @@ class _CustomListTileState extends State<CustomListTile> {
     if (widget.item!.contact == null) {
       if (widget.item?.group?.groupName == null) {
         contactImage = ContactInitial(
-            initials: (widget.item!.group!.displayName.length > 3
+            initials: (widget.item!.group!.displayName!.length > 3
                 ? widget.item?.group?.displayName?.substring(0, 2)
                 : widget.item?.group?.displayName ?? 'UG')!);
       } else {
         contactImage = ContactInitial(
-            initials: (widget.item!.group!.groupName.length > 3
+            initials: (widget.item!.group!.groupName!.length > 3
                 ? widget.item?.group?.groupName?.substring(0, 2)
                 : widget.item?.group?.groupName ?? 'UG')!);
       }
     } else {
       if ((widget.item?.contact?.tags != null &&
-          widget.item?.contact?.tags['image'] != null)) {
-        List<int> intList = widget.item?.contact?.tags['image'].cast<int>();
+          widget.item?.contact?.tags!['image'] != null)) {
+        List<int> intList = widget.item?.contact?.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
         image = await FlutterImageCompress.compressWithList(
           image,
@@ -127,7 +127,7 @@ class _CustomListTileState extends State<CustomListTile> {
         if (widget.item?.contact?.atSign == null) {
           initial = '    ';
         } else {
-          initial = widget.item!.contact!.atSign;
+          initial = widget.item!.contact!.atSign!;
         }
 
         contactImage = ContactInitial(initials: initial);
@@ -195,9 +195,9 @@ class _CustomListTileState extends State<CustomListTile> {
                       ? widget.item!.group!.groupName
                       : widget.item!.group!.displayName
                   // ignore: prefer_if_null_operators
-                  : widget.item!.contact!.tags['name'] == null
-                      ? widget.item!.contact!.atSign.substring(1)
-                      : widget.item!.contact!.tags['name'],
+                  : widget.item!.contact!.tags!['name'] == null
+                      ? widget.item!.contact!.atSign!.substring(1)
+                      : widget.item!.contact!.tags!['name'],
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14.toFont,
