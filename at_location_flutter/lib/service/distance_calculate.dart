@@ -10,6 +10,11 @@ class DistanceCalculate {
   static final DistanceCalculate _instance = DistanceCalculate._();
   factory DistanceCalculate() => _instance;
 
+  /// Will calculate the ETA from [origin] to [destination].
+  ///
+  /// If no path is found or any other error occurs, will return '?'.
+  ///
+  /// Make sure that [apiKey] is passed while initialising.
   Future<String> calculateETA(LatLng origin, LatLng destination) async {
     try {
       var url =

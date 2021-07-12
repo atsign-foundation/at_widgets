@@ -13,6 +13,7 @@ import 'request_location_service.dart';
 import 'sharing_location_service.dart';
 import 'sync_secondary.dart';
 
+/// Starts monitor and listens for notifications related to this package.
 class AtLocationNotificationListener {
   AtLocationNotificationListener._();
   static final _instance = AtLocationNotificationListener._();
