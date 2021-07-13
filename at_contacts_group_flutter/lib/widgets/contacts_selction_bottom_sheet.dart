@@ -6,6 +6,7 @@
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_button.dart';
+import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -14,12 +15,21 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
-class ContactSelectionBottomSheet extends StatelessWidget {
+class ContactSelectionBottomSheet extends StatefulWidget {
   final Function? onPressed;
   final ValueChanged<List<GroupContactsModel?>>? selectedList;
   const ContactSelectionBottomSheet(
       {Key? key, this.onPressed, this.selectedList})
       : super(key: key);
+
+  @override
+  State<ContactSelectionBottomSheet> createState() =>
+      _ContactSelectionBottomSheetState();
+}
+
+class _ContactSelectionBottomSheetState
+    extends State<ContactSelectionBottomSheet> {
+  bool processing = false;
   @override
   Widget build(BuildContext context) {
     var _groupService = GroupService();
@@ -48,17 +58,30 @@ class ContactSelectionBottomSheet extends StatelessWidget {
                     ),
                   ),
                   CustomButton(
-                    buttonText: 'Done',
+                    buttonText: processing ? 'Processing...' : 'Done',
                     width: 120.toWidth,
                     height: 40.toHeight,
-                    onPressed: () {
-                      onPressed!();
-                      selectedList!(_groupService.selectedGroupContacts);
-                    },
-                    buttonColor:
-                        Theme.of(context).brightness == Brightness.light
+                    onPressed: processing
+                        ? null
+                        : () async {
+                            setState(() {
+                              processing = true;
+                            });
+                            await widget.onPressed!();
+                            widget.selectedList!(
+                                _groupService.selectedGroupContacts);
+
+                            if (mounted) {
+                              setState(() {
+                                processing = true;
+                              });
+                            }
+                          },
+                    buttonColor: processing
+                        ? ColorConstants.dullText
+                        : (Theme.of(context).brightness == Brightness.light
                             ? Colors.black
-                            : Colors.white,
+                            : Colors.white),
                     fontColor: Theme.of(context).brightness == Brightness.light
                         ? Colors.white
                         : Colors.black,
