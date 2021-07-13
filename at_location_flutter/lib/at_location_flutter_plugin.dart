@@ -236,8 +236,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
 
   void zoomOutFn() {
     _popupController.hidePopup();
-    if (LocationService().hybridUsersList!.isNotEmpty) {
-      mapController!.move(LocationService().hybridUsersList![0]!.latLng, 4);
+    if (LocationService().hybridUsersList.isNotEmpty) {
+      mapController!.move(LocationService().hybridUsersList[0]!.latLng, 4);
     }
     // LocationService().hybridUsersList.isNotEmpty
     //     ? mapController.move(LocationService().hybridUsersList[0].latLng, 4)

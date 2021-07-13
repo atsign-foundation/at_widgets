@@ -113,15 +113,15 @@ class LocationService {
 
     myData = _myData;
 
-    var _index = hybridUsersList!.indexWhere((element) =>
+    var _index = hybridUsersList.indexWhere((element) =>
         element!.displayName == AtLocationNotificationListener().currentAtSign);
 
     if (_index < 0) {
       if (addCurrentUserMarker!) {
-        hybridUsersList!.add(myData);
+        hybridUsersList.add(myData);
       }
     } else {
-      hybridUsersList![_index] = myData;
+      hybridUsersList[_index] = myData;
     }
 
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
@@ -137,7 +137,7 @@ class LocationService {
     centreMarker.marker = buildMarker(centreMarker);
 
     Future.delayed(
-        const Duration(seconds: 2), () => hybridUsersList!.add(centreMarker));
+        const Duration(seconds: 2), () => hybridUsersList.add(centreMarker));
   }
 
   /// called for the first time pckage is entered from main app
@@ -147,7 +147,7 @@ class LocationService {
       if (atsignsToTrack!.contains(user.displayName)) await updateDetails(user);
     });
 
-    if (hybridUsersList!.isNotEmpty) {
+    if (hybridUsersList.isNotEmpty) {
       Future.delayed(const Duration(seconds: 2),
           () => _atHybridUsersController.add(hybridUsersList));
     }
@@ -171,8 +171,8 @@ class LocationService {
 
   /// called when a user stops sharing his location
   void removeUser(String? atsign) {
-    if ((atsignsToTrack != null) && (hybridUsersList!.isNotEmpty)) {
-      hybridUsersList!.removeWhere((element) => element!.displayName == atsign);
+    if ((atsignsToTrack != null) && (hybridUsersList.isNotEmpty)) {
+      hybridUsersList.removeWhere((element) => element!.displayName == atsign);
       if (!_atHybridUsersController.isClosed) {
         _atHybridUsersController.add(hybridUsersList);
       }
@@ -183,10 +183,10 @@ class LocationService {
   Future<void> updateDetails(HybridModel user) async {
     var contains = false;
     int? index;
-    hybridUsersList!.forEach((hybridUser) {
+    hybridUsersList.forEach((hybridUser) {
       if (hybridUser!.displayName == user.displayName) {
         contains = true;
-        index = hybridUsersList!.indexOf(hybridUser);
+        index = hybridUsersList.indexOf(hybridUser);
       }
     });
     if (contains) {
@@ -203,10 +203,10 @@ class LocationService {
       var _eta = await _calculateEta(user);
       user.eta = _eta;
       if ((index != null)) {
-        if ((index < hybridUsersList!.length)) hybridUsersList![index] = user;
+        if ((index < hybridUsersList.length)) hybridUsersList[index] = user;
       } else {
         var _continue = true;
-        hybridUsersList!.forEach((hybridUser) {
+        hybridUsersList.forEach((hybridUser) {
           if (hybridUser!.displayName == user.displayName) {
             hybridUser = user;
             _continue = false;
@@ -214,7 +214,7 @@ class LocationService {
           }
         });
         if (_continue) {
-          hybridUsersList!.add(user);
+          hybridUsersList.add(user);
           if (showToast != null) {
             showToast!('${user.displayName} started sharing their location');
           }
@@ -254,7 +254,7 @@ class LocationService {
   }
 
   void notifyListeners() {
-    if (hybridUsersList!.isNotEmpty) {
+    if (hybridUsersList.isNotEmpty) {
       _atHybridUsersController.add(hybridUsersList);
     }
   }
