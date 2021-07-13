@@ -38,8 +38,9 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
   @override
   void initState() {
     super.initState();
-    if (widget.contact?.tags != null && widget.contact?.tags['image'] != null) {
-      List<int> intList = widget.contact?.tags['image'].cast<int>();
+    if (widget.contact?.tags != null &&
+        widget.contact?.tags!['image'] != null) {
+      List<int> intList = widget.contact?.tags!['image'].cast<int>();
       image = Uint8List.fromList(intList);
     }
   }
@@ -76,8 +77,8 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                       )
                     : ContactInitial(
                         initials: widget.contact?.tags != null &&
-                                widget.contact?.tags['name'] != null
-                            ? widget.contact?.tags['name']
+                                widget.contact?.tags!['name'] != null
+                            ? widget.contact?.tags!['name']
                             : widget.contact?.atSign,
                         size: 30,
                         maxSize: (80.0 - 30.0),
@@ -95,9 +96,9 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                   child: Center(
                       child: Text(
                     widget.contact?.tags != null &&
-                            widget.contact?.tags['name'] != null
-                        ? widget.contact?.tags['name']
-                        : widget.contact?.atSign.substring(1),
+                            widget.contact?.tags!['name'] != null
+                        ? widget.contact?.tags!['name']
+                        : widget.contact?.atSign!.substring(1),
                     style: CustomTextStyles.primaryBold16,
                   )),
                 ),
@@ -112,7 +113,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      widget.contact!.atSign,
+                      widget.contact!.atSign ?? '',
                       style: CustomTextStyles.secondaryRegular14,
                     ),
                   ),

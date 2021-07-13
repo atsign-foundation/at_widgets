@@ -314,8 +314,8 @@ class GroupService {
 
   void addRecentContacts(GroupContactsModel groupContact) {
     _recentContacts.removeWhere((element) {
-      return element.contact!.atSign.toLowerCase() ==
-          groupContact.contact!.atSign.toLowerCase();
+      return element.contact!.atSign!.toLowerCase() ==
+          groupContact.contact!.atSign!.toLowerCase();
     });
     _recentContacts.insert(0, groupContact);
     if (_recentContacts.length > 10) {
