@@ -57,7 +57,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   void initState() {
     _groupService = GroupService();
     _contactService = ContactService();
-    _groupService.fetchGroupsAndContacts();
+    _groupService.fetchGroupsAndContacts(isDesktop: widget.isDesktop);
     unmodifiedSelectedGroupContacts =
         List.from(_groupService.selectedGroupContacts);
 

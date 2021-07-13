@@ -46,9 +46,9 @@ packages:
   at_common_flutter:
     dependency: "direct main"
     description:
-      name: at_common_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../at_common_flutter"
+      relative: true
+    source: path
     version: "2.0.0"
   at_commons:
     dependency: "direct main"
@@ -70,7 +70,7 @@ packages:
       path: "../at_contacts_flutter"
       relative: true
     source: path
-    version: "1.0.2"
+    version: "2.0.1"
   at_lookup:
     dependency: transitive
     description:
@@ -176,13 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  emoji_picker:
+  emoji_picker_flutter:
     dependency: "direct main"
     description:
-      name: emoji_picker
+      name: emoji_picker_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "1.0.6"
   encrypt:
     dependency: transitive
     description:
@@ -372,21 +372,21 @@ packages:
       name: path_provider_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1+2"
+    version: "2.0.0"
   path_provider_platform_interface:
     dependency: transitive
     description:
       name: path_provider_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.1"
   path_provider_windows:
     dependency: transitive
     description:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.5"
+    version: "2.0.1"
   pedantic:
     dependency: "direct main"
     description:
@@ -428,42 +428,42 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.12+4"
+    version: "2.0.6"
   shared_preferences_linux:
     dependency: transitive
     description:
       name: shared_preferences_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.2+4"
+    version: "2.0.0"
   shared_preferences_macos:
     dependency: transitive
     description:
       name: shared_preferences_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1+11"
+    version: "2.0.0"
   shared_preferences_platform_interface:
     dependency: transitive
     description:
       name: shared_preferences_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.0"
   shared_preferences_web:
     dependency: transitive
     description:
       name: shared_preferences_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.2+7"
+    version: "2.0.0"
   shared_preferences_windows:
     dependency: transitive
     description:
       name: shared_preferences_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.2+3"
+    version: "2.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -545,7 +545,7 @@ packages:
       name: xdg_directories
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.2"
+    version: "0.2.0"
   yaml:
     dependency: transitive
     description:
@@ -555,4 +555,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.13.0 <3.0.0"
-  flutter: ">=2.0.0"
+  flutter: ">=2.0.1"

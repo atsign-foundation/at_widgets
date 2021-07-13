@@ -131,6 +131,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                         DesktopRoutes.DESKTOP_GROUP_DETAIL,
                         arguments: {
                           'group': _filteredList[index],
+                          'currentIndex': index,
                         })();
                   },
                   child: Container(

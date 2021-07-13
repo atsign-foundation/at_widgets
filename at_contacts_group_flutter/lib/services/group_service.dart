@@ -63,6 +63,8 @@ class GroupService {
 
   List<GroupContactsModel> get recentContacts => _recentContacts;
 
+  int? expandIndex = 0;
+
   // ignore: always_declare_return_types
   setSelectedContacts(List<AtContact?>? list) {
     selecteContactList = list;
@@ -86,7 +88,7 @@ class GroupService {
     try {
       AtGroup? group = await atContactImpl.createGroup(atGroup);
       if (group is AtGroup) {
-        await updateGroupStreams(group);
+        await updateGroupStreams(group, expandGroup: true);
         return group;
       }
     } catch (e) {
@@ -96,7 +98,11 @@ class GroupService {
   }
 
   // ignore: always_declare_return_types
-  getAllGroupsDetails() async {
+  getAllGroupsDetails({
+    int? expandIndex,
+    AtGroup? expandGroup,
+    bool addToGroupSink = true,
+  }) async {
     try {
       var groupIds = await atContactImpl.listGroupIds();
       var groupList = <AtGroup>[];
@@ -111,7 +117,21 @@ class GroupService {
         allContacts.add(
             GroupContactsModel(group: group, contactType: ContactsType.GROUP));
       });
-      atGroupSink.add(groupList);
+
+      if (expandIndex != null) {
+        this.expandIndex = expandIndex;
+      } else {
+        if (expandGroup != null) {
+          this.expandIndex = groupList
+              .indexWhere((element) => element.groupId == expandGroup.groupId);
+        } else {
+          this.expandIndex = 0;
+        }
+      }
+
+      if (addToGroupSink) {
+        atGroupSink.add(groupList);
+      }
     } catch (e) {
       print('error in getting group list: $e');
     }
@@ -142,7 +162,7 @@ class GroupService {
     try {
       var result = await atContactImpl.deleteMembers(Set.from(contacts), group);
       if (result is bool) {
-        await updateGroupStreams(group);
+        await updateGroupStreams(group, expandGroup: true);
         return result;
       }
     } catch (e) {
@@ -156,7 +176,7 @@ class GroupService {
     try {
       var result = await atContactImpl.addMembers(Set.from(contacts), group);
       if (result is bool) {
-        await updateGroupStreams(group);
+        await updateGroupStreams(group, expandGroup: true);
         return result;
       }
     } catch (e) {
@@ -165,11 +185,11 @@ class GroupService {
     }
   }
 
-  Future<dynamic> updateGroup(AtGroup group) async {
+  Future<dynamic> updateGroup(AtGroup group, {int? expandIndex}) async {
     try {
       var updatedGroup = await atContactImpl.updateGroup(group);
       if (updatedGroup is AtGroup) {
-        updateGroupStreams(updatedGroup);
+        updateGroupStreams(updatedGroup, expandIndex: expandIndex);
         return updatedGroup;
       } else {
         return 'something went wrong';
@@ -181,10 +201,12 @@ class GroupService {
   }
 
   // ignore: always_declare_return_types
-  updateGroupStreams(AtGroup group) async {
+  updateGroupStreams(AtGroup group,
+      {int? expandIndex, bool expandGroup = false}) async {
     var groupDetail = await (getGroupDetail(group.groupId!));
     if (groupDetail is AtGroup) groupViewSink.add(groupDetail);
-    await getAllGroupsDetails();
+    await getAllGroupsDetails(
+        expandIndex: expandIndex, expandGroup: expandGroup ? group : null);
   }
 
   Future<bool?> deleteGroup(AtGroup group) async {
@@ -199,9 +221,9 @@ class GroupService {
   }
 
   Future<dynamic> updateGroupData(AtGroup group, BuildContext context,
-      {bool isDesktop = false}) async {
+      {bool isDesktop = false, int? expandIndex}) async {
     try {
-      var result = await updateGroup(group);
+      var result = await updateGroup(group, expandIndex: expandIndex);
       if (isDesktop) {
         return result;
       } else {
@@ -220,7 +242,7 @@ class GroupService {
 
   // fetches contacts using the contacts library and groups from itself
   // ignore: always_declare_return_types
-  fetchGroupsAndContacts() async {
+  fetchGroupsAndContacts({bool isDesktop = false}) async {
     try {
       allContacts = [];
       var contactList = await fetchContacts();
@@ -229,7 +251,7 @@ class GroupService {
         allContacts.add(GroupContactsModel(
             contact: contact, contactType: ContactsType.CONTACT));
       });
-      await getAllGroupsDetails();
+      await getAllGroupsDetails(addToGroupSink: !isDesktop);
       // print('ALL CONTACTS====>${allContacts[8]}');
       _allContactsStreamController.add(allContacts);
     } catch (e) {

@@ -18,7 +18,8 @@ import 'package:at_contact/at_contact.dart';
 
 class DesktopGroupDetail extends StatefulWidget {
   AtGroup group;
-  DesktopGroupDetail(this.group);
+  int currentIndex;
+  DesktopGroupDetail(this.group, this.currentIndex);
 
   @override
   _DesktopGroupDetailState createState() => _DesktopGroupDetailState();
@@ -223,7 +224,9 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                             var result = await GroupService()
                                                 .updateGroupData(
                                                     _group, context,
-                                                    isDesktop: true);
+                                                    isDesktop: true,
+                                                    expandIndex:
+                                                        widget.currentIndex);
 
                                             if (result is AtGroup) {
                                               // TODO: Doubt
@@ -233,12 +236,16 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                                       content: Text(
                                                           'Name updated')));
                                             } else if (result == null) {
+                                              textController!.text =
+                                                  widget.group.groupName!;
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(
                                                       content: Text(
                                                           TextConstants()
                                                               .SERVICE_ERROR)));
                                             } else {
+                                              textController!.text =
+                                                  widget.group.groupName!;
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(
                                                       content: Text(
@@ -404,8 +411,8 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
     );
 
     _group.groupPicture = selectedImageByteData;
-    var result =
-        await GroupService().updateGroupData(_group, context, isDesktop: true);
+    var result = await GroupService().updateGroupData(_group, context,
+        isDesktop: true, expandIndex: widget.currentIndex);
 
     if (result is AtGroup) {
       // TODO: Doubt

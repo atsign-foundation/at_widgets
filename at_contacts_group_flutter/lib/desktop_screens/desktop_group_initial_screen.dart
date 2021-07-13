@@ -80,6 +80,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
                           },
                           shouldUpdate: shouldUpdate,
                           key: UniqueKey(),
+                          expandIndex: 0,
                         )
                       : DesktopEmptyGroup(createBtnTapped, onCreateBtnTap: () {
                           setState(() {
@@ -96,6 +97,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
                     },
                     shouldUpdate: shouldUpdate,
                     key: UniqueKey(),
+                    expandIndex: GroupService().expandIndex ?? 0,
                   );
                 }
               } else {
@@ -117,8 +119,9 @@ class NestedNavigators extends StatefulWidget {
   final List<AtGroup> data;
   final Function initialRouteOnArrowBackTap;
   final bool shouldUpdate;
+  final int expandIndex;
   NestedNavigators(this.data, this.initialRouteOnArrowBackTap,
-      {Key? key, this.shouldUpdate = false})
+      {Key? key, this.shouldUpdate = false, required this.expandIndex})
       : super(key: key);
 
   @override
@@ -149,10 +152,8 @@ class _NestedNavigatorsState extends State<NestedNavigators> {
               onGenerateRoute: (routeSettings) {
                 var routeBuilders =
                     DesktopGroupSetupRoutes.groupLeftRouteBuilders(
-                  context,
-                  routeSettings,
-                  widget.data,
-                );
+                        context, routeSettings, widget.data,
+                        expandIndex: widget.expandIndex);
                 return MaterialPageRoute(builder: (context) {
                   return routeBuilders[routeSettings.name]!(context);
                 });
@@ -167,13 +168,12 @@ class _NestedNavigatorsState extends State<NestedNavigators> {
               onGenerateRoute: (routeSettings) {
                 var routeBuilders =
                     DesktopGroupSetupRoutes.groupRightRouteBuilders(
-                  context,
-                  routeSettings,
-                  widget.data,
-                  initialRouteOnArrowBackTap: widget.initialRouteOnArrowBackTap,
-                  initialRouteOnDoneTap: DesktopGroupSetupRoutes.navigator(
-                      DesktopRoutes.DESKTOP_NEW_GROUP),
-                );
+                        context, routeSettings, widget.data,
+                        initialRouteOnArrowBackTap:
+                            widget.initialRouteOnArrowBackTap,
+                        initialRouteOnDoneTap: DesktopGroupSetupRoutes
+                            .navigator(DesktopRoutes.DESKTOP_NEW_GROUP),
+                        expandIndex: widget.expandIndex);
                 return MaterialPageRoute(builder: (context) {
                   return routeBuilders[routeSettings.name]!(context);
                 });
