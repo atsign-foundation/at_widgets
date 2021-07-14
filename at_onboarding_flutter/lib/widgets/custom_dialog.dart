@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
@@ -91,6 +92,12 @@ class CustomDialog extends StatelessWidget {
       pair = true;
       isfreeAtsign = true;
     }
+
+    var _dialogWidth = double.maxFinite;
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      _dialogWidth = 400;
+    }
+
     return StatefulBuilder(builder: (context, stateSet) {
       return Stack(children: [
         Opacity(
@@ -184,7 +191,7 @@ class CustomDialog extends StatelessWidget {
                       ? Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
                           child: Container(
-                            width: double.maxFinite,
+                            width: _dialogWidth,
                             // height:
                             //     MediaQuery.of(context).size.height * 0.6,
                             child: ListView(
@@ -235,36 +242,38 @@ class CustomDialog extends StatelessWidget {
                                                         color: ColorConstants
                                                             .appColor))),
                                           )
-                                        : PinCodeTextField(
-                                            animationType: AnimationType.none,
-                                            textCapitalization:
-                                                TextCapitalization.characters,
-                                            appContext: context,
-                                            length: 4,
-                                            onChanged: (value) {
-                                              verificationCode = value;
-                                            },
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500),
-                                            pinTheme: PinTheme(
-                                              selectedColor: Colors.black,
-                                              inactiveColor: Colors.grey[500],
-                                              activeColor:
-                                                  ColorConstants.appColor,
-                                              shape: PinCodeFieldShape.box,
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              fieldHeight: 50,
-                                              fieldWidth: 45.toWidth,
-                                            ),
-                                            cursorHeight: 15.toFont,
-                                            cursorColor: Colors.grey,
-                                            // controller: _otpController,
-                                            keyboardType: TextInputType.text,
-                                            onCompleted: (v) {
-                                              verificationCode = v;
-                                            },
-                                          )),
+                                        : SizedBox()
+                                    PinCodeTextField(
+                                        animationType: AnimationType.none,
+                                        textCapitalization:
+                                            TextCapitalization.characters,
+                                        appContext: context,
+                                        length: 4,
+                                        onChanged: (value) {
+                                          verificationCode = value;
+                                        },
+                                        textStyle: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                        pinTheme: PinTheme(
+                                          selectedColor: Colors.black,
+                                          inactiveColor: Colors.grey[500],
+                                          activeColor:
+                                              ColorConstants.appColor,
+                                          shape: PinCodeFieldShape.box,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          fieldHeight: 50,
+                                          fieldWidth: 45.toWidth,
+                                        ),
+                                        cursorHeight: 15.toFont,
+                                        cursorColor: Colors.grey,
+                                        // controller: _otpController,
+                                        keyboardType: TextInputType.text,
+                                        onCompleted: (v) {
+                                          verificationCode = v;
+                                        },
+                                      )
+                                    ),
                                 if (!isfreeAtsign && !isQR) ...[
                                   SizedBox(height: 15.toHeight),
                                   Row(
@@ -359,7 +368,8 @@ class CustomDialog extends StatelessWidget {
                                                   stateSet(() {});
                                                   _atsignController.text =
                                                       (await (getFreeAtsign(
-                                                              context))) ?? '';
+                                                              context))) ??
+                                                          '';
                                                   loading = false;
                                                   stateSet(() {});
                                                 },

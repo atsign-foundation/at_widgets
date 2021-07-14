@@ -22,6 +22,7 @@ import 'package:at_onboarding_flutter/widgets/custom_dialog.dart';
 import 'package:at_onboarding_flutter/widgets/custom_strings.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -220,8 +221,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       loading = true;
     });
     try {
-      var isExist =
-          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool?>);
+      var isExist = await (_onboardingService.isExistingAtsign(atsign)
+          as FutureOr<bool?>);
       if (isExist != null && isExist) {
         setState(() {
           loading = false;
@@ -244,7 +245,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               MaterialPageRoute(
                   builder: (context) => _onboardingService.nextScreen!));
         }
-      }    
+      }
     } catch (e) {
       setState(() {
         loading = false;
@@ -257,7 +258,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         _showAlertDialog(e, isPkam: true, title: 'Auth Failed');
       } else if (e == ResponseStatus.TIME_OUT) {
         _showAlertDialog(e, title: 'Response Time out');
-      } else{
+      } else {
         print(e);
       }
     }
@@ -280,8 +281,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       // for (var pickedFile in result.files) {
       // var path = pickedFile.path;
       // var path = '/Users/apple/Desktop/@new52plum_key.atKeys';
-      var path =
-          '/Users/sachinsingh/Desktop/atKeys2/@blindtahugejrot_key(1).atKeys';
+      var path = '/Users/apple/Downloads/atkeys/@new52plum_key.atKeys';
       File selectedFile = File(path);
       var length = selectedFile.lengthSync();
       if (length < 10) {
@@ -367,6 +367,89 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
+  void _uploadKeyFileForDesktop() async {
+    try {
+      _isServerCheck = false;
+      _isContinue = true;
+      var fileContents, aesKey, atsign;
+      setState(() {
+        loading = true;
+      });
+      // var path = '/Users/apple/Downloads/atkeys/@new52plum_key.atKeys';
+
+      var path = await _desktopKeyPicker();
+
+      if (path == null) {
+        return;
+      }
+
+      File selectedFile = File(path);
+      var length = selectedFile.lengthSync();
+      if (length < 10) {
+        _showAlertDialog(_incorrectKeyFile);
+        return;
+      }
+
+      fileContents = File(path).readAsStringSync();
+
+      if (aesKey == null && atsign == null && fileContents != null) {
+        var keyData = fileContents.split(',"@');
+        List<String> params = keyData[1]
+            .toString()
+            .substring(0, keyData[1].length - 2)
+            .split('":"');
+        atsign = params[0];
+        aesKey = params[1];
+      }
+      if (fileContents == null || (aesKey == null && atsign == null)) {
+        _showAlertDialog(_incorrectKeyFile);
+        setState(() {
+          loading = false;
+        });
+        return;
+      } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
+              _pairingAtsign &&
+          _pairingAtsign != null) {
+        _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
+        setState(() {
+          loading = false;
+        });
+        return;
+      }
+      await _processAESKey(atsign, aesKey, fileContents);
+      setState(() {
+        loading = false;
+      });
+    } catch (error) {
+      setState(() {
+        loading = false;
+      });
+      _logger.severe('Uploading backup zip file throws $error');
+      _showAlertDialog(_failedFileProcessing);
+    }
+  }
+
+  Future<dynamic> _desktopKeyPicker() async {
+    try {
+      // ignore: omit_local_variable_types
+      final XTypeGroup typeGroup = XTypeGroup(
+        label: 'images',
+        extensions: ['atKeys'],
+      );
+      final List<XFile> files =
+          await openFiles(acceptedTypeGroups: [typeGroup]);
+      if (files.isEmpty) {
+        return null;
+      }
+      // ignore: omit_local_variable_types
+      final XFile file = files[0];
+      return file.path;
+    } catch (e) {
+      print('Error in desktopImagePicker $e');
+      return null;
+    }
+  }
+
   _showAlertDialog(var errorMessage,
       {bool? isPkam, String? title, bool? getClose, Function? onClose}) {
     showDialog(
@@ -438,7 +521,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                         child: CustomButton(
                           width: 230.toWidth,
                           buttonText: Strings.uploadZipTitle,
-                          onPressed: _uploadKeyFile,
+                          onPressed: (Platform.isMacOS ||
+                                  Platform.isLinux ||
+                                  Platform.isWindows)
+                              ? _uploadKeyFileForDesktop
+                              : _uploadKeyFile,
                         ),
                       ),
                       SizedBox(
