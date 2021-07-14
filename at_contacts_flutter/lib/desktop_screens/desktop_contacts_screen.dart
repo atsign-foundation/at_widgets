@@ -170,7 +170,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                               // return contacts_tile(contact);
                               var contact = snapshot.data![index]!;
 
-                              if (contact.atSign.contains(searchText)) {
+                              if (contact.atSign!.contains(searchText)) {
                                 _filteredList.add(contact);
                                 return contacts_tile(contact);
                               } else {
@@ -189,7 +189,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                             },
                             separatorBuilder: (context, index) {
                               var contact = snapshot.data![index]!;
-                              if (contact.atSign.contains(searchText)) {
+                              if (contact.atSign!.contains(searchText)) {
                                 return Divider(
                                   thickness: 0.2,
                                 );
@@ -216,7 +216,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                             itemBuilder: (context, index) {
                               var contact = snapshot.data![index]!;
 
-                              if (contact.atSign.contains(searchText)) {
+                              if (contact.atSign!.contains(searchText)) {
                                 _filteredList.add(contact);
                                 return contacts_tile(contact);
                               } else {
@@ -235,7 +235,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                             },
                             separatorBuilder: (context, index) {
                               var contact = snapshot.data![index]!;
-                              if (contact.atSign.contains(searchText)) {
+                              if (contact.atSign!.contains(searchText)) {
                                 return Divider(
                                   thickness: 0.2,
                                 );
@@ -257,11 +257,11 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
     String? name;
     var image;
     if (contact.tags != null) {
-      if (contact.tags['name'] != null) {
-        name = contact.tags['name'];
+      if (contact.tags!['name'] != null) {
+        name = contact.tags!['name'];
       }
-      if (contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
+      if (contact.tags!['image'] != null) {
+        List<int> intList = contact.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
       }
     }
@@ -276,7 +276,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                   size: 50,
                 )
               : ContactInitial(
-                  initials: contact.atSign,
+                  initials: contact.atSign ?? '',
                   maxSize: 50,
                   minSize: 50,
                 ),
@@ -286,14 +286,14 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           SizedBox(
             width: 250,
             child: Text(
-              name ?? contact.atSign,
+              name ?? contact.atSign ?? '',
               style: CustomTextStyles.primaryNormal20,
             ),
           ),
           SizedBox(
             width: 70,
           ),
-          Text(contact.atSign,
+          Text(contact.atSign ?? '',
               style: CustomTextStyles.desktopSecondaryRegular18),
           Spacer(),
           ContactListTile(contact, isBlockedScreen: widget.isBlockedScreen),
@@ -354,7 +354,7 @@ class _ContactListTileState extends State<ContactListTile> {
               ? SizedBox(
                   width: 25, height: 25, child: CircularProgressIndicator())
               : Container(
-                  child: contact.favourite
+                  child: contact.favourite!
                       ? Icon(
                           Icons.star,
                           color: ColorConstants.orangeColor,
@@ -395,7 +395,7 @@ class _ContactListTileState extends State<ContactListTile> {
                   setState(() {
                     isDeletingContact = true;
                   });
-                  await _contactService!.deleteAtSign(atSign: contact.atSign);
+                  await _contactService!.deleteAtSign(atSign: contact.atSign!);
                   setState(() {
                     isDeletingContact = false;
                   });

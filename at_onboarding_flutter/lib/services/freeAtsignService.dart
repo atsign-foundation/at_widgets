@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
-import 'package:http/io_client.dart';
+// import 'package:http/io_client.dart';
 
 class FreeAtsignService {
   static final freeAtsignService = FreeAtsignService._internal();
@@ -20,7 +20,7 @@ class FreeAtsignService {
     final ioc = new HttpClient();
     ioc.badCertificateCallback =
         (X509Certificate cert, String host, int port) => true;
-    _http = new IOClient(ioc);
+    // _http = new IOClient(ioc);
     initialized = true;
   }
 
@@ -60,7 +60,8 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    var url = Uri.https(AppConstants.apiEndPoint, '${AppConstants.apiPath}${AppConstants.getFreeAtsign}');
+    var url = Uri.https(AppConstants.apiEndPoint,
+        '${AppConstants.apiPath}${AppConstants.getFreeAtsign}');
 
     var response = await _http.get(url, headers: {
       "Authorization": '${AppConstants.apiKey}',

@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_commons/at_commons.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
+// import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
@@ -243,36 +243,36 @@ class CustomDialog extends StatelessWidget {
                                                             .appColor))),
                                           )
                                         : SizedBox()
-                                    PinCodeTextField(
-                                        animationType: AnimationType.none,
-                                        textCapitalization:
-                                            TextCapitalization.characters,
-                                        appContext: context,
-                                        length: 4,
-                                        onChanged: (value) {
-                                          verificationCode = value;
-                                        },
-                                        textStyle: TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                        pinTheme: PinTheme(
-                                          selectedColor: Colors.black,
-                                          inactiveColor: Colors.grey[500],
-                                          activeColor:
-                                              ColorConstants.appColor,
-                                          shape: PinCodeFieldShape.box,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          fieldHeight: 50,
-                                          fieldWidth: 45.toWidth,
-                                        ),
-                                        cursorHeight: 15.toFont,
-                                        cursorColor: Colors.grey,
-                                        // controller: _otpController,
-                                        keyboardType: TextInputType.text,
-                                        onCompleted: (v) {
-                                          verificationCode = v;
-                                        },
-                                      )
+                                    // PinCodeTextField(
+                                    //     animationType: AnimationType.none,
+                                    //     textCapitalization:
+                                    //         TextCapitalization.characters,
+                                    //     appContext: context,
+                                    //     length: 4,
+                                    //     onChanged: (value) {
+                                    //       verificationCode = value;
+                                    //     },
+                                    //     textStyle: TextStyle(
+                                    //         fontWeight: FontWeight.w500),
+                                    //     pinTheme: PinTheme(
+                                    //       selectedColor: Colors.black,
+                                    //       inactiveColor: Colors.grey[500],
+                                    //       activeColor:
+                                    //           ColorConstants.appColor,
+                                    //       shape: PinCodeFieldShape.box,
+                                    //       borderRadius:
+                                    //           BorderRadius.circular(5),
+                                    //       fieldHeight: 50,
+                                    //       fieldWidth: 45.toWidth,
+                                    //     ),
+                                    //     cursorHeight: 15.toFont,
+                                    //     cursorColor: Colors.grey,
+                                    //     // controller: _otpController,
+                                    //     keyboardType: TextInputType.text,
+                                    //     onCompleted: (v) {
+                                    //       verificationCode = v;
+                                    //     },
+                                    //   )
                                     ),
                                 if (!isfreeAtsign && !isQR) ...[
                                   SizedBox(height: 15.toHeight),

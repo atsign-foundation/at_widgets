@@ -126,7 +126,7 @@ class ContactService {
   // ignore: always_declare_return_types
   markFavContact(AtContact contact) async {
     try {
-      contact.favourite = !contact.favourite;
+      contact.favourite = !contact.favourite!;
       await atContactImpl.update(contact);
       await fetchBlockContactList();
       await fetchContacts();

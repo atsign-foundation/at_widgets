@@ -20,7 +20,8 @@ dependencies:
   at_lookup: ^2.0.1
   at_contact: ^2.0.0
   # at_common_flutter: ^1.0.0
-  at_common_flutter: ^2.0.0
+  at_common_flutter:
+    path: ../at_common_flutter
   
 dev_dependencies:
   flutter_test:
