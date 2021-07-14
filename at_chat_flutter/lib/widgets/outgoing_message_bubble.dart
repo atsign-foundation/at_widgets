@@ -9,12 +9,14 @@ class OutgoingMessageBubble extends StatefulWidget {
   final Message? message;
   final Color color;
   final Color avatarColor;
+  final double bubble_height;
+  final double bubble_width;
 
   const OutgoingMessageBubble(
       {Key? key,
       this.message,
       this.color = CustomColors.outgoingMessageColor,
-      this.avatarColor = CustomColors.defaultColor})
+      this.avatarColor = CustomColors.defaultColor, this.bubble_height = 12.0, this.bubble_width = 12.0})
       : super(key: key);
   @override
   _OutgoingMessageBubbleState createState() => _OutgoingMessageBubbleState();
@@ -29,7 +31,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          padding: EdgeInsets.all(30.toHeight),
+          padding: EdgeInsets.symmetric(horizontal: widget.bubble_width, vertical: widget.bubble_height),
           decoration: BoxDecoration(
             color: widget.color,
             borderRadius: BorderRadius.circular(10.toWidth),
