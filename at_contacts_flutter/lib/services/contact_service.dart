@@ -147,7 +147,7 @@ class ContactService {
         (e) => e!.atSign == baseContact.contact!.atSign,
       );
       if (index == -1) {
-        atsignsToRemove.add(baseContact.contact!.atSign);
+        atsignsToRemove.add(baseContact.contact!.atSign!);
       }
     });
     atsignsToRemove.forEach((e) {
@@ -225,7 +225,7 @@ class ContactService {
         (e) => e!.atSign == baseContact.contact!.atSign,
       );
       if (index == -1) {
-        atsignsToRemove.add(baseContact.contact!.atSign);
+        atsignsToRemove.add(baseContact.contact!.atSign!);
       }
     });
     atsignsToRemove.forEach((e) {

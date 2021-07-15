@@ -169,7 +169,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                             itemBuilder: (context, index) {
                               var baseContact = snapshot.data![index]!;
 
-                              if (baseContact.contact!.atSign
+                              if (baseContact.contact!.atSign!
                                   .contains(searchText)) {
                                 _filteredList.add(baseContact);
                                 return contacts_tile(baseContact);
@@ -189,7 +189,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                             },
                             separatorBuilder: (context, index) {
                               var baseContact = snapshot.data![index]!;
-                              if (baseContact.contact!.atSign
+                              if (baseContact.contact!.atSign!
                                   .contains(searchText)) {
                                 return Divider(
                                   thickness: 0.2,
@@ -218,7 +218,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                             itemBuilder: (context, index) {
                               var contact = snapshot.data![index]!;
 
-                              if (contact.contact!.atSign
+                              if (contact.contact!.atSign!
                                   .contains(searchText)) {
                                 _filteredList.add(contact);
                                 return contacts_tile(contact);
@@ -238,7 +238,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                             },
                             separatorBuilder: (context, index) {
                               var contact = snapshot.data![index]!;
-                              if (contact.contact!.atSign
+                              if (contact.contact!.atSign!
                                   .contains(searchText)) {
                                 return Divider(
                                   thickness: 0.2,
@@ -262,11 +262,11 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
     String? name;
     var image;
     if (contact.contact!.tags != null) {
-      if (contact.contact!.tags['name'] != null) {
-        name = contact.contact!.tags['name'];
+      if (contact.contact!.tags!['name'] != null) {
+        name = contact.contact!.tags!['name'];
       }
-      if (contact.contact!.tags['image'] != null) {
-        List<int> intList = contact.contact!.tags['image'].cast<int>();
+      if (contact.contact!.tags!['image'] != null) {
+        List<int> intList = contact.contact!.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
       }
     }
@@ -281,8 +281,9 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                   size: 50,
                 )
               : ContactInitial(
-                  initials: contact.contact!.atSign,
-                  size: 50,
+                  initials: contact.contact!.atSign ?? '',
+                  maxSize: 50,
+                  minSize: 50,
                 ),
           SizedBox(
             width: 15,
@@ -290,14 +291,14 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           SizedBox(
             width: 250,
             child: Text(
-              name ?? contact.contact!.atSign,
+              name ?? contact.contact!.atSign ?? '',
               style: CustomTextStyles.primaryNormal20,
             ),
           ),
           SizedBox(
             width: 70,
           ),
-          Text(contact.contact!.atSign,
+          Text(contact.contact!.atSign ?? '',
               style: CustomTextStyles.desktopSecondaryRegular18),
           Spacer(),
           ContactListTile(
@@ -394,7 +395,8 @@ class _ContactListTileState extends State<ContactListTile> {
                 onTap: () async {
                   _contactService!
                       .updateState(STATE_UPDATE.DELETE, contact, true);
-                  await _contactService!.deleteAtSign(atSign: contact.atSign);
+                  await _contactService!
+                      .deleteAtSign(atSign: contact.atSign ?? '');
                   _contactService!
                       .updateState(STATE_UPDATE.DELETE, contact, false);
                 },

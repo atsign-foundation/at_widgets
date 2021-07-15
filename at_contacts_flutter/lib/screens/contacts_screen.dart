@@ -169,7 +169,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         } else {
                           var _filteredList = <BaseContact?>[];
                           snapshot.data!.forEach((c) {
-                            if (c!.contact!.atSign
+                            if (c!.contact!.atSign!
                                 .toUpperCase()
                                 .contains(searchText.toUpperCase())) {
                               _filteredList.add(c);
@@ -195,14 +195,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
                               if (alphabetIndex == 26) {
                                 currentChar = 'Others';
                                 _filteredList.forEach((c) {
-                                  if (int.tryParse(c!.contact!.atSign[1]) !=
+                                  if (int.tryParse(c!.contact!.atSign![1]) !=
                                       null) {
                                     contactsForAlphabet.add(c.contact!);
                                   }
                                 });
                               } else {
                                 _filteredList.forEach((c) {
-                                  if (c!.contact!.atSign[1].toUpperCase() ==
+                                  if (c!.contact!.atSign![1].toUpperCase() ==
                                       currentChar) {
                                     contactsForAlphabet.add(c.contact!);
                                   }
