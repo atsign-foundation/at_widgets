@@ -45,6 +45,7 @@ class ConnectionsService {
         connectionProvider.followingList =
         await _formAtSignData(following.list!, isFollowing: true);
       }
+      await _sdkService.sync();
       if (!this.following.contains(this.followAtsign) &&
           this.followAtsign != null) {
         var atsignData = await this.follow(this.followAtsign);
@@ -215,6 +216,7 @@ class ConnectionsService {
       if (isSetStatus) connectionProvider.setStatus(Status.loading);
       var atKey = this._formKey();
       if (followers.list!.contains(notification.fromAtSign)) {
+
         if (isSetStatus) connectionProvider.setStatus(Status.done);
         return;
       }
@@ -343,7 +345,7 @@ class ConnectionsService {
   }
 
   Future<Atsign> _getAtsignData(String? connection,
-      {bool isFollowing = false, bool isNew = false}) async {
+      {bool isFollowing = true, bool isNew = false}) async {
     AtKey atKey;
     Atsign atsignData = Atsign()
       ..title = connection

@@ -253,9 +253,11 @@ class _FollowersState extends State<Followers> {
             ],
           ),
         );
-      } else if (provider.status == Status.error) {
+      }
+      else if (provider.status == Status.error) {
         return AtExceptionHandler().handle(provider.error, context);
-      } else {
+      }
+      else {
         WidgetsBinding.instance!.addPostFrameCallback((_) async {
           await provider.getAtsignsList(isFollowing: widget.isFollowing);
         });
