@@ -183,11 +183,11 @@ class ConnectionsService {
     atFollowsList.remove(atsign);
     if (atFollowsList.toString().isEmpty) {
       result = await _sdkService.put(atKey, 'null');
-      await _sdkService.sync();
-    } else {
-      result = await _sdkService.put(atKey, atFollowsList.toString());
-      await _sdkService.sync();
     }
+    else {
+      result = await _sdkService.put(atKey, atFollowsList.toString());
+    }
+    await _sdkService.sync();
     return result;
   }
 
