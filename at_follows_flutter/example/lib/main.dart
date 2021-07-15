@@ -131,6 +131,7 @@ class _MyAppState extends State<MyApp> {
 
     Onboarding(
       domain: AppConstants.rootDomain,
+      appAPIKey: AppConstants.devAPIKey,
       context: context,
       onboard: (value, atsign) async {
         atService.atClientServiceInstance = value[atsign];
