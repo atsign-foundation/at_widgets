@@ -5,18 +5,16 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactInitial extends StatelessWidget {
   final double size;
-  final double? maxSize, minSize;
   final String initials;
   int? index;
   Key? key;
 
-  ContactInitial(
-      {this.size = 40,
-      this.key,
-      required this.initials,
-      this.index,
-      this.maxSize,
-      this.minSize});
+  ContactInitial({
+    this.size = 40,
+    this.key,
+    required this.initials,
+    this.index,
+  });
   @override
   Widget build(BuildContext context) {
     var encodedInitials = initials.runes;
@@ -29,15 +27,9 @@ class ContactInitial extends StatelessWidget {
     return Container(
       height: size.toFont,
       width: size.toFont,
-      constraints: BoxConstraints(
-        minHeight: minSize ?? double.infinity,
-        minWidth: minSize ?? double.infinity,
-        maxHeight: maxSize ?? double.infinity,
-        maxWidth: maxSize ?? double.infinity,
-      ),
       decoration: BoxDecoration(
         color: ContactInitialsColors.getColor(initials),
-        borderRadius: BorderRadius.circular((size.toFont)),
+        borderRadius: BorderRadius.circular((size.toWidth)),
       ),
       child: Center(
         child: Text(
