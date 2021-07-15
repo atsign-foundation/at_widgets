@@ -45,8 +45,9 @@ class _CustomListTileState extends State<CustomListTile> {
   @override
   Widget build(BuildContext context) {
     Widget contactImage;
-    if (widget.contact!.tags != null && widget.contact!.tags['image'] != null) {
-      List<int> intList = widget.contact!.tags['image'].cast<int>();
+    if (widget.contact!.tags != null &&
+        widget.contact!.tags!['image'] != null) {
+      List<int> intList = widget.contact!.tags!['image'].cast<int>();
       var image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
@@ -54,7 +55,7 @@ class _CustomListTileState extends State<CustomListTile> {
       );
     } else {
       contactImage = ContactInitial(
-        initials: widget.contact!.atSign,
+        initials: widget.contact!.atSign!,
       );
     }
     return StreamBuilder<List<AtContact?>>(
@@ -97,16 +98,16 @@ class _CustomListTileState extends State<CustomListTile> {
             },
             title: Text(
               widget.contact!.tags != null &&
-                      widget.contact!.tags['name'] != null
-                  ? widget.contact!.tags['name']
-                  : widget.contact!.atSign.substring(1),
+                      widget.contact!.tags!['name'] != null
+                  ? widget.contact!.tags!['name']
+                  : widget.contact!.atSign!.substring(1),
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14.toFont,
               ),
             ),
             subtitle: Text(
-              widget.contact!.atSign,
+              widget.contact!.atSign!,
               style: TextStyle(
                 color: ColorConstants.fadedText,
                 fontSize: 14.toFont,

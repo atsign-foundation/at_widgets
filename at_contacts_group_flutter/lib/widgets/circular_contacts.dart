@@ -18,8 +18,8 @@ class CircularContacts extends StatelessWidget {
     SizeConfig().init(context);
     Uint8List? image;
     if (groupContact?.contact?.tags != null &&
-        groupContact?.contact?.tags['image'] != null) {
-      List<int> intList = groupContact?.contact?.tags['image'].cast<int>();
+        groupContact?.contact?.tags!['image'] != null) {
+      List<int> intList = groupContact?.contact?.tags!['image'].cast<int>();
       image = Uint8List.fromList(intList);
     }
     return Container(
@@ -35,7 +35,7 @@ class CircularContacts extends StatelessWidget {
                 height: 50.toHeight,
                 width: 50.toHeight,
                 child: (groupContact?.contact?.tags != null &&
-                        groupContact?.contact?.tags['image'] != null)
+                        groupContact?.contact?.tags!['image'] != null)
                     ? CustomCircleAvatar(
                         byteImage: image,
                         nonAsset: true,
@@ -71,8 +71,8 @@ class CircularContacts extends StatelessWidget {
             width: 80.toWidth,
             child: Text(
               groupContact?.contact?.tags != null &&
-                      groupContact?.contact?.tags['name'] != null
-                  ? groupContact?.contact?.tags['name']
+                      groupContact?.contact?.tags!['name'] != null
+                  ? groupContact?.contact?.tags!['name']
                   : (groupContact?.contact?.atSign?.substring(1) ??
                       groupContact?.group?.groupName?.substring(0))!,
               textAlign: TextAlign.center,

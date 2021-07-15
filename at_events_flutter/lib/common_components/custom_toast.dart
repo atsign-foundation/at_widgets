@@ -7,8 +7,8 @@ class CustomToast {
   static final CustomToast _instance = CustomToast._();
   factory CustomToast() => _instance;
 
-  void show(String text, BuildContext context,
-      {Color bgColor, Color textColor, int duration = 3}) {
+  void show(String text, BuildContext? context,
+      {Color? bgColor, Color? textColor, int duration = 3}) {
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_LONG,

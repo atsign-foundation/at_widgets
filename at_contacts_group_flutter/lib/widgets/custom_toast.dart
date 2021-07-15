@@ -18,7 +18,6 @@ class CustomToast {
         text,
         context,
         duration: FlutterToastr.lengthLong,
-        gravity: FlutterToastr.bottom,
       );
     } else {
       Fluttertoast.showToast(

@@ -52,8 +52,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
 
     // ignore: unnecessary_null_comparison
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int>? intList = contact.tags['image'].cast<int>();
+      if (contact.tags != null && contact.tags!['image'] != null) {
+        List<int>? intList = contact.tags!['image'].cast<int>();
         setState(() {
           contactImage = Uint8List.fromList(intList!);
         });

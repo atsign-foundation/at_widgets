@@ -21,7 +21,8 @@ class DesktopGroupSetupRoutes {
   }
 
   static Map<String, WidgetBuilder> groupLeftRouteBuilders(
-      BuildContext context, RouteSettings routeSettings, List<AtGroup> _data) {
+      BuildContext context, RouteSettings routeSettings, List<AtGroup> _data,
+      {int? expandIndex}) {
     return {
       DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL: (context) {
         if (_data.length == 0) {
@@ -30,14 +31,15 @@ class DesktopGroupSetupRoutes {
           return DesktopGroupList(
             _data,
             key: UniqueKey(),
+            expandIndex: expandIndex ?? 0,
           );
         }
       },
       DesktopRoutes.DESKTOP_GROUP_LIST: (context) {
         var args = routeSettings.arguments as Map<String, dynamic>;
         return DesktopGroupList(
-          _data,
-          expandIndex: _data.length - 1,
+          args['groups'],
+          expandIndex: args['expandIndex'],
           key: UniqueKey(),
         );
       },
@@ -45,12 +47,10 @@ class DesktopGroupSetupRoutes {
   }
 
   static Map<String, WidgetBuilder> groupRightRouteBuilders(
-    BuildContext context,
-    RouteSettings routeSettings,
-    var _data, {
-    required Function initialRouteOnArrowBackTap,
-    required Function initialRouteOnDoneTap,
-  }) {
+      BuildContext context, RouteSettings routeSettings, var _data,
+      {required Function initialRouteOnArrowBackTap,
+      required Function initialRouteOnDoneTap,
+      int? expandIndex}) {
     return {
       DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL: (context) {
         if (_data.length == 0) {
@@ -77,7 +77,7 @@ class DesktopGroupSetupRoutes {
                 initialRouteOnDoneTap();
               });
         } else {
-          return DesktopGroupDetail(_data[0]);
+          return DesktopGroupDetail(_data[expandIndex ?? 0], expandIndex ?? 0);
         }
       },
       DesktopRoutes.DESKTOP_NEW_GROUP: (context) {
@@ -89,7 +89,7 @@ class DesktopGroupSetupRoutes {
       },
       DesktopRoutes.DESKTOP_GROUP_DETAIL: (context) {
         var args = routeSettings.arguments as Map<String, dynamic>;
-        return DesktopGroupDetail(args['group']);
+        return DesktopGroupDetail(args['group'], args['currentIndex']);
       },
       DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW: (context) {
         var args = routeSettings.arguments as Map<String, dynamic>;

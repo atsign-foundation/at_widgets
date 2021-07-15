@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/images.dart';
@@ -8,28 +10,30 @@ import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_image_picker.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_person_vertical_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/remove_trusted_contact_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
 class DesktopGroupDetail extends StatefulWidget {
-  final AtGroup group;
-  DesktopGroupDetail(this.group);
+  AtGroup group;
+  int currentIndex;
+  DesktopGroupDetail(this.group, this.currentIndex);
 
   @override
   _DesktopGroupDetailState createState() => _DesktopGroupDetailState();
 }
 
 class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
-  bool isEditingName = false, loading = false;
+  bool isEditingName = false, updatingName = false, updatingImage = false;
   TextEditingController? textController;
 
   @override
   void initState() {
     textController = TextEditingController.fromValue(
       TextEditingValue(
-        text: widget.group.groupName,
+        text: widget.group.groupName ?? '',
         selection: TextSelection.collapsed(offset: -1),
       ),
     );
@@ -46,13 +50,44 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
             children: [
               Column(
                 children: [
-                  Image.asset(
-                    AllImages().GROUP_PHOTO,
-                    height: 272,
-                    width: double.infinity,
-                    fit: BoxFit.fitWidth,
-                    package: 'at_contacts_group_flutter',
-                  ),
+                  widget.group.groupPicture != null
+                      ? Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Image.memory(
+                              Uint8List.fromList(
+                                widget.group.groupPicture.cast<int>(),
+                              ),
+                              height: 272.toHeight,
+                              width: double.infinity,
+                              fit: BoxFit.contain,
+                            ),
+                            updatingImage
+                                ? Positioned(
+                                    child: Text('Updating image...',
+                                        style: CustomTextStyles.primaryBold16),
+                                  )
+                                : SizedBox()
+                          ],
+                        )
+                      : Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Image.asset(
+                              AllImages().GROUP_PHOTO,
+                              height: 272,
+                              width: double.infinity,
+                              fit: BoxFit.fitWidth,
+                              package: 'at_contacts_group_flutter',
+                            ),
+                            updatingImage
+                                ? Positioned(
+                                    child: Text('Updating image...',
+                                        style: CustomTextStyles.primaryBold16),
+                                  )
+                                : SizedBox()
+                          ],
+                        ),
                   SizedBox(
                     height: 60.toHeight,
                   ),
@@ -62,16 +97,16 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                     runSpacing: 10.0,
                     spacing: 30.0,
                     children:
-                        List.generate(widget.group.members.length, (index) {
+                        List.generate(widget.group.members!.length, (index) {
                       return InkWell(
                         onTap: () {
                           showDialog(
                             context: context,
                             barrierDismissible: true,
                             builder: (context) => RemoveTrustedContact(
-                              'Remove ${widget.group.members.elementAt(index).atSign}  ',
+                              'Remove ${widget.group.members!.elementAt(index).atSign}  ',
                               contact: AtContact(
-                                  atSign: widget.group.members
+                                  atSign: widget.group.members!
                                       .elementAt(index)
                                       .atSign),
                               atGroup: widget.group,
@@ -81,9 +116,9 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                         child: DesktopCustomPersonVerticalTile(
                           title: 'Title',
                           subTitle:
-                              widget.group.members.elementAt(index).atSign,
+                              widget.group.members!.elementAt(index).atSign,
                           isAssetImage: true,
-                          atsign: widget.group.members.elementAt(index).atSign,
+                          atsign: widget.group.members!.elementAt(index).atSign,
                         ),
                       );
                     }),
@@ -148,40 +183,69 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                     onChanged: (s) {},
                                   ),
                                 ),
-                                loading
+                                updatingName
                                     ? SizedBox(
-                                        width: 25,
+                                        width: 35,
                                         height: 25,
-                                        child: CircularProgressIndicator(),
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: CircularProgressIndicator(),
+                                        ),
                                       )
                                     : InkWell(
                                         onTap: () async {
                                           setState(() {
-                                            loading = true;
+                                            updatingName = true;
                                           });
 
                                           if (textController!.text !=
                                               widget.group.groupName) {
-                                            var _group = widget.group;
-                                            widget.group.groupName =
+                                            var _group = AtGroup(
+                                              widget.group.groupName,
+                                              groupId: widget.group.groupId,
+                                              displayName:
+                                                  widget.group.displayName,
+                                              description:
+                                                  widget.group.description,
+                                              groupPicture:
+                                                  widget.group.groupPicture,
+                                              members: widget.group.members,
+                                              tags: widget.group.tags,
+                                              createdOn: widget.group.createdOn,
+                                              updatedOn: widget.group.updatedOn,
+                                              createdBy: widget.group.createdBy,
+                                              updatedBy: widget.group.updatedBy,
+                                            );
+
+                                            _group.groupName =
                                                 textController!.text;
+
                                             var result = await GroupService()
                                                 .updateGroupData(
                                                     _group, context,
-                                                    isDesktop: true);
+                                                    isDesktop: true,
+                                                    expandIndex:
+                                                        widget.currentIndex);
 
                                             if (result is AtGroup) {
+                                              // TODO: Doubt
+                                              widget.group = _group;
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(
                                                       content: Text(
                                                           'Name updated')));
                                             } else if (result == null) {
+                                              textController!.text =
+                                                  widget.group.groupName!;
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(
                                                       content: Text(
                                                           TextConstants()
                                                               .SERVICE_ERROR)));
                                             } else {
+                                              textController!.text =
+                                                  widget.group.groupName!;
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(
                                                       content: Text(
@@ -190,14 +254,18 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                           }
 
                                           setState(() {
-                                            loading = false;
+                                            updatingName = false;
                                             isEditingName = false;
                                           });
                                         },
-                                        child: Icon(
-                                          Icons.done,
-                                          color: Colors.black,
-                                          size: 20,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Icon(
+                                            Icons.done,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ),
                                         ),
                                       )
                               ],
@@ -241,7 +309,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                         ),
                                       ),
                                       Text(
-                                        '${widget.group.members.length} members',
+                                        '${widget.group.members!.length} members',
                                         style: CustomTextStyles
                                             .desktopPrimaryRegular14,
                                       ),
@@ -300,12 +368,20 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                 top: 30.toHeight,
                 right: 10.toWidth,
                 child: InkWell(
-                  onTap: () {},
-                  child: Icon(
-                    Icons.edit,
-                    color: Colors.black,
-                    size: 25.toFont,
-                  ),
+                  onTap: () async {
+                    var _imageBytes = await desktopImagePicker();
+                    if (_imageBytes != null) {
+                      updateImage(_imageBytes);
+                    }
+                  },
+                  child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: ColorConstants.fadedbackground,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.image)),
                 ),
               )
             ],
@@ -313,5 +389,48 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
         ),
       ),
     );
+  }
+
+  void updateImage(selectedImageByteData) async {
+    setState(() {
+      updatingImage = true;
+    });
+
+    var _group = AtGroup(
+      widget.group.groupName,
+      groupId: widget.group.groupId,
+      displayName: widget.group.displayName,
+      description: widget.group.description,
+      groupPicture: widget.group.groupPicture,
+      members: widget.group.members,
+      tags: widget.group.tags,
+      createdOn: widget.group.createdOn,
+      updatedOn: widget.group.updatedOn,
+      createdBy: widget.group.createdBy,
+      updatedBy: widget.group.updatedBy,
+    );
+
+    _group.groupPicture = selectedImageByteData;
+    var result = await GroupService().updateGroupData(_group, context,
+        isDesktop: true, expandIndex: widget.currentIndex);
+
+    if (result is AtGroup) {
+      // TODO: Doubt
+      widget.group = _group;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        'Image updated',
+        textAlign: TextAlign.center,
+      )));
+    } else if (result == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(result.toString())));
+    }
+    setState(() {
+      updatingImage = false;
+    });
   }
 }

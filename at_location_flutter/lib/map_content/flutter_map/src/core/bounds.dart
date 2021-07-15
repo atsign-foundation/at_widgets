@@ -20,6 +20,7 @@ class Bounds<T extends num> {
   Bounds<T> extend(CustomPoint<T> point) {
     CustomPoint<T> newMin;
     CustomPoint<T> newMax;
+    // ignore: unnecessary_null_comparison
     if (min == null && max == null) {
       newMin = point;
       newMax = point;

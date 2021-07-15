@@ -10,7 +10,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showTitle;
   final bool showQr;
   final bool showNotifications;
-  final String title;
+  final String? title;
   final showBackButton;
 
   CustomAppBar(

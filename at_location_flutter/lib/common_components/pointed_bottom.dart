@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget pointedBottom({Color color}) {
+Widget pointedBottom({Color? color}) {
   return ClipPath(
     clipper: ShapeBorderClipper(
       shape: BeveledRectangleBorder(

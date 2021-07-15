@@ -2,7 +2,7 @@ import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 void bottomSheet(BuildContext context, T, double height,
-    {Function onSheetCLosed}) {
+    {Function? onSheetCLosed}) {
   var future = showModalBottomSheet(
       context: context,
       isScrollControlled: true,

@@ -23,4 +23,9 @@ class AllText {
   String LOCATION_NOTIFY = 'locationotify';
   // ignore: non_constant_identifier_names
   String EVENT_NOTIFY = 'eventnotify';
+
+  String LOC_START_TIME_TITLE =
+      'When do you want to start sharing your location?';
+  String LOC_END_TIME_TITLE =
+      'When do you want your location to be turned off ?';
 }

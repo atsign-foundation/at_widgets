@@ -1,6 +1,7 @@
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
+import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/screens/home/home_screen.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
@@ -9,7 +10,7 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter_example/client_sdk_service.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -18,21 +19,28 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  String activeAtSign, receiver;
-  Stream<List<KeyLocationModel>> newStream;
+  String? activeAtSign, receiver;
+  Stream<List<KeyLocationModel>?>? newStream;
+  MapController mapController = MapController();
+
   @override
   void initState() {
     try {
       super.initState();
       activeAtSign =
-          clientSdkService.atClientServiceInstance.atClient.currentAtSign;
+          clientSdkService.atClientServiceInstance!.atClient!.currentAtSign;
       initializeLocationService(
-          clientSdkService.atClientServiceInstance.atClient,
-          activeAtSign,
-          NavService.navKey);
-      newStream = getAllNotification();
+        clientSdkService.atClientServiceInstance!.atClient!,
+        activeAtSign!,
+        NavService.navKey,
+        mapKey: '',
+        apiKey: '',
+        showDialogBox: true,
+      );
+
+      newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;
     } catch (e) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -101,7 +109,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       CustomToast().show('Atsign not valid', context);
                       return;
                     }
-                    await sendShareLocationNotification(receiver, 30);
+                    await sendShareLocationNotification(receiver!, 30);
                   },
                   child: Text('Send Location '),
                 ),
@@ -112,7 +120,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       CustomToast().show('Atsign not valid', context);
                       return;
                     }
-                    await sendRequestLocationNotification(receiver);
+                    await sendRequestLocationNotification(receiver!);
                   },
                   child: Text('Request Location'),
                 ),
@@ -144,7 +152,7 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () async {
                 await Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      ShowLocation(UniqueKey(), locationList: [
+                      showLocation(UniqueKey(), mapController, locationList: [
                     LatLng(30, 45),
                     LatLng(40, 45),
                   ]),
@@ -175,11 +183,11 @@ class _SecondScreenState extends State<SecondScreen> {
                         return Text('error');
                       } else {
                         return Column(
-                            children: snapshot.data.map((notification) {
+                            children: snapshot.data!.map((notification) {
                           return Padding(
                             padding: const EdgeInsets.all(14.0),
                             child: Text(
-                              '${snapshot.data.indexOf(notification) + 1}. ${notification.key}',
+                              '${snapshot.data!.indexOf(notification) + 1}. ${notification.key}',
                               style: TextStyle(fontSize: 16),
                               textAlign: TextAlign.left,
                             ),
@@ -200,11 +208,11 @@ class _SecondScreenState extends State<SecondScreen> {
   Future<bool> checkAtsign() async {
     if (receiver == null) {
       return false;
-    } else if (!receiver.contains('@')) {
-      receiver = '@' + receiver;
+    } else if (!receiver!.contains('@')) {
+      receiver = '@' + receiver!;
     }
     var checkPresence = await AtLookupImpl.findSecondary(
-        receiver, MixedConstants.ROOT_DOMAIN, 64);
+        receiver!, MixedConstants.ROOT_DOMAIN, 64);
     return checkPresence != null;
   }
 

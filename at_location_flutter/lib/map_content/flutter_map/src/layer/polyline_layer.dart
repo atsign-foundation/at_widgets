@@ -4,14 +4,15 @@ import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 class PolylineLayerOptions extends LayerOptions {
   final List<Polyline> polylines;
   final bool polylineCulling;
 
   PolylineLayerOptions({
-    Key key,
+    Key? key,
     this.polylines = const [],
     this.polylineCulling = false,
     rebuild,
@@ -25,16 +26,16 @@ class PolylineLayerOptions extends LayerOptions {
 }
 
 class Polyline {
-  final List<LatLng> points;
+  final List<LatLng>? points;
   final List<Offset> offsets = [];
   final double strokeWidth;
   final Color color;
   final double borderStrokeWidth;
   final Color borderColor;
-  final List<Color> gradientColors;
-  final List<double> colorsStop;
+  final List<Color>? gradientColors;
+  final List<double>? colorsStop;
   final bool isDotted;
-  LatLngBounds boundingBox;
+  late LatLngBounds boundingBox;
 
   Polyline({
     this.points,
@@ -50,19 +51,19 @@ class Polyline {
 
 class PolylineLayerWidget extends StatelessWidget {
   final PolylineLayerOptions options;
-  PolylineLayerWidget({@required this.options}) : super(key: options.key);
+  PolylineLayerWidget({required this.options}) : super(key: options.key);
 
   @override
   Widget build(BuildContext context) {
-    final mapState = MapState.of(context);
+    final mapState = MapState.of(context)!;
     return PolylineLayer(options, mapState, mapState.onMoved);
   }
 }
 
 class PolylineLayer extends StatelessWidget {
   final PolylineLayerOptions polylineOpts;
-  final MapState map;
-  final Stream<Null> stream;
+  final MapState? map;
+  final Stream<Null>? stream;
 
   PolylineLayer(this.polylineOpts, this.map, this.stream)
       : super(key: polylineOpts.key);
@@ -87,12 +88,12 @@ class PolylineLayer extends StatelessWidget {
           polylineOpt.offsets.clear();
 
           if (polylineOpts.polylineCulling &&
-              !polylineOpt.boundingBox.isOverlapping(map.bounds)) {
+              !polylineOpt.boundingBox.isOverlapping(map!.bounds)) {
             // skip this polyline as it's offscreen
             continue;
           }
 
-          _fillOffsets(polylineOpt.offsets, polylineOpt.points);
+          _fillOffsets(polylineOpt.offsets, polylineOpt.points!);
 
           polylines.add(CustomPaint(
             painter: PolylinePainter(polylineOpt),
@@ -113,9 +114,9 @@ class PolylineLayer extends StatelessWidget {
     for (var i = 0, len = points.length; i < len; ++i) {
       var point = points[i];
 
-      var pos = map.project(point);
-      pos = pos.multiplyBy(map.getZoomScale(map.zoom, map.zoom)) -
-          map.getPixelOrigin();
+      var pos = map!.project(point);
+      pos = pos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) -
+          map!.getPixelOrigin()!;
       offsets.add(Offset(pos.x.toDouble(), pos.y.toDouble()));
       if (i > 0) {
         offsets.add(Offset(pos.x.toDouble(), pos.y.toDouble()));
@@ -145,7 +146,7 @@ class PolylinePainter extends CustomPainter {
     if (polylineOpt.gradientColors == null) {
       paint.color = polylineOpt.color;
     } else {
-      polylineOpt.gradientColors.isNotEmpty
+      polylineOpt.gradientColors!.isNotEmpty
           ? paint.shader = _paintGradient()
           : paint.color = polylineOpt.color;
     }
@@ -229,18 +230,18 @@ class PolylinePainter extends CustomPainter {
   }
 
   ui.Gradient _paintGradient() => ui.Gradient.linear(polylineOpt.offsets.first,
-      polylineOpt.offsets.last, polylineOpt.gradientColors, _getColorsStop());
+      polylineOpt.offsets.last, polylineOpt.gradientColors!, _getColorsStop());
 
-  List<double> _getColorsStop() => (polylineOpt.colorsStop != null &&
-          polylineOpt.colorsStop.length == polylineOpt.gradientColors.length)
+  List<double>? _getColorsStop() => (polylineOpt.colorsStop != null &&
+          polylineOpt.colorsStop!.length == polylineOpt.gradientColors!.length)
       ? polylineOpt.colorsStop
       : _calculateColorsStop();
 
   List<double> _calculateColorsStop() {
-    final colorsStopInterval = 1.0 / polylineOpt.gradientColors.length;
-    return polylineOpt.gradientColors
+    final colorsStopInterval = 1.0 / polylineOpt.gradientColors!.length;
+    return polylineOpt.gradientColors!
         .map((gradientColor) =>
-            polylineOpt.gradientColors.indexOf(gradientColor) *
+            polylineOpt.gradientColors!.indexOf(gradientColor) *
             colorsStopInterval)
         .toList();
   }

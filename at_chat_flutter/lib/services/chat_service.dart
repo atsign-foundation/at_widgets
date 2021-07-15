@@ -61,7 +61,8 @@ class ChatService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    return await atClientInstance.getPrivateKey(atsign);
+    var str = await atClientInstance.getPrivateKey(atsign);
+    return str!;
   }
 
   void _notificationCallback(dynamic notification) async {
@@ -82,7 +83,7 @@ class ChatService {
             notificationKey.startsWith(chatKey + groupChatId!) &&
             groupChatMembers!.contains(fromAtsign))) {
       var message = responseJson['value'];
-      var decryptedMessage = await atClientInstance.encryptionService
+      var decryptedMessage = await atClientInstance.encryptionService!
           .decrypt(message, fromAtsign)
           .catchError((e) {
         print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
@@ -96,7 +97,7 @@ class ChatService {
     }
   }
 
-  void setAtsignToChatWith(String chatWithAtSignFromApp, bool isGroup,
+  void setAtsignToChatWith(String? chatWithAtSignFromApp, bool isGroup,
       String? groupId, List<String>? groupMembers) {
     if (isGroup) {
       isGroupChat = isGroup;
@@ -155,7 +156,7 @@ class ChatService {
   Future<void> checkForMissedMessages(String referenceKey) async {
     var result = await atClientInstance
         .getKeys(
-            sharedBy: chatWithAtSign!,
+            sharedBy: chatWithAtSign,
             sharedWith: currentAtSign!,
             regex: chatKey + (isGroupChat ? groupChatId! : ''))
         .catchError((e) {
@@ -181,7 +182,7 @@ class ChatService {
           message: result.value,
           sender: chatWithAtSign ?? missingAtkey.sharedBy,
           time: int.parse(missingKey
-              .replaceFirst(chatWithAtSign!, '')
+              .replaceFirst(chatWithAtSign ?? '', '')
               .replaceFirst(chatKey + (isGroupChat ? groupChatId! : ''), '')
               .split('.')[0]),
           type: MessageType.INCOMING));
@@ -214,7 +215,7 @@ class ChatService {
 
     var atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata.ttr = -1
+      ..metadata?.ttr = -1
       ..key = chatKey +
           (isGroupChat ? groupChatId! : '') +
           DateTime.now().millisecondsSinceEpoch.toString();
@@ -223,11 +224,11 @@ class ChatService {
         if (member != currentAtSign) {
           atKey.sharedWith = member;
           var result = await atClientInstance.put(atKey, message);
-          print('send notification => $result');
+          print('send notification for groupChat => $result');
         }
       });
     } else {
-      atKey.sharedWith = chatWithAtSign!;
+      atKey.sharedWith = chatWithAtSign;
       var result = await atClientInstance.put(atKey, message);
       print('send notification => $result');
     }

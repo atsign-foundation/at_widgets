@@ -13,8 +13,8 @@ class _ThirdScreenState extends State<ThirdScreen> {
       appBar: AppBar(title: Text('Chat Screen')),
       body: ChatScreen(
         height: MediaQuery.of(context).size.height,
-        incomingMessageColor: Colors.blue[100],
-        outgoingMessageColor: Colors.green[100],
+        incomingMessageColor: Colors.blue[100]!,
+        outgoingMessageColor: Colors.green[100]!,
         isScreen: true,
       ),
     );

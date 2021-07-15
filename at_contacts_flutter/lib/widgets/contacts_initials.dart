@@ -5,20 +5,23 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactInitial extends StatelessWidget {
   final double size;
+  final double? maxSize, minSize;
   final String initials;
   int? index;
   Key? key;
 
-  ContactInitial({
-    this.size = 40,
-    this.key,
-    required this.initials,
-    this.index,
-  });
+  ContactInitial(
+      {this.size = 40,
+      this.key,
+      required this.initials,
+      this.index,
+      this.maxSize,
+      this.minSize});
   @override
   Widget build(BuildContext context) {
-    if (initials.length < 3) {
-      index = initials.length;
+    var encodedInitials = initials.runes;
+    if (encodedInitials.length < 3) {
+      index = encodedInitials.length;
     } else {
       index = 3;
     }
@@ -26,15 +29,24 @@ class ContactInitial extends StatelessWidget {
     return Container(
       height: size.toFont,
       width: size.toFont,
+      constraints: BoxConstraints(
+        minHeight: minSize ?? double.infinity,
+        minWidth: minSize ?? double.infinity,
+        maxHeight: maxSize ?? double.infinity,
+        maxWidth: maxSize ?? double.infinity,
+      ),
       decoration: BoxDecoration(
         color: ContactInitialsColors.getColor(initials),
-        borderRadius: BorderRadius.circular((size.toWidth)),
+        borderRadius: BorderRadius.circular((size.toFont)),
       ),
       child: Center(
         child: Text(
-          initials.substring((index == 1) ? 0 : 1, index).toUpperCase(),
-          style: CustomTextStyles.whiteBold(
-            size: (size ~/ 3).toInt(),
+          String.fromCharCodes(encodedInitials, (index == 1) ? 0 : 1, index)
+              .toUpperCase(),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.toFont,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),

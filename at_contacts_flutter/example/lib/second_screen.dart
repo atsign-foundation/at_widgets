@@ -12,7 +12,7 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  String activeAtSign;
+  String? activeAtSign;
   @override
   void initState() {
     getAtSignAndInitializeContacts();
@@ -66,12 +66,12 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void getAtSignAndInitializeContacts() async {
-    var currentAtSign = await clientSdkService.getAtSign();
+    var currentAtSign = await (clientSdkService.getAtSign());
     setState(() {
       activeAtSign = currentAtSign;
     });
     initializeContactsService(
-        clientSdkService.atClientServiceInstance.atClient, currentAtSign,
+        clientSdkService.atClientServiceInstance!.atClient!, currentAtSign!,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }

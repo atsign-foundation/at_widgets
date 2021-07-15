@@ -89,4 +89,10 @@ class CustomTextStyles {
     letterSpacing: 0.1,
     fontWeight: FontWeight.w700,
   );
+
+  static TextStyle error14 = TextStyle(
+      color: ColorConstants.redText,
+      fontSize: 14.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
 }

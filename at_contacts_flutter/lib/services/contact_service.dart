@@ -36,10 +36,10 @@ class ContactService {
   Stream<List<BaseContact>> get blockedContactStream =>
       blockedContactStreamController.stream;
 
-  StreamController<List<AtContact>> selectedContactStreamController =
-      StreamController<List<AtContact>>.broadcast();
+  StreamController<List<AtContact?>> selectedContactStreamController =
+      StreamController<List<AtContact?>>.broadcast();
   Sink get selectedContactSink => selectedContactStreamController.sink;
-  Stream<List<AtContact>> get selectedContactStream =>
+  Stream<List<AtContact?>> get selectedContactStream =>
       selectedContactStreamController.stream;
 
   void disposeControllers() {
@@ -91,8 +91,8 @@ class ContactService {
       var tempContactList = <AtContact?>[...contactList];
       var range = contactList.length;
       for (var i = 0; i < range; i++) {
-        allContactsList.add(contactList[i]!.atSign);
-        if (contactList[i]!.blocked) {
+        allContactsList.add(contactList[i]!.atSign!);
+        if (contactList[i]!.blocked!) {
           tempContactList.remove(contactList[i]);
         }
       }
@@ -111,6 +111,7 @@ class ContactService {
       return contactList;
     } catch (e) {
       print('error here => $e');
+      return [];
     }
   }
 
@@ -146,7 +147,7 @@ class ContactService {
         (e) => e!.atSign == baseContact.contact!.atSign,
       );
       if (index == -1) {
-        atsignsToRemove.add(baseContact.contact!.atSign);
+        atsignsToRemove.add(baseContact.contact!.atSign!);
       }
     });
     atsignsToRemove.forEach((e) {
@@ -170,7 +171,7 @@ class ContactService {
   // ignore: always_declare_return_types
   markFavContact(AtContact contact) async {
     try {
-      contact.favourite = !contact.favourite;
+      contact.favourite = !contact.favourite!;
       await atContactImpl.update(contact);
       await fetchBlockContactList();
       await fetchContacts();
@@ -224,7 +225,7 @@ class ContactService {
         (e) => e!.atSign == baseContact.contact!.atSign,
       );
       if (index == -1) {
-        atsignsToRemove.add(baseContact.contact!.atSign);
+        atsignsToRemove.add(baseContact.contact!.atSign!);
       }
     });
     atsignsToRemove.forEach((e) {

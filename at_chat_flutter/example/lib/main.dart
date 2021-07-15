@@ -3,7 +3,7 @@ import 'package:at_chat_flutter_example/second_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:flutter/material.dart';
-
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'client_sdk_service.dart';
 
 void main() {
@@ -58,10 +58,11 @@ class _MyAppState extends State<MyApp> {
                             context: context,
                             atClientPreference:
                                 clientSdkService.atClientPreference,
+                            appAPIKey: MixedConstants.devAPIKey,
                             domain: MixedConstants.ROOT_DOMAIN,
                             appColor: Color.fromARGB(255, 240, 94, 62),
-                            onboard: (Map<String, AtClientService> value,
-                                String atsign) async {
+                            onboard: (Map<String?, AtClientService> value,
+                                String? atsign) async {
                               clientSdkService.atClientServiceInstance =
                                   value[atsign];
                               await Navigator.pushReplacement(
