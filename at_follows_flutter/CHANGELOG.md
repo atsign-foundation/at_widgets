@@ -10,3 +10,5 @@
 ## 2.0.0
 - support for .wavi keys and minor bug fixes
 - null-safety migration
+## 2.0.1
+- Fix sync related issues in follows list
