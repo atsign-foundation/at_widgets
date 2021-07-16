@@ -22,7 +22,8 @@ class ChatService {
   String? currentAtSign;
   String? chatWithAtSign;
   List<Message> chatHistory = [];
-  List<dynamic>? chatHistoryMessages = [];
+  List<dynamic> chatHistoryMessages = [];
+  List<dynamic> chatHistoryMessagesOther = [];
 
   // in case of group chat
   bool isGroupChat = false;
@@ -123,70 +124,80 @@ class ChatService {
       var key = AtKey()
         ..key = storageKey +
             (isGroupChat ? groupChatId! : '') +
-            (atsign ?? chatWithAtSign ?? ' ').substring(1)
+            (chatWithAtSign ?? ' ').substring(1)
         ..sharedBy = currentAtSign!
+        ..sharedWith = chatWithAtSign
         ..metadata = Metadata();
-
+      key.metadata?.ccd = true;
       var keyValue = await atClientInstance.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
 
       // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
-        chatHistoryMessages = json.decode((keyValue.value) as String) as List?;
-        chatHistoryMessages!.forEach((value) {
-          var message = Message.fromJson((value));
-          chatHistory.insert(0, message);
-        });
-        chatSink.add(chatHistory);
+        chatHistoryMessages = json.decode((keyValue.value) as String) as List;
       } else {
         chatHistoryMessages = [];
-        chatSink.add(chatHistory);
       }
-      var referenceKey = chatKey +
-          (isGroupChat ? groupChatId! : '') +
-          (chatHistory.isEmpty ? '' : chatHistory[0].time.toString()) +
-          currentAtSign!;
-      await checkForMissedMessages(referenceKey);
+    
+      // get received messages
+      key.key = storageKey +
+            (isGroupChat ? groupChatId! : '') +
+            (chatWithAtSign != null ? currentAtSign! : ' ').substring(1);
+      key.sharedBy = chatWithAtSign;
+      key.sharedWith = currentAtSign!;
+      keyValue = await atClientInstance.get(key).catchError((e) {
+        print('error in getting other history ${e.errorCode} ${e.errorMessage}');
+      });
+      if (keyValue != null && keyValue.value != null) {
+        chatHistoryMessagesOther = json.decode((keyValue.value) as String) as List;
+      } else {
+        chatHistoryMessagesOther = [];
+      }
+
+      chatHistory = interleave(chatHistoryMessages, chatHistoryMessagesOther);
+      chatSink.add(chatHistory);
     } catch (error) {
       print('Error in getting chat -> $error');
     }
   }
 
-  Future<void> checkForMissedMessages(String referenceKey) async {
-    var result = await atClientInstance
-        .getKeys(
-            sharedBy: chatWithAtSign,
-            sharedWith: currentAtSign!,
-            regex: chatKey + (isGroupChat ? groupChatId! : ''))
-        .catchError((e) {
-      print('error in checkForMissedMessages:getKeys ${e.toString()}');
-    });
-    await Future.forEach(result, (dynamic key) async {
-      if (referenceKey.compareTo(key) == -1) {
-        print('missed key - $key');
-        await getMissingKey(key);
+  List<Message> interleave<T>(List a, List b) {
+    List result = [];
+    final ita = a.iterator;
+    final itb = b.iterator;
+    bool hasa = ita.moveNext();
+    bool hasb = itb.moveNext();
+    var valueA, valueB;
+    while (hasa | hasb ) {
+      if (hasa && hasb){
+        valueA = Message.fromJson(ita.current);      
+        valueB = Message.fromJson(itb.current);
+        if (valueA.time > valueB.time) {
+          result.add(valueA);
+          hasa = ita.moveNext();
+        } else {
+          result.add(valueB);
+          hasb = itb.moveNext();
+        }
+      } else if(hasa){
+        valueA = Message.fromJson(ita.current);
+        result.add(valueA);
+        while (hasa = ita.moveNext()){
+          valueA = Message.fromJson(ita.current);
+          result.add(valueA);
+        }
+      } else if(hasb){
+        valueB = Message.fromJson(itb.current);
+        result.add(valueB);
+        while (hasb = itb.moveNext()){
+          valueB = Message.fromJson(itb.current);
+          result.add(valueB);
+        }
       }
-    });
-  }
-
-  Future<void> getMissingKey(String missingKey) async {
-    var missingAtkey = AtKey.fromString(missingKey);
-    var result = await atClientInstance.get(missingAtkey).catchError((e) {
-      print('error in getMissingKey:get ${e.toString()}');
-    });
-    print('result - $result');
-    // ignore: unnecessary_null_comparison
-    if (result != null) {
-      await setChatHistory(Message(
-          message: result.value,
-          sender: chatWithAtSign ?? missingAtkey.sharedBy,
-          time: int.parse(missingKey
-              .replaceFirst(chatWithAtSign ?? '', '')
-              .replaceFirst(chatKey + (isGroupChat ? groupChatId! : ''), '')
-              .split('.')[0]),
-          type: MessageType.INCOMING));
     }
+    List<Message> finalResult = List<Message>.from(result);
+    return finalResult;
   }
 
   Future<void> setChatHistory(Message message) async {
@@ -195,11 +206,14 @@ class ChatService {
         ..key = storageKey +
             (isGroupChat ? groupChatId! : '') +
             (chatWithAtSign ?? ' ').substring(1)
+        ..sharedBy = currentAtSign!
+        ..sharedWith = chatWithAtSign
         ..metadata = Metadata();
+      key.metadata?.ccd = true;
 
       chatHistory.insert(0, message);
       chatSink.add(chatHistory);
-      chatHistoryMessages!.add(message.toJson());
+      chatHistoryMessages.insert(0, message.toJson());
       await atClientInstance.put(key, json.encode(chatHistoryMessages));
     } catch (e) {
       print('Error in setting chat => $e');
@@ -213,24 +227,47 @@ class ChatService {
         time: DateTime.now().millisecondsSinceEpoch,
         type: MessageType.OUTGOING));
 
-    var atKey = AtKey()
-      ..metadata = Metadata()
-      ..metadata?.ttr = -1
-      ..key = chatKey +
-          (isGroupChat ? groupChatId! : '') +
-          DateTime.now().millisecondsSinceEpoch.toString();
-    if (isGroupChat) {
-      await Future.forEach(groupChatMembers!, (dynamic member) async {
-        if (member != currentAtSign) {
-          atKey.sharedWith = member;
-          var result = await atClientInstance.put(atKey, message);
-          print('send notification for groupChat => $result');
-        }
-      });
-    } else {
-      atKey.sharedWith = chatWithAtSign;
-      var result = await atClientInstance.put(atKey, message);
-      print('send notification => $result');
+    // TODO: change logic for group chat to accomodate delete
+    // var atKey = AtKey()
+    //   ..metadata = Metadata()
+    //   ..metadata?.ttr = -1
+    //   ..key = chatKey +
+    //       (isGroupChat ? groupChatId! : '') +
+    //       DateTime.now().millisecondsSinceEpoch.toString();
+    // if (isGroupChat) {
+    //   await Future.forEach(groupChatMembers!, (dynamic member) async {
+    //     if (member != currentAtSign) {
+    //       atKey.sharedWith = member;
+    //       var result = await atClientInstance.put(atKey, message);
+    //       print('send notification for groupChat => $result');
+    //     }
+    //   });
+    // } else {
+    //   atKey.sharedWith = chatWithAtSign;
+    //   var result = await atClientInstance.put(atKey, message);
+    //   print('send notification => $result');
+    // }
+  }
+
+  // deletes self owned messages only
+  Future<bool> deleteMessages() async {
+    var key = AtKey()
+        ..key = storageKey +
+            (isGroupChat ? groupChatId! : '') +
+            (chatWithAtSign ?? ' ').substring(1)
+        ..sharedBy = currentAtSign!
+        ..sharedWith = chatWithAtSign
+        ..metadata = Metadata();
+    key.metadata?.ccd = true;
+
+    try {
+      chatHistoryMessages = [];
+      var result = await atClientInstance.put(key, json.encode(chatHistoryMessages));
+      await getChatHistory();
+      return result;
+    } catch (e) {
+      print('error in deleting => $e');
+      return false;
     }
   }
 }

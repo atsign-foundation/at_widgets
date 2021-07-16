@@ -27,7 +27,6 @@ dependencies:
   cupertino_icons: ^1.0.3
   at_onboarding_flutter: ^2.1.1
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -16,3 +16,7 @@ void setChatWithAtSign(String? atsign,
 void disposeContactsControllers() {
   ChatService().disposeControllers();
 }
+
+Future<bool> deleteMessages() async {
+  return await ChatService().deleteMessages();
+}
