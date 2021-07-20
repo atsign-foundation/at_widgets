@@ -45,6 +45,7 @@ class ConnectionsService {
         connectionProvider.followingList =
             await _formAtSignData(following.list!, isFollowing: true);
       }
+      await _sdkService.sync();
       if (!this.following.contains(this.followAtsign) &&
           this.followAtsign != null) {
         var atsignData = await this.follow(this.followAtsign);
@@ -108,6 +109,7 @@ class ConnectionsService {
     }
     following.add(atsign);
     var result = await _sdkService.put(atKey, following.toString());
+    await _sdkService.sync();
     //change metadata to private to notify
     if (result) {
       atKey..sharedWith = atsign;
@@ -184,6 +186,7 @@ class ConnectionsService {
     } else {
       result = await _sdkService.put(atKey, atFollowsList.toString());
     }
+    await _sdkService.sync();
     return result;
   }
 
@@ -340,7 +343,7 @@ class ConnectionsService {
   }
 
   Future<Atsign> _getAtsignData(String? connection,
-      {bool isFollowing = false, bool isNew = false}) async {
+      {bool isFollowing = true, bool isNew = false}) async {
     AtKey atKey;
     Atsign atsignData = Atsign()
       ..title = connection
