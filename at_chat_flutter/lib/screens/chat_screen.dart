@@ -19,8 +19,8 @@ class ChatScreen extends StatefulWidget {
   final Color receiverAvatarColor;
   final String title;
   final String? hintText;
-  final double bubble_height;
-  final double bubble_width;
+  final double bubbleHeightPadding;
+  final double bubbleWidthPadding;
 
   /// Widget to display chats as a screen or a bottom sheet.
   /// [height] specifies the height of bottom sheet/screen,
@@ -38,7 +38,9 @@ class ChatScreen extends StatefulWidget {
       this.senderAvatarColor = CustomColors.defaultColor,
       this.receiverAvatarColor = CustomColors.defaultColor,
       this.title = 'Messages',
-      this.hintText, this.bubble_height = 12.0, this.bubble_width = 12.0})
+      this.hintText, 
+      this.bubbleHeightPadding = 12.0, 
+      this.bubbleWidthPadding = 12.0})
       : super(key: key);
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -145,8 +147,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                       child: snapshot.data![index].type ==
                                               MessageType.INCOMING
                                           ? IncomingMessageBubble(
-                                              bubble_height: widget.bubble_height,
-                                              bubble_width: widget.bubble_width,
+                                              bubbleHeightPadding: widget.bubbleHeightPadding,
+                                              bubbleWidthPadding: widget.bubbleWidthPadding,
                                               message: snapshot.data![index],
                                               color:
                                                   widget.incomingMessageColor,
@@ -154,8 +156,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                                   widget.senderAvatarColor,
                                             )
                                           : OutgoingMessageBubble(
-                                              bubble_height: widget.bubble_height,
-                                              bubble_width: widget.bubble_width,
+                                              bubbleHeightPadding: widget.bubbleHeightPadding,
+                                              bubbleWidthPadding: widget.bubbleWidthPadding,
                                               message: snapshot.data![index],
                                               color:
                                                   widget.outgoingMessageColor,
