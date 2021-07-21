@@ -176,14 +176,16 @@ class _ConnectionsState extends State<Connections> {
                                     color: ColorConstants.borderColor!))),
                       ),
                       SizedBox(height: 20.toHeight),
-                      if (connectionTabs[0].isActive)
+                      if (connectionTabs.isNotEmpty &&
+                          connectionTabs[0].isActive)
                         Followers(
                           count: () {
                             _getCount();
                           },
                           searchText: searchController.text,
                         ),
-                      if (connectionTabs[1].isActive)
+                      if (connectionTabs.isNotEmpty &&
+                          connectionTabs[1].isActive)
                         Followers(
                           isFollowing: true,
                           searchText: searchController.text,
