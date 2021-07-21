@@ -48,8 +48,10 @@ class _ConnectionsState extends State<Connections> {
 
   @override
   void initState() {
-    _connectionService.init();
-    _connectionProvider.init();
+    String currentAtsign =
+        (widget.atClientserviceInstance.atClient!.currentAtSign) ?? '';
+    _connectionService.init(currentAtsign);
+    _connectionProvider.init(currentAtsign);
     ColorConstants.darkTheme = false;
     ColorConstants.appColor = widget.appColor;
     SDKService().setClientService = widget.atClientserviceInstance;

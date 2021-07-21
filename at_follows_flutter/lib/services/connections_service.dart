@@ -17,7 +17,7 @@ class ConnectionsService {
   late AtFollowsList following;
   String? followerAtsign;
   String? followAtsign;
-  bool initialised = false;
+  String initialised = '';
 
   var _logger = AtSignLogger('Connections Service');
 
@@ -33,12 +33,12 @@ class ConnectionsService {
 
   late bool isMonitorStarted;
 
-  init() {
-    if (!initialised) {
+  init(String atsign) {
+    if (atsign != initialised) {
       followers = AtFollowsList();
       following = AtFollowsList();
       isMonitorStarted = false;
-      initialised = true;
+      initialised = atsign;
     }
   }
 
