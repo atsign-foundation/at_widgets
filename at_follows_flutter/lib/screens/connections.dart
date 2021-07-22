@@ -48,8 +48,10 @@ class _ConnectionsState extends State<Connections> {
 
   @override
   void initState() {
-    _connectionService.init();
-    _connectionProvider.init();
+    String currentAtsign =
+        (widget.atClientserviceInstance.atClient!.currentAtSign) ?? '';
+    _connectionService.init(currentAtsign);
+    _connectionProvider.init(currentAtsign);
     ColorConstants.darkTheme = false;
     ColorConstants.appColor = widget.appColor;
     SDKService().setClientService = widget.atClientserviceInstance;
@@ -176,14 +178,16 @@ class _ConnectionsState extends State<Connections> {
                                     color: ColorConstants.borderColor!))),
                       ),
                       SizedBox(height: 20.toHeight),
-                      if (connectionTabs[0].isActive)
+                      if (connectionTabs.isNotEmpty &&
+                          connectionTabs[0].isActive)
                         Followers(
                           count: () {
                             _getCount();
                           },
                           searchText: searchController.text,
                         ),
-                      if (connectionTabs[1].isActive)
+                      if (connectionTabs.isNotEmpty &&
+                          connectionTabs[1].isActive)
                         Followers(
                           isFollowing: true,
                           searchText: searchController.text,

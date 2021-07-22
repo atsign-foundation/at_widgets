@@ -17,6 +17,7 @@ class ConnectionsService {
   late AtFollowsList following;
   String? followerAtsign;
   String? followAtsign;
+  bool isinitialised = false;
 
   var _logger = AtSignLogger('Connections Service');
 
@@ -32,10 +33,13 @@ class ConnectionsService {
 
   late bool isMonitorStarted;
 
-  init() {
-    followers = AtFollowsList();
-    following = AtFollowsList();
-    isMonitorStarted = false;
+  init(String atsign) {
+    if (!isinitialised) {
+      followers = AtFollowsList();
+      following = AtFollowsList();
+      isMonitorStarted = false;
+      isinitialised = true;
+    }
   }
 
   Future<void> getAtsignsList({bool isInit = false}) async {
