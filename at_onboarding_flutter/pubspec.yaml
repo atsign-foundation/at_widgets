@@ -1,5 +1,5 @@
 name: at_onboarding_flutter
-description: A flutter plugin project for onboarding any @sign in @protocol apps with ease. Provides QRscanner and upload key file option to authenticate. 
+description: A Flutter plugin project for onboarding any @‎sign in @‎platform apps with ease. Provides a QRscanner option and an upload key file option to authenticate.
 version: 2.1.2
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
