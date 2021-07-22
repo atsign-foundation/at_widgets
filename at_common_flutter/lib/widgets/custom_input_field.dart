@@ -38,6 +38,12 @@ class CustomInputField extends StatelessWidget {
   /// makes the input field to be read only.
   final bool isReadOnly;
 
+  /// this widget comes as prefix to input field.
+  final Widget? prefix;
+
+  /// background color of input field.
+  final Color? inputFieldColor;
+
   TextEditingController textController = TextEditingController();
 
   CustomInputField(
@@ -51,7 +57,9 @@ class CustomInputField extends StatelessWidget {
       this.value,
       this.initialValue = '',
       this.onSubmitted,
-      this.isReadOnly = false});
+      this.isReadOnly = false,
+      this.prefix,
+      this.inputFieldColor});
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +71,13 @@ class CustomInputField extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: ColorConstants.inputFieldGrey,
+        color: inputFieldColor ?? ColorConstants.inputFieldGrey,
         borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Row(
         children: <Widget>[
+          prefix != null ? prefix! : SizedBox(),
           Expanded(
             child: TextField(
               readOnly: isReadOnly,
