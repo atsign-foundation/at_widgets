@@ -40,7 +40,7 @@ class ConnectionProvider extends ChangeNotifier {
   }
 
   init(String atsign) {
-    if (isinitialised = true) {
+    if (!isinitialised) {
       this.followersList = [];
       this.followingList = [];
       this.atsignsList = [];

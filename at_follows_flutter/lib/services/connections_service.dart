@@ -34,7 +34,7 @@ class ConnectionsService {
   late bool isMonitorStarted;
 
   init(String atsign) {
-    if (isinitialised = true) {
+    if (!isinitialised) {
       followers = AtFollowsList();
       following = AtFollowsList();
       isMonitorStarted = false;
