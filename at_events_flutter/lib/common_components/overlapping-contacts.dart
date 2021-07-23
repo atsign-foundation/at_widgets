@@ -57,7 +57,8 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                       width: 28.toHeight,
                       decoration: BoxDecoration(shape: BoxShape.circle),
                       child: (widget.selectedList![index].tags != null &&
-                              widget.selectedList![index].tags!['image'] != null)
+                              widget.selectedList![index].tags!['image'] !=
+                                  null)
                           ? CustomCircleAvatar(
                               memoryImage: image,
                               isMemoryImage: true,
@@ -174,14 +175,16 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                     .substring(1),
                             atSign: widget.selectedList![index].atSign,
                             image: (widget.selectedList![index].tags != null &&
-                                    widget.selectedList![index].tags!['image'] !=
+                                    widget.selectedList![index]
+                                            .tags!['image'] !=
                                         null)
                                 ? CustomCircleAvatar(
                                     memoryImage: image,
                                     isMemoryImage: true,
                                   )
                                 : ContactInitial(
-                                    initials: widget.selectedList![index].atSign,
+                                    initials:
+                                        widget.selectedList![index].atSign,
                                   ),
                           );
                         },

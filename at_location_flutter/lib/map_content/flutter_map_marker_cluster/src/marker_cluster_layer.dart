@@ -240,7 +240,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _onMarkerTap(marker) as void Function()?,
-        child: marker.builder!(context),
+        child: marker.builder(context),
       ),
     );
   }
@@ -689,9 +689,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       final center = widget.map!.center!;
 
       final _latTween =
-          Tween<double>(begin: center.latitude, end: marker.point!.latitude);
+          Tween<double>(begin: center.latitude, end: marker.point.latitude);
       final _lngTween =
-          Tween<double>(begin: center.longitude, end: marker.point!.longitude);
+          Tween<double>(begin: center.longitude, end: marker.point.longitude);
 
       Animation<double> animation = CurvedAnimation(
           parent: _centerMarkerController!,

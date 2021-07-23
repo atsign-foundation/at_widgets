@@ -13,6 +13,7 @@ import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
 
+/// Starts monitor and listens for notifications related to this package.
 class AtEventNotificationListener {
   AtEventNotificationListener._();
   static final _instance = AtEventNotificationListener._();

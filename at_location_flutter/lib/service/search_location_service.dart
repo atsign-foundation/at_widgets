@@ -20,6 +20,10 @@ class SearchLocationService {
   StreamSink<List<LocationModal>> get atLocationSink =>
       _atLocationStreamController.sink;
 
+  /// Adds location matching to [address] to [atLocationSink].
+  /// If [currentLocation] is passed then will add locations nearby the [currentLocation].
+  ///
+  /// Make sure that [apiKey] is passed while initialising.
   void getAddressLatLng(String address, LatLng? currentLocation) async {
     var url;
     // ignore: unnecessary_null_comparison

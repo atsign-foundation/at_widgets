@@ -12,7 +12,7 @@ This plugin can be added to the project as git dependency in pubspec.yaml
 
 ```
 dependencies:
-  at_location_flutter: ^0.0.3
+  at_location_flutter: ^2.0.2
 ```
 
 ### Sample usage
@@ -24,7 +24,10 @@ The location service needs to be initialised with the `atClient` from the `AtCli
 initializeLocationService(
           clientSdkService.atClientServiceInstance.atClient,
           activeAtSign,
-          NavService.navKey);
+          NavService.navKey,
+          mapKey: 'xxxx',
+          apiKey: 'xxxx',
+          showDialogBox: true);
 ```
 
 Navigating to the maps view is done simply by using:

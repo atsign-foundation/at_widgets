@@ -58,6 +58,7 @@ class KeyStreamService {
     contactList = await atContactImpl!.listContacts();
   }
 
+  /// adds all share and request location notifications to [atNotificationsSink]
   void getAllNotifications() async {
     await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
 
@@ -108,6 +109,7 @@ class KeyStreamService {
     SendLocationNotification().init(atClientInstance);
   }
 
+  /// Updates any received notification with [haveResponded] true, if already responded.
   Future<void> checkForPendingLocations() async {
     allLocationNotifications.forEach((notification) async {
       if (notification.key!.contains(MixedConstants.SHARE_LOCATION)) {
@@ -158,6 +160,7 @@ class KeyStreamService {
     notifyListeners();
   }
 
+  /// Checks for missed 'Remove Person' requests for request location notifications
   void checkForDeleteRequestAck() async {
     // Letting other events complete
     await Future.delayed(Duration(seconds: 5));
@@ -204,6 +207,7 @@ class KeyStreamService {
     }
   }
 
+  /// Removes past notifications and notification where data is null.
   void filterData() {
     var tempArray = <KeyLocationModel>[];
     for (var i = 0; i < allLocationNotifications.length; i++) {
@@ -226,6 +230,7 @@ class KeyStreamService {
         .removeWhere((element) => tempArray.contains(element));
   }
 
+  /// Checks for any missed notifications and updates respective notification
   void updateEventAccordingToAcknowledgedData() async {
     await Future.forEach((allLocationNotifications),
         (dynamic notification) async {
@@ -294,6 +299,7 @@ class KeyStreamService {
     }
   }
 
+  /// Updates any [KeyLocationModel] data for updated data
   void mapUpdatedLocationDataToWidget(LocationNotificationModel locationData) {
     String newLocationDataKeyId;
     if (locationData.key!.contains(MixedConstants.SHARE_LOCATION)) {
@@ -321,6 +327,7 @@ class KeyStreamService {
     }
   }
 
+  /// Removes a notification from list
   void removeData(String? key) {
     allLocationNotifications
         .removeWhere((notification) => key!.contains(notification.atKey!.key!));
@@ -329,6 +336,7 @@ class KeyStreamService {
     SendLocationNotification().removeMember(key);
   }
 
+  /// Adds new [KeyLocationModel] data for new received notification
   Future<KeyLocationModel> addDataToList(
       LocationNotificationModel locationNotificationModel) async {
     String newLocationDataKeyId;
@@ -408,6 +416,7 @@ class KeyStreamService {
     }
   }
 
+  /// Returns updated list
   void notifyListeners() {
     // print('notifyListeners');
     // allLocationNotifications.forEach((element) {

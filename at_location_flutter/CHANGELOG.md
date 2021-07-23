@@ -1,35 +1,30 @@
-## [2.0.1] - 07/09/2021
+## 2.0.2
+- Null safe code changes
+- Updated documentation
 
-* Updated packages
+## 2.0.1
+- Updated packages
 
-## [2.0.0] - 07/07/2021
+## 2.0.0
+- Null safe support
 
-* Null safe support
+## 1.0.3
+- Improved notification handling
 
-## [1.0.3] - 05/13/2021
+## 1.0.2
+- Updated dependent packages
 
-* Improved notification handling
+## 1.0.1
+- Resolved static analysis issues
 
-## [1.0.2] - 04/30/2021
+## 1.0.0
+- Updated dependent packages
 
-* Updated dependent packages
+## 0.0.3
+- Updated example app
 
-## [1.0.1] - 04/23/2021
+## 0.0.2
+- Bug fixes and updated dependent packages.
 
-* Resolved static analysis issues
-
-## [1.0.0] - 04/22/2021
-
-* Updated dependent packages
-
-## [0.0.3] - 04/20/2021
-
-* Updated example app
-
-## [0.0.2] - 02/23/2021
-
-* Bug fixes and updated dependent packages.
-
-## [0.0.1] - 02/16/2021
-
-* The initial release consists of sharing and requesting for location between two atsigns
+## 0.0.1
+- The initial release consists of sharing and requesting for location between two atsigns

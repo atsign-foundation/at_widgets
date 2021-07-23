@@ -56,6 +56,7 @@ class RequestLocationService {
     return false;
   }
 
+  /// Sends a 'requestlocation' key to [atsign].
   Future<bool?> sendRequestLocationEvent(String? atsign) async {
     try {
       var alreadyExists = checkForAlreadyExisting(atsign);
@@ -140,6 +141,8 @@ class RequestLocationService {
     }
   }
 
+  /// Sends a 'requestlocationacknowledged' key to [originalLocationNotificationModel].receiver with isAccepted as [isAccepted]
+  /// and duration of [minutes] minute
   Future<bool> requestLocationAcknowledgment(
       LocationNotificationModel originalLocationNotificationModel,
       bool isAccepted,
@@ -201,6 +204,8 @@ class RequestLocationService {
     }
   }
 
+  /// Updates originally created [locationNotificationModel] with [originalLocationNotificationModel] data
+  /// If [rePrompt] is true, then will show dialog box on receiver's side.
   Future updateWithRequestLocationAcknowledge(
       LocationNotificationModel originalLocationNotificationModel,
       {bool rePrompt = false}) async {
@@ -264,6 +269,7 @@ class RequestLocationService {
     }
   }
 
+  /// Sends a 'deleterequestacklocation' key to delete the originally created key
   Future<bool> sendDeleteAck(
       LocationNotificationModel locationNotificationModel) async {
     try {
@@ -296,6 +302,7 @@ class RequestLocationService {
     }
   }
 
+  /// Deletes originally created [locationNotificationModel] notification
   Future<bool> deleteKey(
       LocationNotificationModel locationNotificationModel) async {
     var atkeyMicrosecondId = locationNotificationModel.key!
