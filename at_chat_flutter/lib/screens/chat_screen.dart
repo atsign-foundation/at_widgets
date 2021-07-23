@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_chat_flutter/widgets/incoming_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/outgoing_message_bubble.dart';
+
 import 'package:at_chat_flutter/widgets/send_message.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
@@ -18,6 +19,8 @@ class ChatScreen extends StatefulWidget {
   final Color receiverAvatarColor;
   final String title;
   final String? hintText;
+  final double bubbleHeightPadding;
+  final double bubbleWidthPadding;
 
   /// Widget to display chats as a screen or a bottom sheet.
   /// [height] specifies the height of bottom sheet/screen,
@@ -26,7 +29,6 @@ class ChatScreen extends StatefulWidget {
   /// [incomingMessageColor] defines the color of incoming message color.
   /// [title] specifies the title text to be displayed.
   /// [hintText] specifies the hint text to be displayed in the input box.
-
   const ChatScreen(
       {Key? key,
       this.height,
@@ -36,7 +38,9 @@ class ChatScreen extends StatefulWidget {
       this.senderAvatarColor = CustomColors.defaultColor,
       this.receiverAvatarColor = CustomColors.defaultColor,
       this.title = 'Messages',
-      this.hintText})
+      this.hintText, 
+      this.bubbleHeightPadding = 12.0, 
+      this.bubbleWidthPadding = 12.0})
       : super(key: key);
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -76,7 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
             topRight: Radius.circular(10.toHeight),
           ),
           color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.black87
+              ? Colors.black
               : Colors.white,
           boxShadow: [
             BoxShadow(
@@ -139,10 +143,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding:
-                                          EdgeInsets.symmetric(vertical: 10.0),
+                                          EdgeInsets.symmetric(vertical: 8.0),
                                       child: snapshot.data![index].type ==
                                               MessageType.INCOMING
                                           ? IncomingMessageBubble(
+                                              bubbleHeightPadding: widget.bubbleHeightPadding,
+                                              bubbleWidthPadding: widget.bubbleWidthPadding,
                                               message: snapshot.data![index],
                                               color:
                                                   widget.incomingMessageColor,
@@ -150,6 +156,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                                   widget.senderAvatarColor,
                                             )
                                           : OutgoingMessageBubble(
+                                              bubbleHeightPadding: widget.bubbleHeightPadding,
+                                              bubbleWidthPadding: widget.bubbleWidthPadding,
                                               message: snapshot.data![index],
                                               color:
                                                   widget.outgoingMessageColor,

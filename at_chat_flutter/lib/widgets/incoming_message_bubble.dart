@@ -9,12 +9,16 @@ class IncomingMessageBubble extends StatefulWidget {
   final Message? message;
   final Color color;
   final Color avatarColor;
+  final double bubbleHeightPadding;
+  final double bubbleWidthPadding;
 
   const IncomingMessageBubble(
       {Key? key,
       this.message,
       this.color = CustomColors.incomingMessageColor,
-      this.avatarColor = CustomColors.defaultColor})
+      this.avatarColor = CustomColors.defaultColor, 
+      this.bubbleHeightPadding = 12.0,
+      this.bubbleWidthPadding = 12.0})
       : super(key: key);
   @override
   _IncomingMessageBubbleState createState() => _IncomingMessageBubbleState();
@@ -47,7 +51,7 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
           width: 15.toWidth,
         ),
         Container(
-          padding: EdgeInsets.all(30.toHeight),
+          padding: EdgeInsets.symmetric(horizontal: widget.bubbleWidthPadding, vertical: widget.bubbleHeightPadding),
           decoration: BoxDecoration(
             color: widget.color,
             borderRadius: BorderRadius.circular(10.toWidth),
