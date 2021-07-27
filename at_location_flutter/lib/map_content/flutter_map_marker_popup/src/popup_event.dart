@@ -2,24 +2,24 @@ import 'package:at_location_flutter/map_content/flutter_map/src/layer/marker_lay
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_event_actions.dart';
 
 class PopupEvent {
-  final Marker marker;
-  final List<Marker> markers;
+  final Marker? marker;
+  final List<Marker?>? markers;
   final PopupEventActions action;
 
   PopupEvent.hideInList(this.markers)
-      : this.marker = null,
-        this.action = PopupEventActions.hideInList;
+      : marker = null,
+        action = PopupEventActions.hideInList;
 
   PopupEvent.hideAny()
-      : this.marker = null,
-        this.markers = null,
-        this.action = PopupEventActions.hideAny;
+      : marker = null,
+        markers = null,
+        action = PopupEventActions.hideAny;
 
   PopupEvent.toggle(this.marker)
-      : this.markers = null,
-        this.action = PopupEventActions.toggle;
+      : markers = null,
+        action = PopupEventActions.toggle;
 
   PopupEvent.show(this.marker)
-      : this.markers = null,
-        this.action = PopupEventActions.show;
+      : markers = null,
+        action = PopupEventActions.show;
 }

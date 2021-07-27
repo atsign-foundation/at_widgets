@@ -1,26 +1,30 @@
-/// This is a custom button
-/// @param [onPressed] defines what to execute on press of this button
-/// @param [buttonText] is a [String] to display on this button
-/// @param [height] in [double] sets the height of the button
-/// @param [width] in [double] sets the width of the button
-/// @param [buttonColor] sets the fill color of the button
-/// @param [fontColor] sets the font color for [buttonText] text
-
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/utils/colors.dart';
 import 'package:at_common_flutter/utils/text_styles.dart';
 
+/// A custom button to use the theme colors and common app functionalities.
 class CustomButton extends StatelessWidget {
-  final Function() onPressed;
+  /// defines the function to execute on press of this button.
+  final Function()? onPressed;
+
+  /// a string to display on this button.
   final String buttonText;
-  final double height;
-  final double width;
+
+  /// sets the height of the button.
+  final double? height;
+
+  /// sets the width of the button.
+  final double? width;
+
+  /// sets the fill color of the button.
   final Color buttonColor;
+
+  /// sets the font color for [buttonText] text
   final Color fontColor;
 
   const CustomButton({
-    Key key,
+    Key? key,
     this.onPressed,
     this.buttonText = '',
     this.height,

@@ -1,15 +1,17 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class GroupBottomSheet extends StatefulWidget {
-  final Function onPressed;
+  final Function? onPressed;
   final String buttontext, message;
   const GroupBottomSheet({
     this.onPressed,
-    @required this.buttontext,
+    required this.buttontext,
     this.message = '',
   });
 
@@ -18,10 +20,9 @@ class GroupBottomSheet extends StatefulWidget {
 }
 
 class _GroupBottomSheetState extends State<GroupBottomSheet> {
-  bool isLoading;
+  late bool isLoading;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isLoading = false;
   }
@@ -31,6 +32,8 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
       height: 70.toHeight,
+      decoration: BoxDecoration(
+          color: Color(0xffF7F7FF), boxShadow: [BoxShadow(color: Colors.grey)]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -52,7 +55,7 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
                       isLoading = true;
                     });
 
-                    if (widget.onPressed != null) await widget.onPressed();
+                    if (widget.onPressed != null) await widget.onPressed!();
 
                     if (mounted) {
                       setState(() {
@@ -69,8 +72,6 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
                 )
         ],
       ),
-      decoration: BoxDecoration(
-          color: Color(0xffF7F7FF), boxShadow: [BoxShadow(color: Colors.grey)]),
     );
   }
 }

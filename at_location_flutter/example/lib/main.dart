@@ -1,9 +1,11 @@
-import 'package:at_location_flutter/utils/constants/constants.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter_example/client_sdk_service.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter_example/second_screen.dart';
+
+import 'constants.dart';
 
 void main() {
   runApp(MyApp());
@@ -54,9 +56,10 @@ class _MyAppState extends State<MyApp> {
                                 clientSdkService.atClientPreference,
                             domain: MixedConstants.ROOT_DOMAIN,
                             appColor: Color.fromARGB(255, 240, 94, 62),
-                            onboard: (Map<String, AtClientService> value,
-                                String atsign) async {
-                              this.clientSdkService.atClientServiceInstance =
+                            appAPIKey: MixedConstants.devAPIKey,
+                            onboard: (Map<String?, AtClientService> value,
+                                String? atsign) async {
+                              clientSdkService.atClientServiceInstance =
                                   value[atsign];
                               await Navigator.pushReplacement(
                                   context,
@@ -100,6 +103,25 @@ class _MyAppState extends State<MyApp> {
                         },
                         child: Text('Already authenticated',
                             style: TextStyle(color: Colors.black)))),
+                TextButton(
+                  onPressed: () async {
+                    var _keyChainManager = KeyChainManager.getInstance();
+                    var _atSignsList =
+                        await _keyChainManager.getAtSignListFromKeychain();
+                    _atSignsList?.forEach((element) {
+                      _keyChainManager.deleteAtSignFromKeychain(element);
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                      'Keychain cleaned',
+                      textAlign: TextAlign.center,
+                    )));
+                  },
+                  child: Text(
+                    'Reset keychain',
+                    style: TextStyle(color: Colors.blueGrey),
+                  ),
+                )
               ],
             ),
           )),

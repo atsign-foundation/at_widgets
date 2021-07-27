@@ -1,9 +1,12 @@
+import 'package:at_events_flutter/at_events_flutter.dart';
+import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/screens/create_event.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
-import 'package:at_events_flutter_example/event_list.dart';
+import 'package:at_events_flutter_example/main.dart';
 import 'package:flutter/material.dart';
 import 'client_sdk_service.dart';
 import 'constants.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -12,9 +15,10 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  String activeAtSign;
-  GlobalKey<ScaffoldState> scaffoldKey;
-  bool isAuthenticated;
+  String? activeAtSign;
+  GlobalKey<ScaffoldState>? scaffoldKey;
+  bool? isAuthenticated;
+  List<EventKeyLocationModel> events = [];
 
   @override
   void initState() {
@@ -23,13 +27,13 @@ class _SecondScreenState extends State<SecondScreen> {
 
     try {
       activeAtSign =
-          clientSdkService.atClientServiceInstance.atClient.currentAtSign;
+          clientSdkService.atClientServiceInstance!.atClient!.currentAtSign;
       initializeEventService();
       isAuthenticated = true;
     } catch (e) {
       isAuthenticated = false;
       print('not authenticated');
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -40,8 +44,15 @@ class _SecondScreenState extends State<SecondScreen> {
     }
   }
 
+  void updateEvents(List<EventKeyLocationModel> _events) {
+    setState(() {
+      events = _events;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -67,7 +78,9 @@ class _SecondScreenState extends State<SecondScreen> {
           TextButton(
             onPressed: () {
               bottomSheet(
-                  CreateEvent(), MediaQuery.of(context).size.height * 0.9);
+                  CreateEvent(
+                      clientSdkService.atClientServiceInstance!.atClient),
+                  MediaQuery.of(context).size.height * 0.9);
             },
             child: Container(
               height: 40,
@@ -78,31 +91,61 @@ class _SecondScreenState extends State<SecondScreen> {
           SizedBox(
             height: 20.0,
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EventList(),
-                ),
-              );
-            },
-            child: Container(
-              height: 40,
-              child: Text('Event list', style: TextStyle(color: Colors.black)),
-            ),
-          ),
+          Expanded(
+            child: ListView.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () {
+                      HomeEventService().onEventModelTap(
+                          events[index].eventNotificationModel!,
+                          events[index].haveResponded);
+                    },
+                    child: DisplayTile(
+                      atsignCreator:
+                          events[index].eventNotificationModel!.atsignCreator,
+                      number: events[index]
+                          .eventNotificationModel!
+                          .group!
+                          .members!
+                          .length,
+                      title: 'Event - ' +
+                          events[index].eventNotificationModel!.title!,
+                      subTitle: HomeEventService()
+                          .getSubTitle(events[index].eventNotificationModel!),
+                      semiTitle: HomeEventService().getSemiTitle(
+                          events[index].eventNotificationModel!,
+                          events[index].haveResponded),
+                      showRetry:
+                          HomeEventService().calculateShowRetry(events[index]),
+                      onRetryTapped: () {
+                        HomeEventService().onEventModelTap(
+                            events[index].eventNotificationModel!, false);
+                      },
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider(
+                    color: Colors.grey,
+                  );
+                },
+                itemCount: events.length),
+          )
         ],
       ),
     );
   }
 
-  initializeEventService() {
-    initialiseEventService(clientSdkService.atClientServiceInstance.atClient,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+  void initializeEventService() {
+    initialiseEventService(
+        clientSdkService.atClientServiceInstance!.atClient!, NavService.navKey,
+        mapKey: '',
+        apiKey: '',
+        rootDomain: MixedConstants.ROOT_DOMAIN,
+        streamAlternative: updateEvents);
   }
 
-  bottomSheet(
+  void bottomSheet(
     T,
     double height,
   ) async {
@@ -130,11 +173,11 @@ class _SecondScreenState extends State<SecondScreen> {
       title: Text('you are not authenticated'),
       actions: [
         TextButton(
-          child: Text("Ok", style: TextStyle(color: Colors.black)),
           onPressed: () async {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
+          child: Text('Ok', style: TextStyle(color: Colors.black)),
         ),
       ],
     );

@@ -23,7 +23,8 @@ class _QrScanState extends State<QrScan> {
   bool permissionGrated = false;
   bool loading = false;
   bool _scanCompleted = false;
-  QrReaderViewController _controller;
+  QrReaderViewController? _controller;
+  bool _isScan = false;
 
   @override
   initState() {
@@ -56,7 +57,7 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
-  Future<bool> _validateFollowingAtsign(String atsign,
+  Future<bool> _validateFollowingAtsign(String? atsign,
       [bool isScan = false]) async {
     if (ConnectionProvider().containsFollowing(atsign)) {
       _showFollowersAlertDialog(context, atsign, isScan: isScan);
@@ -70,7 +71,7 @@ class _QrScanState extends State<QrScan> {
           message: Strings.invalidAtsignMessage, isScan: isScan);
       return false;
     }
-    var atSignStatus = await SDKService().checkAtSignStatus(atsign);
+    var atSignStatus = await SDKService().checkAtSignStatus(atsign!);
     if (atSignStatus == AtSignStatus.teapot ||
         atSignStatus == AtSignStatus.activated) {
       return true;
@@ -88,14 +89,14 @@ class _QrScanState extends State<QrScan> {
       loading = true;
     });
     _logger.info('received data is $data');
-    if (data != null || data != '') {
+    if (data != '') {
       var formattedAtsign = ConnectionsService().formatAtSign(data);
       var result = await _validateFollowingAtsign(formattedAtsign, true);
 
       if (result) {
         Navigator.pop(context);
         await ConnectionProvider().follow(formattedAtsign);
-      } else {}
+      }
     } else {
       _logger.severe('Scanning the QRcode throws error');
     }
@@ -116,10 +117,22 @@ class _QrScanState extends State<QrScan> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                  Text(
-                    Strings.qrscanDescription,
-                    style: CustomTextStyles.fontR16primary,
-                    textAlign: TextAlign.center,
+                  SwitchListTile(
+                    title: Text(
+                      Strings.qrscanDescription,
+                      style: CustomTextStyles.fontR16primary,
+                      textAlign: TextAlign.center,
+                    ),
+                    value: _isScan,
+                    onChanged: (value) {
+                      setState(() {
+                        _isScan = value;
+                      });
+                    },
+                    inactiveTrackColor: ColorConstants.inactiveTrackColor,
+                    inactiveThumbColor: ColorConstants.inactiveThumbColor,
+                    activeTrackColor: ColorConstants.activeTrackColor,
+                    activeColor: ColorConstants.activeColor,
                   ),
                   SizedBox(height: 20.toHeight),
                   Center(
@@ -129,7 +142,7 @@ class _QrScanState extends State<QrScan> {
                         width: 300.toWidth,
                         height: 350.toHeight,
                         color: Colors.black,
-                        child: !permissionGrated
+                        child: !permissionGrated || !_isScan
                             ? SizedBox()
                             : Stack(
                                 children: [
@@ -138,7 +151,7 @@ class _QrScanState extends State<QrScan> {
                                     height: 350.toHeight,
                                     callback: (container) async {
                                       this._controller = container;
-                                      await _controller
+                                      await _controller!
                                           .startCamera((data, offsets) async {
                                         if (!_scanCompleted) {
                                           _controller?.stopCamera();
@@ -157,10 +170,12 @@ class _QrScanState extends State<QrScan> {
                   SizedBox(height: 20.toHeight),
                   Text(
                     'OR',
+                    style: CustomTextStyles.fontR14primary,
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 20.toHeight),
                   CustomButton(
+                      height: 40.toHeight,
                       isActive: true,
                       onPressedCallBack: (value) {
                         _getAtsignForm(context);
@@ -175,7 +190,7 @@ class _QrScanState extends State<QrScan> {
                       width: SizeConfig().screenWidth,
                       child: Center(
                         child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
+                            valueColor: AlwaysStoppedAnimation<Color?>(
                                 ColorConstants.buttonHighLightColor)),
                       ),
                     )
@@ -212,13 +227,13 @@ class _QrScanState extends State<QrScan> {
                       prefixText: '@',
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: ColorConstants.buttonHighLightColor))),
+                              color: ColorConstants.buttonHighLightColor!))),
                 ),
               ),
               actions: [
                 TextButton(
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       this.setState(() {
                         loading = true;
                       });
@@ -251,8 +266,8 @@ class _QrScanState extends State<QrScan> {
         });
   }
 
-  _showFollowersAlertDialog(BuildContext context, String atsign,
-      {String message, bool isScan = false}) {
+  _showFollowersAlertDialog(BuildContext context, String? atsign,
+      {String? message, bool isScan = false}) {
     showDialog(
         context: context,
         builder: (context) {
@@ -268,7 +283,7 @@ class _QrScanState extends State<QrScan> {
                 onPressed: () {
                   Navigator.pop(context);
                   if (isScan) {
-                    _controller.startCamera((data1, offsets1) {
+                    _controller!.startCamera((data1, offsets1) {
                       if (!_scanCompleted) {
                         onScan(data1, offsets1, context);
                         _scanCompleted = true;

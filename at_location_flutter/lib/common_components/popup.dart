@@ -2,15 +2,17 @@ import 'package:at_location_flutter/common_components/pointed_bottom.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 
-Widget buildPopup(HybridModel user) {
-  bool showEtaSection = true;
+Widget buildPopup(HybridModel user, {LatLng? center}) {
+  var showEtaSection = true;
   if (LocationService().etaFrom != null) {
     if (user.latLng == LocationService().etaFrom) showEtaSection = false;
-  } else if (user.latLng == LocationService().myData.latLng) {
+  } else if (user.latLng == (center ?? LocationService().myData!.latLng)) {
     showEtaSection = false;
   }
 
@@ -19,8 +21,9 @@ Widget buildPopup(HybridModel user) {
     children: [
       Positioned(bottom: 0, child: pointedBottom()),
       Container(
-        width:
-            ((LocationService().calculateETA) && (showEtaSection)) ? 200 : 140,
+        width: ((LocationService().calculateETA ?? true) && (showEtaSection))
+            ? 200
+            : 140,
         height: 82,
         alignment: Alignment.topCenter,
         child: ClipRRect(
@@ -30,11 +33,11 @@ Widget buildPopup(HybridModel user) {
             height: 76,
             child: Row(
               mainAxisAlignment:
-                  ((LocationService().calculateETA) && (showEtaSection))
+                  ((LocationService().calculateETA ?? true) && (showEtaSection))
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.center,
               children: [
-                ((LocationService().calculateETA) && (showEtaSection))
+                ((LocationService().calculateETA ?? true) && (showEtaSection))
                     ? Expanded(
                         child: Container(
                           padding: EdgeInsets.all(10),
@@ -76,7 +79,7 @@ Widget buildPopup(HybridModel user) {
                                   nonAsset: true,
                                   size: 30)
                               : ContactInitial(
-                                  initials: user.displayName.substring(1, 3),
+                                  initials: user.displayName,
                                   size: 60,
                                 ),
                         ),

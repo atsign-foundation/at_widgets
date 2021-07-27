@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
-  final String url;
-  final String title;
+  final String? url;
+  final String? title;
 
   WebViewScreen({this.url, this.title});
   @override
@@ -15,7 +15,7 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-  bool isLoading;
+  late bool isLoading;
 
   @override
   void initState() {
@@ -28,10 +28,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        showBackButton: true,
-        title: widget.title,
-      ),
+      appBar:
+          AppBar(
+            title: Text(widget.title ??'FAQ',style: TextStyle(color: Colors.white),),
+            elevation: 1.0,
+            centerTitle: true,
+            backgroundColor: ColorConstants.appColor,
+          ),
+//      CustomAppBar(
+//        showBackButton: true,
+//        title: widget.title,
+//      ),
       body: Stack(
         children: [
           WebView(

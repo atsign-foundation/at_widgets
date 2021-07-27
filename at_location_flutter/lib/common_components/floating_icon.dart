@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class FloatingIcon extends StatelessWidget {
-  final Color bgColor, iconColor;
-  final IconData icon;
+  final Color? bgColor, iconColor;
+  final IconData? icon;
   final bool isTopLeft;
-  final Function onPressed;
+  final Function? onPressed;
 
   FloatingIcon(
       {this.bgColor,
@@ -26,10 +26,10 @@ class FloatingIcon extends StatelessWidget {
           bottomLeft: !isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
           bottomRight: isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
         ),
-        color: bgColor != null ? bgColor : AllColors().Black,
+        color: bgColor ?? AllColors().Black,
         boxShadow: [
           BoxShadow(
-            color: iconColor != null ? iconColor : Color(0xFF868A92),
+            color: iconColor ?? Color(0xFF868A92),
             blurRadius: 2.0,
             spreadRadius: 2.0,
             offset: Offset(0.0, 0.0),
@@ -39,11 +39,12 @@ class FloatingIcon extends StatelessWidget {
       child: IconButton(
           padding: EdgeInsets.all(10.toHeight),
           icon: Icon(
-            icon != null ? icon : Icons.table_rows,
-            color: iconColor != null ? iconColor : AllColors().WHITE,
+            icon ?? Icons.table_rows,
+            color: iconColor ?? AllColors().WHITE,
             size: 27.toFont,
           ),
-          onPressed: onPressed ?? () => Scaffold.of(context).openEndDrawer()),
+          onPressed: onPressed as void Function()? ??
+              () => Scaffold.of(context).openEndDrawer()),
     );
   }
 }

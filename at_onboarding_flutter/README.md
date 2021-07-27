@@ -12,9 +12,11 @@ To use this plugin in app, first add it to pubspec.yaml
 
 ```
 dependencies:
-  at_onboarding_flutter: ^1.0.0+4
+  at_onboarding_flutter: ^2.1.2
 ```
 
+### API Key
+In order to utilise the `get free atsign` feature, please contact <get-key@atsign.com> and get an API key for your app.
 
 ### Android
 Add the following permissions to AndroidManifest.xml
@@ -118,7 +120,8 @@ TextButton(
        //handle the error
       },
       nextScreen: DashBoard(),
-      fistTimeAuthNextScreen: Details()
+      fistTimeAuthNextScreen: Details(),
+      appAPIKey: AppConstants.devAPIKey
     )
   },
   child: Text('Onboard my @sign'))

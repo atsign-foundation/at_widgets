@@ -12,7 +12,7 @@ This plugin can be added to the project as git dependency in pubspec.yaml
 
 ```
 dependencies:
-  at_backupkey_flutter: ^1.0.0+3
+  at_backupkey_flutter: ^2.0.0
 ```
 
 ### Android

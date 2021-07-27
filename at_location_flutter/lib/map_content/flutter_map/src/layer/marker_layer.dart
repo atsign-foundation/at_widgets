@@ -2,12 +2,13 @@ import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 class MarkerLayerOptions extends LayerOptions {
   final List<Marker> markers;
   MarkerLayerOptions({
-    Key key,
+    Key? key,
     this.markers = const [],
     rebuild,
   }) : super(key: key, rebuild: rebuild);
@@ -19,11 +20,11 @@ class Anchor {
 
   Anchor(this.left, this.top);
 
-  Anchor._(double width, double height, AnchorAlign alignOpt)
+  Anchor._(double width, double height, AnchorAlign? alignOpt)
       : left = _leftOffset(width, alignOpt),
         top = _topOffset(height, alignOpt);
 
-  static double _leftOffset(double width, AnchorAlign alignOpt) {
+  static double _leftOffset(double width, AnchorAlign? alignOpt) {
     switch (alignOpt) {
       case AnchorAlign.left:
         return 0.0;
@@ -37,7 +38,7 @@ class Anchor {
     }
   }
 
-  static double _topOffset(double height, AnchorAlign alignOpt) {
+  static double _topOffset(double height, AnchorAlign? alignOpt) {
     switch (alignOpt) {
       case AnchorAlign.top:
         return 0.0;
@@ -51,7 +52,7 @@ class Anchor {
     }
   }
 
-  factory Anchor.forPos(AnchorPos pos, double width, double height) {
+  factory Anchor.forPos(AnchorPos? pos, double width, double height) {
     if (pos == null) return Anchor._(width, height, null);
     if (pos.value is AnchorAlign) return Anchor._(width, height, pos.value);
     if (pos.value is Anchor) return pos.value;
@@ -82,55 +83,55 @@ class Marker {
   final Anchor anchor;
 
   Marker({
-    this.point,
-    this.builder,
+    required this.point,
+    required this.builder,
     this.width = 30.0,
     this.height = 30.0,
-    AnchorPos anchorPos,
+    AnchorPos? anchorPos,
   }) : anchor = Anchor.forPos(anchorPos, width, height);
 }
 
 class MarkerLayerWidget extends StatelessWidget {
   final MarkerLayerOptions options;
 
-  MarkerLayerWidget({@required this.options}) : super(key: options.key);
+  MarkerLayerWidget({required this.options}) : super(key: options.key);
 
   @override
   Widget build(BuildContext context) {
-    final mapState = MapState.of(context);
+    final mapState = MapState.of(context)!;
     return MarkerLayer(options, mapState, mapState.onMoved);
   }
 }
 
 class MarkerLayer extends StatelessWidget {
   final MarkerLayerOptions markerOpts;
-  final MapState map;
-  final Stream<Null> stream;
+  final MapState? map;
+  final Stream<Null>? stream;
 
   MarkerLayer(this.markerOpts, this.map, this.stream)
       : super(key: markerOpts.key);
 
   bool _boundsContainsMarker(Marker marker) {
-    var pixelPoint = map.project(marker.point);
+    var pixelPoint = map!.project(marker.point);
 
     final width = marker.width - marker.anchor.left;
     final height = marker.height - marker.anchor.top;
 
     var sw = CustomPoint(pixelPoint.x + width, pixelPoint.y - height);
     var ne = CustomPoint(pixelPoint.x - width, pixelPoint.y + height);
-    return map.pixelBounds.containsPartialBounds(Bounds(sw, ne));
+    return map!.pixelBounds!.containsPartialBounds(Bounds(sw, ne));
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<int>(
+    return StreamBuilder<int?>(
       stream: stream, // a Stream<int> or null
-      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
         var markers = <Widget>[];
         for (var markerOpt in markerOpts.markers) {
-          var pos = map.project(markerOpt.point);
-          pos = pos.multiplyBy(map.getZoomScale(map.zoom, map.zoom)) -
-              map.getPixelOrigin();
+          var pos = map!.project(markerOpt.point);
+          pos = pos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) -
+              map!.getPixelOrigin()!;
 
           var pixelPosX =
               (pos.x - (markerOpt.width - markerOpt.anchor.left)).toDouble();

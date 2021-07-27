@@ -4,16 +4,18 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  Future<dynamic> getRequest(String url, [Map<String, String> header]) async {
-    bool val = await ConnectivityService().checkConnectivity();
+  Future<dynamic> getRequest(String url, [Map<String, String>? header]) async {
+    var val = await ConnectivityService().checkConnectivity();
     if (val) {
-      return http.get(url, headers: header).then((http.Response response) {
-        final int statusCode = response.statusCode;
+      return http
+          .get(Uri.parse(url), headers: header)
+          .then((http.Response response) {
+        final statusCode = response.statusCode;
         print(statusCode);
         if (statusCode == 200) {
           return {
             'status': true,
-            "body": utf8.decode(response.bodyBytes),
+            'body': utf8.decode(response.bodyBytes),
             'message': 'success',
             'header': response.headers,
             'code': statusCode,
@@ -23,7 +25,7 @@ class ApiService {
             'status': false,
             'body': response.body,
             'message': (response.statusCode == 404)
-                ? "Page not Found"
+                ? 'Page not Found'
                 : (response.statusCode == 401)
                     ? 'Unauthorized'
                     : 'Error occured while Fetching Data',
@@ -41,14 +43,14 @@ class ApiService {
   }
 
   Future<dynamic> postRequest(String url,
-      {Map<String, String> headers, body, encoding}) async {
-    bool val = await ConnectivityService().checkConnectivity();
+      {Map<String, String>? headers, body, encoding}) async {
+    var val = await ConnectivityService().checkConnectivity();
     if (val) {
       return http
-          .post(url,
+          .post(Uri.parse(url),
               body: json.encode(body), headers: headers, encoding: encoding)
           .then((http.Response response) {
-        final int statusCode = response.statusCode;
+        final statusCode = response.statusCode;
         print(statusCode);
         if (statusCode == 200) {
           return {
@@ -71,7 +73,7 @@ class ApiService {
             'status': false,
             'body': response.body,
             'message': (response.statusCode == 404)
-                ? "Page not Found"
+                ? 'Page not Found'
                 : (response.statusCode == 401)
                     ? 'Unauthorized'
                     : 'Error occured while Fetching Data',
@@ -91,16 +93,16 @@ class ApiService {
 
 class ConnectivityService {
   ConnectivityService._();
-  static ConnectivityService _instance = ConnectivityService._();
+  static final ConnectivityService _instance = ConnectivityService._();
   factory ConnectivityService() => _instance;
 
   Future<bool> checkConnectivity() async {
-    Socket socket;
+    Socket? socket;
     bool connectivity;
     await Future.delayed(Duration(milliseconds: 100));
     try {
       socket =
-          await Socket.connect("google.com", 80, timeout: Duration(seconds: 4));
+          await Socket.connect('google.com', 80, timeout: Duration(seconds: 4));
       connectivity = true;
     } catch (e) {
       checkInternetConnection();
@@ -112,9 +114,9 @@ class ConnectivityService {
         print(e);
       }
     }
-    print("conn $connectivity");
+    print('conn $connectivity');
     return connectivity;
   }
 
-  checkInternetConnection() {}
+  void checkInternetConnection() {}
 }

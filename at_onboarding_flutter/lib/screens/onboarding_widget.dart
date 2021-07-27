@@ -17,50 +17,54 @@ class Onboarding {
   ///if[atsign] is empty then it directly jumps into authenticate without performing onboarding. (or)
   ///if [atsign] is empty then it just presents pairAtSign screen without onboarding the atsign. (or)
   ///Just provide an empty string for ignoring existing atsign in keychain or app's atsign.
-  final String atsign;
+  final String? atsign;
 
   ///The atClientPreference [required] to continue with the onboarding.
   final AtClientPreference atClientPreference;
 
   ///Default the plugin connects to [root.atsign.org] to perform onboarding.
-  final String domain;
+  final String? domain;
 
   ///The color of the screen to match with the app's aesthetics. default it is [black].
-  final Color appColor;
+  final Color? appColor;
 
   ///if logo is not null then displays the widget in the left side of appbar else displays nothing.
-  final Widget logo;
+  final Widget? logo;
 
   ///Function returns atClientServiceMap on successful onboarding along with onboarded @sign.
-  final Function(Map<String, AtClientService>, String) onboard;
+  late Function(Map<String?, AtClientService>, String?) onboard;
 
   ///Function returns error when failed in onboarding the existing or given atsign if [nextScreen] is null;
-  final Function(Object) onError;
+  final Function(Object?) onError;
 
   ///after successful onboarding will gets redirected to this screen if it is not null.
-  final Widget nextScreen;
+  final Widget? nextScreen;
 
   ///after first time succesful onboarding it will get redirected to this screen if not null.
-  final Widget fistTimeAuthNextScreen;
+  final Widget? fistTimeAuthNextScreen;
+
+  /// API authentication key for getting free atsigns
+  final String appAPIKey;
 
   final AtSignLogger _logger = AtSignLogger('At Onboarding Flutter');
 
   Onboarding(
-      {Key key,
-      @required this.context,
+      {Key? key,
+      required this.context,
       this.atsign,
-      @required this.onboard,
-      @required this.onError,
+      required this.onboard,
+      required this.onError,
       this.nextScreen,
       this.fistTimeAuthNextScreen,
-      @required this.atClientPreference,
+      required this.atClientPreference,
       this.appColor,
       this.logo,
-      this.domain}) {
+      this.domain,
+      required this.appAPIKey}) {
     _show();
   }
   void _show() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -73,7 +77,8 @@ class Onboarding {
               atClientPreference: this.atClientPreference,
               appColor: this.appColor,
               logo: this.logo,
-              domain: this.domain));
+              domain: this.domain,
+              appAPIKey: this.appAPIKey));
     });
 
     _logger.info('Onboarding...!');
@@ -86,51 +91,55 @@ class OnboardingWidget extends StatefulWidget {
   ///if[atsign] is empty then it directly jumps into authenticate without performing onboarding. (or)
   ///if [atsign] is empty then it just presents pairAtSign screen without onboarding the atsign. (or)
   ///Just provide an empty string for ignoring existing atsign in keychain or app's atsign.
-  final String atsign;
+  final String? atsign;
 
   ///The atClientPreference [required] to continue with the onboarding.
   final AtClientPreference atClientPreference;
 
   ///Default the plugin connects to [root.atsign.org] to perform onboarding.
-  final String domain;
+  final String? domain;
 
   ///The color of the screen to match with the app's aesthetics. default it is [black].
-  final Color appColor;
+  final Color? appColor;
 
   ///if logo is not null then displays the widget in the left side of appbar else displays nothing.
-  final Widget logo;
+  final Widget? logo;
 
   ///Function returns atClientServiceMap on successful onboarding along with onboarded @sign.
-  final Function(Map<String, AtClientService>, String) onboard;
+  final Function(Map<String?, AtClientService>, String?) onboard;
 
   ///Function returns error when failed in onboarding the existing or given atsign if [nextScreen] is null;
-  final Function(Object) onError;
+  final Function(Object?) onError;
 
   ///after successful onboarding will gets redirected to this screen if it is not null.
-  final Widget nextScreen;
+  final Widget? nextScreen;
 
   ///after first time succesful onboarding it will get redirected to this screen if not null
   ///else it redirects to nextScreen.
-  final Widget fistTimeAuthNextScreen;
+  final Widget? fistTimeAuthNextScreen;
+
+  /// API authentication key for getting free atsigns
+  final String appAPIKey;
 
   OnboardingWidget(
-      {Key key,
+      {Key? key,
       this.atsign,
-      @required this.onboard,
-      @required this.onError,
+      required this.onboard,
+      required this.onError,
       this.nextScreen,
       this.fistTimeAuthNextScreen,
-      @required this.atClientPreference,
+      required this.atClientPreference,
       this.appColor,
       this.logo,
-      this.domain});
+      this.domain,
+      required this.appAPIKey});
   @override
   _OnboardingWidgetState createState() => _OnboardingWidgetState();
 }
 
 class _OnboardingWidgetState extends State<OnboardingWidget> {
   var _onboardingService = OnboardingService.getInstance();
-  Future<bool> _future;
+  Future<bool>? _future;
   var data;
   var error;
   @override
@@ -146,6 +155,8 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
     if (widget.atsign != '') {
       _future = _onboardingService.onboard();
     }
+
+    AppConstants.setApiKey(widget.appAPIKey);
 
     super.initState();
   }
@@ -164,7 +175,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             CustomNav().pop(context);
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
               widget.onboard(_onboardingService.atClientServiceMap,
                   _onboardingService.currentAtsign);
             });
@@ -180,7 +191,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
             } else if (snapshot.error == OnboardingStatus.ACTIVATE ||
                 snapshot.error == OnboardingStatus.RESTORE) {
               return PairAtsignWidget(
-                onboardStatus: snapshot.error,
+                onboardStatus: snapshot.error as OnboardingStatus?,
               );
             } else {
               CustomNav().pop(context);

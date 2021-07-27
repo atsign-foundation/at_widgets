@@ -1,3 +1,22 @@
+## [2.0.1] - 07/09/2021
+
+* Updated dependencies
+
+## [2.0.0] - 06/30/2021
+
+* Null safe version
+* Updated dependencies
+
+## [1.0.2] - 05/27/2021
+
+* Fix to prevent adding self to contact list
+* Added function to get contact details from cached data
+
+## [1.0.1] - 05/13/2021
+
+* The referenced packages are updated
+* Improved avatar placeholder
+
 ## [1.0.0] - 04/20/2021
 
 * Updated example app

@@ -10,16 +10,16 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
 class ShareLocationSheet extends StatefulWidget {
-  final Function onTap;
+  final Function? onTap;
   ShareLocationSheet({this.onTap});
   @override
   _ShareLocationSheetState createState() => _ShareLocationSheetState();
 }
 
 class _ShareLocationSheetState extends State<ShareLocationSheet> {
-  AtContact selectedContact;
-  bool isLoading;
-  String selectedOption, textField;
+  AtContact? selectedContact;
+  late bool isLoading;
+  String? selectedOption, textField;
 
   @override
   void initState() {
@@ -52,8 +52,11 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
             width: 330.toWidth,
             height: 50,
             hintText: 'Type @sign ',
-            initialValue: textField,
+            initialValue: textField ?? '',
             value: (str) {
+              if (!str.contains('@')) {
+                str = '@' + str;
+              }
               textField = str;
             },
             icon: Icons.contacts_rounded,
@@ -76,7 +79,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               elevation: 0,
               dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
               value: selectedOption,
-              hint: Text("Occurs on"),
+              hint: Text('Occurs on'),
               items: ['30 mins', '2 hours', '24 hours', 'Until turned off']
                   .map((String option) {
                 return DropdownMenuItem<String>(
@@ -84,7 +87,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
                   child: Text(option),
                 );
               }).toList(),
-              onChanged: (value) {
+              onChanged: (dynamic value) {
                 setState(() {
                   textField = textField;
                   selectedOption = value;
@@ -109,11 +112,11 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     );
   }
 
-  onShareTap() async {
+  void onShareTap() async {
     setState(() {
       isLoading = true;
     });
-    bool validAtSign = await checkAtsign(textField);
+    var validAtSign = await checkAtsign(textField);
 
     if (!validAtSign) {
       setState(() {
@@ -128,7 +131,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
       return;
     }
 
-    int minutes = (selectedOption == '30 mins'
+    var minutes = (selectedOption == '30 mins'
         ? 30
         : (selectedOption == '2 hours'
             ? (2 * 60)
@@ -136,6 +139,14 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
 
     var result = await SharingLocationService()
         .sendShareLocationEvent(textField, false, minutes: minutes);
+
+    if (result == null) {
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.of(context).pop();
+      return;
+    }
 
     if (result == true) {
       CustomToast().show('Share Location Request sent', context);
@@ -151,7 +162,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     }
   }
 
-  Future<bool> checkAtsign(String atSign) async {
+  Future<bool> checkAtsign(String? atSign) async {
     if (atSign == null) {
       return false;
     } else if (!atSign.contains('@')) {

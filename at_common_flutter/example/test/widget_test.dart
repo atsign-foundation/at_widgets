@@ -12,7 +12,7 @@ import 'package:at_common_flutter_example/main.dart';
 import 'test_material_app.dart';
 
 void main() {
-  Widget _homeWidget({@required Widget home}) {
+  Widget _homeWidget({required Widget home}) {
     return TestMaterialApp(home: home);
   }
 
@@ -56,12 +56,12 @@ void main() {
           await tester.widget<CustomButton>(find.byType(CustomButton));
       expect(customButton.buttonText, 'Add');
       expect(customButton.buttonColor, Colors.black);
-      expect(customButton.onPressed.call(), null);
+      expect(customButton.onPressed!.call(), null);
 
       await tester.pumpWidget(_homeWidget(home: CustomButton()));
       expect(customButton.buttonText, 'Add');
       expect(customButton.buttonColor, Colors.black);
-      expect(customButton.onPressed.call(), null);
+      expect(customButton.onPressed!.call(), null);
     });
   });
 }

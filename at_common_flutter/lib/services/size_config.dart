@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 
+/// A class defined to get dimensions for the screen size displayed,
+/// using the proportion of the designed screen size.
 class SizeConfig {
   SizeConfig._();
 
   static SizeConfig _instance = SizeConfig._();
 
   factory SizeConfig() => _instance;
-  MediaQueryData _mediaQueryData;
-  double screenWidth;
-  double screenHeight;
-  double blockSizeHorizontal;
-  double blockSizeVertical;
-  double deviceTextFactor;
+  late MediaQueryData _mediaQueryData;
+  late double screenWidth;
+  late double screenHeight;
+  late double blockSizeHorizontal;
+  late double blockSizeVertical;
+  late double deviceTextFactor;
 
-  double _safeAreaHorizontal;
-  double _safeAreaVertical;
-  double safeBlockHorizontal;
-  double safeBlockVertical;
+  late double _safeAreaHorizontal;
+  late double _safeAreaVertical;
+  late double safeBlockHorizontal;
+  late double safeBlockVertical;
 
-  double profileDrawerWidth;
-  double refHeight;
-  double refWidth;
+  double? profileDrawerWidth;
+  late double refHeight;
+  late double refWidth;
 
   double textFactor = 1.0;
 
@@ -88,6 +90,7 @@ class SizeConfig {
   }
 }
 
+/// A shorthand usage of the functions defined in [SizeConfig].
 extension SizeUtils on num {
   double get toWidth => SizeConfig().getWidthRatio(this.toDouble());
 

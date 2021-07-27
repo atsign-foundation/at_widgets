@@ -4,10 +4,10 @@ import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
 
 /// [LayerOptions] that describe a layer composed by multiple built-in layers.
 class GroupLayerOptions extends LayerOptions {
-  List<LayerOptions> group = <LayerOptions>[];
+  List<LayerOptions>? group = <LayerOptions>[];
 
   GroupLayerOptions({
-    Key key,
+    Key? key,
     this.group,
     rebuild,
   }) : super(key: key, rebuild: rebuild);
@@ -16,18 +16,18 @@ class GroupLayerOptions extends LayerOptions {
 class GroupLayerWidget extends StatelessWidget {
   final GroupLayerOptions options;
 
-  GroupLayerWidget({@required this.options}) : super(key: options.key);
+  GroupLayerWidget({required this.options}) : super(key: options.key);
 
   @override
   Widget build(BuildContext context) {
-    final mapState = MapState.of(context);
+    final mapState = MapState.of(context)!;
     return GroupLayer(options, mapState, mapState.onMoved);
   }
 }
 
 class GroupLayer extends StatelessWidget {
   final GroupLayerOptions groupOpts;
-  final MapState map;
+  final MapState? map;
   final Stream<Null> stream;
 
   GroupLayer(this.groupOpts, this.map, this.stream) : super(key: groupOpts.key);
@@ -35,7 +35,6 @@ class GroupLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      // TODO unused BoxContraints should remove?
       builder: (BuildContext context, BoxConstraints bc) {
         return _build(context);
       },
@@ -47,7 +46,7 @@ class GroupLayer extends StatelessWidget {
       stream: stream,
       builder: (BuildContext context, _) {
         var layers = <Widget>[
-          for (var options in groupOpts.group) _createLayer(options)
+          for (var options in groupOpts.group!) _createLayer(options)
         ];
 
         return Container(

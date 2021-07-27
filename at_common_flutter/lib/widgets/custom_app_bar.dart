@@ -4,37 +4,53 @@ import 'package:at_common_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
-/// This is a custom app bar
-/// @param [showTitle] toggles to display the center aligned title
-/// @param [showBackButton] toggles the automatically implies leading functionality, with [Icons.arrow_back]
-/// if set to [false] it displays a [Close] String instead of [Icons.arrow_back],
-/// @param [showLeadingIcon] toggles the visibility of [Close] and [Icons.arrow_back] and displays the [leadingIcon] widget instead
-/// @param [titleText] is a [String] to display the title of the appbar
-/// @param [showTrailingIcon] toggles the visibility of trailing icon,
-/// if set to [false] nothing is displayed
-/// @param [trailingIcon] takes in the trailing widget
-/// @param [leadingIcon] takes in the leading widget
-/// @param [onTrailingIconPressed] defines what to execute on press of [trailingIcon]
-/// @param [elevation] sets the appBar elevation
-/// @param [backTextStyle] sets the textStyle for [Close] text
-/// @param [titleTextStyle] sets the textStyle for the [titleText]
-/// @param [appBarColor] sets the appBar color
-/// @param [onLeadingIconPressed] defines what to execute on press of [leadingIcon]
+/// This is a custom app bar.
+///
+/// used to reduce the common widgets that are passed to the material appbar.
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String titleText;
+  /// A string to display the title of the appbar.
+  final String? titleText;
+
+  /// This toggles the display of the center aligned title.
   final bool showTitle;
+
+  /// This automatically implies leading functionality, with [Icons.arrow_back]
+  /// if set to `false` it displays a `CLOSE` String instead of [Icons.arrow_back].
   final bool showBackButton;
+
+  /// This toggles the visibility of `CLOSE` and [Icons.arrow_back] and displays the [leadingIcon] widget instead.
   final bool showLeadingIcon;
+
+  /// This toggles the visibility of trailing icon,
+  /// if set to `false` nothing is displayed.
   final bool showTrailingIcon;
+
+  /// This displays `CLOSE` instead of trailing icon.
   final bool closeOnRight;
-  final Widget trailingIcon;
-  final Widget leadingIcon;
-  final Function onTrailingIconPressed;
+
+  /// takes in a trailing widget.
+  final Widget? trailingIcon;
+
+  /// takes in a leading widget.
+  final Widget? leadingIcon;
+
+  /// defines the function to execute on press of [trailingIcon].
+  final Function? onTrailingIconPressed;
+
+  /// sets the appBar elevation.
   final double elevation;
-  final Color appBarColor;
-  final TextStyle backTextStyle;
-  final TextStyle titleTextStyle;
-  final Function onLeadingIconPressed;
+
+  /// sets the appBar color.
+  final Color? appBarColor;
+
+  /// sets the textStyle for `CLOSE` text.
+  final TextStyle? backTextStyle;
+
+  /// sets the textStyle for the [titleText].
+  final TextStyle? titleTextStyle;
+
+  /// defines the function to execute on press of [leadingIcon].
+  final Function? onLeadingIconPressed;
 
   const CustomAppBar({
     this.titleText,
@@ -59,7 +75,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return AppBar(
-      elevation: elevation ?? 0,
+      elevation: elevation,
       centerTitle: true,
       leadingWidth: 90,
       leading: (showLeadingIcon)
@@ -73,7 +89,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: () {
                     Navigator.pop(context);
                     if (onLeadingIconPressed != null) {
-                      onLeadingIconPressed();
+                      onLeadingIconPressed!();
                     }
                   })
               : leadingIcon
@@ -98,7 +114,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: (showTitle)
                 ? Center(
                     child: Text(
-                      titleText,
+                      titleText!,
                       style: titleTextStyle ?? CustomTextStyles.primaryBold18,
                     ),
                   )
@@ -135,7 +151,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: trailingIcon,
                         onTap: () {
                           if (onTrailingIconPressed != null) {
-                            onTrailingIconPressed();
+                            onTrailingIconPressed!();
                           }
                         },
                       )

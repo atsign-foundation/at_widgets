@@ -1,27 +1,30 @@
 name: at_events_flutter
 description: A flutter plugin project to manage events using the atprotocol.
-version: 1.0.0
+version: 2.0.0
 homepage: https://atsign.com/
 repository: https://github.com/atsign-foundation/at_widgets/tree/master/at_events_flutter
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.20.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  latlong: ^0.6.1
-  toast: ^0.1.5
-
-  at_common_flutter: ^1.0.0
-  at_location_flutter: ^0.0.3
-  at_contacts_flutter: ^1.0.0
-  at_commons: ^1.0.1+6
-  at_client_mobile: ^1.0.0+9
-  at_contact: ^1.0.0+3
-  at_lookup: ^1.0.0+6
+  latlong2: ^0.8.0
+  fluttertoast: ^8.0.5
+  sliding_up_panel: ^2.0.0+1
+  at_common_flutter: ^2.0.0
+  at_location_flutter: ^2.0.1
+  at_contacts_flutter: ^2.0.1
+  at_commons: ^2.0.1
+  at_client_mobile: ^2.0.2
+  at_contact: ^2.0.0
+  at_lookup: ^2.0.1
   pedantic: ^1.11.0
+  geolocator: ^7.0.3
+  at_contacts_group_flutter: ^2.0.1
+  at_chat_flutter: ^2.0.1
 
 dev_dependencies:
   flutter_test:

@@ -12,7 +12,7 @@ To use this plugin in app, first add it to pubspec.yaml
 
 ```
 dependencies:
-  at_follows_flutter: ^1.0.0+2
+  at_follows_flutter: ^2.0.0
 ```
 
 ### Android

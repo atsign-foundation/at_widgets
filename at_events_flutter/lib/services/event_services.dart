@@ -3,45 +3,43 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_events_flutter/common_components/concurrent_event_request_dialog.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
-import 'package:at_events_flutter/models/hybrid_notifiation_model.dart';
-import 'package:at_events_flutter/utils/init_events_service.dart';
+// import 'package:at_events_flutter/services/sync_secondary.dart';
+import 'package:at_location_flutter/service/sync_secondary.dart';
+import 'package:at_events_flutter/utils/constants.dart';
+import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_lookup/at_lookup.dart';
+
+import 'event_key_stream_service.dart';
 
 class EventService {
   EventService._();
+  // ignore: prefer_final_fields
   static EventService _instance = EventService._();
   factory EventService() => _instance;
   bool isEventUpdate = false;
 
-  EventNotificationModel eventNotificationModel;
-  AtClientImpl atClientInstance;
-  List<AtContact> selectedContacts;
-  List<HybridNotificationModel> createdEvents;
-  Function onEventSaved;
-  String currentAtSign, rootDomain;
-  List<EventNotificationModel> allEvents = [];
+  EventNotificationModel? eventNotificationModel;
+  AtClientImpl? atClientInstance;
+  List<AtContact>? selectedContacts;
+  List<String?> selectedContactsAtSigns = [];
+  List<EventNotificationModel>? createdEvents;
+  Function? onEventSaved;
 
   // ignore: close_sinks
   final _atEventNotificationController =
-      StreamController<EventNotificationModel>.broadcast();
-  Stream<EventNotificationModel> get eventStream =>
+      StreamController<EventNotificationModel?>.broadcast();
+  Stream<EventNotificationModel?> get eventStream =>
       _atEventNotificationController.stream;
-  StreamSink<EventNotificationModel> get eventSink =>
+  StreamSink<EventNotificationModel?> get eventSink =>
       _atEventNotificationController.sink;
 
-  // ignore: close_sinks
-  final eventListController =
-      StreamController<List<EventNotificationModel>>.broadcast();
-  Stream<List<EventNotificationModel>> get eventListStream =>
-      eventListController.stream;
-  StreamSink<List<EventNotificationModel>> get eventListSink =>
-      eventListController.sink;
-
-  init({bool isUpdate, EventNotificationModel eventData, rootDomain}) {
+  // ignore: always_declare_return_types
+  init(AtClientImpl? _atClientInstance, bool isUpdate,
+      EventNotificationModel? eventData) {
     if (eventData != null) {
       EventService().eventNotificationModel = EventNotificationModel.fromJson(
           jsonDecode(EventNotificationModel.convertEventNotificationToJson(
@@ -50,167 +48,38 @@ class EventService {
       update();
     } else {
       eventNotificationModel = EventNotificationModel();
-      eventNotificationModel.venue = Venue();
-      eventNotificationModel.event = Event();
-      eventNotificationModel.group = AtGroup('');
+      eventNotificationModel!.venue = Venue();
+      eventNotificationModel!.event = Event();
+      eventNotificationModel!.group = AtGroup('');
       selectedContacts = [];
     }
     isEventUpdate = isUpdate;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    print('isEventUpdate:$isEventUpdate');
+    atClientInstance = _atClientInstance;
+    Future.delayed(Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });
   }
 
-  initializeAtContactImpl(AtClientImpl _atClientInstance, String rootDomain) {
-    atClientInstance = _atClientInstance;
-    currentAtSign = atClientInstance.currentAtSign;
-    this.rootDomain = rootDomain;
-    startMonitor();
-  }
-
-  // startMonitor needs to be called at the beginning of session
-  // called again if outbound connection is dropped
-  Future<bool> startMonitor() async {
-    String privateKey = await getPrivateKey(currentAtSign);
-    atClientInstance.startMonitor(privateKey, _notificationCallback);
-    print("Monitor started");
-    return true;
-  }
-
-  ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    return await atClientInstance.getPrivateKey(atsign);
-  }
-
-  void _notificationCallback(dynamic response) async {
-    print('fnCallBack called in event service');
-    response = response.replaceFirst('notification:', '');
-    var responseJson = jsonDecode(response);
-    var value = responseJson['value'];
-    var notificationKey = responseJson['key'];
-    var fromAtSign = responseJson['from'];
-    var atKey = notificationKey.split(':')[1];
-    var operation = responseJson['operation'];
-    print('_notificationCallback opeartion $operation');
-    if ((operation == 'delete') &&
-        atKey.toString().toLowerCase().contains('createevent')) {
-      removeDeletedEventFromList(notificationKey);
-      return;
-    }
-
-    var decryptedMessage = await atClientInstance.encryptionService
-        .decrypt(value, fromAtSign)
-        .catchError((e) {
-      print("error in decrypting: ${e} ${e}");
-    });
-    print('decrypted message:${decryptedMessage}');
-    if (atKey.toString().contains('createevent')) {
-      EventNotificationModel eventData =
-          EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
-      if (eventData.isUpdate != null && eventData.isUpdate == false) {
-        // new event received
-        // show dialog
-        // add in event list
-        addNewEventInEventList(eventData);
-      } else if (eventData.isUpdate) {
-        // event updated received
-        // update event list
-        onUpdatedEventReceived(eventData);
-      }
-    } else if (atKey.toString().contains('eventacknowledged')) {
-      EventNotificationModel msg =
-          EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
-      print('event acknowledge received:${msg.group} , ${msg.title}');
-      createEventAcknowledged(msg, fromAtSign, atKey);
-    }
-  }
-
-  createEventAcknowledged(EventNotificationModel acknowledgedEvent,
-      String fromAtSign, String key) async {
-    String regexKey, eventId = key.split('eventacknowledged-')[1].split('@')[0];
-    AtKey atKey;
-    EventNotificationModel presentEventData =
-        await getEventDetails('createevent-$eventId');
-
-    presentEventData.group.members.forEach((presentGroupMember) {
-      acknowledgedEvent.group.members.forEach((acknowledgedGroupMember) {
-        if (acknowledgedGroupMember.atSign[0] != '@') {
-          acknowledgedGroupMember.atSign = '@' + acknowledgedGroupMember.atSign;
-        }
-
-        if (presentGroupMember.atSign[0] != '@') {
-          presentGroupMember.atSign = '@' + presentGroupMember.atSign;
-        }
-
-        if (acknowledgedGroupMember.atSign == presentGroupMember.atSign &&
-            acknowledgedGroupMember.atSign == fromAtSign) {
-          presentGroupMember.tags = acknowledgedGroupMember.tags;
-        }
-      });
-    });
-    presentEventData.isUpdate = true;
-
-    regexKey = await getRegexKeyFromKey('createevent-$eventId');
-    if (regexKey != null) {
-      atKey = getAtKey(regexKey);
-    } else {
-      return false;
-    }
-
-    var notification =
-        EventNotificationModel.convertEventNotificationToJson(presentEventData);
-    var result = await atClientInstance.put(atKey, notification);
-    if (result != null && result) {
-      onUpdatedEventReceived(presentEventData);
-    }
-  }
-
-  removeDeletedEventFromList(String regexKey) {
-    String key = regexKey.split('createevent-')[1].split('@')[0];
-
-    EventService()
-        .allEvents
-        .removeWhere((element) => element.key.contains(key));
-
-    EventService().eventListSink.add(EventService().allEvents);
-  }
-
-  addNewEventInEventList(EventNotificationModel newEvent) {
-    if (EventService().allEvents == null) EventService().allEvents = [];
-    EventService().allEvents.add(newEvent);
-    EventService().eventListSink.add(EventService().allEvents);
-  }
-
-  onUpdatedEventReceived(EventNotificationModel newEvent) {
-    int eventIndex = EventService()
-        .allEvents
-        .indexWhere((element) => element.key.contains(newEvent.key));
-
-    if (eventIndex > -1) {
-      EventService().allEvents[eventIndex] = newEvent;
-      EventService().eventListSink.add(EventService().allEvents);
-    }
-  }
-
-  update({EventNotificationModel eventData}) {
+  // ignore: always_declare_return_types
+  update({EventNotificationModel? eventData}) {
     if (eventData != null) {
       eventNotificationModel = eventData;
     }
     eventSink.add(eventNotificationModel);
   }
 
-  createEvent({bool isEventOverlap = false, BuildContext context}) async {
+  // ignore: always_declare_return_types
+  createEvent({bool isEventOverlap = false, BuildContext? context}) async {
     var result;
     if (isEventUpdate) {
-      eventNotificationModel.isUpdate = true;
+      eventNotificationModel!.isUpdate = true;
       result = await editEvent();
       return result;
     } else {
       result = await sendEventNotification();
-      // if (result) EventService().onEventSaved(eventNotificationModel);
-      if (result && isEventOverlap) {
-        Navigator.of(context).pop();
+      if (result is bool && result && isEventOverlap) {
+        Navigator.of(context!).pop();
         Navigator.of(context).pop();
       }
       return result;
@@ -219,18 +88,31 @@ class EventService {
 
   Future<dynamic> editEvent() async {
     try {
-      // AtKey atKey = getAtKey(eventNotificationModel.key);
-      // var eventData = EventNotificationModel.convertEventNotificationToJson(
-      //     EventService().eventNotificationModel);
-      // var result = await atClientInstance.put(atKey, eventData);
-      // if (onEventSaved != null) {
-      //   onEventSaved(eventNotificationModel);
-      // }
-      // return result;
-      var result =
-          await updateEvent(eventNotificationModel, eventNotificationModel.key);
-      if (onEventSaved != null && result) {
-        onEventSaved(eventNotificationModel);
+      var atKey = getAtKey(eventNotificationModel!.key!);
+      var allAtsignList = <String?>[];
+      EventService().eventNotificationModel!.group!.members!.forEach((element) {
+        allAtsignList.add(element.atSign);
+      });
+
+      var eventData = EventNotificationModel.convertEventNotificationToJson(
+          EventService().eventNotificationModel!);
+      var result = await atClientInstance!
+          .put(atKey, eventData, isDedicated: MixedConstants.isDedicated);
+      atKey.sharedWith = jsonEncode(allAtsignList);
+      await SyncSecondary().callSyncSecondary(
+        SyncOperation.notifyAll,
+        atKey: atKey,
+        notification: eventData,
+        operation: OperationEnum.update,
+        isDedicated: MixedConstants.isDedicated,
+      );
+
+      EventKeyStreamService()
+          .mapUpdatedEventDataToWidget(eventNotificationModel!);
+
+      /// Dont need to sync here as notifyAll is called
+      if (onEventSaved != null) {
+        onEventSaved!(eventNotificationModel);
       }
       return result;
     } catch (e) {
@@ -238,81 +120,136 @@ class EventService {
     }
   }
 
+  // ignore: always_declare_return_types
   sendEventNotification() async {
-    EventNotificationModel eventNotification = eventNotificationModel;
-    eventNotification.isUpdate = false;
-    eventNotification.isSharing = true;
+    try {
+      var eventNotification = eventNotificationModel!;
+      eventNotification.isUpdate = false;
+      eventNotification.isSharing = true;
 
-    eventNotification.key =
-        "createevent-${DateTime.now().microsecondsSinceEpoch}";
-    eventNotification.atsignCreator = atClientInstance.currentAtSign;
-    var notification = EventNotificationModel.convertEventNotificationToJson(
-        EventService().eventNotificationModel);
+      eventNotification.key =
+          'createevent-${DateTime.now().microsecondsSinceEpoch}';
+      eventNotification.atsignCreator = atClientInstance!.currentAtSign;
+      var notification = EventNotificationModel.convertEventNotificationToJson(
+          EventService().eventNotificationModel!);
 
-    AtKey atKey = AtKey()
-      ..metadata = Metadata()
-      ..metadata.ccd = true
-      ..metadata.ttr = -1
-      ..key = eventNotification.key
-      ..sharedWith = eventNotification.group.members.elementAt(0).atSign
-      ..sharedBy = eventNotification.atsignCreator;
+      print('shared contact atsigns:$selectedContactsAtSigns');
 
-    var result = await atClientInstance.put(atKey, notification);
-    eventNotificationModel = eventNotification;
-    if (onEventSaved != null) {
-      // String key =
-      //     '${atKey.sharedWith}:${eventNotification.key}:${atKey.sharedBy}';
-      // eventNotification.key = key;
-      onEventSaved(eventNotification);
+      var atKey = AtKey()
+        ..metadata = Metadata()
+        ..metadata!.ttr = -1
+        ..metadata!.ccd = true
+        ..key = eventNotification.key
+        ..sharedBy = eventNotification.atsignCreator;
+
+      var putResult = await atClientInstance!.put(atKey, notification,
+          isDedicated:
+              true); // creating a key and saving it for creator without adding any receiver atsign
+
+      atKey.sharedWith = jsonEncode(
+          [...selectedContactsAtSigns]); //adding event members in atkey
+
+      await SyncSecondary().callSyncSecondary(
+        SyncOperation.notifyAll,
+        atKey: atKey,
+        notification: notification,
+        operation: OperationEnum.update,
+        isDedicated: MixedConstants.isDedicated,
+      );
+
+      /// Dont need to sync as notifyAll is called
+
+      await EventKeyStreamService().addDataToList(eventNotificationModel!);
+
+      eventNotificationModel = eventNotification;
+      if (onEventSaved != null) {
+        onEventSaved!(eventNotification);
+      }
+      return putResult;
+    } catch (e) {
+      print('error in SendEventNotification $e');
+      return e.toString();
     }
-    print('send event:$result');
-    return result;
   }
 
+  // ignore: always_declare_return_types
   addNewGroupMembers(List<AtContact> selectedContactList) {
     EventService().selectedContacts = [];
-    EventService().eventNotificationModel.group.members = {};
+    EventService().selectedContactsAtSigns = [];
+    EventService().eventNotificationModel!.group!.members = {};
 
-    for (AtContact selectedContact in selectedContactList) {
-      EventService().selectedContacts.add(selectedContact);
-      AtContact newContact = getGroupMemberContact(selectedContact);
-      EventService().eventNotificationModel.group.members.add(newContact);
+    for (var selectedContact in selectedContactList) {
+      EventService().selectedContacts!.add(selectedContact);
+      var newContact = getGroupMemberContact(selectedContact);
+      EventService().eventNotificationModel!.group!.members!.add(newContact);
+      selectedContactsAtSigns.add(newContact.atSign);
     }
   }
 
+  // ignore: always_declare_return_types
+  addNewContactAndGroupMembers(List<GroupContactsModel?> selectedList) {
+    EventService().selectedContacts = [];
+    EventService().selectedContactsAtSigns = [];
+    EventService().eventNotificationModel!.group!.members = {};
+
+    selectedList.forEach((element) {
+      if (element!.contact != null) {
+        var newContact = getGroupMemberContact(element.contact!);
+        EventService().eventNotificationModel!.group!.members!.add(newContact);
+        EventService().selectedContacts!.add(newContact);
+        selectedContactsAtSigns.add(newContact.atSign);
+      } else if (element.group != null) {
+        element.group!.members!.forEach((groupMember) {
+          var newContact = getGroupMemberContact(groupMember);
+          EventService()
+              .eventNotificationModel!
+              .group!
+              .members!
+              .add(newContact);
+          EventService().selectedContacts!.add(newContact);
+          selectedContactsAtSigns.add(newContact.atSign);
+        });
+      }
+    });
+  }
+
+  // ignore: always_declare_return_types
   createContactListFromGroupMembers() {
     selectedContacts = [];
-    for (AtContact contact
-        in EventService().eventNotificationModel.group.members) {
-      selectedContacts.add(contact);
+    for (var contact
+        in EventService().eventNotificationModel!.group!.members!) {
+      selectedContacts!.add(contact);
     }
   }
 
   AtContact getGroupMemberContact(AtContact atcontact) {
-    AtContact newContact = AtContact(atSign: atcontact.atSign);
+    var newContact = AtContact(atSign: atcontact.atSign);
     newContact.tags = {};
-    newContact.tags['isAccepted'] = false;
-    newContact.tags['isSharing'] = true;
-    newContact.tags['isExited'] = false;
-    newContact.tags['lat'] = 0;
-    newContact.tags['long'] = 0;
-    newContact.tags['shareFrom'] = -1;
-    newContact.tags['shareTo'] = -1;
+    newContact.tags!['isAccepted'] = false;
+    newContact.tags!['isSharing'] = true;
+    newContact.tags!['isExited'] = false;
+    newContact.tags!['lat'] = null;
+    newContact.tags!['long'] = null;
+    newContact.tags!['shareFrom'] = -1;
+    newContact.tags!['shareTo'] = -1;
     return newContact;
   }
 
+  // ignore: always_declare_return_types
   removeSelectedContact(int index) {
-    if (eventNotificationModel.group.members.length > index &&
-        selectedContacts.length > index) {
-      eventNotificationModel.group.members.removeWhere(
-          (element) => element.atSign == selectedContacts[index].atSign);
-      selectedContacts.removeAt(index);
+    if (eventNotificationModel!.group!.members!.length > index &&
+        selectedContacts!.length > index) {
+      eventNotificationModel!.group!.members!.removeWhere(
+          (element) => element.atSign == selectedContacts![index].atSign);
+      selectedContacts!.removeAt(index);
+      selectedContactsAtSigns.removeAt(index);
     }
   }
 
-  bool showConcurrentEventDialog(List<HybridNotificationModel> createdEvents,
-      EventNotificationModel newEvent, BuildContext context) {
-    if (!isEventUpdate && createdEvents != null && createdEvents.isNotEmpty) {
+  bool? showConcurrentEventDialog(List<EventNotificationModel>? createdEvents,
+      EventNotificationModel? newEvent, BuildContext context) {
+    // ignore: prefer_is_empty
+    if (!isEventUpdate && createdEvents != null && createdEvents.length > 0) {
       var isOverlapData =
           isEventTimeSlotOverlap(createdEvents, eventNotificationModel);
       if (isOverlapData[0]) {
@@ -332,30 +269,30 @@ class EventService {
     }
   }
 
-  dynamic isEventTimeSlotOverlap(List<HybridNotificationModel> hybridEvents,
-      EventNotificationModel newEvent) {
-    bool isOverlap = false;
-    EventNotificationModel overlapEvent = EventNotificationModel();
+  dynamic isEventTimeSlotOverlap(List<EventNotificationModel?> hybridEvents,
+      EventNotificationModel? newEvent) {
+    var isOverlap = false;
+    EventNotificationModel? overlapEvent = EventNotificationModel();
 
     hybridEvents.forEach((element) {
-      if (!element.eventNotificationModel.event.isRecurring) {
-        if (dateToString(element.eventNotificationModel.event.date) ==
-            dateToString(newEvent.event.date)) {
-          Event event = element.eventNotificationModel.event;
-          if (event.startTime.hour >= newEvent.event.startTime.hour &&
-              event.startTime.hour <= newEvent.event.endTime.hour) {
+      if (!eventNotificationModel!.event!.isRecurring!) {
+        if (dateToString(eventNotificationModel!.event!.date!) ==
+            dateToString(newEvent!.event!.date!)) {
+          var event = eventNotificationModel!.event!;
+          if (event.startTime!.hour >= newEvent.event!.startTime!.hour &&
+              event.startTime!.hour <= newEvent.event!.endTime!.hour) {
             isOverlap = true;
-            overlapEvent = element.eventNotificationModel;
+            overlapEvent = eventNotificationModel;
           }
-          if (event.startTime.hour <= newEvent.event.startTime.hour &&
-              event.endTime.hour >= newEvent.event.endTime.hour) {
+          if (event.startTime!.hour <= newEvent.event!.startTime!.hour &&
+              event.endTime!.hour >= newEvent.event!.endTime!.hour) {
             isOverlap = true;
-            overlapEvent = element.eventNotificationModel;
+            overlapEvent = eventNotificationModel;
           }
-          if (event.endTime.hour >= newEvent.event.startTime.hour &&
-              event.endTime.hour <= newEvent.event.endTime.hour) {
+          if (event.endTime!.hour >= newEvent.event!.startTime!.hour &&
+              event.endTime!.hour <= newEvent.event!.endTime!.hour) {
             isOverlap = true;
-            overlapEvent = element.eventNotificationModel;
+            overlapEvent = eventNotificationModel;
           }
         }
       }
@@ -363,74 +300,26 @@ class EventService {
     return [isOverlap, overlapEvent];
   }
 
-  sendEventAcknowledgement(EventNotificationModel acknowledgedEvent,
-      {bool isAccepted, bool isSharing, bool isExited}) async {
-    EventNotificationModel eventData = EventNotificationModel.fromJson(
-        jsonDecode(EventNotificationModel.convertEventNotificationToJson(
-            acknowledgedEvent)));
-    String atkeyMicrosecondId,
-        currentAtsign = EventService().atClientInstance.currentAtSign;
-    atkeyMicrosecondId = eventData.key.split('createevent-')[1].split('@')[0];
-
-    eventData.group.members.forEach((member) {
-      if (member.atSign[0] != '@') member.atSign = '@' + member.atSign;
-      if (currentAtsign[0] != '@') currentAtsign = '@' + currentAtsign;
-
-      if (member.atSign == currentAtsign) {
-        member.tags['isAccepted'] =
-            isAccepted != null ? isAccepted : member.tags['isAccepted'];
-        member.tags['isSharing'] =
-            isSharing != null ? isSharing : member.tags['isSharing'];
-        member.tags['isExited'] =
-            isExited != null ? isExited : member.tags['isExited'];
-        print('matched:${isAccepted}, tags:${member.tags}');
-      }
-    });
-
-    AtKey atKey = AtKey()
-      ..metadata = Metadata()
-      ..metadata.ttr = -1
-      ..metadata.ccd = true
-      ..sharedWith = eventData.atsignCreator
-      ..sharedBy = currentAtsign;
-    atKey.key = 'eventacknowledged-$atkeyMicrosecondId';
-    eventData.key = atKey.key;
-
-    var notification =
-        EventNotificationModel.convertEventNotificationToJson(eventData);
-
-    var result = await EventService().atClientInstance.put(atKey, notification);
-    return result;
-  }
-
-  Future<bool> checkAtsign(String atsign) async {
-    if (atsign == null) {
-      return false;
-    } else if (!atsign.contains('@')) {
-      atsign = '@' + atsign;
-    }
-    var checkPresence =
-        await AtLookupImpl.findSecondary(atsign, rootDomain, 64);
-    return checkPresence != null;
-  }
-
   dynamic createEventFormValidation() {
-    EventNotificationModel eventData = EventService().eventNotificationModel;
-    if (eventData.group.members == null || eventData.group.members.isEmpty) {
-      return 'add contacts';
-    } else if (eventData.title == null || eventData.title.trim().isEmpty) {
-      return 'add title';
+    var eventData = EventService().eventNotificationModel!;
+    if (eventData.group!.members == null ||
+        // ignore: prefer_is_empty
+        eventData.group!.members!.length < 1) {
+      return 'Add contacts';
+      // ignore: prefer_is_empty
+    } else if (eventData.title == null || eventData.title!.trim().length < 1) {
+      return 'Add title';
     } else if (eventData.venue == null ||
-        eventData.venue.label == null ||
-        eventData.venue.latitude == null ||
-        eventData.venue.longitude == null) {
-      return 'add venue';
-    } else if (eventData.event.isRecurring == null) {
-      return 'select event type';
-    } else if (eventData.event.isRecurring == false &&
+        eventData.venue!.label == null ||
+        eventData.venue!.latitude == null ||
+        eventData.venue!.longitude == null) {
+      return 'Add venue';
+    } else if (eventData.event!.isRecurring == null) {
+      return 'Select Timings';
+    } else if (eventData.event!.isRecurring == false &&
         checForOneDayEventFormValidation(eventData) is String) {
       return checForOneDayEventFormValidation(eventData);
-    } else if (eventData.event.isRecurring == true &&
+    } else if (eventData.event!.isRecurring == true &&
         checForRecurringeDayEventFormValidation(eventData) is String) {
       return checForRecurringeDayEventFormValidation(eventData);
     } else {
@@ -439,40 +328,37 @@ class EventService {
   }
 
   dynamic checForOneDayEventFormValidation(EventNotificationModel eventData) {
-    if (eventData.event.date == null) {
+    if (eventData.event!.date == null) {
       return 'add event date';
     }
-    if (eventData.event.endDate == null) {
+    if (eventData.event!.endDate == null) {
       return 'add event date';
     }
-    if (eventData.event.startTime == null) {
+    if (eventData.event!.startTime == null) {
       return 'add event start time';
     }
-    if (eventData.event.endTime == null) {
+    if (eventData.event!.endTime == null) {
       return 'add event end time';
     }
-    // for time
     if (!isEventUpdate) {
-      if (eventData.event.startTime.difference(DateTime.now()).inMinutes < 0) {
+      if (eventData.event!.startTime!.difference(DateTime.now()).inMinutes <
+          0) {
         return 'Start Time cannot be in past';
       }
     }
 
-    if (eventData.event.endTime.difference(DateTime.now()).inMinutes < 0) {
+    if (eventData.event!.endTime!.difference(DateTime.now()).inMinutes < 0) {
       return 'End Time cannot be in past';
     }
 
-    if (eventData.event.endTime
-            .difference(eventData.event.startTime)
+    if (eventData.event!.endTime!
+            .difference(eventData.event!.startTime!)
             .inMinutes <
         0) {
-      print('valdation eventData.event.startTime ${eventData.event.startTime}');
-      print('valdation eventData.event.endTime ${eventData.event.endTime}');
-
       return 'Start time cannot be after End time';
     }
 
-    if (eventData.event.endTime == eventData.event.startTime) {
+    if (eventData.event!.endTime == eventData.event!.startTime) {
       return 'Start time and End time cannot be same';
     }
     return true;
@@ -480,35 +366,49 @@ class EventService {
 
   dynamic checForRecurringeDayEventFormValidation(
       EventNotificationModel eventData) {
-    if (eventData.event.repeatDuration == null) {
+    if (eventData.event!.repeatDuration == null) {
       return 'add repeat cycle';
     }
-    if (eventData.event.repeatCycle == null) {
+    if (eventData.event!.repeatCycle == null) {
       return 'add repeat cycle category';
-    } else if (eventData.event.repeatCycle == RepeatCycle.WEEK &&
-        eventData.event.occursOn == null) {
+    } else if (eventData.event!.repeatCycle == RepeatCycle.WEEK &&
+        eventData.event!.occursOn == null) {
       return 'select event day';
-    } else if (eventData.event.repeatCycle == RepeatCycle.MONTH &&
-        eventData.event.date == null) {
+    } else if (eventData.event!.repeatCycle == RepeatCycle.MONTH &&
+        eventData.event!.date == null) {
       return 'select event date';
-    } else if (eventData.event.startTime == null) {
+    } else if (eventData.event!.startTime == null) {
       return 'add event start time';
-    } else if (eventData.event.endTime == null) {
+    } else if (eventData.event!.endTime == null) {
       return 'add event end time';
-    } else if (eventData.event.endsOn == null) {
+    } else if (eventData.event!.endsOn == null) {
       return 'add event ending details';
-    } else if (eventData.event.endsOn == EndsOn.ON &&
-        eventData.event.endEventOnDate == null) {
+    } else if (eventData.event!.endsOn == EndsOn.ON &&
+        eventData.event!.endEventOnDate == null) {
       return 'add end event date';
-    } else if (eventData.event.endsOn == EndsOn.AFTER &&
-        eventData.event.endEventAfterOccurance == null) {
+    } else if (eventData.event!.endsOn == EndsOn.AFTER &&
+        eventData.event!.endEventAfterOccurance == null) {
       return 'add event occurance';
     }
   }
 
-  getAtKey(String regexKey) {
-    AtKey atKey = AtKey.fromString(regexKey);
-    atKey.metadata.ttr = -1;
+  AtKey getAtKey(String regexKey) {
+    var atKey = AtKey.fromString(regexKey);
+    atKey.metadata!.ttr = -1;
+    // atKey.metadata.ttl = MixedConstants.maxTTL; // 7 days
+    atKey.metadata!.ccd = true;
     return atKey;
+  }
+
+  Future<bool> checkAtsign(String receiver) async {
+    // ignore: unnecessary_null_comparison
+    if (receiver == null) {
+      return false;
+    } else if (!receiver.contains('@')) {
+      receiver = '@' + receiver;
+    }
+    var checkPresence = await AtLookupImpl.findSecondary(
+        receiver, MixedConstants.ROOT_DOMAIN, 64);
+    return checkPresence != null;
   }
 }

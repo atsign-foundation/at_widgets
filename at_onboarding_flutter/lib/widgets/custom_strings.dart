@@ -13,10 +13,10 @@ class CustomStrings {
   String invalidCram(String atsign) =>
       'Click on \"${Strings.saveButtonTitle}"\ for pairing $atsign with the device using backupzip file. Otherwise provide a valid QRcode';
 
-  String pairedAtsign(String atsign) =>
+  String pairedAtsign(String? atsign) =>
       '$atsign was already paired with this device. First delete/reset this @sign from device to add.';
 
-  String atsignMismatch(String givenAtsign, {bool isQr = false}) {
+  String atsignMismatch(String? givenAtsign, {bool isQr = false}) {
     if (isQr) {
       return '@sign mismatches. Please provide the QRcode of $givenAtsign to pair.';
     } else {

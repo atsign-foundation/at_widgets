@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:at_location_flutter/utils/constants/constants.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
 import 'api_service.dart';
 
@@ -13,7 +14,7 @@ class DistanceCalculate {
     try {
       var url =
           'https://router.hereapi.com/v8/routes?transportMode=car&origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&return=summary&apiKey=${MixedConstants.API_KEY}';
-      var response = await ApiService().getRequest("$url");
+      var response = await ApiService().getRequest('$url');
       var data = response;
       data = jsonDecode(data['body']);
       var _min = (data['routes'][0]['sections'][0]['summary']['duration'] / 60);

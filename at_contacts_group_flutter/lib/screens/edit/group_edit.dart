@@ -1,3 +1,4 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/image_picker.dart';
@@ -7,35 +8,38 @@ import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'dart:typed_data';
-import 'package:emoji_picker/emoji_picker.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 class GroupEdit extends StatefulWidget {
   final AtGroup group;
-  GroupEdit({@required this.group});
+  GroupEdit({required this.group});
 
   @override
   _GroupEditState createState() => _GroupEditState();
 }
 
 class _GroupEditState extends State<GroupEdit> {
-  String groupName;
-  bool isLoading;
-  Uint8List groupPicture;
+  String? groupName;
+  late bool isLoading;
+  Uint8List? groupPicture;
   bool isKeyBoardVisible = false, showEmojiPicker = false;
-  TextEditingController textController;
+  TextEditingController? textController;
   FocusNode textFieldFocus = FocusNode();
 
   @override
   void initState() {
     super.initState();
     isLoading = false;
+    // ignore: unnecessary_null_comparison
     if (widget.group != null) groupName = widget.group.displayName;
 
     textController = TextEditingController.fromValue(
       TextEditingValue(
-        text: groupName != null ? groupName : '',
+        text: groupName != null ? groupName! : '',
         selection: TextSelection.collapsed(offset: -1),
       ),
     );
@@ -57,6 +61,9 @@ class _GroupEditState extends State<GroupEdit> {
             child: Container(
               padding: EdgeInsets.only(left: 10),
               child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
                 child: Text(
                   'Cancel',
                   style: TextStyle(
@@ -65,9 +72,6 @@ class _GroupEditState extends State<GroupEdit> {
                           : AllColors().Black,
                       fontSize: 14.toFont),
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
               ),
             ),
           ),
@@ -89,12 +93,12 @@ class _GroupEditState extends State<GroupEdit> {
                         color: AllColors().ORANGE, fontSize: 15.toFont)),
           ),
           onTrailingIconPressed: () async {
-            groupName = textController.text;
+            groupName = textController!.text;
             if (groupName != null) {
-              if (groupName.trim().isNotEmpty) {
-                AtGroup group = widget.group;
-                group.displayName = groupName;
-                group.groupName = groupName;
+              if (groupName!.trim().isNotEmpty) {
+                var group = widget.group;
+                group.displayName = groupName!;
+                group.groupName = groupName!;
                 setState(() {
                   isLoading = true;
                 });
@@ -119,7 +123,7 @@ class _GroupEditState extends State<GroupEdit> {
           children: [
             (widget.group.groupPicture != null && groupPicture != null)
                 ? Image.memory(
-                    groupPicture,
+                    groupPicture!,
                     width: double.infinity,
                     height: 272.toHeight,
                     fit: BoxFit.fill,
@@ -230,16 +234,29 @@ class _GroupEditState extends State<GroupEdit> {
                     showEmojiPicker
                         ? Stack(children: [
                             Container(
-                              // bottom: 0,
+                              height: 250,
                               child: EmojiPicker(
                                 key: UniqueKey(),
-                                rows: 5,
-                                columns: 8,
-                                buttonMode: ButtonMode.MATERIAL,
-                                // recommendKeywords: ["happy", "sad"],
-                                numRecommended: 10,
-                                onEmojiSelected: (emoji, category) {
-                                  textController.text += emoji.emoji;
+                                config: Config(
+                                    columns: 7,
+                                    emojiSizeMax: 32.0,
+                                    verticalSpacing: 0,
+                                    horizontalSpacing: 0,
+                                    initCategory: Category.RECENT,
+                                    bgColor: Color(0xFFF2F2F2),
+                                    indicatorColor: Colors.blue,
+                                    iconColor: Colors.grey,
+                                    iconColorSelected: Colors.blue,
+                                    progressIndicatorColor: Colors.blue,
+                                    showRecentsTab: true,
+                                    recentsLimit: 28,
+                                    noRecentsText: "No Recents",
+                                    noRecentsStyle: const TextStyle(
+                                        fontSize: 20, color: Colors.black26),
+                                    categoryIcons: const CategoryIcons(),
+                                    buttonMode: ButtonMode.MATERIAL),
+                                onEmojiSelected: (category, emoji) {
+                                  textController!.text += emoji.emoji;
                                 },
                               ),
                             ),

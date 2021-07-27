@@ -1,8 +1,9 @@
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-bottomSheet(BuildContext context, T, double height, {Function onSheetCLosed}) {
-  Future<void> future = showModalBottomSheet(
+void bottomSheet(BuildContext context, T, double height,
+    {Function? onSheetCLosed}) {
+  var future = showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: StadiumBorder(),

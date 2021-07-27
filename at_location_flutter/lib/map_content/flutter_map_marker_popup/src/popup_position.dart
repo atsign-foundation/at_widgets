@@ -11,7 +11,7 @@ class PopupPosition {
     Marker marker,
     PopupSnap snap,
   ) {
-    final CustomPoint markerPosition = _markerPosition(mapState, marker);
+    final markerPosition = _markerPosition(mapState, marker);
 
     return _containerFor(
       mapState.size,
@@ -21,23 +21,23 @@ class PopupPosition {
     );
   }
 
-  static PopupContainer _containerFor(CustomPoint visibleSize,
+  static PopupContainer _containerFor(CustomPoint? visibleSize,
       CustomPoint markerPosition, CustomPoint markerSize, PopupSnap snap) {
     // Note: We always add the popup even if it might not be visible. This
     //       ensures the popup state is maintained even when it is not visible.
     switch (snap) {
       case PopupSnap.left:
-        return _snapLeft(visibleSize, markerPosition, markerSize);
+        return _snapLeft(visibleSize!, markerPosition, markerSize);
       case PopupSnap.top:
-        return _snapTop(visibleSize, markerPosition, markerSize);
+        return _snapTop(visibleSize!, markerPosition, markerSize);
       case PopupSnap.right:
-        return _snapRight(visibleSize, markerPosition, markerSize);
+        return _snapRight(visibleSize!, markerPosition, markerSize);
       case PopupSnap.bottom:
-        return _snapBottom(visibleSize, markerPosition, markerSize);
+        return _snapBottom(visibleSize!, markerPosition, markerSize);
       case PopupSnap.center:
-        return _snapCenter(visibleSize, markerPosition, markerSize);
+        return _snapCenter(visibleSize!, markerPosition, markerSize);
       default:
-        return _snapTop(visibleSize, markerPosition, markerSize);
+        return _snapTop(visibleSize!, markerPosition, markerSize);
     }
   }
 
@@ -45,7 +45,7 @@ class PopupPosition {
       CustomPoint markerPosition, CustomPoint markerSize) {
     return PopupContainer(
       size: visibleSize,
-      right: visibleSize.x - markerPosition.x,
+      right: visibleSize.x - (markerPosition.x as double),
       top: markerPosition.y - (visibleSize.y / 2) + (markerSize.y / 2),
       alignment: Alignment.centerRight,
     );
@@ -57,7 +57,7 @@ class PopupPosition {
       size: visibleSize,
       alignment: Alignment.bottomCenter,
       left: markerPosition.x - (visibleSize.x / 2) + (markerSize.x / 2),
-      bottom: visibleSize.y - markerPosition.y,
+      bottom: visibleSize.y - (markerPosition.y as double),
     );
   }
 
@@ -66,7 +66,7 @@ class PopupPosition {
     return PopupContainer(
       size: visibleSize,
       alignment: Alignment.centerLeft,
-      left: markerPosition.x + markerSize.x,
+      left: markerPosition.x + (markerSize.x as double),
       top: markerPosition.y - (visibleSize.y / 2) + (markerSize.y / 2),
     );
   }
@@ -77,7 +77,7 @@ class PopupPosition {
       size: visibleSize,
       alignment: Alignment.topCenter,
       left: markerPosition.x - (visibleSize.x / 2) + (markerSize.x / 2),
-      top: markerPosition.y + markerSize.y,
+      top: markerPosition.y + (markerSize.y as double),
     );
   }
 
@@ -94,7 +94,7 @@ class PopupPosition {
   static CustomPoint _markerPosition(MapState mapState, Marker marker) {
     var pos = mapState.project(marker.point);
     pos = pos.multiplyBy(mapState.getZoomScale(mapState.zoom, mapState.zoom)) -
-        mapState.getPixelOrigin();
+        mapState.getPixelOrigin()!;
 
     return CustomPoint((pos.x - (marker.width - marker.anchor.left)).toDouble(),
         (pos.y - (marker.height - marker.anchor.top)).toDouble());

@@ -11,8 +11,8 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  String activeAtSign;
-  GlobalKey<ScaffoldState> scaffoldKey;
+  String? activeAtSign;
+  GlobalKey<ScaffoldState>? scaffoldKey;
   String chatWithAtSign = '';
   bool showOptions = false;
 
@@ -84,7 +84,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       SizedBox(height: 20.0),
                       TextButton(
                         onPressed: () {
-                          scaffoldKey.currentState
+                          scaffoldKey!.currentState!
                               .showBottomSheet((context) => ChatScreen());
                         },
                         child: Container(
@@ -212,7 +212,7 @@ class _SecondScreenState extends State<SecondScreen> {
       activeAtSign = currentAtSign;
     });
     initializeChatService(
-        clientSdkService.atClientServiceInstance.atClient, activeAtSign,
+        clientSdkService.atClientServiceInstance!.atClient!, activeAtSign!,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
@@ -229,7 +229,7 @@ class _SecondScreenState extends State<SecondScreen> {
         groupId != null &&
         groupId != '') {
       setChatWithAtSign(null, isGroup: true, groupId: groupId, groupMembers: [
-        activeAtSign,
+        activeAtSign!,
         member1.startsWith('@') ? member1 : '@' + member1,
         member2.startsWith('@') ? member2 : '@' + member2
       ]);

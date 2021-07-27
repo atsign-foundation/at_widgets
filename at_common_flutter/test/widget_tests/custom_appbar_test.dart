@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _homeWidget({@required Widget home}) {
+  Widget _homeWidget({required Widget home}) {
     return TestMaterialApp(home: home);
   }
 
@@ -117,7 +117,7 @@ void main() {
       )));
       expect(find.byKey(uniqueKey), findsOneWidget);
       final appBar = tester.widget<CustomAppBar>(find.byType(CustomAppBar));
-      expect(appBar.onTrailingIconPressed.call(), null);
+      expect(appBar.onTrailingIconPressed!.call(), null);
     });
 
     testWidgets('CustomAppBar with trailing Icons disabled',
@@ -153,7 +153,7 @@ void main() {
           find.byWidgetPredicate((Widget widget) =>
               widget is Text && widget.data == TextStrings().buttonClose),
           findsOneWidget);
-      expect(appBar.onTrailingIconPressed.call(), null);
+      expect(appBar.onTrailingIconPressed!.call(), null);
     });
   });
 }

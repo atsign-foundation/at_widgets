@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class ErrorScreen extends StatelessWidget {
-  final Function onPressed;
+  final Function? onPressed;
   ErrorScreen({this.onPressed});
   @override
   Widget build(BuildContext context) {
@@ -26,8 +26,8 @@ class ErrorScreen extends StatelessWidget {
                 ? AllColors().WHITE
                 : AllColors().Black,
             onPressed: () async {
-              if (this.onPressed != null) {
-                onPressed();
+              if (onPressed != null) {
+                onPressed!();
               }
             },
           )

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -10,40 +11,58 @@ import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
 import 'sharing_location_service.dart';
+import 'sync_secondary.dart';
 
 class AtLocationNotificationListener {
   AtLocationNotificationListener._();
   static final _instance = AtLocationNotificationListener._();
   factory AtLocationNotificationListener() => _instance;
   final String locationKey = 'locationnotify';
-  AtClientImpl atClientInstance;
-  String currentAtSign;
-  GlobalKey<NavigatorState> navKey;
+  AtClientImpl? atClientInstance;
+  String? currentAtSign;
+  bool _monitorStarted = false;
+  late bool showDialogBox;
+  late GlobalKey<NavigatorState> navKey;
   // ignore: non_constant_identifier_names
-  String ROOT_DOMAIN;
+  String? ROOT_DOMAIN;
 
-  init(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
-      GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
-      {Function newGetAtValueFromMainApp}) {
+  void init(
+      AtClientImpl atClientInstanceFromApp,
+      String currentAtSignFromApp,
+      GlobalKey<NavigatorState> navKeyFromMainApp,
+      String rootDomain,
+      bool showDialogBox,
+      {Function? newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     navKey = navKeyFromMainApp;
+    this.showDialogBox = showDialogBox;
     ROOT_DOMAIN = rootDomain;
     MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
         newGetAtValueFromMainApp: newGetAtValueFromMainApp);
+
     startMonitor();
   }
 
   Future<bool> startMonitor() async {
-    String privateKey = await getPrivateKey(currentAtSign);
-    atClientInstance.startMonitor(privateKey, _notificationCallback);
-    print("Monitor started in location package");
+    if (!_monitorStarted) {
+      var privateKey = await (getPrivateKey(currentAtSign!));
+      await atClientInstance!.startMonitor(privateKey!, fnCallBack);
+      print('Monitor started in location package');
+      _monitorStarted = true;
+    }
     return true;
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    return await atClientInstance.getPrivateKey(atsign);
+  Future<String?> getPrivateKey(String atsign) async {
+    return await atClientInstance!.getPrivateKey(atsign);
+  }
+
+  void fnCallBack(var response) async {
+    print('fnCallBack called');
+    SyncSecondary()
+        .completePrioritySync(response, afterSync: _notificationCallback);
   }
 
   void _notificationCallback(dynamic notification) async {
@@ -63,7 +82,9 @@ class AtLocationNotificationListener {
         print('$notificationKey deleted');
         MasterLocationService().deleteReceivedData(fromAtSign);
         return;
-      } else if (atKey
+      }
+
+      if (atKey
           .toString()
           .toLowerCase()
           .contains(MixedConstants.SHARE_LOCATION)) {
@@ -71,15 +92,35 @@ class AtLocationNotificationListener {
         KeyStreamService().removeData(atKey.toString());
         return;
       }
+
+      if (atKey
+          .toString()
+          .toLowerCase()
+          .contains(MixedConstants.REQUEST_LOCATION)) {
+        print('$notificationKey containing requestlocation deleted');
+        KeyStreamService().removeData(atKey.toString());
+        return;
+      }
     }
 
-    var decryptedMessage = await atClientInstance.encryptionService
+    var decryptedMessage = await atClientInstance!.encryptionService!
         .decrypt(value, fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
-        .catchError((e) => print("error in decrypting: $e"));
+        .catchError((e) => print('error in decrypting: $e'));
+
+    if (atKey
+        .toString()
+        .toLowerCase()
+        .contains(MixedConstants.DELETE_REQUEST_LOCATION_ACK)) {
+      var msg =
+          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      // ignore: unawaited_futures
+      RequestLocationService().deleteKey(msg);
+      return;
+    }
 
     if (atKey.toString().toLowerCase().contains(locationKey)) {
-      LocationNotificationModel msg =
+      var msg =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       MasterLocationService().updateHybridList(msg);
       return;
@@ -89,8 +130,9 @@ class AtLocationNotificationListener {
         .toString()
         .toLowerCase()
         .contains(MixedConstants.SHARE_LOCATION_ACK)) {
-      LocationNotificationModel locationData =
+      var locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      // ignore: unawaited_futures
       SharingLocationService().updateWithShareLocationAcknowledge(locationData);
       return;
     }
@@ -99,10 +141,13 @@ class AtLocationNotificationListener {
         .toString()
         .toLowerCase()
         .contains(MixedConstants.SHARE_LOCATION)) {
-      LocationNotificationModel locationData =
+      var locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
+        if (locationData.rePrompt) {
+          await showMyDialog(fromAtSign, locationData);
+        }
       } else {
         await KeyStreamService().addDataToList(locationData);
         await showMyDialog(fromAtSign, locationData);
@@ -114,8 +159,9 @@ class AtLocationNotificationListener {
         .toString()
         .toLowerCase()
         .contains(MixedConstants.REQUEST_LOCATION_ACK)) {
-      LocationNotificationModel locationData =
+      var locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      // ignore: unawaited_futures
       RequestLocationService()
           .updateWithRequestLocationAcknowledge(locationData);
       return;
@@ -125,10 +171,13 @@ class AtLocationNotificationListener {
         .toString()
         .toLowerCase()
         .contains(MixedConstants.REQUEST_LOCATION)) {
-      LocationNotificationModel locationData =
+      var locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
+        if (locationData.rePrompt) {
+          await showMyDialog(fromAtSign, locationData);
+        }
       } else {
         await KeyStreamService().addDataToList(locationData);
         await showMyDialog(fromAtSign, locationData);
@@ -138,16 +187,19 @@ class AtLocationNotificationListener {
   }
 
   Future<void> showMyDialog(
-      String fromAtSign, LocationNotificationModel locationData) async {
-    return showDialog<void>(
-      context: navKey.currentContext,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return NotificationDialog(
-          userName: fromAtSign,
-          locationData: locationData,
-        );
-      },
-    );
+      String? fromAtSign, LocationNotificationModel locationData) async {
+    print('showMyDialog called');
+    if (showDialogBox) {
+      return showDialog<void>(
+        context: navKey.currentContext!,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return NotificationDialog(
+            userName: fromAtSign,
+            locationData: locationData,
+          );
+        },
+      );
+    }
   }
 }

@@ -6,7 +6,9 @@
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
 import 'dart:typed_data';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
@@ -19,15 +21,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class CustomListTile extends StatefulWidget {
-  final Function onTap;
-  final Function onTrailingPressed;
+  final Function? onTap;
+  final Function? onTrailingPressed;
   final bool asSelectionTile;
-  final GroupContactsModel item;
+  final GroupContactsModel? item;
   final bool selectSingle;
-  final ValueChanged<List<GroupContactsModel>> selectedList;
+  final ValueChanged<List<GroupContactsModel?>>? selectedList;
 
   const CustomListTile({
-    Key key,
+    Key? key,
     this.onTap,
     this.onTrailingPressed,
     this.asSelectionTile = false,
@@ -42,14 +44,15 @@ class CustomListTile extends StatefulWidget {
 class _CustomListTileState extends State<CustomListTile> {
   bool isSelected = false;
   bool isLoading = false;
-  GroupService _groupService;
-  AtContact localContact;
-  AtGroup localGroup;
+  late GroupService _groupService;
+  AtContact? localContact;
+  AtGroup? localGroup;
   @override
   void initState() {
     _groupService = GroupService();
     // if (!widget.selectSingle) {
-    for (GroupContactsModel groupContact
+    // ignore: omit_local_variable_types
+    for (GroupContactsModel? groupContact
         in _groupService.selectedGroupContacts) {
       if (widget.item.toString() == groupContact.toString()) {
         isSelected = true;
@@ -68,7 +71,8 @@ class _CustomListTileState extends State<CustomListTile> {
     _groupService = GroupService();
 
     // if (!widget.selectSingle) {
-    for (GroupContactsModel groupContact
+    // ignore: omit_local_variable_types
+    for (GroupContactsModel? groupContact
         in _groupService.selectedGroupContacts) {
       if (widget.item.toString() == groupContact.toString()) {
         isSelected = true;
@@ -82,30 +86,31 @@ class _CustomListTileState extends State<CustomListTile> {
     super.didChangeDependencies();
   }
 
-  Widget contactImage;
+  Widget? contactImage;
 
+  // ignore: always_declare_return_types
   getImage() async {
     setState(() {
       isLoading = true;
     });
     Uint8List image;
 
-    if (widget.item.contact == null) {
-      if (widget?.item?.group?.groupName == null) {
+    if (widget.item!.contact == null) {
+      if (widget.item?.group?.groupName == null) {
         contactImage = ContactInitial(
-            initials: widget.item.group.displayName.length > 3
-                ? widget?.item?.group?.displayName?.substring(0, 2)
-                : widget?.item?.group?.displayName ?? 'UG');
+            initials: (widget.item!.group!.displayName!.length > 3
+                ? widget.item?.group?.displayName?.substring(0, 2)
+                : widget.item?.group?.displayName ?? 'UG')!);
       } else {
         contactImage = ContactInitial(
-            initials: widget.item.group.groupName.length > 3
-                ? widget?.item?.group?.groupName?.substring(0, 2)
-                : widget?.item?.group?.groupName ?? 'UG');
+            initials: (widget.item!.group!.groupName!.length > 3
+                ? widget.item?.group?.groupName?.substring(0, 2)
+                : widget.item?.group?.groupName ?? 'UG')!);
       }
     } else {
-      if ((widget?.item?.contact?.tags != null &&
-          widget?.item?.contact?.tags['image'] != null)) {
-        List<int> intList = widget?.item?.contact?.tags['image'].cast<int>();
+      if ((widget.item?.contact?.tags != null &&
+          widget.item?.contact?.tags!['image'] != null)) {
+        List<int> intList = widget.item?.contact?.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
         image = await FlutterImageCompress.compressWithList(
           image,
@@ -118,9 +123,14 @@ class _CustomListTileState extends State<CustomListTile> {
           nonAsset: true,
         );
       } else {
-        contactImage = ContactInitial(
-          initials: widget?.item?.contact?.atSign?.substring(1, 3),
-        );
+        String initial;
+        if (widget.item?.contact?.atSign == null) {
+          initial = '    ';
+        } else {
+          initial = widget.item!.contact!.atSign!;
+        }
+
+        contactImage = ContactInitial(initials: initial);
       }
     }
 
@@ -133,12 +143,13 @@ class _CustomListTileState extends State<CustomListTile> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<GroupContactsModel>>(
+    return StreamBuilder<List<GroupContactsModel?>>(
         initialData: _groupService.selectedGroupContacts,
         stream: _groupService.selectedContactsStream,
         builder: (context, snapshot) {
           // if (!widget.selectSingle) {
-          for (GroupContactsModel groupContact
+          // ignore: omit_local_variable_types
+          for (GroupContactsModel? groupContact
               in _groupService.selectedGroupContacts) {
             if (widget.item.toString() == groupContact.toString()) {
               isSelected = true;
@@ -157,7 +168,7 @@ class _CustomListTileState extends State<CustomListTile> {
                 if (widget.selectSingle) {
                   _groupService.selectedGroupContacts = [];
                   _groupService.addGroupContact(widget.item);
-                  widget.selectedList([widget.item]);
+                  widget.selectedList!([widget.item]);
                   Navigator.pop(context);
                 } else if (!widget.selectSingle) {
                   setState(() {
@@ -170,25 +181,27 @@ class _CustomListTileState extends State<CustomListTile> {
                   });
                 }
               } else {
-                widget?.onTap();
+                widget.onTap!();
               }
             },
             title: Text(
-              widget.item.contact == null
-                  ? widget.item.group.displayName == null
-                      ? widget.item.group.groupName
-                      : widget.item.group.displayName
-                  : widget.item.contact.tags['name'] == null
-                      ? widget.item.contact.atSign.substring(1)
-                      : widget.item.contact.tags['name'],
+              widget.item!.contact == null
+                  // ignore: prefer_if_null_operators
+                  ? widget.item!.group!.displayName == null
+                      ? widget.item!.group!.groupName
+                      : widget.item!.group!.displayName
+                  // ignore: prefer_if_null_operators
+                  : widget.item!.contact!.tags!['name'] == null
+                      ? widget.item!.contact!.atSign!.substring(1)
+                      : widget.item!.contact!.tags!['name'],
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14.toFont,
               ),
             ),
             subtitle: Text(
-              widget?.item?.contact?.atSign ??
-                  '${widget?.item?.group?.members?.length} Members',
+              widget.item?.contact?.atSign ??
+                  '${widget.item?.group?.members?.length} Members',
               style: TextStyle(
                 color: AllColors().FADED_TEXT,
                 fontSize: 14.toFont,
@@ -204,11 +217,11 @@ class _CustomListTileState extends State<CustomListTile> {
                 child:
                     (isLoading) ? CircularProgressIndicator() : contactImage),
             trailing: IconButton(
-              onPressed: (widget?.asSelectionTile == false &&
+              onPressed: (widget.asSelectionTile == false &&
                       widget.onTrailingPressed != null)
-                  ? widget.onTrailingPressed
+                  ? widget.onTrailingPressed as void Function()?
                   : selectRemoveContact(),
-              icon: (widget.asSelectionTile ?? false)
+              icon: (widget.asSelectionTile)
                   ? (isSelected)
                       ? Icon(Icons.close)
                       : Icon(Icons.add)
@@ -223,5 +236,6 @@ class _CustomListTileState extends State<CustomListTile> {
         });
   }
 
+  // ignore: always_declare_return_types
   selectRemoveContact() {}
 }

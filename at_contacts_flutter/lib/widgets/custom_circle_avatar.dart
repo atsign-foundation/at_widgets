@@ -6,16 +6,17 @@
 
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
-  final String image;
+  final String? image;
   final double size;
   final bool nonAsset;
-  final Uint8List byteImage;
+  final Uint8List? byteImage;
 
   const CustomCircleAvatar({
-    Key key,
+    Key? key,
     this.image,
     this.size = 50,
     this.nonAsset = false,
@@ -33,8 +34,8 @@ class CustomCircleAvatar extends StatelessWidget {
         radius: (size - 5).toFont,
         backgroundColor: Colors.transparent,
         backgroundImage: nonAsset
-            ? Image.memory(byteImage).image
-            : AssetImage(image, package: 'at_contacts_flutter'),
+            ? Image.memory(byteImage!).image
+            : AssetImage(image!, package: 'at_contacts_flutter'),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'circle_marker_painter.dart';
 
-Widget buildMarkerCluster(List<Marker> markers, {HybridModel eventData}) {
+Widget buildMarkerCluster(List<Marker?> markers, {HybridModel? eventData}) {
   return Stack(
     alignment: Alignment.center,
     children: [
@@ -25,7 +25,7 @@ Widget buildMarkerCluster(List<Marker> markers, {HybridModel eventData}) {
                     children: [
                       Flexible(
                         child: Text(
-                          eventData.displayName ?? '...',
+                          eventData!.displayName ?? '...',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -36,14 +36,14 @@ Widget buildMarkerCluster(List<Marker> markers, {HybridModel eventData}) {
                       ),
                       Text(
                         ((markers.length - 1) == 1)
-                            ? "${markers.length - 1} person nearby"
-                            : "${markers.length - 1} people nearby",
+                            ? '${markers.length - 1} person nearby'
+                            : '${markers.length - 1} people nearby',
                         style: TextStyle(color: Colors.deepOrange),
                       ),
                     ],
                   )
                 : Text(
-                    "${markers.length} people nearby",
+                    '${markers.length} people nearby',
                     style: TextStyle(color: Colors.deepOrange),
                   ),
           )),

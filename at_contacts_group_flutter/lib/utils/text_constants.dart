@@ -1,6 +1,6 @@
 class TextConstants {
   TextConstants._();
-  static TextConstants _instance = TextConstants._();
+  static final TextConstants _instance = TextConstants._();
   factory TextConstants() => _instance;
 
   // ignore: non_constant_identifier_names

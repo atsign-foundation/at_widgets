@@ -1,7 +1,8 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong/latlong.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 
-Future<LatLng> getMyLocation() async {
+Future<LatLng?> getMyLocation() async {
   try {
     bool serviceEnabled;
     LocationPermission permission;
@@ -25,7 +26,7 @@ Future<LatLng> getMyLocation() async {
 
     if ((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse)) {
-      Position position = await Geolocator.getCurrentPosition();
+      var position = await Geolocator.getCurrentPosition();
       return LatLng(position.latitude, position.longitude);
     }
 

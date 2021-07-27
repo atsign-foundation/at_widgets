@@ -4,7 +4,8 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
-import 'package:latlong/latlong.dart' hide Path; // conflict with Path from UI
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart' hide Path; // conflict with Path from UI
 
 class PolygonLayerOptions extends LayerOptions {
   final List<Polygon> polygons;
@@ -12,7 +13,7 @@ class PolygonLayerOptions extends LayerOptions {
 
   /// screen space culling of polygons based on bounding box
   PolygonLayerOptions({
-    Key key,
+    Key? key,
     this.polygons = const [],
     this.polygonCulling = false,
     rebuild,
@@ -26,16 +27,16 @@ class PolygonLayerOptions extends LayerOptions {
 }
 
 class Polygon {
-  final List<LatLng> points;
+  final List<LatLng?>? points;
   final List<Offset> offsets = [];
-  final List<List<LatLng>> holePointsList;
-  final List<List<Offset>> holeOffsetsList;
+  final List<List<LatLng>>? holePointsList;
+  final List<List<Offset>>? holeOffsetsList;
   final Color color;
   final double borderStrokeWidth;
   final Color borderColor;
   final bool disableHolesBorder;
   final bool isDotted;
-  LatLngBounds boundingBox;
+  late LatLngBounds boundingBox;
 
   Polygon({
     this.points,
@@ -52,19 +53,19 @@ class Polygon {
 
 class PolygonLayerWidget extends StatelessWidget {
   final PolygonLayerOptions options;
-  PolygonLayerWidget({@required this.options}) : super(key: options.key);
+  PolygonLayerWidget({required this.options}) : super(key: options.key);
 
   @override
   Widget build(BuildContext context) {
-    final mapState = MapState.of(context);
+    final mapState = MapState.of(context)!;
     return PolygonLayer(options, mapState, mapState.onMoved);
   }
 }
 
 class PolygonLayer extends StatelessWidget {
   final PolygonLayerOptions polygonOpts;
-  final MapState map;
-  final Stream stream;
+  final MapState? map;
+  final Stream? stream;
 
   PolygonLayer(this.polygonOpts, this.map, this.stream)
       : super(key: polygonOpts.key);
@@ -73,7 +74,6 @@ class PolygonLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints bc) {
-        // TODO unused BoxContraints should remove?
         final size = Size(bc.maxWidth, bc.maxHeight);
         return _build(context, size);
       },
@@ -90,23 +90,25 @@ class PolygonLayer extends StatelessWidget {
           polygon.offsets.clear();
 
           if (null != polygon.holeOffsetsList) {
-            for (var offsets in polygon.holeOffsetsList) {
+            for (var offsets in polygon.holeOffsetsList!) {
               offsets.clear();
             }
           }
 
           if (polygonOpts.polygonCulling &&
-              !polygon.boundingBox.isOverlapping(map.bounds)) {
+              !polygon.boundingBox.isOverlapping(map!.bounds)) {
             // skip this polygon as it's offscreen
             continue;
           }
 
-          _fillOffsets(polygon.offsets, polygon.points);
+          _fillOffsets(polygon.offsets, polygon.points!);
 
           if (null != polygon.holePointsList) {
-            for (var i = 0, len = polygon.holePointsList.length; i < len; ++i) {
+            for (var i = 0, len = polygon.holePointsList!.length;
+                i < len;
+                ++i) {
               _fillOffsets(
-                  polygon.holeOffsetsList[i], polygon.holePointsList[i]);
+                  polygon.holeOffsetsList![i], polygon.holePointsList![i]);
             }
           }
 
@@ -127,13 +129,13 @@ class PolygonLayer extends StatelessWidget {
     );
   }
 
-  void _fillOffsets(final List<Offset> offsets, final List<LatLng> points) {
+  void _fillOffsets(final List<Offset> offsets, final List<LatLng?> points) {
     for (var i = 0, len = points.length; i < len; ++i) {
       var point = points[i];
 
-      var pos = map.project(point);
-      pos = pos.multiplyBy(map.getZoomScale(map.zoom, map.zoom)) -
-          map.getPixelOrigin();
+      var pos = map!.project(point);
+      pos = pos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) -
+          map!.getPixelOrigin()!;
       offsets.add(Offset(pos.x.toDouble(), pos.y.toDouble()));
       if (i > 0) {
         offsets.add(Offset(pos.x.toDouble(), pos.y.toDouble()));
@@ -171,7 +173,7 @@ class PolygonPainter extends CustomPainter {
 
         if (!polygonOpt.disableHolesBorder &&
             null != polygonOpt.holeOffsetsList) {
-          for (var offsets in polygonOpt.holeOffsetsList) {
+          for (var offsets in polygonOpt.holeOffsetsList!) {
             _paintDottedLine(
                 canvas, offsets, borderRadius, spacing, borderPaint);
           }
@@ -181,7 +183,7 @@ class PolygonPainter extends CustomPainter {
 
         if (!polygonOpt.disableHolesBorder &&
             null != polygonOpt.holeOffsetsList) {
-          for (var offsets in polygonOpt.holeOffsetsList) {
+          for (var offsets in polygonOpt.holeOffsetsList!) {
             _paintLine(canvas, offsets, borderRadius, borderPaint);
           }
         }
@@ -226,7 +228,7 @@ class PolygonPainter extends CustomPainter {
       canvas.saveLayer(rect, paint);
       paint.style = PaintingStyle.fill;
 
-      for (var offsets in polygonOpt.holeOffsetsList) {
+      for (var offsets in polygonOpt.holeOffsetsList!) {
         var path = Path();
         path.addPolygon(offsets, true);
         canvas.drawPath(path, paint);

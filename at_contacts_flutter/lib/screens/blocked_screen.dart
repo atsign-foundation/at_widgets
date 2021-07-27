@@ -1,11 +1,13 @@
 /// Screen exposed to see blocked contacts and unblock them
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/widgets/blocked_user_card.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class BlockedScreen extends StatefulWidget {
@@ -14,7 +16,7 @@ class BlockedScreen extends StatefulWidget {
 }
 
 class _BlockedScreenState extends State<BlockedScreen> {
-  ContactService _contactService;
+  late ContactService _contactService;
   @override
   void initState() {
     _contactService = ContactService();
@@ -50,7 +52,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                 child: StreamBuilder(
                   initialData: _contactService.blockContactList,
                   stream: _contactService.blockedContactStream,
-                  builder: (context, snapshot) {
+                  builder: (context, AsyncSnapshot snapshot) {
                     return snapshot.data.isEmpty
                         ? Center(
                             child: Text(
@@ -70,7 +72,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                             ),
                             itemBuilder: (context, index) {
                               return BlockedUserCard(
-                                blockeduser: snapshot.data[index],
+                                blockeduser: snapshot.data?[index],
                               );
                             },
                           );

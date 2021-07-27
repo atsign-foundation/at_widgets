@@ -10,16 +10,16 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
 class RequestLocationSheet extends StatefulWidget {
-  final Function onTap;
+  final Function? onTap;
   RequestLocationSheet({this.onTap});
   @override
   _RequestLocationSheetState createState() => _RequestLocationSheetState();
 }
 
 class _RequestLocationSheetState extends State<RequestLocationSheet> {
-  AtContact selectedContact;
-  bool isLoading;
-  String selectedOption, textField;
+  AtContact? selectedContact;
+  late bool isLoading;
+  String? selectedOption, textField;
 
   @override
   void initState() {
@@ -52,8 +52,11 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
             width: 330.toWidth,
             height: 50,
             hintText: 'Type @sign ',
-            initialValue: textField,
+            initialValue: textField ?? '',
             value: (str) {
+              if (!str.contains('@')) {
+                str = '@' + str;
+              }
               textField = str;
             },
             icon: Icons.contacts_rounded,
@@ -76,11 +79,11 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     );
   }
 
-  onRequestTap() async {
+  void onRequestTap() async {
     setState(() {
       isLoading = true;
     });
-    bool validAtSign = await checkAtsign(textField);
+    var validAtSign = await checkAtsign(textField);
 
     if (!validAtSign) {
       setState(() {
@@ -92,6 +95,14 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
 
     var result =
         await RequestLocationService().sendRequestLocationEvent(textField);
+
+    if (result == null) {
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.of(context).pop();
+      return;
+    }
 
     if (result == true) {
       CustomToast().show('Request Location sent', context);
@@ -107,7 +118,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     }
   }
 
-  Future<bool> checkAtsign(String atSign) async {
+  Future<bool> checkAtsign(String? atSign) async {
     if (atSign == null) {
       return false;
     } else if (!atSign.contains('@')) {

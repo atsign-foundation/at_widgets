@@ -4,7 +4,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 
 class CustomTextStyles {
   CustomTextStyles._();
-  static CustomTextStyles _instance = CustomTextStyles._();
+  static final CustomTextStyles _instance = CustomTextStyles._();
   factory CustomTextStyles() => _instance;
 
   TextStyle blackPlayfairDisplay38 = TextStyle(
@@ -15,6 +15,11 @@ class CustomTextStyles {
   TextStyle greyLabel14 = TextStyle(
     color: AllColors().GREY_LABEL,
     fontSize: 14.toFont,
+  );
+
+  TextStyle red12 = TextStyle(
+    color: AllColors().RED,
+    fontSize: 12.toFont,
   );
 
   TextStyle greyLabel12 = TextStyle(

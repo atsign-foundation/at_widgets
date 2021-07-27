@@ -18,8 +18,8 @@ class Strings {
 
   //public content
   static const String publicContentAppbarTitle = 'Public Content';
-  static String directoryUrl;
-  static String rootdomain;
+  static String? directoryUrl;
+  static String? rootdomain;
 
   static const String privateFollowersList =
       'Public cannot see your followers list when it’s set to private';
@@ -34,7 +34,7 @@ class Strings {
   //follow texts
   static const String followBack = 'Follow Back';
   static const String cancel = 'Cancel';
-  static String followBackDescription(String atsign) {
+  static String followBackDescription(String? atsign) {
     return '$atsign is following you. Tap on follow back to get connected.';
   }
 
@@ -46,26 +46,23 @@ class Strings {
   static const String atsignHintText = 'alice';
   static const String qrTitle = 'Follow @sign';
   static const String qrscanDescription =
-      'Scan the QR code of an @sign to follow';
+      'Toggle to scan the QR code of an @sign to follow';
   static const String submitButton = 'Submit';
   static const String existingFollower = 'You are already following ';
   static const String ownAtsign = 'You cannot follow your own @sign';
   static const String invalidAtsignMessage =
       'Please provide or scan a valid @sign to follow';
   // static const String atSignStatusMessage = 'This @sing is unreachable. P'
-  static String getAtSignStatusMessage(AtSignStatus status) {
+  static String getAtSignStatusMessage(AtSignStatus? status) {
     status ??= AtSignStatus.error;
     switch (status) {
       case AtSignStatus.unavailable:
       case AtSignStatus.notFound:
         return '@sign is not registered yet. Please try with the registered one.';
-        break;
       case AtSignStatus.error:
         return '@sign and the server is unreachable. Please try again';
-        break;
       default:
         return 'Unknown status. Please try again later.';
-        break;
     }
   }
 

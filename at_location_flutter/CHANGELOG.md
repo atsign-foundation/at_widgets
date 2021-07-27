@@ -1,3 +1,27 @@
+## [2.0.1] - 07/09/2021
+
+* Updated packages
+
+## [2.0.0] - 07/07/2021
+
+* Null safe support
+
+## [1.0.3] - 05/13/2021
+
+* Improved notification handling
+
+## [1.0.2] - 04/30/2021
+
+* Updated dependent packages
+
+## [1.0.1] - 04/23/2021
+
+* Resolved static analysis issues
+
+## [1.0.0] - 04/22/2021
+
+* Updated dependent packages
+
 ## [0.0.3] - 04/20/2021
 
 * Updated example app

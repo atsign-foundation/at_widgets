@@ -4,6 +4,7 @@ import 'package:at_location_flutter/common_components/display_tile.dart';
 import 'package:at_location_flutter/common_components/floating_icon.dart';
 import 'package:at_location_flutter/common_components/tasks.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
+import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/screens/request_location/request_location_sheet.dart';
 import 'package:at_location_flutter/screens/share_location/share_location_sheet.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
@@ -15,7 +16,9 @@ import 'package:at_location_flutter/show_location.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong/latlong.dart';
+import 'package:geolocator/geolocator.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,7 +30,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   PanelController pc = PanelController();
-  LatLng myLatLng;
+  LatLng? myLatLng;
 
   @override
   void initState() {
@@ -36,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
     KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
   }
 
-  _getMyLocation() async {
-    LatLng newMyLatLng = await getMyLocation();
+  void _getMyLocation() async {
+    var newMyLatLng = await getMyLocation();
     if (newMyLatLng != null) {
       if (mounted) {
         setState(() {
@@ -45,7 +48,21 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }
+
+    var permission = await Geolocator.checkPermission();
+
+    if (((permission == LocationPermission.always) ||
+        (permission == LocationPermission.whileInUse))) {
+      Geolocator.getPositionStream(distanceFilter: 2)
+          .listen((locationStream) async {
+        setState(() {
+          myLatLng = LatLng(locationStream.latitude, locationStream.longitude);
+        });
+      });
+    }
   }
+
+  MapController mapController = MapController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +72,10 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Stack(
         children: [
           (myLatLng != null)
-              ? ShowLocation(UniqueKey(), location: myLatLng)
-              : ShowLocation(
+              ? showLocation(UniqueKey(), mapController, location: myLatLng)
+              : showLocation(
                   UniqueKey(),
+                  mapController,
                 ),
           Positioned(
             top: 30,
@@ -92,9 +110,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           minHeight: 267.toHeight,
                           maxHeight: 530.toHeight,
                           panelBuilder: (scrollController) {
-                            if (snapshot.data.isNotEmpty) {
-                              return collapsedContent(false, scrollController,
-                                  getListView(snapshot.data, scrollController));
+                            if (snapshot.data!.isNotEmpty) {
+                              return collapsedContent(
+                                  false,
+                                  scrollController,
+                                  getListView(
+                                      snapshot.data!, scrollController));
                             } else {
                               return collapsedContent(false, scrollController,
                                   emptyWidget('No Data Found!!'));
@@ -141,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: T);
   }
 
-  getListView(List<KeyLocationModel> allNotifications,
+  Widget getListView(List<KeyLocationModel> allNotifications,
       ScrollController slidingScrollController) {
     return ListView(
       children: allNotifications.map((notification) {
@@ -149,18 +170,25 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             InkWell(
               onTap: () {
-                HomeScreenService()
-                    .onLocationModelTap(notification.locationNotificationModel);
+                HomeScreenService().onLocationModelTap(
+                    notification.locationNotificationModel!,
+                    notification.haveResponded!);
               },
               child: DisplayTile(
                 atsignCreator:
-                    notification.locationNotificationModel.atsignCreator ==
+                    notification.locationNotificationModel!.atsignCreator ==
                             AtLocationNotificationListener().currentAtSign
-                        ? notification.locationNotificationModel.receiver
-                        : notification.locationNotificationModel.atsignCreator,
-                title: getTitle(notification.locationNotificationModel),
-                subTitle: getSubTitle(notification.locationNotificationModel),
-                semiTitle: getSemiTitle(notification.locationNotificationModel),
+                        ? notification.locationNotificationModel!.receiver
+                        : notification.locationNotificationModel!.atsignCreator,
+                title: getTitle(notification.locationNotificationModel!),
+                subTitle: getSubTitle(notification.locationNotificationModel!),
+                semiTitle: getSemiTitle(notification.locationNotificationModel!,
+                    notification.haveResponded!),
+                showRetry: calculateShowRetry(notification),
+                onRetryTapped: () {
+                  HomeScreenService().onLocationModelTap(
+                      notification.locationNotificationModel!, false);
+                },
               ),
             ),
             Divider()

@@ -20,16 +20,16 @@ class Connections extends StatefulWidget {
   final atClientserviceInstance;
 
   ///color to match with your app theme. Defaults to [orange].
-  final Color appColor;
+  final Color? appColor;
 
   ///name of the follower atsign received from notification to follow them back immediately.
-  final String followerAtsignTitle;
+  final String? followerAtsignTitle;
 
   ///atsign to follow from webapp.
-  final String followAtsignTitle;
+  final String? followAtsignTitle;
   // final bool isLightTheme;
   Connections(
-      {@required this.atClientserviceInstance,
+      {required this.atClientserviceInstance,
       this.appColor,
       this.followAtsignTitle,
       this.followerAtsignTitle});
@@ -39,7 +39,7 @@ class Connections extends StatefulWidget {
 
 class _ConnectionsState extends State<Connections> {
   List<ConnectionTab> connectionTabs = [];
-  int lastAccessedIndex;
+  int? lastAccessedIndex;
   TextEditingController searchController = TextEditingController();
   ConnectionProvider _connectionProvider = ConnectionProvider();
   var _connectionService = ConnectionsService();
@@ -48,8 +48,10 @@ class _ConnectionsState extends State<Connections> {
 
   @override
   void initState() {
-    _connectionService.init();
-    _connectionProvider.init();
+    String currentAtsign =
+        (widget.atClientserviceInstance.atClient!.currentAtSign) ?? '';
+    _connectionService.init(currentAtsign);
+    _connectionProvider.init(currentAtsign);
     ColorConstants.darkTheme = false;
     ColorConstants.appColor = widget.appColor;
     SDKService().setClientService = widget.atClientserviceInstance;
@@ -62,8 +64,6 @@ class _ConnectionsState extends State<Connections> {
 
     _connectionService.followerAtsign = widget.followerAtsignTitle;
     _connectionService.followAtsign = widget.followAtsignTitle;
-    // followAtsignTitle = widget.followAtsignTitle;
-    // followerAtsignTitle = widget.followerAtsignTitle;
 
     super.initState();
   }
@@ -84,14 +84,14 @@ class _ConnectionsState extends State<Connections> {
         body: ChangeNotifierProvider<ConnectionProvider>.value(
           builder: (context, child) {
             if (_connectionService.isMonitorStarted)
-              return child;
+              return child!;
             else {
               return SizedBox(
                 height: SizeConfig().screenHeight * 0.6,
                 width: SizeConfig().screenWidth,
                 child: Center(
                   child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
+                      valueColor: AlwaysStoppedAnimation<Color?>(
                           ColorConstants.buttonHighLightColor)),
                 ),
               );
@@ -107,7 +107,7 @@ class _ConnectionsState extends State<Connections> {
                     width: SizeConfig().screenWidth,
                     child: Center(
                       child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
+                          valueColor: AlwaysStoppedAnimation<Color?>(
                               ColorConstants.buttonHighLightColor)),
                     ),
                   )
@@ -122,7 +122,8 @@ class _ConnectionsState extends State<Connections> {
                               index++)
                             CustomButton(
                               showCount: true,
-                              count: '${connectionTabs[index].count ?? 0}',
+                              count:
+                                  _getFollowsCount(connectionTabs[index].count),
                               width: 150.0.toWidth,
                               isActive: connectionTabs[index].isActive,
                               text: connectionTabs[index].name,
@@ -130,8 +131,10 @@ class _ConnectionsState extends State<Connections> {
                                 if (index != lastAccessedIndex &&
                                     lastAccessedIndex != null &&
                                     !connectionTabs[index].isActive) {
-                                  _connectionProvider.setStatus(Status.getData);
-                                  connectionTabs[lastAccessedIndex].isActive =
+                                  if (_connectionProvider.status == null)
+                                    _connectionProvider
+                                        .setStatus(Status.getData);
+                                  connectionTabs[lastAccessedIndex!].isActive =
                                       false;
                                   connectionTabs[index].isActive = isActive;
                                   lastAccessedIndex = index;
@@ -143,40 +146,48 @@ class _ConnectionsState extends State<Connections> {
                       ),
                       SizedBox(height: 20.toHeight),
                       TextField(
+                        style: CustomTextStyles.fontR16primary,
                         onChanged: (value) {
-                          setState(() {});
+                          if (value == '') {
+                            FocusScope.of(context).unfocus();
+                          } else {
+                            setState(() {});
+                          }
                         },
                         textInputAction: TextInputAction.search,
                         controller: searchController,
                         decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(18.toFont),
                             filled: true,
                             fillColor: ColorConstants.fillColor,
                             hintText: Strings.Search,
                             hintStyle: CustomTextStyles.fontR16primary,
                             prefixIcon: Icon(Icons.filter_list,
-                                color: ColorConstants.primary),
+                                size: 20.toFont, color: ColorConstants.primary),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0.toFont),
                                 borderSide: BorderSide(
-                                    color: ColorConstants.borderColor)),
+                                    color: ColorConstants.borderColor!)),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0.toFont),
                                 borderSide: BorderSide(
-                                    color: ColorConstants.borderColor)),
+                                    color: ColorConstants.borderColor!)),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0.toFont),
                                 borderSide: BorderSide(
-                                    color: ColorConstants.borderColor))),
+                                    color: ColorConstants.borderColor!))),
                       ),
                       SizedBox(height: 20.toHeight),
-                      if (connectionTabs[0].isActive)
+                      if (connectionTabs.isNotEmpty &&
+                          connectionTabs[0].isActive)
                         Followers(
                           count: () {
                             _getCount();
                           },
                           searchText: searchController.text,
                         ),
-                      if (connectionTabs[1].isActive)
+                      if (connectionTabs.isNotEmpty &&
+                          connectionTabs[1].isActive)
                         Followers(
                           isFollowing: true,
                           searchText: searchController.text,
@@ -192,15 +203,34 @@ class _ConnectionsState extends State<Connections> {
 
   _getCount() {
     bool isCalled = false;
-    if (connectionTabs[0].count != ConnectionProvider().followersList.length) {
-      connectionTabs[0].count = ConnectionProvider().followersList.length;
+    if (connectionTabs[0].count != ConnectionProvider().followersList!.length) {
+      connectionTabs[0].count = ConnectionProvider().followersList!.length;
       setState(() {});
       isCalled = true;
     }
-    if (connectionTabs[1].count != ConnectionProvider().followingList.length) {
-      connectionTabs[1].count = ConnectionProvider().followingList.length;
+    if (connectionTabs[1].count != ConnectionProvider().followingList!.length) {
+      connectionTabs[1].count = ConnectionProvider().followingList!.length;
       if (!isCalled) setState(() {});
     }
+  }
+
+  String _getFollowsCount(int? count) {
+    count ??= 0;
+    String countValue;
+    if (count / 100000 > 1) {
+      countValue = count % 100000 == 0
+          ? (count / 100000).toStringAsFixed(0)
+          : (count / 100000).toStringAsFixed(1);
+      countValue += 'M';
+    } else if (count / 1000 > 1) {
+      countValue = count % 1000 == 0
+          ? (count / 1000).toStringAsFixed(0)
+          : (count / 1000).toStringAsFixed(1);
+      countValue += 'K';
+    } else {
+      countValue = count.toString();
+    }
+    return countValue;
   }
 
   _formConnectionTabs(int tabsCount) {
@@ -217,6 +247,6 @@ class _ConnectionsState extends State<Connections> {
 class ConnectionTab {
   bool isActive;
   String name;
-  int count;
-  ConnectionTab({this.isActive = false, @required this.name});
+  int? count;
+  ConnectionTab({this.isActive = false, required this.name});
 }

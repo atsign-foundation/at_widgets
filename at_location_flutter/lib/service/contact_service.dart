@@ -3,10 +3,10 @@ import 'package:at_contact/at_contact.dart';
 
 import 'key_stream_service.dart';
 
-Future<AtContact> getAtSignDetails(String atSign) async {
-  AtContact atContact = getCachedContactDetail(atSign);
+Future<AtContact> getAtSignDetails(String? atSign) async {
+  var atContact = getCachedContactDetail(atSign);
   if (atContact == null) {
-    Map<String, dynamic> contactDetails = await getContactDetails(atSign);
+    var contactDetails = await getContactDetails(atSign);
     atContact = AtContact(
       atSign: atSign,
       tags: contactDetails,
@@ -15,12 +15,12 @@ Future<AtContact> getAtSignDetails(String atSign) async {
   return atContact;
 }
 
-AtContact getCachedContactDetail(String atsign) {
+AtContact? getCachedContactDetail(String? atsign) {
   if (atsign == KeyStreamService().atContactImpl?.atClient?.currentAtSign) {
     return KeyStreamService().loggedInUserDetails;
   }
   if (KeyStreamService().contactList.isNotEmpty) {
-    int index = KeyStreamService()
+    var index = KeyStreamService()
         .contactList
         .indexWhere((element) => element.atSign == atsign);
     if (index > -1) return KeyStreamService().contactList[index];
@@ -28,8 +28,8 @@ AtContact getCachedContactDetail(String atsign) {
   return null;
 }
 
-getContactDetails(atSign) async {
-  Map<String, dynamic> contactDetails = {};
+Future<Map<String, dynamic>> getContactDetails(atSign) async {
+  var contactDetails = <String, dynamic>{};
 
   if (KeyStreamService().atClientInstance == null || atSign == null) {
     return contactDetails;
@@ -39,10 +39,10 @@ getContactDetails(atSign) async {
   var metadata = Metadata();
   metadata.isPublic = true;
   metadata.namespaceAware = false;
-  AtKey key = AtKey();
+  var key = AtKey();
   key.sharedBy = atSign;
   key.metadata = metadata;
-  List contactFields = [
+  var contactFields = [
     'firstname.persona',
     'lastname.persona',
     'image.persona',
@@ -51,14 +51,14 @@ getContactDetails(atSign) async {
   try {
     // firstname
     key.key = contactFields[0];
-    var result = await KeyStreamService().atClientInstance.get(key).catchError(
+    var result = await KeyStreamService().atClientInstance!.get(key).catchError(
         // ignore: return_of_invalid_type_from_catch_error
-        (e) => print("error in get ${e.errorCode} ${e.errorMessage}"));
+        (e) => print('error in get ${e.errorCode} ${e.errorMessage}'));
     var firstname = result.value;
 
     // lastname
     key.key = contactFields[1];
-    result = await KeyStreamService().atClientInstance.get(key);
+    result = await KeyStreamService().atClientInstance!.get(key);
     var lastname = result.value;
 
     // construct name
@@ -68,9 +68,9 @@ getContactDetails(atSign) async {
     }
 
     // profile picture
-    key.metadata.isBinary = true;
+    key.metadata!.isBinary = true;
     key.key = contactFields[2];
-    result = await KeyStreamService().atClientInstance.get(key);
+    result = await KeyStreamService().atClientInstance!.get(key);
     var image = result.value;
     contactDetails['name'] = name;
     contactDetails['image'] = image;

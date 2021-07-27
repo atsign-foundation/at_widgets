@@ -1,53 +1,56 @@
 import 'dart:typed_data';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/service/contact_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
-
 import 'package:flutter/material.dart';
-
 import 'contacts_initial.dart';
-import 'custom_circle_avatar.dart';
 
 class DisplayTile extends StatefulWidget {
-  final String title, semiTitle, subTitle, atsignCreator, invitedBy;
-  final int number;
-  final Widget action;
-  final bool showName;
+  final String? title, semiTitle, subTitle, atsignCreator, invitedBy;
+  final int? number;
+  final Widget? action;
+  final bool showName, showRetry;
+  final Function? onRetryTapped;
   DisplayTile(
-      {@required this.title,
-      this.atsignCreator,
-      @required this.subTitle,
+      {required this.title,
+      required this.atsignCreator,
+      required this.subTitle,
       this.semiTitle,
       this.invitedBy,
       this.number,
       this.showName = false,
-      this.action});
+      this.action,
+      this.showRetry = false,
+      this.onRetryTapped});
 
   @override
   _DisplayTileState createState() => _DisplayTileState();
 }
 
 class _DisplayTileState extends State<DisplayTile> {
-  Uint8List image;
-  AtContact contact;
-  AtContactsImpl atContact;
-  String name;
+  Uint8List? image;
+  AtContact? contact;
+  AtContactsImpl? atContact;
+  String? name;
   @override
   void initState() {
     super.initState();
     getEventCreator();
   }
 
+  // ignore: always_declare_return_types
   getEventCreator() async {
-    AtContact contact = await getAtSignDetails(widget.atsignCreator);
+    var contact = await getAtSignDetails(widget.atsignCreator);
+    // ignore: unnecessary_null_comparison
     if (contact != null) {
-      if (contact.tags != null && contact.tags['image'] != null) {
-        List<int> intList = contact.tags['image'].cast<int>();
+      if (contact.tags != null && contact.tags!['image'] != null) {
+        List<int> intList = contact.tags!['image'].cast<int>();
         if (mounted) {
           setState(() {
             image = Uint8List.fromList(intList);
-            if (widget.showName) name = contact.tags['name'].toString();
+            if (widget.showName) name = contact.tags!['name'].toString();
           });
         }
       }
@@ -57,17 +60,24 @@ class _DisplayTileState extends State<DisplayTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 10.5),
+      padding: EdgeInsets.fromLTRB(0, 0, 15, 10.5),
       child: Row(
         children: [
           Stack(
             children: [
               (image != null)
-                  ? CustomCircleAvatar(
-                      byteImage: image, nonAsset: true, size: 30)
+                  ? ClipRRect(
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(30.toFont)),
+                      child: Image.memory(
+                        image!,
+                        width: 50.toFont,
+                        height: 50.toFont,
+                        fit: BoxFit.fill,
+                      ),
+                    )
                   : widget.atsignCreator != null
-                      ? ContactInitial(
-                          initials: widget.atsignCreator.substring(1, 3))
+                      ? ContactInitial(initials: widget.atsignCreator)
                       : SizedBox(),
               widget.number != null
                   ? Positioned(
@@ -75,10 +85,10 @@ class _DisplayTileState extends State<DisplayTile> {
                       bottom: 0,
                       child: Container(
                         alignment: Alignment.center,
-                        height: 28,
-                        width: 28,
+                        height: 28.toFont,
+                        width: 28.toFont,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(15.0.toFont),
                             color: AllColors().BLUE),
                         child: Text(
                           '+${widget.number}',
@@ -90,55 +100,72 @@ class _DisplayTileState extends State<DisplayTile> {
             ],
           ),
           Expanded(
-              child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            child: Column(
-              mainAxisAlignment: widget.semiTitle != null
-                  ? MainAxisAlignment.spaceEvenly
-                  : MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name ?? widget.title,
-                  style: CustomTextStyles().black14,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 3,
-                ),
-                widget.semiTitle != null
-                    ? Text(
-                        widget.semiTitle,
-                        style: (widget.semiTitle == 'Action required' ||
-                                    widget.semiTitle == 'Request declined') ||
-                                (widget.semiTitle == 'Cancelled')
-                            ? CustomTextStyles().orange12
-                            : CustomTextStyles().darkGrey12,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      )
-                    : SizedBox(),
-                SizedBox(
-                  height: 3,
-                ),
-                Text(
-                  widget.subTitle,
-                  style: CustomTextStyles().darkGrey12,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                widget.invitedBy != null
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Text(widget.invitedBy,
-                            style: CustomTextStyles().grey14),
-                      )
-                    : SizedBox()
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              child: Column(
+                mainAxisAlignment: (widget.subTitle == null)
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name ?? widget.title!,
+                    style: CustomTextStyles().black14,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  widget.semiTitle != null
+                      ? Text(
+                          widget.semiTitle!,
+                          style: (widget.semiTitle == 'Action required' ||
+                                      widget.semiTitle == 'Request declined') ||
+                                  (widget.semiTitle == 'Cancelled')
+                              ? CustomTextStyles().orange12
+                              : CustomTextStyles().darkGrey12,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : SizedBox(),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  (widget.subTitle != null)
+                      ? Text(
+                          widget.subTitle!,
+                          style: CustomTextStyles().darkGrey12,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : SizedBox(),
+                  widget.invitedBy != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Text(widget.invitedBy!,
+                              style: CustomTextStyles().grey14),
+                        )
+                      : SizedBox()
+                ],
+              ),
             ),
-          )),
-          widget.action ?? SizedBox()
+          ),
+          widget.showRetry
+              ? InkWell(
+                  onTap: () {
+                    widget.onRetryTapped!();
+                  },
+                  child: Text(
+                    'Retry',
+                    style: TextStyle(
+                        color: AllColors().ORANGE, fontSize: 14.toFont),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              : SizedBox(),
+          widget.action ?? SizedBox(),
         ],
       ),
     );

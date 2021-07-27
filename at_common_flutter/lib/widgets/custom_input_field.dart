@@ -1,29 +1,41 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
-
-/// This is a custom input field
-/// @param [hintText] is a [String] to display if the input field is empty
-/// @param [initialValue] is a [String] to pre-populate the input field
-/// @param [height] in [double] sets the height of the input field
-/// @param [width] in [double] sets the width of the input field
-/// @param [icon] is the trailing icon on the input field and calls the [onIconTap] or [onTap] when tapped
-/// @param [onTap] defines what to execute on tap on the input field
-/// @param [onIconTap] defines what to execute on tap on the [icon]
-/// @param [onSubmitted] defines what to execute on submit in the input field
-/// @param [iconColor] is the color to fill the [icon]
-/// @param [value] defines the observable value of the input field
-/// @param [isReadOnly] toggles the input field to be read only
-
 import 'package:at_common_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
+/// This is a custom input field to have common functionalities of the app
 // ignore: must_be_immutable
 class CustomInputField extends StatelessWidget {
-  final String hintText, initialValue;
-  final double width, height;
-  final IconData icon;
-  final Function onTap, onIconTap, onSubmitted;
-  final Color iconColor;
-  final ValueChanged<String> value;
+  /// The string to display if the input field is empty.
+  final String hintText;
+
+  /// A string to pre-populate the input field.
+  final String initialValue;
+
+  /// sets the width of the input field.
+  final double width;
+
+  /// sets the height of the input field.
+  final double height;
+
+  /// The trailing icon on the input field and calls the [onIconTap] or [onTap] when tapped.
+  final IconData? icon;
+
+  /// defines the function to execute on tap on the input field.
+  final Function? onTap;
+
+  /// defines the function to execute on tap on the [icon].
+  final Function? onIconTap;
+
+  /// defines the to execute on submit in the input field.
+  final Function? onSubmitted;
+
+  /// The color to fill the [icon].
+  final Color? iconColor;
+
+  /// The observable value of the input field.
+  final ValueChanged<String>? value;
+
+  /// makes the input field to be read only.
   final bool isReadOnly;
 
   TextEditingController textController = TextEditingController();
@@ -70,21 +82,22 @@ class CustomInputField extends StatelessWidget {
                 hintStyle: TextStyle(
                     color: ColorConstants.darkGrey, fontSize: 15.toFont),
               ),
-              onTap: onTap ?? () {},
+              onTap: onTap as void Function()? ?? () {},
               onChanged: (val) {
-                value(val);
+                value!(val);
               },
               controller: textController,
               onSubmitted: (str) {
                 if (onSubmitted != null) {
-                  onSubmitted(str);
+                  onSubmitted!(str);
                 }
               },
             ),
           ),
           icon != null
               ? InkWell(
-                  onTap: onIconTap ?? onTap,
+                  onTap: onIconTap as void Function()? ??
+                      onTap as void Function()?,
                   child: Icon(
                     icon,
                     color: iconColor ?? ColorConstants.darkGrey,
