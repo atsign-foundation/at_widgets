@@ -109,7 +109,10 @@ class InvitationService {
 
       if (sentPasscode == receivedPasscode) {
         atKey.sharedWith = fromAtsign;
-        await atClientInstance?.put(atKey, jsonEncode(sentInformation.message));
+        await atClientInstance?.put(atKey, jsonEncode(sentInformation.message))
+          .catchError((e) {
+            print('Error in sharing saved message => $e');
+          });
       }
     }
   }
@@ -126,7 +129,10 @@ class InvitationService {
     AtKey atKey = AtKey()..metadata = Metadata();
     atKey.key = invitationKey + '.' + keyID;
     atKey.metadata?.ttr = -1;
-    var result = await atClientInstance?.put(atKey, jsonEncode(messageContent));
+    var result = await atClientInstance?.put(atKey, jsonEncode(messageContent))
+      .catchError((e) {
+        print('Error in saving shared data => $e');
+      });;
     print(atKey.key);
     if (result == true) {
       showDialog(
@@ -154,7 +160,10 @@ class InvitationService {
     MessageShareModel messageContent = MessageShareModel(
       passcode: otp, identifier: data, message: 'invite acknowledgement');
     print('created message');
-    var result = await atClientInstance?.put(atKey, jsonEncode(messageContent));
+    var result = await atClientInstance?.put(atKey, jsonEncode(messageContent))
+      .catchError((e) {
+        print('Error in saving acknowledge message => $e');
+      });;
     print(atKey.key);
   }
 }
