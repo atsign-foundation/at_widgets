@@ -49,12 +49,20 @@ class FlutterMap extends StatefulWidget {
   /// A [MapController], used to control the map.
   final MapControllerImpl _mapController;
 
+  /// [returnPositionTapped] will return the latLng where map is doubleTapped
+  final Function(LatLng?)? returnPositionTapped;
+
+  /// [absorbDoubleTapPointer] will absorb the default double tap behaviour
+  final bool absorbDoubleTapPointer;
+
   FlutterMap({
     Key? key,
     required this.options,
     this.layers = const [],
     this.children = const [],
     MapController? mapController,
+    this.returnPositionTapped,
+    this.absorbDoubleTapPointer = false,
   })  : _mapController = mapController as MapControllerImpl? ??
             MapController() as MapControllerImpl,
         super(key: key);
