@@ -151,14 +151,15 @@ abstract class MapGestureMixin extends State<FlutterMap>
   }
 
   void handleDoubleTap(TapPosition tapPosition,
-      {Function(LatLng?)? returnPositionTapped, bool absorbPointer = false}) {
+      {Function(LatLng?, double? zoom)? returnPositionTapped,
+      bool absorbPointer = false}) {
     final centerPos = _pointToOffset(map!.size!) / 2.0;
     final newZoom = _getZoomForScale(map!.zoom, 2.0);
     final focalDelta = _getDoubleTapFocalDelta(
         centerPos, tapPosition.relative!, newZoom - map!.zoom);
     final newCenter = _offsetToCrs(centerPos + focalDelta);
     if (returnPositionTapped != null) {
-      returnPositionTapped(newCenter);
+      returnPositionTapped(newCenter, newZoom);
     }
 
     if (!absorbPointer) {
