@@ -20,6 +20,7 @@ class ConnectionProvider extends ChangeNotifier {
   List<Atsign>? atsignsList;
   Status? status;
   var error;
+  String initialised = '';
 
   late ConnectionsService _connectionsService;
   late bool _disposed;
@@ -38,14 +39,17 @@ class ConnectionProvider extends ChangeNotifier {
     }
   }
 
-  init() {
-    this.followersList = [];
-    this.followingList = [];
-    this.atsignsList = [];
-    _connectionsService = ConnectionsService();
-    connectionslistStatus = ListStatus();
-    _disposed = false;
-    this.setStatus(null);
+  init(String atsign) {
+    if (atsign != initialised) {
+      this.followersList = [];
+      this.followingList = [];
+      this.atsignsList = [];
+      _connectionsService = ConnectionsService();
+      connectionslistStatus = ListStatus();
+      _disposed = false;
+      this.setStatus(null);
+      initialised = atsign;
+    }
   }
 
   setStatus(Status? value) {

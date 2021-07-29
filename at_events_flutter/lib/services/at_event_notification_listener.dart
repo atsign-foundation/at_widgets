@@ -13,6 +13,7 @@ import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
 
+/// Starts monitor and listens for notifications related to this package.
 class AtEventNotificationListener {
   AtEventNotificationListener._();
   static final _instance = AtEventNotificationListener._();
@@ -39,8 +40,7 @@ class AtEventNotificationListener {
 
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
-      var privateKey =
-          await (getPrivateKey(currentAtSign!) as FutureOr<String>);
+      var privateKey = (await (getPrivateKey(currentAtSign!))) ?? '';
       // ignore: await_only_futures
       await atClientInstance!.startMonitor(privateKey, fnCallBack);
       print('Monitor started in events package');

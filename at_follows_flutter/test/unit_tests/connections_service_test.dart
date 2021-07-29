@@ -20,8 +20,8 @@ void main() {
 
   setUp(() async {
     _sdkService.setClientService = await setUpFunc(senderAtsign);
-    _connectionsService.init();
-    ConnectionProvider().init();
+    _connectionsService.init(senderAtsign);
+    ConnectionProvider().init(senderAtsign);
     await _sdkService.startMonitor(monitorCallBack);
   });
 

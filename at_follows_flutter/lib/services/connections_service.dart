@@ -17,6 +17,7 @@ class ConnectionsService {
   late AtFollowsList following;
   String? followerAtsign;
   String? followAtsign;
+  String initialised = '';
 
   var _logger = AtSignLogger('Connections Service');
 
@@ -32,10 +33,13 @@ class ConnectionsService {
 
   late bool isMonitorStarted;
 
-  init() {
-    followers = AtFollowsList();
-    following = AtFollowsList();
-    isMonitorStarted = false;
+  init(String atsign) {
+    if (atsign != initialised) {
+      followers = AtFollowsList();
+      following = AtFollowsList();
+      isMonitorStarted = false;
+      initialised = atsign;
+    }
   }
 
   Future<void> getAtsignsList({bool isInit = false}) async {
@@ -45,6 +49,7 @@ class ConnectionsService {
         connectionProvider.followingList =
             await _formAtSignData(following.list!, isFollowing: true);
       }
+      await _sdkService.sync();
       if (!this.following.contains(this.followAtsign) &&
           this.followAtsign != null) {
         var atsignData = await this.follow(this.followAtsign);
@@ -108,6 +113,7 @@ class ConnectionsService {
     }
     following.add(atsign);
     var result = await _sdkService.put(atKey, following.toString());
+    await _sdkService.sync();
     //change metadata to private to notify
     if (result) {
       atKey..sharedWith = atsign;
@@ -184,6 +190,7 @@ class ConnectionsService {
     } else {
       result = await _sdkService.put(atKey, atFollowsList.toString());
     }
+    await _sdkService.sync();
     return result;
   }
 
@@ -340,7 +347,7 @@ class ConnectionsService {
   }
 
   Future<Atsign> _getAtsignData(String? connection,
-      {bool isFollowing = false, bool isNew = false}) async {
+      {bool isFollowing = true, bool isNew = false}) async {
     AtKey atKey;
     Atsign atsignData = Atsign()
       ..title = connection

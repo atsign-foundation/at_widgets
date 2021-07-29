@@ -45,6 +45,7 @@ class SharingLocationService {
     return false;
   }
 
+  /// Sends a 'sharelocation' key to [atsign] with duration of [minutes] minute
   Future<bool?> sendShareLocationEvent(String? atsign, bool isAcknowledgment,
       {int? minutes}) async {
     try {
@@ -131,6 +132,7 @@ class SharingLocationService {
     }
   }
 
+  /// Sends a 'sharelocationacknowledged' key to [originalLocationNotificationModel].atsignCreator with isAccepted as [isAccepted]
   Future<bool> shareLocationAcknowledgment(
       LocationNotificationModel originalLocationNotificationModel,
       bool isAccepted) async {
@@ -167,6 +169,7 @@ class SharingLocationService {
     }
   }
 
+  /// Updates originally created [locationNotificationModel] with [originalLocationNotificationModel] data
   Future<bool> updateWithShareLocationAcknowledge(
       LocationNotificationModel originalLocationNotificationModel,
       {bool? isSharing,
@@ -249,6 +252,7 @@ class SharingLocationService {
     return result;
   }
 
+  /// Deletes originally created [locationNotificationModel] notification
   Future<bool> deleteKey(
       LocationNotificationModel locationNotificationModel) async {
     try {

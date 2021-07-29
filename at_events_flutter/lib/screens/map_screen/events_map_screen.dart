@@ -7,6 +7,7 @@ import 'package:at_events_flutter/common_components/floating_icon.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
+import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
@@ -281,7 +282,6 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
                     content: Text(_membersSharingLocation.length > 1
                         ? '${_listToString(_membersSharingLocation)} are sharing their locations'
                         : '${_listToString(_membersSharingLocation)} is sharing their location'),
-                    dismissDirection: DismissDirection.horizontal,
                   ));
                   snackbarShownOnce = true;
                 });
@@ -306,7 +306,7 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
                     top: 0,
                     right: 0,
                     child: FloatingIcon(
-                        bgColor: Theme.of(context).primaryColor,
+                        bgColor: AllColors().Black,
                         icon: Icons.message_outlined,
                         iconColor: Theme.of(context).scaffoldBackgroundColor,
                         onPressed: () => scaffoldKey.currentState!

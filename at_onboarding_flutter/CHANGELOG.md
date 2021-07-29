@@ -1,3 +1,6 @@
+## 2.1.2
+- updated README
+
 ## 2.1.1
 - updated packages and authentication bug fix
 

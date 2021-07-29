@@ -5,23 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
 class MarkerNode implements Marker {
-  final Marker? marker;
+  final Marker marker;
   MarkerClusterNode? parent;
 
   MarkerNode(this.marker);
 
   @override
-  Anchor get anchor => marker!.anchor;
+  Anchor get anchor => marker.anchor;
 
   @override
-  WidgetBuilder? get builder => marker!.builder;
+  WidgetBuilder get builder => marker.builder;
 
   @override
-  double get height => marker!.height;
+  double get height => marker.height;
 
   @override
-  LatLng? get point => marker!.point;
+  LatLng get point => marker.point;
 
   @override
-  double get width => marker!.width;
+  double get width => marker.width;
 }

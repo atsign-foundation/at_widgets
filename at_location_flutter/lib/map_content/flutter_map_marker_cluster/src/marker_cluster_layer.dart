@@ -159,7 +159,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
   void _addLayers() {
     for (var marker in widget.options.markers) {
-      _addLayer(MarkerNode(marker), widget.options.disableClusteringAtZoom);
+      if (marker != null) {
+        _addLayer(MarkerNode(marker), widget.options.disableClusteringAtZoom);
+      }
     }
 
     _topClusterLevel.recalculateBounds();
@@ -238,7 +240,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _onMarkerTap(marker) as void Function()?,
-        child: marker.builder!(context),
+        child: marker.builder(context),
       ),
     );
   }
@@ -523,7 +525,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
     return layers;
   }
 
-  List<Widget?> _buildLayers() {
+  List<Widget> _buildLayers() {
     if (widget.map!.zoom != _previousZoomDouble) {
       _previousZoomDouble = widget.map!.zoom;
 
@@ -532,9 +534,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
     var zoom = widget.map!.zoom.ceil();
 
-    var layers = <Widget?>[];
+    var layers = <Widget>[];
 
-    if (_polygon != null) layers.add(_polygon);
+    if (_polygon != null) layers.add(_polygon!);
 
     if (zoom < _currentZoom! || zoom > _currentZoom!) {
       _previousZoom = _currentZoom;
@@ -599,7 +601,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
       if (!widget.options.zoomToBoundsOnClick) return null;
 
-      _showPolygon(cluster.markers.fold<List<LatLng?>>(
+      _showPolygon(cluster.markers.fold<List<LatLng>>(
           [], (result, marker) => result..add(marker.point)));
 
       final center = widget.map!.center!;
@@ -634,7 +636,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
     };
   }
 
-  void _showPolygon(List<LatLng?> points) {
+  void _showPolygon(List<LatLng> points) {
     if (widget.options.showPolygon) {
       setState(() {
         _polygon = PolygonLayer(
@@ -687,9 +689,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       final center = widget.map!.center!;
 
       final _latTween =
-          Tween<double>(begin: center.latitude, end: marker.point!.latitude);
+          Tween<double>(begin: center.latitude, end: marker.point.latitude);
       final _lngTween =
-          Tween<double>(begin: center.longitude, end: marker.point!.longitude);
+          Tween<double>(begin: center.longitude, end: marker.point.longitude);
 
       Animation<double> animation = CurvedAnimation(
           parent: _centerMarkerController!,
@@ -764,7 +766,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       builder: (BuildContext context, _) {
         return Container(
           child: Stack(
-            children: _buildLayers() as List<Widget>,
+            children: _buildLayers(),
           ),
         );
       },

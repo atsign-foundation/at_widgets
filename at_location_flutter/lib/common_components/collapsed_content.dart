@@ -39,8 +39,8 @@ class _CollapsedContentState extends State<CollapsedContent> {
       setState(() {
         locationAvailable = false;
       });
-      for (var i = 0; i < e!.length; i++) {
-        if (e[i].displayName == widget.userListenerKeyword!.atsignCreator) {
+      for (var i = 0; i < e.length; i++) {
+        if (e[i]!.displayName == widget.userListenerKeyword!.atsignCreator) {
           setState(() {
             locationAvailable = true;
           });

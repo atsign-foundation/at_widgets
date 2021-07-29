@@ -1,6 +1,8 @@
 PODS:
   - at_backupkey_flutter (0.0.1):
     - Flutter
+  - at_chat_flutter (0.0.1):
+    - Flutter
   - at_contacts_flutter (0.0.1):
     - Flutter
   - at_contacts_group_flutter (0.0.1):
@@ -102,6 +104,7 @@ PODS:
 
 DEPENDENCIES:
   - at_backupkey_flutter (from `.symlinks/plugins/at_backupkey_flutter/ios`)
+  - at_chat_flutter (from `.symlinks/plugins/at_chat_flutter/ios`)
   - at_contacts_flutter (from `.symlinks/plugins/at_contacts_flutter/ios`)
   - at_contacts_group_flutter (from `.symlinks/plugins/at_contacts_group_flutter/ios`)
   - at_events_flutter (from `.symlinks/plugins/at_events_flutter/ios`)
@@ -138,6 +141,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   at_backupkey_flutter:
     :path: ".symlinks/plugins/at_backupkey_flutter/ios"
+  at_chat_flutter:
+    :path: ".symlinks/plugins/at_chat_flutter/ios"
   at_contacts_flutter:
     :path: ".symlinks/plugins/at_contacts_flutter/ios"
   at_contacts_group_flutter:
@@ -181,6 +186,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   at_backupkey_flutter: 2fc3d01138175e41bce8b574387a47544c53e01b
+  at_chat_flutter: 8df1b69f14a74f0360b21916b5dd6916c9ae7130
   at_contacts_flutter: 11ad3deb3c2a8f1e9daf302ac5962dadd48e21fb
   at_contacts_group_flutter: 31bc718fdb2baca1ae36509009e48cf33a23fa5f
   at_events_flutter: 88b4a1773db9a4cb48ade0a7b9f79a1b351337b4

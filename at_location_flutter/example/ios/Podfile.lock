@@ -1,6 +1,8 @@
 PODS:
   - at_backupkey_flutter (0.0.1):
     - Flutter
+  - at_chat_flutter (0.0.1):
+    - Flutter
   - at_location_flutter (0.0.1):
     - Flutter
   - at_onboarding_flutter (0.0.1):
@@ -73,6 +75,7 @@ PODS:
 
 DEPENDENCIES:
   - at_backupkey_flutter (from `.symlinks/plugins/at_backupkey_flutter/ios`)
+  - at_chat_flutter (from `.symlinks/plugins/at_chat_flutter/ios`)
   - at_location_flutter (from `.symlinks/plugins/at_location_flutter/ios`)
   - at_onboarding_flutter (from `.symlinks/plugins/at_onboarding_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
@@ -100,6 +103,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   at_backupkey_flutter:
     :path: ".symlinks/plugins/at_backupkey_flutter/ios"
+  at_chat_flutter:
+    :path: ".symlinks/plugins/at_chat_flutter/ios"
   at_location_flutter:
     :path: ".symlinks/plugins/at_location_flutter/ios"
   at_onboarding_flutter:
@@ -131,6 +136,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   at_backupkey_flutter: 2fc3d01138175e41bce8b574387a47544c53e01b
+  at_chat_flutter: 8df1b69f14a74f0360b21916b5dd6916c9ae7130
   at_location_flutter: 11cdb9f57b41159f51d1ce151f78c31b9b292607
   at_onboarding_flutter: e8219b6d0bfb236d3837ec3528871aebdcc56e8d
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d

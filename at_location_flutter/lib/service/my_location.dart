@@ -2,6 +2,10 @@ import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 
+/// Returns current [LatLng] of the device.
+///
+/// If location service is disabled or denied, returns null.
+/// Else requests for permission and tries to return [LatLng] if permission granted.
 Future<LatLng?> getMyLocation() async {
   try {
     bool serviceEnabled;

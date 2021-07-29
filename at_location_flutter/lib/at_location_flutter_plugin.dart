@@ -104,7 +104,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         children: [
           StreamBuilder(
               stream: LocationService().atHybridUsersStream,
-              builder: (context, AsyncSnapshot<List<HybridModel>?> snapshot) {
+              builder: (context, AsyncSnapshot<List<HybridModel?>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasError) {
                     return Center(
@@ -117,11 +117,11 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                     print('FlutterMap called');
                     _popupController = PopupController();
                     var users = snapshot.data!;
-                    var markers = users.map((user) => user.marker).toList();
-                    points = users.map((user) => user.latLng).toList();
+                    var markers = users.map((user) => user!.marker).toList();
+                    points = users.map((user) => user!.latLng).toList();
                     print('markers length = ${markers.length}');
                     users.forEach((element) {
-                      print('displayanme - ${element.displayName}');
+                      print('displayanme - ${element!.displayName}');
                     });
                     markers.forEach((element) {
                       print('point - ${element!.point}');
@@ -137,7 +137,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                             (markers.isNotEmpty) &&
                             (mapController != null)) {
                           var indexOfUser = users.indexWhere((element) =>
-                              element.displayName == widget.focusMapOn);
+                              element!.displayName == widget.focusMapOn);
 
                           if (indexOfUser > -1) {
                             mapController!
@@ -171,7 +171,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         )),
                         // ignore: unnecessary_null_comparison
                         center: ((users != null) && (users.isNotEmpty))
-                            ? users[0].latLng
+                            ? users[0]!.latLng
                             : LatLng(45, 45),
                         zoom: markers.isNotEmpty ? 8 : 2,
                         plugins: [MarkerClusterPlugin(UniqueKey())],
@@ -211,7 +211,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                                         .streamController!.isClosed
                                     ? Text('Closed')
                                     : buildPopup(snapshot
-                                        .data![markers.indexOf(marker)]);
+                                        .data![markers.indexOf(marker)]!);
                               }),
                           builder: (context, markers) {
                             return buildMarkerCluster(markers);
@@ -236,8 +236,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
 
   void zoomOutFn() {
     _popupController.hidePopup();
-    if (LocationService().hybridUsersList!.isNotEmpty) {
-      mapController!.move(LocationService().hybridUsersList![0]!.latLng, 4);
+    if (LocationService().hybridUsersList.isNotEmpty) {
+      mapController!.move(LocationService().hybridUsersList[0]!.latLng, 4);
     }
     // LocationService().hybridUsersList.isNotEmpty
     //     ? mapController.move(LocationService().hybridUsersList[0].latLng, 4)

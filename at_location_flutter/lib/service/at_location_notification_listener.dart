@@ -13,6 +13,7 @@ import 'request_location_service.dart';
 import 'sharing_location_service.dart';
 import 'sync_secondary.dart';
 
+/// Starts monitor and listens for notifications related to this package.
 class AtLocationNotificationListener {
   AtLocationNotificationListener._();
   static final _instance = AtLocationNotificationListener._();
@@ -46,9 +47,8 @@ class AtLocationNotificationListener {
 
   Future<bool> startMonitor() async {
     if (!_monitorStarted) {
-      var privateKey =
-          await (getPrivateKey(currentAtSign!) as FutureOr<String>);
-      await atClientInstance!.startMonitor(privateKey, fnCallBack);
+      var privateKey = await (getPrivateKey(currentAtSign!));
+      await atClientInstance!.startMonitor(privateKey!, fnCallBack);
       print('Monitor started in location package');
       _monitorStarted = true;
     }
