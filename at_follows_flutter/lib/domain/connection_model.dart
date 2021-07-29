@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:at_follows_flutter/domain/atsign.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
 
@@ -19,6 +20,7 @@ class ConnectionProvider extends ChangeNotifier {
   List<Atsign>? followingList;
   List<Atsign>? atsignsList;
   Status? status;
+  String? message;
   var error;
   String initialised = '';
 
@@ -52,8 +54,15 @@ class ConnectionProvider extends ChangeNotifier {
     }
   }
 
-  setStatus(Status? value) {
+  setStatus(Status? value, {String? message}) {
     status = value;
+    this.message = message;
+    notifyListeners();
+  }
+
+  setError(var err) {
+    this.error = err;
+    status = Status.error;
     notifyListeners();
   }
 
@@ -69,16 +78,14 @@ class ConnectionProvider extends ChangeNotifier {
     Completer c = Completer();
     bool isInit = status == null;
     try {
-      setStatus(Status.loading);
+      setStatus(Status.loading, message: Strings.getAtSignList);
       await _connectionsService.getAtsignsList(isInit: isInit);
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
-      this.error = err;
-      setStatus(Status.error);
+      setError(err);
     } on Exception catch (ex) {
-      this.error = ex;
-      setStatus(Status.error);
+      setError(ex);
     }
     return c.future;
   }
@@ -92,8 +99,7 @@ class ConnectionProvider extends ChangeNotifier {
       setStatus(Status.done);
       c.complete(true);
     } catch (ex) {
-      this.error = ex;
-      setStatus(Status.error);
+      setError(ex);
     }
     return c.future;
   }
@@ -101,7 +107,7 @@ class ConnectionProvider extends ChangeNotifier {
   Future follow(String? atsign) async {
     Completer c = Completer();
     try {
-      setStatus(Status.loading);
+      setStatus(Status.loading, message: Strings.followMessage);
       var data = await _connectionsService.follow(atsign);
       if (data != null) {
         followingList!.add(data);
@@ -110,11 +116,9 @@ class ConnectionProvider extends ChangeNotifier {
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
-      this.error = err;
-      setStatus(Status.error);
+      setError(err);
     } on Exception catch (ex) {
-      this.error = ex;
-      setStatus(Status.error);
+      setError(ex);
     }
 
     return c.future;
@@ -123,7 +127,7 @@ class ConnectionProvider extends ChangeNotifier {
   Future unfollow(String? atsign) async {
     Completer c = Completer();
     try {
-      setStatus(Status.loading);
+      setStatus(Status.loading, message: Strings.unfollowMessage);
       var result = await _connectionsService.unfollow(atsign);
       if (result) {
         followingList!.removeWhere((element) => element.title == atsign);
@@ -132,11 +136,9 @@ class ConnectionProvider extends ChangeNotifier {
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
-      this.error = err;
-      setStatus(Status.error);
+      setError(err);
     } on Exception catch (ex) {
-      this.error = ex;
-      setStatus(Status.error);
+      setError(ex);
     }
     return c.future;
   }
@@ -155,9 +157,7 @@ class ConnectionProvider extends ChangeNotifier {
       c.complete(true);
     } catch (e) {
       _logger.severe('deleting $atsign throws $e');
-      this.error = e;
-
-      setStatus(Status.error);
+      setError(e);
     }
   }
 

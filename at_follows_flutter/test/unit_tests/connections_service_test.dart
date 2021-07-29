@@ -161,7 +161,56 @@ void main() {
     });
   });
 
-  group('test namespace migration for wavi and persona', () {
+  group('test at_follows namespace migration', () {
+    test('fetch keys list', () async {
+      //oldnamespace keys
+      var metadata = Metadata()..isPublic = true;
+      var atKey = AtKey()
+        ..key = AppConstants.followers
+        ..metadata = metadata;
+      await _sdkService.put(atKey, '@bob🛠,@colin🛠');
+      var atKey1 = AtKey()
+        ..key = AppConstants.following
+        ..metadata = metadata;
+      await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
+      AppConstants.appNamespace = 'sample';
+
+      var followersValue = await _sdkService
+          .scanAndGet('${AppConstants.followers}|${AppConstants.followersKey}');
+      print('followers value is $followersValue');
+      expect(followersValue.value.isNotEmpty, true);
+
+      var oldKeyfollowersValue =
+          await _sdkService.scanAndGet(AppConstants.followers);
+      expect(oldKeyfollowersValue.value, null);
+
+      var followingValue = await _sdkService
+          .scanAndGet('${AppConstants.following}|${AppConstants.followingKey}');
+      print('following value is $followingValue');
+
+      expect(followingValue.value.isNotEmpty, true);
+
+      var oldKeyfollowingValue =
+          await _sdkService.scanAndGet(AppConstants.following);
+      expect(oldKeyfollowingValue.value, null);
+    });
+
+    test('follow functionality', () async {
+      var metadata = Metadata()..isPublic = true;
+      var atKey1 = AtKey()
+        ..key = AppConstants.following
+        ..metadata = metadata;
+      await _sdkService.put(atKey1, '@sitaram🛠');
+
+      await _connectionsService.getAtsignsList();
+      expect(_connectionsService.following.contains('@sitaram🛠'), true);
+      Atsign atsign = await (_connectionsService.follow('@sameeraja🛠')
+          as FutureOr<Atsign>);
+      expect(atsign.title, '@sameeraja🛠');
+      expect(
+          _connectionsService.following.list!.contains('@sameeraja🛠'), isTrue);
+    });
+
     test('follow functioanlity with wavi and persona namespace support',
         () async {
       var firstAtSign = '@bob🛠';
@@ -288,6 +337,12 @@ Future<AtClientService> setUpFunc(String atsign) async {
   await setEncryptionKeys(atClient, atsign);
   return atClientService;
 }
+
+void _onDone(value) {
+  print('sync done: $value');
+}
+
+void _onMonitorError(var error) {}
 
 monitorCallBack(var response) {
   if (response == null) {

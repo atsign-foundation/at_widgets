@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/at_backupkey_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_backupkey_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_backupkey_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_backupkey_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_chat_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_chat_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_chat_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_chat_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_common_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_common_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_common_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_common_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_contacts_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_contacts_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_contacts_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_contacts_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_contacts_group_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_contacts_group_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_contacts_group_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_contacts_group_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_events_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_events_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_events_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_events_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_follows_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_location_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_location_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_location_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_location_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_onboarding_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_onboarding_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/at_onboarding_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/at_onboarding_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/atsign_authentication_helper/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/atsign_authentication_helper/build" />
+      <excludeFolder url="file://$MODULE_DIR$/atsign_authentication_helper/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/atsign_authentication_helper/example/build" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Dart SDK" level="project" />
+    <orderEntry type="library" name="Dart Packages" level="project" />
+  </component>
+</module>
