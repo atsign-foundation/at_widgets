@@ -24,6 +24,11 @@ class TextStrings {
   String yes = 'Yes';
   String no = 'No';
   List<String> contactFields = [
+    'firstname.wavi',
+    'lastname.wavi',
+    'image.wavi',
+  ];
+  List<String> contactFieldsPersona = [
     'firstname.persona',
     'lastname.persona',
     'image.persona',
