@@ -1,3 +1,7 @@
+## 2.0.2
+- Updated repository link and description
+- Updated packages
+
 ## 2.0.1
 - Updated documentation
 
