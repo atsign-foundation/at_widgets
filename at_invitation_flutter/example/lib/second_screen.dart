@@ -68,7 +68,8 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.black12),
               ),
               onPressed: () {
                 shareAndInvite(context, 'welcome');
@@ -83,7 +84,8 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.black12),
               ),
               onPressed: () {
                 _checkForInvite();
@@ -108,12 +110,12 @@ class _SecondScreenState extends State<SecondScreen> {
         navkey: scaffoldKey,
         atClientInstance: clientSdkService.atClientServiceInstance?.atClient,
         currentAtSign: activeAtSign,
-        webPage: 'https://736a74183e87.ngrok.io',
+        webPage: 'https://3cb8767f51fa.ngrok.io',
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
   void _checkForInvite() async {
-    String _url = "https://736a74183e87.ngrok.io";
+    String _url = "https://3cb8767f51fa.ngrok.io";
     await canLaunch(_url)
         ? await launch(_url, forceSafariVC: false)
         : throw 'Could not launch $_url';
@@ -124,10 +126,10 @@ class _SecondScreenState extends State<SecondScreen> {
     // the foreground or in the background.
     _sub = uriLinkStream.listen((Uri? uri) {
       print('got uri: $uri');
-      if(!mounted){
+      if (!mounted) {
         print('not mounted');
       } else {
-        if (uri != null){
+        if (uri != null) {
           var key = uri.host;
           print(key);
           var pathSegments = uri.pathSegments;
