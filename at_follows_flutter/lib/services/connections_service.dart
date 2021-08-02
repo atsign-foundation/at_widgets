@@ -178,6 +178,20 @@ class ConnectionsService {
     return result;
   }
 
+  Future<bool> removeFollower(String atsign) async {
+    var followersList = followers.getKey!.value.split(',');
+    bool result = false;
+    var atKey = _formKey();
+    followersList.remove(atsign);
+    if (followersList.isNotEmpty) {
+      result = await _sdkService.put(atKey, followersList.toString());
+      followers.list!.remove(atsign);
+    } else {
+      result = await _sdkService.put(atKey, 'null');
+    }
+    return result;
+  }
+
   Future<bool> _modifyKey(
       String? atsign, AtFollowsList atFollowsList, AtKey atKey) async {
     var result = false;
