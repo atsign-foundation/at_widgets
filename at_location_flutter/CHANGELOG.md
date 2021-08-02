@@ -1,3 +1,8 @@
+## 2.0.3
+- Updated repository link and description
+- Updated packages
+- Added zoom parameter to returned position
+
 ## 2.0.2
 - Null safe code changes
 - Updated documentation
