@@ -62,45 +62,42 @@ class _OTPDialogState extends State<OTPDialog> {
           ),
           content: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: 200.toHeight),
-            child: Column(
-              children: [
-                Text(
-                  'Please enter the OTP that you have recieved with the invite link',
-                  textAlign: TextAlign.center,
+            child: Column(children: [
+              Text(
+                'Please enter the OTP that you have recieved with the invite link',
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 20.toHeight,
+              ),
+              PinCodeFields(
+                length: 4,
+                controller: newTextEditingController,
+                focusNode: focusNode,
+                fieldBorderStyle: FieldBorderStyle.Square,
+                responsive: false,
+                fieldHeight: 50.0,
+                fieldWidth: 30.0,
+                borderWidth: 1.0,
+                activeBorderColor: Colors.black,
+                borderRadius: BorderRadius.circular(2.0),
+                keyboardType: TextInputType.number,
+                autoHideKeyboard: true,
+                borderColor: Colors.grey,
+                textStyle: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                SizedBox(
-                  height: 20.toHeight,
-                ),
-                PinCodeFields(
-                  length: 4,
-                  controller: newTextEditingController,
-                  focusNode: focusNode,
-                  fieldBorderStyle: FieldBorderStyle.Square,
-                  responsive: false,
-                  fieldHeight: 50.0,
-                  fieldWidth: 30.0,
-                  borderWidth: 1.0,
-                  activeBorderColor: Colors.black,
-                  borderRadius: BorderRadius.circular(2.0),
-                  keyboardType: TextInputType.number,
-                  autoHideKeyboard: true,
-                  borderColor: Colors.grey,
-                  textStyle: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  
-                  onComplete: (result) {
-                    // Your logic with code
-                    print(result);
-                    Navigator.pop(context, result);
-                  },
-                ),
-              ]),
+                onComplete: (result) {
+                  // Your logic with code
+                  print(result);
+                  Navigator.pop(context, result);
+                },
+              ),
+            ]),
           ),
         ),
       ),
     );
   }
-
 }
