@@ -8,10 +8,7 @@ import 'package:at_invitation_flutter/models/message_share.dart';
 import 'package:at_invitation_flutter/widgets/share_dialog.dart';
 import 'package:at_invitation_flutter/widgets/otp_dialog.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
-// ignore: import_of_legacy_library_into_null_safe
-// import 'package:at_commons/at_commons.dart';
 import 'package:uuid/uuid.dart';
 
 class InvitationService {

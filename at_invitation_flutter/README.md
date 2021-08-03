@@ -4,16 +4,12 @@
 
 # at_invitation_flutter
 
-A flutter plugin to share data and invite contacts using SMS or email.
+A Flutter package to share data and invite contacts using SMS or email to the @platform.
 
 ## Getting Started
 
-This plugin can be added to the project as git dependency in pubspec.yaml
-
-```
-dependencies:
-  at_invitation_flutter: ^0.0.1
-```
+This package can be used to generate the invite link with passcode and handle connecting the invitee to the inviter on the @platform.
+Please refer to [documentation](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_invitation_flutter/website_content/overview.md).
 
 ### Sample usage
 It is expected that the app will first create an AtClientService instance and authenticate an atsign.
@@ -31,3 +27,7 @@ initializeInvitationService(
 
 The app also needs to handle deep links and handle incoming link with parameters.
 The [uni_links](https://pub.dev/packages/uni_links) package can be used for this.
+
+### Webpage requirements
+A webpage with app information like store links will be required. It also needs to have the javascript functions provided in the [file](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_invitation_flutter/webpage_content/cookieManager.js)
+The function `checkAndWriteCookie` needs to be called on the `onLoad` event of the webpage.

@@ -1,5 +1,5 @@
 function checkAndWriteCookie() {
-    // change this value to your app's deeplink
+    // IMPORTANT: change this value to your app's deeplink
     var deepLink = "atcompany-atmosphere://";
 
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -17,6 +17,7 @@ function checkAndWriteCookie() {
             location.href = cookieValue;
         } else {
             document.writeln("No Cookies...");
+            location.href = deepLink;
         }
     }
 }
