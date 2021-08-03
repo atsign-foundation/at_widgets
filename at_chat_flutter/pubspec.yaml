@@ -1,5 +1,5 @@
 name: at_chat_flutter
-description: A Flutter package to provide chat feature between @signs using the @platform.
+description: A Flutter plugin project to provide a chat feature between @‎signs built on the @‎platform to any Flutter application.
 version: 2.0.2
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
