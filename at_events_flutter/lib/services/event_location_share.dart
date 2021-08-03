@@ -58,9 +58,23 @@ class EventLocationShare {
   ///
   /// TODO: Can filter events for a specific time limit
   void _initialiseEventData() {
+    eventsToShareLocationWith = [];
+
     for (var i = 0;
         i < EventKeyStreamService().allEventNotifications.length;
         i++) {
+      if ((EventKeyStreamService()
+                  .allEventNotifications[i]
+                  .eventNotificationModel ==
+              null) ||
+          (EventKeyStreamService()
+                  .allEventNotifications[i]
+                  .eventNotificationModel!
+                  .isCancelled ==
+              true)) {
+        continue;
+      }
+
       var eventNotificationModel = EventKeyStreamService()
           .allEventNotifications[i]
           .eventNotificationModel!;
@@ -183,8 +197,35 @@ class EventLocationShare {
   }
 
   Future<void> prepareLocationDataAndSend(
-      EventNotificationModel _eventNotificationModel,
+      EventNotificationModel _storedEventNotificationModel,
       LatLng _myLocation) async {
+    late EventNotificationModel _eventNotificationModel;
+
+    /// To get updated event data
+    for (var i = 0;
+        i < EventKeyStreamService().allEventNotifications.length;
+        i++) {
+      if (EventKeyStreamService()
+              .allEventNotifications[i]
+              .eventNotificationModel!
+              .key ==
+          _storedEventNotificationModel.key) {
+        _eventNotificationModel = EventKeyStreamService()
+            .allEventNotifications[i]
+            .eventNotificationModel!;
+        break;
+      }
+    }
+
+    // ignore: unnecessary_null_comparison
+    if (_eventNotificationModel == null) {
+      return;
+    }
+
+    if (_eventNotificationModel.isCancelled == true) {
+      return;
+    }
+
     if (_eventNotificationModel.atsignCreator ==
         AtEventNotificationListener().currentAtSign) {
       var _from = _eventNotificationModel.event!.startTime!;

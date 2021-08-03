@@ -61,7 +61,7 @@ class PopupMarkerLayer extends StatelessWidget {
               top: pixelPosY,
               child: GestureDetector(
                 onTap: () => layerOpts.popupController.togglePopup(markerOpt),
-                child: markerOpt.builder!(context),
+                child: markerOpt.builder(context),
               ),
             ),
           );

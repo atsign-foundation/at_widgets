@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.7.0"
+    version: "2.6.1"
   at_backupkey_flutter:
     dependency: transitive
     description:
@@ -105,14 +105,14 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.2"
+    version: "2.0.1"
   at_location_flutter:
     dependency: transitive
     description:
-      path: "../../at_location_flutter"
-      relative: true
-    source: path
-    version: "2.0.0"
+      name: at_location_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   at_lookup:
     dependency: transitive
     description:
@@ -449,7 +449,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "1.3.0"
   mgrs_dart:
     dependency: transitive
     description:
@@ -720,7 +720,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0"
+    version: "0.3.0"
   transparent_image:
     dependency: transitive
     description:
