@@ -78,7 +78,7 @@ class InvitationService {
         print('error in decrypting message ${e.toString()}');
       });
       print('message received => $decryptedMessage $fromAtsign');
-      if (notificationKey.startsWith(invitationAckKey)){
+      if (notificationKey.startsWith(invitationAckKey)) {
         _processInviteAcknowledgement(decryptedMessage, fromAtsign);
       } else {
         print('received invited data => $decryptedMessage');
@@ -88,8 +88,8 @@ class InvitationService {
 
   void _processInviteAcknowledgement(String? data, String? fromAtsign) async {
     if (data != null && fromAtsign != null) {
-      MessageShareModel receivedInformation = 
-        MessageShareModel.fromJson(jsonDecode(data));
+      MessageShareModel receivedInformation =
+          MessageShareModel.fromJson(jsonDecode(data));
       print('receivedInformation $receivedInformation');
 
       // build and fetch self key
@@ -98,18 +98,19 @@ class InvitationService {
       atKey.metadata?.ttr = -1;
       var result = await atClientInstance?.get(atKey);
       print('fetch result $result');
-      MessageShareModel sentInformation = 
-        MessageShareModel.fromJson(jsonDecode(result?.value));
+      MessageShareModel sentInformation =
+          MessageShareModel.fromJson(jsonDecode(result?.value));
 
       var receivedPasscode = receivedInformation.passcode;
       var sentPasscode = sentInformation.passcode;
 
       if (sentPasscode == receivedPasscode) {
         atKey.sharedWith = fromAtsign;
-        await atClientInstance?.put(atKey, jsonEncode(sentInformation.message))
-          .catchError((e) {
-            print('Error in sharing saved message => $e');
-          });
+        await atClientInstance
+            ?.put(atKey, jsonEncode(sentInformation.message))
+            .catchError((e) {
+          print('Error in sharing saved message => $e');
+        });
       }
     }
   }
@@ -126,25 +127,27 @@ class InvitationService {
     AtKey atKey = AtKey()..metadata = Metadata();
     atKey.key = invitationKey + '.' + keyID;
     atKey.metadata?.ttr = -1;
-    var result = await atClientInstance?.put(atKey, jsonEncode(messageContent))
-      .catchError((e) {
-        print('Error in saving shared data => $e');
-      });;
+    var result = await atClientInstance
+        ?.put(atKey, jsonEncode(messageContent))
+        .catchError((e) {
+      print('Error in saving shared data => $e');
+    });
+    ;
     print(atKey.key);
     if (result == true) {
       showDialog(
         context: context,
         builder: (context) => ShareDialog(
-          uniqueID: keyID,
-          passcode: passcode,
-          webPageLink: webPage,
-          currentAtsign: currentAtSign
-        ),
+            uniqueID: keyID,
+            passcode: passcode,
+            webPageLink: webPage,
+            currentAtsign: currentAtSign),
       );
     }
   }
 
-  Future<void> fetchInviteData(BuildContext context, String data, String atsign) async {
+  Future<void> fetchInviteData(
+      BuildContext context, String data, String atsign) async {
     String otp = await showDialog(
       context: context,
       builder: (context) => OTPDialog(),
@@ -155,12 +158,14 @@ class InvitationService {
     atKey.sharedWith = atsign;
     atKey.metadata?.ttr = -1;
     MessageShareModel messageContent = MessageShareModel(
-      passcode: otp, identifier: data, message: 'invite acknowledgement');
+        passcode: otp, identifier: data, message: 'invite acknowledgement');
     print('created message');
-    var result = await atClientInstance?.put(atKey, jsonEncode(messageContent))
-      .catchError((e) {
-        print('Error in saving acknowledge message => $e');
-      });;
+    var result = await atClientInstance
+        ?.put(atKey, jsonEncode(messageContent))
+        .catchError((e) {
+      print('Error in saving acknowledge message => $e');
+    });
+    ;
     print(atKey.key);
   }
 }

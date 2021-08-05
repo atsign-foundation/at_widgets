@@ -130,11 +130,10 @@ class _SecondScreenState extends State<SecondScreen> {
         print('not mounted');
       } else {
         if (uri != null) {
-          var key = uri.host;
-          print(key);
-          var pathSegments = uri.pathSegments;
-          print(pathSegments);
-          fetchInviteData(context, key, pathSegments[0]);
+          var queryParameters = uri.queryParameters;
+          print(queryParameters);
+          fetchInviteData(context, queryParameters['key'] ?? '',
+              queryParameters['atsign'] ?? '');
         }
       }
     }, onError: (Object err) {
