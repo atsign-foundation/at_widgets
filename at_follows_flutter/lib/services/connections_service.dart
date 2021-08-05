@@ -78,10 +78,10 @@ class ConnectionsService {
         if (notification.operation == Operation.update) {
           await this.updateFollowers(notification, isSetStatus: false);
         } else if (notification.operation == Operation.delete &&
-            notification.key!.contains(AppConstants.following)) {
+            notification.key!.contains(AppConstants.containsFollowing)) {
           await this.deleteFollowers(notification, isSetStatus: false);
         } else if (notification.operation == Operation.delete &&
-            notification.key!.contains(AppConstants.followers)) {
+            notification.key!.contains(AppConstants.containsFollowers)) {
           await this.deleteFollowing(notification, isSetStatus: false);
         }
       }
@@ -434,15 +434,15 @@ class ConnectionsService {
         'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.fromAtSign} to:${notification.toAtSign}');
     if (notification.operation == Operation.update &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key!.contains(AppConstants.following)) {
+        notification.key!.contains(AppConstants.containsFollowing)) {
       await updateFollowers(notification);
     } else if (notification.operation == Operation.delete &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key!.contains(AppConstants.following)) {
+        notification.key!.contains(AppConstants.containsFollowing)) {
       await deleteFollowers(notification);
     } else if (notification.operation == Operation.delete &&
         notification.toAtSign == _sdkService.atsign &&
-        notification.key!.contains(AppConstants.followers)) {
+        notification.key!.contains(AppConstants.containsFollowers)) {
       await deleteFollowing(notification);
     }
   }
