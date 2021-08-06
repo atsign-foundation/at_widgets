@@ -30,7 +30,7 @@ Widget showLocation(Key key, MapController? mapController,
   if (location != null) {
     marker = buildMarker(HybridModel(latLng: location), singleMarker: true);
     if (mapController != null) {
-      // mapController.move(location, 8);
+      mapController.move(location, 8);
     }
   } else {
     marker =
@@ -52,7 +52,7 @@ Widget showLocation(Key key, MapController? mapController,
   return SafeArea(
     child: Scaffold(
         body: FlutterMap(
-      key: UniqueKey(),
+      // key: UniqueKey(),
       mapController: mapController,
       options: MapOptions(
         center: markerList != null
