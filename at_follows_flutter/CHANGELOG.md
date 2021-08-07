@@ -10,4 +10,6 @@
 ## 2.0.1
 - Fix sync related issues in follows list
 ## 2.0.2
-- Fix for setstate issue in init 
+- Fix for setstate issue in init
+## 2.0.3
+- Support for namespace migration changes
