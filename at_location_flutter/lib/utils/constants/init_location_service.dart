@@ -56,7 +56,7 @@ Stream getAllNotification() {
 
 /// sends a share location notification to the [atsign], with a 'ttl' of [minutes].
 /// before calling this [atsign] should be checked if valid or not.
-Future<bool?> sendShareLocationNotification(String atsign, int minutes) async {
+Future<bool?> sendShareLocationNotification(String atsign, int? minutes) async {
   var result = await SharingLocationService()
       .sendShareLocationEvent(atsign, false, minutes: minutes);
   return result;

@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
+import 'package:at_contact/at_contact.dart';
+import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/sync_secondary.dart';
+import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'at_location_notification_listener.dart';
@@ -43,6 +46,24 @@ class SharingLocationService {
     }
 
     return false;
+  }
+
+  Future<void> sendShareLocationToGroup(List<AtContact> selectedContacts,
+      {int? minutes}) async {
+    await Future.forEach(selectedContacts, (AtContact selectedContact) async {
+      var _state = await sendShareLocationEvent(selectedContact.atSign!, false,
+          minutes: minutes);
+      if (_state == true) {
+        CustomToast().show(
+            'Share Location Request sent to ${selectedContact.atSign!}',
+            AtLocationNotificationListener().navKey.currentContext!);
+      } else if (_state == false) {
+        CustomToast().show(
+            'Something went wrong for ${selectedContact.atSign!}',
+            AtLocationNotificationListener().navKey.currentContext!,
+            bgColor: AllColors().RED);
+      }
+    });
   }
 
   /// Sends a 'sharelocation' key to [atsign] with duration of [minutes] minute
