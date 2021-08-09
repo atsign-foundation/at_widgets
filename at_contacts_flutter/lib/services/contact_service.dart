@@ -153,6 +153,7 @@ class ContactService {
     } else if (atSign[0] != '@') {
       atSign = '@' + atSign;
     }
+    atSign = atSign.toLowerCase().trim();
 
     if (atSign == atClientInstance?.currentAtSign) {
       getAtSignError = TextStrings().addingLoggedInUser;
