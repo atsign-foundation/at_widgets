@@ -2,15 +2,19 @@
 
 import 'dart:async';
 import 'dart:convert';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
 import 'package:at_chat_flutter/models/message_model.dart';
 
 class ChatService {
   ChatService._();
+
   static final ChatService _instance = ChatService._();
+
   factory ChatService() => _instance;
 
   final String storageKey = 'chatHistory.';
@@ -32,7 +36,9 @@ class ChatService {
 
   StreamController<List<Message>> chatStreamController =
       StreamController<List<Message>>.broadcast();
+
   Sink get chatSink => chatStreamController.sink;
+
   Stream<List<Message>> get chatStream => chatStreamController.stream;
 
   void disposeControllers() {
@@ -139,18 +145,20 @@ class ChatService {
       } else {
         chatHistoryMessages = [];
       }
-    
+
       // get received messages
       key.key = storageKey +
-            (isGroupChat ? groupChatId! : '') +
-            (chatWithAtSign != null ? currentAtSign! : ' ').substring(1);
+          (isGroupChat ? groupChatId! : '') +
+          (chatWithAtSign != null ? currentAtSign! : ' ').substring(1);
       key.sharedBy = chatWithAtSign;
       key.sharedWith = currentAtSign!;
       keyValue = await atClientInstance.get(key).catchError((e) {
-        print('error in getting other history ${e.errorCode} ${e.errorMessage}');
+        print(
+            'error in getting other history ${e.errorCode} ${e.errorMessage}');
       });
       if (keyValue != null && keyValue.value != null) {
-        chatHistoryMessagesOther = json.decode((keyValue.value) as String) as List;
+        chatHistoryMessagesOther =
+            json.decode((keyValue.value) as String) as List;
       } else {
         chatHistoryMessagesOther = [];
       }
@@ -169,9 +177,9 @@ class ChatService {
     bool hasa = ita.moveNext();
     bool hasb = itb.moveNext();
     var valueA, valueB;
-    while (hasa | hasb ) {
-      if (hasa && hasb){
-        valueA = Message.fromJson(ita.current);      
+    while (hasa | hasb) {
+      if (hasa && hasb) {
+        valueA = Message.fromJson(ita.current);
         valueB = Message.fromJson(itb.current);
         if (valueA.time > valueB.time) {
           result.add(valueA);
@@ -180,17 +188,17 @@ class ChatService {
           result.add(valueB);
           hasb = itb.moveNext();
         }
-      } else if(hasa){
+      } else if (hasa) {
         valueA = Message.fromJson(ita.current);
         result.add(valueA);
-        while (hasa = ita.moveNext()){
+        while (hasa = ita.moveNext()) {
           valueA = Message.fromJson(ita.current);
           result.add(valueA);
         }
-      } else if(hasb){
+      } else if (hasb) {
         valueB = Message.fromJson(itb.current);
         result.add(valueB);
-        while (hasb = itb.moveNext()){
+        while (hasb = itb.moveNext()) {
           valueB = Message.fromJson(itb.current);
           result.add(valueB);
         }
@@ -222,6 +230,7 @@ class ChatService {
 
   Future<void> sendMessage(String? message) async {
     await setChatHistory(Message(
+        id: '${currentAtSign}_${DateTime.now().millisecondsSinceEpoch}',
         message: message,
         sender: currentAtSign,
         time: DateTime.now().millisecondsSinceEpoch,
@@ -252,17 +261,44 @@ class ChatService {
   // deletes self owned messages only
   Future<bool> deleteMessages() async {
     var key = AtKey()
-        ..key = storageKey +
-            (isGroupChat ? groupChatId! : '') +
-            (chatWithAtSign ?? ' ').substring(1)
-        ..sharedBy = currentAtSign!
-        ..sharedWith = chatWithAtSign
-        ..metadata = Metadata();
+      ..key = storageKey +
+          (isGroupChat ? groupChatId! : '') +
+          (chatWithAtSign ?? ' ').substring(1)
+      ..sharedBy = currentAtSign!
+      ..sharedWith = chatWithAtSign
+      ..metadata = Metadata();
     key.metadata?.ccd = true;
 
     try {
       chatHistoryMessages = [];
-      var result = await atClientInstance.put(key, json.encode(chatHistoryMessages));
+      //     await atClientInstance.delete(atKey)
+      var result =
+          await atClientInstance.put(key, json.encode(chatHistoryMessages));
+      await getChatHistory();
+      return result;
+    } catch (e) {
+      print('error in deleting => $e');
+      return false;
+    }
+  }
+
+  Future<bool> deleteSelectedMessage(String? id) async {
+    var key = AtKey()
+      ..key = storageKey +
+          (isGroupChat ? groupChatId! : '') +
+          (chatWithAtSign ?? ' ').substring(1)
+      ..sharedBy = currentAtSign!
+      ..sharedWith = chatWithAtSign
+      ..metadata = Metadata();
+    key.metadata?.ccd = true;
+
+    try {
+      chatHistoryMessages.removeWhere((e) {
+        var message = Message.fromJson(e);
+        return message.id == id;
+      });
+      var result =
+          await atClientInstance.put(key, json.encode(chatHistoryMessages));
       await getChatHistory();
       return result;
     } catch (e) {

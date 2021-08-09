@@ -1,11 +1,13 @@
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/services/chat_service.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
+import 'package:at_chat_flutter/utils/dialog_utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_chat_flutter/widgets/incoming_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/outgoing_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/send_message.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -38,6 +40,7 @@ class ChatScreen extends StatefulWidget {
       this.title = 'Messages',
       this.hintText})
       : super(key: key);
+
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -47,6 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String? message;
   ScrollController? _scrollController;
   late ChatService _chatService;
+
   @override
   void initState() {
     super.initState();
@@ -150,6 +154,26 @@ class _ChatScreenState extends State<ChatScreen> {
                                                   widget.senderAvatarColor,
                                             )
                                           : OutgoingMessageBubble(
+                                              (id) async {
+                                                final confirmed = await confirm(
+                                                  this.context,
+                                                  title: 'Confirm Dialog',
+                                                  message: 'Do you want to delete this message?',
+                                                  positiveActionTitle: 'Yes',
+                                                  negativeActionTitle: 'No',
+                                                );
+                                                if (!confirmed) return;
+
+                                                var result = await _chatService
+                                                    .deleteSelectedMessage(id);
+                                                var message = result
+                                                    ? 'Message is deleted'
+                                                    : 'Failed to delete';
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content:
+                                                            Text(message)));
+                                              },
                                               message: snapshot.data![index],
                                               color:
                                                   widget.outgoingMessageColor,

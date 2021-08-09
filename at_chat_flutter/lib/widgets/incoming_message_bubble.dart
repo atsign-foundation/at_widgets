@@ -32,9 +32,8 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
           width: 20.toWidth,
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 20),
-          height: 45.toFont,
-          width: 45.toFont,
+          height: 24.toFont,
+          width: 24.toFont,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(45.toWidth),
           ),
@@ -47,7 +46,7 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
           width: 15.toWidth,
         ),
         Container(
-          padding: EdgeInsets.all(30.toHeight),
+          padding: EdgeInsets.all(16.toHeight),
           decoration: BoxDecoration(
             color: widget.color,
             borderRadius: BorderRadius.circular(10.toWidth),

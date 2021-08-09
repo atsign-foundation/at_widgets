@@ -3,15 +3,17 @@ import 'dart:convert';
 enum MessageType { INCOMING, OUTGOING }
 
 class Message {
+  String? id;
   int? time;
   String? message;
   MessageType? type;
   String? sender;
-  Message({this.time, this.message, this.type, this.sender});
+  Message({this.id, this.time, this.message, this.type, this.sender});
 
   Message copyWith(
-      {int? time, String? message, MessageType? type, String? sender}) {
+      {String? id, int? time, String? message, MessageType? type, String? sender}) {
     return Message(
+        id: id ?? this.id,
         time: time ?? this.time,
         message: message ?? this.message,
         type: type ?? this.type,
@@ -20,6 +22,7 @@ class Message {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'time': time,
       'message': message,
       'type': type == MessageType.values[0] ? 0 : 1,
@@ -31,6 +34,7 @@ class Message {
     if (map == null) return Message();
 
     return Message(
+        id: map['id'],
         time: map['time'],
         message: map['message'],
         type: MessageType.values[map['type']],
@@ -44,13 +48,14 @@ class Message {
 
   @override
   String toString() =>
-      'Message(time: $time, message: $message, type: ${type.toString()}, sender: $sender)';
+      'Message(id: $id, time: $time, message: $message, type: ${type.toString()}, sender: $sender)';
 
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
     return o is Message &&
+        o.id == id &&
         o.time == time &&
         o.message == message &&
         o.type == type &&
@@ -59,5 +64,5 @@ class Message {
 
   @override
   int get hashCode =>
-      time.hashCode ^ message.hashCode ^ type.hashCode ^ sender.hashCode;
+      id.hashCode ^ time.hashCode ^ message.hashCode ^ type.hashCode ^ sender.hashCode;
 }

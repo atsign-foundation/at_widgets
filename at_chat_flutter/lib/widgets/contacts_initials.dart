@@ -41,8 +41,8 @@ class ContactInitial extends StatelessWidget {
         child: Text(
           initials.substring((index == 1) ? 0 : 1, index).toUpperCase(),
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.toFont,
+            color: Colors.black,
+            fontSize: 13.toFont,
             fontWeight: FontWeight.w700,
           ),
         ),
