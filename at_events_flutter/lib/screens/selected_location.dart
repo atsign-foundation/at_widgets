@@ -13,9 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
 class SelectedLocation extends StatefulWidget {
-  final LatLng? point;
+  final LatLng point;
   final String displayName;
-  SelectedLocation(this.displayName, this.point);
+  SelectedLocation(this.displayName, this.point, {Key? key}) : super(key: key);
   @override
   _SelectedLocationState createState() => _SelectedLocationState();
 }
@@ -28,7 +28,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
       child: Scaffold(
         body: Stack(
           children: <Widget>[
-            showLocation(UniqueKey(), mapController, location: LatLng(20, 30)),
+            showLocation(UniqueKey(), null, location: widget.point),
             Positioned(
               top: 0,
               left: 0,
@@ -131,12 +131,12 @@ class _SelectedLocationState extends State<SelectedLocation> {
                               EventService()
                                   .eventNotificationModel!
                                   .venue!
-                                  .latitude = widget.point!.latitude;
+                                  .latitude = widget.point.latitude;
 
                               EventService()
                                   .eventNotificationModel!
                                   .venue!
-                                  .longitude = widget.point!.longitude;
+                                  .longitude = widget.point.longitude;
 
                               EventService().update(
                                   eventData:

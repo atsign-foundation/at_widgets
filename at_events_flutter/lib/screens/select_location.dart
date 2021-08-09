@@ -162,7 +162,7 @@ class _SelectLocationState extends State<SelectLocation> {
                 CustomToast().show('Unable to access location', context);
                 return;
               }
-              onLocationSelect(context, currentLocation);
+              onLocationSelect(context, currentLocation!);
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,7 +235,7 @@ class _SelectLocationState extends State<SelectLocation> {
   }
 }
 
-void onLocationSelect(BuildContext context, LatLng? point,
+void onLocationSelect(BuildContext context, LatLng point,
     {String? displayName}) {
   Navigator.push(
       context,
