@@ -1,38 +1,33 @@
-## [2.0.1] - 07/09/2021
+## 2.0.2
+- Updated repository link and description
+- Updated dependencies
 
-* Updated dependencies
+## 2.0.1
+- Updated dependencies
 
-## [2.0.0] - 06/30/2021
+## 2.0.0
+- Null safe version
+- Updated dependencies
 
-* Null safe version
-* Updated dependencies
+## 1.0.2
+- Fix to prevent adding self to contact list
+- Added function to get contact details from cached data
 
-## [1.0.2] - 05/27/2021
+## 1.0.1
+- The referenced packages are updated
+- Improved avatar placeholder
 
-* Fix to prevent adding self to contact list
-* Added function to get contact details from cached data
+## 1.0.0
+- Updated example app
 
-## [1.0.1] - 05/13/2021
+## 0.0.4
+- The referenced packages are updated
 
-* The referenced packages are updated
-* Improved avatar placeholder
+## 0.0.3
+- The referenced packages from client sdk updated
 
-## [1.0.0] - 04/20/2021
+## 0.0.2
+- The referenced packages from client sdk updated
 
-* Updated example app
-
-## [0.0.4] - 03/19/2021
-
-* The referenced packages are updated
-
-## [0.0.3] - 02/23/2021
-
-* The referenced packages from client sdk updated
-
-## [0.0.2] - 01/14/2021
-
-* The referenced packages from client sdk updated
-
-## [0.0.1] - 01/04/2021
-
-* The initial release consists of two screens - contacts and blocked contacts.
+## 0.0.1
+- The initial release consists of two screens - contacts and blocked contacts.

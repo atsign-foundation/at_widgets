@@ -43,7 +43,8 @@ class FloatingIcon extends StatelessWidget {
             color: iconColor ?? AllColors().WHITE,
             size: 27.toFont,
           ),
-          onPressed: onPressed as void Function()? ?? () => Scaffold.of(context).openEndDrawer()),
+          onPressed: onPressed as void Function()? ??
+              () => Scaffold.of(context).openEndDrawer()),
     );
   }
 }
