@@ -19,7 +19,7 @@ void shareAndInvite(BuildContext context, String jsonData) {
   InvitationService().shareAndinvite(context, jsonData);
 }
 
-fetchInviteData(BuildContext context, String data, String atsign){
+fetchInviteData(BuildContext context, String data, String atsign) {
   print('fetchInviteData $data $atsign');
   InvitationService().fetchInviteData(context, data, atsign);
 }

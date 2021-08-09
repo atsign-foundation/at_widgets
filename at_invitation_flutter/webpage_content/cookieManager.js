@@ -1,11 +1,13 @@
 function checkAndWriteCookie() {
     // IMPORTANT: change this value to your app's deeplink
-    var deepLink = "atcompany-atmosphere://";
+    var iosDeepLink = "atcompany-atmosphere://";
+    var androidDeepLink = "https://www.atcompany-atmosphere.com/";
 
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
     if (params['key'] != undefined && params['atsign'] != undefined) {
-        custom = deepLink + params['key'] + '/' + params['atsign'];
+        custom = ((navigator.userAgent.match(/Android/i) == 'Android') ? androidDeepLink : iosDeepLink) + '?key=' + params['key'] + '&atsign=' + params['atsign'];
+
         var now = new Date();
         var time = now.getTime();
         var expireTime = time + 1000 * 3600;
@@ -16,8 +18,19 @@ function checkAndWriteCookie() {
         if (cookieValue) {
             location.href = cookieValue;
         } else {
-            document.writeln("No Cookies...");
-            location.href = deepLink;
+            console.log("No Cookies...");
+            location.href = iosDeepLink;
+        }
+        // for Android
+        // As the script initiated redirection does not work for chrome
+        if ((navigator.userAgent.match(/Android/i) == 'Android')) {
+            var elemCenter = document.createElement('center');
+            var elemA = document.createElement('a');
+            elemA.href = cookieValue ? cookieValue : androidDeepLink;
+            var text = "Return to app";
+            elemA.append(text);
+            elemCenter.append(elemA);
+            document.body.prepend(elemCenter);
         }
     }
 }

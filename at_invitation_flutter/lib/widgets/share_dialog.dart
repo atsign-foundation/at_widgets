@@ -16,7 +16,12 @@ class ShareDialog extends StatefulWidget {
   final String? passcode;
   final String? webPageLink;
   final String currentAtsign;
-  ShareDialog({Key? key, this.uniqueID, this.passcode, this.webPageLink, required this.currentAtsign})
+  ShareDialog(
+      {Key? key,
+      this.uniqueID,
+      this.passcode,
+      this.webPageLink,
+      required this.currentAtsign})
       : super(key: key);
 
   @override
@@ -265,8 +270,8 @@ class _ShareDialogState extends State<ShareDialog> {
 
   Future<void> _sendInformation() async {
     // construct message body
-    String link = (widget.webPageLink ?? '') + 
-      '?key=${widget.uniqueID}&atsign=${widget.currentAtsign}';
+    String link = (widget.webPageLink ?? '') +
+        '?key=${widget.uniqueID}&atsign=${widget.currentAtsign}';
     String inviteText =
         'Hi there, you have been invited to join this app. \n link: $link \n password: ${widget.passcode}';
 
@@ -288,7 +293,7 @@ class _ShareDialogState extends State<ShareDialog> {
       }
     }
     // send email
-    if (emailAddress != '') {
+    else if (emailAddress != '') {
       var uri =
           'mailto:' + emailAddress + '?subject=Invitation&body=' + messageBody;
       print(uri);
