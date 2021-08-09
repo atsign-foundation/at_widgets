@@ -75,8 +75,7 @@ class GroupService {
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
     atContactImpl = await AtContactsImpl.getInstance(atSign);
-    await atContactImpl.listContacts();
-    await getAllGroupsDetails();
+    await fetchGroupsAndContacts();
   }
 
   Future<dynamic?> createGroup(AtGroup atGroup) async {
@@ -302,6 +301,15 @@ class GroupService {
     } catch (e) {
       print(e);
     }
+  }
+
+  void resetData() {
+    allContacts = [];
+    selectedGroupContacts = [];
+    selectedContactsSink.add(selectedGroupContacts);
+    atGroupSink.add([]);
+    allContactsSink.add([]);
+    showLoaderSink.add(false);
   }
 
   void dispose() {
