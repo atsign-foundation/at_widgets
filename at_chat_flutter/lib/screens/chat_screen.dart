@@ -155,17 +155,19 @@ class _ChatScreenState extends State<ChatScreen> {
                                             )
                                           : OutgoingMessageBubble(
                                               (id) async {
-                                                final confirmed = await confirm(
-                                                  this.context,
-                                                  title: 'Confirm Dialog',
-                                                  message: 'Do you want to delete this message?',
-                                                  positiveActionTitle: 'Yes',
-                                                  negativeActionTitle: 'No',
-                                                );
-                                                if (!confirmed) return;
+                                                // final confirmed = await confirm(
+                                                //   this.context,
+                                                //   title: 'Confirm Dialog',
+                                                //   message: 'Do you want to delete this message?',
+                                                //   positiveActionTitle: 'Yes',
+                                                //   negativeActionTitle: 'No',
+                                                // );
+                                                // if (!confirmed) return;
 
                                                 var result = await _chatService
                                                     .deleteSelectedMessage(id);
+                                                Navigator.of(context).pop();
+
                                                 var message = result
                                                     ? 'Message is deleted'
                                                     : 'Failed to delete';
