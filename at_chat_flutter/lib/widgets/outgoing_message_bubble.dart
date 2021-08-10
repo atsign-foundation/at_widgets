@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -36,10 +38,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
           ),
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 165.toWidth),
-            child: Text(
-              widget.message?.message ?? ' ',
-              textAlign: TextAlign.right,
-            ),
+            child: _buildContentMessage(),
           ),
         ),
         SizedBox(
@@ -61,5 +60,19 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
         )
       ],
     );
+  }
+
+  Widget _buildContentMessage() {
+    if (widget.message?.contentType == MessageContentType.IMAGE) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 165.toWidth),
+        child: Image.memory(base64Decode(widget.message?.message ?? '')),
+      );
+    } else {
+      return Text(
+        widget.message?.message ?? ' ',
+        textAlign: TextAlign.right,
+      );
+    }
   }
 }

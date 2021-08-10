@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -230,6 +231,40 @@ class ChatService {
     } else {
       atKey.sharedWith = chatWithAtSign;
       var result = await atClientInstance.put(atKey, message);
+      print('send notification => $result');
+    }
+  }
+
+  Future<void> sendImageFile(File file) async {
+    List<int> imageBytes = file.readAsBytesSync();
+    final base64Image = base64Encode(imageBytes);
+    await setChatHistory(Message(
+      message: base64Image,
+      sender: currentAtSign,
+      time: DateTime.now().millisecondsSinceEpoch,
+      type: MessageType.OUTGOING,
+      contentType: MessageContentType.IMAGE,
+    ));
+
+    final metadata = Metadata();
+    metadata.isBinary = true;
+    var atKey = AtKey()
+      ..metadata = metadata
+      ..metadata?.ttr = -1
+      ..key = chatKey +
+          (isGroupChat ? groupChatId! : '') +
+          DateTime.now().millisecondsSinceEpoch.toString();
+    if (isGroupChat) {
+      await Future.forEach(groupChatMembers!, (dynamic member) async {
+        if (member != currentAtSign) {
+          atKey.sharedWith = member;
+          var result = await atClientInstance.put(atKey, base64Image);
+          print('send notification for groupChat => $result');
+        }
+      });
+    } else {
+      atKey.sharedWith = chatWithAtSign;
+      var result = await atClientInstance.put(atKey, base64Image);
       print('send notification => $result');
     }
   }
