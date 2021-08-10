@@ -47,6 +47,7 @@ class EventKeyStreamService {
     atClientInstance = clientInstance;
     currentAtSign = atClientInstance!.currentAtSign;
     allEventNotifications = [];
+    allPastEventNotifications = [];
     this.streamAlternative = streamAlternative;
 
     atNotificationsController =
