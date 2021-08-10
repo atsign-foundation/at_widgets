@@ -195,22 +195,45 @@ class EventService {
     selectedList.forEach((element) {
       if (element!.contact != null) {
         var newContact = getGroupMemberContact(element.contact!);
-        EventService().eventNotificationModel!.group!.members!.add(newContact);
-        EventService().selectedContacts!.add(newContact);
-        selectedContactsAtSigns.add(newContact.atSign);
+        // EventService().eventNotificationModel!.group!.members!.add(newContact);
+        // EventService().selectedContacts!.add(newContact);
+        // selectedContactsAtSigns.add(newContact.atSign);
+        addContactToList(newContact);
       } else if (element.group != null) {
         element.group!.members!.forEach((groupMember) {
           var newContact = getGroupMemberContact(groupMember);
-          EventService()
-              .eventNotificationModel!
-              .group!
-              .members!
-              .add(newContact);
-          EventService().selectedContacts!.add(newContact);
-          selectedContactsAtSigns.add(newContact.atSign);
+          // EventService()
+          //     .eventNotificationModel!
+          //     .group!
+          //     .members!
+          //     .add(newContact);
+          // EventService().selectedContacts!.add(newContact);
+          // selectedContactsAtSigns.add(newContact.atSign);
+          addContactToList(newContact);
         });
       }
     });
+  }
+
+  void addContactToList(AtContact _selectedContact) {
+    var _containsContact = false;
+
+    // to prevent one contact from getting added again
+    EventService().selectedContacts!.forEach((_contact) {
+      if (_selectedContact.atSign == _contact.atSign) {
+        _containsContact = true;
+      }
+    });
+
+    if (!_containsContact) {
+      EventService()
+          .eventNotificationModel!
+          .group!
+          .members!
+          .add(_selectedContact);
+      EventService().selectedContacts!.add(_selectedContact);
+      selectedContactsAtSigns.add(_selectedContact.atSign);
+    }
   }
 
   // ignore: always_declare_return_types
