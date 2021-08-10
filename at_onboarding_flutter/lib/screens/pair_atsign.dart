@@ -92,7 +92,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     return true;
   }
 
-  _processSharedSecret(String atsign, String secret) async {
+  _processSharedSecret(String atsign, String secret,
+      {bool isScanner = false}) async {
     var authResponse;
     try {
       setState(() {
@@ -115,9 +116,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
               _onboardingService.currentAtsign);
           if (_onboardingService.nextScreen == null) {
+            if (isScanner) Navigator.pop(context);
             Navigator.pop(context);
             return;
           }
+          if (isScanner) Navigator.pop(context);
           await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -395,16 +398,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         appBar: CustomAppBar(
           showBackButton: true,
           title: Strings.pairAtsignTitle,
-          actionItems: [
-            IconButton(
-              icon: Icon(Icons.scanner_outlined, size: 16.toFont),
-              onPressed: () {
-                setState(() {
-                  scanQR = false;
-                });
-              },
-            )
-          ],
         ),
         body: QrReaderView(
           width: 300.0,
@@ -435,14 +428,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                                 url: Strings.faqUrl,
                               )));
                 }),
-            IconButton(
-              icon: Icon(Icons.scanner_outlined, size: 16.toFont),
-              onPressed: () {
-                setState(() {
-                  scanQR = true;
-                });
-              },
-            )
           ],
         ),
         body: SingleChildScrollView(
@@ -611,10 +596,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                 value == null ? _getAtsignForm() : await _onAtSignSubmit(value);
               });
             },
-            onValidate: (atsign, secret) async {
+            onValidate: (atsign, secret, isScanner) async {
               _loadingMessage = Strings.loadingAtsignReady;
               setState(() {});
-              await _processSharedSecret(atsign, secret);
+              await _processSharedSecret(atsign, secret, isScanner: isScanner);
             },
             onSubmit: (atsign) async {
               await _onAtSignSubmit(atsign);
@@ -657,10 +642,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                     return true;
                   },
                   child: CustomDialog(
-                    onValidate: (atsign, secret) async {
+                    onValidate: (atsign, secret, isScanner) async {
                       _loadingMessage = Strings.loadingAtsignReady;
                       setState(() {});
-                      await _processSharedSecret(atsign, secret);
+                      await _processSharedSecret(atsign, secret,
+                          isScanner: isScanner);
                     },
                     isAtsignForm: true,
                     isQR: true,
@@ -735,10 +721,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               return true;
             },
             child: CustomDialog(
-              onValidate: (atsign, secret) async {
+              onValidate: (atsign, secret, isScanner) async {
                 _loadingMessage = Strings.loadingAtsignReady;
                 setState(() {});
-                await _processSharedSecret(atsign, secret);
+                await _processSharedSecret(atsign, secret, isScanner: isScanner);
               },
               isAtsignForm: true,
               isQR: true,

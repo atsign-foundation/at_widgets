@@ -17,11 +17,13 @@ import 'package:flutter/material.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:flutter_qr_reader/flutter_qr_reader.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
-class CustomDialog extends StatelessWidget {
+class CustomDialog extends StatefulWidget {
   ///will display the dialog with the [title] and the error details if set to true else displays the [message]. By default it is set to true.
   final bool isErrorDialog;
 
@@ -47,7 +49,7 @@ class CustomDialog extends StatelessWidget {
   final Function(String)? onSubmit;
 
   ///Returns a valid atsign if atsignForm is made true.
-  final Function(String, String)? onValidate;
+  final Function(String, String, bool)? onValidate;
 
   final Function(List<String>, String)? onLimitExceed;
 
@@ -70,23 +72,47 @@ class CustomDialog extends StatelessWidget {
       this.onLimitExceed,
       this.onClose,
       this.context});
+
+  @override
+  _CustomDialogState createState() => _CustomDialogState();
+}
+
+class _CustomDialogState extends State<CustomDialog> {
   final _formKey = GlobalKey<FormState>();
+
   TextEditingController _atsignController = TextEditingController();
+
   TextEditingController _emailController = TextEditingController();
+
   final FreeAtsignService _freeAtsignService = FreeAtsignService();
+
   String? freeAtsign;
+
   bool otp = false;
+
   bool pair = false;
+
   bool isfreeAtsign = false;
+
   String? verificationCode;
+
   bool loading = false;
+
   bool wrongEmail = false;
+
   String? oldEmail;
+
   String limitExceeded = 'limitExceeded';
+
+  bool isQrScanner = false;
+
+  QrReaderViewController? _controller;
+
+  Future<bool>? scanResult;
 
   @override
   Widget build(BuildContext context) {
-    if (this.isQR) {
+    if (this.widget.isQR) {
       otp = true;
       pair = true;
       isfreeAtsign = true;
@@ -98,89 +124,148 @@ class CustomDialog extends StatelessWidget {
             child: AbsorbPointer(
                 absorbing: loading,
                 child: AlertDialog(
-                  title: isErrorDialog
+                  title: widget.isErrorDialog
                       ? Row(
                           children: [
                             Text(
-                              title ?? Strings.errorTitle,
+                              widget.title ?? Strings.errorTitle,
                               style: CustomTextStyles.fontR16primary,
                             ),
-                            this.message == ResponseStatus.TIME_OUT
+                            this.widget.message == ResponseStatus.TIME_OUT
                                 ? Icon(Icons.access_time, size: 18.toFont)
                                 : Icon(Icons.sentiment_dissatisfied,
                                     size: 18.toFont)
                           ],
                         )
-                      : isAtsignForm
-                          ? Padding(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: 4.0.toFont),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Setting up your account',
-                                      style: TextStyle(
-                                          color: ColorConstants.appColor,
-                                          fontSize: 16.toFont),
-                                    ),
-                                    SizedBox(height: 15.toHeight),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                      : widget.isAtsignForm
+                          ? isQrScanner
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 4.0.toFont),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Flexible(
-                                          child: Text(
-                                            !isfreeAtsign
-                                                ? isQR
-                                                    ? 'Enter Verification code'
-                                                    : Strings.enterAtsignTitle
-                                                : !pair
-                                                    ? 'Free @sign'
-                                                    : !otp
-                                                        ? 'Enter your email'
-                                                        : 'Enter Verification Code',
-                                            style:
-                                                CustomTextStyles.fontR16primary,
+                                        Text(
+                                          'Scan your QR!',
+                                          style: TextStyle(
+                                              color: ColorConstants.appColor,
+                                              fontSize: 16.toFont),
+                                        ),
+                                        SizedBox(height: 20.toHeight),
+                                        Container(
+                                          width: 300.toWidth,
+                                          height: 350.toHeight,
+                                          child: QrReaderView(
+                                            width: 300.toWidth,
+                                            height: 350.toHeight,
+                                            callback: (controller) {
+                                              _controller = controller;
+                                              _controller!
+                                                  .startCamera((data, offsets) {
+                                                onScan(data, offsets, context);
+                                              });
+                                            },
                                           ),
                                         ),
-                                        IconButton(
-                                            icon: Icon(
-                                              Icons.help,
+                                        SizedBox(height: 20.toHeight),
+                                        Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.grey[800])),
+                                              // key: Key(''),
+                                              onPressed: () {
+                                                setState(() {
+                                                  isQrScanner = false;
+                                                });
+                                              },
+                                              child: Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15.toFont),
+                                              ),
+                                            )),
+                                      ]),
+                                )
+                              : Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 4.0.toFont),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Setting up your account',
+                                          style: TextStyle(
                                               color: ColorConstants.appColor,
-                                              size: 18.toFont,
+                                              fontSize: 16.toFont),
+                                        ),
+                                        SizedBox(height: 15.toHeight),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                !isfreeAtsign
+                                                    ? widget.isQR
+                                                        ? 'Enter Verification code'
+                                                        : Strings
+                                                            .enterAtsignTitle
+                                                    : !pair
+                                                        ? 'Free @sign'
+                                                        : !otp
+                                                            ? 'Enter your email'
+                                                            : 'Enter Verification Code',
+                                                style: CustomTextStyles
+                                                    .fontR16primary,
+                                              ),
                                             ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          WebViewScreen(
-                                                            title: Strings
-                                                                .faqTitle,
-                                                            url: Strings.faqUrl,
-                                                          )));
-                                            })
-                                      ],
-                                    ),
-                                    otp
-                                        ? Text(
-                                            !this.isQR
-                                                ? 'A verification code has been sent to ${_emailController.text}'
-                                                : 'A verification code has been sent to your registered email.',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 13.toFont),
-                                          )
-                                        : Container()
-                                  ]))
-                          : this.title != null
+                                            IconButton(
+                                                icon: Icon(
+                                                  Icons.help,
+                                                  color:
+                                                      ColorConstants.appColor,
+                                                  size: 18.toFont,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              WebViewScreen(
+                                                                title: Strings
+                                                                    .faqTitle,
+                                                                url: Strings
+                                                                    .faqUrl,
+                                                              )));
+                                                })
+                                          ],
+                                        ),
+                                        otp
+                                            ? Text(
+                                                !this.widget.isQR
+                                                    ? 'A verification code has been sent to ${_emailController.text}'
+                                                    : 'A verification code has been sent to your registered email.',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 13.toFont),
+                                              )
+                                            : Container()
+                                      ]))
+                          : this.widget.title != null
                               ? Text(
-                                  title!,
+                                  widget.title!,
                                   style: CustomTextStyles.fontR16primary,
                                 )
-                              : this.title as Widget?,
-                  content: isAtsignForm
+                              : this.widget.title as Widget?,
+                  content: widget.isAtsignForm && !isQrScanner
                       ? Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
                           child: Container(
@@ -265,7 +350,9 @@ class CustomDialog extends StatelessWidget {
                                               verificationCode = v;
                                             },
                                           )),
-                                if (!isfreeAtsign && !isQR) ...[
+                                if (!isfreeAtsign &&
+                                    !widget.isQR &&
+                                    !isQrScanner) ...[
                                   SizedBox(height: 15.toHeight),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -294,7 +381,7 @@ class CustomDialog extends StatelessWidget {
                                           if (_formKey.currentState!
                                               .validate()) {
                                             Navigator.pop(context);
-                                            this.onSubmit!(
+                                            this.widget.onSubmit!(
                                                 _atsignController.text);
                                           }
                                         },
@@ -307,6 +394,30 @@ class CustomDialog extends StatelessWidget {
                                       ),
                                     ],
                                   ),
+                                  SizedBox(height: 20.toHeight),
+                                  Text('Have a QR Code?'),
+                                  SizedBox(height: 5.toHeight),
+                                  Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.grey[800])),
+                                        // key: Key(''),
+                                        onPressed: () async {
+                                          _verifyCameraPermissions();
+                                          setState(() {
+                                            isQrScanner = true;
+                                          });
+                                        },
+                                        child: Text(
+                                          'Open QR Reader',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15.toFont),
+                                        ),
+                                      )),
                                   SizedBox(height: 20.toHeight),
                                   Text('Need an @sign?'),
                                   SizedBox(height: 5.toHeight),
@@ -359,7 +470,8 @@ class CustomDialog extends StatelessWidget {
                                                   stateSet(() {});
                                                   _atsignController.text =
                                                       (await (getFreeAtsign(
-                                                              context))) ?? '';
+                                                              context))) ??
+                                                          '';
                                                   loading = false;
                                                   stateSet(() {});
                                                 },
@@ -475,7 +587,7 @@ class CustomDialog extends StatelessWidget {
                                                             (_emailController
                                                                             .text !=
                                                                         '' ||
-                                                                    isQR)
+                                                                    widget.isQR)
                                                                 ? Colors
                                                                     .grey[800]
                                                                 : Colors.grey[
@@ -483,15 +595,15 @@ class CustomDialog extends StatelessWidget {
                                                 onPressed: () async {
                                                   if ((_emailController.text !=
                                                           '') ||
-                                                      isQR) {
+                                                      widget.isQR) {
                                                     loading = true;
                                                     stateSet(() {});
 
                                                     String? result;
-                                                    if (isQR) {
+                                                    if (widget.isQR) {
                                                       result =
                                                           await validatewithAtsign(
-                                                              atsign,
+                                                              widget.atsign,
                                                               verificationCode!,
                                                               context);
                                                     } else {
@@ -513,8 +625,8 @@ class CustomDialog extends StatelessWidget {
                                                       List params =
                                                           result.split(':');
                                                       Navigator.pop(context);
-                                                      this.onValidate!(
-                                                          params[0], params[1]);
+                                                      this.widget.onValidate!(
+                                                          params[0], params[1], false);
                                                     }
                                                   }
                                                 },
@@ -531,12 +643,12 @@ class CustomDialog extends StatelessWidget {
                                               onPressed: () async {
                                                 if ((_emailController.text !=
                                                         '') ||
-                                                    isQR) {
+                                                    widget.isQR) {
                                                   loading = true;
                                                   stateSet(() {});
-                                                  if (isQR) {
+                                                  if (widget.isQR) {
                                                     await loginWithAtsign(
-                                                        atsign, context);
+                                                        widget.atsign, context);
                                                   } else {
                                                     await registerPersona(
                                                         _atsignController.text,
@@ -555,7 +667,7 @@ class CustomDialog extends StatelessWidget {
                                                         .appColor),
                                               )),
                                           SizedBox(height: 10.toHeight),
-                                          if (!isQR)
+                                          if (!widget.isQR)
                                             TextButton(
                                                 onPressed: () {
                                                   otp = false;
@@ -610,13 +722,13 @@ class CustomDialog extends StatelessWidget {
                               ],
                             ),
                           ))
-                      : _getMessage(this.message, isErrorDialog),
-                  actions: showClose
+                      : _getMessage(this.widget.message, widget.isErrorDialog),
+                  actions: widget.showClose
                       ? [
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);
-                              this.onClose!();
+                              this.widget.onClose!();
                             },
                             child: Text(
                               Strings.closeTitle,
@@ -632,7 +744,27 @@ class CustomDialog extends StatelessWidget {
     });
   }
 
-  //to get free atsign from the server
+  Future<bool> _verifyCameraPermissions() async {
+    var status = await Permission.camera.status;
+    print("camera status => $status");
+    if (status.isGranted) {
+      return true;
+    }
+    return (await [Permission.camera].request())[0] == PermissionStatus.granted;
+  }
+
+  void onScan(String data, List<Offset> offsets, context) async {
+    _controller!.stopCamera();
+    print('SCANNED: => $data');
+    var values = data.split(':');
+    await widget.onValidate!(values[0], values[1], true);
+
+    // try again
+    await _controller!.startCamera((data, offsets) {
+      onScan(data, offsets, context);
+    });
+  }
+
   Future<String?> getFreeAtsign(BuildContext context) async {
     var data;
     String? atsign;
@@ -650,8 +782,6 @@ class CustomDialog extends StatelessWidget {
     return atsign;
   }
 
-  //To register the person with the provided atsign and email
-//It will send an OTP to the registered email
   Future<bool> registerPersona(
       String atsign, String email, BuildContext context,
       {String? oldEmail}) async {
@@ -682,8 +812,6 @@ class CustomDialog extends StatelessWidget {
     return status;
   }
 
-  //It will validate the person with atsign, email and the OTP.
-  //If the validation is successful, it will return a cram secret for the user to login
   Future<String?> validatePerson(
       String atsign, String email, String? otp, BuildContext context,
       {bool isConfirmation = false}) async {
@@ -708,7 +836,7 @@ class CustomDialog extends StatelessWidget {
         if (responseData['newAtsign'] == null) {
           Navigator.pop(context);
 
-          this.onLimitExceed!(atsigns, responseData['message']);
+          this.widget.onLimitExceed!(atsigns, responseData['message']);
           return this.limitExceeded;
         }
         //displays list of atsign along with newAtsign
@@ -727,7 +855,7 @@ class CustomDialog extends StatelessWidget {
             } else {
               if (value != null) {
                 Navigator.pop(context);
-                this.onSubmit!(value);
+                this.widget.onSubmit!(value);
               }
               return null;
             }
@@ -749,8 +877,6 @@ class CustomDialog extends StatelessWidget {
     return cramSecret;
   }
 
-  //It will validate the person with atsign, email and the OTP.
-  //If the validation is successful, it will return a cram secret for the user to login
   Future<String> validatewithAtsign(
       String atsign, String otp, BuildContext context,
       {bool isConfirmation = false}) async {
@@ -780,8 +906,6 @@ class CustomDialog extends StatelessWidget {
     return cramSecret;
   }
 
-  //It will validate the person with atsign, email and the OTP.
-  //If the validation is successful, it will return a cram secret for the user to login
   Future<bool> loginWithAtsign(String atsign, BuildContext context) async {
     var data;
     bool status = false;
@@ -937,7 +1061,7 @@ class CustomDialog extends StatelessWidget {
       return null;
     }
     if (isErrorDialog) {
-      message = _getErrorMessage(this.message);
+      message = _getErrorMessage(this.widget.message);
     }
     if (!message.contains(highLightText)) {
       return Text(message, style: CustomTextStyles.fontR16primary);
@@ -974,7 +1098,7 @@ class CustomDialog extends StatelessWidget {
                 } else {
                   showDialog(
                       barrierDismissible: false,
-                      context: context,
+                      context: widget.context,
                       builder: (BuildContext context) {
                         return CustomDialog(
                           isErrorDialog: true,
