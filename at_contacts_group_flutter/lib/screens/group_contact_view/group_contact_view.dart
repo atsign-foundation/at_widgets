@@ -391,7 +391,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                                         ),
                                                       )
                                                     : CustomListTile(
-                                                        // onTap: () {},
+                                                        onTap: () {},
                                                         // asSelectionTile: widget
                                                         //     .asSelectionScreen,
                                                         // selectSingle: widget
@@ -407,8 +407,23 @@ class _GroupContactViewState extends State<GroupContactView> {
                                                           widget
                                                               .selectedList!(s);
                                                         },
-                                                        // onTrailingPressed:
-                                                        //     () {},
+                                                        onTrailingPressed: () {
+                                                          if (contactsForAlphabet[
+                                                                      index]!
+                                                                  .group !=
+                                                              null) {
+                                                            Navigator.pop(
+                                                                context);
+
+                                                            _groupService
+                                                                .addGroupContact(
+                                                                    contactsForAlphabet[
+                                                                        index]);
+                                                            widget.selectedList!(
+                                                                GroupService()
+                                                                    .selectedGroupContacts);
+                                                          }
+                                                        },
                                                       ),
 
                                                 // child:,
