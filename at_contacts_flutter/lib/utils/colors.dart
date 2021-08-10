@@ -46,6 +46,9 @@ class ContactInitialsColors {
   };
 
   static Color? getColor(String atsign) {
+    if (atsign.length == 1) {
+      atsign = atsign + ' ';
+    }
     if (atsign[0] == '@') {
       return color['${atsign[1].toUpperCase()}'];
     }
