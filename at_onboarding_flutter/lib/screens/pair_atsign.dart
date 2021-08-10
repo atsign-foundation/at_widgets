@@ -55,6 +55,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   bool isValidated = false;
   bool permissionGrated = false;
   bool scanCompleted = false;
+  bool scanQR = false;
   String _incorrectKeyFile =
       'Unable to fetch the keys from chosen file. Please choose correct file';
   String _failedFileProcessing = 'Failed in processing files. Please try again';
@@ -220,8 +221,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       loading = true;
     });
     try {
-      var isExist =
-          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool?>);
+      var isExist = await (_onboardingService.isExistingAtsign(atsign)
+          as FutureOr<bool?>);
       if (isExist != null && isExist) {
         setState(() {
           loading = false;
@@ -244,7 +245,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               MaterialPageRoute(
                   builder: (context) => _onboardingService.nextScreen!));
         }
-      }    
+      }
     } catch (e) {
       setState(() {
         loading = false;
@@ -257,7 +258,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         _showAlertDialog(e, isPkam: true, title: 'Auth Failed');
       } else if (e == ResponseStatus.TIME_OUT) {
         _showAlertDialog(e, title: 'Response Time out');
-      } else{
+      } else {
         print(e);
       }
     }
@@ -387,7 +388,36 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
+    // QR Scanner
+    if (scanQR) {
+      return Scaffold(
+        backgroundColor: ColorConstants.light,
+        appBar: CustomAppBar(
+          showBackButton: true,
+          title: Strings.pairAtsignTitle,
+          actionItems: [
+            IconButton(
+              icon: Icon(Icons.scanner_outlined, size: 16.toFont),
+              onPressed: () {
+                setState(() {
+                  scanQR = false;
+                });
+              },
+            )
+          ],
+        ),
+        body: QrReaderView(
+          width: 300.0,
+          height: 300.0,
+          callback: (controller) {
+            _controller = controller;
+            _controller.startCamera((data, offsets) {
+              onScan(data, offsets, context);
+            });
+          },
+        ),
+      );
+    }
     return Scaffold(
         backgroundColor: ColorConstants.light,
         appBar: CustomAppBar(
@@ -404,7 +434,15 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                                 title: Strings.faqTitle,
                                 url: Strings.faqUrl,
                               )));
-                })
+                }),
+            IconButton(
+              icon: Icon(Icons.scanner_outlined, size: 16.toFont),
+              onPressed: () {
+                setState(() {
+                  scanQR = true;
+                });
+              },
+            )
           ],
         ),
         body: SingleChildScrollView(
