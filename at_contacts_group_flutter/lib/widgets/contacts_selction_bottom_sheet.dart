@@ -54,6 +54,7 @@ class ContactSelectionBottomSheet extends StatelessWidget {
                     onPressed: () {
                       onPressed!();
                       selectedList!(_groupService.selectedGroupContacts);
+                      _groupService.selectedGroupContacts = [];
                     },
                     buttonColor:
                         Theme.of(context).brightness == Brightness.light
