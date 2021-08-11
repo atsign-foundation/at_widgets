@@ -169,7 +169,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                           ),
                                         ),
                                         SizedBox(height: 20.toHeight),
-                                        Container(
+                                        loading ?Container(
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
@@ -190,7 +190,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     color: Colors.white,
                                                     fontSize: 15.toFont),
                                               ),
-                                            )),
+                                            )): SizedBox(
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                            ),
+                                          ),
+                                        )
                                       ]),
                                 )
                               : Padding(
@@ -395,30 +400,6 @@ class _CustomDialogState extends State<CustomDialog> {
                                     ],
                                   ),
                                   SizedBox(height: 20.toHeight),
-                                  Text('Have a QR Code?'),
-                                  SizedBox(height: 5.toHeight),
-                                  Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.grey[800])),
-                                        // key: Key(''),
-                                        onPressed: () async {
-                                          _verifyCameraPermissions();
-                                          setState(() {
-                                            isQrScanner = true;
-                                          });
-                                        },
-                                        child: Text(
-                                          'Open QR Reader',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.toFont),
-                                        ),
-                                      )),
-                                  SizedBox(height: 20.toHeight),
                                   Text('Need an @sign?'),
                                   SizedBox(height: 5.toHeight),
                                   Container(
@@ -444,6 +425,30 @@ class _CustomDialogState extends State<CustomDialog> {
                                         },
                                         child: Text(
                                           'Generate Free @sign',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15.toFont),
+                                        ),
+                                      )),
+                                  SizedBox(height: 20.toHeight),
+                                  Text('Have a QR Code?'),
+                                  SizedBox(height: 5.toHeight),
+                                  Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.grey[800])),
+                                        // key: Key(''),
+                                        onPressed: () async {
+                                          _verifyCameraPermissions();
+                                          setState(() {
+                                            isQrScanner = true;
+                                          });
+                                        },
+                                        child: Text(
+                                          'Scan QR code',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 15.toFont),
@@ -754,6 +759,9 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   void onScan(String data, List<Offset> offsets, context) async {
+    setState(() {
+      loading = true;
+    });
     _controller!.stopCamera();
     print('SCANNED: => $data');
     var values = data.split(':');
