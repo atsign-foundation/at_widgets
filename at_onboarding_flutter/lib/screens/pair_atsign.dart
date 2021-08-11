@@ -55,6 +55,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   bool isValidated = false;
   bool permissionGrated = false;
   bool scanCompleted = false;
+  bool scanQR = false;
   String _incorrectKeyFile =
       'Unable to fetch the keys from chosen file. Please choose correct file';
   String _failedFileProcessing = 'Failed in processing files. Please try again';
@@ -91,7 +92,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     return true;
   }
 
-  _processSharedSecret(String atsign, String secret) async {
+  _processSharedSecret(String atsign, String secret,
+      {bool isScanner = false}) async {
     var authResponse;
     try {
       setState(() {
@@ -114,9 +116,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
               _onboardingService.currentAtsign);
           if (_onboardingService.nextScreen == null) {
+            if (isScanner) Navigator.pop(context);
             Navigator.pop(context);
             return;
           }
+          if (isScanner) Navigator.pop(context);
           await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -220,8 +224,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       loading = true;
     });
     try {
-      var isExist =
-          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool?>);
+      var isExist = await (_onboardingService.isExistingAtsign(atsign)
+          as FutureOr<bool?>);
       if (isExist != null && isExist) {
         setState(() {
           loading = false;
@@ -244,7 +248,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               MaterialPageRoute(
                   builder: (context) => _onboardingService.nextScreen!));
         }
-      }    
+      }
     } catch (e) {
       setState(() {
         loading = false;
@@ -257,7 +261,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         _showAlertDialog(e, isPkam: true, title: 'Auth Failed');
       } else if (e == ResponseStatus.TIME_OUT) {
         _showAlertDialog(e, title: 'Response Time out');
-      } else{
+      } else {
         print(e);
       }
     }
@@ -387,7 +391,26 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
+    // QR Scanner
+    if (scanQR) {
+      return Scaffold(
+        backgroundColor: ColorConstants.light,
+        appBar: CustomAppBar(
+          showBackButton: true,
+          title: Strings.pairAtsignTitle,
+        ),
+        body: QrReaderView(
+          width: 300.0,
+          height: 300.0,
+          callback: (controller) {
+            _controller = controller;
+            _controller.startCamera((data, offsets) {
+              onScan(data, offsets, context);
+            });
+          },
+        ),
+      );
+    }
     return Scaffold(
         backgroundColor: ColorConstants.light,
         appBar: CustomAppBar(
@@ -404,7 +427,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                                 title: Strings.faqTitle,
                                 url: Strings.faqUrl,
                               )));
-                })
+                }),
           ],
         ),
         body: SingleChildScrollView(
@@ -573,10 +596,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                 value == null ? _getAtsignForm() : await _onAtSignSubmit(value);
               });
             },
-            onValidate: (atsign, secret) async {
+            onValidate: (atsign, secret, isScanner) async {
               _loadingMessage = Strings.loadingAtsignReady;
               setState(() {});
-              await _processSharedSecret(atsign, secret);
+              await _processSharedSecret(atsign, secret, isScanner: isScanner);
             },
             onSubmit: (atsign) async {
               await _onAtSignSubmit(atsign);
@@ -619,10 +642,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                     return true;
                   },
                   child: CustomDialog(
-                    onValidate: (atsign, secret) async {
+                    onValidate: (atsign, secret, isScanner) async {
                       _loadingMessage = Strings.loadingAtsignReady;
                       setState(() {});
-                      await _processSharedSecret(atsign, secret);
+                      await _processSharedSecret(atsign, secret,
+                          isScanner: isScanner);
                     },
                     isAtsignForm: true,
                     isQR: true,
@@ -697,10 +721,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               return true;
             },
             child: CustomDialog(
-              onValidate: (atsign, secret) async {
+              onValidate: (atsign, secret, isScanner) async {
                 _loadingMessage = Strings.loadingAtsignReady;
                 setState(() {});
-                await _processSharedSecret(atsign, secret);
+                await _processSharedSecret(atsign, secret, isScanner: isScanner);
               },
               isAtsignForm: true,
               isQR: true,
