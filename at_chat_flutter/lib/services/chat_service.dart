@@ -258,13 +258,13 @@ class ChatService {
       await Future.forEach(groupChatMembers!, (dynamic member) async {
         if (member != currentAtSign) {
           atKey.sharedWith = member;
-          var result = await atClientInstance.put(atKey, base64Image);
+          var result = await atClientInstance.put(atKey, "Image");
           print('send notification for groupChat => $result');
         }
       });
     } else {
       atKey.sharedWith = chatWithAtSign;
-      var result = await atClientInstance.put(atKey, base64Image);
+      var result = await atClientInstance.put(atKey, "Image");
       print('send notification => $result');
     }
   }
