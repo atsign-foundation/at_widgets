@@ -1,5 +1,6 @@
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/services/chat_service.dart';
+import 'package:at_chat_flutter/utils/chat_theme.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,10 @@ class ChatScreen extends StatefulWidget {
   final String title;
   final String? hintText;
 
+  /// Chat theme. Extend [ChatTheme] class to create your own theme or use
+  /// existing one, like the [DefaultChatTheme].
+  final ChatTheme theme;
+
   /// Widget to display chats as a screen or a bottom sheet.
   /// [height] specifies the height of bottom sheet/screen,
   /// [isScreen] toggles the screen behaviour to adapt for screen or bottom sheet,
@@ -29,17 +34,18 @@ class ChatScreen extends StatefulWidget {
   /// [title] specifies the title text to be displayed.
   /// [hintText] specifies the hint text to be displayed in the input box.
 
-  const ChatScreen(
-      {Key? key,
-      this.height,
-      this.isScreen = false,
-      this.outgoingMessageColor = CustomColors.outgoingMessageColor,
-      this.incomingMessageColor = CustomColors.incomingMessageColor,
-      this.senderAvatarColor = CustomColors.defaultColor,
-      this.receiverAvatarColor = CustomColors.defaultColor,
-      this.title = 'Messages',
-      this.hintText})
-      : super(key: key);
+  const ChatScreen({
+    Key? key,
+    this.height,
+    this.isScreen = false,
+    this.outgoingMessageColor = CustomColors.outgoingMessageColor,
+    this.incomingMessageColor = CustomColors.incomingMessageColor,
+    this.senderAvatarColor = CustomColors.defaultColor,
+    this.receiverAvatarColor = CustomColors.defaultColor,
+    this.title = 'Messages',
+    this.hintText,
+    this.theme = const DefaultChatTheme(),
+  }) : super(key: key);
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -64,23 +70,25 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return ClipRRect(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(10.toHeight),
-        topRight: Radius.circular(10.toHeight),
-      ),
+      borderRadius: widget.isScreen
+          ? BorderRadius.zero
+          : BorderRadius.only(
+              topLeft: Radius.circular(10.toHeight),
+              topRight: Radius.circular(10.toHeight),
+            ),
       child: Container(
         height: widget.height ?? SizeConfig().screenHeight * 0.8,
         margin: widget.isScreen
             ? const EdgeInsets.all(0.0)
             : const EdgeInsets.only(top: 10.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.toHeight),
-            topRight: Radius.circular(10.toHeight),
-          ),
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.black87
-              : Colors.white,
+          borderRadius: widget.isScreen
+              ? null
+              : BorderRadius.only(
+                  topLeft: Radius.circular(10.toHeight),
+                  topRight: Radius.circular(10.toHeight),
+                ),
+          color: widget.theme.backgroundColor,
           boxShadow: [
             BoxShadow(
               color: Colors.grey,
@@ -97,16 +105,17 @@ class _ChatScreenState extends State<ChatScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 16.0),
+                          height: AppBar().preferredSize.height,
+                          alignment: Alignment.centerLeft,
                           child: Text(
                             widget.title,
-                            style: TextStyle(color: Colors.black, fontSize: 14),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.only(right: 16.0),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
@@ -147,15 +156,17 @@ class _ChatScreenState extends State<ChatScreen> {
                                               MessageType.INCOMING
                                           ? IncomingMessageBubble(
                                               message: snapshot.data![index],
-                                              color:
-                                                  widget.incomingMessageColor,
+                                              color: widget.theme
+                                                  .incomingBackgroundColor,
+                                              messageTextStyle: widget.theme.incomingTextStyle,
                                               avatarColor:
                                                   widget.senderAvatarColor,
                                             )
                                           : OutgoingMessageBubble(
                                               message: snapshot.data![index],
-                                              color:
-                                                  widget.outgoingMessageColor,
+                                              color: widget.theme
+                                                  .outgoingBackgroundColor,
+                                              messageTextStyle: widget.theme.outgoingTextStyle,
                                               avatarColor:
                                                   widget.receiverAvatarColor,
                                             ),
@@ -183,6 +194,7 @@ class _ChatScreenState extends State<ChatScreen> {
         }
       },
       onMediaPressed: showImagePicker,
+      backgroundColor: widget.theme.inputBackgroundColor,
     );
   }
 

@@ -1,4 +1,6 @@
 import 'package:at_chat_flutter/at_chat_flutter.dart';
+import 'package:at_chat_flutter/utils/chat_theme.dart';
+import 'package:at_chat_flutter_example/main.dart';
 import 'package:flutter/material.dart';
 import 'client_sdk_service.dart';
 import 'third_screen.dart';
@@ -33,7 +35,24 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text('Second Screen')),
+      appBar: AppBar(
+        title: Text('Second Screen'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              updateThemeMode.sink.add(
+                  Theme.of(context).brightness == Brightness.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light);
+            },
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.light
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+            ),
+          )
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,24 +94,25 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 50.0,
-            ),
             showOptions
                 ? Column(
                     children: [
-                      SizedBox(height: 20.0),
                       TextButton(
                         onPressed: () {
-                          scaffoldKey!.currentState!
-                              .showBottomSheet((context) => ChatScreen());
+                          scaffoldKey!.currentState!.showBottomSheet(
+                            (context) => ChatScreen(
+                              theme: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? DefaultChatTheme()
+                                  : DarkChatTheme(
+                                      backgroundColor: Theme.of(context)
+                                          .scaffoldBackgroundColor,
+                                    ),
+                            ),
+                          );
                         },
-                        child: Container(
-                          height: 40,
-                          child: Text(
-                            'Open chat in bottom sheet',
-                            style: TextStyle(color: Colors.black),
-                          ),
+                        child: Text(
+                          'Open chat in bottom sheet',
                         ),
                       ),
                       TextButton(
@@ -102,12 +122,8 @@ class _SecondScreenState extends State<SecondScreen> {
                               MaterialPageRoute(
                                   builder: (context) => ThirdScreen()));
                         },
-                        child: Container(
-                          height: 40,
-                          child: Text(
-                            'Navigate to chat screen',
-                            style: TextStyle(color: Colors.black),
-                          ),
+                        child: Text(
+                          'Navigate to chat screen',
                         ),
                       )
                     ],
@@ -131,12 +147,14 @@ class _SecondScreenState extends State<SecondScreen> {
                           height: 40,
                           child: Text(
                             'Chat options',
-                            style: TextStyle(color: Colors.black),
                           ),
                         ),
                       ),
                     ],
                   ),
+            SizedBox(
+              height: 50.0,
+            ),
             Divider(
               thickness: 2,
               height: 20,
@@ -190,7 +208,8 @@ class _SecondScreenState extends State<SecondScreen> {
             SizedBox(height: 10),
             TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Theme.of(context).accentColor),
               ),
               onPressed: () {
                 setGroupToChatWith(context);
@@ -257,7 +276,6 @@ class _SecondScreenState extends State<SecondScreen> {
                 },
                 child: Text(
                   'Close',
-                  style: TextStyle(color: Colors.black),
                 ),
               )
             ],
