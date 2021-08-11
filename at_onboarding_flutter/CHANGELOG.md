@@ -1,3 +1,6 @@
+## 2.1.3
+- added QR code screen
+
 ## 2.1.2
 - updated README
 
