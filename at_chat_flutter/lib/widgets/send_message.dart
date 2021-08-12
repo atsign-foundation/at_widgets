@@ -7,13 +7,15 @@ class SendMessage extends StatefulWidget {
   final ValueChanged<String>? messageCallback;
   final Color? sendButtonColor;
   final String? hintText;
-  const SendMessage(
-      {Key? key,
-      this.onSend,
-      this.messageCallback,
-      this.sendButtonColor,
-      this.hintText})
-      : super(key: key);
+  final Color backgroundColor;
+  const SendMessage({
+    Key? key,
+    this.onSend,
+    this.messageCallback,
+    this.sendButtonColor,
+    this.hintText,
+    this.backgroundColor = Colors.grey,
+  }) : super(key: key);
   @override
   _SendMessageState createState() => _SendMessageState();
 }
@@ -40,8 +42,8 @@ class _SendMessageState extends State<SendMessage> {
     return Container(
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.toHeight),
-          color: Colors.grey[200]),
+        borderRadius: BorderRadius.circular(10.toHeight),
+        color: widget.backgroundColor,),
       child: Row(
         children: [
           Expanded(
