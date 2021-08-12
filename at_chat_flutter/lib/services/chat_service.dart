@@ -14,8 +14,9 @@ class ChatService {
   static final ChatService _instance = ChatService._();
   factory ChatService() => _instance;
 
-  final String storageKey = 'chatHistory.';
+  final String storageKey = 'chathistory.';
   final String chatKey = 'chat';
+  final String chatImageKey = 'chatimg';
 
   late AtClientImpl atClientInstance;
   String? rootDomain;
@@ -79,9 +80,9 @@ class ChatService {
     notificationKey.replaceFirst(fromAtsign, '');
     notificationKey.trim();
 
-    if ((notificationKey.startsWith(chatKey) && fromAtsign == chatWithAtSign) ||
+    if (((notificationKey.startsWith(chatKey) || notificationKey.startsWith(chatImageKey)) && fromAtsign == chatWithAtSign) ||
         (isGroupChat &&
-            notificationKey.startsWith(chatKey + groupChatId!) &&
+            (notificationKey.startsWith(chatKey + groupChatId!) || notificationKey.startsWith(chatImageKey + groupChatId!)) &&
             groupChatMembers!.contains(fromAtsign))) {
       var message = responseJson['value'];
       var decryptedMessage = await atClientInstance.encryptionService!
@@ -90,11 +91,20 @@ class ChatService {
         print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
       });
       print('chat message => $decryptedMessage $fromAtsign');
-      await setChatHistory(Message(
+      if (notificationKey.startsWith(chatImageKey) ) {
+        await setChatHistory(Message(
+          message: decryptedMessage,
+          sender: fromAtsign,
+          time: responseJson['epochMillis'],
+          type: MessageType.INCOMING,
+          contentType: MessageContentType.IMAGE));
+      } else {
+        await setChatHistory(Message(
           message: decryptedMessage,
           sender: fromAtsign,
           time: responseJson['epochMillis'],
           type: MessageType.INCOMING));
+      }
     }
   }
 
@@ -164,7 +174,7 @@ class ChatService {
       print('error in checkForMissedMessages:getKeys ${e.toString()}');
     });
     await Future.forEach(result, (dynamic key) async {
-      if (referenceKey.compareTo(key) == -1) {
+      if (referenceKey.compareTo(key) == -1 && !key.startsWith(storageKey)) {
         print('missed key - $key');
         await getMissingKey(key);
       }
@@ -176,10 +186,20 @@ class ChatService {
     var result = await atClientInstance.get(missingAtkey).catchError((e) {
       print('error in getMissingKey:get ${e.toString()}');
     });
-    print('result - $result');
     // ignore: unnecessary_null_comparison
     if (result != null) {
-      await setChatHistory(Message(
+      if (missingKey.startsWith(chatImageKey)){
+        await setChatHistory(Message(
+          message: result.value,
+          sender: chatWithAtSign ?? missingAtkey.sharedBy,
+          time: int.parse(missingKey
+              .replaceFirst(chatWithAtSign ?? '', '')
+              .replaceFirst(chatImageKey + (isGroupChat ? groupChatId! : ''), '')
+              .split('.')[0]),
+          type: MessageType.INCOMING,
+          contentType: MessageContentType.IMAGE));
+      } else {
+        await setChatHistory(Message(
           message: result.value,
           sender: chatWithAtSign ?? missingAtkey.sharedBy,
           time: int.parse(missingKey
@@ -187,6 +207,7 @@ class ChatService {
               .replaceFirst(chatKey + (isGroupChat ? groupChatId! : ''), '')
               .split('.')[0]),
           type: MessageType.INCOMING));
+      }
     }
   }
 
@@ -247,24 +268,23 @@ class ChatService {
     ));
 
     final metadata = Metadata();
-    metadata.isBinary = true;
     var atKey = AtKey()
       ..metadata = metadata
       ..metadata?.ttr = -1
-      ..key = chatKey +
+      ..key = chatImageKey +
           (isGroupChat ? groupChatId! : '') +
           DateTime.now().millisecondsSinceEpoch.toString();
     if (isGroupChat) {
       await Future.forEach(groupChatMembers!, (dynamic member) async {
         if (member != currentAtSign) {
           atKey.sharedWith = member;
-          var result = await atClientInstance.put(atKey, "Image");
+          var result = await atClientInstance.put(atKey, base64Image);
           print('send notification for groupChat => $result');
         }
       });
     } else {
       atKey.sharedWith = chatWithAtSign;
-      var result = await atClientInstance.put(atKey, "Image");
+      var result = await atClientInstance.put(atKey, base64Image);
       print('send notification => $result');
     }
   }
