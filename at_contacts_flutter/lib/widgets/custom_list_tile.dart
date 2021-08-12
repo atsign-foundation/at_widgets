@@ -98,8 +98,8 @@ class _CustomListTileState extends State<CustomListTile> {
             },
             title: Text(
               widget.contact!.tags != null &&
-                      widget.contact!.tags!['name'] != null
-                  ? widget.contact!.tags!['name']
+                      widget.contact!.tags!['nickname'] != null
+                  ? widget.contact!.tags!['nickname']
                   : widget.contact!.atSign!.substring(1),
               style: TextStyle(
                 color: Colors.black,
