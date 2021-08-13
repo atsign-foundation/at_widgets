@@ -1,9 +1,12 @@
 import 'package:at_bug_report_flutter/models/bug_report_model.dart';
 import 'package:at_bug_report_flutter/services/bug_report_service.dart';
+import 'package:at_bug_report_flutter/utils/strings.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import 'bug_report_tab.dart';
 
 class ListBugReportScreen extends StatefulWidget {
   final String title;
@@ -12,7 +15,7 @@ class ListBugReportScreen extends StatefulWidget {
 
   const ListBugReportScreen({
     Key? key,
-    this.title = 'List Bug Report',
+    this.title = 'List Reported Issues',
     this.atSign = '',
     this.authorAtSign = '',
   }) : super(key: key);
@@ -21,24 +24,21 @@ class ListBugReportScreen extends StatefulWidget {
   _ListBugReportScreenState createState() => _ListBugReportScreenState();
 }
 
-class _ListBugReportScreenState extends State<ListBugReportScreen> {
+class _ListBugReportScreenState extends State<ListBugReportScreen>
+    with SingleTickerProviderStateMixin {
+  TabController? _controller;
+
   GlobalKey<ScaffoldState>? scaffoldKey;
-  ScrollController? _scrollController;
   late BugReportService _bugReportService;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
+
+    _controller = TabController(length: 2, vsync: this, initialIndex: 0);
     scaffoldKey = GlobalKey<ScaffoldState>();
     _bugReportService = BugReportService();
     _bugReportService.setAuthorAtSign(widget.authorAtSign);
-
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      await _bugReportService.getBugReports(
-        atsign: widget.atSign,
-      );
-    });
   }
 
   @override
@@ -52,75 +52,57 @@ class _ListBugReportScreenState extends State<ListBugReportScreen> {
           widget.title,
         ),
       ),
-      body: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.toHeight),
-          topRight: Radius.circular(10.toHeight),
-        ),
+      body: SingleChildScrollView(
         child: Container(
           height: SizeConfig().screenHeight,
-          margin: EdgeInsets.all(0.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10.toHeight),
-              topRight: Radius.circular(10.toHeight),
-            ),
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black87
-                : Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                offset: Offset(0.0, 1.0),
-                blurRadius: 10.0,
-              ),
-            ],
-          ),
-          child: StreamBuilder<List<BugReport>>(
-            stream: _bugReportService.bugReportStream,
-            initialData: _bugReportService.bugReports,
-            builder: (context, snapshot) {
-              return (snapshot.connectionState == ConnectionState.waiting)
-                  ? Center(
-                      child: CircularProgressIndicator(),
+          child: Column(
+            children: [
+              Container(
+                height: 40,
+                child: TabBar(
+                  onTap: (index) {},
+                  labelColor: Colors.black,
+                  indicatorWeight: 2.toHeight,
+                  indicatorColor: Colors.black,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14.toFont,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  unselectedLabelStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14.toFont,
+                      fontWeight: FontWeight.normal),
+                  controller: _controller,
+                  tabs: [
+                    Text(
+                      Strings.sentTitle,
+                    ),
+                    Text(
+                      Strings.receivedTitle,
                     )
-                  : (snapshot.data == null || snapshot.data!.isEmpty)
-                      ? Center(
-                          child: Text('No bug report found'),
-                        )
-                      : ListView.builder(
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          itemCount: snapshot.data?.length ?? 3,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(vertical: 10.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    snapshot.data?[index]?.screen ?? 'Screen',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 4.toHeight,
-                                  ),
-                                  Text(
-                                    snapshot.data?[index]?.atSign ?? 'AtSign',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-            },
+                  ],
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _controller,
+                  children: [
+                    ListBugReportTab(
+                      bugReportService: _bugReportService,
+                      isAuthorAtSign: false,
+                      atSign: widget.atSign,
+                    ),
+                    ListBugReportTab(
+                      bugReportService: _bugReportService,
+                      isAuthorAtSign: true,
+                      atSign: widget.atSign,
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),

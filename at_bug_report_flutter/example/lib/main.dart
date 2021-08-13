@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData.light(),
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('Plugin example app'),
+            title: const Text('At Bug Report Plugin Example'),
           ),
           body: Builder(
             builder: (context) => Column(

@@ -2,8 +2,10 @@ class Strings {
   static const String cancelButtonTitle = 'Cancel';
   static const String shareButtonTitle = 'Share';
   static const String showDetailsBugReport = 'Show Details';
-  static const String shareTitle = 'Error';
-  static const String shareDescription =
-      'Do you want to share this information?';
+  static const String bugReportTitle = 'Bug Report';
+  static const String bugReportDescription =
+      'Do you want to share this bug report?';
+  static const String sentTitle = 'Sent';
+  static const String receivedTitle = 'Received';
   static const String backupKeyName = '_key.atKeys';
 }

@@ -30,7 +30,6 @@ class _BugReportDialogState extends State<BugReportDialog> {
 
   @override
   void initState() {
-    super.initState();
     isExpanded = false;
     _scrollController = ScrollController();
     _bugReportService = BugReportService();
@@ -42,6 +41,7 @@ class _BugReportDialogState extends State<BugReportDialog> {
         atsign: widget.atSign,
       );
     });
+    super.initState();
   }
 
   @override
@@ -50,7 +50,7 @@ class _BugReportDialogState extends State<BugReportDialog> {
     return AlertDialog(
       title: Center(
         child: Text(
-          Strings.shareTitle,
+          Strings.bugReportTitle,
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
@@ -62,7 +62,7 @@ class _BugReportDialogState extends State<BugReportDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(Strings.shareDescription,
+            Text(Strings.bugReportDescription,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey[700])),
             SizedBox(height: 20),
@@ -75,15 +75,15 @@ class _BugReportDialogState extends State<BugReportDialog> {
                       Text(
                         Strings.showDetailsBugReport,
                         style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal,
-                        ),
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 13),
                       ),
                       Icon(
                         isExpanded
                             ? Icons.keyboard_arrow_up
                             : Icons.keyboard_arrow_down,
-                        size: 24,
+                        size: 18,
                         color: Colors.black,
                       ),
                     ],
@@ -97,7 +97,10 @@ class _BugReportDialogState extends State<BugReportDialog> {
                 GestureDetector(
                   child: Text(Strings.shareButtonTitle,
                       style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold)),
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      )),
                   onTap: () async {
                     await _bugReportService.setBugReport(
                       BugReport(
@@ -115,6 +118,7 @@ class _BugReportDialogState extends State<BugReportDialog> {
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.normal,
+                      fontSize: 14,
                     ),
                   ),
                   onTap: () {
@@ -126,59 +130,60 @@ class _BugReportDialogState extends State<BugReportDialog> {
             SizedBox(
               height: 16.toHeight,
             ),
-            Visibility(
-              visible: isExpanded,
-              child: Expanded(
-                child: StreamBuilder<List<BugReport>>(
-                  stream: _bugReportService.bugReportStream,
-                  initialData: _bugReportService.bugReports,
-                  builder: (context, snapshot) {
-                    return (snapshot.connectionState == ConnectionState.waiting)
-                        ? Center(
-                            child: CircularProgressIndicator(),
+            StreamBuilder<List<BugReport>>(
+              stream: _bugReportService.bugReportStream,
+              initialData: _bugReportService.bugReports,
+              builder: (context, snapshot) {
+                return (snapshot.connectionState == ConnectionState.waiting)
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : (snapshot.data == null || snapshot.data!.isEmpty)
+                        ? Visibility(
+                            visible: isExpanded,
+                            child: Center(
+                              child: Text('No bug report found'),
+                            ),
                           )
-                        : (snapshot.data == null || snapshot.data!.isEmpty)
-                            ? Center(
-                                child: Text('No bug report found'),
-                              )
-                            : ListView.builder(
-                                controller: _scrollController,
-                                shrinkWrap: true,
-                                itemCount: snapshot.data?.length ?? 3,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 10.toHeight),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          snapshot.data?[index]?.screen ??
-                                              'Screen',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                          ),
+                        : Visibility(
+                            visible: isExpanded,
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              shrinkWrap: true,
+                              itemCount: snapshot.data?.length ?? 3,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10.toHeight),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        snapshot.data?[index]?.screen ??
+                                            'Screen',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
                                         ),
-                                        // SizedBox(
-                                        //   height: 4.toHeight,
-                                        // ),
-                                        // Text(
-                                        //   snapshot.data?[index]?.atSign ??
-                                        //       'AtSign',
-                                        //   style: TextStyle(
-                                        //     color: Colors.grey,
-                                        //     fontSize: 14,
-                                        //   ),
-                                        // ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                  },
-                ),
-              ),
+                                      ),
+                                      // SizedBox(
+                                      //   height: 4.toHeight,
+                                      // ),
+                                      // Text(
+                                      //   snapshot.data?[index]?.atSign ??
+                                      //       'AtSign',
+                                      //   style: TextStyle(
+                                      //     color: Colors.grey,
+                                      //     fontSize: 14,
+                                      //   ),
+                                      // ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+              },
             ),
           ],
         ),
