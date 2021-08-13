@@ -80,9 +80,12 @@ class ChatService {
     notificationKey.replaceFirst(fromAtsign, '');
     notificationKey.trim();
 
-    if (((notificationKey.startsWith(chatKey) || notificationKey.startsWith(chatImageKey)) && fromAtsign == chatWithAtSign) ||
+    if (((notificationKey.startsWith(chatKey) ||
+                notificationKey.startsWith(chatImageKey)) &&
+            fromAtsign == chatWithAtSign) ||
         (isGroupChat &&
-            (notificationKey.startsWith(chatKey + groupChatId!) || notificationKey.startsWith(chatImageKey + groupChatId!)) &&
+            (notificationKey.startsWith(chatKey + groupChatId!) ||
+                notificationKey.startsWith(chatImageKey + groupChatId!)) &&
             groupChatMembers!.contains(fromAtsign))) {
       var message = responseJson['value'];
       var decryptedMessage = await atClientInstance.encryptionService!
@@ -91,19 +94,19 @@ class ChatService {
         print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
       });
       print('chat message => $decryptedMessage $fromAtsign');
-      if (notificationKey.startsWith(chatImageKey) ) {
+      if (notificationKey.startsWith(chatImageKey)) {
         await setChatHistory(Message(
-          message: decryptedMessage,
-          sender: fromAtsign,
-          time: responseJson['epochMillis'],
-          type: MessageType.INCOMING,
-          contentType: MessageContentType.IMAGE));
+            message: decryptedMessage,
+            sender: fromAtsign,
+            time: responseJson['epochMillis'],
+            type: MessageType.INCOMING,
+            contentType: MessageContentType.IMAGE));
       } else {
         await setChatHistory(Message(
-          message: decryptedMessage,
-          sender: fromAtsign,
-          time: responseJson['epochMillis'],
-          type: MessageType.INCOMING));
+            message: decryptedMessage,
+            sender: fromAtsign,
+            time: responseJson['epochMillis'],
+            type: MessageType.INCOMING));
       }
     }
   }
@@ -154,8 +157,7 @@ class ChatService {
         chatHistoryMessages = [];
         chatSink.add(chatHistory);
       }
-      var referenceKey = chatKey +
-          (isGroupChat ? groupChatId! : '') +
+      var referenceKey = (isGroupChat ? groupChatId! : '') +
           (chatHistory.isEmpty ? '' : chatHistory[0].time.toString()) +
           currentAtSign!;
       await checkForMissedMessages(referenceKey);
@@ -174,9 +176,18 @@ class ChatService {
       print('error in checkForMissedMessages:getKeys ${e.toString()}');
     });
     await Future.forEach(result, (dynamic key) async {
-      if (referenceKey.compareTo(key) == -1 && !key.startsWith(storageKey)) {
-        print('missed key - $key');
-        await getMissingKey(key);
+      if (key.startsWith(chatImageKey)) {
+        if (referenceKey.compareTo(key.substring(7)) == -1 &&
+            !key.startsWith(storageKey)) {
+          print('missed key - $key');
+          await getMissingKey(key);
+        }
+      } else {
+        if (referenceKey.compareTo(key.substring(4)) == -1 &&
+            !key.startsWith(storageKey)) {
+          print('missed key - $key');
+          await getMissingKey(key);
+        }
       }
     });
   }
@@ -188,25 +199,26 @@ class ChatService {
     });
     // ignore: unnecessary_null_comparison
     if (result != null) {
-      if (missingKey.startsWith(chatImageKey)){
+      if (missingKey.startsWith(chatImageKey)) {
         await setChatHistory(Message(
-          message: result.value,
-          sender: chatWithAtSign ?? missingAtkey.sharedBy,
-          time: int.parse(missingKey
-              .replaceFirst(chatWithAtSign ?? '', '')
-              .replaceFirst(chatImageKey + (isGroupChat ? groupChatId! : ''), '')
-              .split('.')[0]),
-          type: MessageType.INCOMING,
-          contentType: MessageContentType.IMAGE));
+            message: result.value,
+            sender: chatWithAtSign ?? missingAtkey.sharedBy,
+            time: int.parse(missingKey
+                .replaceFirst(chatWithAtSign ?? '', '')
+                .replaceFirst(
+                    chatImageKey + (isGroupChat ? groupChatId! : ''), '')
+                .split('.')[0]),
+            type: MessageType.INCOMING,
+            contentType: MessageContentType.IMAGE));
       } else {
         await setChatHistory(Message(
-          message: result.value,
-          sender: chatWithAtSign ?? missingAtkey.sharedBy,
-          time: int.parse(missingKey
-              .replaceFirst(chatWithAtSign ?? '', '')
-              .replaceFirst(chatKey + (isGroupChat ? groupChatId! : ''), '')
-              .split('.')[0]),
-          type: MessageType.INCOMING));
+            message: result.value,
+            sender: chatWithAtSign ?? missingAtkey.sharedBy,
+            time: int.parse(missingKey
+                .replaceFirst(chatWithAtSign ?? '', '')
+                .replaceFirst(chatKey + (isGroupChat ? groupChatId! : ''), '')
+                .split('.')[0]),
+            type: MessageType.INCOMING));
       }
     }
   }

@@ -78,9 +78,7 @@ class _ChatScreenState extends State<ChatScreen> {
             topLeft: Radius.circular(10.toHeight),
             topRight: Radius.circular(10.toHeight),
           ),
-          color: Theme
-              .of(context)
-              .brightness == Brightness.dark
+          color: Theme.of(context).brightness == Brightness.dark
               ? Colors.black87
               : Colors.white,
           boxShadow: [
@@ -96,80 +94,77 @@ class _ChatScreenState extends State<ChatScreen> {
             (widget.isScreen)
                 ? Container()
                 : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.title,
-                      style: TextStyle(color: Colors.black, fontSize: 14),
-                    ),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            widget.title,
+                            style: TextStyle(color: Colors.black, fontSize: 14),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Close',
+                            style: TextStyle(
+                                color: Color(0xffFC7B30), fontSize: 14),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Close',
-                      style: TextStyle(
-                          color: Color(0xffFC7B30), fontSize: 14),
-                    ),
-                  ),
-                )
-              ],
-            ),
             Expanded(
                 child: StreamBuilder<List<Message>>(
                     stream: _chatService.chatStream,
                     initialData: _chatService.chatHistory,
                     builder: (context, snapshot) {
                       return (snapshot.connectionState ==
-                          ConnectionState.waiting)
+                              ConnectionState.waiting)
                           ? Center(
-                        child: CircularProgressIndicator(),
-                      )
+                              child: CircularProgressIndicator(),
+                            )
                           : (snapshot.data == null || snapshot.data!.isEmpty)
-                          ? Center(
-                        child: Text('No chat history found'),
-                      )
-                          : ListView.builder(
-                          reverse: true,
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding:
-                              EdgeInsets.symmetric(vertical: 10.0),
-                              child: snapshot.data![index].type ==
-                                  MessageType.INCOMING
-                                  ? IncomingMessageBubble(
-                                message: snapshot.data![index],
-                                color:
-                                widget.incomingMessageColor,
-                                avatarColor:
-                                widget.senderAvatarColor,
-                              )
-                                  : OutgoingMessageBubble(
-                                message: snapshot.data![index],
-                                color:
-                                widget.outgoingMessageColor,
-                                avatarColor:
-                                widget.receiverAvatarColor,
-                              ),
-                            );
-                          });
+                              ? Center(
+                                  child: Text('No chat history found'),
+                                )
+                              : ListView.builder(
+                                  reverse: true,
+                                  controller: _scrollController,
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10.0),
+                                      child: snapshot.data![index].type ==
+                                              MessageType.INCOMING
+                                          ? IncomingMessageBubble(
+                                              message: snapshot.data![index],
+                                              color:
+                                                  widget.incomingMessageColor,
+                                              avatarColor:
+                                                  widget.senderAvatarColor,
+                                            )
+                                          : OutgoingMessageBubble(
+                                              message: snapshot.data![index],
+                                              color:
+                                                  widget.outgoingMessageColor,
+                                              avatarColor:
+                                                  widget.receiverAvatarColor,
+                                            ),
+                                    );
+                                  });
                     })),
             _buildMessageInputWidget(),
             //Make sure view inside SafeArea
-            SizedBox(height: MediaQuery
-                .of(context)
-                .padding
-                .bottom),
+            SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
       ),
