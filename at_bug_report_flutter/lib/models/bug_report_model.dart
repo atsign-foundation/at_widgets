@@ -19,14 +19,6 @@ class BugReport {
         screen: screen ?? this.screen);
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'time': time,
-      'atSign': atSign,
-      'screen': screen,
-    };
-  }
-
   factory BugReport.fromMap(Map<String, dynamic>? map) {
     if (map == null) return BugReport();
 
@@ -34,6 +26,20 @@ class BugReport {
         time: map['time'],
         atSign: map['atSign'],
         screen: map['screen']);
+  }
+
+  // Map<String, dynamic> toJson() => <String, dynamic> {
+  //   'time': time,
+  //   'atSign': atSign,
+  //   'screen': screen,
+  // };
+
+  Map<String, dynamic> toMap() {
+    return {
+      'time': time,
+      'atSign': atSign,
+      'screen': screen,
+    };
   }
 
   String toJson() => json.encode(toMap());

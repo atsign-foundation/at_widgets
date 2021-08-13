@@ -20,6 +20,8 @@ class BugReportService {
   final String storageKey = 'bugReport.';
   final String bugReportKey = 'bugReportKey';
 
+  String authorAtSign = '';
+
   late AtClientImpl atClientInstance;
   String? rootDomain;
   int? rootPort;
@@ -104,6 +106,7 @@ class BugReportService {
       var key = AtKey()
         ..key = storageKey + (atsign ?? currentAtSign ?? ' ').substring(1)
         ..sharedBy = currentAtSign!
+        ..sharedWith = authorAtSign
         ..metadata = Metadata();
 
       var keyValue = await atClientInstance.get(key).catchError((e) {
@@ -114,70 +117,80 @@ class BugReportService {
       if (keyValue != null && keyValue.value != null) {
         bugReportsJson = json.decode((keyValue.value) as String) as List?;
         bugReportsJson!.forEach((value) {
-          var message = BugReport.fromJson((value));
-          bugReports.insert(0, message);
+          var bugReport = BugReport.fromJson((value));
+          bugReports.insert(0, bugReport);
         });
         bugReportSink.add(bugReports);
       } else {
         bugReportsJson = [];
         bugReportSink.add(bugReports);
       }
-      var referenceKey = bugReportKey +
-          (bugReports.isEmpty ? '' : bugReports[0].time.toString()) +
-          currentAtSign!;
-      await checkForMissedMessages(referenceKey);
+      // var referenceKey = bugReportKey +
+      //     (bugReports.isEmpty ? '' : bugReports[0].time.toString()) +
+      //     currentAtSign!;
+      // await checkForMissedMessages(referenceKey);
     } catch (error) {
       print('Error in getting bug Report -> $error');
     }
   }
 
-  Future<void> checkForMissedMessages(String referenceKey) async {
-    var result = await atClientInstance
-        .getKeys(
-            sharedBy: currentAtSign,
-            sharedWith: currentAtSign!,
-            regex: bugReportKey)
-        .catchError((e) {
-      print('error in checkForMissedMessages:getKeys ${e.toString()}');
-    });
-    await Future.forEach(result, (dynamic key) async {
-      if (referenceKey.compareTo(key) == -1) {
-        print('missed key - $key');
-        await getMissingKey(key);
-      }
-    });
-  }
+  // Future<void> checkForMissedMessages(String referenceKey) async {
+  //   var result = await atClientInstance
+  //       .getKeys(
+  //           sharedBy: currentAtSign,
+  //           sharedWith: currentAtSign!,
+  //           regex: bugReportKey)
+  //       .catchError((e) {
+  //     print('error in checkForMissedMessages:getKeys ${e.toString()}');
+  //   });
+  //   await Future.forEach(result, (dynamic key) async {
+  //     if (referenceKey.compareTo(key) == -1) {
+  //       print('missed key - $key');
+  //       await getMissingKey(key);
+  //     }
+  //   });
+  // }
+  //
+  // Future<void> getMissingKey(String missingKey) async {
+  //   var missingAtkey = AtKey.fromString(missingKey);
+  //   var result = await atClientInstance.get(missingAtkey).catchError((e) {
+  //     print('error in getMissingKey:get ${e.toString()}');
+  //   });
+  //   print('result - $result');
+  //   // ignore: unnecessary_null_comparison
+  //   if (result != null) {
+  //     await setBugReport(
+  //       BugReport(
+  //         screen: result.value,
+  //         atSign: currentAtSign ?? missingAtkey.sharedBy,
+  //         time: int.parse(missingKey
+  //             .replaceFirst(currentAtSign ?? '', '')
+  //             .replaceFirst(bugReportKey, '')
+  //             .split('.')[0]),
+  //       ),
+  //     );
+  //   }
+  // }
 
-  Future<void> getMissingKey(String missingKey) async {
-    var missingAtkey = AtKey.fromString(missingKey);
-    var result = await atClientInstance.get(missingAtkey).catchError((e) {
-      print('error in getMissingKey:get ${e.toString()}');
-    });
-    print('result - $result');
-    // ignore: unnecessary_null_comparison
-    if (result != null) {
-      await setBugReport(
-        BugReport(
-          screen: result.value,
-          atSign: currentAtSign ?? missingAtkey.sharedBy,
-          time: int.parse(missingKey
-              .replaceFirst(currentAtSign ?? '', '')
-              .replaceFirst(bugReportKey, '')
-              .split('.')[0]),
-        ),
-      );
-    }
+  void setAuthorAtSign(String? authorAtSign) {
+    this.authorAtSign = authorAtSign!;
   }
 
   Future<void> setBugReport(BugReport bugReport) async {
     try {
       var key = AtKey()
         ..key = storageKey + (currentAtSign ?? ' ').substring(1)
+        ..sharedBy = currentAtSign
+        ..sharedWith = authorAtSign
         ..metadata = Metadata();
 
       bugReports.insert(0, bugReport);
       bugReportSink.add(bugReports);
       bugReportsJson!.add(bugReport.toJson());
+
+   //   var jsonEncoded = jsonEncode(bugReports.map((e) => e.toJson()).toList());
+      // String jsonEncoded = json.encode(bugReportsJson);
+      // jsonEncoded = jsonEncoded.replaceAll('\\', '');
       await atClientInstance.put(key, json.encode(bugReportsJson));
     } catch (e) {
       print('Error in setting bugReport => $e');

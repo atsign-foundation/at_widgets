@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 class ListBugReportScreen extends StatefulWidget {
   final String title;
   final String? atSign;
+  final String? authorAtSign;
 
   const ListBugReportScreen({
     Key? key,
     this.title = 'List Bug Report',
     this.atSign = '',
+    this.authorAtSign = '',
   }) : super(key: key);
 
   @override
@@ -20,8 +22,6 @@ class ListBugReportScreen extends StatefulWidget {
 }
 
 class _ListBugReportScreenState extends State<ListBugReportScreen> {
-  List<Widget> messageList = [];
-  String? message;
   GlobalKey<ScaffoldState>? scaffoldKey;
   ScrollController? _scrollController;
   late BugReportService _bugReportService;
@@ -32,11 +32,12 @@ class _ListBugReportScreenState extends State<ListBugReportScreen> {
     _scrollController = ScrollController();
     scaffoldKey = GlobalKey<ScaffoldState>();
     _bugReportService = BugReportService();
+    _bugReportService.setAuthorAtSign(widget.authorAtSign);
 
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       await _bugReportService.getBugReports(
-             atsign: widget.atSign,
-          );
+        atsign: widget.atSign,
+      );
     });
   }
 
@@ -88,39 +89,33 @@ class _ListBugReportScreenState extends State<ListBugReportScreen> {
                           child: Text('No bug report found'),
                         )
                       : ListView.builder(
-                          reverse: true,
                           controller: _scrollController,
                           shrinkWrap: true,
                           itemCount: snapshot.data?.length ?? 3,
                           itemBuilder: (context, index) {
-                            return Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      snapshot.data?[index]?.screen ?? 'Screen',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
+                            return Container(
+                              padding: EdgeInsets.symmetric(vertical: 10.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    snapshot.data?[index]?.screen ?? 'Screen',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
                                     ),
-                                    SizedBox(
-                                      height: 4.toHeight,
+                                  ),
+                                  SizedBox(
+                                    height: 4.toHeight,
+                                  ),
+                                  Text(
+                                    snapshot.data?[index]?.atSign ?? 'AtSign',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
                                     ),
-                                    Text(
-                                      snapshot.data?[index]?.atSign ?? 'AtSign',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             );
                           },

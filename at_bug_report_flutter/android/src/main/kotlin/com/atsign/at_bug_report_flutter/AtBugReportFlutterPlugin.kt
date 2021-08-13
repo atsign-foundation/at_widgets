@@ -1,4 +1,4 @@
-package com.atsign.at_chat_flutter
+package com.atsign.at_bug_report_flutter
 
 import androidx.annotation.NonNull
 
