@@ -38,6 +38,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
       child: Flex(
         direction: Axis.horizontal,
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: EdgeInsets.all(16.toHeight),
@@ -54,11 +55,11 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
             ),
           ),
           SizedBox(
-            width: 8.toWidth,
+            width: 15.toWidth,
           ),
           Container(
-            height: 24.toFont,
-            width: 24.toFont,
+            height: 45.toFont,
+            width: 45.toFont,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(45.toWidth),
             ),

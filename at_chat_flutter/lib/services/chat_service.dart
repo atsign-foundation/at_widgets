@@ -84,7 +84,6 @@ class ChatService {
     }
     notificationKey.replaceFirst(fromAtsign, '');
     notificationKey.trim();
-
     if ((notificationKey.startsWith(chatKey) && fromAtsign == chatWithAtSign) ||
         (isGroupChat &&
             notificationKey.startsWith(chatKey + groupChatId!) &&
@@ -96,11 +95,10 @@ class ChatService {
         print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
       });
       print('chat message => $decryptedMessage $fromAtsign');
-      await setChatHistory(Message(
-          message: decryptedMessage,
-          sender: fromAtsign,
-          time: responseJson['epochMillis'],
-          type: MessageType.INCOMING));
+      chatHistoryMessagesOther =
+        json.decode((decryptedMessage) as String) as List;
+      chatHistory = interleave(chatHistoryMessages, chatHistoryMessagesOther);
+      chatSink.add(chatHistory);
     }
   }
 
@@ -181,6 +179,7 @@ class ChatService {
       if (hasa && hasb) {
         valueA = Message.fromJson(ita.current);
         valueB = Message.fromJson(itb.current);
+        valueB.type = MessageType.INCOMING;
         if (valueA.time > valueB.time) {
           result.add(valueA);
           hasa = ita.moveNext();
@@ -197,9 +196,11 @@ class ChatService {
         }
       } else if (hasb) {
         valueB = Message.fromJson(itb.current);
+        valueB.type = MessageType.INCOMING;
         result.add(valueB);
         while (hasb = itb.moveNext()) {
           valueB = Message.fromJson(itb.current);
+          valueB.type = MessageType.INCOMING;
           result.add(valueB);
         }
       }
@@ -271,7 +272,6 @@ class ChatService {
 
     try {
       chatHistoryMessages = [];
-      //     await atClientInstance.delete(atKey)
       var result =
           await atClientInstance.put(key, json.encode(chatHistoryMessages));
       await getChatHistory();

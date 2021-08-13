@@ -27,13 +27,14 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
     return Flex(
       direction: Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: 20.toWidth,
         ),
         Container(
-          height: 24.toFont,
-          width: 24.toFont,
+          height: 45.toFont,
+          width: 45.toFont,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(45.toWidth),
           ),
