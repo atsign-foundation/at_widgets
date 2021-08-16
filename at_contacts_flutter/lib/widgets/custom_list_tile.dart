@@ -113,7 +113,7 @@ class _CustomListTileState extends State<CustomListTile> {
             subtitle: Text(
               (widget.contact!.tags != null &&
                       widget.contact!.tags!['nickname'] != null
-                  ? '${widget.contact!.tags!['nickname']} (${widget.contact!.atSign!.substring(1)})'
+                  ? '${widget.contact!.tags!['nickname']} (@${widget.contact!.atSign!.substring(1)})'
                   : widget.contact!.atSign!.substring(1)),
               style: TextStyle(
                 color: ColorConstants.fadedText,
