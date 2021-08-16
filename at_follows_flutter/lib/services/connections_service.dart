@@ -187,7 +187,7 @@ class ConnectionsService {
       result = await _sdkService.put(atKey, followersList.toString());
       followers.list!.remove(atsign);
     } else {
-      result = await _sdkService.put(atKey, 'null');
+      result = await _sdkService.put(atKey, '');
     }
     return result;
   }
@@ -312,8 +312,8 @@ class ConnectionsService {
   Future<void> createLists({required bool isFollowing}) async {
     // for following list followers list is not required.
     if (!isFollowing) {
-      var followersValue = await _sdkService
-          .scanAndGet(AppConstants.containsFollowers);
+      var followersValue =
+          await _sdkService.scanAndGet(AppConstants.containsFollowers);
       this.followers.create(followersValue);
       if (followersValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
@@ -323,8 +323,8 @@ class ConnectionsService {
     } else {
       // for followers list following list is required to show the status of follow button.
 
-      var followingValue = await _sdkService
-          .scanAndGet(AppConstants.containsFollowing);
+      var followingValue =
+          await _sdkService.scanAndGet(AppConstants.containsFollowing);
       this.following.create(followingValue);
 
       if (followingValue.metadata != null) {
