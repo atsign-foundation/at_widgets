@@ -22,7 +22,7 @@ class Strings {
   static const String stopButtonTitle = 'stop';
   //backuzip file save texts
   static const String backupKeyDescription =
-      'upload your backup key file from stored location which was generated during the pairing process of your @sign.';
+      ' upload your backup key file from stored location which was generated during the pairing process of your @sign.';
   static const String uploadZipTitle = 'Upload backup key file';
   static const String saveBackupKeyTitle = 'Save your key';
   static const String saveImportantTitle = 'IMPORTANT!';
