@@ -1,19 +1,11 @@
 <img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
 
 ### Now for a little internet optimism
+[![Pub Package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter)
 
 # at_follows_flutter
 
 A flutter plugin project to integrate follows feature for @signs.
-
-## Getting Started
-
-To use this plugin in app, first add it to pubspec.yaml
-
-```
-dependencies:
-  at_follows_flutter: ^2.0.0
-```
 
 ### Android
 Add the following permissions to AndroidManifest.xml

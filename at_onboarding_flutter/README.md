@@ -2,18 +2,12 @@
 
 ### Now for a little internet optimism
 
+[![Pub Package](https://img.shields.io/pub/v/at_onboarding_flutter)](https://pub.dev/packages/at_onboarding_flutter)
+
 # at_onboarding_flutter
 
 A flutter plugin project to cover the onboarding flow of @protocol apps.
 
-## Getting Started
-
-To use this plugin in app, first add it to pubspec.yaml
-
-```
-dependencies:
-  at_onboarding_flutter: ^2.1.2
-```
 
 ### API Key
 In order to utilise the `get free atsign` feature, please contact <get-key@atsign.com> and get an API key for your app.
