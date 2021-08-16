@@ -59,18 +59,20 @@ class _ListBugReportTabState extends State<ListBugReportTab>
                 ? Center(
                     child: Text('No bug report found'),
                   )
-                : ListView.builder(
+                : ListView.separated(
                     controller: _scrollController,
                     shrinkWrap: true,
-                    itemCount: snapshot.data?.length ?? 3,
+                    itemCount: snapshot.data?.length ?? 0,
+                    padding: EdgeInsets.symmetric(vertical: 12.toHeight),
                     itemBuilder: (context, index) {
                       return Container(
-                        padding: EdgeInsets.symmetric(vertical: 10.toHeight),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.toHeight, horizontal: 12.toWidth),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              snapshot.data?[index]?.screen ?? 'Screen',
+                              snapshot.data?[index]?.errorDetail ?? 'Error',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
@@ -90,6 +92,9 @@ class _ListBugReportTabState extends State<ListBugReportTab>
                           ],
                         ),
                       );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider();
                     },
                   );
       },

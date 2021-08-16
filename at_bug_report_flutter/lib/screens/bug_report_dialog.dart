@@ -5,19 +5,21 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
-import 'list_bug_report_screen.dart';
+import 'bug_report_list_screen.dart';
 
 class BugReportDialog extends StatefulWidget {
-  final String? screen;
+  final String? errorDetail;
   final String? atSign;
   final String? authorAtSign;
+  final Function()? isSuccessCallback;
 
-  const BugReportDialog({
-    Key? key,
-    this.screen = '',
-    this.atSign = '',
-    this.authorAtSign = '',
-  }) : super(key: key);
+  const BugReportDialog(
+      {Key? key,
+      this.errorDetail = '',
+      this.atSign = '',
+      this.authorAtSign = '',
+      this.isSuccessCallback})
+      : super(key: key);
 
   @override
   _BugReportDialogState createState() => _BugReportDialogState();
@@ -25,22 +27,15 @@ class BugReportDialog extends StatefulWidget {
 
 class _BugReportDialogState extends State<BugReportDialog> {
   late BugReportService _bugReportService;
-  ScrollController? _scrollController;
-  bool isExpanded = false;
+  bool isLoading = false;
+  bool isError = false;
 
   @override
   void initState() {
-    isExpanded = false;
-    _scrollController = ScrollController();
+    isLoading = false;
+    isError = false;
     _bugReportService = BugReportService();
     _bugReportService.setAuthorAtSign(widget.authorAtSign);
-    print('Show Error Dialog in ${widget.screen} of ${widget.atSign}');
-
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      await _bugReportService.getBugReports(
-        atsign: widget.atSign,
-      );
-    });
     super.initState();
   }
 
@@ -56,44 +51,31 @@ class _BugReportDialogState extends State<BugReportDialog> {
       ),
       content: Container(
         constraints: BoxConstraints(
-          minHeight: 110.toHeight,
-          maxHeight: 400.toHeight,
+          minHeight: 75.toHeight,
+          maxHeight: 300.toHeight,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(Strings.bugReportDescription,
+            Text(widget.errorDetail ?? '',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey[700])),
-            SizedBox(height: 20),
+            SizedBox(height: 20.toHeight),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  child: Row(
-                    children: [
-                      Text(
-                        Strings.showDetailsBugReport,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 13),
-                      ),
-                      Icon(
-                        isExpanded
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
-                        size: 18,
-                        color: Colors.black,
-                      ),
-                    ],
-                  ),
-                  onTap: () async {
-                    isExpanded = !isExpanded;
-                    setState(() {});
-                  },
-                ),
                 Spacer(),
+                Visibility(
+                  visible: isLoading,
+                  child: Container(
+                    width: 16.toWidth,
+                    height: 16.toHeight,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                SizedBox(
+                  width: 24.toHeight,
+                ),
                 GestureDetector(
                   child: Text(Strings.shareButtonTitle,
                       style: TextStyle(
@@ -102,16 +84,31 @@ class _BugReportDialogState extends State<BugReportDialog> {
                         fontSize: 16,
                       )),
                   onTap: () async {
-                    await _bugReportService.setBugReport(
+                    isLoading = true;
+                    isError = false;
+                    setState(() {});
+                    var isSuccess = await _bugReportService.setBugReport(
                       BugReport(
                         time: DateTime.now().millisecondsSinceEpoch,
                         atSign: widget.atSign,
-                        screen: widget.screen,
+                        errorDetail: widget.errorDetail,
                       ),
                     );
+                    if (isSuccess) {
+                      if (widget.isSuccessCallback != null) {
+                        widget.isSuccessCallback!();
+                      }
+                      Navigator.of(context).pop();
+                    } else {
+                      isLoading = false;
+                      isError = true;
+                      setState(() {});
+                    }
                   },
                 ),
-                Spacer(),
+                SizedBox(
+                  width: 32.toHeight,
+                ),
                 GestureDetector(
                   child: Text(
                     Strings.cancelButtonTitle,
@@ -127,63 +124,16 @@ class _BugReportDialogState extends State<BugReportDialog> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 16.toHeight,
-            ),
-            StreamBuilder<List<BugReport>>(
-              stream: _bugReportService.bugReportStream,
-              initialData: _bugReportService.bugReports,
-              builder: (context, snapshot) {
-                return (snapshot.connectionState == ConnectionState.waiting)
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : (snapshot.data == null || snapshot.data!.isEmpty)
-                        ? Visibility(
-                            visible: isExpanded,
-                            child: Center(
-                              child: Text('No bug report found'),
-                            ),
-                          )
-                        : Visibility(
-                            visible: isExpanded,
-                            child: ListView.builder(
-                              controller: _scrollController,
-                              shrinkWrap: true,
-                              itemCount: snapshot.data?.length ?? 3,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 10.toHeight),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        snapshot.data?[index]?.screen ??
-                                            'Screen',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      // SizedBox(
-                                      //   height: 4.toHeight,
-                                      // ),
-                                      // Text(
-                                      //   snapshot.data?[index]?.atSign ??
-                                      //       'AtSign',
-                                      //   style: TextStyle(
-                                      //     color: Colors.grey,
-                                      //     fontSize: 14,
-                                      //   ),
-                                      // ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-              },
+            Visibility(
+              visible: isError,
+              child: Container(
+                margin: EdgeInsets.only(top: 12.toHeight),
+                child: Text(
+                  'Something errors',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
             ),
           ],
         ),

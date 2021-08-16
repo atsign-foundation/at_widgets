@@ -101,7 +101,7 @@ class BugReportService {
       print('chat message => $decryptedMessage $fromAtsign');
       await setBugReport(
         BugReport(
-          screen: decryptedMessage,
+          errorDetail: decryptedMessage,
           atSign: fromAtsign,
           time: responseJson['epochMillis'],
         ),
@@ -115,7 +115,6 @@ class BugReportService {
       var key = AtKey()
         ..key = storageKey + (atsign ?? currentAtSign ?? ' ').substring(1)
         ..sharedBy = currentAtSign!
-        ..sharedWith = authorAtSign
         ..metadata = Metadata();
 
       var keyValue = await atClientInstance.get(key).catchError((e) {
@@ -176,54 +175,16 @@ class BugReportService {
     }
   }
 
-  // Future<void> checkForMissedMessages(String referenceKey) async {
-  //   var result = await atClientInstance
-  //       .getKeys(
-  //           sharedBy: currentAtSign,
-  //           sharedWith: currentAtSign!,
-  //           regex: bugReportKey)
-  //       .catchError((e) {
-  //     print('error in checkForMissedMessages:getKeys ${e.toString()}');
-  //   });
-  //   await Future.forEach(result, (dynamic key) async {
-  //     if (referenceKey.compareTo(key) == -1) {
-  //       print('missed key - $key');
-  //       await getMissingKey(key);
-  //     }
-  //   });
-  // }
-  //
-  // Future<void> getMissingKey(String missingKey) async {
-  //   var missingAtkey = AtKey.fromString(missingKey);
-  //   var result = await atClientInstance.get(missingAtkey).catchError((e) {
-  //     print('error in getMissingKey:get ${e.toString()}');
-  //   });
-  //   print('result - $result');
-  //   // ignore: unnecessary_null_comparison
-  //   if (result != null) {
-  //     await setBugReport(
-  //       BugReport(
-  //         screen: result.value,
-  //         atSign: currentAtSign ?? missingAtkey.sharedBy,
-  //         time: int.parse(missingKey
-  //             .replaceFirst(currentAtSign ?? '', '')
-  //             .replaceFirst(bugReportKey, '')
-  //             .split('.')[0]),
-  //       ),
-  //     );
-  //   }
-  // }
-
   void setAuthorAtSign(String? authorAtSign) {
     this.authorAtSign = authorAtSign!;
   }
 
-  Future<void> setBugReport(BugReport bugReport) async {
+  Future<bool> setBugReport(BugReport bugReport) async {
     try {
       var key = AtKey()
         ..key = storageKey + (currentAtSign ?? ' ').substring(1)
         ..sharedBy = currentAtSign
-        ..sharedWith = authorAtSign
+  //      ..sharedWith = authorAtSign
         ..metadata = Metadata();
 
       bugReports.insert(0, bugReport);
@@ -234,8 +195,10 @@ class BugReportService {
       // String jsonEncoded = json.encode(bugReportsJson);
       // jsonEncoded = jsonEncoded.replaceAll('\\', '');
       await atClientInstance.put(key, json.encode(bugReportsJson));
+      return true;
     } catch (e) {
       print('Error in setting bugReport => $e');
+      return false;
     }
   }
 }

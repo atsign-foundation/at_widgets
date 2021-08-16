@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 
-public class SwiftAtReportFlutterPlugin: NSObject, FlutterPlugin {
+public class SwiftAtBugReportFlutterPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "at_bug_report_flutter", binaryMessenger: registrar.messenger())
     let instance = SwiftAtBugReportFlutterPlugin()

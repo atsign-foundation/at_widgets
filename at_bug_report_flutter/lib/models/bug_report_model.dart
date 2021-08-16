@@ -3,20 +3,20 @@ import 'dart:convert';
 class BugReport {
   int? time;
   String? atSign;
-  String? screen;
+  String? errorDetail;
 
   BugReport({
     this.time,
     this.atSign,
-    this.screen,
+    this.errorDetail,
   });
 
   BugReport copyWith(
-      {int? time, String? atSign, String? screen}) {
+      {int? time, String? atSign, String? errorDetail}) {
     return BugReport(
         time: time ?? this.time,
         atSign: atSign ?? this.atSign,
-        screen: screen ?? this.screen);
+        errorDetail: errorDetail ?? this.errorDetail);
   }
 
   factory BugReport.fromMap(Map<String, dynamic>? map) {
@@ -25,7 +25,7 @@ class BugReport {
     return BugReport(
         time: map['time'],
         atSign: map['atSign'],
-        screen: map['screen']);
+        errorDetail: map['errorDetail']);
   }
 
   // Map<String, dynamic> toJson() => <String, dynamic> {
@@ -38,7 +38,7 @@ class BugReport {
     return {
       'time': time,
       'atSign': atSign,
-      'screen': screen,
+      'errorDetail': errorDetail,
     };
   }
 
@@ -49,7 +49,7 @@ class BugReport {
 
   @override
   String toString() =>
-      'BugReport(time: $time, atSign: $atSign, screen: $screen)';
+      'BugReport(time: $time, atSign: $atSign, errorDetail: $errorDetail)';
 
   @override
   bool operator ==(Object o) {
@@ -58,10 +58,10 @@ class BugReport {
     return o is BugReport &&
         o.time == time &&
         o.atSign == atSign &&
-        o.screen == screen;
+        o.errorDetail == errorDetail;
   }
 
   @override
   int get hashCode =>
-      time.hashCode ^ atSign.hashCode ^ screen.hashCode;
+      time.hashCode ^ atSign.hashCode ^ errorDetail.hashCode;
 }

@@ -1,4 +1,6 @@
-import 'package:at_bug_report_flutter/screens/list_bug_report_screen.dart';
+import 'dart:math';
+
+import 'package:at_bug_report_flutter/screens/bug_report_list_screen.dart';
 import 'package:at_bug_report_flutter/utils/bug_report_dialog_utils.dart';
 import 'package:at_bug_report_flutter/utils/init_bug_report_service.dart';
 import 'package:at_bug_report_flutter_example/constants.dart';
@@ -44,7 +46,21 @@ class _BugReportScreenState extends State<BugReportScreen> {
                   onPressed: () async {
                     print('activeAtSign = $activeAtSign');
                     showBugReportDialog(
-                        context, activeAtSign, '', 'BugReportExampleScreen');
+                      context,
+                      activeAtSign,
+                      '',
+                      'This is error ${Random().nextInt(100)} from Bug Report Example Screen',
+                      isSuccessCallback: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.green,
+                            content: Text(
+                              'Share Successfully',
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   },
                   child: Text(
                     'Show issue report dialog',
