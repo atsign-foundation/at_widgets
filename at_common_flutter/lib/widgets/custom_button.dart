@@ -23,15 +23,20 @@ class CustomButton extends StatelessWidget {
   /// sets the font color for [buttonText] text
   final Color fontColor;
 
-  const CustomButton({
-    Key? key,
-    this.onPressed,
-    this.buttonText = '',
-    this.height,
-    this.width,
-    this.buttonColor = Colors.black,
-    this.fontColor = ColorConstants.fontPrimary,
-  }) : super(key: key);
+  /// to give radius to button border
+  /// If null, 30 will be assigned as [borderRadius]
+  final double? borderRadius;
+
+  const CustomButton(
+      {Key? key,
+      this.onPressed,
+      this.buttonText = '',
+      this.height,
+      this.width,
+      this.buttonColor = Colors.black,
+      this.fontColor = ColorConstants.fontPrimary,
+      this.borderRadius})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -41,7 +46,7 @@ class CustomButton extends StatelessWidget {
         height: height ?? (50.toHeight),
         padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30.toWidth),
+            borderRadius: BorderRadius.circular(borderRadius ?? 30.toWidth),
             color: buttonColor),
         child: Center(
           child: Text(
