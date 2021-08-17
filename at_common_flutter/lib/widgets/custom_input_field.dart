@@ -44,22 +44,33 @@ class CustomInputField extends StatelessWidget {
   /// background color of input field.
   final Color? inputFieldColor;
 
+  /// The style to use for the text being edited.
+  /// If null, defaults to the `subtitle1` text style from the current [Theme].
+  final TextStyle style;
+
+  /// The style to use for the [hintText].
+  final TextStyle hintStyle;
+
   TextEditingController textController = TextEditingController();
 
-  CustomInputField(
-      {this.hintText = '',
-      this.height = 50,
-      this.width = 300,
-      this.iconColor,
-      this.icon,
-      this.onTap,
-      this.onIconTap,
-      this.value,
-      this.initialValue = '',
-      this.onSubmitted,
-      this.isReadOnly = false,
-      this.prefix,
-      this.inputFieldColor});
+  CustomInputField({
+    this.hintText = '',
+    this.height = 50,
+    this.width = 300,
+    this.iconColor,
+    this.icon,
+    this.onTap,
+    this.onIconTap,
+    this.value,
+    this.initialValue = '',
+    this.onSubmitted,
+    this.isReadOnly = false,
+    this.prefix,
+    this.inputFieldColor,
+    this.style = const TextStyle(fontSize: 15),
+    this.hintStyle =
+        const TextStyle(color: ColorConstants.darkGrey, fontSize: 15),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -81,15 +92,12 @@ class CustomInputField extends StatelessWidget {
           Expanded(
             child: TextField(
               readOnly: isReadOnly,
-              style: TextStyle(
-                fontSize: 15.toFont,
-              ),
+              style: style,
               decoration: InputDecoration(
                 hintText: hintText,
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
-                hintStyle: TextStyle(
-                    color: ColorConstants.darkGrey, fontSize: 15.toFont),
+                hintStyle: hintStyle,
               ),
               onTap: onTap as void Function()? ?? () {},
               onChanged: (val) {

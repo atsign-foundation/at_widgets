@@ -52,6 +52,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// defines the function to execute on press of [leadingIcon].
   final Function? onLeadingIconPressed;
 
+  /// Defines the height of the toolbar component of an [CustomAppBar].
+  /// By default, the value of `toolbarHeight` is 70pt
+  final double toolbarHeight;
+
   const CustomAppBar({
     this.titleText,
     this.showTitle = false,
@@ -67,9 +71,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.titleTextStyle,
     this.onLeadingIconPressed,
     this.closeOnRight = false,
+    this.toolbarHeight = 70,
   });
   @override
-  Size get preferredSize => Size.fromHeight(70.toHeight);
+  Size get preferredSize => Size.fromHeight(toolbarHeight.toHeight);
 
   @override
   Widget build(BuildContext context) {
