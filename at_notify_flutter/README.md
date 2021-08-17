@@ -1,6 +1,6 @@
-# at_bug_report_flutter
+# at_notify_flutter
 
-A new Flutter application.
+A new Flutter Notify Plugin.
 
 ## Getting Started
 
