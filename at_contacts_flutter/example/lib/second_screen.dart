@@ -1,5 +1,7 @@
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter_example/constants.dart';
+import 'package:at_contacts_flutter_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contacts_flutter_example/client_sdk_service.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
@@ -30,6 +32,21 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Second Screen'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              updateThemeMode.sink.add(
+                  Theme.of(context).brightness == Brightness.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light);
+            },
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.light
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+            ),
+          )
+        ],
       ),
       body: Center(
         child: Column(
@@ -45,7 +62,15 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ContactsScreen(),
+                  builder: (BuildContext context) => ContactsScreen(
+                    theme: Theme.of(context).brightness == Brightness.light
+                        ? DefaultContactTheme()
+                        : DarkContactTheme(
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            primaryColor: Theme.of(context).primaryColor,
+                          ),
+                  ),
                 ));
               },
               child: Text('Show contacts'),
@@ -54,7 +79,15 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => BlockedScreen(),
+                  builder: (BuildContext context) => BlockedScreen(
+                    theme: Theme.of(context).brightness == Brightness.light
+                        ? DefaultContactTheme()
+                        : DarkContactTheme(
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            primaryColor: Theme.of(context).primaryColor,
+                          ),
+                  ),
                 ));
               },
               child: Text('Show blocked contacts'),

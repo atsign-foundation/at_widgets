@@ -3,6 +3,7 @@
 /// @param [initials] as String and display those initials in a circular avatar with random colors
 
 import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
@@ -13,13 +14,16 @@ class ContactInitial extends StatelessWidget {
   final String initials;
   int? index;
   final Color? backgroundColor;
-  ContactInitial(
-      {Key? key,
-      this.size = 50,
-      required this.initials,
-      this.index,
-      this.backgroundColor})
-      : super(key: key);
+  final ContactTheme theme;
+
+  ContactInitial({
+    Key? key,
+    this.size = 50,
+    required this.initials,
+    this.index,
+    this.backgroundColor,
+    this.theme = const DefaultContactTheme(),
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +40,7 @@ class ContactInitial extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor ?? ContactInitialsColors.getColor(initials),
         borderRadius: BorderRadius.circular(size.toWidth),
+        border: Border.all(color: theme.avatarBorderColor, width: 2),
       ),
       child: Center(
         child: Text(
