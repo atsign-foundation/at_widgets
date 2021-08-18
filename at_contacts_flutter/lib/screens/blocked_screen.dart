@@ -4,6 +4,7 @@
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/widgets/blocked_user_card.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class BlockedScreen extends StatefulWidget {
+  final ContactTheme theme;
+
+  BlockedScreen({
+    this.theme = const DefaultContactTheme(),
+  });
+
   @override
   _BlockedScreenState createState() => _BlockedScreenState();
 }
@@ -30,12 +37,22 @@ class _BlockedScreenState extends State<BlockedScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: ColorConstants.scaffoldColor,
+      backgroundColor: widget.theme.backgroundColor,
       appBar: CustomAppBar(
-        showBackButton: true,
+        showBackButton: false,
         showTitle: true,
         showLeadingIcon: true,
+        leadingIcon: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: widget.theme.appbarIconColor,
+          ),
+        ),
         titleText: TextStrings().blockedContacts,
+        appBarColor: widget.theme.primaryColor,
       ),
       body: RefreshIndicator(
         color: Colors.transparent,
@@ -45,7 +62,6 @@ class _BlockedScreenState extends State<BlockedScreen> {
           await _contactService.fetchBlockContactList();
         },
         child: Container(
-          color: ColorConstants.appBarColor,
           child: Column(
             children: [
               Expanded(
@@ -73,6 +89,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                             itemBuilder: (context, index) {
                               return BlockedUserCard(
                                 blockeduser: snapshot.data?[index],
+                                theme: widget.theme,
                               );
                             },
                           );
