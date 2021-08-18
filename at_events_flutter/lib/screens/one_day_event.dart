@@ -30,6 +30,7 @@ class _OneDayEventState extends State<OneDayEvent> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
       padding: EdgeInsets.all(25),
       child: SingleChildScrollView(
         child: Container(
@@ -43,7 +44,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                   children: <Widget>[
                     CustomHeading(heading: 'One Day Event', action: 'Cancel'),
                     SizedBox(height: 25),
-                    Text('Select Date', style: CustomTextStyles().greyLabel14),
+                    Text('Select Date', style: TextStyle().copyWith(fontSize: 14)),
                     SizedBox(height: 6.toHeight),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,6 +58,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                           initialValue: (eventData.event!.date != null)
                               ? dateToString(eventData.event!.date!)
                               : '',
+                          inputFieldColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.2)
+                                  : Colors.white.withOpacity(0.2),
                           onTap: () async {
                             final datePicked = await showDatePicker(
                                 context: context,
@@ -92,6 +97,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                           initialValue: (eventData.event!.endDate != null)
                               ? dateToString(eventData.event!.endDate!)
                               : '',
+                          inputFieldColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.2)
+                                  : Colors.white.withOpacity(0.2),
                           onTap: () async {
                             final datePicked = await showDatePicker(
                                 context: context,
@@ -119,7 +128,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                       ],
                     ),
                     SizedBox(height: 25),
-                    Text('Select Time', style: CustomTextStyles().greyLabel14),
+                    Text('Select Time', style: TextStyle().copyWith(fontSize: 14)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -132,6 +141,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                           initialValue: eventData.event!.startTime != null
                               ? timeOfDayToString(eventData.event!.startTime!)
                               : '',
+                          inputFieldColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.2)
+                                  : Colors.white.withOpacity(0.2),
                           onTap: () async {
                             final timePicked = await showTimePicker(
                                 context: context,
@@ -167,6 +180,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                             initialValue: eventData.event!.endTime != null
                                 ? timeOfDayToString(eventData.event!.endTime!)
                                 : '',
+                            inputFieldColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black.withOpacity(0.2)
+                                    : Colors.white.withOpacity(0.2),
                             onTap: () async {
                               final timePicked = await showTimePicker(
                                   context: context,

@@ -31,7 +31,9 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
         height: (isExpanded) ? 300.toHeight : 55,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color(0xffF7F7FF),
+          color: Theme.of(context).brightness == Brightness.light
+              ? Colors.black.withOpacity(0.2)
+              : Colors.white.withOpacity(0.2),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Stack(

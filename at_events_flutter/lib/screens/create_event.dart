@@ -97,7 +97,8 @@ class _CreateEventState extends State<CreateEvent> {
                                       action: 'Cancel'),
                                   SizedBox(height: 25),
                                   Text('Send To',
-                                      style: CustomTextStyles().greyLabel14),
+                                      style:
+                                          TextStyle().copyWith(fontSize: 14)),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
                                     width: SizeConfig().screenWidth * 0.95,
@@ -105,6 +106,11 @@ class _CreateEventState extends State<CreateEvent> {
                                     isReadOnly: true,
                                     hintText: 'Select @sign from contacts',
                                     icon: Icons.contacts_rounded,
+                                    inputFieldColor:
+                                        Theme.of(context).brightness ==
+                                                Brightness.light
+                                            ? Colors.black.withOpacity(0.2)
+                                            : Colors.white.withOpacity(0.2),
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -152,13 +158,18 @@ class _CreateEventState extends State<CreateEvent> {
                                       : SizedBox(),
                                   Text(
                                     'Title',
-                                    style: CustomTextStyles().greyLabel14,
+                                    style: TextStyle().copyWith(fontSize: 14),
                                   ),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
                                     width: SizeConfig().screenWidth * 0.95,
                                     height: 50.toHeight,
                                     hintText: 'Title of the event',
+                                    inputFieldColor:
+                                        Theme.of(context).brightness ==
+                                                Brightness.light
+                                            ? Colors.black.withOpacity(0.2)
+                                            : Colors.white.withOpacity(0.2),
                                     initialValue: eventData.title != null
                                         ? EventService()
                                             .eventNotificationModel!
@@ -172,13 +183,19 @@ class _CreateEventState extends State<CreateEvent> {
                                   ),
                                   SizedBox(height: 25),
                                   Text('Add Venue',
-                                      style: CustomTextStyles().greyLabel14),
+                                      style:
+                                          TextStyle().copyWith(fontSize: 14)),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
                                     width: SizeConfig().screenWidth * 0.95,
                                     height: 50.toHeight,
                                     isReadOnly: true,
                                     hintText: 'Start typing or select from map',
+                                    inputFieldColor:
+                                        Theme.of(context).brightness ==
+                                                Brightness.light
+                                            ? Colors.black.withOpacity(0.2)
+                                            : Colors.white.withOpacity(0.2),
                                     initialValue: eventData.venue!.label != null
                                         ? eventData.venue!.label!
                                         : '',
@@ -200,8 +217,8 @@ class _CreateEventState extends State<CreateEvent> {
                                                     0.9);
                                           },
                                           child: Text('Select Times',
-                                              style: CustomTextStyles()
-                                                  .greyLabel14),
+                                              style: TextStyle()
+                                                  .copyWith(fontSize: 14)),
                                         ),
                                       ),
                                       Checkbox(
@@ -262,8 +279,8 @@ class _CreateEventState extends State<CreateEvent> {
 
                                               ///
                                               // 'Event on ${dateToString(eventData.event.date)} (${timeOfDayToString(eventData.event.startTime)}- ${timeOfDayToString(eventData.event.endTime)})',
-                                              style: CustomTextStyles()
-                                                  .greyLabel12,
+                                              style: TextStyle()
+                                                  .copyWith(fontSize: 12),
                                             )
                                           : SizedBox()
                                       : SizedBox(),

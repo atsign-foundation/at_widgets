@@ -44,7 +44,7 @@ PODS:
   - DKPhotoGallery/Resource (0.0.17):
     - SDWebImage
     - SwiftyGif
-  - emoji_picker (0.0.3):
+  - emoji_picker_flutter (0.0.1):
     - Flutter
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
@@ -110,7 +110,7 @@ DEPENDENCIES:
   - at_events_flutter (from `.symlinks/plugins/at_events_flutter/ios`)
   - at_location_flutter (from `.symlinks/plugins/at_location_flutter/ios`)
   - at_onboarding_flutter (from `.symlinks/plugins/at_onboarding_flutter/ios`)
-  - emoji_picker (from `.symlinks/plugins/emoji_picker/ios`)
+  - emoji_picker_flutter (from `.symlinks/plugins/emoji_picker_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
@@ -153,8 +153,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/at_location_flutter/ios"
   at_onboarding_flutter:
     :path: ".symlinks/plugins/at_onboarding_flutter/ios"
-  emoji_picker:
-    :path: ".symlinks/plugins/emoji_picker/ios"
+  emoji_picker_flutter:
+    :path: ".symlinks/plugins/emoji_picker_flutter/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
@@ -194,7 +194,7 @@ SPEC CHECKSUMS:
   at_onboarding_flutter: e8219b6d0bfb236d3837ec3528871aebdcc56e8d
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
-  emoji_picker: 0e868059aa18f9473d234f3d0701fbd4d5fd310c
+  emoji_picker_flutter: 4f9a1ac31d355e1bf9622a1e821a809149130127
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_image_compress: 082f8daaf6c1b0c9fe798251c750ef0ecd98d7ae
@@ -219,4 +219,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 67509bdfc9e7e3da0e68d53ab26669daba079215
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2

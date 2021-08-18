@@ -47,6 +47,7 @@ class _SelectLocationState extends State<SelectLocation> {
     return Container(
       height: SizeConfig().screenHeight * 0.8,
       padding: EdgeInsets.fromLTRB(28.toWidth, 20.toHeight, 17.toWidth, 0),
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -57,6 +58,10 @@ class _SelectLocationState extends State<SelectLocation> {
                   hintText: 'Search an area, street name…',
                   height: 50.toHeight,
                   initialValue: inputText,
+                  inputFieldColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.2),
                   onSubmitted: (String str) async {
                     setState(() {
                       isLoader = true;
@@ -138,7 +143,7 @@ class _SelectLocationState extends State<SelectLocation> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Near me', style: CustomTextStyles().greyLabel14),
+                    Text('Near me', style: TextStyle().copyWith(fontSize: 14)),
                     ((nearMe == null) ||
                             ((nearMe == false) && (currentLocation == null)))
                         ? Flexible(
@@ -167,9 +172,10 @@ class _SelectLocationState extends State<SelectLocation> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Current Location', style: CustomTextStyles().greyLabel14),
+                Text('Current Location',
+                    style: TextStyle().copyWith(fontSize: 14)),
                 SizedBox(height: 5.toHeight),
-                Text('Using GPS', style: CustomTextStyles().greyLabel12),
+                Text('Using GPS', style: TextStyle().copyWith(fontSize: 12)),
               ],
             ),
           ),
