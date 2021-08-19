@@ -38,12 +38,9 @@ class _GroupViewState extends State<GroupView> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).brightness == Brightness.light
-            ? AllColors().WHITE
-            : AllColors().Black,
-        body: SingleChildScrollView(
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Stack(
             children: [
               Column(
@@ -190,12 +187,12 @@ class _GroupViewState extends State<GroupView> {
                       horizontal: 15.toWidth, vertical: 10.toHeight),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? AllColors().WHITE
-                        : AllColors().Black,
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     boxShadow: [
                       BoxShadow(
-                        color: AllColors().DARK_GREY,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black.withOpacity(0.4)
+                            : Colors.white.withOpacity(0.4),
                         blurRadius: 10.0,
                         spreadRadius: 1.0,
                         offset: Offset(0.0, 0.0),
@@ -229,15 +226,14 @@ class _GroupViewState extends State<GroupView> {
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                             // softWrap: false,
-                                            style: TextStyle(
-                                              color: AllColors().GREY,
-                                              fontSize: 16.toFont,
-                                            ),
+                                            style: TextStyle()
+                                                .copyWith(fontSize: 16.toFont),
                                           ),
                                         ),
                                         Text(
                                           '${groupData.members!.length} members',
-                                          style: CustomTextStyles().grey14,
+                                          style: TextStyle()
+                                              .copyWith(fontSize: 14.toFont),
                                         ),
                                       ],
                                     ),

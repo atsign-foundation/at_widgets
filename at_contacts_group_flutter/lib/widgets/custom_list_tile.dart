@@ -194,10 +194,7 @@ class _CustomListTileState extends State<CustomListTile> {
                   : widget.item!.contact!.tags!['name'] == null
                       ? widget.item!.contact!.atSign!.substring(1)
                       : widget.item!.contact!.tags!['name'],
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 14.toFont,
-              ),
+              style: TextStyle().copyWith(fontSize: 14.toFont),
             ),
             subtitle: Text(
               widget.item?.contact?.atSign ??

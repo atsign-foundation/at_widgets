@@ -88,8 +88,10 @@ class _GroupContactViewState extends State<GroupContactView> {
                   height: 0,
                 ),
       appBar: CustomAppBar(
+        appBarColor: Theme.of(context).primaryColor,
         showTitle: true,
         titleText: 'Contacts',
+        titleTextStyle: TextStyle().copyWith(fontSize: 18),
         onLeadingIconPressed: () {
           _groupService.selectedGroupContacts = unmodifiedSelectedGroupContacts;
           widget.selectedList!(unmodifiedSelectedGroupContacts);

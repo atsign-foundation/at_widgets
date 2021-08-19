@@ -106,193 +106,190 @@ class _NewGroupState extends State<NewGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).brightness == Brightness.light
-            ? AllColors().WHITE
-            : AllColors().Black,
-        bottomSheet: GroupBottomSheet(
-          onPressed: createGroup,
-          message: '${selectedContacts!.length} Contacts Selected',
-          buttontext: 'Done',
-        ),
-        appBar: CustomAppBar(
-            titleText: 'New Group',
-            showTitle: true,
-            showBackButton: true,
-            showLeadingIcon: true),
-        body: Column(
-          children: <Widget>[
-            SizedBox(height: 20.toHeight),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  width: 15.toWidth,
-                ),
-                InkWell(
-                  onTap: () async {
-                    var image = await ImagePicker().pickImage();
-                    setState(() {
-                      selectedImageByteData = image;
-                    });
-                  },
-                  child: Container(
-                    width: 68.toWidth,
-                    height: 68.toWidth,
-                    decoration: BoxDecoration(
-                      color: AllColors().MILD_GREY,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: selectedImageByteData != null
-                          ? SizedBox(
-                              width: 68.toWidth,
-                              height: 68.toWidth,
-                              child: CircleAvatar(
-                                backgroundImage:
-                                    Image.memory(selectedImageByteData!).image,
-                              ),
-                            )
-                          : Icon(Icons.add, color: AllColors().ORANGE),
-                    ),
+    return Scaffold(
+      bottomSheet: GroupBottomSheet(
+        onPressed: createGroup,
+        message: '${selectedContacts!.length} Contacts Selected',
+        buttontext: 'Done',
+      ),
+      appBar: CustomAppBar(
+        appBarColor: Theme.of(context).primaryColor,
+        titleText: 'New Group',
+        showTitle: true,
+        showBackButton: true,
+        showLeadingIcon: true,
+      ),
+      body: Column(
+        children: <Widget>[
+          SizedBox(height: 20.toHeight),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                width: 15.toWidth,
+              ),
+              InkWell(
+                onTap: () async {
+                  var image = await ImagePicker().pickImage();
+                  setState(() {
+                    selectedImageByteData = image;
+                  });
+                },
+                child: Container(
+                  width: 68.toWidth,
+                  height: 68.toWidth,
+                  decoration: BoxDecoration(
+                    color: AllColors().MILD_GREY,
+                    shape: BoxShape.circle,
                   ),
-                ),
-                SizedBox(width: 10.toWidth),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Group name', style: TextStyle(fontSize: 18.toFont)),
-                      SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15.0),
-                        child: Container(
-                          width: 330.toWidth,
-                          height: 50.toHeight,
-                          decoration: BoxDecoration(
-                            color: AllColors().INPUT_FIELD_COLOR,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: TextField(
-                                  readOnly: false,
-                                  focusNode: textFieldFocus,
-                                  style: TextStyle(
-                                    fontSize: 15.toFont,
-                                  ),
-                                  decoration: InputDecoration(
-                                    // hintText: hintText,
-                                    enabledBorder: InputBorder.none,
-                                    border: InputBorder.none,
-                                    hintStyle: TextStyle(
-                                        color: AllColors().INPUT_FIELD_COLOR,
-                                        fontSize: 15.toFont),
-                                  ),
-                                  onTap: () {
-                                    if (showEmojiPicker) {
-                                      setState(() {
-                                        showEmojiPicker = false;
-                                      });
-                                    }
-                                  },
-                                  onChanged: (val) {},
-                                  controller: textController,
-                                  onSubmitted: (str) {},
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  showEmojiPicker = !showEmojiPicker;
-                                  if (showEmojiPicker) {
-                                    textFieldFocus.unfocus();
-                                  }
-
-                                  setState(() {});
-                                },
-                                child: Icon(
-                                  Icons.emoji_emotions_outlined,
-                                  color: Colors.grey,
-                                  size: 20.toFont,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 13.toHeight),
-            Divider(),
-            SizedBox(height: 13.toHeight),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.only(right: 15, left: 15),
-                child: SingleChildScrollView(
-                  child: GridView.count(
-                    physics: ScrollPhysics(),
-                    shrinkWrap: true,
-                    crossAxisCount: 4,
-                    childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
-                        (SizeConfig().screenHeight * 0.2)),
-                    children: List.generate(selectedContacts!.length, (index) {
-                      return CustomPersonVerticalTile(
-                        imageLocation: null,
-                        title: selectedContacts![index]!.atSign,
-                        subTitle: selectedContacts![index]!.atSign,
-                        icon: Icons.close,
-                        isTopRight: true,
-                        atsign: selectedContacts![index]!.atSign,
-                        onCrossPressed: () {
-                          setState(() {
-                            selectedContacts!.removeAt(index);
-                          });
-                        },
-                      );
-                    }),
+                  child: Center(
+                    child: selectedImageByteData != null
+                        ? SizedBox(
+                            width: 68.toWidth,
+                            height: 68.toWidth,
+                            child: CircleAvatar(
+                              backgroundImage:
+                                  Image.memory(selectedImageByteData!).image,
+                            ),
+                          )
+                        : Icon(Icons.add, color: AllColors().ORANGE),
                   ),
                 ),
               ),
-            ),
-            showEmojiPicker
-                ? Container(
-                    height: 250,
-                    margin: EdgeInsets.only(bottom: 70.toHeight),
-                    child: EmojiPicker(
-                      key: UniqueKey(),
-                      config: Config(
-                          columns: 7,
-                          emojiSizeMax: 32.0,
-                          verticalSpacing: 0,
-                          horizontalSpacing: 0,
-                          initCategory: Category.RECENT,
-                          bgColor: Color(0xFFF2F2F2),
-                          indicatorColor: Colors.blue,
-                          iconColor: Colors.grey,
-                          iconColorSelected: Colors.blue,
-                          progressIndicatorColor: Colors.blue,
-                          showRecentsTab: true,
-                          recentsLimit: 28,
-                          noRecentsText: 'No Recents',
-                          noRecentsStyle: const TextStyle(
-                              fontSize: 20, color: Colors.black26),
-                          categoryIcons: const CategoryIcons(),
-                          buttonMode: ButtonMode.MATERIAL),
-                      onEmojiSelected: (category, emoji) {
-                        textController.text += emoji.emoji;
-                      },
+              SizedBox(width: 10.toWidth),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Group name', style: TextStyle(fontSize: 18.toFont)),
+                    SizedBox(height: 5),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15.0),
+                      child: Container(
+                        width: 330.toWidth,
+                        height: 50.toHeight,
+                        decoration: BoxDecoration(
+                          color: AllColors().INPUT_FIELD_COLOR,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: TextField(
+                                readOnly: false,
+                                focusNode: textFieldFocus,
+                                style: TextStyle(
+                                  fontSize: 15.toFont,
+                                ),
+                                decoration: InputDecoration(
+                                  // hintText: hintText,
+                                  enabledBorder: InputBorder.none,
+                                  border: InputBorder.none,
+                                  hintStyle: TextStyle(
+                                      color: AllColors().INPUT_FIELD_COLOR,
+                                      fontSize: 15.toFont),
+                                ),
+                                onTap: () {
+                                  if (showEmojiPicker) {
+                                    setState(() {
+                                      showEmojiPicker = false;
+                                    });
+                                  }
+                                },
+                                onChanged: (val) {},
+                                controller: textController,
+                                onSubmitted: (str) {},
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                showEmojiPicker = !showEmojiPicker;
+                                if (showEmojiPicker) {
+                                  textFieldFocus.unfocus();
+                                }
+
+                                setState(() {});
+                              },
+                              child: Icon(
+                                Icons.emoji_emotions_outlined,
+                                color: Colors.grey,
+                                size: 20.toFont,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  )
-                : SizedBox()
-          ],
-        ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 13.toHeight),
+          Divider(),
+          SizedBox(height: 13.toHeight),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(right: 15, left: 15),
+              child: SingleChildScrollView(
+                child: GridView.count(
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  crossAxisCount: 4,
+                  childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
+                      (SizeConfig().screenHeight * 0.2)),
+                  children: List.generate(selectedContacts!.length, (index) {
+                    return CustomPersonVerticalTile(
+                      imageLocation: null,
+                      title: selectedContacts![index]!.atSign,
+                      subTitle: selectedContacts![index]!.atSign,
+                      icon: Icons.close,
+                      isTopRight: true,
+                      atsign: selectedContacts![index]!.atSign,
+                      onCrossPressed: () {
+                        setState(() {
+                          selectedContacts!.removeAt(index);
+                        });
+                      },
+                    );
+                  }),
+                ),
+              ),
+            ),
+          ),
+          showEmojiPicker
+              ? Container(
+                  height: 250,
+                  margin: EdgeInsets.only(bottom: 70.toHeight),
+                  child: EmojiPicker(
+                    key: UniqueKey(),
+                    config: Config(
+                        columns: 7,
+                        emojiSizeMax: 32.0,
+                        verticalSpacing: 0,
+                        horizontalSpacing: 0,
+                        initCategory: Category.RECENT,
+                        bgColor: Color(0xFFF2F2F2),
+                        indicatorColor: Colors.blue,
+                        iconColor: Colors.grey,
+                        iconColorSelected: Colors.blue,
+                        progressIndicatorColor: Colors.blue,
+                        showRecentsTab: true,
+                        recentsLimit: 28,
+                        noRecentsText: 'No Recents',
+                        noRecentsStyle: const TextStyle(
+                            fontSize: 20, color: Colors.black26),
+                        categoryIcons: const CategoryIcons(),
+                        buttonMode: ButtonMode.MATERIAL),
+                    onEmojiSelected: (category, emoji) {
+                      textController.text += emoji.emoji;
+                    },
+                  ),
+                )
+              : SizedBox()
+        ],
       ),
     );
   }

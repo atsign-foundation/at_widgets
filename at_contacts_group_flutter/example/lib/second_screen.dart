@@ -8,6 +8,8 @@ import 'client_sdk_service.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_flutter/screens/blocked_screen.dart';
 
+import 'main.dart';
+
 class SecondScreen extends StatefulWidget {
   @override
   _SecondScreenState createState() => _SecondScreenState();
@@ -33,6 +35,21 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Second Screen'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              updateThemeMode.sink.add(
+                  Theme.of(context).brightness == Brightness.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light);
+            },
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.light
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+            ),
+          )
+        ],
       ),
       body: Center(
         child: Column(

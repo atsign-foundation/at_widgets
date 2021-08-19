@@ -70,9 +70,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
       content: Container(
         height: 410.toHeight,
         width: 200.toWidth,
-        color: Theme.of(context).brightness == Brightness.light
-            ? AllColors().WHITE
-            : AllColors().Black,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Container(
           padding: EdgeInsets.fromLTRB(24, 20, 24, 24),
           child: Column(
@@ -81,7 +79,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             children: [
               Text(
                 widget.heading!,
-                style: CustomTextStyles().grey16,
+                style: TextStyle().copyWith(fontSize: 16.toFont),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 15.toHeight),
@@ -114,7 +112,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               SizedBox(height: 15.toHeight),
               Text(
                 widget.title,
-                style: CustomTextStyles().grey16,
+                style: TextStyle().copyWith(fontSize: 16.toFont),
               ),
               widget.subtitle != null
                   ? Text(

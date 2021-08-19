@@ -119,7 +119,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
           contactName != null
               ? Text(
                   contactName!,
-                  style: CustomTextStyles().grey16,
+                  style: TextStyle().copyWith(fontSize: 16.toFont),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -129,7 +129,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
           widget.subTitle != null
               ? Text(
                   widget.subTitle!,
-                  style: CustomTextStyles().grey14,
+                  style: TextStyle().copyWith(fontSize: 14.toFont),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
