@@ -169,7 +169,14 @@ class _CustomDialogState extends State<CustomDialog> {
                                           ),
                                         ),
                                         SizedBox(height: 20.toHeight),
-                                        loading ?Container(
+                                        SizedBox(
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              ),
+                                            ),
+                                        ),
+                                        SizedBox(height: 20.toHeight),
+                                        Container(
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
@@ -190,12 +197,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     color: Colors.white,
                                                     fontSize: 15.toFont),
                                               ),
-                                            )): SizedBox(
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                            ),
-                                          ),
-                                        )
+                                            )),
                                       ]),
                                 )
                               : Padding(
@@ -759,9 +761,6 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   void onScan(String data, List<Offset> offsets, context) async {
-    setState(() {
-      loading = true;
-    });
     _controller!.stopCamera();
     print('SCANNED: => $data');
     var values = data.split(':');
