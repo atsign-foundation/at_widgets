@@ -15,7 +15,6 @@ notify(
   String? atSign,
   String? sendToAtSign,
   String? message,
-  NotifyEnum? notifyType,
 ) {
   _notifyService.setSendToAtSign(sendToAtSign);
   _notifyService.addNotify(
@@ -50,7 +49,6 @@ notifyList(
     String? atSign,
     String? sendToAtSign,
     String? message,
-    NotifyEnum? notifyType,
     ) {
   _notifyService.setSendToAtSign(sendToAtSign);
   _notifyService.addNotify(

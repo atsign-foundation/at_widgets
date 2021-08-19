@@ -71,7 +71,6 @@ class _BugReportScreenState extends State<BugReportScreen> {
                         activeAtSign,
                         atSignController.text,
                         messageController.text,
-                        null,
                       );
                     },
                     child: Text(
@@ -79,14 +78,16 @@ class _BugReportScreenState extends State<BugReportScreen> {
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
                   TextButton(
                     onPressed: () async {
-                      notify(
+                      notifyAll(
                         context,
                         activeAtSign,
                         atSignController.text,
                         messageController.text,
-                        null,
                       );
                     },
                     child: Text(
@@ -94,14 +95,16 @@ class _BugReportScreenState extends State<BugReportScreen> {
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
                   TextButton(
                     onPressed: () async {
-                      notify(
+                      notifyList(
                         context,
                         activeAtSign,
                         atSignController.text,
                         messageController.text,
-                        null,
                       );
                     },
                     child: Text(
