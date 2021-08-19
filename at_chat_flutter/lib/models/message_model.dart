@@ -1,20 +1,45 @@
 import 'dart:convert';
 
 enum MessageType { INCOMING, OUTGOING }
+enum MessageContentType { TEXT, IMAGE }
+
+extension MessageContentTypeExt on MessageContentType {
+  static MessageContentType? fromIndex(int index) {
+    if (index >= 0 && index < MessageContentType.values.length) {
+      return MessageContentType.values[index];
+    } else {
+      return null;
+    }
+  }
+}
 
 class Message {
   int? time;
   String? message;
   MessageType? type;
+  MessageContentType? contentType;
   String? sender;
-  Message({this.time, this.message, this.type, this.sender});
 
-  Message copyWith(
-      {int? time, String? message, MessageType? type, String? sender}) {
+  Message({
+    this.time,
+    this.message,
+    this.type,
+    this.contentType = MessageContentType.TEXT,
+    this.sender,
+  });
+
+  Message copyWith({
+    int? time,
+    String? message,
+    MessageType? type,
+    MessageContentType? contentType,
+    String? sender,
+  }) {
     return Message(
         time: time ?? this.time,
         message: message ?? this.message,
         type: type ?? this.type,
+        contentType: contentType ?? this.contentType,
         sender: sender ?? this.sender);
   }
 
@@ -23,7 +48,8 @@ class Message {
       'time': time,
       'message': message,
       'type': type == MessageType.values[0] ? 0 : 1,
-      'sender': sender
+      'content_type': contentType?.index,
+      'sender': sender,
     };
   }
 
@@ -31,10 +57,12 @@ class Message {
     if (map == null) return Message();
 
     return Message(
-        time: map['time'],
-        message: map['message'],
-        type: MessageType.values[map['type']],
-        sender: map['sender']);
+      time: map['time'],
+      message: map['message'],
+      type: MessageType.values[map['type']],
+      contentType: MessageContentTypeExt.fromIndex(map['content_type'] ?? 0),
+      sender: map['sender'],
+    );
   }
 
   String toJson() => json.encode(toMap());
@@ -44,7 +72,8 @@ class Message {
 
   @override
   String toString() =>
-      'Message(time: $time, message: $message, type: ${type.toString()}, sender: $sender)';
+      'Message(time: $time, message: $message, type: ${type.toString()}, '
+      'contentType ${contentType.toString()}, sender: $sender)';
 
   @override
   bool operator ==(Object o) {
@@ -54,6 +83,7 @@ class Message {
         o.time == time &&
         o.message == message &&
         o.type == type &&
+        o.contentType == contentType &&
         o.sender == sender;
   }
 

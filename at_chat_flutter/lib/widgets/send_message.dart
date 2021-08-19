@@ -6,14 +6,19 @@ class SendMessage extends StatefulWidget {
   final Function? onSend;
   final ValueChanged<String>? messageCallback;
   final Color? sendButtonColor;
+  final Color? mediaButtonColor;
   final String? hintText;
-  const SendMessage(
-      {Key? key,
-      this.onSend,
-      this.messageCallback,
-      this.sendButtonColor,
-      this.hintText})
-      : super(key: key);
+  final VoidCallback? onMediaPressed;
+
+  const SendMessage({
+    Key? key,
+    this.onSend,
+    this.messageCallback,
+    this.mediaButtonColor,
+    this.sendButtonColor,
+    this.hintText,
+    this.onMediaPressed,
+  }) : super(key: key);
   @override
   _SendMessageState createState() => _SendMessageState();
 }
@@ -44,6 +49,14 @@ class _SendMessageState extends State<SendMessage> {
           color: Colors.grey[200]),
       child: Row(
         children: [
+          IconButton(
+              icon: Icon(
+                Icons.image_outlined,
+                color: widget.mediaButtonColor ?? Colors.orange,
+              ),
+              onPressed: () {
+                widget.onMediaPressed?.call();
+              }),
           Expanded(
               child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
