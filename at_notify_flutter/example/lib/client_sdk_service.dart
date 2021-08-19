@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-
+import 'package:flutter_keychain/flutter_keychain.dart';
 import 'constants.dart';
 
 class ClientSdkService {
@@ -53,5 +53,10 @@ class ClientSdkService {
   ///Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
     return await atClientServiceInstance!.getAtSign();
+  }
+
+  deleteKey() async {
+    FlutterKeychain.remove(key: '@atsign');
+    print('after delete');
   }
 }

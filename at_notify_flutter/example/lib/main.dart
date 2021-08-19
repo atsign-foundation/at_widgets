@@ -106,6 +106,22 @@ class _MyAppState extends State<MyApp> {
                           'Already authenticated',
                           style: TextStyle(color: Colors.black),
                         ))),
+                SizedBox(
+                  height: 25,
+                ),
+                Center(
+                    child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.black12),
+                        ),
+                        onPressed: () async {
+                          await clientSdkService.deleteKey();
+                        },
+                        child: Text(
+                          'Clear paired atsigns',
+                          style: TextStyle(color: Colors.black),
+                        ))),
               ],
             ),
           )),
