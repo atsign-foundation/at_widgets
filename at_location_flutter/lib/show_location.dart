@@ -49,9 +49,9 @@ Widget showLocation(Key? key, MapController? mapController,
 
   ///
 
-  return SafeArea(
-    child: Scaffold(
-        body: FlutterMap(
+  return Scaffold(
+    body: SafeArea(
+        child: FlutterMap(
       key: key,
       mapController: mapController ?? MapController(),
       options: MapOptions(

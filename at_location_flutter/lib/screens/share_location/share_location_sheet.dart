@@ -32,6 +32,13 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     return Container(
       height: SizeConfig().screenHeight * 0.5,
       padding: EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+        ),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,20 +46,27 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Share Location', style: CustomTextStyles().black18),
+              Text(
+                'Share Location',
+                style: TextStyle()
+                    .copyWith(fontSize: 18.toFont, fontWeight: FontWeight.w700),
+              ),
               PopButton(label: 'Cancel')
             ],
           ),
           SizedBox(
             height: 25,
           ),
-          Text('Share with', style: CustomTextStyles().greyLabel14),
+          Text('Share with', style: TextStyle().copyWith(fontSize: 14)),
           SizedBox(height: 10),
           CustomInputField(
             width: 330.toWidth,
             height: 50,
             hintText: 'Type @sign ',
             initialValue: textField ?? '',
+            inputFieldColor: Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.2)
+                : Colors.white.withOpacity(0.2),
             value: (str) {
               if (!str.contains('@')) {
                 str = '@' + str;
@@ -65,11 +79,13 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
           SizedBox(height: 25),
           Text(
             'Duration',
-            style: CustomTextStyles().greyLabel14,
+            style: TextStyle().copyWith(fontSize: 14),
           ),
           SizedBox(height: 10),
           Container(
-            color: AllColors().INPUT_GREY_BACKGROUND,
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.2)
+                : Colors.white.withOpacity(0.2),
             width: 330.toWidth,
             padding: EdgeInsets.only(left: 10, right: 10),
             child: DropdownButton(
@@ -77,7 +93,9 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               icon: Icon(Icons.keyboard_arrow_down),
               underline: SizedBox(),
               elevation: 0,
-              dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
+              dropdownColor: Theme.of(context).brightness == Brightness.light
+                  ? AllColors().INPUT_GREY_BACKGROUND
+                  : AllColors().LIGHT_INPUT_GREY_BACKGROUND,
               value: selectedOption,
               hint: Text('Occurs on'),
               items: ['30 mins', '2 hours', '24 hours', 'Until turned off']
