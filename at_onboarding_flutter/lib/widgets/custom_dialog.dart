@@ -687,6 +687,17 @@ class _CustomDialogState extends State<CustomDialog> {
                                                   'Wrong email?',
                                                   style: TextStyle(
                                                       color: Colors.grey),
+                                                )),
+                                        if (widget.isQR)
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text(
+                                                  'Back',
+                                                  style: TextStyle(
+                                                      color: Colors.grey),
                                                 ))
                                         ]),
                                   if (!pair) ...[
