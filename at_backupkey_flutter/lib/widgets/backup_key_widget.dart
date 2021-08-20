@@ -140,24 +140,22 @@ class BackupKeyWidget extends StatelessWidget {
             title: Center(
               child: Text(
                 Strings.backUpKeysTitle,
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(Strings.backUpKeysDescription,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[700])),
+                Text(
+                  Strings.backUpKeysDescription,
+                  textAlign: TextAlign.center,
+                ),
                 SizedBox(height: 20.toHeight),
                 Row(
                   children: [
                     TextButton(
                         child: Text(Strings.backButtonTitle,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         onPressed: () async {
                           var result = await _onBackup(context);
                           Navigator.pop(ctxt);
@@ -167,8 +165,8 @@ class BackupKeyWidget extends StatelessWidget {
                         }),
                     Spacer(),
                     TextButton(
-                        child: Text(Strings.cancelButtonTitle,
-                            style: TextStyle(color: Colors.black)),
+                        child:
+                            Text(Strings.cancelButtonTitle, style: TextStyle()),
                         onPressed: () {
                           Navigator.pop(context);
                         })
