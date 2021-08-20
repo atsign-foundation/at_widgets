@@ -1,5 +1,8 @@
 import 'package:at_client/src/preference/at_client_preference.dart';
 import 'package:at_client_mobile/src/at_client_service.dart';
+import 'dart:async';
+
+import 'package:at_onboarding_flutter/utils/color_constants.dart';
 import 'package:at_onboarding_flutter_example/dashboard.dart';
 import 'package:at_onboarding_flutter_example/services/at_service.dart';
 import 'package:at_onboarding_flutter_example/utils/app_constants.dart';
@@ -12,6 +15,9 @@ import 'package:at_utils/at_logger.dart';
 void main() {
   runApp(MyApp());
 }
+
+final StreamController<ThemeMode> updateThemeMode =
+    StreamController<ThemeMode>.broadcast();
 
 class MyApp extends StatefulWidget {
   @override
@@ -29,34 +35,71 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Builder(
-          builder: (BuildContext context) => Center(
-            child: TextButton(
-                onPressed: () async {
-                  Onboarding(
-                      context: context,
-                      atClientPreference: atClientPrefernce,
-                      domain: AppConstants.rootDomain,
-                      appColor: const Color.fromARGB(255, 240, 94, 62),
-                      onboard: (Map<String?, AtClientService> value, String? atsign) {
-                        AtService.getInstance().atClientServiceMap = value;
-                        _logger.finer('Successfully onboarded $atsign');
-                      },
-                      onError: (Object? error) {
-                        _logger.severe('Onboarding throws $error error');
-                      },
-                      nextScreen: DashBoard(),
-                      appAPIKey: AppConstants.devAPIKey);
-                },
-                child: const Text(AppStrings.scan_qr)),
+    return StreamBuilder<ThemeMode>(
+      stream: updateThemeMode.stream,
+      initialData: ThemeMode.light,
+      builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
+        ThemeMode themeMode = snapshot.data ?? ThemeMode.light;
+        return MaterialApp(
+          theme: ThemeData(
+            brightness: Brightness.light,
+            primaryColor: const Color(0xFFf4533d),
+            accentColor: Colors.black,
+            backgroundColor: Colors.white,
+            scaffoldBackgroundColor: Colors.white,
           ),
-        ),
-      ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            primaryColor: Colors.blue,
+            accentColor: Colors.white,
+            backgroundColor: Colors.grey[850],
+            scaffoldBackgroundColor: Colors.grey[850],
+          ),
+          themeMode: themeMode,
+          home: Scaffold(
+            appBar: AppBar(
+              title: const Text('Plugin example app'),
+              actions: <Widget>[
+                IconButton(
+                  onPressed: () {
+                    updateThemeMode.sink.add(themeMode == ThemeMode.light
+                        ? ThemeMode.dark
+                        : ThemeMode.light);
+                  },
+                  icon: Icon(
+                    Theme.of(context).brightness == Brightness.light
+                        ? Icons.dark_mode_outlined
+                        : Icons.light_mode_outlined,
+                  ),
+                )
+              ],
+            ),
+            body: Builder(
+              builder: (BuildContext context) => Center(
+                child: TextButton(
+                    onPressed: () async {
+                      ColorConstants.darkTheme = themeMode != ThemeMode.light;
+                      Onboarding(
+                          context: context,
+                          atClientPreference: atClientPrefernce,
+                          domain: AppConstants.rootDomain,
+                          appColor: const Color.fromARGB(255, 240, 94, 62),
+                          onboard: (Map<String?, AtClientService> value, String? atsign) {
+                            AtService.getInstance().atClientServiceMap = value;
+                            _logger.finer('Successfully onboarded $atsign');
+                          },
+                          onError: (Object? error) {
+                            _logger.severe('Onboarding throws $error error');
+                          },
+                          nextScreen: DashBoard(),
+                          appAPIKey: AppConstants.devAPIKey);
+                    },
+                    child: const Text(AppStrings.scan_qr)),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
