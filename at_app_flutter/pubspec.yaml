@@ -1,0 +1,22 @@
+name: at_app_flutter
+description: A library that help developers build flutter applications on the @platform.
+version: 0.1.0
+repository: https://github.com/atsign-foundation/at_app
+homepage: https://atsign.dev/
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+  flutter: '>=1.17.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  at_client_mobile: ^2.0.3
+  at_onboarding_flutter: ^2.1.2
+  at_utils: ^2.0.4
+  dotenv: ^3.0.0
+  path_provider: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
