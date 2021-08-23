@@ -171,9 +171,8 @@ class _CustomDialogState extends State<CustomDialog> {
                                         SizedBox(height: 20.toHeight),
                                         SizedBox(
                                           child: Center(
-                                            child: CircularProgressIndicator(
-                                              ),
-                                            ),
+                                            child: CircularProgressIndicator(),
+                                          ),
                                         ),
                                         SizedBox(height: 20.toHeight),
                                         Container(
@@ -440,8 +439,8 @@ class _CustomDialogState extends State<CustomDialog> {
                                       child: ElevatedButton(
                                         style: ButtonStyle(
                                             backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.grey[800])),
+                                                MaterialStateProperty.all(
+                                                    Colors.grey[800])),
                                         // key: Key(''),
                                         onPressed: () async {
                                           _verifyCameraPermissions();
@@ -633,7 +632,9 @@ class _CustomDialogState extends State<CustomDialog> {
                                                           result.split(':');
                                                       Navigator.pop(context);
                                                       this.widget.onValidate!(
-                                                          params[0], params[1], false);
+                                                          params[0],
+                                                          params[1],
+                                                          false);
                                                     }
                                                   }
                                                 },
@@ -688,7 +689,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                   style: TextStyle(
                                                       color: Colors.grey),
                                                 )),
-                                        if (widget.isQR)
+                                          if (widget.isQR)
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);

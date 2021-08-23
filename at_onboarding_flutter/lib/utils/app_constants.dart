@@ -22,7 +22,7 @@ class AppConstants {
 
   static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';
-    if(_rootDomain == 'root.atsign.org') {
+    if (_rootDomain == 'root.atsign.org') {
       website = 'https://atsign.com';
       apiEndPoint = 'my.atsign.com';
     } else {

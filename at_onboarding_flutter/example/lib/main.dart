@@ -39,20 +39,19 @@ class _MyAppState extends State<MyApp> {
             child: TextButton(
                 onPressed: () async {
                   Onboarding(
-                    context: context,
-                    atClientPreference: atClientPrefernce,
-                    domain: AppConstants.rootDomain,
-                    appColor: Color.fromARGB(255, 240, 94, 62),
-                    onboard: (value, atsign) {
-                      AtService.getInstance().atClientServiceMap = value;
-                      _logger.finer('Successfully onboarded $atsign');
-                    },
-                    onError: (error) {
-                      _logger.severe('Onboarding throws $error error');
-                    },
-                    nextScreen: DashBoard(),
-                    appAPIKey: AppConstants.devAPIKey
-                  );
+                      context: context,
+                      atClientPreference: atClientPrefernce,
+                      domain: AppConstants.rootDomain,
+                      appColor: Color.fromARGB(255, 240, 94, 62),
+                      onboard: (value, atsign) {
+                        AtService.getInstance().atClientServiceMap = value;
+                        _logger.finer('Successfully onboarded $atsign');
+                      },
+                      onError: (error) {
+                        _logger.severe('Onboarding throws $error error');
+                      },
+                      nextScreen: DashBoard(),
+                      appAPIKey: AppConstants.devAPIKey);
                 },
                 child: Text(AppStrings.scan_qr)),
           ),

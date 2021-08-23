@@ -28,13 +28,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(
-            title: Text(widget.title ??'FAQ',style: TextStyle(color: Colors.white),),
-            elevation: 1.0,
-            centerTitle: true,
-            backgroundColor: ColorConstants.appColor,
-          ),
+      appBar: AppBar(
+        title: Text(
+          widget.title ?? 'FAQ',
+          style: TextStyle(color: Colors.white),
+        ),
+        elevation: 1.0,
+        centerTitle: true,
+        backgroundColor: ColorConstants.appColor,
+      ),
 //      CustomAppBar(
 //        showBackButton: true,
 //        title: widget.title,

@@ -1,3 +1,6 @@
+## 2.1.4
+- fixed UI related issues
+
 ## 2.1.3
 - added QR code screen
 

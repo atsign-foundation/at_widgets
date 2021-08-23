@@ -724,7 +724,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               onValidate: (atsign, secret, isScanner) async {
                 _loadingMessage = Strings.loadingAtsignReady;
                 setState(() {});
-                await _processSharedSecret(atsign, secret, isScanner: isScanner);
+                await _processSharedSecret(atsign, secret,
+                    isScanner: isScanner);
               },
               isAtsignForm: true,
               isQR: true,

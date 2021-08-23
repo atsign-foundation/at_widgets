@@ -60,7 +60,8 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    var url = Uri.https(AppConstants.apiEndPoint, '${AppConstants.apiPath}${AppConstants.getFreeAtsign}');
+    var url = Uri.https(AppConstants.apiEndPoint,
+        '${AppConstants.apiPath}${AppConstants.getFreeAtsign}');
 
     var response = await _http.get(url, headers: {
       "Authorization": '${AppConstants.apiKey}',
