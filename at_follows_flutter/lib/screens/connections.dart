@@ -52,7 +52,7 @@ class _ConnectionsState extends State<Connections> {
         (widget.atClientserviceInstance.atClient!.currentAtSign) ?? '';
     _connectionService.init(currentAtsign);
     _connectionProvider.init(currentAtsign);
-    ColorConstants.darkTheme = false;
+    // ColorConstants.darkTheme = false;
     ColorConstants.appColor = widget.appColor;
     SDKService().setClientService = widget.atClientserviceInstance;
     Strings.directoryUrl = Strings.rootdomain == 'root.atsign.org'
@@ -73,7 +73,7 @@ class _ConnectionsState extends State<Connections> {
     SizeConfig().init(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: ColorConstants.backgroundColor,
+        // backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
           title: SDKService().atsign,
           showTitle: true,
@@ -159,7 +159,7 @@ class _ConnectionsState extends State<Connections> {
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(18.toFont),
                             filled: true,
-                            fillColor: ColorConstants.fillColor,
+                            // fillColor: ColorConstants.fillColor,
                             hintText: Strings.Search,
                             hintStyle: CustomTextStyles.fontR16primary,
                             prefixIcon: Icon(Icons.filter_list,

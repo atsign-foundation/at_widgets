@@ -32,7 +32,7 @@ class AtService {
       ..cramSecret = cramSecret
       ..namespace = AppConstants.appNamespace
       ..syncStrategy = SyncStrategy.ONDEMAND
-      ..rootDomain = 'root.atsign.wtf'
+      ..rootDomain = AppConstants.rootDomain
       ..hiveStoragePath = path;
     return _atClientPreference;
   }
@@ -79,8 +79,11 @@ class AtService {
   // startMonitor needs to be called at the beginning of session
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
-    String privateKey = await (getPrivateKey(_atsign!) as FutureOr<String>);
+    String? privateKey = await (getPrivateKey(_atsign!) as FutureOr<String?>);
     // ignore: await_only_futures
+    if (privateKey == null) {
+      return false;
+    }
     await atClientInstance!.startMonitor(privateKey, (response) {
       acceptStream(response);
     });

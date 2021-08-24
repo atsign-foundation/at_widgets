@@ -105,7 +105,7 @@ class _QrScanState extends State<QrScan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorConstants.backgroundColor,
+        // backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
           showTitle: true,
           title: SDKService().atsign,

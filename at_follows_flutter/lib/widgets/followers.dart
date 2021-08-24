@@ -195,7 +195,6 @@ class _FollowersState extends State<Followers> {
                                             ),
                                           )
                                         : Icon(Icons.person_outline,
-                                            color: Colors.black,
                                             size: 25.toFont),
                                   ),
                                   title: Text(currentAtsign.title!,
