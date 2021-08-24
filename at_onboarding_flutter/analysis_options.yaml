@@ -1,3 +1,5 @@
+# include: package:lints/recommended.yaml;
+
 analyzer:
   errors:
     unused_local_variable: warning
@@ -18,6 +20,7 @@ linter:
     non_constant_identifier_names: false
     avoid_type_to_string: true
     camel_case_types: false
+    not_initialized_non_nullable_instance_field: false
     empty_constructor_bodies: true
     prefer_const_constructors: true
     sort_constructors_first: false
