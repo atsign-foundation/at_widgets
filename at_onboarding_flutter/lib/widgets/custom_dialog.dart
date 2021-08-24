@@ -256,7 +256,6 @@ class _CustomDialogState extends State<CustomDialog> {
                               children: <Widget>[
                                 Form(
                                     key: _formKey,
-                                    // autovalidateMode: AutovalidateMode.always,
                                     child: !otp
                                         ? TextFormField(
                                             enabled: isfreeAtsign & !pair ? false : true,
@@ -274,23 +273,35 @@ class _CustomDialogState extends State<CustomDialog> {
                                             },
                                             controller: !pair ? _atsignController : _emailController,
                                             inputFormatters: <TextInputFormatter>[
+                                              LengthLimitingTextInputFormatter(80),
                                               FilteringTextInputFormatter.allow(
                                                 RegExp(
-                                                  '[a-z0-9_]|\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]',
+                                                  '[a-zA-Z0-9_]|\u00a9|\u00af|[\u2155-\u2900]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]',
                                                 ),
                                               ),
+                                              // This inputFormatter function will convert all the input to lowercase.
+                                              TextInputFormatter.withFunction(
+                                                  (TextEditingValue oldValue, TextEditingValue newValue) {
+                                                return newValue.copyWith(
+                                                  text: newValue.text.toLowerCase(),
+                                                );
+                                              })
                                             ],
                                             textCapitalization: TextCapitalization.none,
                                             decoration: InputDecoration(
-                                                fillColor: Colors.blueAccent,
-                                                errorStyle: TextStyle(
-                                                  fontSize: 12.toFont,
+                                              fillColor: Colors.blueAccent,
+                                              errorStyle: TextStyle(
+                                                fontSize: 12.toFont,
+                                              ),
+                                              hintText: !pair ? Strings.atsignHintText : '',
+                                              prefixText: !pair ? '@' : '',
+                                              prefixStyle: TextStyle(color: ColorConstants.appColor),
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: ColorConstants.appColor,
                                                 ),
-                                                hintText: !pair ? Strings.atsignHintText : '',
-                                                prefixText: !pair ? '@' : '',
-                                                prefixStyle: TextStyle(color: ColorConstants.appColor),
-                                                border: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: ColorConstants.appColor))),
+                                              ),
+                                            ),
                                           )
                                         : PinCodeTextField(
                                             animationType: AnimationType.none,
@@ -342,7 +353,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                         onPressed: () async {
                                           if (_formKey.currentState!.validate()) {
                                             Navigator.pop(context);
-                                            widget.onSubmit!(_atsignController.text);
+                                            widget.onSubmit!(_atsignController.text.toLowerCase());
                                           }
                                         },
                                         child: Text(
@@ -411,7 +422,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 onPressed: () async {
                                                   loading = true;
                                                   stateSet(() {});
-                                                  _atsignController.text = (await (getFreeAtsign(context))) ?? '';
+                                                  _atsignController.text = await getFreeAtsign(context) ?? '';
                                                   loading = false;
                                                   stateSet(() {});
                                                 },
