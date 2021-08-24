@@ -16,14 +16,12 @@ class PrivateKeyQRCodeGenScreen extends StatefulWidget {
   PrivateKeyQRCodeGenScreen({Key? key}) : super(key: key);
 
   @override
-  _PrivateKeyQRCodeGenScreenState createState() =>
-      _PrivateKeyQRCodeGenScreenState();
+  _PrivateKeyQRCodeGenScreenState createState() => _PrivateKeyQRCodeGenScreenState();
 }
 
 class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
   String? atsign;
-  var aesKey;
-  var _onboardingService = OnboardingService.getInstance();
+  final OnboardingService _onboardingService = OnboardingService.getInstance();
   @override
   void initState() {
     super.initState();
@@ -31,20 +29,20 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
   }
 
   @override
-  void setState(fn) {
+  void setState(VoidCallback fn) {
     if (mounted) {
       super.setState(fn);
     }
   }
 
-  GlobalKey globalKey = new GlobalKey();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  var _loading = false;
+  GlobalKey globalKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
     if (atsign == null) {
-      return Text('An @sign is required.');
+      return const Text('An @sign is required.');
     }
     return Opacity(
       opacity: _loading ? 0.2 : 1,
@@ -60,7 +58,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
           body: Padding(
             padding: EdgeInsets.all(16.0.toFont),
             child: ListView(
-              children: [
+              children: <Widget>[
                 SizedBox(
                   height: 10.toHeight,
                 ),
@@ -92,8 +90,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   height: 30.toHeight,
                 ),
                 BackupKeyWidget(
-                  atClientService: OnboardingService.getInstance()
-                      .atClientServiceMap[atsign],
+                  atClientService: OnboardingService.getInstance().atClientServiceMap[atsign],
                   isButton: true,
                   buttonWidth: 230.toWidth,
                   atsign: atsign!,
@@ -108,32 +105,24 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   isInverted: true,
                   buttonText: Strings.coninueButtonTitle,
                   onPressed: () async {
-                    if (OnboardingService.getInstance().fistTimeAuthScreen !=
-                        null) {
+                    if (OnboardingService.getInstance().fistTimeAuthScreen != null) {
                       _onboardingService.onboardFunc(
-                          _onboardingService.atClientServiceMap,
-                          _onboardingService.currentAtsign);
+                          _onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
                       await Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  OnboardingService.getInstance()
-                                      .fistTimeAuthScreen!));
-                    } else if (OnboardingService.getInstance().nextScreen !=
-                        null) {
+                          MaterialPageRoute<OnboardingService>(
+                              builder: (BuildContext context) => OnboardingService.getInstance().fistTimeAuthScreen!));
+                    } else if (OnboardingService.getInstance().nextScreen != null) {
                       _onboardingService.onboardFunc(
-                          _onboardingService.atClientServiceMap,
-                          _onboardingService.currentAtsign);
+                          _onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
                       await Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  OnboardingService.getInstance().nextScreen!));
+                          MaterialPageRoute<OnboardingService>(
+                              builder: (BuildContext context) => OnboardingService.getInstance().nextScreen!));
                     } else {
                       Navigator.pop(context);
                       _onboardingService.onboardFunc(
-                          _onboardingService.atClientServiceMap,
-                          _onboardingService.currentAtsign);
+                          _onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
                     }
                   },
                 )

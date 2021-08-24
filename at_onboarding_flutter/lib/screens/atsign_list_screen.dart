@@ -18,14 +18,14 @@ class AtsignListScreen extends StatefulWidget {
 }
 
 class _AtsignListScreenState extends State<AtsignListScreen> {
-  List<String>? pairedAtsignsList = [];
-  var lastSelectedIndex;
+  List<String>? pairedAtsignsList = <String>[];
+  Object? lastSelectedIndex;
   late String message;
   late int greyStartIndex;
   @override
   void initState() {
     super.initState();
-    OnboardingService.getInstance().getAtsignList().then((value) {
+    OnboardingService.getInstance().getAtsignList().then((List<String>? value) {
       pairedAtsignsList = value!;
       setState(() {});
     });
@@ -43,13 +43,11 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.toFont),
-        child: this.pairedAtsignsList == null
+        child: pairedAtsignsList == null
             ? Center(
                 child: Column(
-                children: [
-                  CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          ColorConstants.appColor)),
+                children: <Widget>[
+                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(ColorConstants.appColor)),
                   Text(
                     'Loading atsigns',
                     style: CustomTextStyles.fontBold16dark,
@@ -57,15 +55,15 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                 ],
               ))
             : Column(
-                children: [
-                  Text(this.message, style: CustomTextStyles.fontBold14primary),
-                  SizedBox(height: 10),
-                  if (widget.newAtsign != null) ...[
-                    Divider(thickness: 0.8),
-                    RadioListTile(
+                children: <Widget>[
+                  Text(message, style: CustomTextStyles.fontBold14primary),
+                  const SizedBox(height: 10),
+                  if (widget.newAtsign != null) ...<Widget>[
+                    const Divider(thickness: 0.8),
+                    RadioListTile<Object>(
                       controlAffinity: ListTileControlAffinity.trailing,
                       groupValue: lastSelectedIndex,
-                      onChanged: (value) {
+                      onChanged: (Object? value) {
                         setState(() {
                           lastSelectedIndex = value;
                         });
@@ -73,37 +71,33 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                       },
                       value: 'new',
                       activeColor: ColorConstants.appColor,
-                      title: Text('@${widget.newAtsign}',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      title: Text('@${widget.newAtsign}', style: const TextStyle(fontWeight: FontWeight.bold)),
                     )
                   ],
-                  Divider(thickness: 0.8),
+                  const Divider(thickness: 0.8),
                   Expanded(
                     child: ListView.builder(
                       itemCount: widget.atsigns.length,
-                      itemBuilder: (ctxt, index) {
-                        var currentItem = '@' + widget.atsigns[index];
-                        var isExist =
-                            this.pairedAtsignsList!.contains(currentItem);
+                      itemBuilder: (BuildContext context, int index) {
+                        String currentItem = '@' + widget.atsigns[index];
+                        bool isExist = pairedAtsignsList!.contains(currentItem);
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 2.0.toFont),
-                          child: RadioListTile(
+                          child: RadioListTile<Object>(
                             controlAffinity: ListTileControlAffinity.trailing,
                             groupValue: lastSelectedIndex,
                             onChanged: isExist
                                 ? null
-                                : (value) {
+                                : (Object? value) {
                                     setState(() {
                                       lastSelectedIndex = value;
                                     });
-                                    _showAlert(
-                                        widget.atsigns[lastSelectedIndex],
-                                        context);
+                                    _showAlert(widget.atsigns[int.parse(lastSelectedIndex.toString())], context);
                                   },
                             value: index,
                             activeColor: ColorConstants.appColor,
-                            title: Text('$currentItem',
-                                style: TextStyle(
+                            title: Text(currentItem,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.normal,
                                 )),
                           ),
@@ -117,41 +111,33 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
     );
   }
 
-  _showAlert(String atsign, BuildContext ctxt) {
-    showDialog(
-        context: ctxt,
+  Future<AlertDialog?> _showAlert(String atsign, BuildContext context) async {
+    await showDialog<AlertDialog>(
+        context: context,
         builder: (_) => AlertDialog(
               content: RichText(
-                text:
-                    TextSpan(style: CustomTextStyles.fontR14primary, children: [
-                  TextSpan(text: 'You have selected  '),
-                  TextSpan(
-                      text: '$atsign ',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(text: 'to pair with this device')
+                text: TextSpan(style: CustomTextStyles.fontR14primary, children: <InlineSpan>[
+                  const TextSpan(text: 'You have selected  '),
+                  TextSpan(text: '$atsign ', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const TextSpan(text: 'to pair with this device')
                 ]),
               ),
-              actions: [
+              actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.pop(_),
                   child: Text(
                     Strings.cancelButton,
-                    style: TextStyle(
-                        color: ColorConstants.lightBackgroundColor,
-                        fontSize: 12.toFont),
+                    style: TextStyle(color: ColorConstants.lightBackgroundColor, fontSize: 12.toFont),
                   ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.pop(_);
-                    Navigator.pop(ctxt, atsign);
+                    Navigator.pop(context, atsign);
                   },
                   child: Text(
                     'Yes, continue',
-                    style: TextStyle(
-                        color: ColorConstants.dark,
-                        fontSize: 12.toFont,
-                        fontWeight: FontWeight.bold),
+                    style: TextStyle(color: ColorConstants.dark, fontSize: 12.toFont, fontWeight: FontWeight.bold),
                   ),
                 )
               ],

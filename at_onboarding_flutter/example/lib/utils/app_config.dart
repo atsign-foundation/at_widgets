@@ -5,7 +5,7 @@ class AppConfig {
       '540f1b5fa05b40a58ea7ef82d3cfcde9bb72db8baf4bc863f552f82695837b9fee631f773ab3e34dde05b51e900220e6ae6f7240ec9fc1d967252e1aea4064ba';
   static const String bob =
       '33c2df30b79743ff880fc1c832a5c69170974dd736231b84ee360df89a0faff1f6efe0e83064144a7b4e5029334ad1daedc49bf82c0be1f763f590c28e33ba0a';
-  static const shared_secrets = {
+  static const Map<String, String> shared_secrets = <String, String>{
     '@sameeraja': sameeraja,
     '@colin': colin,
     '@bob': bob

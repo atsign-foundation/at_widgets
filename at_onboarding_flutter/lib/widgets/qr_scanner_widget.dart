@@ -27,18 +27,18 @@ class _QrScannerWidgetState extends State<QrScannerWidget> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      actions: [
+      actions: <Widget>[
         ElevatedButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text("Cancel"),
+          child: const Text('Cancel'),
         )
       ],
       content: QrReaderView(
         width: 300.0,
         height: 300.0,
-        callback: (controller) {
+        callback: (QrReaderViewController controller) {
           _controller = controller;
-          _controller!.startCamera((data, offsets) {
+          _controller!.startCamera((String data, List<Offset> offsets) {
             onScan(data, offsets, context);
           });
         },
@@ -47,23 +47,23 @@ class _QrScannerWidgetState extends State<QrScannerWidget> {
   }
 
   Future<bool> _verifyCameraPermissions() async {
-    var status = await Permission.camera.status;
-    print("camera status => $status");
+    PermissionStatus status = await Permission.camera.status;
+    print('camera status => $status');
     if (status.isGranted) {
       return true;
     }
-    return (await [Permission.camera].request())[0] == PermissionStatus.granted;
+    return (await <Permission>[Permission.camera].request())[0] == PermissionStatus.granted;
   }
 
-  Future<bool> onScan(String data, List<Offset> offsets, context) async {
+  Future<bool> onScan(String data, List<Offset> offsets, BuildContext context) async {
     late Future<bool> result;
 
-    _controller!.stopCamera();
+    await _controller!.stopCamera();
     String authenticateMessage = await onboardingService.authenticate(data);
     if (authenticateMessage == ResponseStatus.AUTH_SUCCESS) return true;
 
     // try again
-    _controller!.startCamera((data, offsets) {
+    await _controller!.startCamera((String data, List<Offset> offsets) {
       result = onScan(data, offsets, context);
     });
 

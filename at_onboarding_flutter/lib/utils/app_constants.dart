@@ -18,7 +18,7 @@ class AppConstants {
   static int responseTimeLimit = 30;
   static String contactAddress = 'support@atsign.com';
 
-  static get serverDomain => _rootDomain;
+  static String get serverDomain => _rootDomain;
 
   static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';
