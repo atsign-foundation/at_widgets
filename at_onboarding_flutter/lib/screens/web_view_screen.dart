@@ -27,13 +27,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(
-            title: Text(widget.title ??'FAQ',style: const TextStyle(color: Colors.white),),
-            elevation: 1.0,
-            centerTitle: true,
-            backgroundColor: ColorConstants.appColor,
-          ),
+      appBar: AppBar(
+        title: Text(
+          widget.title ?? 'FAQ',
+          style: const TextStyle(color: Colors.white),
+        ),
+        elevation: 1.0,
+        centerTitle: true,
+        backgroundColor: ColorConstants.appColor,
+      ),
       body: Stack(
         children: <Widget>[
           WebView(

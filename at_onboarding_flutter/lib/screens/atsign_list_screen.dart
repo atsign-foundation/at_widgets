@@ -47,7 +47,9 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
             ? Center(
                 child: Column(
                 children: <Widget>[
-                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(ColorConstants.appColor)),
+                  CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          ColorConstants.appColor)),
                   Text(
                     'Loading atsigns',
                     style: CustomTextStyles.fontBold16dark,
@@ -71,7 +73,8 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                       },
                       value: 'new',
                       activeColor: ColorConstants.appColor,
-                      title: Text('@${widget.newAtsign}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      title: Text('@${widget.newAtsign}',
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     )
                   ],
                   const Divider(thickness: 0.8),
@@ -92,7 +95,10 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                                     setState(() {
                                       lastSelectedIndex = value;
                                     });
-                                    _showAlert(widget.atsigns[int.parse(lastSelectedIndex.toString())], context);
+                                    _showAlert(
+                                        widget.atsigns[int.parse(
+                                            lastSelectedIndex.toString())],
+                                        context);
                                   },
                             value: index,
                             activeColor: ColorConstants.appColor,
@@ -116,18 +122,24 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
         context: context,
         builder: (_) => AlertDialog(
               content: RichText(
-                text: TextSpan(style: CustomTextStyles.fontR14primary, children: <InlineSpan>[
-                  const TextSpan(text: 'You have selected  '),
-                  TextSpan(text: '$atsign ', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const TextSpan(text: 'to pair with this device')
-                ]),
+                text: TextSpan(
+                    style: CustomTextStyles.fontR14primary,
+                    children: <InlineSpan>[
+                      const TextSpan(text: 'You have selected  '),
+                      TextSpan(
+                          text: '$atsign ',
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: 'to pair with this device')
+                    ]),
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.pop(_),
                   child: Text(
                     Strings.cancelButton,
-                    style: TextStyle(color: ColorConstants.lightBackgroundColor, fontSize: 12.toFont),
+                    style: TextStyle(
+                        color: ColorConstants.lightBackgroundColor,
+                        fontSize: 12.toFont),
                   ),
                 ),
                 TextButton(
@@ -137,7 +149,10 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                   },
                   child: Text(
                     'Yes, continue',
-                    style: TextStyle(color: ColorConstants.dark, fontSize: 12.toFont, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: ColorConstants.dark,
+                        fontSize: 12.toFont,
+                        fontWeight: FontWeight.bold),
                   ),
                 )
               ],

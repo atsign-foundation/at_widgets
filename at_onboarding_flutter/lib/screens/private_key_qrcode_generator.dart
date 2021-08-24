@@ -16,7 +16,8 @@ class PrivateKeyQRCodeGenScreen extends StatefulWidget {
   PrivateKeyQRCodeGenScreen({Key? key}) : super(key: key);
 
   @override
-  _PrivateKeyQRCodeGenScreenState createState() => _PrivateKeyQRCodeGenScreenState();
+  _PrivateKeyQRCodeGenScreenState createState() =>
+      _PrivateKeyQRCodeGenScreenState();
 }
 
 class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
@@ -90,7 +91,8 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   height: 30.toHeight,
                 ),
                 BackupKeyWidget(
-                  atClientService: OnboardingService.getInstance().atClientServiceMap[atsign],
+                  atClientService: OnboardingService.getInstance()
+                      .atClientServiceMap[atsign],
                   isButton: true,
                   buttonWidth: 230.toWidth,
                   atsign: atsign!,
@@ -105,24 +107,32 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                   isInverted: true,
                   buttonText: Strings.coninueButtonTitle,
                   onPressed: () async {
-                    if (OnboardingService.getInstance().fistTimeAuthScreen != null) {
+                    if (OnboardingService.getInstance().fistTimeAuthScreen !=
+                        null) {
                       _onboardingService.onboardFunc(
-                          _onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
+                          _onboardingService.atClientServiceMap,
+                          _onboardingService.currentAtsign);
                       await Navigator.pushReplacement(
                           context,
                           MaterialPageRoute<OnboardingService>(
-                              builder: (BuildContext context) => OnboardingService.getInstance().fistTimeAuthScreen!));
-                    } else if (OnboardingService.getInstance().nextScreen != null) {
+                              builder: (BuildContext context) =>
+                                  OnboardingService.getInstance()
+                                      .fistTimeAuthScreen!));
+                    } else if (OnboardingService.getInstance().nextScreen !=
+                        null) {
                       _onboardingService.onboardFunc(
-                          _onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
+                          _onboardingService.atClientServiceMap,
+                          _onboardingService.currentAtsign);
                       await Navigator.pushReplacement(
                           context,
                           MaterialPageRoute<OnboardingService>(
-                              builder: (BuildContext context) => OnboardingService.getInstance().nextScreen!));
+                              builder: (BuildContext context) =>
+                                  OnboardingService.getInstance().nextScreen!));
                     } else {
                       Navigator.pop(context);
                       _onboardingService.onboardFunc(
-                          _onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
+                          _onboardingService.atClientServiceMap,
+                          _onboardingService.currentAtsign);
                     }
                   },
                 )

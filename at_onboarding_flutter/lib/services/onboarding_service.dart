@@ -17,7 +17,8 @@ class OnboardingService {
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
   final AtSignLogger _logger = AtSignLogger('Onboarding Service');
 
-  Map<String?, AtClientService> atClientServiceMap = <String?, AtClientService>{};
+  Map<String?, AtClientService> atClientServiceMap =
+      <String?, AtClientService>{};
   String? _atsign;
   AtClientPreference _atClientPreference = AtClientPreference();
 
@@ -83,8 +84,10 @@ class OnboardingService {
 
   ///Returns `true` if authentication is successful for the existing atsign in device.
   Future<bool> onboard() async {
-    AtClientService atClientServiceInstance = _getClientServiceForAtsign(_atsign)!;
-    bool result = await atClientServiceInstance.onboard(atClientPreference: _atClientPreference, atsign: _atsign);
+    AtClientService atClientServiceInstance =
+        _getClientServiceForAtsign(_atsign)!;
+    bool result = await atClientServiceInstance.onboard(
+        atClientPreference: _atClientPreference, atsign: _atsign);
     _atsign ??= await getAtSign();
     atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
     await _sync();
@@ -94,7 +97,10 @@ class OnboardingService {
   ///Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].
   ///Throws Excpetion if atsign is null.
   Future<dynamic> authenticate(String? atsign,
-      {String? cramSecret, String? jsonData, String? decryptKey, OnboardingStatus? status}) async {
+      {String? cramSecret,
+      String? jsonData,
+      String? decryptKey,
+      OnboardingStatus? status}) async {
     _isPkam = false;
     atsign = formatAtSign(atsign);
     if (atsign == null) {
@@ -103,7 +109,8 @@ class OnboardingService {
     Completer<dynamic> c = Completer<dynamic>();
     try {
       serverStatus = await _checkAtSignServerStatus(atsign);
-      if (serverStatus != ServerStatus.teapot && serverStatus != ServerStatus.activated) {
+      if (serverStatus != ServerStatus.teapot &&
+          serverStatus != ServerStatus.activated) {
         c.complete(ResponseStatus.SERVER_NOT_REACHED);
         if (cramSecret == null) {
           _isPkam = true;
@@ -116,7 +123,8 @@ class OnboardingService {
         _atClientPreference.privateKey = null;
       }
       await atClientService
-          .authenticate(atsign, _atClientPreference, jsonData: jsonData, decryptKey: decryptKey, status: status)
+          .authenticate(atsign, _atClientPreference,
+              jsonData: jsonData, decryptKey: decryptKey, status: status)
           .then((bool value) async {
         _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
@@ -128,7 +136,8 @@ class OnboardingService {
       if (e == ResponseStatus.TIME_OUT) {
         c.completeError(e);
       } else {
-        c.completeError(e.runtimeType == OnboardingStatus ? e : ResponseStatus.AUTH_FAILED);
+        c.completeError(
+            e.runtimeType == OnboardingStatus ? e : ResponseStatus.AUTH_FAILED);
       }
     }
     return c.future;
@@ -149,7 +158,8 @@ class OnboardingService {
   }
 
   Future<Map<String, String?>> getEncryptedKeys(String atsign) async {
-    Map<String, String?> result = await atClientServiceMap[atsign]!.getEncryptedKeys(atsign);
+    Map<String, String?> result =
+        await atClientServiceMap[atsign]!.getEncryptedKeys(atsign);
     result[atsign] = await getAESKey(atsign);
     return result;
   }
@@ -171,8 +181,9 @@ class OnboardingService {
     }
     atsign = formatAtSign(atsign);
     List<String>? atSignsList = await getAtsignList();
-    ServerStatus? status = await _checkAtSignServerStatus(atsign!)
-        .timeout(Duration(seconds: AppConstants.responseTimeLimit), onTimeout: () => throw ResponseStatus.TIME_OUT);
+    ServerStatus? status = await _checkAtSignServerStatus(atsign!).timeout(
+        Duration(seconds: AppConstants.responseTimeLimit),
+        onTimeout: () => throw ResponseStatus.TIME_OUT);
     bool isExist = atSignsList != null ? atSignsList.contains(atsign) : false;
     if (status == ServerStatus.teapot) {
       isExist = false;
@@ -181,12 +192,14 @@ class OnboardingService {
   }
 
   Future<List<String>?> getAtsignList() async {
-    List<String>? atSignsList = await _keyChainManager.getAtSignListFromKeychain();
+    List<String>? atSignsList =
+        await _keyChainManager.getAtSignListFromKeychain();
     return atSignsList;
   }
 
   Future<ServerStatus?> _checkAtSignServerStatus(String atsign) async {
-    AtStatusImpl atStatusImpl = AtStatusImpl(rootUrl: AppConstants.serverDomain);
+    AtStatusImpl atStatusImpl =
+        AtStatusImpl(rootUrl: AppConstants.serverDomain);
     AtStatus status = await atStatusImpl.get(atsign);
     return status.serverStatus;
   }
@@ -197,7 +210,8 @@ class OnboardingService {
       return null;
     }
     atsign = formatAtSign(atsign);
-    AtStatusImpl atStatusImpl = AtStatusImpl(rootUrl: AppConstants.serverDomain);
+    AtStatusImpl atStatusImpl =
+        AtStatusImpl(rootUrl: AppConstants.serverDomain);
     AtStatus status = await atStatusImpl.get(atsign!);
     return status.status();
   }

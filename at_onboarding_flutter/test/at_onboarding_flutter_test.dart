@@ -35,14 +35,14 @@ void main() {
       await tester.pumpWidget(
         _homeWidget(
           home: CustomDialog(
-            ctxt!,
+            context: ctxt,
             isAtsignForm: true,
             onSubmit: onSubmit,
           ),
         ),
       );
-      await tester
-          .tap(find.byWidgetPredicate((Widget widget) => widget is Text && widget.data == Strings.submitButton));
+      await tester.tap(find.byWidgetPredicate((Widget widget) =>
+          widget is Text && widget.data == Strings.submitButton));
       expect(find.byType(CustomDialog), findsOneWidget);
       expect(_atsign, null);
     });
@@ -53,14 +53,18 @@ void main() {
         _atsign = atsign;
       }
 
-      await tester.pumpWidget(_homeWidget(home: CustomDialog(ctxt!, isAtsignForm: true, onSubmit: onSubmit)));
+      await tester.pumpWidget(_homeWidget(
+          home: CustomDialog(
+              context: ctxt, isAtsignForm: true, onSubmit: onSubmit)));
 
-      await tester.enterText(find.byType(TextFormField), 'alice🛠');
-      expect(find.byWidgetPredicate((Widget widget) => widget is TextFormField && widget.controller!.text == 'alice🛠'),
+      await tester.enterText(find.byType(TextFormField), 'ALICE 💙');
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is TextFormField && widget.controller!.text == 'alice💙'),
           findsOneWidget);
       expect(find.byType(CustomDialog), findsOneWidget);
       await tester.tap(find.byKey(uniqueKey));
-      expect(_atsign, 'alice🛠');
+      expect(_atsign, 'alice💙');
       await tester.pump();
       expect(find.byType(CustomDialog), findsOneWidget);
     });

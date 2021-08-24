@@ -19,7 +19,8 @@ class FreeAtsignService {
 
   void _init() {
     HttpClient ioc = HttpClient();
-    ioc.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+    ioc.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
     _http = IOClient(ioc);
     initialized = true;
   }
@@ -40,13 +41,17 @@ class FreeAtsignService {
   }
 
   //validating atsign with verification code
-  Future<dynamic> verificationWithAtsign(String atsign, String verificationCode) async {
+  Future<dynamic> verificationWithAtsign(
+      String atsign, String verificationCode) async {
     // if init was not called earlier, call here to initialize the http
     if (!initialized) {
       _init();
     }
     String path = AppConstants.apiPath + AppConstants.validationWithAtsign;
-    Map<String, String?> data = <String, String?>{'atsign': atsign, 'otp': verificationCode};
+    Map<String, String?> data = <String, String?>{
+      'atsign': atsign,
+      'otp': verificationCode
+    };
 
     dynamic response = await postRequest(path, data);
 
@@ -59,7 +64,8 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    Uri url = Uri.https(AppConstants.apiEndPoint, '${AppConstants.apiPath}${AppConstants.getFreeAtsign}');
+    Uri url = Uri.https(AppConstants.apiEndPoint,
+        '${AppConstants.apiPath}${AppConstants.getFreeAtsign}');
 
     Response response = await _http.get(
       url,
@@ -74,14 +80,19 @@ class FreeAtsignService {
 
 //To register the person with the provided atsign and email
 //It will send an OTP to the registered email
-  Future<dynamic> registerPerson(String atsign, String email, {String? oldEmail}) async {
+  Future<dynamic> registerPerson(String atsign, String email,
+      {String? oldEmail}) async {
     if (!initialized) {
       _init();
     }
     Map<String, String?> data;
     String path = AppConstants.apiPath + AppConstants.registerPerson;
     if (oldEmail != null) {
-      data = <String, String?>{'email': email, 'atsign': atsign, 'oldEmail': oldEmail};
+      data = <String, String?>{
+        'email': email,
+        'atsign': atsign,
+        'oldEmail': oldEmail
+      };
     } else {
       data = <String, String?>{'email': email, 'atsign': atsign};
     }
@@ -92,13 +103,19 @@ class FreeAtsignService {
 
 //It will validate the person with atsign, email and the OTP.
 //If the validation is successful, it will return a cram secret for the user to login
-  Future<dynamic> validatePerson(String atsign, String email, String? otp, {bool confirmation = false}) async {
+  Future<dynamic> validatePerson(String atsign, String email, String? otp,
+      {bool confirmation = false}) async {
     if (!initialized) {
       _init();
     }
     Map<String, String?> data;
     String path = AppConstants.apiPath + AppConstants.validatePerson;
-    data = <String, String?>{'email': email, 'atsign': atsign, 'otp': otp, 'confirmation': confirmation.toString()};
+    data = <String, String?>{
+      'email': email,
+      'atsign': atsign,
+      'otp': otp,
+      'confirmation': confirmation.toString()
+    };
     dynamic response = await postRequest(path, data);
 
     return response;
