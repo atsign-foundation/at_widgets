@@ -5,7 +5,6 @@ import 'package:at_backupkey_flutter/services/backupkey_service.dart';
 import 'package:at_backupkey_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:share/share.dart';
@@ -63,50 +62,22 @@ class BackupKeyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return isButton
-        ? Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    var result = await _onBackup(context, false);
-                    if (result == false) {
-                      _showAlertDialog(context);
-                    }
-                  },
-                  child: Container(
-                    //width: this.buttonWidth ?? 158.toWidth,
-                    height: this.buttonHeight ?? (50.toHeight),
-                    padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.toWidth), color: this.buttonColor == null ? Colors.black : this.buttonColor),
-                    child: Center(
-                      child: Text(buttonText!, textAlign: TextAlign.center, style: TextStyle(fontSize: 16.toFont, color: Colors.white, fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ),
+        ? GestureDetector(
+            onTap: () async {
+              var result = await _onBackup(context);
+              if (result == false) {
+                _showAlertDialog(context);
+              }
+            },
+            child: Container(
+              width: this.buttonWidth ?? 158.toWidth,
+              height: this.buttonHeight ?? (50.toHeight),
+              padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.toWidth), color: this.buttonColor == null ? Colors.black : this.buttonColor),
+              child: Center(
+                child: Text(buttonText!, textAlign: TextAlign.center, style: TextStyle(fontSize: 16.toFont, color: Colors.white, fontWeight: FontWeight.bold)),
               ),
-              SizedBox(
-                width: 30,
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    var result = await _onBackup(context, true);
-                    if (result == false) {
-                      _showAlertDialog(context);
-                    }
-                  },
-                  child: Container(
-                    //width: this.buttonWidth ?? 158.toWidth,
-                    height: this.buttonHeight ?? (50.toHeight),
-                    padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.toWidth), color: this.buttonColor == null ? Colors.black : this.buttonColor),
-                    child: Center(
-                      child: Text('Share', textAlign: TextAlign.center, style: TextStyle(fontSize: 16.toFont, color: Colors.white, fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           )
         : IconButton(
             icon: Icon(
@@ -171,7 +142,7 @@ class BackupKeyWidget extends StatelessWidget {
                     TextButton(
                         child: Text(Strings.backButtonTitle, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                         onPressed: () async {
-                          var result = await _onBackup(context, false);
+                          var result = await _onBackup(context);
                           Navigator.pop(ctxt);
                           if (result == false) {
                             _showAlertDialog(context);
@@ -191,7 +162,7 @@ class BackupKeyWidget extends StatelessWidget {
         });
   }
 
-  _onBackup(BuildContext context, bool isShareClicked) async {
+  _onBackup(BuildContext context) async {
     var _size = MediaQuery.of(context).size;
     try {
       var aesEncryptedKeys = await _backupKeyService.getEncryptedKeys(atsign);
@@ -200,15 +171,9 @@ class BackupKeyWidget extends StatelessWidget {
       }
       String path = await _generateFile(aesEncryptedKeys);
       print(path);
-      if (isShareClicked) {
-        await Share.shareFiles([path], sharePositionOrigin: Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
-      } else {
-        Fluttertoast.showToast(
-          msg: "Key saved to your device",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-      }
+      // await Share.shareFiles([path],
+      //     sharePositionOrigin:
+      //         Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
     } on Error catch (err) {

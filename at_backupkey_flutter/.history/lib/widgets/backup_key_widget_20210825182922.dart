@@ -68,7 +68,7 @@ class BackupKeyWidget extends StatelessWidget {
               Expanded(
                 child: GestureDetector(
                   onTap: () async {
-                    var result = await _onBackup(context, false);
+                    var result = await _onBackup(context);
                     if (result == false) {
                       _showAlertDialog(context);
                     }
@@ -84,13 +84,10 @@ class BackupKeyWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 30,
-              ),
               Expanded(
                 child: GestureDetector(
                   onTap: () async {
-                    var result = await _onBackup(context, true);
+                    var result = await _onBackup(context);
                     if (result == false) {
                       _showAlertDialog(context);
                     }
@@ -171,7 +168,7 @@ class BackupKeyWidget extends StatelessWidget {
                     TextButton(
                         child: Text(Strings.backButtonTitle, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                         onPressed: () async {
-                          var result = await _onBackup(context, false);
+                          var result = await _onBackup(context);
                           Navigator.pop(ctxt);
                           if (result == false) {
                             _showAlertDialog(context);
@@ -191,7 +188,7 @@ class BackupKeyWidget extends StatelessWidget {
         });
   }
 
-  _onBackup(BuildContext context, bool isShareClicked) async {
+  _onBackup(BuildContext context) async {
     var _size = MediaQuery.of(context).size;
     try {
       var aesEncryptedKeys = await _backupKeyService.getEncryptedKeys(atsign);
@@ -200,15 +197,14 @@ class BackupKeyWidget extends StatelessWidget {
       }
       String path = await _generateFile(aesEncryptedKeys);
       print(path);
-      if (isShareClicked) {
-        await Share.shareFiles([path], sharePositionOrigin: Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
-      } else {
-        Fluttertoast.showToast(
-          msg: "Key saved to your device",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-      }
+      // await Share.shareFiles([path],
+      //     sharePositionOrigin:
+      //         Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
+      Fluttertoast.showToast(
+        msg: "Key saved to your device",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
     } on Error catch (err) {

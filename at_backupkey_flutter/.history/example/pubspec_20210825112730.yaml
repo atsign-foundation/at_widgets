@@ -11,7 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  at_client_mobile: ^2.0.3
   at_onboarding_flutter: 
     git:
       url: https://github.com/atsign-foundation/at_widgets.git

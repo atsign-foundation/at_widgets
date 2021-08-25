@@ -1,4 +1,3 @@
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -28,7 +27,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<AtClientPreference> getAtClientPreference() async {
-    final appDocumentDirectory = await path_provider.getApplicationSupportDirectory();
+    final appDocumentDirectory =
+        await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
     var _atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
