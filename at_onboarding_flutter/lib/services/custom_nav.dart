@@ -8,13 +8,16 @@ class CustomNav {
     return _singleton;
   }
 
-  push(Widget? widget, context) {
+  void push(Widget? widget, BuildContext context) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => widget!));
+      Navigator.push(
+          context,
+          MaterialPageRoute<Widget>(
+              builder: (BuildContext context) => widget!));
     });
   }
 
-  pop(context) {
+  void pop(BuildContext context) {
     Navigator.pop(context);
   }
 }
