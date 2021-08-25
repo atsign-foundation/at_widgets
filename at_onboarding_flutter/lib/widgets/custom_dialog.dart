@@ -118,8 +118,7 @@ class _CustomDialogState extends State<CustomDialog> {
       pair = true;
       isfreeAtsign = true;
     }
-    return StatefulBuilder(builder:
-        (BuildContext context, void Function(void Function()) stateSet) {
+    return StatefulBuilder(builder: (BuildContext context, void Function(void Function()) stateSet) {
       return Stack(children: <Widget>[
         Opacity(
             opacity: loading ? 0.3 : 1,
@@ -135,143 +134,109 @@ class _CustomDialogState extends State<CustomDialog> {
                             ),
                             widget.message == ResponseStatus.TIME_OUT
                                 ? Icon(Icons.access_time, size: 18.toFont)
-                                : Icon(Icons.sentiment_dissatisfied,
-                                    size: 18.toFont)
+                                : Icon(Icons.sentiment_dissatisfied, size: 18.toFont)
                           ],
                         )
                       : widget.isAtsignForm
                           ? isQrScanner
                               ? Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 4.0.toFont),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          'Scan your QR!',
-                                          style: TextStyle(
-                                              color: ColorConstants.appColor,
-                                              fontSize: 16.toFont),
-                                        ),
-                                        SizedBox(height: 20.toHeight),
-                                        Container(
-                                          width: 300.toWidth,
-                                          height: 350.toHeight,
-                                          child: QrReaderView(
-                                            width: 300.toWidth,
-                                            height: 350.toHeight,
-                                            callback: (QrReaderViewController
-                                                controller) {
-                                              _controller = controller;
-                                              _controller!.startCamera(
-                                                  (String data,
-                                                      List<Offset> offsets) {
-                                                onScan(data, offsets, context);
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(height: 20.toHeight),
-                                        loading
-                                            ? Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ElevatedButton(
-                                                  style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(Colors
-                                                                  .grey[800])),
-                                                  // key: Key(''),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      isQrScanner = false;
-                                                    });
-                                                  },
-                                                  child: Text(
-                                                    'Cancel',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 15.toFont),
-                                                  ),
-                                                ))
-                                            : const SizedBox(
-                                                child: Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                              )
-                                      ]),
+                                  padding: EdgeInsets.symmetric(horizontal: 4.0.toFont),
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                                    Text(
+                                      'Scan your QR!',
+                                      style: TextStyle(color: ColorConstants.appColor, fontSize: 16.toFont),
+                                    ),
+                                    SizedBox(height: 20.toHeight),
+                                    Container(
+                                      width: 300.toWidth,
+                                      height: 350.toHeight,
+                                      child: QrReaderView(
+                                        width: 300.toWidth,
+                                        height: 350.toHeight,
+                                        callback: (QrReaderViewController controller) {
+                                          _controller = controller;
+                                          _controller!.startCamera((String data, List<Offset> offsets) {
+                                            onScan(data, offsets, context);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(height: 20.toHeight),
+                                    loading
+                                        ? Container(
+                                            width: MediaQuery.of(context).size.width,
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
+                                              // key: Key(''),
+                                              onPressed: () {
+                                                setState(() {
+                                                  isQrScanner = false;
+                                                });
+                                              },
+                                              child: Text(
+                                                'Cancel',
+                                                style: TextStyle(color: Colors.white, fontSize: 15.toFont),
+                                              ),
+                                            ))
+                                        : const SizedBox(
+                                            child: Center(
+                                              child: CircularProgressIndicator(),
+                                            ),
+                                          )
+                                  ]),
                                 )
                               : Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 4.0.toFont),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                  padding: EdgeInsets.symmetric(horizontal: 4.0.toFont),
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                                    Text(
+                                      'Setting up your account',
+                                      style: TextStyle(color: ColorConstants.appColor, fontSize: 16.toFont),
+                                    ),
+                                    SizedBox(height: 15.toHeight),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Text(
-                                          'Setting up your account',
-                                          style: TextStyle(
+                                        Flexible(
+                                          child: Text(
+                                            !isfreeAtsign
+                                                ? widget.isQR
+                                                    ? 'Enter Verification code'
+                                                    : Strings.enterAtsignTitle
+                                                : !pair
+                                                    ? 'Free @sign'
+                                                    : !otp
+                                                        ? 'Enter your email'
+                                                        : 'Enter Verification Code',
+                                            style: CustomTextStyles.fontR16primary,
+                                          ),
+                                        ),
+                                        IconButton(
+                                            icon: Icon(
+                                              Icons.help,
                                               color: ColorConstants.appColor,
-                                              fontSize: 16.toFont),
-                                        ),
-                                        SizedBox(height: 15.toHeight),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Flexible(
-                                              child: Text(
-                                                !isfreeAtsign
-                                                    ? widget.isQR
-                                                        ? 'Enter Verification code'
-                                                        : Strings
-                                                            .enterAtsignTitle
-                                                    : !pair
-                                                        ? 'Free @sign'
-                                                        : !otp
-                                                            ? 'Enter your email'
-                                                            : 'Enter Verification Code',
-                                                style: CustomTextStyles
-                                                    .fontR16primary,
-                                              ),
+                                              size: 18.toFont,
                                             ),
-                                            IconButton(
-                                                icon: Icon(
-                                                  Icons.help,
-                                                  color:
-                                                      ColorConstants.appColor,
-                                                  size: 18.toFont,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute<Widget>(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              WebViewScreen(
-                                                                title: Strings
-                                                                    .faqTitle,
-                                                                url: Strings
-                                                                    .faqUrl,
-                                                              )));
-                                                })
-                                          ],
-                                        ),
-                                        otp
-                                            ? Text(
-                                                !widget.isQR
-                                                    ? 'A verification code has been sent to ${_emailController.text}'
-                                                    : 'A verification code has been sent to your registered email.',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 13.toFont),
-                                              )
-                                            : Container()
-                                      ]))
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute<Widget>(
+                                                      builder: (BuildContext context) => WebViewScreen(
+                                                            title: Strings.faqTitle,
+                                                            url: Strings.faqUrl,
+                                                          )));
+                                            })
+                                      ],
+                                    ),
+                                    otp
+                                        ? Text(
+                                            !widget.isQR
+                                                ? 'A verification code has been sent to ${_emailController.text}'
+                                                : 'A verification code has been sent to your registered email.',
+                                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.toFont),
+                                          )
+                                        : Container()
+                                  ]))
                           : widget.title != null
                               ? Text(
                                   widget.title!,
@@ -294,93 +259,69 @@ class _CustomDialogState extends State<CustomDialog> {
                                     key: _formKey,
                                     child: !otp
                                         ? TextFormField(
-                                            enabled: isfreeAtsign & !pair
-                                                ? false
-                                                : true,
-                                            style: TextStyle(
-                                                fontSize: 14.toFont,
-                                                height: 1.0.toHeight),
+                                            enabled: isfreeAtsign & !pair ? false : true,
+                                            style: TextStyle(fontSize: 14.toFont, height: 1.0.toHeight),
                                             validator: (String? value) {
-                                              if (value == null ||
-                                                  value == '') {
-                                                return !pair
-                                                    ? '@sign cannot be empty'
-                                                    : 'Email cannot be empty';
+                                              if (value == null || value == '') {
+                                                return !pair ? '@sign cannot be empty' : 'Email cannot be empty';
                                               }
                                               return null;
                                             },
                                             onChanged: (String value) {
-                                              stateSet(() {
-                                                !pair
-                                                    ? _atsignController.text
-                                                    : _emailController.text =
-                                                        value;
-                                              });
+                                              stateSet(() {});
                                             },
-                                            controller: !pair
-                                                ? _atsignController
-                                                : _emailController,
-                                            inputFormatters: <
-                                                TextInputFormatter>[
-                                              LengthLimitingTextInputFormatter(
-                                                  80),
-                                              FilteringTextInputFormatter.allow(
-                                                RegExp(
-                                                  '[a-zA-Z0-9_]|\u00a9|\u00af|[\u2155-\u2900]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]',
-                                                ),
-                                              ),
+                                            controller: !pair ? _atsignController : _emailController,
+                                            inputFormatters: <TextInputFormatter>[
+                                              LengthLimitingTextInputFormatter(80),
+                                              !pair
+                                                  ? FilteringTextInputFormatter.allow(
+                                                      RegExp(
+                                                        '[a-zA-Z0-9_]|\u00a9|\u00af|[\u2155-\u2900]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]',
+                                                      ),
+                                                    )
+                                                  : FilteringTextInputFormatter.allow(
+                                                      RegExp('[a-zA-Z0-9.@_]'),
+                                                    ),
                                               // This inputFormatter function will convert all the input to lowercase.
                                               TextInputFormatter.withFunction(
-                                                  (TextEditingValue oldValue,
-                                                      TextEditingValue
-                                                          newValue) {
+                                                  (TextEditingValue oldValue, TextEditingValue newValue) {
                                                 return newValue.copyWith(
-                                                  text: newValue.text
-                                                      .toLowerCase(),
+                                                  text: newValue.text.toLowerCase(),
+                                                  selection: newValue.selection,
                                                 );
                                               })
                                             ],
-                                            textCapitalization:
-                                                TextCapitalization.none,
+                                            textCapitalization: TextCapitalization.none,
                                             decoration: InputDecoration(
                                               fillColor: Colors.blueAccent,
                                               errorStyle: TextStyle(
                                                 fontSize: 12.toFont,
                                               ),
-                                              hintText: !pair
-                                                  ? Strings.atsignHintText
-                                                  : '',
+                                              hintText: !pair ? Strings.atsignHintText : '',
                                               prefixText: !pair ? '@' : '',
-                                              prefixStyle: TextStyle(
-                                                  color:
-                                                      ColorConstants.appColor),
+                                              prefixStyle: TextStyle(color: ColorConstants.appColor),
                                               border: OutlineInputBorder(
                                                 borderSide: BorderSide(
-                                                  color:
-                                                      ColorConstants.appColor,
+                                                  color: ColorConstants.appColor,
                                                 ),
                                               ),
                                             ),
                                           )
                                         : PinCodeTextField(
                                             animationType: AnimationType.none,
-                                            textCapitalization:
-                                                TextCapitalization.characters,
+                                            textCapitalization: TextCapitalization.characters,
                                             appContext: context,
                                             length: 4,
                                             onChanged: (String value) {
                                               verificationCode = value;
                                             },
-                                            textStyle: const TextStyle(
-                                                fontWeight: FontWeight.w500),
+                                            textStyle: const TextStyle(fontWeight: FontWeight.w500),
                                             pinTheme: PinTheme(
                                               selectedColor: Colors.black,
                                               inactiveColor: Colors.grey[500],
-                                              activeColor:
-                                                  ColorConstants.appColor,
+                                              activeColor: ColorConstants.appColor,
                                               shape: PinCodeFieldShape.box,
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
+                                              borderRadius: BorderRadius.circular(5),
                                               fieldHeight: 50,
                                               fieldWidth: 45.toWidth,
                                             ),
@@ -392,9 +333,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                               verificationCode = v;
                                             },
                                           )),
-                                if (!isfreeAtsign &&
-                                    !widget.isQR &&
-                                    !isQrScanner) ...<Widget>[
+                                if (!isfreeAtsign && !widget.isQR && !isQrScanner) ...<Widget>[
                                   SizedBox(height: 15.toHeight),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -407,32 +346,23 @@ class _CustomDialogState extends State<CustomDialog> {
                                         },
                                         child: Text(
                                           Strings.cancelButton,
-                                          style: TextStyle(
-                                              color: ColorConstants.appColor,
-                                              fontSize: 12.toFont),
+                                          style: TextStyle(color: ColorConstants.appColor, fontSize: 12.toFont),
                                         ),
                                       ),
                                       SizedBox(width: 15.toWidth),
                                       ElevatedButton(
                                         style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    ColorConstants.appColor)),
+                                            backgroundColor: MaterialStateProperty.all(ColorConstants.appColor)),
                                         key: const Key(Strings.submitButton),
                                         onPressed: () async {
-                                          if (_formKey.currentState!
-                                              .validate()) {
+                                          if (_formKey.currentState!.validate()) {
                                             Navigator.pop(context);
-                                            widget.onSubmit!(_atsignController
-                                                .text
-                                                .toLowerCase());
+                                            widget.onSubmit!(_atsignController.text.toLowerCase());
                                           }
                                         },
                                         child: Text(
                                           Strings.submitButton,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12.toFont),
+                                          style: TextStyle(color: Colors.white, fontSize: 12.toFont),
                                         ),
                                       ),
                                     ],
@@ -443,19 +373,15 @@ class _CustomDialogState extends State<CustomDialog> {
                                   Container(
                                       width: MediaQuery.of(context).size.width,
                                       child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.grey[800])),
+                                        style:
+                                            ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
                                         // key: Key(''),
                                         onPressed: () async {
                                           loading = true;
                                           stateSet(() {});
-                                          freeAtsign =
-                                              await getFreeAtsign(context);
+                                          freeAtsign = await getFreeAtsign(context);
                                           if (freeAtsign != null) {
-                                            _atsignController.text =
-                                                freeAtsign!;
+                                            _atsignController.text = freeAtsign!;
                                             isfreeAtsign = true;
                                           }
                                           loading = false;
@@ -463,9 +389,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                         },
                                         child: Text(
                                           'Generate Free @sign',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.toFont),
+                                          style: TextStyle(color: Colors.white, fontSize: 15.toFont),
                                         ),
                                       )),
                                   SizedBox(height: 20.toHeight),
@@ -474,10 +398,8 @@ class _CustomDialogState extends State<CustomDialog> {
                                   Container(
                                       width: MediaQuery.of(context).size.width,
                                       child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.grey[800])),
+                                        style:
+                                            ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
                                         // key: Key(''),
                                         onPressed: () async {
                                           await _verifyCameraPermissions();
@@ -487,9 +409,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                         },
                                         child: Text(
                                           'Scan QR code',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.toFont),
+                                          style: TextStyle(color: Colors.white, fontSize: 15.toFont),
                                         ),
                                       )),
                                 ],
@@ -498,85 +418,53 @@ class _CustomDialogState extends State<CustomDialog> {
                                   !otp
                                       ? !pair
                                           ? Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
+                                              width: MediaQuery.of(context).size.width,
                                               child: ElevatedButton(
                                                 style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all(Colors
-                                                                .grey[800])),
+                                                    backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
                                                 // key: Key(''),
                                                 onPressed: () async {
                                                   loading = true;
                                                   stateSet(() {});
-                                                  _atsignController.text =
-                                                      await getFreeAtsign(
-                                                              context) ??
-                                                          '';
+                                                  _atsignController.text = await getFreeAtsign(context) ?? '';
                                                   loading = false;
                                                   stateSet(() {});
                                                 },
-                                                child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      Center(
-                                                          child: Text(
-                                                        'Refresh',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize:
-                                                                15.toFont),
-                                                      )),
-                                                      const Icon(
-                                                        Icons.refresh,
-                                                        color: Colors.white,
-                                                      )
-                                                    ]),
+                                                child:
+                                                    Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                                                  Center(
+                                                      child: Text(
+                                                    'Refresh',
+                                                    style: TextStyle(color: Colors.white, fontSize: 15.toFont),
+                                                  )),
+                                                  const Icon(
+                                                    Icons.refresh,
+                                                    color: Colors.white,
+                                                  )
+                                                ]),
                                               ))
                                           : Column(children: <Widget>[
                                               Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
+                                                  width: MediaQuery.of(context).size.width,
                                                   child: ElevatedButton(
                                                     style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty.all(
-                                                                (_emailController
-                                                                            .text !=
-                                                                        '')
-                                                                    ? Colors.grey[
-                                                                        800]
-                                                                    : Colors.grey[
-                                                                        400])),
+                                                        backgroundColor: MaterialStateProperty.all(
+                                                            (_emailController.text != '')
+                                                                ? Colors.grey[800]
+                                                                : Colors.grey[400])),
                                                     // key: Key(''),
                                                     onPressed: () async {
-                                                      if (_emailController
-                                                              .text !=
-                                                          '') {
+                                                      if (_emailController.text != '') {
                                                         loading = true;
                                                         stateSet(() {});
                                                         bool status = false;
                                                         if (!wrongEmail) {
                                                           status = await registerPersona(
-                                                              _atsignController
-                                                                  .text,
-                                                              _emailController
-                                                                  .text,
-                                                              context);
+                                                              _atsignController.text, _emailController.text, context);
                                                         } else {
                                                           status = await registerPersona(
-                                                              _atsignController
-                                                                  .text,
-                                                              _emailController
-                                                                  .text,
-                                                              context,
-                                                              oldEmail:
-                                                                  oldEmail);
+                                                              _atsignController.text, _emailController.text, context,
+                                                              oldEmail: oldEmail);
                                                         }
                                                         loading = false;
                                                         stateSet(() {});
@@ -589,9 +477,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     child: Center(
                                                         child: Text(
                                                       'Send Code',
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15.toFont),
+                                                      style: TextStyle(color: Colors.white, fontSize: 15.toFont),
                                                     )),
                                                   )),
                                               SizedBox(
@@ -599,10 +485,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                               ),
                                               Text(
                                                 Strings.emailNote,
-                                                style: TextStyle(
-                                                    fontSize: 13.toFont,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                                style: TextStyle(fontSize: 13.toFont, fontWeight: FontWeight.w600),
                                               ),
                                               Center(
                                                   child: TextButton(
@@ -613,92 +496,58 @@ class _CustomDialogState extends State<CustomDialog> {
                                                       },
                                                       child: Text(
                                                         'Back',
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .grey[700]),
+                                                        style: TextStyle(color: Colors.grey[700]),
                                                       )))
                                             ])
                                       : Column(children: <Widget>[
                                           Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
+                                              width: MediaQuery.of(context).size.width,
                                               child: ElevatedButton(
                                                 style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty.all(
-                                                            (_emailController
-                                                                            .text !=
-                                                                        '' ||
-                                                                    widget.isQR)
-                                                                ? Colors
-                                                                    .grey[800]
-                                                                : Colors.grey[
-                                                                    400])),
+                                                    backgroundColor: MaterialStateProperty.all(
+                                                        (_emailController.text != '' || widget.isQR)
+                                                            ? Colors.grey[800]
+                                                            : Colors.grey[400])),
                                                 onPressed: () async {
-                                                  if ((_emailController.text !=
-                                                          '') ||
-                                                      widget.isQR) {
+                                                  if ((_emailController.text != '') || widget.isQR) {
                                                     loading = true;
                                                     stateSet(() {});
 
                                                     String? result;
                                                     if (widget.isQR) {
-                                                      result =
-                                                          await validatewithAtsign(
-                                                              widget.atsign,
-                                                              verificationCode!,
-                                                              context);
+                                                      result = await validatewithAtsign(
+                                                          widget.atsign, verificationCode!, context);
                                                     } else {
-                                                      result =
-                                                          await validatePerson(
-                                                              _atsignController
-                                                                  .text,
-                                                              _emailController
-                                                                  .text,
-                                                              verificationCode,
-                                                              context);
+                                                      result = await validatePerson(_atsignController.text,
+                                                          _emailController.text, verificationCode, context);
                                                     }
 
                                                     loading = false;
                                                     stateSet(() {});
-                                                    if (result != null &&
-                                                        result !=
-                                                            limitExceeded) {
-                                                      List<String> params =
-                                                          result.split(':');
+                                                    if (result != null && result != limitExceeded) {
+                                                      List<String> params = result.split(':');
                                                       Navigator.pop(context);
-                                                      widget.onValidate!(
-                                                          params[0],
-                                                          params[1],
-                                                          false);
+                                                      widget.onValidate!(params[0], params[1], false);
                                                     }
                                                   }
                                                 },
                                                 child: Center(
                                                     child: Text(
                                                   'Verify & Login',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15.toFont),
+                                                  style: TextStyle(color: Colors.white, fontSize: 15.toFont),
                                                 )),
                                               )),
                                           SizedBox(height: 10.toHeight),
                                           TextButton(
                                               onPressed: () async {
-                                                if ((_emailController.text !=
-                                                        '') ||
-                                                    widget.isQR) {
+                                                if ((_emailController.text != '') || widget.isQR) {
                                                   loading = true;
                                                   stateSet(() {});
                                                   if (widget.isQR) {
-                                                    await loginWithAtsign(
-                                                        widget.atsign, context);
+                                                    await loginWithAtsign(widget.atsign, context);
                                                   } else {
                                                     await registerPersona(
-                                                        _atsignController.text,
-                                                        _emailController.text,
-                                                        context);
+                                                        _atsignController.text, _emailController.text, context);
                                                   }
 
                                                   loading = false;
@@ -707,9 +556,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                               },
                                               child: Text(
                                                 'Resend Code',
-                                                style: TextStyle(
-                                                    color: ColorConstants
-                                                        .appColor),
+                                                style: TextStyle(color: ColorConstants.appColor),
                                               )),
                                           SizedBox(height: 10.toHeight),
                                           if (!widget.isQR)
@@ -717,26 +564,21 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 onPressed: () {
                                                   otp = false;
                                                   wrongEmail = true;
-                                                  oldEmail =
-                                                      _emailController.text;
+                                                  oldEmail = _emailController.text;
                                                   stateSet(() {});
                                                 },
                                                 child: const Text(
                                                   'Wrong email?',
-                                                  style: TextStyle(
-                                                      color: Colors.grey),
+                                                  style: TextStyle(color: Colors.grey),
                                                 ))
                                         ]),
                                   if (!pair) ...<Widget>[
                                     SizedBox(height: 15.toHeight),
                                     Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                        width: MediaQuery.of(context).size.width,
                                         child: ElevatedButton(
                                           style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      ColorConstants.appColor)),
+                                              backgroundColor: MaterialStateProperty.all(ColorConstants.appColor)),
                                           onPressed: () async {
                                             pair = true;
                                             _emailController.text = '';
@@ -745,9 +587,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                           child: Center(
                                               child: Text(
                                             'Pair',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15.toFont),
+                                            style: TextStyle(color: Colors.white, fontSize: 15.toFont),
                                           )),
                                         )),
                                     Center(
@@ -759,8 +599,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                             },
                                             child: const Text(
                                               'Back',
-                                              style:
-                                                  TextStyle(color: Colors.grey),
+                                              style: TextStyle(color: Colors.grey),
                                             )))
                                   ]
                                 ]
@@ -777,9 +616,7 @@ class _CustomDialogState extends State<CustomDialog> {
                             },
                             child: Text(
                               Strings.closeTitle,
-                              style: TextStyle(
-                                  color: ColorConstants.appColor,
-                                  fontSize: 14.toFont),
+                              style: TextStyle(color: ColorConstants.appColor, fontSize: 14.toFont),
                             ),
                           ),
                         ]
@@ -795,12 +632,10 @@ class _CustomDialogState extends State<CustomDialog> {
     if (status.isGranted) {
       return true;
     }
-    return (await <Permission>[Permission.camera].request())[0] ==
-        PermissionStatus.granted;
+    return (await <Permission>[Permission.camera].request())[0] == PermissionStatus.granted;
   }
 
-  Future<void> onScan(
-      String data, List<Offset> offsets, BuildContext context) async {
+  Future<void> onScan(String data, List<Offset> offsets, BuildContext context) async {
     setState(() {
       loading = true;
     });
@@ -832,14 +667,11 @@ class _CustomDialogState extends State<CustomDialog> {
     return atsign;
   }
 
-  Future<bool> registerPersona(
-      String atsign, String email, BuildContext context,
-      {String? oldEmail}) async {
+  Future<bool> registerPersona(String atsign, String email, BuildContext context, {String? oldEmail}) async {
     dynamic data;
     bool status = false;
     // String atsign;
-    dynamic response = await _freeAtsignService.registerPerson(atsign, email,
-        oldEmail: oldEmail);
+    dynamic response = await _freeAtsignService.registerPerson(atsign, email, oldEmail: oldEmail);
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
@@ -862,24 +694,20 @@ class _CustomDialogState extends State<CustomDialog> {
     return status;
   }
 
-  Future<String?> validatePerson(
-      String atsign, String email, String? otp, BuildContext context,
+  Future<String?> validatePerson(String atsign, String email, String? otp, BuildContext context,
       {bool isConfirmation = false}) async {
     dynamic data;
     String? cramSecret;
     List<String> atsigns = <String>[];
     // String atsign;
 
-    dynamic response = await _freeAtsignService
-        .validatePerson(atsign, email, otp, confirmation: isConfirmation);
+    dynamic response = await _freeAtsignService.validatePerson(atsign, email, otp, confirmation: isConfirmation);
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
       print(data['data']);
       //check for the atsign list and display them.
-      if (data['data'] != null &&
-          data['data'].length == 2 &&
-          data['status'] != 'error') {
+      if (data['data'] != null && data['data'].length == 2 && data['status'] != 'error') {
         dynamic responseData = data['data'];
         atsigns.addAll(List<String>.from(responseData['atsigns']));
 
@@ -899,8 +727,7 @@ class _CustomDialogState extends State<CustomDialog> {
                         newAtsign: responseData['newAtsign'],
                       ))).then((dynamic value) async {
             if (value == responseData['newAtsign']) {
-              cramSecret = await validatePerson(value, email, otp, context,
-                  isConfirmation: true);
+              cramSecret = await validatePerson(value, email, otp, context, isConfirmation: true);
               return cramSecret;
             } else {
               if (value != null) {
@@ -927,14 +754,12 @@ class _CustomDialogState extends State<CustomDialog> {
     return cramSecret;
   }
 
-  Future<String> validatewithAtsign(
-      String atsign, String otp, BuildContext context,
+  Future<String> validatewithAtsign(String atsign, String otp, BuildContext context,
       {bool isConfirmation = false}) async {
     dynamic data;
     String? cramSecret;
 
-    dynamic response =
-        await _freeAtsignService.verificationWithAtsign(atsign, otp);
+    dynamic response = await _freeAtsignService.verificationWithAtsign(atsign, otp);
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
@@ -1036,8 +861,7 @@ class _CustomDialogState extends State<CustomDialog> {
     }
   }
 
-  Future<CustomDialog?> showErrorDialog(
-      BuildContext context, String? errorMessage) async {
+  Future<CustomDialog?> showErrorDialog(BuildContext context, String? errorMessage) async {
     return showDialog<CustomDialog>(
         barrierDismissible: false,
         context: context,
@@ -1061,12 +885,8 @@ class _CustomDialogState extends State<CustomDialog> {
               text: TextSpan(
                 children: <InlineSpan>[
                   TextSpan(
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16.toFont,
-                        letterSpacing: 0.5),
-                    text:
-                        'Oops! You already have the maximum number of free @signs. Please login to ',
+                    style: TextStyle(color: Colors.black, fontSize: 16.toFont, letterSpacing: 0.5),
+                    text: 'Oops! You already have the maximum number of free @signs. Please login to ',
                   ),
                   TextSpan(
                       text: 'https://my.atsign.com',
@@ -1084,10 +904,7 @@ class _CustomDialogState extends State<CustomDialog> {
                         }),
                   TextSpan(
                     text: '  to select one of your existing @signs.',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16.toFont,
-                        letterSpacing: 0.5),
+                    style: TextStyle(color: Colors.black, fontSize: 16.toFont, letterSpacing: 0.5),
                   ),
                 ],
               ),
@@ -1107,9 +924,7 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget? _getMessage(dynamic message, bool isErrorDialog) {
-    String? highLightText = message == ResponseStatus.TIME_OUT
-        ? AppConstants.contactAddress
-        : AppConstants.website;
+    String? highLightText = message == ResponseStatus.TIME_OUT ? AppConstants.contactAddress : AppConstants.website;
     if (message == null) {
       return null;
     }
@@ -1120,8 +935,7 @@ class _CustomDialogState extends State<CustomDialog> {
       return Text(message, style: CustomTextStyles.fontR16primary);
     }
     int startIndex = message.indexOf(highLightText);
-    String text1 = message.substring(0, startIndex),
-        text3 = message.substring(startIndex + highLightText!.length);
+    String text1 = message.substring(0, startIndex), text3 = message.substring(startIndex + highLightText!.length);
 
     return RichText(
       text: TextSpan(
@@ -1144,9 +958,7 @@ class _CustomDialogState extends State<CustomDialog> {
                     path: AppConstants.contactAddress,
                     query: Strings.mailUrlquery, //add subject and body here
                   );
-                  String url = highLightText == AppConstants.contactAddress
-                      ? params.toString()
-                      : highLightText;
+                  String url = highLightText == AppConstants.contactAddress ? params.toString() : highLightText;
                   String errorMessage = 'Cannot launch $url';
                   if (await canLaunch(url)) {
                     await launch(url);
