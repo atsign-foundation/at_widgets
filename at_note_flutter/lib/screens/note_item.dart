@@ -6,12 +6,10 @@ import 'package:at_note_flutter/models/note_model.dart';
 class NoteItem extends StatelessWidget {
   Note? note;
   int index;
-  String? imageBase64;
 
   NoteItem(
     this.note,
     this.index,
-    this.imageBase64,
   );
 
   @override
@@ -36,8 +34,8 @@ class NoteItem extends StatelessWidget {
               ),
               Container(
                 height: 120.toHeight,
-                child: (imageBase64 != null && imageBase64!.isNotEmpty)
-                    ? imageFromBase64String(imageBase64!)
+                child: note?.image != null
+                    ? imageFromUInt8List(note!.image!)
                     : Container(
                         color: Colors.grey.shade400,
                       ),

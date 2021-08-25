@@ -3,7 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_commons/at_commons.dart';
 import 'bottom_sheet_dialog.dart';
 
 enum NoteEnum {
@@ -80,10 +81,20 @@ Future<dynamic> showBottomSheetDialog(BuildContext context,
       });
 }
 
-Widget imageFromBase64String(String base64String) {
+Future<Uint8List?> readFileByte(String filePath) async {
+  File file = File(filePath);
+  try {
+    var fileInByte = await file.readAsBytes();
+    return fileInByte;
+  } catch (error) {
+    return null;
+  }
+}
+
+Widget imageFromUInt8List(Uint8List? uInt8list) {
   try {
     return Image.memory(
-      base64Decode(base64String),
+      uInt8list!,
       fit: BoxFit.fill,
     );
   } catch (error) {

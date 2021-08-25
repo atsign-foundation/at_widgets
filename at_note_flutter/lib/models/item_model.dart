@@ -1,16 +1,20 @@
 import 'dart:convert';
 
+import 'dart:typed_data';
+
 class Item {
   int? time;
   String? type;
   String? value;
   String? showType;
+  Uint8List? image;
 
   Item({
     this.time,
     this.type,
     this.value,
     this.showType = 'base64',
+    this.image,
   });
 
   Item copyWith({int? time, String? atSign, String? message}) {
@@ -19,6 +23,7 @@ class Item {
       type: type ?? this.type,
       value: value ?? this.value,
       showType: showType ?? this.showType,
+      image: image ?? this.image,
     );
   }
 

@@ -2,12 +2,14 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
+import 'package:at_note_flutter/models/key_model.dart';
 import 'package:at_note_flutter/models/note_model.dart';
 import 'package:at_note_flutter/utils/note_utils.dart';
 
@@ -116,9 +118,28 @@ class NoteService {
       // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
         notesJson = json.decode((keyValue.value) as String) as List?;
-        notesJson!.forEach((value) {
+        notesJson!.forEach((value) async {
           if (value != null) {
             var note = Note.fromJson((value));
+
+            String keyImage = '';
+            bool hasGetImageNote = false;
+            for (var item in note.items!) {
+              if (item.type == 'image') {
+                if (item.value != null && item.value!.isNotEmpty) {
+                  if (!hasGetImageNote) {
+                    keyImage = item.value!;
+                    hasGetImageNote = true;
+                  }
+                  var uInt8List = await getImage(item.value!);
+                  item.image = uInt8List;
+                }
+              }
+            }
+            if (keyImage != null && keyImage.isNotEmpty) {
+              var uInt8List = await getImage(keyImage);
+              note.image = uInt8List;
+            }
             notes.add(note);
           }
         });
@@ -148,6 +169,59 @@ class NoteService {
     return true;
   }
 
+  Future<String> addImage(String name, Uint8List uint8list) async {
+    try {
+      print('name = $name');
+      var metadata = Metadata();
+      metadata.isBinary = true;
+      var key = AtKey()
+        ..key = storageKey + (currentAtSign ?? ' ').substring(1) + '.$name'
+        ..sharedBy = currentAtSign
+        ..metadata = metadata;
+      bool isSuccess = await atClientInstance.put(key, uint8list);
+      print('Add Image Success $isSuccess');
+
+      Key newKey = Key(
+        value: key.key,
+        sharedBy: key.sharedBy,
+        isBinary: true,
+      );
+      return newKey.toJson();
+    } catch (e) {
+      print('Error in setting image => $e');
+      return '';
+    }
+  }
+
+  Future<Uint8List?> getImage(String keyImage) async {
+    try {
+      Key newKey = Key.fromJson(keyImage);
+
+      var metaData = Metadata();
+      metaData.isBinary = true;
+
+      var key = AtKey()
+        ..key = newKey.value
+        ..sharedBy = newKey.sharedBy
+        ..metadata = metaData;
+      var keyValue = await atClientInstance.get(key).catchError((e) {
+        print('error in get ${e.errorCode} ${e.errorMessage}');
+      });
+
+      // ignore: unnecessary_null_comparison
+      if (keyValue != null && keyValue.value != null) {
+        List<int> intList = keyValue.value.cast<int>();
+        Uint8List image = Uint8List.fromList(intList);
+        return image;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error in getting image => $e');
+      return null;
+    }
+  }
+
   Future<bool> addNote(Note note) async {
     try {
       var key = AtKey()
@@ -156,7 +230,8 @@ class NoteService {
         ..sharedWith = sendToAtSign
         ..metadata = Metadata();
 
-      notes.add(note);
+      Note newNote = await addImageToNote(note);
+      notes.add(newNote);
       noteSink.add(notes);
       notesJson!.add(note.toJson());
       bool isSuccess = await atClientInstance.put(key, json.encode(notesJson));
@@ -176,7 +251,8 @@ class NoteService {
         ..sharedWith = sendToAtSign
         ..metadata = Metadata();
 
-      notes[index] = note;
+      Note newNote = await addImageToNote(note);
+      notes[index] = newNote;
       noteSink.add(notes);
       notesJson![index] = note.toJson();
       bool isSuccess = await atClientInstance.put(key, json.encode(notesJson));
@@ -206,6 +282,28 @@ class NoteService {
       print('Error in setting note => $e');
       return false;
     }
+  }
+
+  Future<Note> addImageToNote(Note note) async {
+    String keyImage = '';
+    bool hasGetImageNote = false;
+    for (var item in note.items!) {
+      if (item.type == 'image') {
+        if (item.value != null && item.value!.isNotEmpty) {
+          if (!hasGetImageNote) {
+            keyImage = item.value!;
+            hasGetImageNote = true;
+          }
+          var uInt8List = await getImage(item.value!);
+          item.image = uInt8List;
+        }
+      }
+    }
+    if (keyImage != null && keyImage.isNotEmpty) {
+      var uInt8List = await getImage(keyImage);
+      note.image = uInt8List;
+    }
+    return note;
   }
 
   Future<bool> reOrderNote(int oldIndex, int newIndex) async {

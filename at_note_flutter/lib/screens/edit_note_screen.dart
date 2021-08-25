@@ -9,6 +9,7 @@ import 'package:at_note_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
 
 class EditNoteScreen extends StatefulWidget {
   Note? note;
@@ -37,14 +38,14 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
   List<Item> textItems = [];
   List<Item> imageItems = [];
 
+  bool isLoading = false;
+
   @override
   void initState() {
     noteService = NoteService();
     titleController = TextEditingController(text: widget.note?.title ?? '');
 
-    int time = DateTime
-        .now()
-        .millisecondsSinceEpoch;
+    int time = DateTime.now().millisecondsSinceEpoch;
 
     items = widget.note?.items ??
         [
@@ -55,8 +56,8 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
           ),
         ];
     textItems = widget.note?.items
-        ?.where((element) => element.type == 'text')
-        ?.toList() ??
+            ?.where((element) => element.type == 'text')
+            ?.toList() ??
         [
           Item(
             time: time,
@@ -65,8 +66,8 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
           ),
         ];
     imageItems = widget.note?.items
-        ?.where((element) => element.type == 'image')
-        ?.toList() ??
+            ?.where((element) => element.type == 'image')
+            ?.toList() ??
         [];
 
     for (var item in textItems) {
@@ -115,12 +116,20 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                   context,
                   Strings.confirmDeleteNote,
                   onConfirmed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
                     bool isSuccess = await noteService.removeNote(widget.index);
+                    setState(() {
+                      isLoading = false;
+                    });
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
+                        duration: Duration(seconds: 3),
                         backgroundColor: isSuccess ? Colors.green : Colors.red,
-                        content: Text(
-                            isSuccess ? Strings.deleteNoteSuccess : Strings.deleteNoteFailed),
+                        content: Text(isSuccess
+                            ? Strings.deleteNoteSuccess
+                            : Strings.deleteNoteFailed),
                       ),
                     );
                     Future.delayed(Duration(milliseconds: 1000), () {});
@@ -132,14 +141,21 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
           ),
           IconButton(
             icon: Icon(
-              Icons.check,
+              Icons.check_sharp,
               color: Colors.black,
             ),
             onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
               for (int i = 0; i < items.length; i++) {
                 if (items[i].type == 'image' && items[i].showType == 'path') {
-                  items[i].value =
-                  await getBase64FromFile(File(items[i].value!));
+                  var uInt8List = await readFileByte(items[i].value!);
+                  var name = p.basename(items[i].value!);
+                  String keyImage =
+                      await noteService.addImage(name, uInt8List!);
+                  items[i].value = keyImage;
+                  //    await getBase64FromFile(File(items[i].value!));
                   items[i].showType = 'base64';
                 }
               }
@@ -152,29 +168,37 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                   note,
                   widget.index,
                 );
+                setState(() {
+                  isLoading = false;
+                });
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
+                    duration: Duration(seconds: 3),
                     backgroundColor: isSuccess ? Colors.green : Colors.red,
-                    content: Text(
-                        isSuccess ? Strings.editNoteSuccess : Strings.editNoteFailed),
+                    content: Text(isSuccess
+                        ? Strings.editNoteSuccess
+                        : Strings.editNoteFailed),
                   ),
                 );
               } else {
                 var isSuccess = await noteService.addNote(
                   Note(
                     atSign: widget.activeAtSign,
-                    time: DateTime
-                        .now()
-                        .millisecondsSinceEpoch,
+                    time: DateTime.now().millisecondsSinceEpoch,
                     title: titleController.text,
                     items: items,
                   ),
                 );
+                setState(() {
+                  isLoading = false;
+                });
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
+                    duration: Duration(seconds: 3),
                     backgroundColor: isSuccess ? Colors.green : Colors.red,
-                    content: Text(
-                        isSuccess ? Strings.addNoteSuccess : Strings.addNoteFailed),
+                    content: Text(isSuccess
+                        ? Strings.addNoteSuccess
+                        : Strings.addNoteFailed),
                   ),
                 );
               }
@@ -184,204 +208,215 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
           ),
         ],
       ),
-      body: Container(
-        padding: EdgeInsets.only(top: 16.toHeight,
-          bottom: 16.toHeight,
-          left: 16.toWidth,
-          right: 8.toWidth,),
-        color: Colors.white,
-        child: Column(
-          children: [
-            TextField(
-              controller: titleController,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.blue,
-                  ),
-                ),
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                hintText: Strings.title,
-              ),
-              style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              onChanged: (text) {},
+      body: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.only(
+              top: 16.toHeight,
+              bottom: 16.toHeight,
+              left: 16.toWidth,
+              right: 8.toWidth,
             ),
-            SizedBox(
-              height: 8.toHeight,
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, i) {
-                  if (items[i].type == 'text') {
-                    int indexInItems = textItems.indexWhere((element) =>
-                    element.time == items[i].time);
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: itemControllers[indexInItems],
-                            decoration: new InputDecoration(
-                                border: InputBorder.none,
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                hintText: Strings.enterNote),
-                            onChanged: (text) {
-                              textItems[textItems.indexOf(items[i])].value =
-                                  text;
-                              items[i].value = text;
-                            },
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.cancel,
-                            color: Colors.grey,
-                            size: 20,
-                          ),
-                          onPressed: () async {
-                            itemControllers
-                                .removeAt(textItems.indexOf(items[i]));
-                            textItems
-                                .removeAt(textItems.indexOf(items[i]));
-                            items.removeAt(i);
-                            setState(() {});
-                          },),
-                      ],
-                    );
-                  } else {
-                    return Stack(
-                      children: [
-                        Container(
-                          padding:
-                          EdgeInsets.symmetric(vertical: 8.toHeight),
-                          alignment: Alignment.center,
-                          child: items[i].showType == 'path'
-                              ? ((items[i].value != null &&
-                              items[i].value!.isNotEmpty)
-                              ? Image.file(File(items[i].value!))
-                              : Container())
-                              : ((items[i].value != null &&
-                              items[i].value!.isNotEmpty))
-                              ? imageFromBase64String(items[i].value!)
-                              : Container(),
-                          //    imageFromBase64String(items[i].value!),
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 8.toHeight,
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.cancel,
-                                color: Colors.white,
-                                size: 28,
-                              ),
-                              onPressed: () async {
-                                imageItems.removeWhere((element) {
-                                  for (var item in items) {
-                                    if (element.time == item.time) {
-                                      return true;
-                                    }
-                                  }
-                                  return false;
-                                });
-                                items.removeAt(i);
-                                setState(() {});
-                              }),
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+            color: Colors.white,
+            child: Column(
               children: [
-                FloatingActionButton(
-                  heroTag: 'addText',
-                  elevation: 0.0,
-                  child: Text(
-                    'A',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.white),
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue,
+                      ),
+                    ),
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    hintText: Strings.title,
                   ),
-                  backgroundColor: Colors.black,
-                  onPressed: () {
-                    itemControllers.add(TextEditingController(text: ''));
-                    textItems.add(Item(
-                      type: 'text',
-                      time: DateTime
-                          .now()
-                          .millisecondsSinceEpoch,
-                      value: '',
-                    ));
-                    items.add(Item(
-                      type: 'text',
-                      time: DateTime
-                          .now()
-                          .millisecondsSinceEpoch,
-                      value: '',
-                    ));
-                    setState(() {});
-                  },
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                  onChanged: (text) {},
                 ),
                 SizedBox(
-                  width: 16,
+                  height: 8.toHeight,
                 ),
-                FloatingActionButton(
-                  heroTag: 'addImage',
-                  elevation: 0.0,
-                  child: Icon(
-                    Icons.photo,
-                    color: Colors.white,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, i) {
+                      if (items[i].type == 'text') {
+                        int indexInItems = textItems.indexWhere(
+                            (element) => element.time == items[i].time);
+                        return Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: itemControllers[indexInItems],
+                                decoration: new InputDecoration(
+                                    border: InputBorder.none,
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    enabledBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                    hintText: Strings.enterNote),
+                                onChanged: (text) {
+                                  textItems[textItems.indexOf(items[i])].value =
+                                      text;
+                                  items[i].value = text;
+                                },
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Colors.grey,
+                                size: 20,
+                              ),
+                              onPressed: () async {
+                                itemControllers
+                                    .removeAt(textItems.indexOf(items[i]));
+                                textItems.removeAt(textItems.indexOf(items[i]));
+                                items.removeAt(i);
+                                setState(() {});
+                              },
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Stack(
+                          children: [
+                            Container(
+                              padding:
+                                  EdgeInsets.symmetric(vertical: 8.toHeight),
+                              alignment: Alignment.center,
+                              child: items[i].showType == 'path'
+                                  ? ((items[i].value != null &&
+                                          items[i].value!.isNotEmpty)
+                                      ? Image.file(File(items[i].value!))
+                                      : Container())
+                                  : ((items[i].value != null &&
+                                          items[i].value!.isNotEmpty))
+                                      ? imageFromUInt8List(items[i].image!)
+                                      : Container(),
+                              //    imageFromBase64String(items[i].value!),
+                            ),
+                            Positioned(
+                              right: 0,
+                              top: 4.toHeight,
+                              child: IconButton(
+                                  icon: Icon(
+                                    Icons.cancel,
+                                    color: Colors.grey,
+                                    size: 28,
+                                  ),
+                                  onPressed: () async {
+                                    imageItems.removeWhere((element) {
+                                      for (var item in items) {
+                                        if (element.time == item.time) {
+                                          return true;
+                                        }
+                                      }
+                                      return false;
+                                    });
+                                    items.removeAt(i);
+                                    setState(() {});
+                                  }),
+                            ),
+                          ],
+                        );
+                      }
+                    },
                   ),
-                  backgroundColor: Colors.black,
-                  onPressed: () async {
-                    showBottomSheetDialog(
-                      context,
-                      photoCallback: () async {
-                        var image = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery);
-                        Navigator.of(context).pop();
-                        if (image != null) {
-                          addImage(image.path);
-                        }
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton(
+                      heroTag: 'addText',
+                      elevation: 0.0,
+                      child: Text(
+                        'A',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.white),
+                      ),
+                      backgroundColor: Colors.black,
+                      onPressed: () {
+                        itemControllers.add(TextEditingController(text: ''));
+                        textItems.add(Item(
+                          type: 'text',
+                          time: DateTime.now().millisecondsSinceEpoch,
+                          value: '',
+                        ));
+                        items.add(Item(
+                          type: 'text',
+                          time: DateTime.now().millisecondsSinceEpoch,
+                          value: '',
+                        ));
+                        setState(() {});
                       },
-                      cameraCallback: () async {
-                        var image = await ImagePicker()
-                            .pickImage(source: ImageSource.camera);
-                        Navigator.of(context).pop();
-                        if (image != null) {
-                          addImage(image.path);
-                        }
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    FloatingActionButton(
+                      heroTag: 'addImage',
+                      elevation: 0.0,
+                      child: Icon(
+                        Icons.photo,
+                        color: Colors.white,
+                      ),
+                      backgroundColor: Colors.black,
+                      onPressed: () async {
+                        showBottomSheetDialog(
+                          context,
+                          photoCallback: () async {
+                            var image = await ImagePicker()
+                                .pickImage(source: ImageSource.gallery);
+                            Navigator.of(context).pop();
+                            if (image != null) {
+                              addImage(image.path);
+                            }
+                          },
+                          cameraCallback: () async {
+                            var image = await ImagePicker()
+                                .pickImage(source: ImageSource.camera);
+                            Navigator.of(context).pop();
+                            if (image != null) {
+                              addImage(image.path);
+                            }
+                          },
+                        );
                       },
-                    );
-                  },
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 16.toHeight,
                 ),
               ],
             ),
-            SizedBox(
-              height: 16.toHeight,
+          ),
+          Visibility(
+            visible: isLoading,
+            child: Container(
+              color: Colors.black.withOpacity(0.3),
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -390,17 +425,13 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
     String base64 = await getBase64FromFile(File(path));
     items.add(Item(
       type: 'image',
-      time: DateTime
-          .now()
-          .millisecondsSinceEpoch,
+      time: DateTime.now().millisecondsSinceEpoch,
       value: path,
       showType: 'path',
     ));
     imageItems.add(Item(
       type: 'image',
-      time: DateTime
-          .now()
-          .millisecondsSinceEpoch,
+      time: DateTime.now().millisecondsSinceEpoch,
       value: path,
       showType: 'path',
     ));

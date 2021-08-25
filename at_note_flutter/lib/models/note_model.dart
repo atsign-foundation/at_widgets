@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'item_model.dart';
 
@@ -7,12 +8,14 @@ class Note {
   String? atSign;
   String? title;
   List<Item>? items;
+  Uint8List? image;
 
   Note({
     this.time,
     this.atSign,
     this.title,
     this.items,
+    this.image,
   });
 
   Note copyWith({int? time, String? atSign, String? message}) {
@@ -21,6 +24,7 @@ class Note {
       atSign: atSign ?? this.atSign,
       title: title ?? this.title,
       items: items ?? this.items,
+      image: image ?? this.image,
     );
   }
 
@@ -29,9 +33,11 @@ class Note {
       time: map['time'],
       atSign: map['atSign'],
       title: map['title'],
-      items: map['items'] != null ? (map['items'] as List)
-          ?.map((e) => Item.fromJson(e as String))
-          ?.toList() : null,
+      items: map['items'] != null
+          ? (map['items'] as List)
+              ?.map((e) => Item.fromJson(e as String))
+              ?.toList()
+          : null,
     );
   }
 

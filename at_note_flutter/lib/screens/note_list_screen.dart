@@ -59,7 +59,7 @@ class _NoteListScreenScreenState extends State<NoteListScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.check,
+              Icons.check_sharp,
               color: Colors.black,
             ),
             onPressed: () async {
@@ -156,15 +156,7 @@ class _NoteListScreenScreenState extends State<NoteListScreen> {
                             '${DateTime.now().toString().substring(5, 22)} reorder started: index:$index');
                       },
                       children: snapshot.data!.map((note) {
-                        String? image;
-                        for (var item in note.items!) {
-                          if (item.type == 'image') {
-                            if (item.value != null && item.value!.isNotEmpty) {
-                              image = item.value;
-                              break;
-                            }
-                          }
-                        }
+
                         return GestureDetector(
                           onTap: () async {
                             await Navigator.of(context).push(
@@ -181,7 +173,6 @@ class _NoteListScreenScreenState extends State<NoteListScreen> {
                           child: NoteItem(
                             note,
                             snapshot.data!.indexOf(note),
-                            image,
                           ),
                         );
                       }).toList(),
