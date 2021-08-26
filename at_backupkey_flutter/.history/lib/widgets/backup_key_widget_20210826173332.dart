@@ -198,17 +198,16 @@ class BackupKeyWidget extends StatelessWidget {
           return AlertDialog(
             title: Center(
               child: Text(
-                'Key saved successfully!',
+                Platform.isAndroid ? Strings.key_saved_android : Strings.key_saved_ios,
                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(Platform.isAndroid ? Strings.key_saved_android : Strings.key_saved_ios, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[700])),
+                Text(Strings.backUpKeysDescription, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[700])),
                 SizedBox(height: 20.toHeight),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // TextButton(
                     //     child: Text(Strings.backButtonTitle, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
