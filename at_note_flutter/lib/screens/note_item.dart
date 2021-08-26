@@ -1,4 +1,3 @@
-import 'package:at_note_flutter/utils/note_utils.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_note_flutter/models/note_model.dart';
@@ -42,7 +41,6 @@ class NoteItem extends StatelessWidget {
                     : Container(
                         color: Colors.grey.shade400,
                       ),
-                //  Image.asset('assets/images/ic_place_holder.png'),
               ),
               SizedBox(
                 height: 8,

@@ -1,5 +1,4 @@
-/// A service to handle save and retrieve operation on chat
-
+/// A service to handle save and retrieve operation on note
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -106,6 +105,7 @@ class NoteService {
     }
   }
 
+  /// Get Note List from atClient
   Future<void> getNotes({String? atsign}) async {
     try {
       notes = [];
@@ -176,6 +176,7 @@ class NoteService {
     return true;
   }
 
+  /// Save Image In Note to atClient
   Future<String> addImage(String name, Uint8List uint8list) async {
     try {
       print('name = $name');
@@ -200,6 +201,7 @@ class NoteService {
     }
   }
 
+  /// Save Image In Note from atClient
   Future<Uint8List?> getImage(String keyImage) async {
     try {
       KeyModel newKey = KeyModel.fromJson(keyImage);
@@ -229,6 +231,7 @@ class NoteService {
     }
   }
 
+  /// Add Note to atClient
   Future<bool> addNote(Note note) async {
     try {
       var key = AtKey()
@@ -250,6 +253,7 @@ class NoteService {
     }
   }
 
+  /// Edit Note to atClient
   Future<bool> editNote(Note note, int index) async {
     try {
       var key = AtKey()
@@ -276,6 +280,7 @@ class NoteService {
     }
   }
 
+  /// Remove Note to atClient
   Future<bool> removeNote(int index) async {
     try {
       var key = AtKey()
@@ -302,6 +307,7 @@ class NoteService {
     }
   }
 
+  /// Add Image to show in Note List
   Future<Note> addImageToNote(Note note) async {
     String keyImage = '';
     bool hasGetImageNote = false;
@@ -324,6 +330,7 @@ class NoteService {
     return note;
   }
 
+  /// Handle Drag and Drop Note
   Future<bool> reOrderNote(int oldIndex, int newIndex) async {
     try {
       Note oldNote = notes[oldIndex];
@@ -340,6 +347,7 @@ class NoteService {
     }
   }
 
+  /// Save ReOrder Result Notes
   Future<bool> updateNotes() async {
     try {
       var key = AtKey()
@@ -362,6 +370,7 @@ class NoteService {
     }
   }
 
+  /// Crop and compress image get from device
   Future<Uint8List?> cropImage(BuildContext context, String path) async {
     try {
       var _cropped = await ImageCropper.cropImage(

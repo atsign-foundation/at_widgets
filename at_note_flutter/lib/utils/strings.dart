@@ -1,3 +1,4 @@
+/// Strings used in the widgets.
 class Strings {
   static const String cancelButtonTitle = 'Cancel';
   static const String shareButtonTitle = 'Share';

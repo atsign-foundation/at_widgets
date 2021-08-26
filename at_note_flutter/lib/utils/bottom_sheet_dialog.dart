@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Bottom Sheet Dialog with 2 options Get Photos from Gallery or Camera
 class BottomSheetDialog extends StatefulWidget {
   final Function()? photoCallback;
   final Function()? cameraCallback;

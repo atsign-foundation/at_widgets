@@ -12,6 +12,7 @@ enum NoteEnum {
   image,
 }
 
+/// Show Confirm Dialog with Ok and Cancel
 showConfirmDialog(
   BuildContext context,
   String message, {
@@ -45,6 +46,7 @@ showConfirmDialog(
   );
 }
 
+/// Show Alert Dialog
 showAlertDialog(
   BuildContext context,
   String message,
@@ -69,25 +71,7 @@ showAlertDialog(
   );
 }
 
-showLoading(BuildContext context) {
-  AlertDialog alert = AlertDialog(
-    backgroundColor: Colors.transparent,
-    elevation: 0,
-    content: Container(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
-    ),
-  );
-  showDialog(
-    barrierDismissible: false,
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
+/// Show Bottom Sheet Dialog with 2 options Get Photos from Gallery or Camera
 Future<dynamic> showBottomSheetDialog(BuildContext context,
     {Function()? photoCallback, Function()? cameraCallback}) {
   return showModalBottomSheet(
@@ -105,6 +89,7 @@ Future<dynamic> showBottomSheetDialog(BuildContext context,
       });
 }
 
+/// Read File to Uint8List
 Future<Uint8List?> readFileByte(String filePath) async {
   File file = File(filePath);
   try {
@@ -115,14 +100,17 @@ Future<Uint8List?> readFileByte(String filePath) async {
   }
 }
 
+/// Convert Base64 String to Uint8List
 Uint8List dataFromBase64String(String base64String) {
   return base64Decode(base64String);
 }
 
+/// Convert Uint8List to Base64 String
 String base64String(Uint8List data) {
   return base64Encode(data);
 }
 
+/// Convert File to Base64 String
 Future<String> getBase64FromFile(File? file) async {
   if (file != null && await file.exists()) {
     List<int> fileInByte = await file.readAsBytes();

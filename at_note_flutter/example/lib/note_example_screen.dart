@@ -18,7 +18,7 @@ class _NoteExampleScreenState extends State<NoteExampleScreen> {
 
   @override
   void initState() {
-    getAtSignAndInitializeBugReport();
+    getAtSignAndInitializeNote();
     super.initState();
   }
 
@@ -65,7 +65,7 @@ class _NoteExampleScreenState extends State<NoteExampleScreen> {
     );
   }
 
-  void getAtSignAndInitializeBugReport() async {
+  void getAtSignAndInitializeNote() async {
     var currentAtSign = await clientSdkService.getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
