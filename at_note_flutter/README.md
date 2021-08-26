@@ -1,16 +1,40 @@
+<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+
+### Now for some internet optimism.
+
 # at_note_flutter
 
-A new Flutter Note Plugin.
+A flutter plugin to create note with text and image.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This plugin provides a note widget.
 
-A few resources to get you started if this is your first Flutter project:
+### Initialising
+The note service needs to be initialised. It is expected that the app will first create an AtClientService instance using the preferences and then use it to initialise the note service.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+```
+initializeNoteService(
+        clientSdkService.atClientServiceInstance.atClient, activeAtSign,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
+```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Sample Usage
+
+Navigate to notes screen
+```
+TextButton(
+   onPressed: () async {
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => NoteListScreen(
+               activeAtSign!,
+            ),
+         ),
+       );
+   },
+   child: Text(
+       'Show Notes Screen',
+   ),
+),
+```
