@@ -101,7 +101,7 @@ class _GroupContactViewState extends State<GroupContactView> {
         //     ? true
         //     : false,
         showTrailingIcon: true,
-        trailingIcon: Icon(Icons.add),
+        trailingIcon: Icon(Icons.add, color: Colors.black),
         onTrailingIconPressed: () {
           showDialog(
             context: context,
