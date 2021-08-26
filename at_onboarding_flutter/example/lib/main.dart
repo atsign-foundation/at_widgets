@@ -60,8 +60,8 @@ class _MyAppState extends State<MyApp> {
                   CustomResetButton(
                     loading: false,
                     buttonText: "Reset",
-                    width: 120,
-                    height: 50,
+                    width: 90,
+                    height: 40,
                       ),
           ],
             ),

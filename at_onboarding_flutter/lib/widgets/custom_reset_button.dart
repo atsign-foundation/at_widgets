@@ -36,14 +36,13 @@ class _CustomResetButtonState extends State<CustomResetButton> {
         height: widget.height,
         padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Color.fromARGB(255, 240, 94, 62)),
+            color: Colors.grey[200]),
         child: Center(
           child: Text(
             widget.buttonText!,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.grey[600],
             ),
             //style: CustomTextStyles.fontBold16light,
           ),
