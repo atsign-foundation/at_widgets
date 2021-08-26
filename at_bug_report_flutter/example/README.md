@@ -1,16 +1,37 @@
-# example
+<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
 
-A new Flutter application.
+### Now for some internet optimism.
+
+# at_bug_report_flutter
+
+A flutter example to create bug report and show list bug report.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This plugin provides a bug report widget.
 
-A few resources to get you started if this is your first Flutter project:
+### Sample Usage
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Show Bug Report Dialog
+```
+showBugReportDialog(
+   context,
+   activeAtSign,
+   '',
+   'This is error from Bug Report Example Screen',
+   isSuccessCallback: () {},
+);
+```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Navigate to List Bug Report Screen
+```
+await Navigator.push(
+  context,
+  MaterialPageRoute(
+      builder: (context) => ListBugReportScreen(
+         atSign: activeAtSign,
+         authorAtSign: '',
+      ),
+  );
+);
+```
