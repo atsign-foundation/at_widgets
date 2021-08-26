@@ -39,7 +39,7 @@ class NoteService {
   List<dynamic>? notesJson = [];
 
   StreamController<List<Note>> noteStreamController =
-      StreamController<List<Note>>.broadcast();
+  StreamController<List<Note>>.broadcast();
 
   Sink get noteSink => noteStreamController.sink;
 
@@ -49,8 +49,7 @@ class NoteService {
     noteStreamController.close();
   }
 
-  void initNoteService(
-      AtClientImpl atClientInstanceFromApp,
+  void initNoteService(AtClientImpl atClientInstanceFromApp,
       String currentAtSignFromApp,
       String rootDomainFromApp,
       int rootPortFromApp) async {
@@ -123,31 +122,34 @@ class NoteService {
       // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
         notesJson = json.decode((keyValue.value) as String) as List?;
-        notesJson!.forEach((value) async {
-          if (value != null) {
-            var note = Note.fromJson((value));
 
-            String keyImage = '';
-            bool hasGetImageNote = false;
-            for (var item in note.items!) {
-              if (item.type == 'image') {
-                if (item.value != null && item.value!.isNotEmpty) {
-                  if (!hasGetImageNote) {
-                    keyImage = item.value!;
-                    hasGetImageNote = true;
+        if (notesJson != null) {
+          for (int i = 0; i < notesJson!.length; i++) {
+            if (notesJson![i] != null) {
+              var note = Note.fromJson((notesJson![i]));
+
+              String? keyImage = '';
+              bool hasGetImageNote = false;
+              for (var item in note.items!) {
+                if (item.type == 'image') {
+                  if (item.value != null && item.value!.isNotEmpty) {
+                    if (!hasGetImageNote) {
+                      keyImage = item.value!;
+                      hasGetImageNote = true;
+                    }
+                    var uInt8List = await getImage(item.value!);
+                    item.image = uInt8List;
                   }
-                  var uInt8List = await getImage(item.value!);
-                  item.image = uInt8List;
                 }
               }
+              if (keyImage != null && keyImage.isNotEmpty) {
+                var uInt8List = await getImage(keyImage);
+                note.image = uInt8List;
+              }
+              notes.add(note);
             }
-            if (keyImage != null && keyImage.isNotEmpty) {
-              var uInt8List = await getImage(keyImage);
-              note.image = uInt8List;
-            }
-            notes.add(note);
           }
-        });
+        }
         noteSink.add(notes);
       } else {
         notesJson = [];
@@ -284,7 +286,7 @@ class NoteService {
 
       notes.removeAt(index);
       noteSink.add(notes);
-      
+
       notesJson!.clear();
       notes.forEach((value) {
         var note = value.toJson();
