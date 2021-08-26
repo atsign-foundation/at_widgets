@@ -1,11 +1,10 @@
 import 'package:at_note_flutter/models/note_model.dart';
-import 'package:at_note_flutter/reorder/reorderables.dart';
 import 'package:at_note_flutter/services/note_service.dart';
 import 'package:at_note_flutter/utils/note_utils.dart';
 import 'package:at_note_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
-
+import 'package:reorderables/reorderables.dart';
 import 'edit_note_screen.dart';
 import 'note_item.dart';
 
@@ -59,7 +58,7 @@ class _NoteListScreenScreenState extends State<NoteListScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.check_sharp,
+              Icons.check_outlined,
               color: Colors.black,
             ),
             onPressed: () async {

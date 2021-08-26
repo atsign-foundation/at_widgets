@@ -17,9 +17,10 @@ class Strings {
   static const String addNote = 'Add Note';
   static const String editNote = 'Edit Note';
 
-  static const String noNotesFound = ' No notes found';
-  static const String noteList = 'Note List';
+  static const String noNotesFound = ' No Notes Found';
+  static const String noteList = 'Notes';
   static const String enterNote = 'Enter Note';
   static const String searchNote = 'Search Note';
   static const String confirmDeleteNote = 'Do you want to delete this note?';
+  static const String cropImage = 'Crop Image';
 }

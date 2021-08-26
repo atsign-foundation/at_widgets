@@ -2,16 +2,21 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_note_flutter/utils/strings.dart';
+import 'package:image/image.dart' as img;
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
 import 'package:at_note_flutter/models/key_model.dart';
 import 'package:at_note_flutter/models/note_model.dart';
 import 'package:at_note_flutter/utils/note_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class NoteService {
   NoteService._();
@@ -181,7 +186,7 @@ class NoteService {
       bool isSuccess = await atClientInstance.put(key, uint8list);
       print('Add Image Success $isSuccess');
 
-      Key newKey = Key(
+      KeyModel newKey = KeyModel(
         value: key.key,
         sharedBy: key.sharedBy,
         isBinary: true,
@@ -195,7 +200,7 @@ class NoteService {
 
   Future<Uint8List?> getImage(String keyImage) async {
     try {
-      Key newKey = Key.fromJson(keyImage);
+      KeyModel newKey = KeyModel.fromJson(keyImage);
 
       var metaData = Metadata();
       metaData.isBinary = true;
@@ -341,6 +346,47 @@ class NoteService {
     } catch (e) {
       print('Error in setting note => $e');
       return false;
+    }
+  }
+
+  Future<Uint8List?> cropImage(BuildContext context, String path) async {
+    try {
+      var _cropped = await ImageCropper.cropImage(
+          sourcePath: path,
+          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+          compressQuality: 100,
+          maxHeight: 700,
+          maxWidth: 700,
+          compressFormat: ImageCompressFormat.jpg,
+          androidUiSettings: AndroidUiSettings(
+              toolbarColor: Colors.white,
+              toolbarTitle: Strings.cropImage,
+              statusBarColor: Colors.grey[700],
+              backgroundColor: Colors.white));
+      try {
+        List<int> croppedImageData = await _cropped!.readAsBytes();
+        var decodedCroppedImage = img.decodeImage(croppedImageData);
+        var compressedImage = img.copyResize(
+          decodedCroppedImage!,
+          width: 200,
+          height: 200,
+        );
+        List<int> compressedImageData = img.encodeJpg(compressedImage);
+        var compressedImageSize = compressedImage.length;
+        if (compressedImageSize > AtClientPreference().maxDataSize) {
+          showAlertDialog(context, 'Image exceeds the maximum limit of 512KB');
+          print('Image exceeds the maximum limit of 512KB');
+          return null;
+        } else {
+          return Uint8List.fromList(compressedImageData);
+        }
+      } catch (ex) {
+        print('${ex.toString()}');
+        return null;
+      }
+    } on Exception catch (ex) {
+      print('${ex.toString()}');
+      return null;
     }
   }
 }

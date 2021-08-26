@@ -1,26 +1,26 @@
 import 'dart:convert';
 
-class Key {
+class KeyModel {
   String? value;
   String? sharedBy;
   bool? isBinary;
 
-  Key({
+  KeyModel({
     this.value,
     this.sharedBy,
     this.isBinary,
   });
 
-  Key copyWith({String? value, String? sharedBy, bool? isBinary}) {
-    return Key(
+  KeyModel copyWith({String? value, String? sharedBy, bool? isBinary}) {
+    return KeyModel(
       value: value ?? this.value,
       sharedBy: sharedBy ?? this.sharedBy,
       isBinary: isBinary ?? this.isBinary,
     );
   }
 
-  factory Key.fromMap(Map<String, dynamic> map) {
-    return Key(
+  factory KeyModel.fromMap(Map<String, dynamic> map) {
+    return KeyModel(
       value: map['value'],
       sharedBy: map['sharedBy'],
       isBinary: map['isBinary'],
@@ -37,7 +37,7 @@ class Key {
 
   String toJson() => json.encode(toMap());
 
-  factory Key.fromJson(String source) => Key.fromMap(json.decode(source));
+  factory KeyModel.fromJson(String source) => KeyModel.fromMap(json.decode(source));
 
   @override
   String toString() =>
@@ -47,7 +47,7 @@ class Key {
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is Key &&
+    return o is KeyModel &&
         o.value == value &&
         o.sharedBy == sharedBy &&
         o.isBinary == isBinary;

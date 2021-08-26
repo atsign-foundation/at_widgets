@@ -45,6 +45,30 @@ showConfirmDialog(
   );
 }
 
+showAlertDialog(
+  BuildContext context,
+  String message,
+) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Alert"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            child: Text("Ok"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 showLoading(BuildContext context) {
   AlertDialog alert = AlertDialog(
     backgroundColor: Colors.transparent,
@@ -88,17 +112,6 @@ Future<Uint8List?> readFileByte(String filePath) async {
     return fileInByte;
   } catch (error) {
     return null;
-  }
-}
-
-Widget imageFromUInt8List(Uint8List? uInt8list) {
-  try {
-    return Image.memory(
-      uInt8list!,
-      fit: BoxFit.fill,
-    );
-  } catch (error) {
-    return Container();
   }
 }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:at_note_flutter/models/note_model.dart';
 import 'package:at_note_flutter/models/item_model.dart';
 import 'package:at_note_flutter/services/note_service.dart';
@@ -45,7 +46,9 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
     noteService = NoteService();
     titleController = TextEditingController(text: widget.note?.title ?? '');
 
-    int time = DateTime.now().millisecondsSinceEpoch;
+    int time = DateTime
+        .now()
+        .millisecondsSinceEpoch;
 
     items = widget.note?.items ??
         [
@@ -56,8 +59,8 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
           ),
         ];
     textItems = widget.note?.items
-            ?.where((element) => element.type == 'text')
-            ?.toList() ??
+        ?.where((element) => element.type == 'text')
+        ?.toList() ??
         [
           Item(
             time: time,
@@ -66,8 +69,8 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
           ),
         ];
     imageItems = widget.note?.items
-            ?.where((element) => element.type == 'image')
-            ?.toList() ??
+        ?.where((element) => element.type == 'image')
+        ?.toList() ??
         [];
 
     for (var item in textItems) {
@@ -141,7 +144,7 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
           ),
           IconButton(
             icon: Icon(
-              Icons.check_sharp,
+              Icons.check_outlined,
               color: Colors.black,
             ),
             onPressed: () async {
@@ -150,12 +153,10 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
               });
               for (int i = 0; i < items.length; i++) {
                 if (items[i].type == 'image' && items[i].showType == 'path') {
-                  var uInt8List = await readFileByte(items[i].value!);
                   var name = p.basename(items[i].value!);
                   String keyImage =
-                      await noteService.addImage(name, uInt8List!);
+                  await noteService.addImage(name, items[i].image!);
                   items[i].value = keyImage;
-                  //    await getBase64FromFile(File(items[i].value!));
                   items[i].showType = 'base64';
                 }
               }
@@ -184,7 +185,9 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                 var isSuccess = await noteService.addNote(
                   Note(
                     atSign: widget.activeAtSign,
-                    time: DateTime.now().millisecondsSinceEpoch,
+                    time: DateTime
+                        .now()
+                        .millisecondsSinceEpoch,
                     title: titleController.text,
                     items: items,
                   ),
@@ -247,7 +250,7 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                     itemBuilder: (context, i) {
                       if (items[i].type == 'text') {
                         int indexInItems = textItems.indexWhere(
-                            (element) => element.time == items[i].time);
+                                (element) => element.time == items[i].time);
                         return Row(
                           children: [
                             Expanded(
@@ -274,7 +277,7 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                             IconButton(
                               icon: Icon(
                                 Icons.cancel,
-                                color: Colors.grey,
+                                color: Colors.black54,
                                 size: 20,
                               ),
                               onPressed: () async {
@@ -291,28 +294,33 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                         return Stack(
                           children: [
                             Container(
+                              height: 300,
                               padding:
-                                  EdgeInsets.symmetric(vertical: 8.toHeight),
+                              EdgeInsets.symmetric(vertical: 8.toHeight),
                               alignment: Alignment.center,
-                              child: items[i].showType == 'path'
-                                  ? ((items[i].value != null &&
-                                          items[i].value!.isNotEmpty)
-                                      ? Image.file(File(items[i].value!))
-                                      : Container())
-                                  : ((items[i].value != null &&
-                                          items[i].value!.isNotEmpty))
-                                      ? imageFromUInt8List(items[i].image!)
-                                      : Container(),
-                              //    imageFromBase64String(items[i].value!),
+                              decoration: BoxDecoration(
+                                image: (items[i].value != null &&
+                                    items[i].value!.isNotEmpty)
+                                    ? DecorationImage(
+                                  image: Image
+                                      .memory(
+                                    items[i].image!,
+                                    fit: BoxFit.fill,
+                                  )
+                                      .image,
+                                  fit: BoxFit.fill,
+                                )
+                                    : null,
+                              ),
                             ),
                             Positioned(
                               right: 0,
-                              top: 4.toHeight,
+                              top: 0,
                               child: IconButton(
                                   icon: Icon(
                                     Icons.cancel,
-                                    color: Colors.grey,
-                                    size: 28,
+                                    color: Colors.black54,
+                                    size: 24,
                                   ),
                                   onPressed: () async {
                                     imageItems.removeWhere((element) {
@@ -352,18 +360,7 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                       ),
                       backgroundColor: Colors.black,
                       onPressed: () {
-                        itemControllers.add(TextEditingController(text: ''));
-                        textItems.add(Item(
-                          type: 'text',
-                          time: DateTime.now().millisecondsSinceEpoch,
-                          value: '',
-                        ));
-                        items.add(Item(
-                          type: 'text',
-                          time: DateTime.now().millisecondsSinceEpoch,
-                          value: '',
-                        ));
-                        setState(() {});
+                        addText();
                       },
                     ),
                     SizedBox(
@@ -384,16 +381,24 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                             var image = await ImagePicker()
                                 .pickImage(source: ImageSource.gallery);
                             Navigator.of(context).pop();
-                            if (image != null) {
-                              addImage(image.path);
+                            if (image?.path != null) {
+                              var compressedImageData = await noteService
+                                  .cropImage(context, image!.path);
+                              if (compressedImageData != null) {
+                                addImage(image!.path, compressedImageData);
+                              }
                             }
                           },
                           cameraCallback: () async {
                             var image = await ImagePicker()
                                 .pickImage(source: ImageSource.camera);
                             Navigator.of(context).pop();
-                            if (image != null) {
-                              addImage(image.path);
+                            if (image?.path != null) {
+                              var compressedImageData = await noteService
+                                  .cropImage(context, image!.path);
+                              if (compressedImageData != null) {
+                                addImage(image!.path, compressedImageData);
+                              }
                             }
                           },
                         );
@@ -421,19 +426,41 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
     );
   }
 
-  void addImage(String path) async {
-    String base64 = await getBase64FromFile(File(path));
+  void addText() {
+    var time = DateTime
+        .now()
+        .millisecondsSinceEpoch;
+    itemControllers.add(TextEditingController(text: ''));
+    textItems.add(Item(
+      type: 'text',
+      time: time,
+      value: '',
+    ));
+    items.add(Item(
+      type: 'text',
+      time: time,
+      value: '',
+    ));
+    setState(() {});
+  }
+
+  void addImage(String path, Uint8List uInt8list) async {
+    var time = DateTime
+        .now()
+        .millisecondsSinceEpoch;
     items.add(Item(
       type: 'image',
-      time: DateTime.now().millisecondsSinceEpoch,
+      time: time,
       value: path,
       showType: 'path',
+      image: uInt8list,
     ));
     imageItems.add(Item(
       type: 'image',
-      time: DateTime.now().millisecondsSinceEpoch,
+      time: time,
       value: path,
       showType: 'path',
+      image: uInt8list,
     ));
     setState(() {});
   }

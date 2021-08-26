@@ -35,7 +35,10 @@ class NoteItem extends StatelessWidget {
               Container(
                 height: 120.toHeight,
                 child: note?.image != null
-                    ? imageFromUInt8List(note!.image!)
+                    ? Image.memory(
+                        note!.image!,
+                        fit: BoxFit.fill,
+                      )
                     : Container(
                         color: Colors.grey.shade400,
                       ),

@@ -29,6 +29,9 @@ dependencies:
   at_client_mobile: ^2.0.3
   at_onboarding_flutter: ^2.1.2
   image_picker: ^0.8.3+2
+  image_cropper: ^1.2.2
+  reorderables: ^0.4.1
+  image: ^3.0.2
 
 dev_dependencies:
   flutter_test:
