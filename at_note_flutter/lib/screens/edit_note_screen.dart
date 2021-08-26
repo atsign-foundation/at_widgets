@@ -151,6 +151,7 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
               setState(() {
                 isLoading = true;
               });
+              bool hasImage = false;
               for (int i = 0; i < items.length; i++) {
                 if (items[i].type == 'image' && items[i].showType == 'path') {
                   var name = p.basename(items[i].value!);
@@ -159,12 +160,18 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                   items[i].value = keyImage;
                   items[i].showType = 'base64';
                 }
+                if (items[i].type == 'image' && items[i].value != null &&
+                    items[i].value!.isNotEmpty) {
+                  hasImage = true;
+                }
               }
               if (widget.isEditNote) {
                 Note note = widget.note!;
                 note.items = items;
                 note.title = titleController.text;
-
+                if (!hasImage) {
+                  note.image = null;
+                }
                 var isSuccess = await noteService.editNote(
                   note,
                   widget.index,
@@ -283,7 +290,9 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                               onPressed: () async {
                                 itemControllers
                                     .removeAt(textItems.indexOf(items[i]));
-                                textItems.removeAt(textItems.indexOf(items[i]));
+                                textItems.removeWhere((element) {
+                                  return (element.time == items[i].time);
+                                });
                                 items.removeAt(i);
                                 setState(() {});
                               },
@@ -324,12 +333,7 @@ class _EditNoteScreenScreenState extends State<EditNoteScreen> {
                                   ),
                                   onPressed: () async {
                                     imageItems.removeWhere((element) {
-                                      for (var item in items) {
-                                        if (element.time == item.time) {
-                                          return true;
-                                        }
-                                      }
-                                      return false;
+                                      return (element.time == items[i].time);
                                     });
                                     items.removeAt(i);
                                     setState(() {});

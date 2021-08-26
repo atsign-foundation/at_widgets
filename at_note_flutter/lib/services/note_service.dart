@@ -259,7 +259,12 @@ class NoteService {
       Note newNote = await addImageToNote(note);
       notes[index] = newNote;
       noteSink.add(notes);
-      notesJson![index] = note.toJson();
+
+      notesJson!.clear();
+      notes.forEach((value) {
+        var note = value.toJson();
+        notesJson!.add(note);
+      });
       bool isSuccess = await atClientInstance.put(key, json.encode(notesJson));
       print('Edit Note Success $isSuccess');
       return true;
@@ -279,7 +284,13 @@ class NoteService {
 
       notes.removeAt(index);
       noteSink.add(notes);
-      notesJson!.removeAt(index);
+      
+      notesJson!.clear();
+      notes.forEach((value) {
+        var note = value.toJson();
+        notesJson!.add(note);
+      });
+
       bool isSuccess = await atClientInstance.put(key, json.encode(notesJson));
       print('Remove Note Success $isSuccess');
       return true;
