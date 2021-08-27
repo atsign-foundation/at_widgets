@@ -68,17 +68,6 @@ class _NotifyScreenState extends State<NotifyScreen>
                                 fontSize: 16,
                               ),
                             ),
-                            // SizedBox(
-                            //   height: 4.toHeight,
-                            // ),
-                            // Text(
-                            //   snapshot.data?[index]?.atSign ??
-                            //       'AtSign',
-                            //   style: TextStyle(
-                            //     color: Colors.grey,
-                            //     fontSize: 14,
-                            //   ),
-                            // ),
                           ],
                         ),
                       );

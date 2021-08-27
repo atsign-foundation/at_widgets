@@ -69,6 +69,7 @@ class NotifyService {
     return str!;
   }
 
+  /// Listen Notification
   void _notificationCallback(dynamic notification) async {
     notification = notification.replaceFirst('notification:', '');
     var responseJson = jsonDecode(notification);
@@ -101,6 +102,7 @@ class NotifyService {
     }
   }
 
+  /// Get Notify List From AtClient
   Future<void> getNotifies({String? atsign}) async {
     try {
       notifies = [];
@@ -126,10 +128,6 @@ class NotifyService {
         notifiesJson = [];
         notifySink.add(notifies);
       }
-      // var referenceKey = bugReportKey +
-      //     (notifies.isEmpty ? '' : notifies[0].time.toString()) +
-      //     currentAtSign!;
-      // await checkForMissedMessages(referenceKey);
     } catch (error) {
       print('Error in getting bug Report -> $error');
     }
@@ -139,6 +137,7 @@ class NotifyService {
     this.sendToAtSign = sendToAtSign!;
   }
 
+  /// Send new notify to atClient
   Future<bool> addNotify(Notify notify, {NotifyEnum? notifyType}) async {
     try {
       var key = AtKey()

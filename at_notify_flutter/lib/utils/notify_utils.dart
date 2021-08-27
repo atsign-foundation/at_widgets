@@ -10,6 +10,7 @@ enum NotifyEnum {
 
 NotifyService _notifyService = NotifyService();
 
+/// Basic notify
 notify(
   BuildContext context,
   String? atSign,
@@ -27,6 +28,7 @@ notify(
   );
 }
 
+/// Notify to All
 notifyAll(
     BuildContext context,
     String? atSign,
@@ -44,6 +46,7 @@ notifyAll(
   );
 }
 
+/// Notify in List
 notifyList(
     BuildContext context,
     String? atSign,
