@@ -201,36 +201,6 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     fontSize: 15.toFont),
                                               ),
                                             )),
-                                        loading
-                                            ? Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ElevatedButton(
-                                                  style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(Colors
-                                                                  .grey[800])),
-                                                  // key: Key(''),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      isQrScanner = false;
-                                                    });
-                                                  },
-                                                  child: Text(
-                                                    'Cancel',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 15.toFont),
-                                                  ),
-                                                ))
-                                            : const SizedBox(
-                                                child: Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                              )
                                       ]),
                                 )
                               : Padding(
@@ -352,11 +322,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 TextInputFormatter>[
                                               LengthLimitingTextInputFormatter(
                                                   80),
-                                              FilteringTextInputFormatter.allow(
-                                                RegExp(
-                                                  '[a-zA-Z0-9_]|\u00a9|\u00af|[\u2155-\u2900]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]',
-                                                ),
-                                              ),
+                                              // FilteringTextInputFormatter.allow(
+                                              //   RegExp(
+                                              //     '[a-zA-Z0-9_]|\u00a9|\u00af|[\u2155-\u2900]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]',
+                                              //   ),
+                                              // ),
                                               // This inputFormatter function will convert all the input to lowercase.
                                               TextInputFormatter.withFunction(
                                                   (TextEditingValue oldValue,

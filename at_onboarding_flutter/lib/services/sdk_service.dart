@@ -43,12 +43,8 @@ class SDKService {
 
   ///Returns list of atsigns stored in device storage.
   Future<List<String>?> getAtsignList() async {
-    if(await _keyChainManager.getAtSignListFromKeychain() != null){
-      atSignsList = (await _keyChainManager.getAtSignListFromKeychain())!;
-    }
-    else{
-      atSignsList ;
-    }
+
+      atSignsList = (await _keyChainManager.getAtSignListFromKeychain());
     return atSignsList ;
   }
 

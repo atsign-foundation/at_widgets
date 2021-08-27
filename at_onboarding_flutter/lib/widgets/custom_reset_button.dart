@@ -34,7 +34,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
       child: Container(
         width: widget.width ,
         height: widget.height,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
             color: Colors.grey[200]),
         child: Center(
@@ -55,11 +55,13 @@ class _CustomResetButtonState extends State<CustomResetButton> {
     bool isSelectAtsign = false;
     bool isSelectAll = false;
     List<String>? atsignsList = await SDKService().getAtsignList();
-    Map atsignMap = {} ;
-    for (String atsign in atsignsList!) {
-      atsignMap[atsign] = false;
+    Map<String?,bool?>? atsignMap ;
+    if(atsignsList != null && atsignMap != null){
+      for (String atsign in atsignsList) {
+        atsignMap[atsign] = false;
+      }
     }
-    showDialog(
+    await showDialog(
         barrierDismissible: true,
         context: context,
         builder: (BuildContext context) {
@@ -79,7 +81,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                     )
                   ],
                 ),
-                content: atsignsList.isEmpty
+                content: atsignsList == null && atsignMap == null
                     ? Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                   Text(Strings.noAtsignToReset,
                       style: TextStyle(fontSize: 15)),
@@ -102,8 +104,8 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                       CheckboxListTile(
                         onChanged: (bool? value) {
                           isSelectAll = value!;
-                          atsignMap
-                              .updateAll((dynamic key,dynamic value1) => value1 = value);
+                          atsignMap != null ? atsignMap
+                              .updateAll((String? key,bool? value1) => value1 = value):true;
                           // atsignMap[atsign] = value;
                           stateSet(() {});
                         },
@@ -117,13 +119,13 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                             )),
                         // trailing: Checkbox,
                       ),
-                      for (String atsign in atsignsList)
+                      for (String atsign in atsignsList!)
                         CheckboxListTile(
                           onChanged: (bool? value) {
-                            atsignMap[atsign] = value;
+                            atsignMap != null ? atsignMap[atsign] = value : true;
                             stateSet(() {});
                           },
-                          value: atsignMap[atsign],
+                          value: atsignMap != null ? atsignMap[atsign]:true,
                           checkColor: Colors.white,
                           activeColor: Color.fromARGB(255, 240, 94, 62),
                           title: Text('$atsign'),
@@ -148,18 +150,19 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                       Row(children:<Widget> [
                         TextButton(
                           onPressed: () {
-                            Map tempAtsignMap = {};
-                            tempAtsignMap.addAll(atsignMap);
-                            tempAtsignMap.removeWhere(
-                                    (dynamic key,dynamic value) => value == false);
-                            if (tempAtsignMap.keys.toList().isEmpty) {
+                            Map<String?,bool?>? tempAtsignMap ;
+                            tempAtsignMap != null ? tempAtsignMap.addAll(atsignMap!): true;
+                            tempAtsignMap != null ? tempAtsignMap.removeWhere(
+                                    (String? key, bool? value) => value == false) : true;
+                            if(tempAtsignMap != null){
+                              if (tempAtsignMap.keys.toList() != null) {
                               isSelectAtsign = true;
                               stateSet(() {});
                             } else {
                               isSelectAtsign = false;
                               _resetDevice(tempAtsignMap.keys.toList());
                             }
-                          },
+                          }},
                           child: Text(AppConstants.removeButton,
                               style: TextStyle(
                                   fontSize: 15,
