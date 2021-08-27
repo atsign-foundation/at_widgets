@@ -8,7 +8,7 @@ A flutter example to create bug report and show list bug report.
 
 ## Getting Started
 
-This plugin provides a bug report widget.
+This example provides a bug report widget.
 
 ### Sample Usage
 
