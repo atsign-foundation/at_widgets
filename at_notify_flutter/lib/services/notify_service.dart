@@ -134,6 +134,9 @@ class NotifyService {
   }
 
   void setSendToAtSign(String? sendToAtSign) {
+    if (sendToAtSign != null && sendToAtSign[0] != '@') {
+      sendToAtSign = '@' + sendToAtSign;
+    }
     this.sendToAtSign = sendToAtSign!;
   }
 
