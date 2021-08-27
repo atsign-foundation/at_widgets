@@ -77,6 +77,7 @@ class BugReportService {
     return str!;
   }
 
+  /// Listen Notification
   void _notificationCallback(dynamic notification) async {
     notification = notification.replaceFirst('notification:', '');
     var responseJson = jsonDecode(notification);
@@ -109,6 +110,7 @@ class BugReportService {
     }
   }
 
+  /// Get List Bug Report
   Future<void> getBugReports({String? atsign}) async {
     try {
       bugReports = [];
@@ -133,15 +135,12 @@ class BugReportService {
         bugReportsJson = [];
         bugReportSink.add(bugReports);
       }
-      // var referenceKey = bugReportKey +
-      //     (bugReports.isEmpty ? '' : bugReports[0].time.toString()) +
-      //     currentAtSign!;
-      // await checkForMissedMessages(referenceKey);
     } catch (error) {
       print('Error in getting bug Report -> $error');
     }
   }
 
+  /// Get All Bug Report of App
   Future<void> getAllBugReports({String? atsign}) async {
     try {
       allBugReports = [];
@@ -166,10 +165,6 @@ class BugReportService {
         allBugReportsJson = [];
         allBugReportSink.add(allBugReports);
       }
-      // var referenceKey = bugReportKey +
-      //     (bugReports.isEmpty ? '' : bugReports[0].time.toString()) +
-      //     currentAtSign!;
-      // await checkForMissedMessages(referenceKey);
     } catch (error) {
       print('Error in getting allBugReport -> $error');
     }
@@ -179,21 +174,17 @@ class BugReportService {
     this.authorAtSign = authorAtSign!;
   }
 
+  /// Add New Bug Report to AtClient
   Future<bool> setBugReport(BugReport bugReport) async {
     try {
       var key = AtKey()
         ..key = storageKey + (currentAtSign ?? ' ').substring(1)
         ..sharedBy = currentAtSign
-  //      ..sharedWith = authorAtSign
         ..metadata = Metadata();
 
       bugReports.insert(0, bugReport);
       bugReportSink.add(bugReports);
       bugReportsJson!.add(bugReport.toJson());
-
-   //   var jsonEncoded = jsonEncode(bugReports.map((e) => e.toJson()).toList());
-      // String jsonEncoded = json.encode(bugReportsJson);
-      // jsonEncoded = jsonEncoded.replaceAll('\\', '');
       await atClientInstance.put(key, json.encode(bugReportsJson));
       return true;
     } catch (e) {
