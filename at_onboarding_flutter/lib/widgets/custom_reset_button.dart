@@ -34,7 +34,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
       child: Container(
         width: widget.width ,
         height: widget.height,
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
             color: Colors.grey[200]),
         child: Center(
@@ -54,20 +54,20 @@ class _CustomResetButtonState extends State<CustomResetButton> {
   _showResetDialog() async {
     bool isSelectAtsign = false;
     bool isSelectAll = false;
-    var atsignsList = await SDKService().getAtsignList();
-    Map atsignMap = {};
-    for (String atsign in atsignsList) {
+    List<String>? atsignsList = await SDKService().getAtsignList();
+    Map atsignMap = {} ;
+    for (String atsign in atsignsList!) {
       atsignMap[atsign] = false;
     }
     showDialog(
         barrierDismissible: true,
         context: context,
         builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, stateSet) {
+          return StatefulBuilder(builder: (BuildContext context, void Function(void Function()) stateSet) {
             return AlertDialog(
                 title: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: <Widget>[
                     Text(Strings.resetDescription,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 15)),
@@ -80,7 +80,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                   ],
                 ),
                 content: atsignsList.isEmpty
-                    ? Column(mainAxisSize: MainAxisSize.min, children: [
+                    ? Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                   Text(Strings.noAtsignToReset,
                       style: TextStyle(fontSize: 15)),
                   Align(
@@ -98,12 +98,12 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                     : SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: <Widget>[
                       CheckboxListTile(
-                        onChanged: (value) {
+                        onChanged: (bool? value) {
                           isSelectAll = value!;
                           atsignMap
-                              .updateAll((key, value1) => value1 = value);
+                              .updateAll((dynamic key,dynamic value1) => value1 = value);
                           // atsignMap[atsign] = value;
                           stateSet(() {});
                         },
@@ -117,9 +117,9 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                             )),
                         // trailing: Checkbox,
                       ),
-                      for (var atsign in atsignsList)
+                      for (String atsign in atsignsList)
                         CheckboxListTile(
-                          onChanged: (value) {
+                          onChanged: (bool? value) {
                             atsignMap[atsign] = value;
                             stateSet(() {});
                           },
@@ -145,13 +145,13 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                       SizedBox(
                         height: 10,
                       ),
-                      Row(children: [
+                      Row(children:<Widget> [
                         TextButton(
                           onPressed: () {
-                            var tempAtsignMap = {};
+                            Map tempAtsignMap = {};
                             tempAtsignMap.addAll(atsignMap);
                             tempAtsignMap.removeWhere(
-                                    (key, value) => value == false);
+                                    (dynamic key,dynamic value) => value == false);
                             if (tempAtsignMap.keys.toList().isEmpty) {
                               isSelectAtsign = true;
                               stateSet(() {});
@@ -181,16 +181,16 @@ class _CustomResetButtonState extends State<CustomResetButton> {
           // );
         });
   }
-  _resetDevice(List checkedAtsigns) async {
+  _resetDevice(List<dynamic> checkedAtsigns) async {
     Navigator.of(context).pop();
     setState(() {
       widget.loading = true;
     });
-    await SDKService().resetAtsigns(checkedAtsigns).then((value) async {
+    await SDKService().resetAtsigns(checkedAtsigns).then((void value) async {
       setState(() {
         widget.loading = false;
       });
-    }).catchError((error) {
+    }).catchError((Object error) {
       setState(() {
         widget.loading = false;
       });

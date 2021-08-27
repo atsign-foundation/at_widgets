@@ -1,3 +1,5 @@
+import 'package:at_client/src/preference/at_client_preference.dart';
+import 'package:at_client_mobile/src/at_client_service.dart';
 import 'package:at_onboarding_flutter_example/dashboard.dart';
 import 'package:at_onboarding_flutter_example/services/at_service.dart';
 import 'package:at_onboarding_flutter_example/utils/app_constants.dart';
@@ -17,13 +19,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var atClientPrefernce;
-  var _logger = AtSignLogger('Plugin example app');
+  late AtClientPreference atClientPrefernce;
+  AtSignLogger _logger = AtSignLogger('Plugin example app');
   @override
   void initState() {
-    AtService.getInstance()
-        .getAtClientPreference()
-        .then((value) => atClientPrefernce = value);
+    AtService.getInstance().getAtClientPreference().then((AtClientPreference value) => atClientPrefernce = value);
     super.initState();
   }
 
@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Builder(
-          builder: (context) => Center(
+          builder: (BuildContext context) => Center(
             child: Column(
               children:<Widget>[
                 TextButton(
@@ -45,11 +45,11 @@ class _MyAppState extends State<MyApp> {
                           atClientPreference: atClientPrefernce,
                           domain: AppConstants.rootDomain,
                           appColor: Color.fromARGB(255, 240, 94, 62),
-                          onboard: (value, atsign) {
+                          onboard: (Map<String?, AtClientService> value, String? atsign) {
                             AtService.getInstance().atClientServiceMap = value;
                             _logger.finer('Successfully onboarded $atsign');
                           },
-                          onError: (error) {
+                          onError: (Object? error) {
                             _logger.severe('Onboarding throws $error error');
                           },
                           nextScreen: DashBoard(),
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
                     },
                     child: Text(AppStrings.scan_qr)),
 
-                  CustomResetButton(
+                CustomResetButton(
                     loading: false,
                     buttonText: "Reset",
                     width: 90,
@@ -65,9 +65,8 @@ class _MyAppState extends State<MyApp> {
                       ),
           ],
             ),
-          ),
         ),
       ),
-    );
+    ));
   }
 }

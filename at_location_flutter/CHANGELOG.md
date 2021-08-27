@@ -1,3 +1,7 @@
+## 2.0.4
+- Bug fixes
+- Added send location to group
+
 ## 2.0.3
 - Updated repository link and description
 - Updated packages

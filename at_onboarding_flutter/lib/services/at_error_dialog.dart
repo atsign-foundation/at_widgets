@@ -5,12 +5,12 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_server_status/at_server_status.dart';
 
 class AtErrorDialog {
-  static getAlertDialog(var error, BuildContext context) {
+  static getAlertDialog(Object error, BuildContext context) {
     String errorMessage = _getErrorMessage(error);
-    var title = 'Error';
+    String title = 'Error';
     return AlertDialog(
       title: Row(
-        children: [
+        children: <Widget>[
           Text(
             title,
             style:
@@ -32,7 +32,7 @@ class AtErrorDialog {
   }
 
   ///Returns corresponding errorMessage for [error].
-  static String _getErrorMessage(var error) {
+  static String _getErrorMessage( Object error) {
     switch (error.runtimeType) {
       case AtClientException:
         return 'Unable to perform this action. Please try again.';
@@ -52,10 +52,10 @@ class AtErrorDialog {
         return 'Unable to connect. Please check with network connection and try again.';
       case InvalidAtSignException:
         return 'Invalid atsign is provided. Please contact admin.';
-      case ServerStatus:
-        return _getServerStatusMessage(error);
-      case OnboardingStatus:
-        return _message(error);
+      // case ServerStatus:
+      //   return _getServerStatusMessage(error);
+      // case OnboardingStatus:
+      //   return _message(error);
       default:
         return 'unable to connect. Please refresh the page';
     }

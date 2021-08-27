@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
 import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
-import 'package:at_onboarding_flutter/services/freeAtsignService.dart';
+import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -54,13 +55,14 @@ class CustomDialog extends StatefulWidget {
   final Function(List<String>, String)? onLimitExceed;
 
   ///The context to open this widget.
-  final context;
+  final BuildContext? context;
 
   ///function call on close button press.
   final Function? onClose;
 
   CustomDialog(
-      {this.isErrorDialog = false,
+      {this.context,
+      this.isErrorDialog = false,
       this.message,
       this.title,
       this.isAtsignForm = false,
@@ -70,19 +72,18 @@ class CustomDialog extends StatefulWidget {
       this.onSubmit,
       this.onValidate,
       this.onLimitExceed,
-      this.onClose,
-      this.context});
+      this.onClose});
 
   @override
   _CustomDialogState createState() => _CustomDialogState();
 }
 
 class _CustomDialogState extends State<CustomDialog> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController _atsignController = TextEditingController();
+  final TextEditingController _atsignController = TextEditingController();
 
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   final FreeAtsignService _freeAtsignService = FreeAtsignService();
 
@@ -112,13 +113,14 @@ class _CustomDialogState extends State<CustomDialog> {
 
   @override
   Widget build(BuildContext context) {
-    if (this.widget.isQR) {
+    if (widget.isQR) {
       otp = true;
       pair = true;
       isfreeAtsign = true;
     }
-    return StatefulBuilder(builder: (context, stateSet) {
-      return Stack(children: [
+    return StatefulBuilder(builder:
+        (BuildContext context, void Function(void Function()) stateSet) {
+      return Stack(children: <Widget>[
         Opacity(
             opacity: loading ? 0.3 : 1,
             child: AbsorbPointer(
@@ -126,12 +128,12 @@ class _CustomDialogState extends State<CustomDialog> {
                 child: AlertDialog(
                   title: widget.isErrorDialog
                       ? Row(
-                          children: [
+                          children: <Widget>[
                             Text(
                               widget.title ?? Strings.errorTitle,
                               style: CustomTextStyles.fontR16primary,
                             ),
-                            this.widget.message == ResponseStatus.TIME_OUT
+                            widget.message == ResponseStatus.TIME_OUT
                                 ? Icon(Icons.access_time, size: 18.toFont)
                                 : Icon(Icons.sentiment_dissatisfied,
                                     size: 18.toFont)
@@ -145,7 +147,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                   child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: [
+                                      children: <Widget>[
                                         Text(
                                           'Scan your QR!',
                                           style: TextStyle(
@@ -159,10 +161,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                           child: QrReaderView(
                                             width: 300.toWidth,
                                             height: 350.toHeight,
-                                            callback: (controller) {
+                                            callback: (QrReaderViewController
+                                                controller) {
                                               _controller = controller;
-                                              _controller!
-                                                  .startCamera((data, offsets) {
+                                              _controller!.startCamera(
+                                                  (String data,
+                                                      List<Offset> offsets) {
                                                 onScan(data, offsets, context);
                                               });
                                             },
@@ -197,6 +201,36 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     fontSize: 15.toFont),
                                               ),
                                             )),
+                                        loading
+                                            ? Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: ElevatedButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .grey[800])),
+                                                  // key: Key(''),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      isQrScanner = false;
+                                                    });
+                                                  },
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15.toFont),
+                                                  ),
+                                                ))
+                                            : const SizedBox(
+                                                child: Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              )
                                       ]),
                                 )
                               : Padding(
@@ -205,7 +239,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                   child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: [
+                                      children: <Widget>[
                                         Text(
                                           'Setting up your account',
                                           style: TextStyle(
@@ -216,7 +250,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
-                                          children: [
+                                          children: <Widget>[
                                             Flexible(
                                               child: Text(
                                                 !isfreeAtsign
@@ -243,8 +277,9 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 onPressed: () {
                                                   Navigator.push(
                                                       context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
+                                                      MaterialPageRoute<Widget>(
+                                                          builder: (BuildContext
+                                                                  context) =>
                                                               WebViewScreen(
                                                                 title: Strings
                                                                     .faqTitle,
@@ -256,7 +291,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                         ),
                                         otp
                                             ? Text(
-                                                !this.widget.isQR
+                                                !widget.isQR
                                                     ? 'A verification code has been sent to ${_emailController.text}'
                                                     : 'A verification code has been sent to your registered email.',
                                                 style: TextStyle(
@@ -265,12 +300,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                               )
                                             : Container()
                                       ]))
-                          : this.widget.title != null
+                          : widget.title != null
                               ? Text(
                                   widget.title!,
                                   style: CustomTextStyles.fontR16primary,
                                 )
-                              : this.widget.title as Widget?,
+                              : widget.title as Widget?,
                   content: widget.isAtsignForm && !isQrScanner
                       ? Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
@@ -282,10 +317,9 @@ class _CustomDialogState extends State<CustomDialog> {
                               shrinkWrap: true,
                               // mainAxisSize: MainAxisSize.min,
                               // crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                              children: <Widget>[
                                 Form(
                                     key: _formKey,
-                                    // autovalidateMode: AutovalidateMode.always,
                                     child: !otp
                                         ? TextFormField(
                                             enabled: isfreeAtsign & !pair
@@ -294,7 +328,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                             style: TextStyle(
                                                 fontSize: 14.toFont,
                                                 height: 1.0.toHeight),
-                                            validator: (value) {
+                                            validator: (String? value) {
                                               if (value == null ||
                                                   value == '') {
                                                 return !pair
@@ -303,28 +337,58 @@ class _CustomDialogState extends State<CustomDialog> {
                                               }
                                               return null;
                                             },
-                                            onChanged: (value) {
-                                              stateSet(() {});
+                                            onChanged: (String value) {
+                                              stateSet(() {
+                                                !pair
+                                                    ? _atsignController.text
+                                                    : _emailController.text =
+                                                        value;
+                                              });
                                             },
                                             controller: !pair
                                                 ? _atsignController
                                                 : _emailController,
-                                            decoration: InputDecoration(
-                                                fillColor: Colors.blueAccent,
-                                                errorStyle: TextStyle(
-                                                  fontSize: 12.toFont,
+                                            inputFormatters: <
+                                                TextInputFormatter>[
+                                              LengthLimitingTextInputFormatter(
+                                                  80),
+                                              FilteringTextInputFormatter.allow(
+                                                RegExp(
+                                                  '[a-zA-Z0-9_]|\u00a9|\u00af|[\u2155-\u2900]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]',
                                                 ),
-                                                hintText: !pair
-                                                    ? Strings.atsignHintText
-                                                    : '',
-                                                prefixText: !pair ? '@' : '',
-                                                prefixStyle: TextStyle(
-                                                    color: ColorConstants
-                                                        .appColor),
-                                                border: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: ColorConstants
-                                                            .appColor))),
+                                              ),
+                                              // This inputFormatter function will convert all the input to lowercase.
+                                              TextInputFormatter.withFunction(
+                                                  (TextEditingValue oldValue,
+                                                      TextEditingValue
+                                                          newValue) {
+                                                return newValue.copyWith(
+                                                  text: newValue.text
+                                                      .toLowerCase(),
+                                                );
+                                              })
+                                            ],
+                                            textCapitalization:
+                                                TextCapitalization.none,
+                                            decoration: InputDecoration(
+                                              fillColor: Colors.blueAccent,
+                                              errorStyle: TextStyle(
+                                                fontSize: 12.toFont,
+                                              ),
+                                              hintText: !pair
+                                                  ? Strings.atsignHintText
+                                                  : '',
+                                              prefixText: !pair ? '@' : '',
+                                              prefixStyle: TextStyle(
+                                                  color:
+                                                      ColorConstants.appColor),
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color:
+                                                      ColorConstants.appColor,
+                                                ),
+                                              ),
+                                            ),
                                           )
                                         : PinCodeTextField(
                                             animationType: AnimationType.none,
@@ -332,10 +396,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 TextCapitalization.characters,
                                             appContext: context,
                                             length: 4,
-                                            onChanged: (value) {
+                                            onChanged: (String value) {
                                               verificationCode = value;
                                             },
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                                 fontWeight: FontWeight.w500),
                                             pinTheme: PinTheme(
                                               selectedColor: Colors.black,
@@ -352,19 +416,19 @@ class _CustomDialogState extends State<CustomDialog> {
                                             cursorColor: Colors.grey,
                                             // controller: _otpController,
                                             keyboardType: TextInputType.text,
-                                            onCompleted: (v) {
+                                            onCompleted: (String v) {
                                               verificationCode = v;
                                             },
                                           )),
                                 if (!isfreeAtsign &&
                                     !widget.isQR &&
-                                    !isQrScanner) ...[
+                                    !isQrScanner) ...<Widget>[
                                   SizedBox(height: 15.toHeight),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
+                                    children: <Widget>[
                                       TextButton(
-                                        key: Key('${Strings.cancelButton}'),
+                                        key: const Key(Strings.cancelButton),
                                         onPressed: () async {
                                           Navigator.pop(context);
                                           Navigator.pop(context);
@@ -382,13 +446,14 @@ class _CustomDialogState extends State<CustomDialog> {
                                             backgroundColor:
                                                 MaterialStateProperty.all(
                                                     ColorConstants.appColor)),
-                                        key: Key('${Strings.submitButton}'),
+                                        key: const Key(Strings.submitButton),
                                         onPressed: () async {
                                           if (_formKey.currentState!
                                               .validate()) {
                                             Navigator.pop(context);
-                                            this.widget.onSubmit!(
-                                                _atsignController.text);
+                                            widget.onSubmit!(_atsignController
+                                                .text
+                                                .toLowerCase());
                                           }
                                         },
                                         child: Text(
@@ -401,7 +466,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                     ],
                                   ),
                                   SizedBox(height: 20.toHeight),
-                                  Text('Need an @sign?'),
+                                  const Text('Need an @sign?'),
                                   SizedBox(height: 5.toHeight),
                                   Container(
                                       width: MediaQuery.of(context).size.width,
@@ -432,7 +497,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                         ),
                                       )),
                                   SizedBox(height: 20.toHeight),
-                                  Text('Have a QR Code?'),
+                                  const Text('Have a QR Code?'),
                                   SizedBox(height: 5.toHeight),
                                   Container(
                                       width: MediaQuery.of(context).size.width,
@@ -443,7 +508,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     Colors.grey[800])),
                                         // key: Key(''),
                                         onPressed: () async {
-                                          _verifyCameraPermissions();
+                                          await _verifyCameraPermissions();
                                           setState(() {
                                             isQrScanner = true;
                                           });
@@ -456,7 +521,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                         ),
                                       )),
                                 ],
-                                if (isfreeAtsign) ...[
+                                if (isfreeAtsign) ...<Widget>[
                                   SizedBox(height: 15.toHeight),
                                   !otp
                                       ? !pair
@@ -475,8 +540,8 @@ class _CustomDialogState extends State<CustomDialog> {
                                                   loading = true;
                                                   stateSet(() {});
                                                   _atsignController.text =
-                                                      (await (getFreeAtsign(
-                                                              context))) ??
+                                                      await getFreeAtsign(
+                                                              context) ??
                                                           '';
                                                   loading = false;
                                                   stateSet(() {});
@@ -485,7 +550,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
-                                                    children: [
+                                                    children: <Widget>[
                                                       Center(
                                                           child: Text(
                                                         'Refresh',
@@ -494,13 +559,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                                             fontSize:
                                                                 15.toFont),
                                                       )),
-                                                      Icon(
+                                                      const Icon(
                                                         Icons.refresh,
                                                         color: Colors.white,
                                                       )
                                                     ]),
                                               ))
-                                          : Column(children: [
+                                          : Column(children: <Widget>[
                                               Container(
                                                   width: MediaQuery.of(context)
                                                       .size
@@ -581,7 +646,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                                 .grey[700]),
                                                       )))
                                             ])
-                                      : Column(children: [
+                                      : Column(children: <Widget>[
                                           Container(
                                               width: MediaQuery.of(context)
                                                   .size
@@ -627,11 +692,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     stateSet(() {});
                                                     if (result != null &&
                                                         result !=
-                                                            this.limitExceeded) {
-                                                      List params =
+                                                            limitExceeded) {
+                                                      List<String> params =
                                                           result.split(':');
                                                       Navigator.pop(context);
                                                       this.widget.onValidate!(
+
                                                           params[0],
                                                           params[1],
                                                           false);
@@ -684,7 +750,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                       _emailController.text;
                                                   stateSet(() {});
                                                 },
-                                                child: Text(
+                                                child: const Text(
                                                   'Wrong email?',
                                                   style: TextStyle(
                                                       color: Colors.grey),
@@ -701,7 +767,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                       color: Colors.grey),
                                                 ))
                                         ]),
-                                  if (!pair) ...[
+                                  if (!pair) ...<Widget>[
                                     SizedBox(height: 15.toHeight),
                                     Container(
                                         width:
@@ -731,7 +797,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                               _atsignController.text = '';
                                               stateSet(() {});
                                             },
-                                            child: Text(
+                                            child: const Text(
                                               'Back',
                                               style:
                                                   TextStyle(color: Colors.grey),
@@ -741,13 +807,13 @@ class _CustomDialogState extends State<CustomDialog> {
                               ],
                             ),
                           ))
-                      : _getMessage(this.widget.message, widget.isErrorDialog),
+                      : _getMessage(widget.message, widget.isErrorDialog),
                   actions: widget.showClose
-                      ? [
+                      ? <Widget>[
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);
-                              this.widget.onClose!();
+                              widget.onClose!();
                             },
                             child: Text(
                               Strings.closeTitle,
@@ -764,28 +830,30 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Future<bool> _verifyCameraPermissions() async {
-    var status = await Permission.camera.status;
-    print("camera status => $status");
+    PermissionStatus status = await Permission.camera.status;
+    print('camera status => $status');
     if (status.isGranted) {
       return true;
     }
-    return (await [Permission.camera].request())[0] == PermissionStatus.granted;
+    return (await <Permission>[Permission.camera].request())[0] ==
+        PermissionStatus.granted;
   }
 
-  void onScan(String data, List<Offset> offsets, context) async {
+
+  void onScan(String data, List<Offset> offsets,BuildContext context) async {
     _controller!.stopCamera();
     print('SCANNED: => $data');
-    var values = data.split(':');
+    List<String> values = data.split(':');
     await widget.onValidate!(values[0], values[1], true);
 
     // try again
-    await _controller!.startCamera((data, offsets) {
+    await _controller!.startCamera((String data, List<Offset> offsets) {
       onScan(data, offsets, context);
     });
   }
 
   Future<String?> getFreeAtsign(BuildContext context) async {
-    var data;
+    dynamic data;
     String? atsign;
     dynamic response = await _freeAtsignService.getFreeAtsigns();
     if (response.statusCode == 200) {
@@ -796,7 +864,7 @@ class _CustomDialogState extends State<CustomDialog> {
       data = response.body;
       data = jsonDecode(data);
       String? errorMessage = data['message'];
-      showErrorDialog(context, errorMessage);
+      await showErrorDialog(context, errorMessage);
     }
     return atsign;
   }
@@ -804,7 +872,7 @@ class _CustomDialogState extends State<CustomDialog> {
   Future<bool> registerPersona(
       String atsign, String email, BuildContext context,
       {String? oldEmail}) async {
-    var data;
+    dynamic data;
     bool status = false;
     // String atsign;
     dynamic response = await _freeAtsignService.registerPerson(atsign, email,
@@ -823,9 +891,9 @@ class _CustomDialogState extends State<CustomDialog> {
         oldEmail = email;
       }
       if (errorMessage.contains('maximum number of free @signs')) {
-        showlimitDialog(context);
+        await showlimitDialog(context);
       } else {
-        showErrorDialog(context, errorMessage);
+        await showErrorDialog(context, errorMessage);
       }
     }
     return status;
@@ -834,9 +902,9 @@ class _CustomDialogState extends State<CustomDialog> {
   Future<String?> validatePerson(
       String atsign, String email, String? otp, BuildContext context,
       {bool isConfirmation = false}) async {
-    var data;
+    dynamic data;
     String? cramSecret;
-    List<String> atsigns = [];
+    List<String> atsigns = <String>[];
     // String atsign;
 
     dynamic response = await _freeAtsignService
@@ -849,32 +917,32 @@ class _CustomDialogState extends State<CustomDialog> {
       if (data['data'] != null &&
           data['data'].length == 2 &&
           data['status'] != 'error') {
-        var responseData = data['data'];
+        dynamic responseData = data['data'];
         atsigns.addAll(List<String>.from(responseData['atsigns']));
 
         if (responseData['newAtsign'] == null) {
           Navigator.pop(context);
 
-          this.widget.onLimitExceed!(atsigns, responseData['message']);
-          return this.limitExceeded;
+          widget.onLimitExceed!(atsigns, responseData['message']);
+          return limitExceeded;
         }
         //displays list of atsign along with newAtsign
         else {
           await Navigator.push(
               context,
-              MaterialPageRoute(
+              MaterialPageRoute<dynamic>(
                   builder: (_) => AtsignListScreen(
                         atsigns: atsigns,
                         newAtsign: responseData['newAtsign'],
-                      ))).then((value) async {
+                      ))).then((dynamic value) async {
             if (value == responseData['newAtsign']) {
-              cramSecret = await this.validatePerson(value, email, otp, context,
+              cramSecret = await validatePerson(value, email, otp, context,
                   isConfirmation: true);
               return cramSecret;
             } else {
               if (value != null) {
                 Navigator.pop(context);
-                this.widget.onSubmit!(value);
+                widget.onSubmit!(value);
               }
               return null;
             }
@@ -884,14 +952,14 @@ class _CustomDialogState extends State<CustomDialog> {
         cramSecret = data['cramkey'];
       } else {
         String? errorMessage = data['message'];
-        showErrorDialog(context, errorMessage);
+        await showErrorDialog(context, errorMessage);
       }
       // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
       String? errorMessage = data['message'];
-      showErrorDialog(context, errorMessage);
+      await showErrorDialog(context, errorMessage);
     }
     return cramSecret;
   }
@@ -899,8 +967,8 @@ class _CustomDialogState extends State<CustomDialog> {
   Future<String> validatewithAtsign(
       String atsign, String otp, BuildContext context,
       {bool isConfirmation = false}) async {
-    var data;
-    String cramSecret = '';
+    dynamic data;
+    String? cramSecret;
 
     dynamic response =
         await _freeAtsignService.verificationWithAtsign(atsign, otp);
@@ -909,24 +977,24 @@ class _CustomDialogState extends State<CustomDialog> {
       data = jsonDecode(data);
       print(data['data']);
       //check for the atsign list and display them.
-      if (data['message'] == "Verified") {
+      if (data['message'] == 'Verified') {
         cramSecret = data['cramkey'];
       } else {
         String errorMessage = data['message'];
-        showErrorDialog(context, errorMessage);
+        await showErrorDialog(context, errorMessage);
       }
       // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      showErrorDialog(context, errorMessage);
+      await showErrorDialog(context, errorMessage);
     }
-    return cramSecret;
+    return cramSecret ?? '';
   }
 
   Future<bool> loginWithAtsign(String atsign, BuildContext context) async {
-    var data;
+    dynamic data;
     bool status = false;
 
     dynamic response = await _freeAtsignService.loginWithAtsign(atsign);
@@ -941,14 +1009,14 @@ class _CustomDialogState extends State<CustomDialog> {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      showErrorDialog(context, errorMessage);
+      await showErrorDialog(context, errorMessage);
     }
     return status;
   }
 
   ///Returns corresponding errorMessage for [error].
-  String? _getErrorMessage(var error) {
-    var _onboardingService = OnboardingService.getInstance();
+  String? _getErrorMessage(dynamic error) {
+    OnboardingService _onboardingService = OnboardingService.getInstance();
     switch (error.runtimeType) {
       case AtClientException:
         return 'Unable to perform this action. Please try again.';
@@ -971,10 +1039,10 @@ class _CustomDialogState extends State<CustomDialog> {
       case ServerStatus:
         return _getServerStatusMessage(error);
       case OnboardingStatus:
-        return error.message;
+        return error.toString();
       case ResponseStatus:
         if (error == ResponseStatus.AUTH_FAILED) {
-          if (_onboardingService.isPkam) {
+          if (_onboardingService.isPkam!) {
             return 'Please provide valid backupkey file to continue.';
           } else {
             return _onboardingService.serverStatus == ServerStatus.activated
@@ -1005,60 +1073,63 @@ class _CustomDialogState extends State<CustomDialog> {
     }
   }
 
-  showErrorDialog(BuildContext context, String? errorMessage) {
-    return showDialog(
+  Future<CustomDialog?> showErrorDialog(
+      BuildContext context, String? errorMessage) async {
+    return showDialog<CustomDialog>(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return CustomDialog(
+            context: context,
             isErrorDialog: true,
             showClose: true,
-            context: context,
             message: errorMessage,
             onClose: () {},
           );
         });
   }
 
-  showlimitDialog(BuildContext context) {
-    return showDialog(
+  Future<AlertDialog?> showlimitDialog(BuildContext context) async {
+    return showDialog<AlertDialog>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             content: RichText(
-              text: TextSpan(children: [
-                TextSpan(
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.toFont,
-                      letterSpacing: 0.5),
-                  text:
-                      'Oops! You already have the maximum number of free @signs. Please login to ',
-                ),
-                TextSpan(
-                    text: 'https://my.atsign.com',
+              text: TextSpan(
+                children: <InlineSpan>[
+                  TextSpan(
                     style: TextStyle(
+                        color: Colors.black,
                         fontSize: 16.toFont,
-                        color: ColorConstants.appColor,
-                        letterSpacing: 0.5,
-                        decoration: TextDecoration.underline),
-                    recognizer: new TapGestureRecognizer()
-                      ..onTap = () async {
-                        var url = 'https://my.atsign.com';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        }
-                      }),
-                TextSpan(
-                  text: '  to select one of your existing @signs.',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.toFont,
-                      letterSpacing: 0.5),
-                ),
-              ]),
+                        letterSpacing: 0.5),
+                    text:
+                        'Oops! You already have the maximum number of free @signs. Please login to ',
+                  ),
+                  TextSpan(
+                      text: 'https://my.atsign.com',
+                      style: TextStyle(
+                          fontSize: 16.toFont,
+                          color: ColorConstants.appColor,
+                          letterSpacing: 0.5,
+                          decoration: TextDecoration.underline),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () async {
+                          String url = 'https://my.atsign.com';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          }
+                        }),
+                  TextSpan(
+                    text: '  to select one of your existing @signs.',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.toFont,
+                        letterSpacing: 0.5),
+                  ),
+                ],
+              ),
             ),
-            actions: [
+            actions: <Widget>[
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -1072,65 +1143,71 @@ class _CustomDialogState extends State<CustomDialog> {
         });
   }
 
-  Widget? _getMessage(var message, bool isErrorDialog) {
+  Widget? _getMessage(dynamic message, bool isErrorDialog) {
     String? highLightText = message == ResponseStatus.TIME_OUT
-        ? '${AppConstants.contactAddress}'
+        ? AppConstants.contactAddress
         : AppConstants.website;
     if (message == null) {
       return null;
     }
     if (isErrorDialog) {
-      message = _getErrorMessage(this.widget.message);
+      message = _getErrorMessage(widget.message);
     }
     if (!message.contains(highLightText)) {
       return Text(message, style: CustomTextStyles.fontR16primary);
     }
     int startIndex = message.indexOf(highLightText);
-    var text1 = message.substring(0, startIndex),
+    String text1 = message.substring(0, startIndex),
         text3 = message.substring(startIndex + highLightText!.length);
 
     return RichText(
-      text: TextSpan(style: CustomTextStyles.fontR16primary, children: [
-        TextSpan(
-          text: text1,
-        ),
-        TextSpan(
-            text: highLightText,
-            style: TextStyle(
-                fontSize: 16.toFont,
-                fontWeight: FontWeight.bold,
-                color: ColorConstants.appColor,
-                decoration: TextDecoration.underline),
-            recognizer: new TapGestureRecognizer()
-              ..onTap = () async {
-                final Uri params = Uri(
-                  scheme: Strings.mailUrlScheme,
-                  path: '${AppConstants.contactAddress}',
-                  query: Strings.mailUrlquery, //add subject and body here
-                );
-                var url = highLightText == AppConstants.contactAddress
-                    ? params.toString()
-                    : highLightText;
-                String errorMessage = 'Cannot launch $url';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  showDialog(
-                      barrierDismissible: false,
-                      context: widget.context,
-                      builder: (BuildContext context) {
-                        return CustomDialog(
-                          isErrorDialog: true,
-                          showClose: true,
-                          context: context,
-                          message: errorMessage,
-                          onClose: () {},
-                        );
-                      });
-                }
-              }),
-        TextSpan(text: text3, style: TextStyle(color: Colors.black)),
-      ]),
+      text: TextSpan(
+        style: CustomTextStyles.fontR16primary,
+        children: <InlineSpan>[
+          TextSpan(
+            text: text1,
+          ),
+          TextSpan(
+              text: highLightText,
+              style: TextStyle(
+                  fontSize: 16.toFont,
+                  fontWeight: FontWeight.bold,
+                  color: ColorConstants.appColor,
+                  decoration: TextDecoration.underline),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () async {
+                  Uri params = Uri(
+                    scheme: Strings.mailUrlScheme,
+                    path: AppConstants.contactAddress,
+                    query: Strings.mailUrlquery, //add subject and body here
+                  );
+                  String url = highLightText == AppConstants.contactAddress
+                      ? params.toString()
+                      : highLightText;
+                  String errorMessage = 'Cannot launch $url';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    await showDialog(
+                        barrierDismissible: false,
+                        context: widget.context!,
+                        builder: (BuildContext context) {
+                          return CustomDialog(
+                            context: context,
+                            isErrorDialog: true,
+                            showClose: true,
+                            message: errorMessage,
+                            onClose: () {},
+                          );
+                        });
+                  }
+                }),
+          TextSpan(
+            text: text3,
+            style: const TextStyle(color: Colors.black),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -3,11 +3,11 @@ import 'package:at_commons/at_commons.dart';
 
 class SDKService {
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
-  Map<String, AtClientService> atClientServiceMap = {};
-  List<String> atSignsList = [];
+  Map<String, AtClientService>? atClientServiceMap ;
+  List<String>? atSignsList ;
   String? currentAtsign;
   String? lastOnboardedAtsign;
-  Map<String, bool> monitorConnectionMap = {};
+  Map<String, bool>? monitorConnectionMap ;
 
   static final SDKService _singleton = SDKService._internal();
   SDKService._internal();
@@ -20,8 +20,8 @@ class SDKService {
   ///If [atsign] is null then it will be current @sign.
   AtClientImpl? _getAtClientForAtsign({String? atsign}) {
     atsign ??= currentAtsign!;
-    if (atClientServiceMap.containsKey(atsign)) {
-      return atClientServiceMap[atsign]!.atClient;
+    if (atClientServiceMap!.containsKey(atsign)) {
+      return atClientServiceMap![atsign]!.atClient;
     }
     return null;
   }
@@ -34,20 +34,20 @@ class SDKService {
   ///Deletes the [atsign] from device storage.
   Future<void> deleteAtSign(String atsign) async {
     await _keyChainManager.deleteAtSignFromKeychain(atsign);
-    atClientServiceMap.remove(atsign);
-    monitorConnectionMap.remove(atsign);
+    atClientServiceMap!.remove(atsign);
+    monitorConnectionMap!.remove(atsign);
     if (atsign == currentAtsign) currentAtsign = null;
     if (atsign == lastOnboardedAtsign) lastOnboardedAtsign = null;
-    atSignsList.remove(atsign);
+    atSignsList!.remove(atsign);
   }
 
   ///Returns list of atsigns stored in device storage.
-  Future<List<String>> getAtsignList() async {
+  Future<List<String>?> getAtsignList() async {
     if(await _keyChainManager.getAtSignListFromKeychain() != null){
       atSignsList = (await _keyChainManager.getAtSignListFromKeychain())!;
     }
     else{
-      atSignsList = [];
+      atSignsList ;
     }
     return atSignsList ;
   }
@@ -72,44 +72,44 @@ class SDKService {
     Function responseCallback,
   ) async {
     currentAtsign = await getAtSign();
-    var exist = monitorConnectionMap.containsKey(currentAtsign);
+    bool exist = monitorConnectionMap!.containsKey(currentAtsign);
     if (exist) {
       return true;
     }
     String? privateKey =
         await _getAtClientForAtsign()!.getPrivateKey(currentAtsign!);
     await _getAtClientForAtsign()!.startMonitor(privateKey!, responseCallback);
-    monitorConnectionMap.putIfAbsent(currentAtsign!, () => true);
+    monitorConnectionMap!.putIfAbsent(currentAtsign!, () => true);
     return true;
   }
 
 
   ///Resets [atsigns] list from device storage.
-  Future<void> resetAtsigns(List atsigns) async {
+  Future<void> resetAtsigns(List<dynamic> atsigns) async {
     for (String atsign in atsigns) {
       await _keyChainManager.resetAtSignFromKeychain(atsign);
-      atClientServiceMap.remove(atsign);
-      monitorConnectionMap.remove(atsign);
+      atClientServiceMap!.remove(atsign);
+      monitorConnectionMap!.remove(atsign);
     }
     this.currentAtsign = null;
     this.lastOnboardedAtsign = null;
-    this.atSignsList = [];
+    this.atSignsList ;
   }
 
   ///Returns `true` if [atsign] is onboarded in the app.
   bool isOnboarded(String atsign) {
-    return atClientServiceMap.containsKey(atsign);
+    return atClientServiceMap!.containsKey(atsign);
   }
 
   sync() async {
     await _getAtClientForAtsign()!.getSyncManager()!.sync();
   }
 
-  ///Returns `true` if [value] is a non empty string.
-  bool isValid(var value) {
-    var result = value == null || value == '' || value == 'null';
-    return !result;
-  }
+  // ///Returns `true` if [value] is a non empty string.
+  // bool isValid(var value) {
+  //   var result = value == null || value == '' || value == 'null';
+  //   return !result;
+  // }
 
 
   ///Returns null if [atsign] is null else the formatted [atsign].

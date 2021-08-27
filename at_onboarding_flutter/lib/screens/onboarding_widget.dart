@@ -64,21 +64,21 @@ class Onboarding {
     _show();
   }
   void _show() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
       showDialog(
           context: context,
           barrierDismissible: false,
           builder: (_) => OnboardingWidget(
-              atsign: this.atsign,
-              onboard: this.onboard,
-              onError: this.onError,
-              nextScreen: this.nextScreen,
-              fistTimeAuthNextScreen: this.fistTimeAuthNextScreen,
-              atClientPreference: this.atClientPreference,
-              appColor: this.appColor,
-              logo: this.logo,
-              domain: this.domain,
-              appAPIKey: this.appAPIKey));
+              atsign: atsign,
+              onboard: onboard,
+              onError: onError,
+              nextScreen: nextScreen,
+              fistTimeAuthNextScreen: fistTimeAuthNextScreen,
+              atClientPreference: atClientPreference,
+              appColor: appColor,
+              logo: logo,
+              domain: domain,
+              appAPIKey: appAPIKey));
     });
 
     _logger.info('Onboarding...!');
@@ -138,10 +138,10 @@ class OnboardingWidget extends StatefulWidget {
 }
 
 class _OnboardingWidgetState extends State<OnboardingWidget> {
-  var _onboardingService = OnboardingService.getInstance();
+  final OnboardingService _onboardingService = OnboardingService.getInstance();
   Future<bool>? _future;
-  var data;
-  var error;
+  dynamic data;
+  dynamic error;
   @override
   void initState() {
     AppConstants.rootDomain = widget.domain;
@@ -172,17 +172,17 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
 
     return FutureBuilder<bool>(
         future: _future,
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             CustomNav().pop(context);
-            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+            WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
               widget.onboard(_onboardingService.atClientServiceMap,
                   _onboardingService.currentAtsign);
             });
             if (widget.nextScreen != null) {
               CustomNav().push(widget.nextScreen, context);
             }
-            return Center();
+            return const Center();
           } else if (snapshot.hasError) {
             if (snapshot.error == OnboardingStatus.ATSIGN_NOT_FOUND) {
               return PairAtsignWidget(
@@ -195,13 +195,13 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
               );
             } else {
               CustomNav().pop(context);
-              Future.delayed((Duration(milliseconds: 200)), () {
+              Future<dynamic>.delayed((const Duration(milliseconds: 200)), () {
                 widget.onError(snapshot.error);
               });
-              return Center();
+              return const Center();
             }
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         });
   }
