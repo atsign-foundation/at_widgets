@@ -19,7 +19,7 @@ class ColorConstants {
   static Color? borderColor;
 
   ///dark background color
-  static Color dark = Color.fromARGB(255, 45, 42, 48);
+  static Color dark = const Color.fromARGB(255, 45, 42, 48);
 
   static Color light = Colors.white;
 
@@ -30,7 +30,7 @@ class ColorConstants {
   static Brightness? brightness;
   static Color? backgroundColor;
   static set appColor(Color? color) {
-    buttonHighLightColor = color ?? Color.fromARGB(255, 240, 94, 62);
+    buttonHighLightColor = color ?? const Color.fromARGB(255, 240, 94, 62);
     activeColor = buttonHighLightColor;
     activeTrackColor = buttonHighLightColor!.withOpacity(0.2);
   }

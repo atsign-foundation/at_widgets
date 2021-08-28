@@ -3,28 +3,28 @@ import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 
 class CustomErrorDialog extends StatelessWidget {
-  final error;
+  final String error;
   CustomErrorDialog({required this.error});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Row(
-        children: [
+        children: <Widget>[
           Text(
-            Strings.Error,
+            Strings.error,
             style: CustomTextStyles.fontR14primary,
           ),
-          Icon(Icons.sentiment_dissatisfied)
+          const Icon(Icons.sentiment_dissatisfied)
         ],
       ),
-      content: Text('${this.error}'),
+      content: Text(error),
       actions: <Widget>[
         TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text(Strings.Close),
+          child: const Text(Strings.close),
         )
       ],
     );
@@ -41,7 +41,7 @@ class ErrorDialog {
     return _singleton;
   }
 
-  void show(var error, {required BuildContext context}) {
+  void show(String error, {required BuildContext context}) {
     showDialog(
         context: context,
         builder: (_) {

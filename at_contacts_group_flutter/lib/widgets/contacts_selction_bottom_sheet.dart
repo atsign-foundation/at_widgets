@@ -22,23 +22,23 @@ class ContactSelectionBottomSheet extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    var _groupService = GroupService();
+    GroupService _groupService = GroupService();
     return StreamBuilder<List<GroupContactsModel?>>(
       stream: _groupService.selectedContactsStream,
       initialData: _groupService.selectedGroupContacts,
-      builder: (context, snapshot) => (snapshot.data!.isEmpty)
+      builder: (BuildContext context, AsyncSnapshot<List<GroupContactsModel?>> snapshot) => (snapshot.data!.isEmpty)
           ? Container(
               height: 0,
             )
           : Container(
               padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
               height: 70.toHeight,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color(0xffF7F7FF),
-                  boxShadow: [BoxShadow(color: Colors.grey)]),
+                  boxShadow: <BoxShadow>[BoxShadow(color: Colors.grey,),],),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                children: <Widget>[
                   Expanded(
                     child: Text(
                       (_groupService.length != 25)
@@ -54,7 +54,7 @@ class ContactSelectionBottomSheet extends StatelessWidget {
                     onPressed: () {
                       onPressed!();
                       selectedList!(_groupService.selectedGroupContacts);
-                      _groupService.selectedGroupContacts = [];
+                      _groupService.selectedGroupContacts = <GroupContactsModel?>[];
                     },
                     buttonColor:
                         Theme.of(context).brightness == Brightness.light

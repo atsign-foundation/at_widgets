@@ -6,24 +6,20 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 class Tasks extends StatelessWidget {
   final IconData icon;
   final String task;
-  final Function onTap;
+  final VoidCallback onTap;
   final double angle;
-  Tasks(
-      {required this.task,
-      required this.icon,
-      required this.onTap,
-      this.angle = 0.0});
+  Tasks({required this.task, required this.icon, required this.onTap, this.angle = 0.0});
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap as void Function()?,
+      onTap: onTap,
       child: Container(
         height: 54.toHeight,
         width: 70.toWidth,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Transform.rotate(
               angle: angle,
               child: Icon(

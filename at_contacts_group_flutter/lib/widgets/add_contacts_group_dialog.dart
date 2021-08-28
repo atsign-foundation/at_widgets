@@ -33,8 +33,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var _contactService = ContactService();
-    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    ContactService _contactService = ContactService();
+    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,
@@ -46,7 +46,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
               top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Expanded(
                 child: Text(
                   contact_strings.TextStrings().addContact,
@@ -62,13 +62,13 @@ class _AddContactDialogState extends State<AddContactDialog> {
                     ? 255.toHeight
                     : 310.toHeight * deviceTextFactor),
             child: Column(
-              children: [
+              children: <Widget>[
                 SizedBox(
                   height: 20.toHeight,
                 ),
                 TextFormField(
                   autofocus: true,
-                  onChanged: (value) {
+                  onChanged: (String value) {
                     atsignName = value;
                   },
                   // validator: Validators.validateAdduser,
@@ -86,11 +86,11 @@ class _AddContactDialogState extends State<AddContactDialog> {
                 (_contactService.getAtSignError == '')
                     ? Container()
                     : Row(
-                        children: [
+                        children: <Widget>[
                           Expanded(
                             child: Text(
                               _contactService.getAtSignError,
-                              style: TextStyle(color: Colors.red),
+                              style: const TextStyle(color: Colors.red),
                             ),
                           )
                         ],
@@ -100,9 +100,9 @@ class _AddContactDialogState extends State<AddContactDialog> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: <Widget>[
                     (isLoading)
-                        ? CircularProgressIndicator()
+                        ? const CircularProgressIndicator()
                         : CustomButton(
                             height: 50.toHeight * deviceTextFactor,
                             buttonText:
@@ -113,7 +113,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               });
                               await _contactService.addAtSign(context,
                                   atSign: atsignName);
-                              var _groupService = GroupService();
+                              GroupService _groupService = GroupService();
                               await _groupService.fetchGroupsAndContacts();
                               setState(() {
                                 isLoading = false;
@@ -139,7 +139,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: <Widget>[
                     CustomButton(
                       height: 50.toHeight * deviceTextFactor,
                       buttonText: contact_strings.TextStrings().buttonCancel,

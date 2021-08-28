@@ -20,14 +20,14 @@ class LoadingDialog {
       AtEventNotificationListener()
           .navKey!
           .currentState!
-          .push(CustomPopupRoutes(
+          .push(CustomPopupRoutes<Widget>(
               pageBuilder: (_, __, ___) {
                 print('building loader');
                 return Center(
                   child: (text != null)
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: <Widget>[
                             Flexible(
                               child: Text(
                                 text,
@@ -46,7 +46,7 @@ class LoadingDialog {
                             ),
                           ],
                         )
-                      : CircularProgressIndicator(),
+                      : const CircularProgressIndicator(),
                 );
               },
               barrierDismissible: false))

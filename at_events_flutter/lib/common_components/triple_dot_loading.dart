@@ -26,7 +26,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
   late Animation<double> _largeBubbleAnimation;
 
   late AnimationController _repeatingController;
-  final List<Interval> _dotIntervals = const [
+  final List<Interval> _dotIntervals = const <Interval>[
     Interval(0.25, 0.8),
     Interval(0.35, 0.9),
     Interval(0.45, 1.0),
@@ -105,7 +105,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _indicatorSpaceAnimation,
-      builder: (context, child) {
+      builder: (BuildContext context, Widget? child) {
         return SizedBox(
           height: _indicatorSpaceAnimation.value,
           child: child,
@@ -128,7 +128,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
   }) {
     return AnimatedBuilder(
       animation: animation,
-      builder: (context, child) {
+      builder: (BuildContext context, Widget? child) {
         return Transform.scale(
           scale: animation.value,
           alignment: Alignment.bottomLeft,
@@ -146,7 +146,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
       padding: const EdgeInsets.symmetric(horizontal: 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
+        children: <Widget>[
           _buildFlashingCircle(0),
           _buildFlashingCircle(1),
           _buildFlashingCircle(2),
@@ -158,10 +158,10 @@ class _TypingIndicatorState extends State<TypingIndicator>
   Widget _buildFlashingCircle(int index) {
     return AnimatedBuilder(
       animation: _repeatingController,
-      builder: (context, child) {
-        final circleFlashPercent =
+      builder: (BuildContext context, Widget? child) {
+        double circleFlashPercent =
             _dotIntervals[index].transform(_repeatingController.value);
-        final circleColorPercent = sin(pi * circleFlashPercent);
+        double circleColorPercent = sin(pi * circleFlashPercent);
 
         return Container(
           width: 5,

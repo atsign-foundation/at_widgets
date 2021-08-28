@@ -7,7 +7,7 @@ class CustomColors {
 }
 
 class ContactInitialsColors {
-  static final color = {
+  static final Map<String, Color> color = const <String, Color>{
     'A': Color(0xFFAA0DFE),
     'B': Color(0xFF3283FE),
     'C': Color(0xFF85660D),
@@ -38,9 +38,9 @@ class ContactInitialsColors {
 
   static Color? getColor(String atsign) {
     if (atsign[0] == '@') {
-      return color['${atsign[1].toUpperCase()}'];
+      return color[atsign[1].toUpperCase()];
     }
 
-    return color['${atsign[0].toUpperCase()}'];
+    return color[atsign[0].toUpperCase()];
   }
 }

@@ -17,7 +17,6 @@ import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -39,8 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
     KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
   }
 
-  void _getMyLocation() async {
-    var newMyLatLng = await getMyLocation();
+  Future<void> _getMyLocation() async {
+    LatLng? newMyLatLng = await getMyLocation();
     if (newMyLatLng != null) {
       if (mounted) {
         setState(() {
@@ -49,12 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    var permission = await Geolocator.checkPermission();
+    LocationPermission permission = await Geolocator.checkPermission();
 
-    if (((permission == LocationPermission.always) ||
-        (permission == LocationPermission.whileInUse))) {
-      Geolocator.getPositionStream(distanceFilter: 2)
-          .listen((locationStream) async {
+    if (((permission == LocationPermission.always) || (permission == LocationPermission.whileInUse))) {
+      Geolocator.getPositionStream(distanceFilter: 2).listen((Position locationStream) async {
         setState(() {
           myLatLng = LatLng(locationStream.latitude, locationStream.longitude);
         });
@@ -70,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
           body: Stack(
-        children: [
+        children: <Widget>[
           (myLatLng != null)
               ? showLocation(UniqueKey(), mapController, location: myLatLng)
               : showLocation(
@@ -83,42 +80,33 @@ class _HomeScreenState extends State<HomeScreen> {
             child: FloatingIcon(
               icon: Icons.location_off,
               isTopLeft: false,
-              onPressed: () =>
-                  SendLocationNotification().deleteAllLocationKey(),
+              onPressed: () => SendLocationNotification().deleteAllLocationKey(),
             ),
           ),
+          widget.showList ? Positioned(bottom: 264.toHeight, child: header()) : const SizedBox(),
           widget.showList
-              ? Positioned(bottom: 264.toHeight, child: header())
-              : SizedBox(),
-          widget.showList
-              ? StreamBuilder(
+              ? StreamBuilder<List<KeyLocationModel>>(
                   stream: KeyStreamService().atNotificationsStream,
-                  builder: (context,
-                      AsyncSnapshot<List<KeyLocationModel>> snapshot) {
+                  builder: (BuildContext context, AsyncSnapshot<List<KeyLocationModel>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
                       if (snapshot.hasError) {
                         return SlidingUpPanel(
                             controller: pc,
                             minHeight: 267.toHeight,
                             maxHeight: 530.toHeight,
-                            panelBuilder: (scrollController) =>
-                                collapsedContent(false, scrollController,
-                                    emptyWidget('Something went wrong!!')));
+                            panelBuilder: (ScrollController scrollController) =>
+                                collapsedContent(false, scrollController, emptyWidget('Something went wrong!!')));
                       } else {
                         return SlidingUpPanel(
                           controller: pc,
                           minHeight: 267.toHeight,
                           maxHeight: 530.toHeight,
-                          panelBuilder: (scrollController) {
+                          panelBuilder: (ScrollController scrollController) {
                             if (snapshot.data!.isNotEmpty) {
                               return collapsedContent(
-                                  false,
-                                  scrollController,
-                                  getListView(
-                                      snapshot.data!, scrollController));
+                                  false, scrollController, getListView(snapshot.data!, scrollController));
                             } else {
-                              return collapsedContent(false, scrollController,
-                                  emptyWidget('No Data Found!!'));
+                              return collapsedContent(false, scrollController, emptyWidget('No Data Found!!'));
                             }
                           },
                         );
@@ -128,70 +116,62 @@ class _HomeScreenState extends State<HomeScreen> {
                         controller: pc,
                         minHeight: 267.toHeight,
                         maxHeight: 530.toHeight,
-                        panelBuilder: (scrollController) {
-                          return collapsedContent(false, scrollController,
-                              emptyWidget('No Data Found!!'));
+                        panelBuilder: (ScrollController scrollController) {
+                          return collapsedContent(false, scrollController, emptyWidget('No Data Found!!'));
                         },
                       );
                     }
                   })
-              : SizedBox(),
+              : const SizedBox(),
         ],
       )),
     );
   }
 
-  Widget collapsedContent(
-      bool isExpanded, ScrollController slidingScrollController, dynamic T) {
+  Widget collapsedContent(bool isExpanded, ScrollController slidingScrollController, dynamic T) {
     return Container(
         height: !isExpanded ? 260.toHeight : 530.toHeight,
         padding: EdgeInsets.fromLTRB(15.toWidth, 7.toHeight, 0, 0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
           color: Theme.of(context).scaffoldBackgroundColor,
-          boxShadow: [
+          boxShadow: <BoxShadow>[
             BoxShadow(
               color: AllColors().DARK_GREY,
               blurRadius: 10.0,
               spreadRadius: 1.0,
-              offset: Offset(0.0, 0.0),
+              offset: const Offset(0.0, 0.0),
             )
           ],
         ),
         child: T);
   }
 
-  Widget getListView(List<KeyLocationModel> allNotifications,
-      ScrollController slidingScrollController) {
+  Widget getListView(List<KeyLocationModel> allNotifications, ScrollController slidingScrollController) {
     return ListView(
-      children: allNotifications.map((notification) {
+      children: allNotifications.map((KeyLocationModel notification) {
         return Column(
-          children: [
+          children: <Widget>[
             InkWell(
               onTap: () {
-                HomeScreenService().onLocationModelTap(
-                    notification.locationNotificationModel!,
-                    notification.haveResponded!);
+                HomeScreenService()
+                    .onLocationModelTap(notification.locationNotificationModel!, notification.haveResponded!);
               },
               child: DisplayTile(
-                atsignCreator:
-                    notification.locationNotificationModel!.atsignCreator ==
-                            AtLocationNotificationListener().currentAtSign
-                        ? notification.locationNotificationModel!.receiver
-                        : notification.locationNotificationModel!.atsignCreator,
+                atsignCreator: notification.locationNotificationModel!.atsignCreator ==
+                        AtLocationNotificationListener().currentAtSign
+                    ? notification.locationNotificationModel!.receiver
+                    : notification.locationNotificationModel!.atsignCreator,
                 title: getTitle(notification.locationNotificationModel!),
                 subTitle: getSubTitle(notification.locationNotificationModel!),
-                semiTitle: getSemiTitle(notification.locationNotificationModel!,
-                    notification.haveResponded!),
+                semiTitle: getSemiTitle(notification.locationNotificationModel!, notification.haveResponded!),
                 showRetry: calculateShowRetry(notification),
                 onRetryTapped: () {
-                  HomeScreenService().onLocationModelTap(
-                      notification.locationNotificationModel!, false);
+                  HomeScreenService().onLocationModelTap(notification.locationNotificationModel!, false);
                 },
               ),
             ),
-            Divider()
+            const Divider()
           ],
         );
       }).toList(),
@@ -202,32 +182,30 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       height: 77.toHeight,
       width: 356.toWidth,
-      margin:
-          EdgeInsets.symmetric(horizontal: 10.toWidth, vertical: 10.toHeight),
+      margin: EdgeInsets.symmetric(horizontal: 10.toWidth, vertical: 10.toHeight),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [
+        boxShadow: <BoxShadow>[
           BoxShadow(
             color: AllColors().DARK_GREY,
             blurRadius: 10.0,
             spreadRadius: 1.0,
-            offset: Offset(0.0, 0.0),
+            offset: const Offset(0.0, 0.0),
           )
         ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
+        children: <Widget>[
           Expanded(
             child: Tasks(
                 task: 'Request Location',
                 icon: Icons.sync,
                 angle: (-3.14 / 2),
                 onTap: () async {
-                  bottomSheet(context, RequestLocationSheet(),
-                      SizeConfig().screenHeight * 0.5);
+                  await bottomSheet(context, RequestLocationSheet(), SizeConfig().screenHeight * 0.5);
                 }),
           ),
           Expanded(
@@ -235,8 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 task: 'Share Location',
                 icon: Icons.person_add,
                 onTap: () {
-                  bottomSheet(context, ShareLocationSheet(),
-                      SizeConfig().screenHeight * 0.6);
+                  bottomSheet(context, ShareLocationSheet(), SizeConfig().screenHeight * 0.6);
                 }),
           )
         ],
@@ -246,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget emptyWidget(String title) {
     return Column(
-      children: [
+      children: <Widget>[
         Image.asset(
           'packages/at_location_flutter/assets/images/empty_group.png',
           width: 181.toWidth,

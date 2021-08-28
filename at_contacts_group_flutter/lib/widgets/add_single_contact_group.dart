@@ -25,7 +25,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
       height: 100 * deviceTextFactor,
       width: 100,
@@ -36,7 +36,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
             top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Expanded(
               child: Text(
                 TextStrings().addContactHeading,
@@ -49,7 +49,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
         content: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: 190.toHeight),
           child: Column(
-            children: [
+            children: <Widget>[
               // SizedBox(
               //   height: 21.toHeight,
               // ),
@@ -72,7 +72,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
               //   style: CustomTextStyles.secondaryRegular16,
               // ),
               (isLoading)
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : CustomButton(
                       buttonText: TextStrings().yes,
                       buttonColor:

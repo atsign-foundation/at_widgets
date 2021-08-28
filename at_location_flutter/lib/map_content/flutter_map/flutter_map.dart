@@ -9,7 +9,6 @@ import 'package:at_location_flutter/map_content/flutter_map/src/geo/crs/crs.dart
 import 'package:at_location_flutter/map_content/flutter_map/src/map/flutter_map_state.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/plugins/plugin.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 
 export 'package:at_location_flutter/map_content/flutter_map/src/core/point.dart';
@@ -58,13 +57,12 @@ class FlutterMap extends StatefulWidget {
   FlutterMap({
     Key? key,
     required this.options,
-    this.layers = const [],
-    this.children = const [],
+    this.layers = const <LayerOptions>[],
+    this.children = const <Widget>[],
     MapController? mapController,
     this.returnPositionTapped,
     this.absorbDoubleTapPointer = false,
-  })  : _mapController = mapController as MapControllerImpl? ??
-            MapController() as MapControllerImpl,
+  })  : _mapController = mapController as MapControllerImpl? ?? MapController() as MapControllerImpl,
         super(key: key);
 
   @override
@@ -90,7 +88,7 @@ abstract class MapController {
 
   bool get ready;
 
-  Future<Null> get onReady;
+  Future<void> get onReady;
 
   LatLng? get center;
 
@@ -168,7 +166,7 @@ class MapOptions {
     this.onTap,
     this.onLongPress,
     this.onPositionChanged,
-    this.plugins = const [],
+    this.plugins = const <MapPlugin>[],
     this.slideOnBoundaries = false,
     this.adaptiveBoundaries = false,
     this.screenSize,
@@ -178,12 +176,9 @@ class MapOptions {
   }) {
     center ??= LatLng(50.5, 30.51);
     _safeAreaZoom = zoom;
-    assert(slideOnBoundaries ||
-        !isOutOfBounds(center)); //You cannot start outside pan boundary
-    assert(!adaptiveBoundaries || screenSize != null,
-        'screenSize must be set in order to enable adaptive boundaries.');
-    assert(!adaptiveBoundaries || controller != null,
-        'controller must be set in order to enable adaptive boundaries.');
+    assert(slideOnBoundaries || !isOutOfBounds(center)); //You cannot start outside pan boundary
+    assert(!adaptiveBoundaries || screenSize != null, 'screenSize must be set in order to enable adaptive boundaries.');
+    assert(!adaptiveBoundaries || controller != null, 'controller must be set in order to enable adaptive boundaries.');
   }
 
   //if there is a pan boundary, do not cross
@@ -194,11 +189,9 @@ class MapOptions {
     if (swPanBoundary != null && nePanBoundary != null) {
       if (center == null) {
         return true;
-      } else if (center.latitude < swPanBoundary!.latitude ||
-          center.latitude > nePanBoundary!.latitude) {
+      } else if (center.latitude < swPanBoundary!.latitude || center.latitude > nePanBoundary!.latitude) {
         return true;
-      } else if (center.longitude < swPanBoundary!.longitude ||
-          center.longitude > nePanBoundary!.longitude) {
+      } else if (center.longitude < swPanBoundary!.longitude || center.longitude > nePanBoundary!.longitude) {
         return true;
       }
     }
@@ -211,22 +204,21 @@ class MapOptions {
     } else {
       return LatLng(
         point!.latitude.clamp(swPanBoundary!.latitude, nePanBoundary!.latitude),
-        point.longitude
-            .clamp(swPanBoundary!.longitude, nePanBoundary!.longitude),
+        point.longitude.clamp(swPanBoundary!.longitude, nePanBoundary!.longitude),
       );
     }
   }
 
   _SafeArea? get _safeArea {
-    final controllerZoom = _getControllerZoom();
+    double controllerZoom = _getControllerZoom();
     if (controllerZoom != _safeAreaZoom || _safeAreaCache == null) {
       _safeAreaZoom = controllerZoom;
-      final halfScreenHeight = _calculateScreenHeightInDegrees() / 2;
-      final halfScreenWidth = _calculateScreenWidthInDegrees() / 2;
-      final southWestLatitude = swPanBoundary!.latitude + halfScreenHeight;
-      final southWestLongitude = swPanBoundary!.longitude + halfScreenWidth;
-      final northEastLatitude = nePanBoundary!.latitude - halfScreenHeight;
-      final northEastLongitude = nePanBoundary!.longitude - halfScreenWidth;
+      double halfScreenHeight = _calculateScreenHeightInDegrees() / 2;
+      double halfScreenWidth = _calculateScreenWidthInDegrees() / 2;
+      double southWestLatitude = swPanBoundary!.latitude + halfScreenHeight;
+      double southWestLongitude = swPanBoundary!.longitude + halfScreenWidth;
+      double northEastLatitude = nePanBoundary!.latitude - halfScreenHeight;
+      double northEastLongitude = nePanBoundary!.longitude - halfScreenWidth;
       _safeAreaCache = _SafeArea(
         LatLng(
           southWestLatitude,
@@ -242,13 +234,12 @@ class MapOptions {
   }
 
   double _calculateScreenWidthInDegrees() {
-    final zoom = _getControllerZoom();
-    final degreesPerPixel = 360 / pow(2, zoom + 8);
+    double zoom = _getControllerZoom();
+    double degreesPerPixel = 360 / pow(2, zoom + 8);
     return screenSize!.width * degreesPerPixel;
   }
 
-  double _calculateScreenHeightInDegrees() =>
-      screenSize!.height * 170.102258 / pow(2, _getControllerZoom() + 8);
+  double _calculateScreenHeightInDegrees() => screenSize!.height * 170.102258 / pow(2, _getControllerZoom() + 8);
 
   double _getControllerZoom() => controller!.ready ? controller!.zoom : zoom;
 }
@@ -285,15 +276,10 @@ class _SafeArea {
         isLatitudeBlocked = southWest.latitude > northEast.latitude,
         isLongitudeBlocked = southWest.longitude > northEast.longitude;
 
-  bool contains(point) =>
-      isLatitudeBlocked || isLongitudeBlocked ? false : bounds.contains(point);
+  bool contains(LatLng? point) => isLatitudeBlocked || isLongitudeBlocked ? false : bounds.contains(point);
 
   LatLng containPoint(LatLng? point, LatLng? fallback) => LatLng(
-        isLatitudeBlocked
-            ? fallback!.latitude
-            : point!.latitude.clamp(bounds.south, bounds.north),
-        isLongitudeBlocked
-            ? fallback!.longitude
-            : point!.longitude.clamp(bounds.west, bounds.east),
+        isLatitudeBlocked ? fallback!.latitude : point!.latitude.clamp(bounds.south, bounds.north),
+        isLongitudeBlocked ? fallback!.longitude : point!.longitude.clamp(bounds.west, bounds.east),
       );
 }

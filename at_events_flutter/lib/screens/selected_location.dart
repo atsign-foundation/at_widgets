@@ -21,7 +21,7 @@ class SelectedLocation extends StatefulWidget {
 }
 
 class _SelectedLocationState extends State<SelectedLocation> {
-  var mapController = MapController();
+  MapController mapController = MapController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -48,7 +48,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
+                  boxShadow: const <BoxShadow>[
                     BoxShadow(
                       color: Colors.grey,
                       offset: Offset(0.0, 1.0), //(x,y)
@@ -56,8 +56,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
                     ),
                   ],
                 ),
-                padding: EdgeInsets.fromLTRB(
-                    28.toWidth, 20.toHeight, 28.toHeight, 0),
+                padding: EdgeInsets.fromLTRB(28.toWidth, 20.toHeight, 28.toHeight, 0),
                 height: SizeConfig().screenHeight * 0.4,
                 width: SizeConfig().screenWidth,
                 child: Column(
@@ -66,12 +65,12 @@ class _SelectedLocationState extends State<SelectedLocation> {
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                        children: <Widget>[
                           Row(
                             children: <Widget>[
                               Expanded(
                                 child: Row(
-                                  children: [
+                                  children: <Widget>[
                                     Icon(
                                       Icons.location_on,
                                       color: AllColors().ORANGE,
@@ -82,14 +81,12 @@ class _SelectedLocationState extends State<SelectedLocation> {
                               ),
                               InkWell(
                                   onTap: () => Navigator.pop(context),
-                                  child: Text('Cancel',
-                                      style: CustomTextStyles().orange16))
+                                  child: Text('Cancel', style: CustomTextStyles().orange16))
                             ],
                           ),
                           SizedBox(height: 10.toHeight),
                           Flexible(
-                            child: Text(widget.displayName,
-                                style: CustomTextStyles().greyLabel14),
+                            child: Text(widget.displayName, style: CustomTextStyles().greyLabel14),
                           ),
                           SizedBox(height: 20.toHeight),
                           Text('Label', style: CustomTextStyles().greyLabel14),
@@ -97,16 +94,9 @@ class _SelectedLocationState extends State<SelectedLocation> {
                           CustomInputField(
                             width: 321.toWidth,
                             hintText: 'Save this address as',
-                            initialValue: EventService()
-                                    .eventNotificationModel!
-                                    .venue!
-                                    .label ??
-                                '',
+                            initialValue: EventService().eventNotificationModel!.venue!.label ?? '',
                             value: (String val) {
-                              EventService()
-                                  .eventNotificationModel!
-                                  .venue!
-                                  .label = val;
+                              EventService().eventNotificationModel!.venue!.label = val;
                             },
                           ),
                         ],
@@ -118,46 +108,25 @@ class _SelectedLocationState extends State<SelectedLocation> {
                         child: CustomButton(
                           buttonText: 'Save',
                           onPressed: () {
-                            if ((EventService()
-                                        .eventNotificationModel!
-                                        .venue!
-                                        .label !=
-                                    null) &&
-                                (EventService()
-                                    .eventNotificationModel!
-                                    .venue!
-                                    .label!
-                                    .isNotEmpty)) {
-                              EventService()
-                                  .eventNotificationModel!
-                                  .venue!
-                                  .latitude = widget.point.latitude;
+                            if ((EventService().eventNotificationModel!.venue!.label != null) &&
+                                (EventService().eventNotificationModel!.venue!.label!.isNotEmpty)) {
+                              EventService().eventNotificationModel!.venue!.latitude = widget.point.latitude;
 
-                              EventService()
-                                  .eventNotificationModel!
-                                  .venue!
-                                  .longitude = widget.point.longitude;
+                              EventService().eventNotificationModel!.venue!.longitude = widget.point.longitude;
 
-                              EventService().update(
-                                  eventData:
-                                      EventService().eventNotificationModel);
+                              EventService().update(eventData: EventService().eventNotificationModel);
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                             } else {
-                              CustomToast()
-                                  .show('Cannot leave LABEL empty', context);
+                              CustomToast().show('Cannot leave LABEL empty', context);
                             }
                           },
                           width: 165.toWidth,
                           height: 48.toHeight,
                           buttonColor:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? AllColors().Black
-                                  : AllColors().WHITE,
+                              Theme.of(context).brightness == Brightness.light ? AllColors().Black : AllColors().WHITE,
                           fontColor:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? AllColors().WHITE
-                                  : AllColors().Black,
+                              Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
                         ),
                       ),
                     ),

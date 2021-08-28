@@ -17,9 +17,7 @@ import 'utils/constants/constants.dart';
 ///
 /// [locationListMarker] Custom widget displayed as the marker.
 Widget showLocation(Key? key, MapController? mapController,
-    {LatLng? location,
-    List<LatLng>? locationList,
-    Widget? locationListMarker}) {
+    {LatLng? location, List<LatLng>? locationList, Widget? locationListMarker}) {
   bool showMarker;
   Marker marker;
   List<Marker>? markerList;
@@ -33,18 +31,16 @@ Widget showLocation(Key? key, MapController? mapController,
       mapController.move(location, 8);
     }
   } else {
-    marker =
-        buildMarker(HybridModel(latLng: LatLng(45, 45)), singleMarker: true);
+    marker = buildMarker(HybridModel(latLng: LatLng(45, 45)), singleMarker: true);
     showMarker = false;
   }
 
   if (locationList != null) {
-    markerList = [];
-    locationList.forEach((location) {
-      var marker = buildMarker(HybridModel(latLng: location),
-          singleMarker: true, marker: locationListMarker);
-      markerList!.add(marker);
-    });
+    markerList = <Marker>[];
+    for (LatLng location in locationList) {
+      Marker marker = buildMarker(HybridModel(latLng: location), singleMarker: true, marker: locationListMarker);
+      markerList.add(marker);
+    }
   }
 
   ///
@@ -65,28 +61,25 @@ Widget showLocation(Key? key, MapController? mapController,
             : (location != null)
                 ? 15
                 : 4,
-        plugins: [MarkerClusterPlugin(UniqueKey())],
+        plugins: <MapPlugin>[MarkerClusterPlugin(UniqueKey())],
       ),
-      layers: [
+      layers: <LayerOptions>[
         TileLayerOptions(
           minNativeZoom: 2,
           maxNativeZoom: 18,
           minZoom: 1,
-          urlTemplate:
-              'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MixedConstants.MAP_KEY}',
+          urlTemplate: 'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MixedConstants.MAP_KEY}',
         ),
         MarkerClusterLayerOptions(
           maxClusterRadius: 190,
           disableClusteringAtZoom: 16,
-          size: Size(5, 5),
+          size: const Size(5, 5),
           anchor: AnchorPos.align(AnchorAlign.center),
-          fitBoundsOptions: FitBoundsOptions(
+          fitBoundsOptions: const FitBoundsOptions(
             padding: EdgeInsets.all(50),
           ),
-          markers:
-              // ignore: prefer_if_null_operators
-              markerList != null ? markerList : (showMarker ? [marker] : []),
-          builder: (context, markers) {
+          markers: markerList ?? (showMarker ? <Marker?>[marker] : <Marker?>[]),
+          builder: (BuildContext context, List<Marker?> markers) {
             return buildMarkerCluster(markers);
           },
         ),

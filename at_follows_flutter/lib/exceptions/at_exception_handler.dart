@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
 
 class AtExceptionHandler {
-  handle(var exception, BuildContext context) {
-    var message = this.errorMessage(exception)!;
+  Center handle(dynamic exception, BuildContext context) {
+    String message = errorMessage(exception)!;
 
     return Center(
         child: Padding(
@@ -20,7 +20,7 @@ class AtExceptionHandler {
     ));
   }
 
-  String? errorMessage(var exception) {
+  String? errorMessage(dynamic exception) {
     switch (exception.runtimeType) {
       case AtClientException:
         return 'Unable to perform this action. Please try again.';

@@ -7,16 +7,10 @@ class CustomInputField extends StatelessWidget {
   final String hintText;
   final double width, height;
   final IconData? icon;
-  final Function? onTap;
+  final VoidCallback? onTap;
   final Color? iconColor;
 
-  CustomInputField(
-      {this.hintText = '',
-      this.height = 50,
-      this.width = 300,
-      this.iconColor,
-      this.icon,
-      this.onTap});
+  CustomInputField({this.hintText = '', this.height = 50, this.width = 300, this.iconColor, this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +21,7 @@ class CustomInputField extends StatelessWidget {
         color: AllColors().INPUT_GREY_BACKGROUND,
         borderRadius: BorderRadius.circular(5),
       ),
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -38,7 +32,7 @@ class CustomInputField extends StatelessWidget {
                 border: InputBorder.none,
                 hintStyle: TextStyle(color: AllColors().DARK_GREY),
               ),
-              onTap: onTap as void Function()? ?? () {},
+              onTap: onTap ?? () {},
             ),
           ),
           icon != null
@@ -46,7 +40,7 @@ class CustomInputField extends StatelessWidget {
                   icon,
                   color: iconColor ?? AllColors().DARK_GREY,
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );

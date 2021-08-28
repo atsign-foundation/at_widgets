@@ -33,9 +33,8 @@ void main() {
       final String privateKey = demo_data.pkamPrivateKeyMap[receiverAtsign]!;
       await receiverAtClientService.atClient!
           .startMonitor(privateKey, monitorCallBack);
-      Atsign atsign = await (_connectionsService.follow(receiverAtsign)
-          as FutureOr<Atsign>);
-      expect(atsign.title, receiverAtsign);
+      Atsign? atsign = await _connectionsService.follow(receiverAtsign);
+      expect(atsign!.title, receiverAtsign);
       expect(
           _connectionsService.following.list!.contains(receiverAtsign), isTrue);
     });
@@ -49,9 +48,8 @@ void main() {
 
     test('with existing @sign', () async {
       String receiverAtsign = '@bob🛠';
-      Atsign atsign = await (_connectionsService.follow(receiverAtsign)
-          as FutureOr<Atsign>);
-      expect(atsign.title, receiverAtsign);
+      Atsign? atsign = await _connectionsService.follow(receiverAtsign);
+      expect(atsign!.title, receiverAtsign);
       expect(
           _connectionsService.following.list!.contains(receiverAtsign), isTrue);
       Atsign? atsign1 = await _connectionsService.follow(receiverAtsign);
@@ -87,14 +85,14 @@ void main() {
       await colinClientService.atClient!.put(colinFirstname, 'Colin');
       await colinClientService.atClient!.put(colinLastname, 'Felton');
 
-      Atsign atsign =
-          await (_connectionsService.follow(firstAtSign) as FutureOr<Atsign>);
-      expect(atsign.subtitle, 'Bob Geller');
+      Atsign? atsign =
+          await _connectionsService.follow(firstAtSign);
+      expect(atsign!.subtitle, 'Bob Geller');
       expect(_connectionsService.following.list!.contains(firstAtSign), isTrue);
 
-      Atsign atsign1 =
-          await (_connectionsService.follow(secondAtSign) as FutureOr<Atsign>);
-      expect(atsign1.subtitle, 'Colin Felton');
+      Atsign? atsign1 =
+          await _connectionsService.follow(secondAtSign);
+      expect(atsign1!.subtitle, 'Colin Felton');
       expect(
           _connectionsService.following.list!.contains(secondAtSign), isTrue);
     });
@@ -131,9 +129,8 @@ void main() {
       var connectionProvider = ConnectionProvider();
       await _connectionsService.getAtsignsList();
       String receiverAtsign = '@bob🛠';
-      Atsign atsign = await (_connectionsService.follow(receiverAtsign)
-          as FutureOr<Atsign>);
-      expect(atsign.title, receiverAtsign);
+      Atsign? atsign = await _connectionsService.follow(receiverAtsign);
+      expect(atsign!.title, receiverAtsign);
       expect(
           _connectionsService.following.list!.contains(receiverAtsign), isTrue);
       expect(
@@ -147,9 +144,9 @@ void main() {
       await _connectionsService.getAtsignsList();
       var connectionProvider = ConnectionProvider();
       String receiverAtsign = '@kevin🛠';
-      Atsign atsign = await (_connectionsService.follow(receiverAtsign)
-          as FutureOr<Atsign>);
-      expect(atsign.title, receiverAtsign);
+      Atsign? atsign = await _connectionsService.follow(receiverAtsign)
+          ;
+      expect(atsign!.title, receiverAtsign);
       expect(
           _connectionsService.following.list!.contains(receiverAtsign), isTrue);
       connectionProvider.connectionslistStatus.isFollowingPrivate = true;
@@ -200,16 +197,16 @@ void main() {
 
       var followingValue =
           await _sdkService.scanAndGet('${AppConstants.following}');
-      expect(followingValue.value.isNotEmpty, true);
+      expect(followingValue!.value.isNotEmpty, true);
 
-      Atsign atsign =
-          await (_connectionsService.follow(firstAtSign) as FutureOr<Atsign>);
-      expect(atsign.subtitle, 'Bob Geller');
+      Atsign? atsign =
+          await _connectionsService.follow(firstAtSign) ;
+      expect(atsign!.subtitle, 'Bob Geller');
       expect(_connectionsService.following.list!.contains(firstAtSign), isTrue);
 
-      Atsign atsign1 =
-          await (_connectionsService.follow(secondAtSign) as FutureOr<Atsign>);
-      expect(atsign1.subtitle, 'Colin Felton');
+      Atsign? atsign1 =
+          await _connectionsService.follow(secondAtSign) ;
+      expect(atsign1!.subtitle, 'Colin Felton');
       expect(
           _connectionsService.following.list!.contains(secondAtSign), isTrue);
     });
@@ -224,7 +221,7 @@ void main() {
 
       var followingValue =
           await _sdkService.scanAndGet('${AppConstants.following}');
-      expect(followingValue.value.isNotEmpty, true);
+      expect(followingValue?.value.isNotEmpty, true);
       _connectionsService.following.add('@sameeraja🛠');
       _connectionsService.following.add('@sitaram🛠');
 
@@ -282,7 +279,7 @@ Future<AtClientService> setUpFunc(String atsign) async {
   AtClientService atClientService = AtClientService();
 
   await AtClientImpl.createClient(atsign, 'wavi', preference);
-  var atClient = await (AtClientImpl.getClient(atsign) as FutureOr<AtClient>);
+  var atClient = await AtClientImpl.getClient(atsign);
   atClientService.atClient = atClient as AtClientImpl;
   await atClient.getSyncManager()!.sync();
   await setEncryptionKeys(atClient, atsign);

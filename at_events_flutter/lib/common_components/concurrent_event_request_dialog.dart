@@ -7,11 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ConcurrentEventRequest extends StatefulWidget {
-  final String? reqEvent,
-      reqInvitedPeopleCount,
-      reqTimeAndDate,
-      currentEvent,
-      currentEventTimeAndDate;
+  final String? reqEvent, reqInvitedPeopleCount, reqTimeAndDate, currentEvent, currentEventTimeAndDate;
   final EventNotificationModel? concurrentEvent;
   ConcurrentEventRequest(
       {this.reqEvent,
@@ -37,7 +33,7 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
   Widget build(BuildContext context) {
     return Container(
       child: AlertDialog(
-        contentPadding: EdgeInsets.fromLTRB(10, 20, 5, 10),
+        contentPadding: const EdgeInsets.fromLTRB(10, 20, 5, 10),
         content: Container(
           child: SingleChildScrollView(
             child: Container(
@@ -49,19 +45,18 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                     textAlign: TextAlign.center,
                     style: CustomTextStyles().grey16,
                   ),
-                  Divider(
+                  const Divider(
                     height: 2,
                   ),
                   SizedBox(height: 15.toHeight),
                   widget.concurrentEvent != null
-                      ? Text(widget.concurrentEvent!.title!,
-                          style: CustomTextStyles().black16)
-                      : SizedBox(),
+                      ? Text(widget.concurrentEvent!.title!, style: CustomTextStyles().black16)
+                      : const SizedBox(),
                   widget.concurrentEvent != null
                       ? Text(
                           '${timeOfDayToString(widget.concurrentEvent!.event!.startTime!)} on ${dateToString(widget.concurrentEvent!.event!.date!)}',
                           style: CustomTextStyles().black14)
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: 20.toHeight),
                   !isLoader
                       ? CustomButton(
@@ -69,8 +64,7 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                             setState(() {
                               isLoader = true;
                             });
-                            await EventService().createEvent(
-                                isEventOverlap: true, context: context);
+                            await EventService().createEvent(isEventOverlap: true, context: context);
                             if (mounted) {
                               setState(() {
                                 isLoader = true;
@@ -81,16 +75,12 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                           width: 278,
                           height: 48.toHeight,
                           buttonColor:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? AllColors().Black
-                                  : AllColors().WHITE,
+                              Theme.of(context).brightness == Brightness.light ? AllColors().Black : AllColors().WHITE,
                           fontColor:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? AllColors().WHITE
-                                  : AllColors().Black,
+                              Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
                         )
-                      : CircularProgressIndicator(),
-                  SizedBox(height: 10),
+                      : const CircularProgressIndicator(),
+                  const SizedBox(height: 10),
                   InkWell(
                     onTap: () {
                       Navigator.of(context).pop();

@@ -4,7 +4,7 @@ class CircleMarkerPainter extends CustomPainter {
   Color? color;
   PaintingStyle? paintingStyle;
   CircleMarkerPainter({this.color, this.paintingStyle});
-  final _paint = Paint()
+  final Paint _paint = Paint()
     ..color = Colors.orange
     ..strokeWidth = 5
     ..style = PaintingStyle.stroke;

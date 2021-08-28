@@ -40,7 +40,7 @@ class _GroupEditState extends State<GroupEdit> {
     textController = TextEditingController.fromValue(
       TextEditingValue(
         text: groupName != null ? groupName! : '',
-        selection: TextSelection.collapsed(offset: -1),
+        selection: const TextSelection.collapsed(offset: -1),
       ),
     );
 
@@ -59,7 +59,7 @@ class _GroupEditState extends State<GroupEdit> {
           showLeadingIcon: true,
           leadingIcon: Center(
             child: Container(
-              padding: EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 10),
               child: GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
@@ -67,9 +67,7 @@ class _GroupEditState extends State<GroupEdit> {
                 child: Text(
                   'Cancel',
                   style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? AllColors().Black
-                          : AllColors().Black,
+                      color: Theme.of(context).brightness == Brightness.light ? AllColors().Black : AllColors().Black,
                       fontSize: 14.toFont),
                 ),
               ),
@@ -85,18 +83,16 @@ class _GroupEditState extends State<GroupEdit> {
                     child: SizedBox(
                       width: 20.toHeight,
                       height: 20.toHeight,
-                      child: CircularProgressIndicator(),
+                      child: const CircularProgressIndicator(),
                     ),
                   )
-                : Text('Done',
-                    style: TextStyle(
-                        color: AllColors().ORANGE, fontSize: 15.toFont)),
+                : Text('Done', style: TextStyle(color: AllColors().ORANGE, fontSize: 15.toFont)),
           ),
           onTrailingIconPressed: () async {
             groupName = textController!.text;
             if (groupName != null) {
               if (groupName!.trim().isNotEmpty) {
-                var group = widget.group;
+                AtGroup group = widget.group;
                 group.displayName = groupName!;
                 group.groupName = groupName!;
                 setState(() {
@@ -120,7 +116,7 @@ class _GroupEditState extends State<GroupEdit> {
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             (widget.group.groupPicture != null && groupPicture != null)
                 ? Image.memory(
                     groupPicture!,
@@ -136,8 +132,7 @@ class _GroupEditState extends State<GroupEdit> {
                     package: 'at_contacts_group_flutter',
                   ),
             Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 27.toWidth, vertical: 15.toHeight),
+              padding: EdgeInsets.symmetric(horizontal: 27.toWidth, vertical: 15.toHeight),
               child: InkWell(
                 onTap: () => bottomSheetContent(
                   context,
@@ -145,7 +140,7 @@ class _GroupEditState extends State<GroupEdit> {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     Text(
                       'Edit group Picture',
                       style: CustomTextStyles().orange12,
@@ -168,25 +163,23 @@ class _GroupEditState extends State<GroupEdit> {
                 child: SingleChildScrollView(
                     child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 27.toWidth, vertical: 2.toHeight),
+                      padding: EdgeInsets.symmetric(horizontal: 27.toWidth, vertical: 2.toHeight),
                       child: Text(
                         'Group Name',
                         style: CustomTextStyles().grey16,
                       ),
                     ),
                     Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 27.toWidth, vertical: 2.toHeight),
+                        padding: EdgeInsets.symmetric(horizontal: 27.toWidth, vertical: 2.toHeight),
                         child: Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: AllColors().INPUT_FIELD_COLOR,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                           child: Row(
                             children: <Widget>[
                               Expanded(
@@ -198,9 +191,7 @@ class _GroupEditState extends State<GroupEdit> {
                                     // hintText: hintText,
                                     enabledBorder: InputBorder.none,
                                     border: InputBorder.none,
-                                    hintStyle: TextStyle(
-                                        color: AllColors().INPUT_FIELD_COLOR,
-                                        fontSize: 15.toFont),
+                                    hintStyle: TextStyle(color: AllColors().INPUT_FIELD_COLOR, fontSize: 15.toFont),
                                   ),
                                   onTap: () {
                                     if (showEmojiPicker) {
@@ -209,9 +200,9 @@ class _GroupEditState extends State<GroupEdit> {
                                       });
                                     }
                                   },
-                                  onChanged: (val) {},
+                                  onChanged: (String val) {},
                                   controller: textController,
-                                  onSubmitted: (str) {},
+                                  onSubmitted: (String str) {},
                                 ),
                               ),
                               InkWell(
@@ -223,7 +214,7 @@ class _GroupEditState extends State<GroupEdit> {
 
                                   setState(() {});
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.emoji_emotions_outlined,
                                   color: Colors.grey,
                                 ),
@@ -232,12 +223,12 @@ class _GroupEditState extends State<GroupEdit> {
                           ),
                         )),
                     showEmojiPicker
-                        ? Stack(children: [
+                        ? Stack(children: <Widget>[
                             Container(
                               height: 250,
                               child: EmojiPicker(
                                 key: UniqueKey(),
-                                config: Config(
+                                config: const Config(
                                     columns: 7,
                                     emojiSizeMax: 32.0,
                                     verticalSpacing: 0,
@@ -250,18 +241,17 @@ class _GroupEditState extends State<GroupEdit> {
                                     progressIndicatorColor: Colors.blue,
                                     showRecentsTab: true,
                                     recentsLimit: 28,
-                                    noRecentsText: "No Recents",
-                                    noRecentsStyle: const TextStyle(
-                                        fontSize: 20, color: Colors.black26),
-                                    categoryIcons: const CategoryIcons(),
+                                    noRecentsText: 'No Recents',
+                                    noRecentsStyle: TextStyle(fontSize: 20, color: Colors.black26),
+                                    categoryIcons: CategoryIcons(),
                                     buttonMode: ButtonMode.MATERIAL),
-                                onEmojiSelected: (category, emoji) {
+                                onEmojiSelected: (Category category, Emoji emoji) {
                                   textController!.text += emoji.emoji;
                                 },
                               ),
                             ),
                           ])
-                        : SizedBox()
+                        : const SizedBox()
                   ],
                 )),
               ),
@@ -274,59 +264,58 @@ class _GroupEditState extends State<GroupEdit> {
 
   void bottomSheetContent(BuildContext context, double height) {
     showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: StadiumBorder(),
-        builder: (BuildContext context) {
-          return Container(
-            height: 119.toHeight,
-            decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? AllColors().WHITE
-                  : AllColors().Black,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(12.0),
-                topRight: const Radius.circular(12.0),
-              ),
+      context: context,
+      isScrollControlled: true,
+      shape: const StadiumBorder(),
+      builder: (BuildContext context) {
+        return Container(
+          height: 119.toHeight,
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12.0),
+              topRight: Radius.circular(12.0),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      var image = await ImagePicker().pickImage();
-                      setState(() {
-                        widget.group.groupPicture = image;
-                        groupPicture = image;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'Change Group Photo',
-                      style: CustomTextStyles().grey16,
-                    ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                InkWell(
+                  onTap: () async {
+                    Uint8List? image = await ImagePicker().pickImage();
+                    setState(() {
+                      widget.group.groupPicture = image;
+                      groupPicture = image;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Change Group Photo',
+                    style: CustomTextStyles().grey16,
                   ),
-                  Divider(),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        widget.group.groupPicture = null;
-                        groupPicture = null;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'Remove Group Photo',
-                      style: CustomTextStyles().grey16,
-                    ),
-                  )
-                ],
-              ),
+                ),
+                const Divider(),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      widget.group.groupPicture = null;
+                      groupPicture = null;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Remove Group Photo',
+                    style: CustomTextStyles().grey16,
+                  ),
+                )
+              ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

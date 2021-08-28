@@ -30,7 +30,7 @@ class _EmptyGroupState extends State<EmptyGroup> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Image.asset(
               AllImages().EMPTY_GROUP,
               width: 181.toWidth,
@@ -59,24 +59,23 @@ class _EmptyGroupState extends State<EmptyGroup> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => ContactsScreen(
+                  MaterialPageRoute<ContactsScreen>(
+                    builder: (BuildContext context) => ContactsScreen(
                       asSelectionScreen: true,
                       context: context,
-                      selectedList: (selectedList) {
+                      selectedList: (List<AtContact?> selectedList) {
                         print('in selectedList => selectedList');
                         selectedContactList = selectedList;
 
                         if (selectedContactList!.isNotEmpty) {
-                          GroupService()
-                              .setSelectedContacts(selectedContactList);
+                          GroupService().setSelectedContacts(selectedContactList);
                         }
                       },
                       saveGroup: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => NewGroup(),
+                          MaterialPageRoute<NewGroup>(
+                            builder: (BuildContext context) => NewGroup(),
                           ),
                         );
                       },
@@ -84,12 +83,8 @@ class _EmptyGroupState extends State<EmptyGroup> {
                   ),
                 );
               },
-              buttonColor: Theme.of(context).brightness == Brightness.light
-                  ? AllColors().Black
-                  : AllColors().WHITE,
-              fontColor: Theme.of(context).brightness == Brightness.light
-                  ? AllColors().WHITE
-                  : AllColors().Black,
+              buttonColor: Theme.of(context).brightness == Brightness.light ? AllColors().Black : AllColors().WHITE,
+              fontColor: Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
               // isInverted: Theme.of(context).primaryColor == Color(0xFF000000)
               //     ? false
               //     : true,

@@ -1,6 +1,6 @@
 class AtFollowsException implements Exception {
-  var errorMessage;
-  var errorDescription;
+  String? errorMessage;
+  String? errorDescription;
 }
 
 class ResponseTimeOutException extends AtFollowsException {}

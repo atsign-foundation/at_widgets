@@ -21,8 +21,7 @@ class NotificationDialog extends StatefulWidget {
   final bool showMembersCount;
 
   int? minutes;
-  NotificationDialog(
-      {this.locationData, this.userName, this.showMembersCount = false});
+  NotificationDialog({this.locationData, this.userName, this.showMembersCount = false});
 
   @override
   _NotificationDialogState createState() => _NotificationDialogState();
@@ -36,8 +35,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
 
   @override
   void initState() {
-    locationUserImageToShow = (widget.locationData!.atsignCreator ==
-            AtLocationNotificationListener().currentAtSign
+    locationUserImageToShow = (widget.locationData!.atsignCreator == AtLocationNotificationListener().currentAtSign
         ? widget.locationData!.receiver
         : widget.locationData!.atsignCreator);
 
@@ -47,8 +45,8 @@ class _NotificationDialogState extends State<NotificationDialog> {
     super.initState();
   }
 
-  void getEventCreator() async {
-    var contact = await getAtSignDetails(locationUserImageToShow);
+  Future<void> getEventCreator() async {
+    AtContact contact = await getAtSignDetails(locationUserImageToShow);
     // ignore: unnecessary_null_comparison
     if (contact != null) {
       if (contact.tags != null && contact.tags!['image'] != null) {
@@ -67,7 +65,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
     SizeConfig().init(context);
     return Container(
       child: AlertDialog(
-        contentPadding: EdgeInsets.fromLTRB(10, 20, 5, 10),
+        contentPadding: const EdgeInsets.fromLTRB(10, 20, 5, 10),
         content: Container(
           child: SingleChildScrollView(
             child: Container(
@@ -80,13 +78,12 @@ class _NotificationDialogState extends State<NotificationDialog> {
                           : '${widget.userName} wants you to share your location. Are you sure you want to share?'),
                       style: CustomTextStyles().grey16,
                       textAlign: TextAlign.center),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Stack(
-                    children: [
+                    children: <Widget>[
                       image != null
                           ? ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30)),
+                              borderRadius: const BorderRadius.all(Radius.circular(30)),
                               child: Image.memory(
                                 image!,
                                 width: 50,
@@ -116,51 +113,39 @@ class _NotificationDialogState extends State<NotificationDialog> {
                                 )),
                               ),
                             )
-                          : SizedBox()
+                          : const SizedBox()
                     ],
                   ),
                   SizedBox(height: 10.toHeight),
                   CustomButton(
-                    onPressed: () => () async {
-                      // ignore: unnecessary_statements
-                      ((!widget.locationData!.isRequest)
-                          ? {
-                              print('accept share location'),
-                              SharingLocationService()
-                                  .shareLocationAcknowledgment(
-                                      widget.locationData!, true),
-                              Navigator.of(context).pop(),
-                            }
-                          : {
-                              Navigator.of(context).pop(),
-                              timeSelect(context),
-                            });
-                    }(),
+                    onPressed: () {
+                      if (!widget.locationData!.isRequest) {
+                        print('accept share location');
+                        SharingLocationService().shareLocationAcknowledgment(widget.locationData!, true);
+                        Navigator.of(context).pop();
+                      } else {
+                        Navigator.of(context).pop();
+                        timeSelect(context);
+                      }
+                    },
                     buttonText: 'Yes',
                     buttonColor: AllColors().Black,
                     fontColor: AllColors().WHITE,
                     width: 164.toWidth,
                     height: 48.toHeight,
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   CustomButton(
-                    onPressed: () => () async {
-                      // ignore: unnecessary_statements
-                      ((!widget.locationData!.isRequest)
-                          ? {
-                              print('accept share location'),
-                              SharingLocationService()
-                                  .shareLocationAcknowledgment(
-                                      widget.locationData!, false),
-                              Navigator.of(context).pop(),
-                            }
-                          : {
-                              RequestLocationService()
-                                  .requestLocationAcknowledgment(
-                                      widget.locationData!, false),
-                              Navigator.of(context).pop(),
-                            });
-                    }(),
+                    onPressed: () {
+                      if (!widget.locationData!.isRequest) {
+                        print('accept share location');
+                        SharingLocationService().shareLocationAcknowledgment(widget.locationData!, false);
+                        Navigator.of(context).pop();
+                      } else {
+                        RequestLocationService().requestLocationAcknowledgment(widget.locationData!, false);
+                        Navigator.of(context).pop();
+                      }
+                    },
                     buttonText: 'No',
                     buttonColor: AllColors().WHITE,
                     fontColor: AllColors().Black,
@@ -182,19 +167,14 @@ class _NotificationDialogState extends State<NotificationDialog> {
         context,
         TextTileRepeater(
           title: 'How long do you want to share your location for ?',
-          options: ['30 mins', '2 hours', '24 hours', 'Until turned off'],
-          onChanged: (value) {
-            result = (value == '30 mins'
-                ? 30
-                : (value == '2 hours'
-                    ? (2 * 60)
-                    : (value == '24 hours' ? (24 * 60) : null)));
+          options: <String>['30 mins', '2 hours', '24 hours', 'Until turned off'],
+          onChanged: (String value) {
+            result =
+                (value == '30 mins' ? 30 : (value == '2 hours' ? (2 * 60) : (value == '24 hours' ? (24 * 60) : null)));
           },
         ),
         350, onSheetCLosed: () {
-      RequestLocationService().requestLocationAcknowledgment(
-          widget.locationData!, true,
-          minutes: result);
+      RequestLocationService().requestLocationAcknowledgment(widget.locationData!, true, minutes: result);
       return result;
     });
   }

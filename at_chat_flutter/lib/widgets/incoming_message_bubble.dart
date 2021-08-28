@@ -29,12 +29,12 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
     return Flex(
       direction: Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.start,
-      children: [
+      children: <Widget>[
         SizedBox(
           width: 20.toWidth,
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 20),
+          margin: const EdgeInsets.only(bottom: 20),
           height: 45.toFont,
           width: 45.toFont,
           decoration: BoxDecoration(

@@ -37,7 +37,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
     if (widget.blockeduser!.tags != null &&
         widget.blockeduser!.tags!['image'] != null) {
       List<int> intList = widget.blockeduser!.tags!['image'].cast<int>();
-      var image = Uint8List.fromList(intList);
+      Uint8List image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
         nonAsset: true,
@@ -53,7 +53,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
         width: 300.toWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             Text(
               widget.blockeduser!.atSign!.substring(1).toString(),
               style: CustomTextStyles.primaryRegular16,
@@ -73,13 +73,13 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
           // ignore: unawaited_futures
           showDialog(
             context: context,
-            builder: (context) => AlertDialog(
+            builder: (BuildContext context) => AlertDialog(
               title: Center(
                 child: Text(TextStrings().unblockContact),
               ),
               content: Container(
                 height: 100.toHeight,
-                child: Center(
+                child: const Center(
                   child: CircularProgressIndicator(),
                 ),
               ),

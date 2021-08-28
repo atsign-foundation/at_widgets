@@ -5,7 +5,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 /// Common text styles used in the widgets.
 class CustomTextStyles {
   CustomTextStyles._();
-  static CustomTextStyles _instance = CustomTextStyles._();
+  static final CustomTextStyles _instance = CustomTextStyles._();
   factory CustomTextStyles() => _instance;
 
   static TextStyle primaryBold16(Color fontColor) => TextStyle(
@@ -19,8 +19,6 @@ class CustomTextStyles {
     fontSize: 18.toFont,
     fontWeight: FontWeight.w700,
   );
-  static TextStyle blueRegular18 = TextStyle(
-      color: ColorConstants.appBarCloseColor,
-      fontSize: 18.toFont,
-      fontWeight: FontWeight.normal);
+  static TextStyle blueRegular18 =
+      TextStyle(color: ColorConstants.appBarCloseColor, fontSize: 18.toFont, fontWeight: FontWeight.normal);
 }

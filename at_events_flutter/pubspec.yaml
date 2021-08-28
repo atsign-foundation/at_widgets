@@ -1,5 +1,6 @@
 name: at_events_flutter
-description: A Flutter plugin project to manage events (time, place and attendees) using the @‎platform.
+description: A Flutter plugin project to manage events (time, place and
+  attendees) using the @‎platform.
 version: 2.0.3
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
@@ -9,33 +10,32 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
+  at_chat_flutter: ^2.0.2
+  at_client_mobile: ^2.0.3
+
+  at_common_flutter: ^2.0.2
+  at_commons: ^2.0.5
+  at_contact: ^2.0.3
+  at_contacts_flutter: ^2.0.3
+  at_contacts_group_flutter: ^2.0.3
+  at_location_flutter: ^2.0.4
+  at_lookup: ^2.0.4
   flutter:
     sdk: flutter
-  latlong2: ^0.8.0
   fluttertoast: ^8.0.5
-  sliding_up_panel: ^2.0.0+1
   geolocator: ^7.0.3
-  
-  at_common_flutter: ^2.0.2
-  at_contacts_flutter: ^2.0.3
-  at_commons: ^2.0.5
-  at_client_mobile: ^2.0.3
-  at_contact: ^2.0.3
-  at_lookup: ^2.0.4
-  at_contacts_group_flutter: ^2.0.3
-  at_chat_flutter: ^2.0.2
-  at_location_flutter: ^2.0.4
-  pedantic: ^1.11.0
+  latlong2: ^0.8.0
+  sliding_up_panel: ^2.0.0+1
 
-dependency_overrides:
+dependency_overrides: null
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  lints: ^1.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
   # This section identifies this Flutter project as a plugin project.
@@ -49,7 +49,6 @@ flutter:
         pluginClass: AtEventsFlutterPlugin
       ios:
         pluginClass: AtEventsFlutterPlugin
-
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -60,7 +59,6 @@ flutter:
   #
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # To add custom fonts to your plugin package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

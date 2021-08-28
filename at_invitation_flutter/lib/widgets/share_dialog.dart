@@ -5,9 +5,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 // import 'package:at_common_flutter/services/size_config.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_invitation_flutter/services/invitation_service.dart';
-import 'package:at_invitation_flutter/utils/text_styles.dart'
-    as invitationTextStyles;
+import 'package:at_invitation_flutter/utils/text_styles.dart' as invitation_text_styles;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,12 +14,7 @@ class ShareDialog extends StatefulWidget {
   final String? passcode;
   final String? webPageLink;
   final String currentAtsign;
-  ShareDialog(
-      {Key? key,
-      this.uniqueID,
-      this.passcode,
-      this.webPageLink,
-      required this.currentAtsign})
+  ShareDialog({Key? key, this.uniqueID, this.passcode, this.webPageLink, required this.currentAtsign})
       : super(key: key);
 
   @override
@@ -54,71 +47,66 @@ class _ShareDialogState extends State<ShareDialog> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var _invitationService = InvitationService();
-    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,
       child: SingleChildScrollView(
         child: AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.toWidth)),
-          titlePadding: EdgeInsets.only(
-              top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.toWidth)),
+          titlePadding: EdgeInsets.only(top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Expanded(
                 child: Text(
                   'Share information',
                   textAlign: TextAlign.center,
-                  style: invitationTextStyles.CustomTextStyles.primaryBold18,
+                  style: invitation_text_styles.CustomTextStyles.primaryBold18,
                 ),
               )
             ],
           ),
           content: ConstrainedBox(
-            constraints: BoxConstraints(
-                maxHeight: (emailError || phoneError)
-                    ? 530.toHeight * deviceTextFactor
-                    : 500.toHeight),
+            constraints:
+                BoxConstraints(maxHeight: (emailError || phoneError) ? 530.toHeight * deviceTextFactor : 500.toHeight),
             child: Column(
-              children: [
-                Text(
+              children: <Widget>[
+                const Text(
                   'Would you like to invite someone via',
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
                   height: 20.toHeight,
                 ),
-                new Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    new Radio(
+                    Radio<int>(
                       value: 0,
                       groupValue: activeOption,
-                      onChanged: (e) {
+                      onChanged: (int? e) {
                         setState(() {
                           activeOption = int.parse(e.toString());
                         });
                       },
                     ),
-                    new Text(
+                    const Text(
                       'SMS',
-                      style: new TextStyle(fontSize: 16.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
-                    new Radio(
+                    Radio<int>(
                       value: 1,
                       groupValue: activeOption,
-                      onChanged: (e) {
+                      onChanged: (int? e) {
                         setState(() {
                           activeOption = int.parse(e.toString());
                         });
                       },
                     ),
-                    new Text(
+                    const Text(
                       'Email',
-                      style: new TextStyle(
+                      style: TextStyle(
                         fontSize: 16.0,
                       ),
                     ),
@@ -127,17 +115,16 @@ class _ShareDialogState extends State<ShareDialog> {
                 TextFormField(
                   autofocus: true,
                   enabled: activeOption == 0,
-                  onChanged: (value) {
+                  onChanged: (String value) {
                     phoneNumber = value.trim();
                     if (phoneNumber != '') {
-                      if (RegExp(r"^[0-9]").hasMatch(phoneNumber)) {
+                      if (RegExp(r'^[0-9]').hasMatch(phoneNumber)) {
                         if (phoneNumber.length >= 10) {
                           phoneError = false;
                           phoneErrorMessage = '';
                         } else {
                           phoneError = true;
-                          phoneErrorMessage =
-                              'Phone number can be less than 10 digits';
+                          phoneErrorMessage = 'Phone number can be less than 10 digits';
                         }
                       } else {
                         phoneError = true;
@@ -152,18 +139,14 @@ class _ShareDialogState extends State<ShareDialog> {
                   // validator: Validators.validateAdduser,
                   decoration: InputDecoration(
                     labelText: 'Phone number:',
-                    labelStyle: TextStyle(
-                        color:
-                            activeOption == 0 ? Colors.black : Colors.black26,
-                        fontSize: 18.toFont),
+                    labelStyle:
+                        TextStyle(color: activeOption == 0 ? Colors.black : Colors.black26, fontSize: 18.toFont),
                     prefixText: '+',
-                    prefixStyle:
-                        TextStyle(color: Colors.grey, fontSize: 15.toFont),
+                    prefixStyle: TextStyle(color: Colors.grey, fontSize: 15.toFont),
                     hintText: 'Please enter full international phone number',
                     hintMaxLines: 2,
                     errorText: phoneError ? phoneErrorMessage : null,
-                    errorStyle:
-                        TextStyle(color: Colors.red, fontSize: 10.toFont),
+                    errorStyle: TextStyle(color: Colors.red, fontSize: 10.toFont),
                   ),
                   keyboardType: TextInputType.number,
                   style: TextStyle(fontSize: 15.toFont),
@@ -171,11 +154,10 @@ class _ShareDialogState extends State<ShareDialog> {
                 TextFormField(
                   autofocus: true,
                   enabled: activeOption == 1,
-                  onChanged: (value) {
+                  onChanged: (String value) {
                     emailAddress = value.trim();
                     if (emailAddress != '') {
-                      if (RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      if (RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(emailAddress)) {
                         emailError = false;
                         emailErrorMessage = '';
@@ -191,17 +173,13 @@ class _ShareDialogState extends State<ShareDialog> {
                   },
                   decoration: InputDecoration(
                     labelText: 'Email address:',
-                    labelStyle: TextStyle(
-                        color:
-                            activeOption == 1 ? Colors.black : Colors.black26,
-                        fontSize: 18.toFont),
-                    prefixStyle:
-                        TextStyle(color: Colors.grey, fontSize: 15.toFont),
+                    labelStyle:
+                        TextStyle(color: activeOption == 1 ? Colors.black : Colors.black26, fontSize: 18.toFont),
+                    prefixStyle: TextStyle(color: Colors.grey, fontSize: 15.toFont),
                     hintText: 'Please enter valid email address',
                     hintMaxLines: 2,
                     errorText: emailError ? emailErrorMessage : null,
-                    errorStyle:
-                        TextStyle(color: Colors.red, fontSize: 12.toFont),
+                    errorStyle: TextStyle(color: Colors.red, fontSize: 12.toFont),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   style: TextStyle(fontSize: 15.toFont),
@@ -211,9 +189,9 @@ class _ShareDialogState extends State<ShareDialog> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: <Widget>[
                     (isLoading)
-                        ? CircularProgressIndicator()
+                        ? const CircularProgressIndicator()
                         : CustomButton(
                             height: 50.toHeight * deviceTextFactor,
                             buttonText: 'Share',
@@ -229,14 +207,8 @@ class _ShareDialogState extends State<ShareDialog> {
                                 Navigator.pop(context);
                               }
                             },
-                            buttonColor:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                            fontColor:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.white
-                                    : Colors.black,
+                            buttonColor: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+                            fontColor: Theme.of(context).brightness == Brightness.light ? Colors.white : Colors.black,
                           )
                   ],
                 ),
@@ -245,7 +217,7 @@ class _ShareDialogState extends State<ShareDialog> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: <Widget>[
                     CustomButton(
                       height: 50.toHeight * deviceTextFactor,
                       buttonText: 'Cancel',
@@ -270,8 +242,7 @@ class _ShareDialogState extends State<ShareDialog> {
 
   Future<void> _sendInformation() async {
     // construct message body
-    String link = (widget.webPageLink ?? '') +
-        '?key=${widget.uniqueID}&atsign=${widget.currentAtsign}';
+    String link = (widget.webPageLink ?? '') + '?key=${widget.uniqueID}&atsign=${widget.currentAtsign}';
     String inviteText =
         'Hi there, you have been invited to join this app. \n link: $link \n password: ${widget.passcode}';
 
@@ -280,13 +251,13 @@ class _ShareDialogState extends State<ShareDialog> {
     // send SMS
     if (phoneNumber != '') {
       if (Platform.isAndroid) {
-        var uri = 'sms:' + phoneNumber + '?body=' + messageBody;
+        String uri = 'sms:' + phoneNumber + '?body=' + messageBody;
         if (await canLaunch(uri)) {
           await launch(uri);
           print('sent to $phoneNumber');
         }
       } else if (Platform.isIOS) {
-        var uri = 'sms:' + phoneNumber + '&body=' + messageBody;
+        String uri = 'sms:' + phoneNumber + '&body=' + messageBody;
         if (await canLaunch(uri)) {
           await launch(uri);
         }
@@ -294,8 +265,7 @@ class _ShareDialogState extends State<ShareDialog> {
     }
     // send email
     else if (emailAddress != '') {
-      var uri =
-          'mailto:' + emailAddress + '?subject=Invitation&body=' + messageBody;
+      String uri = 'mailto:' + emailAddress + '?subject=Invitation&body=' + messageBody;
       print(uri);
       if (await canLaunch(uri)) {
         await launch(uri);

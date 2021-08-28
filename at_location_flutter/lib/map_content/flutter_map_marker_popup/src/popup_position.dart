@@ -11,18 +11,18 @@ class PopupPosition {
     Marker marker,
     PopupSnap snap,
   ) {
-    final markerPosition = _markerPosition(mapState, marker);
+    CustomPoint<num> markerPosition = _markerPosition(mapState, marker);
 
     return _containerFor(
       mapState.size,
       markerPosition,
-      CustomPoint(marker.width, marker.height),
+      CustomPoint<num>(marker.width, marker.height),
       snap,
     );
   }
 
-  static PopupContainer _containerFor(CustomPoint? visibleSize,
-      CustomPoint markerPosition, CustomPoint markerSize, PopupSnap snap) {
+  static PopupContainer _containerFor(
+      CustomPoint<num>? visibleSize, CustomPoint<num> markerPosition, CustomPoint<num> markerSize, PopupSnap snap) {
     // Note: We always add the popup even if it might not be visible. This
     //       ensures the popup state is maintained even when it is not visible.
     switch (snap) {
@@ -41,48 +41,48 @@ class PopupPosition {
     }
   }
 
-  static PopupContainer _snapLeft(CustomPoint visibleSize,
-      CustomPoint markerPosition, CustomPoint markerSize) {
+  static PopupContainer _snapLeft(
+      CustomPoint<num> visibleSize, CustomPoint<num> markerPosition, CustomPoint<num> markerSize) {
     return PopupContainer(
       size: visibleSize,
-      right: visibleSize.x - (markerPosition.x as double),
+      right: visibleSize.x - (markerPosition.x.toDouble()),
       top: markerPosition.y - (visibleSize.y / 2) + (markerSize.y / 2),
       alignment: Alignment.centerRight,
     );
   }
 
-  static PopupContainer _snapTop(CustomPoint visibleSize,
-      CustomPoint markerPosition, CustomPoint markerSize) {
+  static PopupContainer _snapTop(
+      CustomPoint<num> visibleSize, CustomPoint<num> markerPosition, CustomPoint<num> markerSize) {
     return PopupContainer(
       size: visibleSize,
       alignment: Alignment.bottomCenter,
       left: markerPosition.x - (visibleSize.x / 2) + (markerSize.x / 2),
-      bottom: visibleSize.y - (markerPosition.y as double),
+      bottom: visibleSize.y - markerPosition.y.toDouble(),
     );
   }
 
-  static PopupContainer _snapRight(CustomPoint visibleSize,
-      CustomPoint markerPosition, CustomPoint markerSize) {
+  static PopupContainer _snapRight(
+      CustomPoint<num> visibleSize, CustomPoint<num> markerPosition, CustomPoint<num> markerSize) {
     return PopupContainer(
       size: visibleSize,
       alignment: Alignment.centerLeft,
-      left: markerPosition.x + (markerSize.x as double),
+      left: markerPosition.x + (markerSize.x.toDouble()),
       top: markerPosition.y - (visibleSize.y / 2) + (markerSize.y / 2),
     );
   }
 
-  static PopupContainer _snapBottom(CustomPoint visibleSize,
-      CustomPoint markerPosition, CustomPoint markerSize) {
+  static PopupContainer _snapBottom(
+      CustomPoint<num> visibleSize, CustomPoint<num> markerPosition, CustomPoint<num> markerSize) {
     return PopupContainer(
       size: visibleSize,
       alignment: Alignment.topCenter,
       left: markerPosition.x - (visibleSize.x / 2) + (markerSize.x / 2),
-      top: markerPosition.y + (markerSize.y as double),
+      top: markerPosition.y + (markerSize.y.toDouble()),
     );
   }
 
-  static PopupContainer _snapCenter(CustomPoint visibleSize,
-      CustomPoint markerPosition, CustomPoint markerSize) {
+  static PopupContainer _snapCenter(
+      CustomPoint<num> visibleSize, CustomPoint<num> markerPosition, CustomPoint<num> markerSize) {
     return PopupContainer(
       size: visibleSize,
       alignment: Alignment.center,
@@ -91,12 +91,11 @@ class PopupPosition {
     );
   }
 
-  static CustomPoint _markerPosition(MapState mapState, Marker marker) {
-    var pos = mapState.project(marker.point);
-    pos = pos.multiplyBy(mapState.getZoomScale(mapState.zoom, mapState.zoom)) -
-        mapState.getPixelOrigin()!;
+  static CustomPoint<num> _markerPosition(MapState mapState, Marker marker) {
+    CustomPoint<num> pos = mapState.project(marker.point);
+    pos = pos.multiplyBy(mapState.getZoomScale(mapState.zoom, mapState.zoom)) - mapState.getPixelOrigin()!;
 
-    return CustomPoint((pos.x - (marker.width - marker.anchor.left)).toDouble(),
+    return CustomPoint<num>((pos.x - (marker.width - marker.anchor.left)).toDouble(),
         (pos.y - (marker.height - marker.anchor.top)).toDouble());
   }
 }

@@ -16,12 +16,12 @@ Marker buildMarker(HybridModel user,
     width: 50,
     point: user.latLng!,
     // ignore: prefer_if_null_operators
-    builder: (ctx) => marker != null
+    builder: (BuildContext ctx) => marker != null
         ? marker
         : (singleMarker
             ? Stack(
                 alignment: Alignment.center,
-                children: [
+                children: <Widget>[
                   Positioned(
                     bottom: 25,
                     child: SizedBox(
@@ -46,7 +46,7 @@ Marker buildMarker(HybridModel user,
               )
             : Stack(
                 alignment: Alignment.center,
-                children: [
+                children: <Widget>[
                   Positioned(
                     bottom: 25,
                     child: CustomPaint(

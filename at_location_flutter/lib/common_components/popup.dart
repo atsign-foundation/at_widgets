@@ -9,7 +9,7 @@ import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 
 Widget buildPopup(HybridModel user, {LatLng? center}) {
-  var showEtaSection = true;
+  bool showEtaSection = true;
   if (LocationService().etaFrom != null) {
     if (user.latLng == LocationService().etaFrom) showEtaSection = false;
   } else if (user.latLng == (center ?? LocationService().myData!.latLng)) {
@@ -18,7 +18,7 @@ Widget buildPopup(HybridModel user, {LatLng? center}) {
 
   return Stack(
     alignment: Alignment.center,
-    children: [
+    children: <Widget>[
       Positioned(bottom: 0, child: pointedBottom()),
       Container(
         width: ((LocationService().calculateETA ?? true) && (showEtaSection))
@@ -27,7 +27,7 @@ Widget buildPopup(HybridModel user, {LatLng? center}) {
         height: 82,
         alignment: Alignment.topCenter,
         child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
           child: Container(
             color: Colors.white,
             height: 76,
@@ -36,15 +36,15 @@ Widget buildPopup(HybridModel user, {LatLng? center}) {
                   ((LocationService().calculateETA ?? true) && (showEtaSection))
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 ((LocationService().calculateETA ?? true) && (showEtaSection))
                     ? Expanded(
                         child: Container(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           color: Colors.blue[100],
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                            children: <Widget>[
                               Icon(
                                 Icons.car_rental,
                                 color: Colors.grey[600],
@@ -63,14 +63,14 @@ Widget buildPopup(HybridModel user, {LatLng? center}) {
                           ),
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 Flexible(
                   child: Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+                      children: <Widget>[
                         CircleAvatar(
                           radius: 20,
                           child: user.image != null
@@ -85,7 +85,7 @@ Widget buildPopup(HybridModel user, {LatLng? center}) {
                         ),
                         Text(
                           user.displayName ?? '...',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black,
                           ),

@@ -5,7 +5,7 @@ class CustomButton extends StatelessWidget {
   final double? width, height, radius;
   final EdgeInsets? padding;
   final Widget child;
-  final Function onTap;
+  final VoidCallback onTap;
   final Color bgColor;
   final Border? border;
 
@@ -23,15 +23,15 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap as void Function()?,
+      onTap: onTap,
       child: Container(
         alignment: Alignment.center,
         width: width!.toWidth,
         height: height!.toHeight,
-        padding: padding ?? EdgeInsets.all(0),
+        padding: padding ?? const EdgeInsets.all(0),
         decoration: BoxDecoration(
             color: bgColor,
-            border: border ?? Border(),
+            border: border ?? const Border(),
             borderRadius: BorderRadius.circular(radius ?? 30)),
         child: child,
       ),

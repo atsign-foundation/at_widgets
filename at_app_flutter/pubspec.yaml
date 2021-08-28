@@ -9,14 +9,15 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
-  flutter:
-    sdk: flutter
   at_client_mobile: ^2.0.3
   at_onboarding_flutter: ^2.1.2
   at_utils: ^2.0.4
   dotenv: ^3.0.0
+  flutter:
+    sdk: flutter
   path_provider: ^2.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  lints: ^1.0.1

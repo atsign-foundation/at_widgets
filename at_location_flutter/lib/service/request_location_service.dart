@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
+import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
@@ -19,20 +20,20 @@ class RequestLocationService {
     return _singleton;
   }
 
-  List checkForAlreadyExisting(String? atsign) {
-    var index = KeyStreamService().allLocationNotifications.indexWhere((e) =>
+  List<dynamic> checkForAlreadyExisting(String? atsign) {
+    int index = KeyStreamService().allLocationNotifications.indexWhere((KeyLocationModel e) =>
         ((e.locationNotificationModel!.atsignCreator == atsign) &&
             (e.locationNotificationModel!.key!
-                .contains(MixedConstants.REQUEST_LOCATION))));
+                .contains(MixedConstants.requestLocation))));
     if (index > -1) {
-      return [
+      return <dynamic>[
         true,
         KeyStreamService()
             .allLocationNotifications[index]
             .locationNotificationModel
       ];
     } else {
-      return [false];
+      return <dynamic>[false];
     }
   }
 
@@ -59,16 +60,16 @@ class RequestLocationService {
   /// Sends a 'requestlocation' key to [atsign].
   Future<bool?> sendRequestLocationEvent(String? atsign) async {
     try {
-      var alreadyExists = checkForAlreadyExisting(atsign);
-      var result;
+      List<dynamic> alreadyExists = checkForAlreadyExisting(atsign);
+      bool result;
 
       if (alreadyExists[0]) {
-        var newLocationNotificationModel = LocationNotificationModel.fromJson(
+        LocationNotificationModel newLocationNotificationModel = LocationNotificationModel.fromJson(
             jsonDecode(
                 LocationNotificationModel.convertLocationNotificationToJson(
                     alreadyExists[1])));
 
-        var isNotResponded =
+        bool isNotResponded =
             checkIfEventIsNotResponded(newLocationNotificationModel);
 
         newLocationNotificationModel.rePrompt = true;
@@ -86,7 +87,7 @@ class RequestLocationService {
           return null;
         }
 
-        var isRejected = checkIfEventIsRejected(newLocationNotificationModel);
+        bool isRejected = checkIfEventIsRejected(newLocationNotificationModel);
         if (isRejected) {
           await locationPromptDialog(
             text:
@@ -111,10 +112,10 @@ class RequestLocationService {
         return null;
       }
 
-      var atKey = newAtKey(60000,
+      AtKey atKey = newAtKey(60000,
           'requestlocation-${DateTime.now().microsecondsSinceEpoch}', atsign);
 
-      var locationNotificationModel = LocationNotificationModel()
+      LocationNotificationModel locationNotificationModel = LocationNotificationModel()
         ..atsignCreator = atsign
         ..key = atKey.key
         ..isRequest = true
@@ -149,12 +150,12 @@ class RequestLocationService {
       {int? minutes,
       bool? isSharing}) async {
     try {
-      var locationNotificationModel = LocationNotificationModel.fromJson(
+      LocationNotificationModel locationNotificationModel = LocationNotificationModel.fromJson(
           jsonDecode(
               LocationNotificationModel.convertLocationNotificationToJson(
                   originalLocationNotificationModel)));
 
-      var atkeyMicrosecondId = locationNotificationModel.key!
+      String atkeyMicrosecondId = locationNotificationModel.key!
           .split('requestlocation-')[1]
           .split('@')[0];
       AtKey atKey;
@@ -179,7 +180,7 @@ class RequestLocationService {
             DateTime.now().add(Duration(minutes: minutes));
       }
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
+      bool result = await AtLocationNotificationListener().atClientInstance!.put(
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
@@ -206,25 +207,25 @@ class RequestLocationService {
 
   /// Updates originally created [locationNotificationModel] with [originalLocationNotificationModel] data
   /// If [rePrompt] is true, then will show dialog box on receiver's side.
-  Future updateWithRequestLocationAcknowledge(
+  Future<bool> updateWithRequestLocationAcknowledge(
       LocationNotificationModel originalLocationNotificationModel,
       {bool rePrompt = false}) async {
     try {
-      var locationNotificationModel = LocationNotificationModel.fromJson(
+      LocationNotificationModel locationNotificationModel = LocationNotificationModel.fromJson(
           jsonDecode(
               LocationNotificationModel.convertLocationNotificationToJson(
                   originalLocationNotificationModel)));
 
-      var atkeyMicrosecondId = locationNotificationModel.key!
+      String atkeyMicrosecondId = locationNotificationModel.key!
           .split('requestlocation-')[1]
           .split('@')[0];
 
-      var response =
+      List<String> response =
           await AtLocationNotificationListener().atClientInstance!.getKeys(
                 regex: 'requestlocation-$atkeyMicrosecondId',
               );
 
-      var key = getAtKey(response[0]);
+      AtKey key = getAtKey(response[0]);
 
       if ((locationNotificationModel.isAccepted) &&
           (locationNotificationModel.from != null) &&
@@ -243,10 +244,10 @@ class RequestLocationService {
       locationNotificationModel.isAcknowledgment = true;
       locationNotificationModel.rePrompt = rePrompt;
 
-      var notification =
+      String notification =
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel);
-      var result;
+      bool result;
       result = await AtLocationNotificationListener().atClientInstance!.put(
             key,
             notification,
@@ -273,7 +274,7 @@ class RequestLocationService {
   Future<bool> sendDeleteAck(
       LocationNotificationModel locationNotificationModel) async {
     try {
-      var atkeyMicrosecondId = locationNotificationModel.key!
+      String atkeyMicrosecondId = locationNotificationModel.key!
           .split('requestlocation-')[1]
           .split('@')[0];
       AtKey atKey;
@@ -283,7 +284,7 @@ class RequestLocationService {
         locationNotificationModel.receiver,
       );
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
+      bool result = await AtLocationNotificationListener().atClientInstance!.put(
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
@@ -305,20 +306,20 @@ class RequestLocationService {
   /// Deletes originally created [locationNotificationModel] notification
   Future<bool> deleteKey(
       LocationNotificationModel locationNotificationModel) async {
-    var atkeyMicrosecondId = locationNotificationModel.key!
+    String atkeyMicrosecondId = locationNotificationModel.key!
         .split('requestlocation-')[1]
         .split('@')[0];
 
-    var response =
+    List<String> response =
         await AtLocationNotificationListener().atClientInstance!.getKeys(
               regex: 'requestlocation-$atkeyMicrosecondId',
             );
 
-    var key = getAtKey(response[0]);
+    AtKey key = getAtKey(response[0]);
 
     locationNotificationModel.isAcknowledgment = true;
 
-    var result =
+    bool result =
         await AtLocationNotificationListener().atClientInstance!.delete(
               key,
               isDedicated: MixedConstants.isDedicated,
@@ -336,7 +337,7 @@ class RequestLocationService {
 
   AtKey newAtKey(int ttr, String key, String? sharedWith,
       {int? ttl, DateTime? expiresAt}) {
-    var atKey = AtKey()
+    AtKey atKey = AtKey()
       ..metadata = Metadata()
       ..metadata!.ttr = ttr
       ..metadata!.ccd = true

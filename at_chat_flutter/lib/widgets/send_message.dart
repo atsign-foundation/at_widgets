@@ -43,12 +43,12 @@ class _SendMessageState extends State<SendMessage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.toHeight),
           color: Colors.grey[200]),
       child: Row(
-        children: [
+        children: <Widget>[
           IconButton(
               icon: Icon(
                 Icons.image_outlined,
@@ -59,10 +59,10 @@ class _SendMessageState extends State<SendMessage> {
               }),
           Expanded(
               child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: TextField(
               controller: _sendController,
-              onChanged: (s) {
+              onChanged: (String s) {
                 widget.messageCallback!(s);
               },
               decoration: InputDecoration.collapsed(

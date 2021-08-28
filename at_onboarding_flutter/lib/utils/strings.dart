@@ -17,7 +17,7 @@ class Strings {
   static const String scanQrMessage = 'Just scan the QR code displayed at ';
   static const String pairAtsignTitle = 'Pair your @sign';
   static const String uploadQRTitle = 'Upload activation QR code';
-  static const String recurr_server_check =
+  static const String recurrServerCheck =
       'Trying to reach server to perform authentication. Click to stop rigorous server check';
   static const String stopButtonTitle = 'stop';
   //backuzip file save texts

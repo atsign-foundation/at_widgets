@@ -31,29 +31,26 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
   Widget build(BuildContext context) {
     return Container(
       height: SizeConfig().screenHeight * 0.4,
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(25),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Request Location', style: CustomTextStyles().black18),
-              PopButton(label: 'Cancel')
-            ],
+            children: <Widget>[Text('Request Location', style: CustomTextStyles().black18), PopButton(label: 'Cancel')],
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           Text('Request From', style: CustomTextStyles().greyLabel14),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           CustomInputField(
             width: 330.toWidth,
             height: 50,
             hintText: 'Type @sign ',
             initialValue: textField ?? '',
-            value: (str) {
+            value: (String str) {
               if (!str.contains('@')) {
                 str = '@' + str;
               }
@@ -62,10 +59,10 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
             icon: Icons.contacts_rounded,
             onTap: widget.onTap,
           ),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
           Center(
             child: isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : CustomButton(
                     buttonText: 'Request',
                     onPressed: onRequestTap,
@@ -79,11 +76,11 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     );
   }
 
-  void onRequestTap() async {
+  Future<void> onRequestTap() async {
     setState(() {
       isLoading = true;
     });
-    var validAtSign = await checkAtsign(textField);
+    bool validAtSign = await checkAtsign(textField);
 
     if (!validAtSign) {
       setState(() {
@@ -93,8 +90,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
       return;
     }
 
-    var result =
-        await RequestLocationService().sendRequestLocationEvent(textField);
+    bool? result = await RequestLocationService().sendRequestLocationEvent(textField);
 
     if (result == null) {
       setState(() {
@@ -124,8 +120,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     } else if (!atSign.contains('@')) {
       atSign = '@' + atSign;
     }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
+    String? checkPresence = await AtLookupImpl.findSecondary(atSign, AtLocationNotificationListener().rootDomain, 64);
     return checkPresence != null;
   }
 }

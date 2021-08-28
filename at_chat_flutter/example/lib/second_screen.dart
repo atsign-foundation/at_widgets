@@ -13,13 +13,13 @@ class _SecondScreenState extends State<SecondScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
   String? activeAtSign;
   GlobalKey<ScaffoldState>? scaffoldKey;
-  String chatWithAtSign = '';
+  String? chatWithAtSign = '';
   bool showOptions = false;
 
   // for goup chat
-  String groupId = '';
-  String member1 = '';
-  String member2 = '';
+  String? groupId = '';
+  String? member1 = '';
+  String? member2 = '';
 
   @override
   void initState() {
@@ -118,7 +118,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       TextButton(
                         onPressed: () {
                           if (chatWithAtSign != null &&
-                              chatWithAtSign.trim() != '') {
+                              chatWithAtSign!.trim() != '') {
                             setAtsignToChatWith();
                             setState(() {
                               showOptions = true;
@@ -223,15 +223,15 @@ class _SecondScreenState extends State<SecondScreen> {
   void setGroupToChatWith(BuildContext context) {
     print('setGroupToChatWith');
     if (member1 != null &&
-        member1.trim() != '' &&
+        member1!.trim() != '' &&
         member2 != null &&
-        member2.trim() != '' &&
+        member2!.trim() != '' &&
         groupId != null &&
         groupId != '') {
       setChatWithAtSign(null, isGroup: true, groupId: groupId, groupMembers: [
         activeAtSign!,
-        member1.startsWith('@') ? member1 : '@' + member1,
-        member2.startsWith('@') ? member2 : '@' + member2
+        member1!.startsWith('@') ? member1! : '@' + member1!,
+        member2!.startsWith('@') ? member2! : '@' + member2!
       ]);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => ThirdScreen()));

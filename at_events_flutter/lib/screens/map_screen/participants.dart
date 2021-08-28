@@ -1,4 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_contact/src/model/at_contact.dart';
 import 'package:at_events_flutter/common_components/custom_heading.dart';
 import 'package:at_events_flutter/common_components/display_tile.dart';
 import 'package:at_events_flutter/common_components/draggable_symbol.dart';
@@ -16,23 +17,23 @@ class Participants extends StatefulWidget {
 }
 
 class _ParticipantsState extends State<Participants> {
-  List<String?> untrackedAtsigns = [];
+  List<String?> untrackedAtsigns = <String?>[];
 
-  List<String?> trackedAtsigns = [];
+  List<String?> trackedAtsigns = <String?>[];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ValueListenableBuilder(
+      child: ValueListenableBuilder<
+          EventNotificationModel?>(
           valueListenable: EventsMapScreenData().eventNotifier!,
           builder: (BuildContext context, EventNotificationModel? _event,
               Widget? child) {
-            var _locationList = EventsMapScreenData().markers;
-            untrackedAtsigns = [];
-            // ignore: unnecessary_null_comparison
+            List<HybridModel>? _locationList = EventsMapScreenData().markers;
+            untrackedAtsigns = <String?>[];
             trackedAtsigns = _locationList != null
-                ? _locationList.map((e) => e.displayName).toList()
-                : [];
+                ? _locationList.map((HybridModel e) => e.displayName).toList()
+                : <String?>[];
 
             /// for creator
             trackedAtsigns.contains(_event!.atsignCreator)
@@ -40,13 +41,13 @@ class _ParticipantsState extends State<Participants> {
                 : untrackedAtsigns.add(_event.atsignCreator);
 
             /// for members
-            _event.group!.members!.forEach((element) => {
+            for(AtContact element in _event.group!.members!) {
                   trackedAtsigns.contains(element.atSign)
                       ? print('')
-                      : untrackedAtsigns.add(element.atSign)
-                });
+                      : untrackedAtsigns.add(element.atSign);
+                }
 
-            return builder(_locationList, _event);
+            return builder(_locationList!, _event);
           }),
     );
   }
@@ -59,19 +60,19 @@ class _ParticipantsState extends State<Participants> {
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: <Widget>[
             DraggableSymbol(),
             CustomHeading(heading: 'Participants', action: 'Close'),
             SizedBox(
               height: 10.toHeight,
             ),
             ListView.separated(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: _markers.length,
               itemBuilder: (BuildContext context, int index) {
                 return _markers[index].displayName == _event!.venue!.label
-                    ? SizedBox()
+                    ? const SizedBox()
                     : DisplayTile(
                         title: _markers[index].displayName ?? '',
                         atsignCreator: _markers[index].displayName,
@@ -80,19 +81,19 @@ class _ParticipantsState extends State<Participants> {
                           (_markers[index].displayName ==
                                   AtEventNotificationListener().currentAtSign)
                               ? ''
-                              : '${_markers[index].eta}',
+                              : _markers[index].eta!,
                           style: CustomTextStyles().darkGrey14,
                         ),
                       );
               },
               separatorBuilder: (BuildContext context, int index) {
                 return _markers[index].displayName != _event!.venue!.label
-                    ? Divider()
-                    : SizedBox();
+                    ? const Divider()
+                    : const SizedBox();
               },
             ),
             ListView.separated(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: untrackedAtsigns.length,
               itemBuilder: (BuildContext context, int index) {
@@ -117,7 +118,7 @@ class _ParticipantsState extends State<Participants> {
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
-                return SizedBox();
+                return const SizedBox();
               },
             )
           ],
@@ -127,8 +128,8 @@ class _ParticipantsState extends State<Participants> {
   }
 
   bool isActionRequired(String? _atsign, EventNotificationModel _event) {
-    var _atcontact =
-        _event.group!.members!.where((element) => element.atSign == _atsign);
+    Iterable<AtContact> _atcontact =
+        _event.group!.members!.where((AtContact element) => element.atSign == _atsign);
     // ignore: unnecessary_null_comparison
     if ((_atcontact != null) && (_atcontact.isNotEmpty)) {
       if ((_atcontact.first.tags!['isAccepted'] == false) &&

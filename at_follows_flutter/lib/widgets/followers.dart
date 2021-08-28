@@ -26,9 +26,9 @@ class Followers extends StatefulWidget {
 }
 
 class _FollowersState extends State<Followers> {
-  List<Atsign>? atsignsList = [];
-  ConnectionsService _connectionsService = ConnectionsService();
-  final _logger = AtSignLogger('Follows Widget');
+  List<Atsign>? atsignsList = <Atsign>[];
+  final ConnectionsService _connectionsService = ConnectionsService();
+  final AtSignLogger _logger = AtSignLogger('Follows Widget');
   bool _isDialogOpen = false;
 
   @override
@@ -37,7 +37,7 @@ class _FollowersState extends State<Followers> {
   }
 
   @override
-  void setState(fn) {
+  void setState(dynamic fn) {
     if (mounted) {
       super.setState(fn);
     }
@@ -45,14 +45,14 @@ class _FollowersState extends State<Followers> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ConnectionProvider>(builder: (context, provider, _) {
+    return Consumer<ConnectionProvider>(builder: (BuildContext context, ConnectionProvider provider, _) {
       _logger.info('provider status is ${provider.status}');
       if (provider.status == Status.loading) {
         return Padding(
           padding: EdgeInsets.only(top: SizeConfig().screenHeight * 0.15),
           child: Center(
             child: Column(
-              children: [
+              children: <Widget>[
                 Container(
                   height: 50.toHeight,
                   width: 50.toHeight,
@@ -83,7 +83,7 @@ class _FollowersState extends State<Followers> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Text(
                   widget.isFollowing
                       ? Strings.noFollowing
@@ -92,9 +92,9 @@ class _FollowersState extends State<Followers> {
             ],
           );
         }
-        var tempAtsignList = [...atsignsList!];
+        List<Atsign> tempAtsignList = <Atsign>[...atsignsList!];
         if (widget.searchText!.isNotEmpty) {
-          tempAtsignList.retainWhere((atsign) {
+          tempAtsignList.retainWhere((Atsign atsign) {
             return atsign.title!
                 .toUpperCase()
                 .contains(widget.searchText!.toUpperCase());
@@ -102,7 +102,7 @@ class _FollowersState extends State<Followers> {
         }
         return Expanded(
           child: Column(
-            children: [
+            children: <Widget>[
               SwitchListTile(
                 title: Text(
                     widget.isFollowing
@@ -112,7 +112,7 @@ class _FollowersState extends State<Followers> {
                 value: widget.isFollowing
                     ? provider.connectionslistStatus.isFollowingPrivate
                     : provider.connectionslistStatus.isFollowersPrivate,
-                onChanged: (value) {
+                onChanged: (bool value) {
                   provider.changeListStatus(widget.isFollowing, value);
                 },
                 inactiveTrackColor: ColorConstants.inactiveTrackColor,
@@ -125,13 +125,13 @@ class _FollowersState extends State<Followers> {
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: 26,
-                  itemBuilder: (_, alphabetIndex) {
-                    List<Atsign> sortedListWithAlphabet = [];
+                  itemBuilder: (_, int alphabetIndex) {
+                    List<Atsign> sortedListWithAlphabet = <Atsign>[];
                     String currentAlphabet =
                         String.fromCharCode(alphabetIndex + 65).toUpperCase();
 
-                    tempAtsignList.forEach((atsign) {
-                      var index = atsign.title!.indexOf(RegExp('[A-Z]|[a-z]'));
+                    for(Atsign atsign in tempAtsignList) {
+                      int index = atsign.title!.indexOf(RegExp('[A-Z]|[a-z]'));
                       if (atsign.title![index].toUpperCase() ==
                           currentAlphabet) {
                         if (widget.searchText != null &&
@@ -141,15 +141,15 @@ class _FollowersState extends State<Followers> {
                           sortedListWithAlphabet.add(atsign);
                         }
                       }
-                    });
+                    }
                     if (sortedListWithAlphabet.isEmpty) {
                       return Container();
                     }
                     return Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: [
+                      children: <Widget>[
                         Row(
-                          children: [
+                          children: <Widget>[
                             Text(currentAlphabet,
                                 style: CustomTextStyles.fontR14primary),
                             Expanded(
@@ -164,9 +164,9 @@ class _FollowersState extends State<Followers> {
                         //   height: 2.toHeight,
                         // ),
                         ListView.separated(
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemBuilder: (_, index) {
+                            itemBuilder: (_, int index) {
                               Atsign currentAtsign =
                                   sortedListWithAlphabet[index];
                               return Padding(
@@ -176,8 +176,8 @@ class _FollowersState extends State<Followers> {
                                   onTap: () {
                                     Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                            builder: (context) => WebViewScreen(
+                                        MaterialPageRoute<WebViewScreen>(
+                                            builder: (BuildContext context) => WebViewScreen(
                                                 url:
                                                     '${Strings.directoryUrl}/${currentAtsign.title}',
                                                 title: Strings
@@ -207,18 +207,18 @@ class _FollowersState extends State<Followers> {
                                       : null,
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: [
+                                    children: <Widget>[
                                       CustomButton(
                                           height: 35.toHeight,
                                           // width: 70.toWidth,
                                           // width: 150.toWidth,
                                           isActive: !currentAtsign.isFollowing!,
-                                          onPressedCallBack: (value) async {
+                                          onPressedCallBack: (bool value) async {
                                             if (value) {
-                                              provider.unfollow(
+                                              await provider.unfollow(
                                                   currentAtsign.title);
                                             } else {
-                                              provider
+                                              await provider
                                                   .follow(currentAtsign.title);
                                             }
                                             sortedListWithAlphabet[index]
@@ -226,8 +226,8 @@ class _FollowersState extends State<Followers> {
                                             setState(() {});
                                           },
                                           text: currentAtsign.isFollowing!
-                                              ? Strings.Unfollow
-                                              : Strings.Follow),
+                                              ? Strings.unfollow
+                                              : Strings.follow),
                                       // IconButton(
                                       //     iconSize: 20.toFont,
                                       //     icon: Icon(Icons.delete),
@@ -240,7 +240,7 @@ class _FollowersState extends State<Followers> {
                                 ),
                               );
                             },
-                            separatorBuilder: (_, index) => Divider(
+                            separatorBuilder: (_, int index) => Divider(
                                   thickness: 0.8,
                                   color: ColorConstants.borderColor,
                                 ),
@@ -259,13 +259,13 @@ class _FollowersState extends State<Followers> {
         WidgetsBinding.instance!.addPostFrameCallback((_) async {
           await provider.getAtsignsList(isFollowing: widget.isFollowing);
         });
-        return SizedBox();
+        return const SizedBox();
       }
     });
   }
 
-  _followAtsign(BuildContext context) {
-    var atsign = ConnectionsService().followerAtsign;
+  void _followAtsign(BuildContext context) {
+    String? atsign = ConnectionsService().followerAtsign;
     bool exists = ConnectionProvider().containsFollowing(atsign);
     if (exists || _isDialogOpen) {
       _connectionsService.followerAtsign = null;
@@ -274,18 +274,18 @@ class _FollowersState extends State<Followers> {
     }
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       _isDialogOpen = true;
-      showDialog(
+      await showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context) => AlertDialog(
+          builder: (BuildContext context) => AlertDialog(
                   content: Text(Strings.followBackDescription(atsign),
                       textAlign: TextAlign.center,
                       style: CustomTextStyles.fontR14dark),
-                  actions: [
+                  actions: <Widget>[
                     CustomButton(
                       width: SizeConfig().screenWidth! * 0.23,
                       isActive: false,
-                      onPressedCallBack: (value) {
+                      onPressedCallBack: (bool value) {
                         _connectionsService.followerAtsign = null;
                         _isDialogOpen = false;
                         // widget.isDialog();
@@ -297,7 +297,7 @@ class _FollowersState extends State<Followers> {
                     CustomButton(
                       width: SizeConfig().screenWidth! * 0.23,
                       isActive: true,
-                      onPressedCallBack: (value) async {
+                      onPressedCallBack: (bool value) async {
                         _connectionsService.followerAtsign = null;
                         _isDialogOpen = false;
                         // widget.isDialog();

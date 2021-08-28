@@ -17,28 +17,27 @@ import 'package:at_common_flutter/services/size_config.dart';
 class CustomBottomSheet extends StatelessWidget {
   final Function? onPressed;
   final ValueChanged<List<AtContact?>?>? selectedList;
-  const CustomBottomSheet({Key? key, this.onPressed, this.selectedList})
-      : super(key: key);
+  const CustomBottomSheet({Key? key, this.onPressed, this.selectedList}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    var _contactServive = ContactService();
+    ContactService _contactServive = ContactService();
     return StreamBuilder<List<AtContact?>>(
       stream: _contactServive.selectedContactStream,
       initialData: _contactServive.selectedContacts,
-      builder: (context, snapshot) => (snapshot.data!.isEmpty)
+      builder: (BuildContext context, AsyncSnapshot<List<AtContact?>> snapshot) => (snapshot.data!.isEmpty)
           ? Container(
               height: 0,
             )
           : Container(
               padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
               height: 70.toHeight,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xffF7F7FF),
-                boxShadow: [BoxShadow(color: Colors.grey)],
+                boxShadow: <BoxShadow>[BoxShadow(color: Colors.grey)],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                children: <Widget>[
                   Expanded(
                     child: Text(
                       (snapshot.data!.length != 25)
@@ -51,13 +50,8 @@ class CustomBottomSheet extends StatelessWidget {
                     buttonText: 'Done',
                     width: 120.toWidth,
                     height: 40.toHeight,
-                    buttonColor:
-                        Theme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white,
-                    fontColor: Theme.of(context).brightness == Brightness.light
-                        ? Colors.white
-                        : Colors.black,
+                    buttonColor: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+                    fontColor: Theme.of(context).brightness == Brightness.light ? Colors.white : Colors.black,
                     onPressed: () {
                       onPressed!();
                       selectedList!(snapshot.data);

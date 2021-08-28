@@ -2,6 +2,7 @@
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
@@ -47,13 +48,13 @@ class _BlockedScreenState extends State<BlockedScreen> {
         child: Container(
           color: ColorConstants.appBarColor,
           child: Column(
-            children: [
+            children: <Widget>[
               Expanded(
-                child: StreamBuilder(
+                child: StreamBuilder<List<AtContact?>>(
                   initialData: _contactService.blockContactList,
                   stream: _contactService.blockedContactStream,
-                  builder: (context, AsyncSnapshot snapshot) {
-                    return snapshot.data.isEmpty
+                  builder: (BuildContext context, AsyncSnapshot<List<AtContact?>> snapshot) {
+                    return snapshot.data!.isEmpty
                         ? Center(
                             child: Text(
                               TextStrings().emptyBlockedList,
@@ -67,10 +68,10 @@ class _BlockedScreenState extends State<BlockedScreen> {
                             padding:
                                 EdgeInsets.symmetric(vertical: 40.toHeight),
                             itemCount: _contactService.blockContactList.length,
-                            separatorBuilder: (context, index) => Divider(
+                            separatorBuilder: (BuildContext context, int index) => Divider(
                               indent: 16.toWidth,
                             ),
-                            itemBuilder: (context, index) {
+                            itemBuilder: (BuildContext context, int index) {
                               return BlockedUserCard(
                                 blockeduser: snapshot.data?[index],
                               );

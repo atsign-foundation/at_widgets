@@ -34,7 +34,7 @@ class AtContext extends InheritedWidget {
   /// Calling AtContext.of(context) in the widget tree will provide you with
   /// the nearest instance of AtContext containing all of the getters for this class.
   static AtContext of(BuildContext context) {
-    var atContext = context.dependOnInheritedWidgetOfExactType<AtContext>();
+    AtContext? atContext = context.dependOnInheritedWidgetOfExactType<AtContext>();
     assert(atContext != null);
     return atContext!;
   }

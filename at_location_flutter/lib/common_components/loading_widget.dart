@@ -17,10 +17,10 @@ class LoadingDialog {
       AtLocationNotificationListener()
           .navKey
           .currentState!
-          .push(CustomPopupRoutes(
+          .push(CustomPopupRoutes<Widget>(
               pageBuilder: (_, __, ___) {
                 print('building loader');
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               },

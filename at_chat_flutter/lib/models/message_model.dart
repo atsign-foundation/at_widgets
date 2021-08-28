@@ -44,7 +44,7 @@ class Message {
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'time': time,
       'message': message,
       'type': type == MessageType.values[0] ? 0 : 1,

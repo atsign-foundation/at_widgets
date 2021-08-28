@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
 
 class ConnectionProvider extends ChangeNotifier {
-  static final _singleton = ConnectionProvider._internal();
+  static final ConnectionProvider _singleton = ConnectionProvider._internal();
   ConnectionProvider._internal();
 
-  var _logger = AtSignLogger('Connection Provider');
+  final AtSignLogger _logger = AtSignLogger('Connection Provider');
 
   factory ConnectionProvider() {
     return _singleton;
@@ -19,7 +19,7 @@ class ConnectionProvider extends ChangeNotifier {
   List<Atsign>? followingList;
   List<Atsign>? atsignsList;
   Status? status;
-  var error;
+  Object? error;
   String initialised = '';
 
   late ConnectionsService _connectionsService;
@@ -39,25 +39,25 @@ class ConnectionProvider extends ChangeNotifier {
     }
   }
 
-  init(String atsign) {
+  void init(String atsign) {
     if (atsign != initialised) {
-      this.followersList = [];
-      this.followingList = [];
-      this.atsignsList = [];
+      followersList = <Atsign>[];
+      followingList = <Atsign>[];
+      atsignsList = <Atsign>[];
       _connectionsService = ConnectionsService();
       connectionslistStatus = ListStatus();
       _disposed = false;
-      this.setStatus(null);
+      setStatus(null);
       initialised = atsign;
     }
   }
 
-  setStatus(Status? value) {
+  void setStatus(Status? value) {
     status = value;
     notifyListeners();
   }
 
-  setListStatus(bool isFollowing, bool value) {
+  void setListStatus(bool isFollowing, bool value) {
     if (!isFollowing) {
       connectionslistStatus.isFollowersPrivate = value;
     } else {
@@ -65,8 +65,8 @@ class ConnectionProvider extends ChangeNotifier {
     }
   }
 
-  Future getAtsignsList({bool isFollowing = false}) async {
-    Completer c = Completer();
+  Future<dynamic> getAtsignsList({bool isFollowing = false}) async {
+    Completer<dynamic> c = Completer<dynamic>();
     bool isInit = status == null;
     try {
       setStatus(Status.loading);
@@ -74,17 +74,17 @@ class ConnectionProvider extends ChangeNotifier {
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
-      this.error = err;
+      error = err;
       setStatus(Status.error);
     } on Exception catch (ex) {
-      this.error = ex;
+      error = ex;
       setStatus(Status.error);
     }
     return c.future;
   }
 
-  Future changeListStatus(bool isFollowing, bool value) async {
-    Completer c = Completer();
+  Future<dynamic> changeListStatus(bool isFollowing, bool value) async {
+    Completer<dynamic> c = Completer<dynamic>();
     try {
       setStatus(Status.loading);
       await _connectionsService.changeListPublicStatus(isFollowing, value);
@@ -92,17 +92,17 @@ class ConnectionProvider extends ChangeNotifier {
       setStatus(Status.done);
       c.complete(true);
     } catch (ex) {
-      this.error = ex;
+      error = ex;
       setStatus(Status.error);
     }
     return c.future;
   }
 
-  Future follow(String? atsign) async {
-    Completer c = Completer();
+  Future<dynamic> follow(String? atsign) async {
+    Completer<dynamic> c = Completer<dynamic>();
     try {
       setStatus(Status.loading);
-      var data = await _connectionsService.follow(atsign);
+      Atsign? data = await _connectionsService.follow(atsign);
       if (data != null) {
         followingList!.add(data);
         _modifyFollowersList(atsign, true);
@@ -110,80 +110,79 @@ class ConnectionProvider extends ChangeNotifier {
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
-      this.error = err;
+      error = err;
       setStatus(Status.error);
     } on Exception catch (ex) {
-      this.error = ex;
+      error = ex;
       setStatus(Status.error);
     }
 
     return c.future;
   }
 
-  Future unfollow(String? atsign) async {
-    Completer c = Completer();
+  Future<dynamic> unfollow(String? atsign) async {
+    Completer<dynamic> c = Completer<dynamic>();
     try {
       setStatus(Status.loading);
-      var result = await _connectionsService.unfollow(atsign);
+      bool result = await _connectionsService.unfollow(atsign);
       if (result) {
-        followingList!.removeWhere((element) => element.title == atsign);
+        followingList!.removeWhere((Atsign element) => element.title == atsign);
         _modifyFollowersList(atsign, false);
       }
       setStatus(Status.done);
       c.complete(true);
     } on Error catch (err) {
-      this.error = err;
+      error = err;
       setStatus(Status.error);
     } on Exception catch (ex) {
-      this.error = ex;
+      error = ex;
       setStatus(Status.error);
     }
     return c.future;
   }
 
   ///deletes [atsign] from followers and following list.
-  Future delete(String atsign) async {
-    Completer c = Completer();
+  Future<void> delete(String atsign) async {
+    Completer<dynamic> c = Completer<dynamic>();
     try {
       setStatus(Status.loading);
-      var result = await _connectionsService.delete(atsign);
+      bool result = await _connectionsService.delete(atsign);
       if (result) {
-        followingList!.removeWhere((element) => element.title == atsign);
-        followersList!.removeWhere((element) => element.title == atsign);
+        followingList!.removeWhere((Atsign element) => element.title == atsign);
+        followersList!.removeWhere((Atsign element) => element.title == atsign);
       }
       setStatus(Status.done);
       c.complete(true);
     } catch (e) {
       _logger.severe('deleting $atsign throws $e');
-      this.error = e;
-
+      error = e;
       setStatus(Status.error);
     }
   }
 
-  _modifyFollowersList(String? atsign, bool follow) {
-    var index = followersList!.indexWhere((element) => element.title == atsign);
+  void _modifyFollowersList(String? atsign, bool follow) {
+    int index = followersList!.indexWhere((Atsign element) => element.title == atsign);
     if (index != -1) {
-      var data = followersList![index];
+      Atsign data = followersList![index];
       followersList![index] = data..isFollowing = follow;
     }
   }
 
   bool containsFollowing(String? atsign) {
-    var index = this.followingList!.indexWhere((data) => data.title == atsign);
+    int index = followingList!.indexWhere((Atsign data) => data.title == atsign);
     return index != -1;
   }
 
   ///Returns data with the title = [atsign] from either followers/following list based on [isFollowing].
   Atsign? getData(bool isFollowing, String? atsign) {
     if (isFollowing) {
-      return this.followingList!.firstWhereOrNull(
-            (data) => data.title == atsign,
-          );
+      return followingList!.firstWhereOrNull(
+        (Atsign data) => data.title == atsign,
+      );
     }
-    return this.followersList!.firstWhereOrNull(
-          (data) => data.title == atsign,
-        );
+    return followersList!.firstWhereOrNull(
+      (Atsign data) => data.title == atsign,
+    );
   }
 }
 

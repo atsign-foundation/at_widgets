@@ -19,7 +19,7 @@ class QrScan extends StatefulWidget {
 }
 
 class _QrScanState extends State<QrScan> {
-  var _logger = AtSignLogger('Connections QR Scan');
+  final AtSignLogger _logger = AtSignLogger('Connections QR Scan');
   bool permissionGrated = false;
   bool loading = false;
   bool _scanCompleted = false;
@@ -27,15 +27,15 @@ class _QrScanState extends State<QrScan> {
   bool _isScan = false;
 
   @override
-  initState() {
+  void initState() {
     checkPermissions();
     super.initState();
   }
 
-  checkPermissions() async {
-    var cameraStatus = await Permission.camera.status;
-    var storageStatus = await Permission.storage.status;
-    _logger.info("camera status => $cameraStatus");
+  Future<void> checkPermissions() async {
+    PermissionStatus cameraStatus = await Permission.camera.status;
+    PermissionStatus storageStatus = await Permission.storage.status;
+    _logger.info('camera status => $cameraStatus');
     _logger.info('storage status is $storageStatus');
 
     if (cameraStatus.isRestricted || cameraStatus.isDenied) {
@@ -49,7 +49,7 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
-  askPermissions(Permission type) async {
+  Future<void> askPermissions(Permission type) async {
     if (type == Permission.camera) {
       await Permission.camera.request();
     } else if (type == Permission.storage) {
@@ -57,41 +57,36 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
-  Future<bool> _validateFollowingAtsign(String? atsign,
-      [bool isScan = false]) async {
+  Future<bool> _validateFollowingAtsign(String? atsign, [bool isScan = false]) async {
     if (ConnectionProvider().containsFollowing(atsign)) {
-      _showFollowersAlertDialog(context, atsign, isScan: isScan);
+      await _showFollowersAlertDialog(context, atsign, isScan: isScan);
       return false;
     } else if (atsign == SDKService().atsign) {
-      _showFollowersAlertDialog(context, atsign,
-          message: Strings.ownAtsign, isScan: isScan);
+      await _showFollowersAlertDialog(context, atsign, message: Strings.ownAtsign, isScan: isScan);
       return false;
     } else if (atsign == Strings.invalidAtsign) {
-      _showFollowersAlertDialog(context, atsign,
-          message: Strings.invalidAtsignMessage, isScan: isScan);
+      await _showFollowersAlertDialog(context, atsign, message: Strings.invalidAtsignMessage, isScan: isScan);
       return false;
     }
-    var atSignStatus = await SDKService().checkAtSignStatus(atsign!);
-    if (atSignStatus == AtSignStatus.teapot ||
-        atSignStatus == AtSignStatus.activated) {
+    AtSignStatus? atSignStatus = await SDKService().checkAtSignStatus(atsign!);
+    if (atSignStatus == AtSignStatus.teapot || atSignStatus == AtSignStatus.activated) {
       return true;
     } else {
-      _showFollowersAlertDialog(context, atsign,
-          message: Strings.getAtSignStatusMessage(atSignStatus),
-          isScan: isScan);
+      await _showFollowersAlertDialog(context, atsign,
+          message: Strings.getAtSignStatusMessage(atSignStatus), isScan: isScan);
       return false;
     }
   }
 
-  Future<void> onScan(String data, List<Offset> offsets, context) async {
+  Future<void> onScan(String data, List<Offset> offsets, BuildContext context) async {
     // _controller.stopCamera();
-    this.setState(() {
+    setState(() {
       loading = true;
     });
     _logger.info('received data is $data');
     if (data != '') {
-      var formattedAtsign = ConnectionsService().formatAtSign(data);
-      var result = await _validateFollowingAtsign(formattedAtsign, true);
+      String? formattedAtsign = ConnectionsService().formatAtSign(data);
+      bool result = await _validateFollowingAtsign(formattedAtsign, true);
 
       if (result) {
         Navigator.pop(context);
@@ -112,10 +107,10 @@ class _QrScanState extends State<QrScan> {
         ),
         body: SingleChildScrollView(
           child: Stack(
-            children: [
+            children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: <Widget>[
                   SizedBox(height: MediaQuery.of(context).size.height * 0.10),
                   SwitchListTile(
                     title: Text(
@@ -124,7 +119,7 @@ class _QrScanState extends State<QrScan> {
                       textAlign: TextAlign.center,
                     ),
                     value: _isScan,
-                    onChanged: (value) {
+                    onChanged: (bool value) {
                       setState(() {
                         _isScan = value;
                       });
@@ -137,24 +132,23 @@ class _QrScanState extends State<QrScan> {
                   SizedBox(height: 20.toHeight),
                   Center(
                     child: Builder(
-                      builder: (context) => Container(
+                      builder: (BuildContext context) => Container(
                         alignment: Alignment.center,
                         width: 300.toWidth,
                         height: 350.toHeight,
                         color: Colors.black,
                         child: !permissionGrated || !_isScan
-                            ? SizedBox()
+                            ? const SizedBox()
                             : Stack(
-                                children: [
+                                children: <Widget>[
                                   QrReaderView(
                                     width: 300.toWidth,
                                     height: 350.toHeight,
-                                    callback: (container) async {
-                                      this._controller = container;
-                                      await _controller!
-                                          .startCamera((data, offsets) async {
+                                    callback: (QrReaderViewController container) async {
+                                      _controller = container;
+                                      await _controller!.startCamera((String data, List<Offset> offsets) async {
                                         if (!_scanCompleted) {
-                                          _controller?.stopCamera();
+                                          await _controller?.stopCamera();
                                           _scanCompleted = true;
 
                                           await onScan(data, offsets, context);
@@ -177,7 +171,7 @@ class _QrScanState extends State<QrScan> {
                   CustomButton(
                       height: 40.toHeight,
                       isActive: true,
-                      onPressedCallBack: (value) {
+                      onPressedCallBack: (bool value) {
                         _getAtsignForm(context);
                       },
                       text: Strings.enterAtsignButton),
@@ -190,20 +184,19 @@ class _QrScanState extends State<QrScan> {
                       width: SizeConfig().screenWidth,
                       child: Center(
                         child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color?>(
-                                ColorConstants.buttonHighLightColor)),
+                            valueColor: AlwaysStoppedAnimation<Color?>(ColorConstants.buttonHighLightColor)),
                       ),
                     )
-                  : SizedBox()
+                  : const SizedBox()
             ],
           ),
         ));
   }
 
-  _getAtsignForm(BuildContext context) {
-    final TextEditingController _atsignController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
-    showDialog(
+  Future<AlertDialog?> _getAtsignForm(BuildContext context) async {
+    TextEditingController _atsignController = TextEditingController();
+    GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    await showDialog<AlertDialog>(
         context: context,
         builder: (_) {
           return AlertDialog(
@@ -215,7 +208,7 @@ class _QrScanState extends State<QrScan> {
                 key: _formKey,
                 autovalidateMode: AutovalidateMode.always,
                 child: TextFormField(
-                  validator: (value) {
+                  validator: (String? value) {
                     if (value == null || value == '') {
                       return '@sign cannot be empty';
                     }
@@ -225,24 +218,20 @@ class _QrScanState extends State<QrScan> {
                   decoration: InputDecoration(
                       hintText: Strings.atsignHintText,
                       prefixText: '@',
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: ColorConstants.buttonHighLightColor!))),
+                      border: OutlineInputBorder(borderSide: BorderSide(color: ColorConstants.buttonHighLightColor!))),
                 ),
               ),
-              actions: [
+              actions: <Widget>[
                 TextButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      this.setState(() {
+                      setState(() {
                         loading = true;
                       });
-                      var formattedAtsign = ConnectionsService()
-                          .formatAtSign(_atsignController.text);
+                      String? formattedAtsign = ConnectionsService().formatAtSign(_atsignController.text);
 
                       Navigator.pop(_);
-                      var result =
-                          await _validateFollowingAtsign(formattedAtsign);
+                      bool result = await _validateFollowingAtsign(formattedAtsign);
 
                       if (!result) {
                         setState(() {
@@ -257,33 +246,27 @@ class _QrScanState extends State<QrScan> {
                   },
                   child: Text(
                     Strings.submitButton,
-                    style: TextStyle(
-                        color: ColorConstants.buttonHighLightColor,
-                        fontSize: 14.toFont),
+                    style: TextStyle(color: ColorConstants.buttonHighLightColor, fontSize: 14.toFont),
                   ),
                 ),
               ]);
         });
   }
 
-  _showFollowersAlertDialog(BuildContext context, String? atsign,
-      {String? message, bool isScan = false}) {
-    showDialog(
+  Future<AlertDialog?> _showFollowersAlertDialog(BuildContext context, String? atsign,
+      {String? message, bool isScan = false}) async {
+    await showDialog<AlertDialog>(
         context: context,
-        builder: (context) {
+        builder: (BuildContext context) {
           return AlertDialog(
-            content: Text(
-                message == null
-                    ? '${Strings.existingFollower}$atsign'
-                    : message,
-                style: CustomTextStyles.fontR14dark),
-            actions: [
+            content: Text(message ?? '${Strings.existingFollower}$atsign', style: CustomTextStyles.fontR14dark),
+            actions: <Widget>[
               TextButton(
-                child: Text(Strings.Close),
+                child: const Text(Strings.close),
                 onPressed: () {
                   Navigator.pop(context);
                   if (isScan) {
-                    _controller!.startCamera((data1, offsets1) {
+                    _controller!.startCamera((String data1, List<Offset> offsets1) {
                       if (!_scanCompleted) {
                         onScan(data1, offsets1, context);
                         _scanCompleted = true;

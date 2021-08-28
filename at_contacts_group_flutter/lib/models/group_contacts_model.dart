@@ -27,7 +27,7 @@ class GroupContactsModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'contact': contact?.toJson(),
       'group': group?.toJson(),
       'contactType': contactType,

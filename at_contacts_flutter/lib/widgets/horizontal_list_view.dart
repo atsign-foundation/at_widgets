@@ -13,18 +13,18 @@ class HorizontalCircularList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _contactService = ContactService();
+    ContactService _contactService = ContactService();
     return StreamBuilder<List<AtContact?>>(
         initialData: _contactService.selectedContacts,
         stream: _contactService.selectedContactStream,
-        builder: (context, snapshot) {
-          var selectedContacts = snapshot.data!;
+        builder: (BuildContext context, AsyncSnapshot<List<AtContact?>> snapshot) {
+          List<AtContact?> selectedContacts = snapshot.data!;
           return Container(
             height: (selectedContacts.isEmpty) ? 0 : 150.toHeight,
             child: ListView.builder(
               itemCount: selectedContacts.length,
               scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
+              itemBuilder: (BuildContext context, int index) {
                 return CircularContacts(
                   contact: selectedContacts[index],
                   onCrossPressed: () {

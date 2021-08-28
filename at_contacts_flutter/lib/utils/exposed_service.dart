@@ -4,6 +4,6 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 
 // ignore: always_declare_return_types
 Future<List<AtContact?>> fetchContacts() async {
-  var contactList = await ContactService().fetchContacts();
+  List<AtContact?> contactList = await ContactService().fetchContacts();
   return contactList;
 }

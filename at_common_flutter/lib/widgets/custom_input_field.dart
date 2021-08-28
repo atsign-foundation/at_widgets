@@ -9,7 +9,7 @@ class CustomInputField extends StatelessWidget {
   final String hintText;
 
   /// A string to pre-populate the input field.
-  final String initialValue;
+  final String? initialValue;
 
   /// sets the width of the input field.
   final double width;
@@ -21,10 +21,10 @@ class CustomInputField extends StatelessWidget {
   final IconData? icon;
 
   /// defines the function to execute on tap on the input field.
-  final Function? onTap;
+  final VoidCallback? onTap;
 
   /// defines the function to execute on tap on the [icon].
-  final Function? onIconTap;
+  final VoidCallback? onIconTap;
 
   /// defines the to execute on submit in the input field.
   final Function? onSubmitted;
@@ -64,9 +64,8 @@ class CustomInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     textController = TextEditingController.fromValue(TextEditingValue(
-        text: initialValue != null ? initialValue : '',
-        selection: TextSelection.collapsed(
-            offset: initialValue != null ? initialValue.length : -1)));
+        text: initialValue != null ? initialValue! : '',
+        selection: TextSelection.collapsed(offset: initialValue != null ? initialValue!.length : -1)));
     return Container(
       width: width,
       height: height,
@@ -74,10 +73,10 @@ class CustomInputField extends StatelessWidget {
         color: inputFieldColor ?? ColorConstants.inputFieldGrey,
         borderRadius: BorderRadius.circular(5),
       ),
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Row(
         children: <Widget>[
-          prefix != null ? prefix! : SizedBox(),
+          prefix != null ? prefix! : const SizedBox(),
           Expanded(
             child: TextField(
               readOnly: isReadOnly,
@@ -88,15 +87,14 @@ class CustomInputField extends StatelessWidget {
                 hintText: hintText,
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
-                hintStyle: TextStyle(
-                    color: ColorConstants.darkGrey, fontSize: 15.toFont),
+                hintStyle: TextStyle(color: ColorConstants.darkGrey, fontSize: 15.toFont),
               ),
-              onTap: onTap as void Function()? ?? () {},
-              onChanged: (val) {
+              onTap: onTap ?? () {},
+              onChanged: (String val) {
                 value!(val);
               },
               controller: textController,
-              onSubmitted: (str) {
+              onSubmitted: (String str) {
                 if (onSubmitted != null) {
                   onSubmitted!(str);
                 }
@@ -105,14 +103,13 @@ class CustomInputField extends StatelessWidget {
           ),
           icon != null
               ? InkWell(
-                  onTap: onIconTap as void Function()? ??
-                      onTap as void Function()?,
+                  onTap: onIconTap ?? onTap,
                   child: Icon(
                     icon,
                     color: iconColor ?? ColorConstants.darkGrey,
                   ),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );

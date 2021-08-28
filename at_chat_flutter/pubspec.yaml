@@ -1,5 +1,6 @@
 name: at_chat_flutter
-description: A Flutter plugin project to provide a chat feature between @‎signs built on the @‎platform to any Flutter application.
+description: A Flutter plugin project to provide a chat feature between @‎signs
+  built on the @‎platform to any Flutter application.
 version: 2.0.2
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
@@ -9,24 +10,23 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  at_contact: ^2.0.2
+  at_client_mobile: ^2.0.3
   at_common_flutter: ^2.0.1
   at_commons: ^2.0.3
-  at_client_mobile: ^2.0.3
+  at_contact: ^2.0.2
   at_lookup: ^2.0.3
-  pedantic: ^1.11.0
   #Picker
   file_picker: 3.0.2+2
+  flutter:
+    sdk: flutter
+  pedantic: ^1.11.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  lints: ^1.0.1
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
   # This section identifies this Flutter project as a plugin project.
@@ -51,7 +51,6 @@ flutter:
   #
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # To add custom fonts to your plugin package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

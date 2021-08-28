@@ -8,8 +8,8 @@ class Bounds<T extends num> {
   final CustomPoint<T> max;
 
   factory Bounds(CustomPoint<T> a, CustomPoint<T> b) {
-    var bounds1 = Bounds._(a, b);
-    var bounds2 = bounds1.extend(a);
+    Bounds<T> bounds1 = Bounds<T>._(a, b);
+    Bounds<T> bounds2 = bounds1.extend(a);
     return bounds2.extend(b);
   }
 
@@ -25,14 +25,14 @@ class Bounds<T extends num> {
       newMin = point;
       newMax = point;
     } else {
-      var minX = math.min(point.x, min.x);
-      var maxX = math.max(point.x, max.x);
-      var minY = math.min(point.y, min.y);
-      var maxY = math.max(point.y, max.y);
-      newMin = CustomPoint(minX, minY);
-      newMax = CustomPoint(maxX, maxY);
+      T minX = math.min(point.x, min.x);
+      T maxX = math.max(point.x, max.x);
+      T minY = math.min(point.y, min.y);
+      T maxY = math.max(point.y, max.y);
+      newMin = CustomPoint<T>(minX, minY);
+      newMax = CustomPoint<T>(maxX, maxY);
     }
-    return Bounds._(newMin, newMax);
+    return Bounds<T>._(newMin, newMax);
   }
 
   /// This [Bounds] cental point.
@@ -44,10 +44,10 @@ class Bounds<T extends num> {
   }
 
   /// Bottom-Left corner's point.
-  CustomPoint<T> get bottomLeft => CustomPoint(min.x, max.y);
+  CustomPoint<T> get bottomLeft => CustomPoint<T>(min.x, max.y);
 
   /// Top-Right corner's point.
-  CustomPoint<T> get topRight => CustomPoint(max.x, min.y);
+  CustomPoint<T> get topRight => CustomPoint<T>(max.x, min.y);
 
   /// Top-Left corner's point.
   CustomPoint<T> get topLeft => min;
@@ -61,9 +61,9 @@ class Bounds<T extends num> {
   }
 
   bool contains(CustomPoint<T> point) {
-    var min = point;
-    var max = point;
-    return containsBounds(Bounds(min, max));
+    CustomPoint<T> min = point;
+    CustomPoint<T> max = point;
+    return containsBounds(Bounds<T>(min, max));
   }
 
   bool containsBounds(Bounds<T> b) {

@@ -12,7 +12,7 @@ class Notifications extends StatelessWidget {
         body: Padding(
           padding: EdgeInsets.all(16.0.toFont),
           child: Column(
-            children: [
+            children: <Widget>[
               Container(
                   height: 70,
                   width: double.infinity,

@@ -12,43 +12,43 @@ class PopupMarkerLayer extends StatelessWidget {
   /// For normal layer behaviour
   final PopupMarkerLayerOptions layerOpts;
   final MapState? map;
-  final Stream<Null> stream;
+  final Stream<dynamic> stream;
 
   PopupMarkerLayer(this.layerOpts, this.map, this.stream);
 
   bool _boundsContainsMarker(Marker marker) {
-    var pixelPoint = map!.project(marker.point);
+    CustomPoint<num> pixelPoint = map!.project(marker.point);
 
-    final width = marker.width - marker.anchor.left;
-    final height = marker.height - marker.anchor.top;
+    double width = marker.width - marker.anchor.left;
+    double height = marker.height - marker.anchor.top;
 
-    var sw = CustomPoint(pixelPoint.x + width, pixelPoint.y - height);
-    var ne = CustomPoint(pixelPoint.x - width, pixelPoint.y + height);
-    return map!.pixelBounds!.containsPartialBounds(Bounds(sw, ne));
+    CustomPoint<num> sw = CustomPoint<num>(pixelPoint.x + width, pixelPoint.y - height);
+    CustomPoint<num> ne = CustomPoint<num>(pixelPoint.x - width, pixelPoint.y + height);
+    return map!.pixelBounds!.containsPartialBounds(Bounds<num>(sw, ne));
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<int?>(
-      stream: stream, // a Stream<int> or null
+      stream: stream as Stream<int>,
       builder: (BuildContext _, AsyncSnapshot<int?> __) {
-        var markers = <Widget>[];
+        List<Widget> markers = <Widget>[];
 
-        for (var markerOpt in layerOpts.markers) {
-          var pos = map!.project(markerOpt.point);
+        for (Marker markerOpt in layerOpts.markers) {
+          CustomPoint<num> pos = map!.project(markerOpt.point);
           pos = pos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) -
               map!.getPixelOrigin()!;
 
-          var pixelPosX =
+          double pixelPosX =
               (pos.x - (markerOpt.width - markerOpt.anchor.left)).toDouble();
-          var pixelPosY =
+          double pixelPosY =
               (pos.y - (markerOpt.height - markerOpt.anchor.top)).toDouble();
 
           if (!_boundsContainsMarker(markerOpt)) {
             continue;
           }
 
-          var bottomPos = map!.pixelBounds!.max;
+          CustomPoint<num> bottomPos = map!.pixelBounds!.max;
           bottomPos =
               bottomPos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) -
                   map!.getPixelOrigin()!;

@@ -22,7 +22,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class CustomListTile extends StatefulWidget {
   final Function? onTap;
-  final Function? onTrailingPressed;
+  final VoidCallback? onTrailingPressed;
   final bool asSelectionTile;
   final GroupContactsModel? item;
   final bool selectSingle;
@@ -52,8 +52,7 @@ class _CustomListTileState extends State<CustomListTile> {
     _groupService = GroupService();
     // if (!widget.selectSingle) {
     // ignore: omit_local_variable_types
-    for (GroupContactsModel? groupContact
-        in _groupService.selectedGroupContacts) {
+    for (GroupContactsModel? groupContact in _groupService.selectedGroupContacts) {
       if (widget.item.toString() == groupContact.toString()) {
         isSelected = true;
         break;
@@ -72,8 +71,7 @@ class _CustomListTileState extends State<CustomListTile> {
 
     // if (!widget.selectSingle) {
     // ignore: omit_local_variable_types
-    for (GroupContactsModel? groupContact
-        in _groupService.selectedGroupContacts) {
+    for (GroupContactsModel? groupContact in _groupService.selectedGroupContacts) {
       if (widget.item.toString() == groupContact.toString()) {
         isSelected = true;
         break;
@@ -108,8 +106,7 @@ class _CustomListTileState extends State<CustomListTile> {
                 : widget.item?.group?.groupName ?? 'UG')!);
       }
     } else {
-      if ((widget.item?.contact?.tags != null &&
-          widget.item?.contact?.tags!['image'] != null)) {
+      if ((widget.item?.contact?.tags != null && widget.item?.contact?.tags!['image'] != null)) {
         List<int> intList = widget.item?.contact?.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
         image = await FlutterImageCompress.compressWithList(
@@ -137,8 +134,6 @@ class _CustomListTileState extends State<CustomListTile> {
     setState(() {
       isLoading = false;
     });
-
-    ;
   }
 
   @override
@@ -146,11 +141,10 @@ class _CustomListTileState extends State<CustomListTile> {
     return StreamBuilder<List<GroupContactsModel?>>(
         initialData: _groupService.selectedGroupContacts,
         stream: _groupService.selectedContactsStream,
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<GroupContactsModel?>> snapshot) {
           // if (!widget.selectSingle) {
           // ignore: omit_local_variable_types
-          for (GroupContactsModel? groupContact
-              in _groupService.selectedGroupContacts) {
+          for (GroupContactsModel? groupContact in _groupService.selectedGroupContacts) {
             if (widget.item.toString() == groupContact.toString()) {
               isSelected = true;
               break;
@@ -166,9 +160,9 @@ class _CustomListTileState extends State<CustomListTile> {
             onTap: () {
               if (widget.asSelectionTile) {
                 if (widget.selectSingle) {
-                  _groupService.selectedGroupContacts = [];
+                  _groupService.selectedGroupContacts = <GroupContactsModel?>[];
                   _groupService.addGroupContact(widget.item);
-                  widget.selectedList!([widget.item]);
+                  widget.selectedList!(<GroupContactsModel?>[widget.item]);
                   Navigator.pop(context);
                 } else if (!widget.selectSingle) {
                   setState(() {
@@ -200,8 +194,7 @@ class _CustomListTileState extends State<CustomListTile> {
               ),
             ),
             subtitle: Text(
-              widget.item?.contact?.atSign ??
-                  '${widget.item?.group?.members?.length} Members',
+              widget.item?.contact?.atSign ?? '${widget.item?.group?.members?.length} Members',
               style: TextStyle(
                 color: AllColors().FADED_TEXT,
                 fontSize: 14.toFont,
@@ -210,21 +203,19 @@ class _CustomListTileState extends State<CustomListTile> {
             leading: Container(
                 height: 40.toHeight,
                 width: 40.toHeight,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.circle,
                 ),
-                child:
-                    (isLoading) ? CircularProgressIndicator() : contactImage),
+                child: (isLoading) ? const CircularProgressIndicator() : contactImage),
             trailing: IconButton(
-              onPressed: (widget.asSelectionTile == false &&
-                      widget.onTrailingPressed != null)
-                  ? widget.onTrailingPressed as void Function()?
+              onPressed: (widget.asSelectionTile == false && widget.onTrailingPressed != null)
+                  ? widget.onTrailingPressed
                   : selectRemoveContact(),
               icon: (widget.asSelectionTile)
                   ? (isSelected)
-                      ? Icon(Icons.close)
-                      : Icon(Icons.add)
+                      ? const Icon(Icons.close)
+                      : const Icon(Icons.add)
                   : Image.asset(
                       AllImages().SEND,
                       width: 21.toWidth,

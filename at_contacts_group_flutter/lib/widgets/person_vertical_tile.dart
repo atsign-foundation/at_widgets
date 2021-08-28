@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:at_contact/src/model/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
@@ -12,7 +13,7 @@ class CustomPersonVerticalTile extends StatefulWidget {
   final String? imageLocation, title, subTitle, atsign;
   final bool isTopRight, isAssetImage;
   final IconData? icon;
-  final Function? onCrossPressed;
+  final VoidCallback? onCrossPressed;
   final Uint8List? imageIntList;
 
   CustomPersonVerticalTile(
@@ -27,8 +28,7 @@ class CustomPersonVerticalTile extends StatefulWidget {
       this.atsign});
 
   @override
-  _CustomPersonVerticalTileState createState() =>
-      _CustomPersonVerticalTileState();
+  _CustomPersonVerticalTileState createState() => _CustomPersonVerticalTileState();
 }
 
 class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
@@ -43,7 +43,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   // ignore: always_declare_return_types
   getAtsignImage() async {
     if (widget.atsign == null) return;
-    var contact = await getAtSignDetails(widget.atsign!);
+    AtContact contact = await getAtSignDetails(widget.atsign!);
 
     // ignore: unnecessary_null_comparison
     if (contact != null) {
@@ -64,7 +64,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 10),
       child: Column(
         children: <Widget>[
           Stack(
@@ -79,8 +79,7 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                       )
                     : image != null
                         ? ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30.toFont)),
+                            borderRadius: BorderRadius.all(Radius.circular(30.toFont)),
                             child: Image.memory(
                               image!,
                               width: 50.toFont,
@@ -98,12 +97,11 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                       bottom: !widget.isTopRight ? 0 : null,
                       right: 0,
                       child: GestureDetector(
-                        onTap: widget.onCrossPressed as void Function()?,
+                        onTap: widget.onCrossPressed,
                         child: Container(
                           height: 20.toHeight,
                           width: 20.toHeight,
-                          decoration: BoxDecoration(
-                              color: Colors.black, shape: BoxShape.circle),
+                          decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
                           child: Icon(
                             Icons.close,
                             size: 15.toHeight,
@@ -112,10 +110,10 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                         ),
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
-          SizedBox(height: 2),
+          const SizedBox(height: 2),
           contactName != null
               ? Text(
                   contactName!,
@@ -124,8 +122,8 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 )
-              : SizedBox(),
-          SizedBox(height: 2),
+              : const SizedBox(),
+          const SizedBox(height: 2),
           widget.subTitle != null
               ? Text(
                   widget.subTitle!,
@@ -134,8 +132,8 @@ class _CustomPersonVerticalTileState extends State<CustomPersonVerticalTile> {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 )
-              : SizedBox(),
-          SizedBox(height: 2),
+              : const SizedBox(),
+          const SizedBox(height: 2),
         ],
       ),
     );

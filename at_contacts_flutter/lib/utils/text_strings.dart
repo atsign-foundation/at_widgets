@@ -23,12 +23,12 @@ class TextStrings {
       'Are you sure you want to add the user to your contact list?';
   String yes = 'Yes';
   String no = 'No';
-  List<String> contactFields = [
+  List<String> contactFields = <String>[
     'firstname.wavi',
     'lastname.wavi',
     'image.wavi',
   ];
-  List<String> contactFieldsPersona = [
+  List<String> contactFieldsPersona = <String>[
     'firstname.persona',
     'lastname.persona',
     'image.persona',

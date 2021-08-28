@@ -8,7 +8,7 @@ class CustomPoint<T extends num> extends math.Point<T> {
   }
 
   CustomPoint<T> ceil() {
-    return CustomPoint(x.ceil(), y.ceil());
+    return CustomPoint<T>(x.ceil(), y.ceil());
   }
 
   CustomPoint<T> floor() {
@@ -34,18 +34,18 @@ class CustomPoint<T extends num> extends math.Point<T> {
     return CustomPoint<T>((x * factor), (y * factor));
   }
 
-  CustomPoint scaleBy(CustomPoint point) {
-    return CustomPoint(x * point.x, y * point.y);
+  CustomPoint<num> scaleBy(CustomPoint<num> point) {
+    return CustomPoint<num>(x * point.x, y * point.y);
   }
 
-  CustomPoint round() {
-    var x = this.x is double ? this.x.round() : this.x;
-    var y = this.y is double ? this.y.round() : this.y;
-    return CustomPoint(x, y);
+  CustomPoint<num> round() {
+    num x = this.x is double ? this.x.round() : this.x;
+    num y = this.y is double ? this.y.round() : this.y;
+    return CustomPoint<num>(x, y);
   }
 
-  CustomPoint multiplyBy(num n) {
-    return CustomPoint(x * n, y * n);
+  CustomPoint<num> multiplyBy(num n) {
+    return CustomPoint<num>(x * n, y * n);
   }
 
   @override

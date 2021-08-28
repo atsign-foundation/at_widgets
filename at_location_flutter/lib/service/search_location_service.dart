@@ -12,21 +12,21 @@ class SearchLocationService {
   static SearchLocationService _instance = SearchLocationService._();
   factory SearchLocationService() => _instance;
 
-  // ignore: close_sinks
-  final _atLocationStreamController =
+  final StreamController<List<LocationModal>> _atLocationStreamController =
       StreamController<List<LocationModal>>.broadcast();
-  Stream<List<LocationModal>> get atLocationStream =>
-      _atLocationStreamController.stream;
-  StreamSink<List<LocationModal>> get atLocationSink =>
-      _atLocationStreamController.sink;
+  Stream<List<LocationModal>> get atLocationStream => _atLocationStreamController.stream;
+  StreamSink<List<LocationModal>> get atLocationSink => _atLocationStreamController.sink;
+
+  void dispose() {
+    _atLocationStreamController.close();
+  }
 
   /// Adds location matching to [address] to [atLocationSink].
   /// If [currentLocation] is passed then will add locations nearby the [currentLocation].
   ///
   /// Make sure that [apiKey] is passed while initialising.
-  void getAddressLatLng(String address, LatLng? currentLocation) async {
-    var url;
-    // ignore: unnecessary_null_comparison
+  Future<void> getAddressLatLng(String address, LatLng? currentLocation) async {
+    String? url;
     if (currentLocation != null) {
       url =
           'https://geocode.search.hereapi.com/v1/geocode?q=${address.replaceAll(RegExp(' '), '+')}&apiKey=${MixedConstants.API_KEY}&at=${currentLocation.latitude},${currentLocation.longitude}';
@@ -34,13 +34,13 @@ class SearchLocationService {
       url =
           'https://geocode.search.hereapi.com/v1/geocode?q=${address.replaceAll(RegExp(' '), '+')}&apiKey=${MixedConstants.API_KEY}';
     }
-    var response = await http.get(Uri.parse(url));
-    var addresses = jsonDecode(response.body);
-    List data = addresses['items'];
-    var share = <LocationModal>[];
+    http.Response response = await http.get(Uri.parse(url));
+    Map<String, dynamic> addresses = jsonDecode(response.body);
+    List<dynamic> data = addresses['items'];
+    List<LocationModal> share = <LocationModal>[];
     //// Removed because of nulls safety
     // for (Map ad in data ?? []) {
-    for (Map ad in data) {
+    for (Map<String, dynamic> ad in data) {
       share.add(LocationModal.fromJson(ad));
     }
 

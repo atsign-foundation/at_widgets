@@ -25,26 +25,23 @@ class ClientSdkService {
     atClientServiceInstance = AtClientService();
     Directory? downloadDirectory;
     if (Platform.isIOS) {
-      downloadDirectory =
-          await path_provider.getApplicationDocumentsDirectory();
+      downloadDirectory = await path_provider.getApplicationDocumentsDirectory();
     } else {
       downloadDirectory = await path_provider.getExternalStorageDirectory();
     }
 
-    final appSupportDirectory =
-        await path_provider.getApplicationSupportDirectory();
+    final appSupportDirectory = await path_provider.getApplicationSupportDirectory();
     var path = appSupportDirectory.path;
     atClientPreference = AtClientPreference();
 
     atClientPreference.isLocalStoreRequired = true;
     atClientPreference.commitLogPath = path;
     atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
-    atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
+    atClientPreference.rootDomain = MixedConstants.rootDomain;
     atClientPreference.hiveStoragePath = path;
     atClientPreference.downloadPath = downloadDirectory!.path;
-    var result = await atClientServiceInstance!
-        .onboard(atClientPreference: atClientPreference, atsign: atsign)
-        .catchError((e) {
+    var result =
+        await atClientServiceInstance!.onboard(atClientPreference: atClientPreference, atsign: atsign).catchError((e) {
       print('Error in Onboarding: $e');
     });
     return result;

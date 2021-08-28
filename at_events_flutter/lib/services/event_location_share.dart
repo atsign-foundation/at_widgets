@@ -29,15 +29,21 @@ class EventLocationShare {
 
   bool masterSwitchState = true;
   StreamSubscription<Position>? positionStream;
-  List<EventNotificationModel> eventsToShareLocationWith = [];
+  List<EventNotificationModel> eventsToShareLocationWith = <EventNotificationModel>[];
   Function? locationPromptDialog;
 
   void init() {
     _initialiseEventData();
 
     print('EventLocationShare init');
-    eventsToShareLocationWith.forEach((e) => print('${e.key}'));
+    for (EventNotificationModel e in eventsToShareLocationWith) {
+      print(e.key);
+    }
     sendLocation();
+  }
+
+  Future<void> dispose() async {
+    await positionStream?.cancel();
   }
 
   void setLocationPrompt(Function _locationPrompt) {
@@ -58,41 +64,27 @@ class EventLocationShare {
   ///
   /// TODO: Can filter events for a specific time limit
   void _initialiseEventData() {
-    eventsToShareLocationWith = [];
+    eventsToShareLocationWith = <EventNotificationModel>[];
 
-    for (var i = 0;
-        i < EventKeyStreamService().allEventNotifications.length;
-        i++) {
-      if ((EventKeyStreamService()
-                  .allEventNotifications[i]
-                  .eventNotificationModel ==
-              null) ||
-          (EventKeyStreamService()
-                  .allEventNotifications[i]
-                  .eventNotificationModel!
-                  .isCancelled ==
-              true)) {
+    for (int i = 0; i < EventKeyStreamService().allEventNotifications.length; i++) {
+      if ((EventKeyStreamService().allEventNotifications[i].eventNotificationModel == null) ||
+          (EventKeyStreamService().allEventNotifications[i].eventNotificationModel!.isCancelled == true)) {
         continue;
       }
 
-      var eventNotificationModel = EventKeyStreamService()
-          .allEventNotifications[i]
-          .eventNotificationModel!;
+      EventNotificationModel eventNotificationModel =
+          EventKeyStreamService().allEventNotifications[i].eventNotificationModel!;
 
-      if ((eventNotificationModel.atsignCreator ==
-          AtEventNotificationListener().currentAtSign)) {
+      if ((eventNotificationModel.atsignCreator == AtEventNotificationListener().currentAtSign)) {
         if (eventNotificationModel.isSharing!) {
           eventsToShareLocationWith.add(eventNotificationModel);
         }
       } else {
         AtContact? currentGroupMember;
-        for (var i = 0;
-            i < eventNotificationModel.group!.members!.length;
-            i++) {
+        for (int i = 0; i < eventNotificationModel.group!.members!.length; i++) {
           if (eventNotificationModel.group!.members!.elementAt(i).atSign ==
               AtEventNotificationListener().currentAtSign) {
-            currentGroupMember =
-                eventNotificationModel.group!.members!.elementAt(i);
+            currentGroupMember = eventNotificationModel.group!.members!.elementAt(i);
             break;
           }
         }
@@ -109,13 +101,11 @@ class EventLocationShare {
 
   /// Will be called from addDataToList or mapUpdatedEventDataToWidget
   Future<void> addMember(EventNotificationModel _newData) async {
-    if (eventsToShareLocationWith
-            .indexWhere((element) => element.key == _newData.key) >
-        -1) {
+    if (eventsToShareLocationWith.indexWhere((EventNotificationModel element) => element.key == _newData.key) > -1) {
       return;
     }
 
-    var myLocation = await getMyLocation();
+    LatLng? myLocation = await getMyLocation();
     if (myLocation != null) {
       if (masterSwitchState) {
         await prepareLocationDataAndSend(_newData, myLocation);
@@ -135,41 +125,34 @@ class EventLocationShare {
       }
     } else {
       if (AtEventNotificationListener().navKey != null) {
-        CustomToast().show('Location permission not granted',
-            AtEventNotificationListener().navKey!.currentContext);
+        CustomToast().show('Location permission not granted', AtEventNotificationListener().navKey!.currentContext);
       }
     }
 
     // add
     eventsToShareLocationWith.add(_newData);
-    print(
-        'after adding atsignsToShareLocationWith length ${eventsToShareLocationWith.length}');
+    print('after adding atsignsToShareLocationWith length ${eventsToShareLocationWith.length}');
   }
 
   /// Will be called from addDataToList or mapUpdatedEventDataToWidget
-  void removeMember(String? key) async {
-    eventsToShareLocationWith
-        .removeWhere((element) => key!.contains(element.key!));
+  Future<void> removeMember(String? key) async {
+    eventsToShareLocationWith.removeWhere((EventNotificationModel element) => key!.contains(element.key!));
 
-    print(
-        'after deleting atsignsToShareLocationWith length ${eventsToShareLocationWith.length}');
+    print('after deleting atsignsToShareLocationWith length ${eventsToShareLocationWith.length}');
   }
 
-  void sendLocation() async {
-    var permission = await Geolocator.checkPermission();
+  Future<void> sendLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
 
-    if (((permission == LocationPermission.always) ||
-        (permission == LocationPermission.whileInUse))) {
+    if (((permission == LocationPermission.always) || (permission == LocationPermission.whileInUse))) {
       /// The stream doesnt run until 100m is covered
       /// So, we send data once
-      var _currentMyLatLng = await getMyLocation();
+      LatLng? _currentMyLatLng = await getMyLocation();
 
       if (_currentMyLatLng != null && masterSwitchState) {
-        await Future.forEach(eventsToShareLocationWith,
-            (dynamic notification) async {
+        await Future.forEach(eventsToShareLocationWith, (dynamic notification) async {
           // ignore: await_only_futures
-          await prepareLocationDataAndSend(notification,
-              LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
+          await prepareLocationDataAndSend(notification, LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
         });
         if (MixedConstants.isDedicated) {
           // ignore: unawaited_futures
@@ -178,14 +161,11 @@ class EventLocationShare {
       }
 
       ///
-      positionStream = Geolocator.getPositionStream(distanceFilter: 100)
-          .listen((myLocation) async {
+      positionStream = Geolocator.getPositionStream(distanceFilter: 100).listen((Position myLocation) async {
         if (masterSwitchState) {
-          await Future.forEach(eventsToShareLocationWith,
-              (dynamic notification) async {
+          await Future.forEach(eventsToShareLocationWith, (dynamic notification) async {
             // ignore: unawaited_futures
-            prepareLocationDataAndSend(notification,
-                LatLng(myLocation.latitude, myLocation.longitude));
+            prepareLocationDataAndSend(notification, LatLng(myLocation.latitude, myLocation.longitude));
           });
           if (MixedConstants.isDedicated) {
             // ignore: unawaited_futures
@@ -197,22 +177,14 @@ class EventLocationShare {
   }
 
   Future<void> prepareLocationDataAndSend(
-      EventNotificationModel _storedEventNotificationModel,
-      LatLng _myLocation) async {
+      EventNotificationModel _storedEventNotificationModel, LatLng _myLocation) async {
     late EventNotificationModel _eventNotificationModel;
 
     /// To get updated event data
-    for (var i = 0;
-        i < EventKeyStreamService().allEventNotifications.length;
-        i++) {
-      if (EventKeyStreamService()
-              .allEventNotifications[i]
-              .eventNotificationModel!
-              .key ==
+    for (int i = 0; i < EventKeyStreamService().allEventNotifications.length; i++) {
+      if (EventKeyStreamService().allEventNotifications[i].eventNotificationModel!.key ==
           _storedEventNotificationModel.key) {
-        _eventNotificationModel = EventKeyStreamService()
-            .allEventNotifications[i]
-            .eventNotificationModel!;
+        _eventNotificationModel = EventKeyStreamService().allEventNotifications[i].eventNotificationModel!;
         break;
       }
     }
@@ -226,56 +198,48 @@ class EventLocationShare {
       return;
     }
 
-    if (_eventNotificationModel.atsignCreator ==
-        AtEventNotificationListener().currentAtSign) {
-      var _from = _eventNotificationModel.event!.startTime!;
-      var _to = _eventNotificationModel.event!.endTime;
+    if (_eventNotificationModel.atsignCreator == AtEventNotificationListener().currentAtSign) {
+      DateTime _from = _eventNotificationModel.event!.startTime!;
+      DateTime? _to = _eventNotificationModel.event!.endTime;
 
-      if ((DateTime.now().difference(_from) > Duration(seconds: 0)) &&
-          (_to!.difference(DateTime.now()) > Duration(seconds: 0))) {
-        var _event = EventNotificationModel.fromJson(jsonDecode(
-            EventNotificationModel.convertEventNotificationToJson(
-                _eventNotificationModel)));
+      if ((DateTime.now().difference(_from) > const Duration(seconds: 0)) &&
+          (_to!.difference(DateTime.now()) > const Duration(seconds: 0))) {
+        EventNotificationModel _event = EventNotificationModel.fromJson(
+            jsonDecode(EventNotificationModel.convertEventNotificationToJson(_eventNotificationModel)));
 
         _event.lat = _myLocation.latitude;
         _event.long = _myLocation.longitude;
 
-        await EventKeyStreamService()
-            .actionOnEvent(_event, ATKEY_TYPE_ENUM.CREATEEVENT);
+        await EventKeyStreamService().actionOnEvent(_event, ATKEY_TYPE_ENUM.CREATEEVENT);
       }
     } else {
-      late var currentGroupMember;
+      late AtContact currentGroupMember;
 
       /// TODO: Optimise this, dont do this on every loop. Do only once
-      _eventNotificationModel.group!.members!.forEach((groupMember) {
+      for (AtContact groupMember in _eventNotificationModel.group!.members!) {
         // sending location to other group members
         if (groupMember.atSign == AtEventNotificationListener().currentAtSign) {
           currentGroupMember = groupMember;
         }
-      });
+      }
 
-      var _from = startTimeEnumToTimeOfDay(
-          currentGroupMember.tags['shareFrom'].toString(),
-          _eventNotificationModel.event!.startTime)!;
-      var _to = endTimeEnumToTimeOfDay(
-          currentGroupMember.tags['shareTo'].toString(),
-          _eventNotificationModel.event!.endTime);
+      DateTime _from = startTimeEnumToTimeOfDay(
+          currentGroupMember.tags!['shareFrom'].toString(), _eventNotificationModel.event!.startTime)!;
+      DateTime? _to = endTimeEnumToTimeOfDay(
+          currentGroupMember.tags!['shareTo'].toString(), _eventNotificationModel.event!.endTime);
 
-      if ((DateTime.now().difference(_from) > Duration(seconds: 0)) &&
-          (_to!.difference(DateTime.now()) > Duration(seconds: 0))) {
-        var _data = EventMemberLocation(
+      if ((DateTime.now().difference(_from) > const Duration(seconds: 0)) &&
+          (_to!.difference(DateTime.now()) > const Duration(seconds: 0))) {
+        EventMemberLocation _data = EventMemberLocation(
             fromAtSign: AtEventNotificationListener().currentAtSign,
             receiver: _eventNotificationModel.atsignCreator,
             key: _eventNotificationModel.key,
             lat: _myLocation.latitude,
             long: _myLocation.longitude);
 
-        var atkeyMicrosecondId =
-            _eventNotificationModel.key!.split('-')[1].split('@')[0];
+        String atkeyMicrosecondId = _eventNotificationModel.key!.split('-')[1].split('@')[0];
 
-        var atKey = newAtKey(
-            5000,
-            '${MixedConstants.EVENT_MEMBER_LOCATION_KEY}-$atkeyMicrosecondId',
+        AtKey atKey = newAtKey(5000, '${MixedConstants.eventMemberLocationKey}-$atkeyMicrosecondId',
             _eventNotificationModel.atsignCreator);
 
         try {
@@ -293,7 +257,7 @@ class EventLocationShare {
   }
 
   AtKey newAtKey(int ttr, String key, String? sharedWith) {
-    var atKey = AtKey()
+    AtKey atKey = AtKey()
       ..metadata = Metadata()
       ..metadata!.ttr = ttr
       // ..metadata.ttl = MixedConstants.maxTTL

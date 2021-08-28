@@ -18,7 +18,7 @@ class LatLngBounds {
       num? minY;
       num? maxY;
 
-      for (var point in points) {
+      for (LatLng? point in points) {
         num x = point!.longitudeInRad;
         num y = point.latitudeInRad;
 
@@ -39,8 +39,8 @@ class LatLngBounds {
         }
       }
 
-      _sw = LatLng(radianToDeg(minY as double), radianToDeg(minX as double));
-      _ne = LatLng(radianToDeg(maxY as double), radianToDeg(maxX as double));
+      _sw = LatLng(radianToDeg(minY!.toDouble()), radianToDeg(minX!.toDouble()));
+      _ne = LatLng(radianToDeg(maxY!.toDouble()), radianToDeg(maxX!.toDouble()));
     }
   }
 
@@ -85,14 +85,14 @@ class LatLngBounds {
     if (!isValid) {
       return false;
     }
-    var sw2 = point;
-    var ne2 = point;
+    LatLng? sw2 = point;
+    LatLng? ne2 = point;
     return containsBounds(LatLngBounds(sw2, ne2));
   }
 
   bool containsBounds(LatLngBounds bounds) {
-    var sw2 = bounds._sw!;
-    var ne2 = bounds._ne;
+    LatLng sw2 = bounds._sw!;
+    LatLng? ne2 = bounds._ne;
     return (sw2.latitude >= _sw!.latitude) &&
         (ne2!.latitude <= _ne!.latitude) &&
         (sw2.longitude >= _sw!.longitude) &&

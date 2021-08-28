@@ -30,7 +30,7 @@ class _OneDayEventState extends State<OneDayEvent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(25),
       child: SingleChildScrollView(
         child: Container(
           height: SizeConfig().screenHeight * 0.85,
@@ -42,7 +42,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     CustomHeading(heading: 'One Day Event', action: 'Cancel'),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Text('Select Date', style: CustomTextStyles().greyLabel14),
                     SizedBox(height: 6.toHeight),
                     Row(
@@ -58,7 +58,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                               ? dateToString(eventData.event!.date!)
                               : '',
                           onTap: () async {
-                            final datePicked = await showDatePicker(
+                            DateTime? datePicked = await showDatePicker(
                                 context: context,
                                 initialDate: (eventData.event!.date != null)
                                     ? eventData.event!.date!
@@ -93,7 +93,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                               ? dateToString(eventData.event!.endDate!)
                               : '',
                           onTap: () async {
-                            final datePicked = await showDatePicker(
+                            DateTime? datePicked = await showDatePicker(
                                 context: context,
                                 initialDate: (eventData.event!.endDate != null)
                                     ? eventData.event!.endDate!
@@ -118,7 +118,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Text('Select Time', style: CustomTextStyles().greyLabel14),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,7 +133,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                               ? timeOfDayToString(eventData.event!.startTime!)
                               : '',
                           onTap: () async {
-                            final timePicked = await showTimePicker(
+                            TimeOfDay? timePicked = await showTimePicker(
                                 context: context,
                                 initialTime: eventData.event!.startTime != null
                                     ? TimeOfDay.fromDateTime(
@@ -168,7 +168,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                                 ? timeOfDayToString(eventData.event!.endTime!)
                                 : '',
                             onTap: () async {
-                              final timePicked = await showTimePicker(
+                              TimeOfDay? timePicked = await showTimePicker(
                                   context: context,
                                   initialTime: eventData.event!.endTime != null
                                       ? TimeOfDay.fromDateTime(
@@ -201,7 +201,7 @@ class _OneDayEventState extends State<OneDayEvent> {
               Center(
                 child: CustomButton(
                   onPressed: () {
-                    var formValid = EventService()
+                    dynamic formValid = EventService()
                         .checForOneDayEventFormValidation(eventData);
                     print(formValid);
                     if (formValid is String) {

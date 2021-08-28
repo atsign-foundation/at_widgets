@@ -40,19 +40,15 @@ class _DisplayTileState extends State<DisplayTile> {
     getEventCreator();
   }
 
-  // ignore: always_declare_return_types
-  getEventCreator() async {
-    var contact = await getAtSignDetails(widget.atsignCreator);
-    // ignore: unnecessary_null_comparison
-    if (contact != null) {
-      if (contact.tags != null && contact.tags!['image'] != null) {
-        List<int> intList = contact.tags!['image'].cast<int>();
-        if (mounted) {
-          setState(() {
-            image = Uint8List.fromList(intList);
-            if (widget.showName) name = contact.tags!['name'].toString();
-          });
-        }
+  Future<void> getEventCreator() async {
+    AtContact? contact = await getAtSignDetails(widget.atsignCreator);
+    if (contact.tags != null && contact.tags!['image'] != null) {
+      List<int> intList = contact.tags!['image'].cast<int>();
+      if (mounted) {
+        setState(() {
+          image = Uint8List.fromList(intList);
+          if (widget.showName) name = contact.tags!['name'].toString();
+        });
       }
     }
   }
@@ -60,15 +56,14 @@ class _DisplayTileState extends State<DisplayTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 15, 10.5),
+      padding: const EdgeInsets.fromLTRB(0, 0, 15, 10.5),
       child: Row(
-        children: [
+        children: <Widget>[
           Stack(
-            children: [
+            children: <Widget>[
               (image != null)
                   ? ClipRRect(
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(30.toFont)),
+                      borderRadius: BorderRadius.all(Radius.circular(30.toFont)),
                       child: Image.memory(
                         image!,
                         width: 50.toFont,
@@ -78,7 +73,7 @@ class _DisplayTileState extends State<DisplayTile> {
                     )
                   : widget.atsignCreator != null
                       ? ContactInitial(initials: widget.atsignCreator)
-                      : SizedBox(),
+                      : const SizedBox(),
               widget.number != null
                   ? Positioned(
                       right: 0,
@@ -87,49 +82,45 @@ class _DisplayTileState extends State<DisplayTile> {
                         alignment: Alignment.center,
                         height: 28.toFont,
                         width: 28.toFont,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.0.toFont),
-                            color: AllColors().BLUE),
+                        decoration:
+                            BoxDecoration(borderRadius: BorderRadius.circular(15.0.toFont), color: AllColors().BLUE),
                         child: Text(
                           '+${widget.number}',
                           style: CustomTextStyles().black10,
                         ),
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
               child: Column(
-                mainAxisAlignment: (widget.subTitle == null)
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: (widget.subTitle == null) ? MainAxisAlignment.center : MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   Text(
                     name ?? widget.title!,
                     style: CustomTextStyles().black14,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   widget.semiTitle != null
                       ? Text(
                           widget.semiTitle!,
-                          style: (widget.semiTitle == 'Action required' ||
-                                      widget.semiTitle == 'Request declined') ||
+                          style: (widget.semiTitle == 'Action required' || widget.semiTitle == 'Request declined') ||
                                   (widget.semiTitle == 'Cancelled')
                               ? CustomTextStyles().orange12
                               : CustomTextStyles().darkGrey12,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
-                      : SizedBox(),
-                  SizedBox(
+                      : const SizedBox(),
+                  const SizedBox(
                     height: 3,
                   ),
                   (widget.subTitle != null)
@@ -139,14 +130,13 @@ class _DisplayTileState extends State<DisplayTile> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   widget.invitedBy != null
                       ? Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: Text(widget.invitedBy!,
-                              style: CustomTextStyles().grey14),
+                          child: Text(widget.invitedBy!, style: CustomTextStyles().grey14),
                         )
-                      : SizedBox()
+                      : const SizedBox()
                 ],
               ),
             ),
@@ -158,14 +148,13 @@ class _DisplayTileState extends State<DisplayTile> {
                   },
                   child: Text(
                     'Retry',
-                    style: TextStyle(
-                        color: AllColors().ORANGE, fontSize: 14.toFont),
+                    style: TextStyle(color: AllColors().ORANGE, fontSize: 14.toFont),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 )
-              : SizedBox(),
-          widget.action ?? SizedBox(),
+              : const SizedBox(),
+          widget.action ?? const SizedBox(),
         ],
       ),
     );

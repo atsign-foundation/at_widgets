@@ -15,10 +15,10 @@ class ImagePicker {
     FilePickerResult? result = await FilePicker.platform
         .pickFiles(type: FileType.image, allowMultiple: false);
     if (result != null) {
-      for (var pickedFile in result.files) {
-        var path = pickedFile.path!;
-        var file = File(path);
-        var compressedFile = await FlutterImageCompress.compressWithFile(
+      for (PlatformFile pickedFile in result.files) {
+        String path = pickedFile.path!;
+        File file = File(path);
+        Uint8List? compressedFile = await FlutterImageCompress.compressWithFile(
           file.absolute.path,
           minWidth: 400,
           minHeight: 200,

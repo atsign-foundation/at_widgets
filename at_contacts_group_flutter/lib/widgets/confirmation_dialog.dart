@@ -1,28 +1,20 @@
 import 'dart:typed_data';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_button.dart';
+import 'package:at_contact/src/model/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
-// ignore: must_be_immutable
 class ConfirmationDialog extends StatefulWidget {
   final String? heading, subtitle, atsign;
-  String title;
+  final String title;
   final Function onYesPressed;
   final Uint8List? image;
   ConfirmationDialog(
-      {required this.heading,
-      required this.title,
-      required this.onYesPressed,
-      this.subtitle,
-      this.atsign,
-      this.image});
+      {required this.heading, required this.title, required this.onYesPressed, this.subtitle, this.atsign, this.image});
 
   @override
   _ConfirmationDialogState createState() => _ConfirmationDialogState();
@@ -48,7 +40,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
   // ignore: always_declare_return_types
   getAtsignImage() async {
     if (widget.atsign == null) return;
-    var contact = await getAtSignDetails(widget.atsign!);
+    AtContact contact = await getAtSignDetails(widget.atsign!);
 
     // ignore: unnecessary_null_comparison
     if (contact != null) {
@@ -64,21 +56,18 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.only(top: 0),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.toWidth)),
+      contentPadding: const EdgeInsets.only(top: 0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.toWidth)),
       content: Container(
         height: 410.toHeight,
         width: 200.toWidth,
-        color: Theme.of(context).brightness == Brightness.light
-            ? AllColors().WHITE
-            : AllColors().Black,
+        color: Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
         child: Container(
-          padding: EdgeInsets.fromLTRB(24, 20, 24, 24),
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Text(
                 widget.heading!,
                 style: CustomTextStyles().grey16,
@@ -88,8 +77,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               // when image is direclty passed as parameter(for group picture)
               widget.image != null
                   ? ClipRRect(
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(30.toFont)),
+                      borderRadius: BorderRadius.all(Radius.circular(30.toFont)),
                       child: Image.memory(
                         widget.image!,
                         width: 50.toFont,
@@ -100,8 +88,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                   // when we have to find image of the atsign
                   : contactImage != null
                       ? ClipRRect(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(30.toFont)),
+                          borderRadius: BorderRadius.all(Radius.circular(30.toFont)),
                           child: Image.memory(
                             contactImage!,
                             width: 50.toFont,
@@ -121,10 +108,10 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                       widget.subtitle!,
                       style: CustomTextStyles().grey16,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               SizedBox(height: 20.toHeight),
               isLoading
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : CustomButton(
                       height: 60.toHeight,
                       width: double.infinity,
@@ -146,28 +133,24 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                         }
                       },
                       buttonColor:
-                          Theme.of(context).brightness == Brightness.light
-                              ? AllColors().Black
-                              : AllColors().WHITE,
+                          Theme.of(context).brightness == Brightness.light ? AllColors().Black : AllColors().WHITE,
                       fontColor:
-                          Theme.of(context).brightness == Brightness.light
-                              ? AllColors().WHITE
-                              : AllColors().Black,
+                          Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
                     ),
               SizedBox(height: 15.toHeight),
               InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: !isLoading
-                      ? Text(
-                          'No',
-                          style: TextStyle(
-                              fontSize: 14.toFont,
-                              color: Theme.of(context).brightness ==
-                                      Brightness.light
-                                  ? AllColors().Black
-                                  : AllColors().WHITE),
-                        )
-                      : SizedBox())
+                onTap: () => Navigator.of(context).pop(),
+                child: !isLoading
+                    ? Text(
+                        'No',
+                        style: TextStyle(
+                            fontSize: 14.toFont,
+                            color: Theme.of(context).brightness == Brightness.light
+                                ? AllColors().Black
+                                : AllColors().WHITE),
+                      )
+                    : const SizedBox(),
+              ),
             ],
           ),
         ),

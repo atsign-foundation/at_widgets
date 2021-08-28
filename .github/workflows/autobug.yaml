@@ -13,8 +13,7 @@ jobs:
     steps:
     - name: Assign issues and pull requests with `bug` label to project 3
       uses: srggrs/assign-one-project-github-action@1.2.1
-      if: |
-        contains(github.event.issue.labels.*.name, 'bug') ||
+      if: contains(github.event.issue.labels.*.name, 'bug')
       with:
         project: 'https://github.com/orgs/atsign-foundation/projects/3'
         column_name: 'Bugs'

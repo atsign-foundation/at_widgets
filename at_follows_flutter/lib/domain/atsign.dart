@@ -10,7 +10,7 @@ class Atsign {
     return value != null && value != '' && value != 'null';
   }
 
-  setData(AtFollowsValue followsValue) {
+  void setData(AtFollowsValue followsValue) {
     switch (followsValue.atKey.key) {
       case PublicData.image:
       case PublicData.imagePersona:
@@ -22,9 +22,7 @@ class Atsign {
         break;
       case PublicData.lastname:
       case PublicData.lastnamePersona:
-        subtitle = _isValid(followsValue.value)
-            ? subtitle! + followsValue.value
-            : subtitle;
+        subtitle = _isValid(followsValue.value) ? subtitle! + followsValue.value : subtitle;
         break;
       default:
         break;
@@ -40,9 +38,9 @@ class Atsign {
 
   factory Atsign.fromJson(Map<String, dynamic> json) {
     return Atsign(
-        title: json['title'] as String?,
-        subtitle: json['subtitle'] as String?,
-        isFollowing: json['isFollowing'] as bool?,
+        title: json['title'].toString(),
+        subtitle: json['subtitle'].toString(),
+        isFollowing: json['isFollowing'],
         profilePicture: json['profilePicture'] as dynamic);
   }
 }
@@ -56,9 +54,9 @@ class PublicData {
   static const String firstnamePersona = 'firstname.persona';
   static const String lastnamePersona = 'lastname.persona';
 
-  static List<String> list = [image, firstname, lastname];
+  static List<String> list = <String>[image, firstname, lastname];
 
-  static Map<String, String> personaMap = {
+  static Map<String, String> personaMap = <String, String>{
     image: imagePersona,
     firstname: firstnamePersona,
     lastname: lastnamePersona

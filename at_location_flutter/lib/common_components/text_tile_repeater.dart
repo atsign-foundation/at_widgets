@@ -20,14 +20,14 @@ class TextTileRepeater extends StatelessWidget {
         children: <Widget>[
           title != null
               ? Text(title!, style: CustomTextStyles().grey16)
-              : SizedBox(),
+              : const SizedBox(),
           Expanded(
             child: ListView.separated(
-              separatorBuilder: (context, index) {
-                return Divider();
+              separatorBuilder: (BuildContext context, int index) {
+                return const Divider();
               },
               itemCount: options!.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (BuildContext context, int index) {
                 return SizedBox(
                   height: 50.toHeight,
                   child: GestureDetector(

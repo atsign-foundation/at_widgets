@@ -10,7 +10,7 @@ class PopupContainer {
   final Alignment? alignment;
 
   PopupContainer({
-    required size,
+    required dynamic size,
     this.left,
     this.top,
     this.right,

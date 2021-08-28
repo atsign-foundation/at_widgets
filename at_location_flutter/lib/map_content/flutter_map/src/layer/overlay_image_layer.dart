@@ -10,8 +10,8 @@ class OverlayImageLayerOptions extends LayerOptions {
 
   OverlayImageLayerOptions({
     Key? key,
-    this.overlayImages = const [],
-    rebuild,
+    this.overlayImages = const <OverlayImage>[],
+    dynamic rebuild,
   }) : super(key: key, rebuild: rebuild);
 }
 
@@ -36,7 +36,7 @@ class OverlayImageLayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mapState = MapState.of(context)!;
+    MapState mapState = MapState.of(context)!;
     return OverlayImageLayer(options, mapState, mapState.onMoved);
   }
 }
@@ -44,10 +44,9 @@ class OverlayImageLayerWidget extends StatelessWidget {
 class OverlayImageLayer extends StatelessWidget {
   final OverlayImageLayerOptions overlayImageOpts;
   final MapState? map;
-  final Stream<Null>? stream;
+  final Stream<void>? stream;
 
-  OverlayImageLayer(this.overlayImageOpts, this.map, this.stream)
-      : super(key: overlayImageOpts.key);
+  OverlayImageLayer(this.overlayImageOpts, this.map, this.stream) : super(key: overlayImageOpts.key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +56,7 @@ class OverlayImageLayer extends StatelessWidget {
         return ClipRect(
           child: Stack(
             children: <Widget>[
-              for (var overlayImage in overlayImageOpts.overlayImages)
-                _positionedForOverlay(overlayImage),
+              for (OverlayImage overlayImage in overlayImageOpts.overlayImages) _positionedForOverlay(overlayImage),
             ],
           ),
         );
@@ -67,14 +65,10 @@ class OverlayImageLayer extends StatelessWidget {
   }
 
   Positioned _positionedForOverlay(OverlayImage overlayImage) {
-    final zoomScale = map!.getZoomScale(map!.zoom, map!.zoom);
-    final pixelOrigin = map!.getPixelOrigin()!;
-    final upperLeftPixel =
-        map!.project(overlayImage.bounds!.northWest).multiplyBy(zoomScale) -
-            pixelOrigin;
-    final bottomRightPixel =
-        map!.project(overlayImage.bounds!.southEast).multiplyBy(zoomScale) -
-            pixelOrigin;
+    double zoomScale = map!.getZoomScale(map!.zoom, map!.zoom);
+    CustomPoint<num> pixelOrigin = map!.getPixelOrigin()!;
+    CustomPoint<num> upperLeftPixel = map!.project(overlayImage.bounds!.northWest).multiplyBy(zoomScale) - pixelOrigin;
+    CustomPoint<num> bottomRightPixel = map!.project(overlayImage.bounds!.southEast).multiplyBy(zoomScale) - pixelOrigin;
     return Positioned(
       left: upperLeftPixel.x.toDouble(),
       top: upperLeftPixel.y.toDouble(),

@@ -12,16 +12,16 @@ class BackUpKeyService {
   late AtClientService atClientService;
 
   Future<String?> _getAESKey(String atsign) async {
-    return await atClientService.getAESKey(atsign);
+    return atClientService.getAESKey(atsign);
   }
 
   Future<Map<String, String>> getEncryptedKeys(String atsign) async {
-    var result;
+    Map<String, String> result;
     try {
       result = await atClientService.getEncryptedKeys(atsign);
-      result[atsign] = await this._getAESKey(atsign);
+      result[atsign] = (await _getAESKey(atsign))!;
     } catch (e) {
-      result = {};
+      result = <String, String>{};
     }
     return result;
   }

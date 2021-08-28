@@ -1,5 +1,7 @@
 name: at_backupkey_flutter
-description: A Flutter plugin project for saving the backup key of any @‎sign that is being onboarded with @‎platform apps. The backup key can be used to authenticate in other @‎platform apps.
+description: A Flutter plugin project for saving the backup key of any @‎sign
+  that is being onboarded with @‎platform apps. The backup key can be used to
+  authenticate in other @‎platform apps.
 version: 2.0.1
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
@@ -9,21 +11,20 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
+  at_client_mobile: ^2.0.2
+  at_utils: ^2.0.1
   flutter:
     sdk: flutter
-  share: ^2.0.4
-  permission_handler: ^8.1.1
   path_provider: ^2.0.2
-  at_utils: ^2.0.1
-  at_client_mobile: ^2.0.2
-  
+  permission_handler: ^8.1.1
+  share: ^2.0.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  lints: ^1.0.1
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
   # This section identifies this Flutter project as a plugin project.
@@ -37,7 +38,6 @@ flutter:
         pluginClass: AtBackupkeyFlutterPlugin
       ios:
         pluginClass: AtBackupkeyFlutterPlugin
-
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -48,7 +48,6 @@ flutter:
   #
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # To add custom fonts to your plugin package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

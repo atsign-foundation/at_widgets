@@ -95,7 +95,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               : leadingIcon
           : Container(),
       title: Row(
-        children: [
+        children: <Widget>[
           // Container(
           //   height: 40.toHeight,
           //   margin: EdgeInsets.only(top: 5.toHeight),
@@ -122,7 +122,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: [
+      actions: <Widget>[
         (closeOnRight)
             ? Center(
                 child: Container(

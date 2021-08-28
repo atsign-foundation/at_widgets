@@ -3,27 +3,27 @@ import 'dart:math';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 
 class Spiderfy {
-  static final pi2 = pi * 2;
-  static const spiralFootSeparation =
+  static final double pi2 = pi * 2;
+  static const int spiralFootSeparation =
       28; //related to size of spiral (experiment!)
-  static const spiralLengthStart = 11;
-  static const spiralLengthFactor = 5;
+  static const int spiralLengthStart = 11;
+  static const int spiralLengthFactor = 5;
 
-  static const circleStartAngle = 0;
+  static const int circleStartAngle = 0;
 
-  static List<Point> spiral(int distanceMultiplier, int count, Point center) {
+  static List<Point<num>> spiral(int distanceMultiplier, int count, Point<num> center) {
     num legLength = distanceMultiplier * spiralLengthStart;
-    final separation = distanceMultiplier * spiralFootSeparation;
-    final lengthFactor = distanceMultiplier * spiralLengthFactor * pi2;
+    int separation = distanceMultiplier * spiralFootSeparation;
+    double lengthFactor = distanceMultiplier * spiralLengthFactor * pi2;
     num angle = 0;
 
-    final result = <Point>[];
+    List<Point<num>> result = <Point<num>>[];
     // Higher index, closer position to cluster center.
-    for (var i = count; i >= 0; i--) {
+    for (int i = count; i >= 0; i--) {
       // Skip the first position, so that we are already farther from center and we avoid
       // being under the default cluster icon (especially important for Circle Markers).
       if (i < count) {
-        result[i] = Point(center.x + legLength * cos(angle),
+        result[i] = Point<num>(center.x + legLength * cos(angle),
             center.y + legLength * sin(angle));
       }
       angle += separation / legLength + i * 0.0005;
@@ -32,12 +32,12 @@ class Spiderfy {
     return result;
   }
 
-  static List<Point> circle(int radius, int count, Point center) {
-    var angleStep = pi2 / count;
-    final result = <Point>[];
+  static List<Point<num>> circle(int radius, int count, Point<num> center) {
+    double angleStep = pi2 / count;
+    List<Point<num>> result = <Point<num>>[];
 
-    for (var i = 0; i < count; i++) {
-      var angle = circleStartAngle + i * angleStep;
+    for (int i = 0; i < count; i++) {
+      double angle = circleStartAngle + i * angleStep;
 
       result[i] = CustomPoint<double>(
           center.x + radius * cos(angle), center.y + radius * sin(angle));

@@ -9,8 +9,8 @@ class MarkerLayerOptions extends LayerOptions {
   final List<Marker> markers;
   MarkerLayerOptions({
     Key? key,
-    this.markers = const [],
-    rebuild,
+    this.markers = const <Marker>[],
+    dynamic rebuild,
   }) : super(key: key, rebuild: rebuild);
 }
 
@@ -52,7 +52,7 @@ class Anchor {
     }
   }
 
-  factory Anchor.forPos(AnchorPos? pos, double width, double height) {
+  factory Anchor.forPos(AnchorPos<dynamic>? pos, double width, double height) {
     if (pos == null) return Anchor._(width, height, null);
     if (pos.value is AnchorAlign) return Anchor._(width, height, pos.value);
     if (pos.value is Anchor) return pos.value;
@@ -63,8 +63,8 @@ class Anchor {
 class AnchorPos<T> {
   AnchorPos._(this.value);
   T value;
-  static AnchorPos exactly(Anchor anchor) => AnchorPos._(anchor);
-  static AnchorPos align(AnchorAlign alignOpt) => AnchorPos._(alignOpt);
+  static AnchorPos<dynamic> exactly(Anchor anchor) => AnchorPos<dynamic>._(anchor);
+  static AnchorPos<dynamic> align(AnchorAlign alignOpt) => AnchorPos<dynamic>._(alignOpt);
 }
 
 enum AnchorAlign {
@@ -87,7 +87,7 @@ class Marker {
     required this.builder,
     this.width = 30.0,
     this.height = 30.0,
-    AnchorPos? anchorPos,
+    AnchorPos<dynamic>? anchorPos,
   }) : anchor = Anchor.forPos(anchorPos, width, height);
 }
 
@@ -98,7 +98,7 @@ class MarkerLayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mapState = MapState.of(context)!;
+    MapState mapState = MapState.of(context)!;
     return MarkerLayer(options, mapState, mapState.onMoved);
   }
 }
@@ -106,37 +106,33 @@ class MarkerLayerWidget extends StatelessWidget {
 class MarkerLayer extends StatelessWidget {
   final MarkerLayerOptions markerOpts;
   final MapState? map;
-  final Stream<Null>? stream;
+  final Stream<void>? stream;
 
-  MarkerLayer(this.markerOpts, this.map, this.stream)
-      : super(key: markerOpts.key);
+  MarkerLayer(this.markerOpts, this.map, this.stream) : super(key: markerOpts.key);
 
   bool _boundsContainsMarker(Marker marker) {
-    var pixelPoint = map!.project(marker.point);
+    CustomPoint<num> pixelPoint = map!.project(marker.point);
 
-    final width = marker.width - marker.anchor.left;
-    final height = marker.height - marker.anchor.top;
+    double width = marker.width - marker.anchor.left;
+    double height = marker.height - marker.anchor.top;
 
-    var sw = CustomPoint(pixelPoint.x + width, pixelPoint.y - height);
-    var ne = CustomPoint(pixelPoint.x - width, pixelPoint.y + height);
-    return map!.pixelBounds!.containsPartialBounds(Bounds(sw, ne));
+    CustomPoint<num> sw = CustomPoint<num>(pixelPoint.x + width, pixelPoint.y - height);
+    CustomPoint<num> ne = CustomPoint<num>(pixelPoint.x - width, pixelPoint.y + height);
+    return map!.pixelBounds!.containsPartialBounds(Bounds<num>(sw, ne));
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<int?>(
-      stream: stream, // a Stream<int> or null
+      stream: stream as Stream<int?>?,
       builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
-        var markers = <Widget>[];
-        for (var markerOpt in markerOpts.markers) {
-          var pos = map!.project(markerOpt.point);
-          pos = pos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) -
-              map!.getPixelOrigin()!;
+        List<Widget> markers = <Widget>[];
+        for (Marker markerOpt in markerOpts.markers) {
+          CustomPoint<num> pos = map!.project(markerOpt.point);
+          pos = pos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) - map!.getPixelOrigin()!;
 
-          var pixelPosX =
-              (pos.x - (markerOpt.width - markerOpt.anchor.left)).toDouble();
-          var pixelPosY =
-              (pos.y - (markerOpt.height - markerOpt.anchor.top)).toDouble();
+          double pixelPosX = (pos.x - (markerOpt.width - markerOpt.anchor.left)).toDouble();
+          double pixelPosY = (pos.y - (markerOpt.height - markerOpt.anchor.top)).toDouble();
 
           if (!_boundsContainsMarker(markerOpt)) {
             continue;

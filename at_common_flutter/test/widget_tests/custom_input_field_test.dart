@@ -73,7 +73,7 @@ void main() {
       final inputField =
           tester.widget<CustomInputField>(find.byType(CustomInputField));
       expect(inputField.iconColor, Colors.blue);
-      expect(inputField.onIconTap!.call(), null);
+      expect(inputField.onIconTap, null);
       expect(inputField.icon, Icons.person);
     });
 

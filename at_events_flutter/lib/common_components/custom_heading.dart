@@ -9,16 +9,16 @@ class CustomHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
+      children: <Widget>[
         heading != null
             ? Text(heading!,
                 style: Theme.of(context).brightness == Brightness.light
                     ? CustomTextStyles().black18
                     : CustomTextStyles().white18)
-            : SizedBox(),
+            : const SizedBox(),
         action != null
             ? Text(action!, style: CustomTextStyles().orange18)
-            : SizedBox()
+            : const SizedBox()
       ],
     );
   }

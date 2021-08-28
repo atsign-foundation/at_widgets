@@ -31,29 +31,26 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
   Widget build(BuildContext context) {
     return Container(
       height: SizeConfig().screenHeight * 0.5,
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(25),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Share Location', style: CustomTextStyles().black18),
-              PopButton(label: 'Cancel')
-            ],
+            children: <Widget>[Text('Share Location', style: CustomTextStyles().black18), PopButton(label: 'Cancel')],
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           Text('Share with', style: CustomTextStyles().greyLabel14),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           CustomInputField(
             width: 330.toWidth,
             height: 50,
             hintText: 'Type @sign ',
             initialValue: textField ?? '',
-            value: (str) {
+            value: (String str) {
               if (!str.contains('@')) {
                 str = '@' + str;
               }
@@ -62,26 +59,25 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
             icon: Icons.contacts_rounded,
             onTap: widget.onTap,
           ),
-          SizedBox(height: 25),
+          const SizedBox(height: 25),
           Text(
             'Duration',
             style: CustomTextStyles().greyLabel14,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             color: AllColors().INPUT_GREY_BACKGROUND,
             width: 330.toWidth,
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: DropdownButton(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: DropdownButton<String>(
               isExpanded: true,
-              icon: Icon(Icons.keyboard_arrow_down),
-              underline: SizedBox(),
+              icon: const Icon(Icons.keyboard_arrow_down),
+              underline: const SizedBox(),
               elevation: 0,
               dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
               value: selectedOption,
-              hint: Text('Occurs on'),
-              items: ['30 mins', '2 hours', '24 hours', 'Until turned off']
-                  .map((String option) {
+              hint: const Text('Occurs on'),
+              items: <String>['30 mins', '2 hours', '24 hours', 'Until turned off'].map((String option) {
                 return DropdownMenuItem<String>(
                   value: option,
                   child: Text(option),
@@ -95,10 +91,10 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               },
             ),
           ),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
           Center(
             child: isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : CustomButton(
                     buttonText: 'Share',
                     onPressed: onShareTap,
@@ -112,11 +108,11 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     );
   }
 
-  void onShareTap() async {
+  Future<void> onShareTap() async {
     setState(() {
       isLoading = true;
     });
-    var validAtSign = await checkAtsign(textField);
+    bool validAtSign = await checkAtsign(textField);
 
     if (!validAtSign) {
       setState(() {
@@ -131,14 +127,11 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
       return;
     }
 
-    var minutes = (selectedOption == '30 mins'
+    int? minutes = (selectedOption == '30 mins'
         ? 30
-        : (selectedOption == '2 hours'
-            ? (2 * 60)
-            : (selectedOption == '24 hours' ? (24 * 60) : null)));
+        : (selectedOption == '2 hours' ? (2 * 60) : (selectedOption == '24 hours' ? (24 * 60) : null)));
 
-    var result = await SharingLocationService()
-        .sendShareLocationEvent(textField, false, minutes: minutes);
+    bool? result = await SharingLocationService().sendShareLocationEvent(textField, false, minutes: minutes);
 
     if (result == null) {
       setState(() {
@@ -168,8 +161,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     } else if (!atSign.contains('@')) {
       atSign = '@' + atSign;
     }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
+    String? checkPresence = await AtLookupImpl.findSecondary(atSign, AtLocationNotificationListener().rootDomain, 64);
     return checkPresence != null;
   }
 }

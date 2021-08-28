@@ -19,11 +19,11 @@ class PopupMarkerLayerOptions extends LayerOptions {
   /// popupController: Optional. Provide a PopupController instance to control
   ///                  popup functionality programmatically.
   PopupMarkerLayerOptions({
-    this.markers = const [],
+    this.markers = const <Marker>[],
     this.popupSnap = PopupSnap.top,
     required this.popupBuilder,
-    popupController,
-    rebuild,
-  })  : popupController = popupController ?? PopupController(),
+    required this.popupController,
+    dynamic rebuild,
+  }):
         super(rebuild: rebuild);
 }

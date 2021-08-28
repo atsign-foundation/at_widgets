@@ -11,7 +11,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showQr;
   final bool showNotifications;
   final String? title;
-  final showBackButton;
+  final bool showBackButton;
 
   CustomAppBar(
       {this.showTitle = false,
@@ -28,17 +28,17 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       backgroundColor: ColorConstants.backgroundColor,
       leading: null,
       automaticallyImplyLeading: false,
-      actions: [
-        if (this.showNotifications)
+      actions: <Widget>[
+        if (showNotifications)
           GestureDetector(
               onTap: () {
                 print('inside notifications');
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                Navigator.push(context, MaterialPageRoute<Notifications>(builder: (BuildContext context) {
                   return Notifications();
                 }));
               },
               child: Stack(
-                children: [
+                children: <Widget>[
                   Padding(
                     padding:
                         EdgeInsets.only(top: 10.0.toFont, right: 10.0.toFont),
@@ -49,24 +49,24 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                     right: 10,
                     top: 10,
                     child: Container(
-                        padding: EdgeInsets.all(1),
+                        padding: const EdgeInsets.all(1),
                         decoration: BoxDecoration(
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(6)),
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                           minHeight: 14,
                           minWidth: 14,
                         ),
-                        child: Text('1', textAlign: TextAlign.center)),
+                        child: const Text('1', textAlign: TextAlign.center)),
                   )
                 ],
               )),
         // SizedBox(width: 10.toFont),
-        if (this.showQr)
+        if (showQr)
           GestureDetector(
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => QrScan()));
+                  context, MaterialPageRoute<QrScan>(builder: (BuildContext context) => QrScan()));
             },
             child: Padding(
               padding: EdgeInsets.only(right: 12.0.toFont),
@@ -80,12 +80,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               child: SizedBox(width: 25.toFont))
       ],
       title: Row(
-        children: [
+        children: <Widget>[
           Flexible(
             fit: FlexFit.loose,
             flex: 2,
             child: GestureDetector(
-                child: Text(Strings.BackButton,
+                child: Text(Strings.backButton,
                     style: CustomTextStyles.fontR14dark),
                 onTap: () {
                   Navigator.pop(context);
@@ -98,7 +98,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 flex: 7,
                 child: Center(
                   child: Text(
-                    this.title ?? Strings.Title,
+                    title ?? Strings.title,
                     maxLines: 3,
                     style: CustomTextStyles.fontBold18primary,
                     textAlign: TextAlign.center,

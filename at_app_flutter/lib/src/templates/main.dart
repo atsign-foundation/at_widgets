@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -13,7 +14,7 @@ void main() {
 }
 
 Future<AtClientPreference> loadAtClientPreference() async {
-  var dir = await path_provider.getApplicationSupportDirectory();
+  Directory dir = await path_provider.getApplicationSupportDirectory();
   return AtClientPreference()
         ..rootDomain = AtEnv.rootDomain
         ..namespace = AtEnv.appNamespace
@@ -48,7 +49,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('MyApp'),
         ),
         body: Builder(
-          builder: (context) => Center(
+          builder: (BuildContext context) => Center(
             child: TextButton(
               onPressed: () async {
                 atClientPreference = await futurePreference;
@@ -56,20 +57,20 @@ class _MyAppState extends State<MyApp> {
                   context: context,
                   atClientPreference: atClientPreference!,
                   domain: AtEnv.rootDomain,
-                  onboard: (value, atsign) {
+                  onboard: (Map<String?, AtClientService> value, String? atsign) {
                     setState(() {
                       atClientService = value[atsign]!;
                     });
                     _logger.finer('Successfully onboarded $atsign');
                   },
-                  onError: (error) {
+                  onError: (Object? error) {
                     _logger.severe('Onboarding throws $error error');
                   },
                   nextScreen: HomeScreen(),
                   appAPIKey: AtEnv.appApiKey,
                 );
               },
-              child: Text(
+              child: const Text(
                 'Onboard an @sign',
                 style: TextStyle(fontSize: 36),
               ),
@@ -109,12 +110,12 @@ class HomeScreen extends StatelessWidget {
     /// atContext.switchAtsign("@example");
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: const Text('Dashboard'),
       ),
       body: Center(
         child: Column(
-          children: [
-            Text('Successfully onboarded and navigated to FirstAppScreen'),
+          children: <Widget>[
+            const Text('Successfully onboarded and navigated to FirstAppScreen'),
             Text('Current @sign: ${atContext.currentAtSign}'),
           ],
         ),

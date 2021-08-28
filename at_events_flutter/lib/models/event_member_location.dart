@@ -37,7 +37,7 @@ class EventMemberLocation {
 
   static String convertLocationNotificationToJson(
       EventMemberLocation eventMemberLocation) {
-    var notification = json.encode({
+    String notification = json.encode(<String, dynamic>{
       'fromAtSign': eventMemberLocation.fromAtSign,
       'receiver': eventMemberLocation.receiver,
       'lat': eventMemberLocation.lat.toString(),

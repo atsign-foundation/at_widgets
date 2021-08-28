@@ -1,3 +1,4 @@
+import 'package:at_contact/src/model/at_contact.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -14,23 +15,21 @@ class HomeEventService {
   bool isActionRequired(EventNotificationModel event) {
     if (event.isCancelled!) return true;
 
-    var isRequired = true;
-    var currentAtsign =
-        AtEventNotificationListener().atClientInstance!.currentAtSign;
+    bool isRequired = true;
+    String? currentAtsign = AtEventNotificationListener().atClientInstance!.currentAtSign;
 
     if (event.group!.members!.isEmpty) return true;
 
-    event.group!.members!.forEach((member) {
+    for (AtContact member in event.group!.members!) {
       if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
-      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
+      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign;
 
-      if ((member.tags!['isAccepted'] != null &&
-              member.tags!['isAccepted'] == true) &&
+      if ((member.tags!['isAccepted'] != null && member.tags!['isAccepted'] == true) &&
           member.tags!['isExited'] == false &&
-          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
+          member.atSign!.toLowerCase() == currentAtsign.toLowerCase()) {
         isRequired = false;
       }
-    });
+    }
 
     if (event.atsignCreator == currentAtsign) isRequired = false;
 
@@ -39,29 +38,28 @@ class HomeEventService {
 
   String getActionString(EventNotificationModel event, bool haveResponded) {
     if (event.isCancelled!) return 'Cancelled';
-    var label = 'Action required';
-    var currentAtsign =
-        AtEventNotificationListener().atClientInstance!.currentAtSign;
+    String label = 'Action required';
+    String? currentAtsign = AtEventNotificationListener().atClientInstance!.currentAtSign;
 
     if (event.group!.members!.isEmpty) return '';
 
-    event.group!.members!.forEach((member) {
+    for (AtContact member in event.group!.members!) {
       if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
-      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
+      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign;
 
       if (member.tags!['isExited'] != null &&
           member.tags!['isExited'] == true &&
-          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
+          member.atSign!.toLowerCase() == currentAtsign.toLowerCase()) {
         label = 'Request declined';
       } else if (member.tags!['isExited'] != null &&
           member.tags!['isExited'] == false &&
           member.tags!['isAccepted'] != null &&
           member.tags!['isAccepted'] == false &&
-          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase() &&
+          member.atSign!.toLowerCase() == currentAtsign.toLowerCase() &&
           haveResponded) {
         label = 'Pending request';
       }
-    });
+    }
 
     return label;
   }
@@ -86,9 +84,7 @@ class HomeEventService {
     if ((_eventKeyModel.eventNotificationModel!.group != null) &&
         (isActionRequired(_eventKeyModel.eventNotificationModel!)) &&
         (_eventKeyModel.haveResponded)) {
-      if (getActionString(_eventKeyModel.eventNotificationModel!,
-              _eventKeyModel.haveResponded) ==
-          'Pending request') {
+      if (getActionString(_eventKeyModel.eventNotificationModel!, _eventKeyModel.haveResponded) == 'Pending request') {
         return true;
       }
       return false;
@@ -96,15 +92,13 @@ class HomeEventService {
     return false;
   }
 
-  // ignore: always_declare_return_types
-  onEventModelTap(
-      EventNotificationModel eventNotificationModel, bool haveResponded) {
-    if (isActionRequired(eventNotificationModel) &&
-        !eventNotificationModel.isCancelled!) {
+  Future<EventNotificationDialog?>? onEventModelTap(
+      EventNotificationModel eventNotificationModel, bool haveResponded) async {
+    if (isActionRequired(eventNotificationModel) && !eventNotificationModel.isCancelled!) {
       if (haveResponded) {
         return null;
       }
-      return showDialog<void>(
+      return showDialog<EventNotificationDialog>(
         context: AtEventNotificationListener().navKey!.currentContext!,
         barrierDismissible: true,
         builder: (BuildContext context) {
@@ -116,6 +110,6 @@ class HomeEventService {
     eventNotificationModel.isUpdate = true;
 
     /// Move to map screen
-    EventsMapScreenData().moveToEventScreen(eventNotificationModel);
+    await EventsMapScreenData().moveToEventScreen(eventNotificationModel);
   }
 }

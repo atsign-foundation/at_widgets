@@ -23,28 +23,24 @@ class ChatService {
   int? rootPort;
   String? currentAtSign;
   String? chatWithAtSign;
-  List<Message> chatHistory = [];
-  List<dynamic>? chatHistoryMessages = [];
+  List<Message> chatHistory = <Message>[];
+  List<dynamic>? chatHistoryMessages = <dynamic>[];
 
   // in case of group chat
   bool isGroupChat = false;
   String? groupChatId;
-  List<String>? groupChatMembers = [];
+  List<String>? groupChatMembers = <String>[];
 
-  StreamController<List<Message>> chatStreamController =
-      StreamController<List<Message>>.broadcast();
-  Sink get chatSink => chatStreamController.sink;
+  StreamController<List<Message>> chatStreamController = StreamController<List<Message>>.broadcast();
+  Sink<List<Message>> get chatSink => chatStreamController.sink;
   Stream<List<Message>> get chatStream => chatStreamController.stream;
 
   void disposeControllers() {
     chatStreamController.close();
   }
 
-  void initChatService(
-      AtClientImpl atClientInstanceFromApp,
-      String currentAtSignFromApp,
-      String rootDomainFromApp,
-      int rootPortFromApp) async {
+  Future<void> initChatService(AtClientImpl atClientInstanceFromApp, String currentAtSignFromApp,
+      String rootDomainFromApp, int rootPortFromApp) async {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     rootDomain = rootDomainFromApp;
@@ -55,7 +51,7 @@ class ChatService {
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
-    var privateKey = await getPrivateKey(currentAtSign!);
+    String privateKey = await getPrivateKey(currentAtSign!);
     await atClientInstance.startMonitor(privateKey, _notificationCallback);
     print('Monitor started');
     return true;
@@ -63,15 +59,15 @@ class ChatService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    var str = await atClientInstance.getPrivateKey(atsign);
+    String? str = await atClientInstance.getPrivateKey(atsign);
     return str!;
   }
 
-  void _notificationCallback(dynamic notification) async {
+  Future<void> _notificationCallback(dynamic notification) async {
     notification = notification.replaceFirst('notification:', '');
-    var responseJson = jsonDecode(notification);
-    var notificationKey = responseJson['key'];
-    var fromAtsign = responseJson['from'];
+    Map<String, dynamic> responseJson = jsonDecode(notification);
+    String notificationKey = responseJson['key']!;
+    String fromAtsign = responseJson['from']!;
 
     // remove from and to atsigns from the notification key
     if (notificationKey.contains(':')) {
@@ -80,17 +76,15 @@ class ChatService {
     notificationKey.replaceFirst(fromAtsign, '');
     notificationKey.trim();
 
-    if (((notificationKey.startsWith(chatKey) ||
-                notificationKey.startsWith(chatImageKey)) &&
+    if (((notificationKey.startsWith(chatKey) || notificationKey.startsWith(chatImageKey)) &&
             fromAtsign == chatWithAtSign) ||
         (isGroupChat &&
             (notificationKey.startsWith(chatKey + groupChatId!) ||
                 notificationKey.startsWith(chatImageKey + groupChatId!)) &&
             groupChatMembers!.contains(fromAtsign))) {
-      var message = responseJson['value'];
-      var decryptedMessage = await atClientInstance.encryptionService!
-          .decrypt(message, fromAtsign)
-          .catchError((e) {
+      String? message = responseJson['value'];
+      String decryptedMessage =
+          await atClientInstance.encryptionService!.decrypt(message!, fromAtsign).catchError((dynamic e) {
         print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
       });
       print('chat message => $decryptedMessage $fromAtsign');
@@ -111,8 +105,7 @@ class ChatService {
     }
   }
 
-  void setAtsignToChatWith(String? chatWithAtSignFromApp, bool isGroup,
-      String? groupId, List<String>? groupMembers) {
+  void setAtsignToChatWith(String? chatWithAtSignFromApp, bool isGroup, String? groupId, List<String>? groupMembers) {
     if (isGroup) {
       isGroupChat = isGroup;
       groupChatId = groupId;
@@ -133,31 +126,29 @@ class ChatService {
 
   Future<void> getChatHistory({String? atsign}) async {
     try {
-      chatHistory = [];
-      var key = AtKey()
-        ..key = storageKey +
-            (isGroupChat ? groupChatId! : '') +
-            (atsign ?? chatWithAtSign ?? ' ').substring(1)
+      chatHistory = <Message>[];
+      AtKey key = AtKey()
+        ..key = storageKey + (isGroupChat ? groupChatId! : '') + (atsign ?? chatWithAtSign ?? ' ').substring(1)
         ..sharedBy = currentAtSign!
         ..metadata = Metadata();
 
-      var keyValue = await atClientInstance.get(key).catchError((e) {
+      AtValue keyValue = await atClientInstance.get(key).catchError((dynamic e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
 
       // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
-        chatHistoryMessages = json.decode((keyValue.value) as String) as List?;
-        chatHistoryMessages!.forEach((value) {
-          var message = Message.fromJson((value));
+        chatHistoryMessages = json.decode(keyValue.value.toString());
+        for (String value in chatHistoryMessages!) {
+          Message message = Message.fromJson((value));
           chatHistory.insert(0, message);
-        });
+        }
         chatSink.add(chatHistory);
       } else {
-        chatHistoryMessages = [];
+        chatHistoryMessages = <Message>[];
         chatSink.add(chatHistory);
       }
-      var referenceKey = (isGroupChat ? groupChatId! : '') +
+      String referenceKey = (isGroupChat ? groupChatId! : '') +
           (chatHistory.isEmpty ? '' : chatHistory[0].time.toString()) +
           currentAtSign!;
       await checkForMissedMessages(referenceKey);
@@ -167,24 +158,20 @@ class ChatService {
   }
 
   Future<void> checkForMissedMessages(String referenceKey) async {
-    var result = await atClientInstance
+    List<String> result = await atClientInstance
         .getKeys(
-            sharedBy: chatWithAtSign,
-            sharedWith: currentAtSign!,
-            regex: chatKey + (isGroupChat ? groupChatId! : ''))
-        .catchError((e) {
+            sharedBy: chatWithAtSign, sharedWith: currentAtSign!, regex: chatKey + (isGroupChat ? groupChatId! : ''))
+        .catchError((dynamic e) {
       print('error in checkForMissedMessages:getKeys ${e.toString()}');
     });
     await Future.forEach(result, (dynamic key) async {
       if (key.startsWith(chatImageKey)) {
-        if (referenceKey.compareTo(key.substring(7)) == -1 &&
-            !key.startsWith(storageKey)) {
+        if (referenceKey.compareTo(key.substring(7)) == -1 && !key.startsWith(storageKey)) {
           print('missed key - $key');
           await getMissingKey(key);
         }
       } else {
-        if (referenceKey.compareTo(key.substring(4)) == -1 &&
-            !key.startsWith(storageKey)) {
+        if (referenceKey.compareTo(key.substring(4)) == -1 && !key.startsWith(storageKey)) {
           print('missed key - $key');
           await getMissingKey(key);
         }
@@ -193,8 +180,8 @@ class ChatService {
   }
 
   Future<void> getMissingKey(String missingKey) async {
-    var missingAtkey = AtKey.fromString(missingKey);
-    var result = await atClientInstance.get(missingAtkey).catchError((e) {
+    AtKey missingAtkey = AtKey.fromString(missingKey);
+    AtValue result = await atClientInstance.get(missingAtkey).catchError((dynamic e) {
       print('error in getMissingKey:get ${e.toString()}');
     });
     // ignore: unnecessary_null_comparison
@@ -205,8 +192,7 @@ class ChatService {
             sender: chatWithAtSign ?? missingAtkey.sharedBy,
             time: int.parse(missingKey
                 .replaceFirst(chatWithAtSign ?? '', '')
-                .replaceFirst(
-                    chatImageKey + (isGroupChat ? groupChatId! : ''), '')
+                .replaceFirst(chatImageKey + (isGroupChat ? groupChatId! : ''), '')
                 .split('.')[0]),
             type: MessageType.INCOMING,
             contentType: MessageContentType.IMAGE));
@@ -225,10 +211,8 @@ class ChatService {
 
   Future<void> setChatHistory(Message message) async {
     try {
-      var key = AtKey()
-        ..key = storageKey +
-            (isGroupChat ? groupChatId! : '') +
-            (chatWithAtSign ?? ' ').substring(1)
+      AtKey key = AtKey()
+        ..key = storageKey + (isGroupChat ? groupChatId! : '') + (chatWithAtSign ?? ' ').substring(1)
         ..metadata = Metadata();
 
       chatHistory.insert(0, message);
@@ -247,30 +231,28 @@ class ChatService {
         time: DateTime.now().millisecondsSinceEpoch,
         type: MessageType.OUTGOING));
 
-    var atKey = AtKey()
+    AtKey atKey = AtKey()
       ..metadata = Metadata()
       ..metadata?.ttr = -1
-      ..key = chatKey +
-          (isGroupChat ? groupChatId! : '') +
-          DateTime.now().millisecondsSinceEpoch.toString();
+      ..key = chatKey + (isGroupChat ? groupChatId! : '') + DateTime.now().millisecondsSinceEpoch.toString();
     if (isGroupChat) {
       await Future.forEach(groupChatMembers!, (dynamic member) async {
         if (member != currentAtSign) {
           atKey.sharedWith = member;
-          var result = await atClientInstance.put(atKey, message);
+          bool result = await atClientInstance.put(atKey, message);
           print('send notification for groupChat => $result');
         }
       });
     } else {
       atKey.sharedWith = chatWithAtSign;
-      var result = await atClientInstance.put(atKey, message);
+      bool result = await atClientInstance.put(atKey, message);
       print('send notification => $result');
     }
   }
 
   Future<void> sendImageFile(File file) async {
     List<int> imageBytes = file.readAsBytesSync();
-    final base64Image = base64Encode(imageBytes);
+    String base64Image = base64Encode(imageBytes);
     await setChatHistory(Message(
       message: base64Image,
       sender: currentAtSign,
@@ -279,24 +261,22 @@ class ChatService {
       contentType: MessageContentType.IMAGE,
     ));
 
-    final metadata = Metadata();
-    var atKey = AtKey()
+    Metadata metadata = Metadata();
+    AtKey atKey = AtKey()
       ..metadata = metadata
       ..metadata?.ttr = -1
-      ..key = chatImageKey +
-          (isGroupChat ? groupChatId! : '') +
-          DateTime.now().millisecondsSinceEpoch.toString();
+      ..key = chatImageKey + (isGroupChat ? groupChatId! : '') + DateTime.now().millisecondsSinceEpoch.toString();
     if (isGroupChat) {
       await Future.forEach(groupChatMembers!, (dynamic member) async {
         if (member != currentAtSign) {
           atKey.sharedWith = member;
-          var result = await atClientInstance.put(atKey, base64Image);
+          bool result = await atClientInstance.put(atKey, base64Image);
           print('send notification for groupChat => $result');
         }
       });
     } else {
       atKey.sharedWith = chatWithAtSign;
-      var result = await atClientInstance.put(atKey, base64Image);
+      bool result = await atClientInstance.put(atKey, base64Image);
       print('send notification => $result');
     }
   }

@@ -15,7 +15,7 @@ The event service needs to be initialised with the `atClient` from the `AtClient
 initialiseEventService(
   clientSdkService.atClientServiceInstance.atClient,
   NavService.navKey,
-  rootDomain: MixedConstants.ROOT_DOMAIN,
+  rootDomain: MixedConstants.rootDomain,
   mapKey: 'xxxx',
   apiKey: 'xxxx');
 ```

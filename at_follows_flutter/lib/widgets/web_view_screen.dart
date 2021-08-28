@@ -22,7 +22,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen> {
   late bool isLoading;
-  var _logger = AtSignLogger('WebView Widget');
+  final AtSignLogger _logger = AtSignLogger('WebView Widget');
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         showTitle: true,
       ),
       body: Stack(
-        children: [
+        children: <Widget>[
           WebView(
             initialUrl: widget.url,
             javascriptMode: JavascriptMode.unrestricted,
@@ -54,7 +54,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
               _logger.info('Navigation decision is taken by webView');
               return NavigationDecision.navigate;
             },
-            onPageFinished: (value) {
+            onPageFinished: (String value) {
               setState(() {
                 isLoading = false;
               });
@@ -67,13 +67,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     ColorConstants.activeColor,
                   )),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );
   }
 
-  _launchURL(String url) async {
+ Future<void> _launchURL(String url) async {
     // url = Uri.encodeFull(url);
     if (await canLaunch(url)) {
       Navigator.pop(context);

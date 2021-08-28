@@ -5,25 +5,23 @@ import 'package:flutter/widgets.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_image/network.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
-import 'package:at_location_flutter/map_content/flutter_map/src/core/util.dart'
-    as util;
+import 'package:at_location_flutter/map_content/flutter_map/src/core/util.dart' as util;
 
 abstract class TileProvider {
   const TileProvider();
 
-  ImageProvider getImage(Coords coords, TileLayerOptions options);
+  ImageProvider getImage(Coords<num> coords, TileLayerOptions options);
 
   void dispose() {}
 
-  String getTileUrl(Coords coords, TileLayerOptions options) {
-    var urlTemplate = (options.wmsOptions != null)
-        ? options.wmsOptions!
-            .getUrl(coords, options.tileSize.toInt(), options.retinaMode)
+  String getTileUrl(Coords<num> coords, TileLayerOptions options) {
+    String urlTemplate = (options.wmsOptions != null)
+        ? options.wmsOptions!.getUrl(coords, options.tileSize.toInt(), options.retinaMode)
         : options.urlTemplate!;
 
-    var z = _getZoomForUrl(coords, options);
+    double z = _getZoomForUrl(coords, options);
 
-    var data = <String, String>{
+    Map<String, String> data = <String, String>{
       'x': coords.x.round().toString(),
       'y': coords.y.round().toString(),
       'z': z.round().toString(),
@@ -33,13 +31,12 @@ abstract class TileProvider {
     if (options.tms) {
       data['y'] = invertY(coords.y.round(), z.round()).toString();
     }
-    var allOpts = Map<String, String>.from(data)
-      ..addAll(options.additionalOptions);
+    Map<String, String> allOpts = Map<String, String>.from(data)..addAll(options.additionalOptions);
     return util.template(urlTemplate, allOpts);
   }
 
-  double _getZoomForUrl(Coords coords, TileLayerOptions options) {
-    var zoom = coords.z!;
+  double _getZoomForUrl(Coords<num> coords, TileLayerOptions options) {
+    num zoom = coords.z!;
 
     if (options.zoomReverse) {
       zoom = options.maxZoom - zoom;
@@ -52,11 +49,11 @@ abstract class TileProvider {
     return ((1 << z) - 1) - y;
   }
 
-  String getSubdomain(Coords coords, TileLayerOptions options) {
+  String getSubdomain(Coords<num> coords, TileLayerOptions options) {
     if (options.subdomains.isEmpty) {
       return '';
     }
-    var index = (coords.x + coords.y).round() % options.subdomains.length;
+    int index = (coords.x + coords.y).round() % options.subdomains.length;
     return options.subdomains[index];
   }
 }
@@ -99,12 +96,12 @@ class FileTileProvider extends TileProvider {
 }
 
 class CustomTileProvider extends TileProvider {
-  String Function(Coords coors, TileLayerOptions options) customTileUrl;
+  String Function(Coords<num> coors, TileLayerOptions options) customTileUrl;
 
   CustomTileProvider({required this.customTileUrl});
 
   @override
-  String getTileUrl(Coords coords, TileLayerOptions options) {
+  String getTileUrl(Coords<num> coords, TileLayerOptions options) {
     return customTileUrl(coords, options);
   }
 

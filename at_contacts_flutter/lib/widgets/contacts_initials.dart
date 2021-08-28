@@ -4,14 +4,12 @@
 
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
-// ignore: must_be_immutable
 class ContactInitial extends StatelessWidget {
   final double size;
   final String initials;
-  int? index;
+  late final int? index;
   final Color? backgroundColor;
   ContactInitial(
       {Key? key,
@@ -23,7 +21,7 @@ class ContactInitial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var encodedInitials = initials.runes;
+    Runes encodedInitials = initials.runes;
     if (encodedInitials.length < 3) {
       index = encodedInitials.length;
     } else {

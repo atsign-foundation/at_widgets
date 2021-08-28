@@ -1,22 +1,22 @@
 class MixedConstants {
-  static const String WEBSITE_URL = 'https://atsign.com/';
+  static const String websiteURL = 'https://atsign.com/';
 
   // for local server
   // static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
   // for staging server
   // static const String ROOT_DOMAIN = 'root.atsign.wtf';
   // for production server
-  static const String ROOT_DOMAIN = 'root.atsign.org';
+  static const String rootDomain = 'root.atsign.org';
 
-  static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
-  static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
+  static const String termsCondition = 'https://atsign.com/terms-conditions/';
+  static const String privacyPolicy = 'https://atsign.com/privacy-policy/';
 
-  static const String SHARE_LOCATION = 'sharelocation';
-  static const String SHARE_LOCATION_ACK = 'sharelocationacknowledged';
+  static const String shareLocation = 'sharelocation';
+  static const String shareLocationACK = 'sharelocationacknowledged';
 
-  static const String REQUEST_LOCATION = 'requestlocation';
-  static const String REQUEST_LOCATION_ACK = 'requestlocationacknowledged';
-  static const String DELETE_REQUEST_LOCATION_ACK = 'deleterequestacklocation';
+  static const String requestLocation = 'requestlocation';
+  static const String requestLocationACK = 'requestlocationacknowledged';
+  static const String deleteRequestLocationACK = 'deleterequestacklocation';
 
   static const bool isDedicated = true;
 

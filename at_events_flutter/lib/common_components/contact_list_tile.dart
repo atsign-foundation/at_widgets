@@ -72,21 +72,21 @@ class _ContactListTileState extends State<ContactListTile> {
                     onTap: () {
                       widget.onRemove();
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.close,
                       color: Color(0xffA8A8A8),
                     ),
                   )
-                : Icon(
+                : const Icon(
                     Icons.add,
                     color: Colors.black,
                   ),
         leading: Stack(
-          children: [
+          children: <Widget>[
             Container(
               height: 40.toWidth,
               width: 40.toWidth,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.black,
                 shape: BoxShape.circle,
               ),

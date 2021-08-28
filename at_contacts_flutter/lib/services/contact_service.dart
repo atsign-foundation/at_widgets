@@ -1,20 +1,13 @@
 /// A service to handle CRUD operation on contacts
 
 import 'dart:async';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
+import 'package:flutter/material.dart';
 
 class ContactService {
   ContactService._();
@@ -29,28 +22,23 @@ class ContactService {
   late int rootPort;
   AtContact? loggedInUserDetails;
 
-  StreamController<List<AtContact?>> contactStreamController =
-      StreamController<List<AtContact?>>.broadcast();
+  StreamController<List<AtContact?>> contactStreamController = StreamController<List<AtContact?>>.broadcast();
 
-  Sink get contactSink => contactStreamController.sink;
+  Sink<List<AtContact?>> get contactSink => contactStreamController.sink;
 
   Stream<List<AtContact?>> get contactStream => contactStreamController.stream;
 
-  StreamController<List<AtContact?>> blockedContactStreamController =
-      StreamController<List<AtContact?>>.broadcast();
+  StreamController<List<AtContact?>> blockedContactStreamController = StreamController<List<AtContact?>>.broadcast();
 
-  Sink get blockedContactSink => blockedContactStreamController.sink;
+  Sink<List<AtContact?>> get blockedContactSink => blockedContactStreamController.sink;
 
-  Stream<List<AtContact?>> get blockedContactStream =>
-      blockedContactStreamController.stream;
+  Stream<List<AtContact?>> get blockedContactStream => blockedContactStreamController.stream;
 
-  StreamController<List<AtContact?>> selectedContactStreamController =
-      StreamController<List<AtContact?>>.broadcast();
+  StreamController<List<AtContact?>> selectedContactStreamController = StreamController<List<AtContact?>>.broadcast();
 
-  Sink get selectedContactSink => selectedContactStreamController.sink;
+  Sink<List<AtContact?>> get selectedContactSink => selectedContactStreamController.sink;
 
-  Stream<List<AtContact?>> get selectedContactStream =>
-      selectedContactStreamController.stream;
+  Stream<List<AtContact?>> get selectedContactStream => selectedContactStreamController.stream;
 
   void disposeControllers() {
     contactStreamController.close();
@@ -58,22 +46,19 @@ class ContactService {
     blockedContactStreamController.close();
   }
 
-  List<AtContact?> contactList = [],
-      blockContactList = [],
-      selectedContacts = [],
-      cachedContactList = [];
+  List<AtContact?> contactList = <AtContact?>[],
+      blockContactList = <AtContact?>[],
+      selectedContacts = <AtContact?>[],
+      cachedContactList = <AtContact?>[];
   bool isContactPresent = false, limitReached = false;
 
   String getAtSignError = '';
   bool? checkAtSign;
-  List<String> allContactsList = [];
+  List<String> allContactsList = <String>[];
 
   // ignore: always_declare_return_types
   initContactsService(
-      AtClientImpl atClientInstanceFromApp,
-      String currentAtSign,
-      String rootDomainFromApp,
-      int rootPortFromApp) async {
+      AtClientImpl atClientInstanceFromApp, String currentAtSign, String rootDomainFromApp, int rootPortFromApp) async {
     loggedInUserDetails = null;
     atClientInstance = atClientInstanceFromApp;
     rootDomain = rootDomainFromApp;
@@ -90,41 +75,35 @@ class ContactService {
     checkAtSign = false;
   }
 
-  // ignore: always_declare_return_types
   Future<List<AtContact?>> fetchContacts() async {
-    selectedContacts = [];
+    selectedContacts = <AtContact?>[];
     try {
-      contactList = [];
-      allContactsList = [];
+      contactList = <AtContact?>[];
+      allContactsList = <String>[];
       contactList = await atContactImpl.listContacts();
-      var tempContactList = <AtContact?>[...contactList];
-      var range = contactList.length;
-      for (var i = 0; i < range; i++) {
+      List<AtContact?> tempContactList = <AtContact?>[...contactList];
+      int range = contactList.length;
+      for (int i = 0; i < range; i++) {
         allContactsList.add(contactList[i]!.atSign!);
         if (contactList[i]!.blocked!) {
           tempContactList.remove(contactList[i]);
         }
       }
       contactList = tempContactList;
-      contactList.sort((a, b) {
-        // ignore: omit_local_variable_types
-        int? index = a?.atSign
-            .toString()
-            .substring(1)
-            .compareTo(b!.atSign!.toString().substring(1));
+      contactList.sort((AtContact? a, AtContact? b) {
+        int? index = a?.atSign.toString().substring(1).compareTo(b!.atSign!.toString().substring(1));
         return index!;
       });
       contactSink.add(contactList);
       return contactList;
     } catch (e) {
       print('error here => $e');
-      return [];
+      return <AtContact?>[];
     }
   }
 
   // ignore: always_declare_return_types
-  blockUnblockContact(
-      {required AtContact contact, required bool blockAction}) async {
+  blockUnblockContact({required AtContact contact, required bool blockAction}) async {
     try {
       contact.blocked = blockAction;
       await atContactImpl.update(contact);
@@ -138,7 +117,7 @@ class ContactService {
   // ignore: always_declare_return_types
   fetchBlockContactList() async {
     try {
-      blockContactList = [];
+      blockContactList = <AtContact?>[];
       blockContactList = await atContactImpl.listBlockedContacts();
       blockedContactSink.add(blockContactList);
     } catch (error) {
@@ -149,16 +128,16 @@ class ContactService {
   // ignore: always_declare_return_types
   deleteAtSign({required String atSign}) async {
     try {
-      var result = await atContactImpl.delete(atSign);
+      bool result = await atContactImpl.delete(atSign);
       print('delete result => $result');
-      fetchContacts();
+      await fetchContacts();
     } catch (error) {
       print('error in delete atsign:$error');
     }
   }
 
   Future<dynamic> addAtSign(
-    context, {
+    BuildContext context, {
     String? atSign,
     String? nickName,
   }) async {
@@ -180,33 +159,33 @@ class ContactService {
       isContactPresent = false;
 
       getAtSignError = '';
-      var contact = AtContact();
+      AtContact contact = AtContact();
 
       checkAtSign = await checkAtsign(atSign);
 
       if (!checkAtSign!) {
         getAtSignError = TextStrings().unknownAtsign(atSign);
       } else {
-        contactList.forEach((element) async {
+        for (AtContact? element in contactList) {
           if (element!.atSign == atSign) {
             getAtSignError = TextStrings().atsignExists(atSign);
             isContactPresent = true;
             return;
           }
-        });
+        }
       }
       if (!isContactPresent && checkAtSign!) {
-        var details = await getContactDetails(atSign, nickName);
+        Map<String, dynamic> details = await getContactDetails(atSign, nickName);
         contact = AtContact(
           atSign: atSign,
           tags: details,
         );
-        print('details==>${contact.atSign}');
-        var result = await atContactImpl.add(contact).catchError((e) {
+        print('details ==> ${contact.atSign}');
+        bool result = await atContactImpl.add(contact).catchError((dynamic e) {
           print('error to add contact => $e');
         });
         print(result);
-        fetchContacts();
+        await fetchContacts();
       }
     } catch (e) {
       print(e);
@@ -219,7 +198,7 @@ class ContactService {
       // ignore: omit_local_variable_types
       for (AtContact? atContact in selectedContacts) {
         if (contact == atContact || atContact!.atSign == contact!.atSign) {
-          var index = selectedContacts.indexOf(contact);
+          int index = selectedContacts.indexOf(contact);
           print('index is $index');
           selectedContacts.removeAt(index);
           break;
@@ -239,8 +218,7 @@ class ContactService {
   // ignore: always_declare_return_types
   selectAtSign(AtContact? contact) {
     try {
-      if (selectedContacts.length <= 25 &&
-          !selectedContacts.contains(contact)) {
+      if (selectedContacts.length <= 25 && !selectedContacts.contains(contact)) {
         selectedContacts.add(contact);
       } else {
         limitReached = true;
@@ -251,13 +229,12 @@ class ContactService {
     }
   }
 
-  // ignore: always_declare_return_types
-  clearAtSigns() {
+  void clearAtSigns() {
     try {
-      selectedContacts = [];
+      selectedContacts = <AtContact?>[];
       selectedContactSink.add(selectedContacts);
     } catch (error) {
-      print(error);
+      print(error.toString());
     }
   }
 
@@ -267,45 +244,43 @@ class ContactService {
     } else if (!atSign.contains('@')) {
       atSign = '@' + atSign;
     }
-    var checkPresence =
-        await AtLookupImpl.findSecondary(atSign, rootDomain, rootPort);
+    String? checkPresence = await AtLookupImpl.findSecondary(atSign, rootDomain, rootPort);
     // ignore: unnecessary_null_comparison
     return checkPresence != null;
   }
 
-  Future<Map<String, dynamic>> getContactDetails(
-      String? atSign, String? nickName) async {
-    var contactDetails = <String, dynamic>{};
+  Future<Map<String, dynamic>> getContactDetails(String? atSign, String? nickName) async {
+    Map<String, dynamic> contactDetails = <String, dynamic>{};
 
     if (atClientInstance == null || atSign == null) {
       return contactDetails;
     } else if (!atSign.contains('@')) {
       atSign = '@' + atSign;
     }
-    var metadata = Metadata();
+    Metadata metadata = Metadata();
     metadata.isPublic = true;
     metadata.namespaceAware = false;
-    var key = AtKey();
+    AtKey key = AtKey();
     key.sharedBy = atSign;
     key.metadata = metadata;
-    List contactFields = TextStrings().contactFields;
+    List<String> contactFields = TextStrings().contactFields;
 
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientInstance!.get(key).catchError((e) {
+      AtValue result = await atClientInstance!.get(key).catchError((dynamic e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
-      var firstname = result.value;
+      dynamic firstname = result.value;
 
       // lastname
       key.key = contactFields[1];
       result = await atClientInstance!.get(key);
-      var lastname = result.value;
+      dynamic lastname = result.value;
 
       // construct name
-      var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
-      if (name.length == 0) {
+      String name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
+      if (name.isEmpty) {
         name = atSign.substring(1);
       }
 
@@ -313,7 +288,7 @@ class ContactService {
       key.metadata?.isBinary = true;
       key.key = contactFields[2];
       result = await atClientInstance!.get(key);
-      var image = result.value;
+      dynamic image = result.value;
       contactDetails['name'] = name;
       contactDetails['image'] = image;
       contactDetails['nickname'] = nickName != '' ? nickName : null;

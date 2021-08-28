@@ -15,7 +15,7 @@ class GroupService {
   factory GroupService() => _instance;
   String? _atsign;
   List<AtContact?>? selecteContactList;
-  List<GroupContactsModel?> allContacts = [], selectedGroupContacts = [];
+  List<GroupContactsModel?> allContacts = <GroupContactsModel?>[], selectedGroupContacts = <GroupContactsModel?>[];
   AtGroup? selectedGroup;
   AtClientImpl? atClientInstance;
   late AtContactsImpl atContactImpl;
@@ -25,34 +25,29 @@ class GroupService {
   bool? showLoader;
 
 // group list stream
-  final _atGroupStreamController = StreamController<List<AtGroup>>.broadcast();
+  final StreamController<List<AtGroup>> _atGroupStreamController = StreamController<List<AtGroup>>.broadcast();
   Stream<List<AtGroup>> get atGroupStream => _atGroupStreamController.stream;
   StreamSink<List<AtGroup>> get atGroupSink => _atGroupStreamController.sink;
 
 // group view stream
-  final _groupViewStreamController = StreamController<AtGroup>.broadcast();
+  final StreamController<AtGroup> _groupViewStreamController = StreamController<AtGroup>.broadcast();
   Stream<AtGroup> get groupViewStream => _groupViewStreamController.stream;
   StreamSink<AtGroup> get groupViewSink => _groupViewStreamController.sink;
 
 // all contacts stream
-  final StreamController<List<GroupContactsModel?>>
-      _allContactsStreamController =
+  final StreamController<List<GroupContactsModel?>> _allContactsStreamController =
       StreamController<List<GroupContactsModel?>>.broadcast();
-  Stream<List<GroupContactsModel?>> get allContactsStream =>
-      _allContactsStreamController.stream;
-  StreamSink<List<GroupContactsModel?>> get allContactsSink =>
-      _allContactsStreamController.sink;
+  Stream<List<GroupContactsModel?>> get allContactsStream => _allContactsStreamController.stream;
+  StreamSink<List<GroupContactsModel?>> get allContactsSink => _allContactsStreamController.sink;
 
   // selected group contact stream
-  final _selectedContactsStreamController =
+  final StreamController<List<GroupContactsModel?>> _selectedContactsStreamController =
       StreamController<List<GroupContactsModel?>>.broadcast();
-  Stream<List<GroupContactsModel?>> get selectedContactsStream =>
-      _selectedContactsStreamController.stream;
-  StreamSink<List<GroupContactsModel?>> get selectedContactsSink =>
-      _selectedContactsStreamController.sink;
+  Stream<List<GroupContactsModel?>> get selectedContactsStream => _selectedContactsStreamController.stream;
+  StreamSink<List<GroupContactsModel?>> get selectedContactsSink => _selectedContactsStreamController.sink;
 
   // show loader stream
-  final _showLoaderStreamController = StreamController<bool>.broadcast();
+  final StreamController<bool> _showLoaderStreamController = StreamController<bool>.broadcast();
   Stream<bool> get showLoaderStream => _showLoaderStreamController.stream;
   StreamSink<bool> get showLoaderSink => _showLoaderStreamController.sink;
 
@@ -68,8 +63,7 @@ class GroupService {
   List<AtContact?>? get selectedContactList => selecteContactList;
 
   // ignore: always_declare_return_types
-  init(AtClientImpl atClientImpl, String atSign, String rootDomainFromApp,
-      int rootPortFromApp) async {
+  init(AtClientImpl atClientImpl, String atSign, String rootDomainFromApp, int rootPortFromApp) async {
     atClientInstance = atClientImpl;
     _atsign = atSign;
     rootDomain = rootDomainFromApp;
@@ -78,8 +72,9 @@ class GroupService {
     await fetchGroupsAndContacts();
   }
 
-  Future<dynamic?> createGroup(AtGroup atGroup) async {
+  Future<dynamic> createGroup(AtGroup atGroup) async {
     try {
+      // ignore: omit_local_variable_types
       AtGroup? group = await atContactImpl.createGroup(atGroup);
       if (group is AtGroup) {
         await updateGroupStreams(group);
@@ -94,19 +89,18 @@ class GroupService {
   // ignore: always_declare_return_types
   getAllGroupsDetails() async {
     try {
-      var groupIds = await atContactImpl.listGroupIds();
-      var groupList = <AtGroup>[];
+      List<String?> groupIds = await atContactImpl.listGroupIds();
+      List<AtGroup> groupList = <AtGroup>[];
 
-      for (var i = 0; i < groupIds.length; i++) {
-        var groupDetail = await (getGroupDetail(groupIds[i]!));
+      for (int i = 0; i < groupIds.length; i++) {
+        AtGroup? groupDetail = await (getGroupDetail(groupIds[i]!));
         // ignore: unnecessary_null_comparison
         if (groupDetail != null) groupList.add(groupDetail);
       }
 
-      groupList.forEach((AtGroup group) {
-        allContacts.add(
-            GroupContactsModel(group: group, contactType: ContactsType.GROUP));
-      });
+      for (AtGroup group in groupList) {
+        allContacts.add(GroupContactsModel(group: group, contactType: ContactsType.GROUP));
+      }
       atGroupSink.add(groupList);
     } catch (e) {
       print('error in getting group list: $e');
@@ -116,7 +110,7 @@ class GroupService {
   // ignore: always_declare_return_types
   listAllGroupNames() async {
     try {
-      var groupNames = await atContactImpl.listGroupNames();
+      List<String?> groupNames = await atContactImpl.listGroupNames();
       return groupNames;
     } catch (e) {
       return e;
@@ -125,7 +119,7 @@ class GroupService {
 
   Future<AtGroup?> getGroupDetail(String groupId) async {
     try {
-      var group = await atContactImpl.getGroup(groupId);
+      AtGroup? group = await atContactImpl.getGroup(groupId);
       return group;
     } catch (e) {
       print('error in getting group details : $e');
@@ -133,10 +127,9 @@ class GroupService {
     }
   }
 
-  Future<dynamic> deletGroupMembers(
-      List<AtContact> contacts, AtGroup group) async {
+  Future<dynamic> deletGroupMembers(List<AtContact> contacts, AtGroup group) async {
     try {
-      var result = await atContactImpl.deleteMembers(Set.from(contacts), group);
+      bool result = await atContactImpl.deleteMembers(Set<AtContact>.from(contacts), group);
       if (result is bool) {
         await updateGroupStreams(group);
         return result;
@@ -147,10 +140,9 @@ class GroupService {
     }
   }
 
-  Future<dynamic> addGroupMembers(
-      List<AtContact?> contacts, AtGroup group) async {
+  Future<dynamic> addGroupMembers(List<AtContact?> contacts, AtGroup group) async {
     try {
-      var result = await atContactImpl.addMembers(Set.from(contacts), group);
+      bool result = await atContactImpl.addMembers(Set<AtContact>.from(contacts), group);
       if (result is bool) {
         await updateGroupStreams(group);
         return result;
@@ -163,7 +155,7 @@ class GroupService {
 
   Future<dynamic> updateGroup(AtGroup group) async {
     try {
-      var updatedGroup = await atContactImpl.updateGroup(group);
+      AtGroup? updatedGroup = await atContactImpl.updateGroup(group);
       if (updatedGroup is AtGroup) {
         updateGroupStreams(updatedGroup);
         return updatedGroup;
@@ -178,14 +170,14 @@ class GroupService {
 
   // ignore: always_declare_return_types
   updateGroupStreams(AtGroup group) async {
-    var groupDetail = await (getGroupDetail(group.groupId!));
+    AtGroup? groupDetail = await (getGroupDetail(group.groupId!));
     if (groupDetail is AtGroup) groupViewSink.add(groupDetail);
     await getAllGroupsDetails();
   }
 
   Future<bool?> deleteGroup(AtGroup group) async {
     try {
-      var result = await atContactImpl.deleteGroup(group);
+      bool result = await atContactImpl.deleteGroup(group);
       await getAllGroupsDetails(); //updating group list sink
       return result;
     } catch (e) {
@@ -196,7 +188,7 @@ class GroupService {
 
   Future<dynamic> updateGroupData(AtGroup group, BuildContext context) async {
     try {
-      var result = await updateGroup(group);
+      dynamic result = await updateGroup(group);
       if (result is AtGroup) {
         Navigator.of(context).pop();
       } else if (result == null) {
@@ -210,16 +202,14 @@ class GroupService {
   }
 
   // fetches contacts using the contacts library and groups from itself
-  // ignore: always_declare_return_types
-  fetchGroupsAndContacts() async {
+  Future<void> fetchGroupsAndContacts() async {
     try {
-      allContacts = [];
-      var contactList = await fetchContacts();
+      allContacts = <GroupContactsModel?>[];
+      List<AtContact?> contactList = await fetchContacts();
       // print('CONT====>$contactList');
-      contactList.forEach((AtContact? contact) {
-        allContacts.add(GroupContactsModel(
-            contact: contact, contactType: ContactsType.CONTACT));
-      });
+      for (AtContact? contact in contactList) {
+        allContacts.add(GroupContactsModel(contact: contact, contactType: ContactsType.CONTACT));
+      }
       await getAllGroupsDetails();
       // print('ALL CONTACTS====>${allContacts[8]}');
       _allContactsStreamController.add(allContacts);
@@ -228,24 +218,23 @@ class GroupService {
     }
   }
 
-  // ignore: always_declare_return_types
-  removeGroupContact(GroupContactsModel? item) async {
+  Future<void> removeGroupContact(GroupContactsModel? item) async {
     try {
       length = 0;
       if (selectedGroupContacts.isNotEmpty) {
-        selectedGroupContacts.forEach((groupContact) {
+        for (GroupContactsModel? groupContact in selectedGroupContacts) {
           if (groupContact!.contactType == ContactsType.CONTACT) {
             length++;
           } else if (groupContact.contactType == ContactsType.GROUP) {
             length = length + groupContact.group!.members!.length;
           }
-        });
+        }
       }
 
       // ignore: omit_local_variable_types
       for (GroupContactsModel? groupContact in selectedGroupContacts) {
         if ((groupContact.toString() == item.toString())) {
-          var index = selectedGroupContacts.indexOf(groupContact);
+          int index = selectedGroupContacts.indexOf(groupContact);
           selectedGroupContacts.removeAt(index);
           break;
         }
@@ -262,22 +251,20 @@ class GroupService {
     }
   }
 
-  // ignore: always_declare_return_types
-  addGroupContact(GroupContactsModel? item) {
+  void addGroupContact(GroupContactsModel? item) {
     try {
-      var isSelected = false;
+      bool isSelected = false;
       length = 0;
       if (selectedGroupContacts.isNotEmpty) {
-        selectedGroupContacts.forEach((groupContact) {
+        for (GroupContactsModel? groupContact in selectedGroupContacts) {
           if (groupContact!.contactType == ContactsType.CONTACT) {
             length++;
           } else if (groupContact.contactType == ContactsType.GROUP) {
             length = length + groupContact.group!.members!.length;
           }
-        });
+        }
       }
 
-      // ignore: omit_local_variable_types
       for (GroupContactsModel? groupContact in selectedGroupContacts) {
         if ((item.toString() == groupContact.toString())) {
           isSelected = true;
@@ -304,16 +291,17 @@ class GroupService {
   }
 
   void resetData() {
-    allContacts = [];
-    selectedGroupContacts = [];
+    allContacts = <GroupContactsModel?>[];
+    selectedGroupContacts = <GroupContactsModel?>[];
     selectedContactsSink.add(selectedGroupContacts);
-    atGroupSink.add([]);
-    allContactsSink.add([]);
+    atGroupSink.add(<AtGroup>[]);
+    allContactsSink.add(<GroupContactsModel?>[]);
     showLoaderSink.add(false);
   }
 
   void dispose() {
     _atGroupStreamController.close();
+    _showLoaderStreamController.close();
     _groupViewStreamController.close();
     _allContactsStreamController.close();
     _selectedContactsStreamController.close();

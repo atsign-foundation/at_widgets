@@ -4,16 +4,14 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  Future<dynamic> getRequest(String url, [Map<String, String>? header]) async {
-    var val = await ConnectivityService().checkConnectivity();
+  Future<Map<String, dynamic>> getRequest(String url, [Map<String, String>? header]) async {
+    bool val = await ConnectivityService().checkConnectivity();
     if (val) {
-      return http
-          .get(Uri.parse(url), headers: header)
-          .then((http.Response response) {
-        final statusCode = response.statusCode;
+      return http.get(Uri.parse(url), headers: header).then((http.Response response) {
+        int statusCode = response.statusCode;
         print(statusCode);
         if (statusCode == 200) {
-          return {
+          return <String, dynamic>{
             'status': true,
             'body': utf8.decode(response.bodyBytes),
             'message': 'success',
@@ -21,7 +19,7 @@ class ApiService {
             'code': statusCode,
           };
         } else {
-          return {
+          return <String, dynamic>{
             'status': false,
             'body': response.body,
             'message': (response.statusCode == 404)
@@ -35,25 +33,24 @@ class ApiService {
         }
       });
     } else {
-      return {
+      return <String, dynamic>{
         'status': false,
         'message': 'No Internet',
       };
     }
   }
 
-  Future<dynamic> postRequest(String url,
-      {Map<String, String>? headers, body, encoding}) async {
-    var val = await ConnectivityService().checkConnectivity();
+  Future<Map<String, dynamic>> postRequest(String url,
+      {Map<String, String>? headers, dynamic body, dynamic encoding}) async {
+    bool val = await ConnectivityService().checkConnectivity();
     if (val) {
       return http
-          .post(Uri.parse(url),
-              body: json.encode(body), headers: headers, encoding: encoding)
+          .post(Uri.parse(url), body: json.encode(body), headers: headers, encoding: encoding)
           .then((http.Response response) {
-        final statusCode = response.statusCode;
+        int statusCode = response.statusCode;
         print(statusCode);
         if (statusCode == 200) {
-          return {
+          return <String, dynamic>{
             'status': true,
             'body': utf8.decode(response.bodyBytes),
             'message': 'success',
@@ -61,7 +58,7 @@ class ApiService {
             'code': statusCode,
           };
         } else if (statusCode == 201) {
-          return {
+          return <String, dynamic>{
             'status': true,
             'body': response.body,
             'message': 'created',
@@ -69,7 +66,7 @@ class ApiService {
             'code': statusCode,
           };
         } else {
-          return {
+          return <String, dynamic>{
             'status': false,
             'body': response.body,
             'message': (response.statusCode == 404)
@@ -83,7 +80,7 @@ class ApiService {
         }
       });
     } else {
-      return {
+      return <String, dynamic>{
         'status': false,
         'message': 'No Internet',
       };
@@ -99,10 +96,9 @@ class ConnectivityService {
   Future<bool> checkConnectivity() async {
     Socket? socket;
     bool connectivity;
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future<dynamic>.delayed(const Duration(milliseconds: 100));
     try {
-      socket =
-          await Socket.connect('google.com', 80, timeout: Duration(seconds: 4));
+      socket = await Socket.connect('google.com', 80, timeout: const Duration(seconds: 4));
       connectivity = true;
     } catch (e) {
       checkInternetConnection();

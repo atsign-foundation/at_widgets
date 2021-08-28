@@ -1,8 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:at_invitation_flutter/at_invitation_flutter.dart';
-
 import 'package:at_invitation_flutter_example/constants.dart';
 import 'package:at_invitation_flutter_example/second_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';

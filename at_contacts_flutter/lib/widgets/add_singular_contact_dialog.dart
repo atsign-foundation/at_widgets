@@ -37,7 +37,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
             top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Expanded(
               child: Text(
                 TextStrings().addContactHeading,
@@ -50,7 +50,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
         content: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: 190.toHeight),
           child: Column(
-            children: [
+            children: <Widget>[
               SizedBox(
                 height: 21.toHeight,
               ),
@@ -75,9 +75,9 @@ class _AddSingleContactState extends State<AddSingleContact> {
             ],
           ),
         ),
-        actions: [
+        actions: <Widget>[
           (isLoading)
-              ? CircularProgressIndicator()
+              ? const CircularProgressIndicator()
               : CustomButton(
                   buttonText: TextStrings().yes,
                   onPressed: () async {

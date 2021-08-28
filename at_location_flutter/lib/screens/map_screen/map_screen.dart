@@ -32,8 +32,8 @@ class _MapScreenState extends State<MapScreen> {
     scaffoldKey = GlobalKey<ScaffoldState>();
     atsignsToTrack =
         widget.userListenerKeyword!.atsignCreator == widget.currentAtSign
-            ? []
-            : [widget.userListenerKeyword!.atsignCreator];
+            ? <String?>[]
+            : <String?>[widget.userListenerKeyword!.atsignCreator];
 
     if (!widget.userListenerKeyword!.atsignCreator!.contains('@')) {
       widget.userListenerKeyword!.atsignCreator =
@@ -54,7 +54,7 @@ class _MapScreenState extends State<MapScreen> {
       child: Scaffold(
           key: scaffoldKey,
           body: Stack(
-            children: [
+            children: <Widget>[
               AtLocationFlutterPlugin(
                 atsignsToTrack,
                 calculateETA: true,
@@ -80,7 +80,7 @@ class _MapScreenState extends State<MapScreen> {
                     icon: Icons.message_outlined,
                     iconColor: Theme.of(context).scaffoldBackgroundColor,
                     onPressed: () => scaffoldKey!.currentState!
-                        .showBottomSheet((context) => ChatScreen())),
+                        .showBottomSheet((BuildContext context) => const ChatScreen())),
               ),
               SlidingUpPanel(
                 controller: pc,
@@ -114,12 +114,12 @@ class _MapScreenState extends State<MapScreen> {
   getAtSignAndInitializeChat() async {
     initializeChatService(AtLocationNotificationListener().atClientInstance!,
         AtLocationNotificationListener().currentAtSign!,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+        rootDomain: MixedConstants.rootDomain);
   }
 
   // ignore: always_declare_return_types
   setAtsignToChatWith() {
-    var chatWith = widget.userListenerKeyword!.atsignCreator ==
+    String? chatWith = widget.userListenerKeyword!.atsignCreator ==
             AtLocationNotificationListener().currentAtSign!
         ? widget.userListenerKeyword!.receiver
         : widget.userListenerKeyword!.atsignCreator;

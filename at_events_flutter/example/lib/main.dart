@@ -46,25 +46,19 @@ class _MyAppState extends State<MyApp> {
                 Center(
                     child: TextButton(
                         style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black12),
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () async {
                           Onboarding(
                             context: context,
-                            atClientPreference:
-                                clientSdkService.atClientPreference,
-                            domain: MixedConstants.ROOT_DOMAIN,
+                            atClientPreference: clientSdkService.atClientPreference,
+                            domain: MixedConstants.rootDomain,
                             appColor: Color.fromARGB(255, 240, 94, 62),
                             appAPIKey: MixedConstants.devAPIKey,
-                            onboard: (Map<String?, AtClientService> value,
-                                String? atsign) async {
-                              clientSdkService.atClientServiceInstance =
-                                  value[atsign];
+                            onboard: (Map<String?, AtClientService> value, String? atsign) async {
+                              clientSdkService.atClientServiceInstance = value[atsign];
                               await Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SecondScreen()));
+                                  context, MaterialPageRoute(builder: (context) => SecondScreen()));
                             },
                             onError: (error) async {
                               await showDialog(
@@ -84,30 +78,23 @@ class _MyAppState extends State<MyApp> {
                             },
                           );
                         },
-                        child: Text('Show QR scanner screen',
-                            style: TextStyle(color: Colors.black)))),
+                        child: Text('Show QR scanner screen', style: TextStyle(color: Colors.black)))),
                 SizedBox(
                   height: 25,
                 ),
                 Center(
                     child: TextButton(
                         style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black12),
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () async {
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SecondScreen()));
+                          await Navigator.push(context, MaterialPageRoute(builder: (context) => SecondScreen()));
                         },
-                        child: Text('Already authenticated',
-                            style: TextStyle(color: Colors.black)))),
+                        child: Text('Already authenticated', style: TextStyle(color: Colors.black)))),
                 TextButton(
                   onPressed: () async {
                     var _keyChainManager = KeyChainManager.getInstance();
-                    var _atSignsList =
-                        await _keyChainManager.getAtSignListFromKeychain();
+                    var _atSignsList = await _keyChainManager.getAtSignListFromKeychain();
                     _atSignsList?.forEach((element) {
                       _keyChainManager.deleteAtSignFromKeychain(element);
                     });

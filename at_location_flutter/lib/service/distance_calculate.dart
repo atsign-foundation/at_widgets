@@ -17,13 +17,13 @@ class DistanceCalculate {
   /// Make sure that [apiKey] is passed while initialising.
   Future<String> calculateETA(LatLng origin, LatLng destination) async {
     try {
-      var url =
+      String url =
           'https://router.hereapi.com/v8/routes?transportMode=car&origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&return=summary&apiKey=${MixedConstants.API_KEY}';
-      var response = await ApiService().getRequest('$url');
-      var data = response;
+      Map<String, dynamic> response = await ApiService().getRequest(url);
+      Map<String, dynamic> data = response;
       data = jsonDecode(data['body']);
-      var _min = (data['routes'][0]['sections'][0]['summary']['duration'] / 60);
-      var _time = _min > 60
+      double _min = (data['routes'][0]['sections'][0]['summary']['duration'] / 60);
+      String _time = _min > 60
           ? '${((_min / 60).toStringAsFixed(0))}hr ${(_min % 60).toStringAsFixed(0)}min'
           : '${_min.toStringAsFixed(2)}min';
 

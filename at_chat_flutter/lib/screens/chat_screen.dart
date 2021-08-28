@@ -45,7 +45,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List<Widget> messageList = [];
+  List<Widget> messageList = <Widget>[];
   String? message;
   ScrollController? _scrollController;
   late ChatService _chatService;
@@ -55,7 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _scrollController = ScrollController();
     _chatService = ChatService();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) async {
       await _chatService.getChatHistory();
     });
   }
@@ -81,8 +81,8 @@ class _ChatScreenState extends State<ChatScreen> {
           color: Theme.of(context).brightness == Brightness.dark
               ? Colors.black87
               : Colors.white,
-          boxShadow: [
-            BoxShadow(
+          boxShadow: <BoxShadow>[
+            const BoxShadow(
               color: Colors.grey,
               offset: Offset(0.0, 1.0),
               blurRadius: 10.0,
@@ -90,28 +90,28 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
         child: Column(
-          children: [
+          children: <Widget>[
             (widget.isScreen)
                 ? Container()
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: <Widget>[
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
                             widget.title,
-                            style: TextStyle(color: Colors.black, fontSize: 14),
+                            style: const TextStyle(color: Colors.black, fontSize: 14),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: Text(
+                          child: const Text(
                             'Close',
                             style: TextStyle(
                                 color: Color(0xffFC7B30), fontSize: 14),
@@ -124,14 +124,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: StreamBuilder<List<Message>>(
                     stream: _chatService.chatStream,
                     initialData: _chatService.chatHistory,
-                    builder: (context, snapshot) {
+                    builder: (BuildContext context, AsyncSnapshot<List<Message>> snapshot) {
                       return (snapshot.connectionState ==
                               ConnectionState.waiting)
-                          ? Center(
+                          ? const Center(
                               child: CircularProgressIndicator(),
                             )
                           : (snapshot.data == null || snapshot.data!.isEmpty)
-                              ? Center(
+                              ? const Center(
                                   child: Text('No chat history found'),
                                 )
                               : ListView.builder(
@@ -139,10 +139,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                   controller: _scrollController,
                                   shrinkWrap: true,
                                   itemCount: snapshot.data!.length,
-                                  itemBuilder: (context, index) {
+                                  itemBuilder: (BuildContext context, int index) {
                                     return Padding(
                                       padding:
-                                          EdgeInsets.symmetric(vertical: 10.0),
+                                          const EdgeInsets.symmetric(vertical: 10.0),
                                       child: snapshot.data![index].type ==
                                               MessageType.INCOMING
                                           ? IncomingMessageBubble(
@@ -173,7 +173,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildMessageInputWidget() {
     return SendMessage(
-      messageCallback: (s) {
+      messageCallback: (String s) {
         message = s;
       },
       hintText: widget.hintText,
@@ -186,14 +186,14 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void showImagePicker() async {
-    final result = await FilePicker.platform.pickFiles(
+  Future<void> showImagePicker() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowCompression: true,
       withData: true,
     );
-    if ((result?.files ?? []).isNotEmpty) {
-      final file = File(result!.files.first.path!);
+    if ((result?.files ?? <PlatformFile>[]).isNotEmpty) {
+      File file = File(result!.files.first.path!);
       await _chatService.sendImageFile(file);
     } else {
       // User canceled the picker

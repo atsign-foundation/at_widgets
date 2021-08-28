@@ -32,11 +32,11 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
       height: 70.toHeight,
-      decoration: BoxDecoration(
-          color: Color(0xffF7F7FF), boxShadow: [BoxShadow(color: Colors.grey)]),
+      decoration: const BoxDecoration(
+          color: Color(0xffF7F7FF), boxShadow: <BoxShadow>[BoxShadow(color: Colors.grey)]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
+        children: <Widget>[
           Expanded(
             child: Text(
               widget.message,
@@ -44,7 +44,7 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
             ),
           ),
           isLoading
-              ? CircularProgressIndicator()
+              ? const CircularProgressIndicator()
               : CustomButton(
                   buttonText: widget.buttontext,
                   width: 120.toWidth,

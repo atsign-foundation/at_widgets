@@ -11,11 +11,11 @@ class TextTile extends StatelessWidget {
     return Container(
       child: Row(
         children: <Widget>[
-          icon != null ? Icon(icon) : SizedBox(),
-          SizedBox(width: 10),
+          icon != null ? Icon(icon) : const SizedBox(),
+          const SizedBox(width: 10),
           title != null
               ? Text(title!, style: CustomTextStyles().darkGrey16)
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );

@@ -42,14 +42,13 @@ class _NewGroupState extends State<NewGroup> {
     if (GroupService().selecteContactList!.isNotEmpty) {
       selectedContacts = GroupService().selecteContactList;
     } else {
-      selectedContacts = [];
+      selectedContacts = <AtContact?>[];
     }
   }
 
   // ignore: always_declare_return_types
   createGroup() async {
-    var isKeyboardOpen =
-        MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
+    bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     groupName = textController.text;
     // ignore: unnecessary_null_comparison
     if (groupName != null) {
@@ -59,11 +58,11 @@ class _NewGroupState extends State<NewGroup> {
       // }
 
       if (groupName.trim().isNotEmpty) {
-        var group = AtGroup(
+        AtGroup group = AtGroup(
           groupName,
           description: 'group desc',
           displayName: groupName,
-          members: Set.from(selectedContacts!),
+          members: Set<AtContact>.from(selectedContacts!),
           createdBy: GroupService().currentAtsign,
           updatedBy: GroupService().currentAtsign,
         );
@@ -72,35 +71,28 @@ class _NewGroupState extends State<NewGroup> {
           group.groupPicture = selectedImageByteData;
         }
 
-        var result = await GroupService().createGroup(group);
+        dynamic result = await GroupService().createGroup(group);
 
-        isKeyboardOpen =
-            MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
+        isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
 
         if (result is AtGroup) {
           Navigator.of(context).pop();
         } else if (result != null) {
           if (result.runtimeType == AlreadyExistsException) {
-            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context,
-                gravity: isKeyboardOpen ? 2 : 0);
+            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context, gravity: isKeyboardOpen ? 2 : 0);
           } else if (result.runtimeType == InvalidAtSignException) {
-            CustomToast()
-                .show(result.message, context, gravity: isKeyboardOpen ? 2 : 0);
+            CustomToast().show(result.message, context, gravity: isKeyboardOpen ? 2 : 0);
           } else {
-            CustomToast().show(TextConstants().SERVICE_ERROR, context,
-                gravity: isKeyboardOpen ? 2 : 0);
+            CustomToast().show(TextConstants().SERVICE_ERROR, context, gravity: isKeyboardOpen ? 2 : 0);
           }
         } else {
-          CustomToast().show(TextConstants().SERVICE_ERROR, context,
-              gravity: isKeyboardOpen ? 2 : 0);
+          CustomToast().show(TextConstants().SERVICE_ERROR, context, gravity: isKeyboardOpen ? 2 : 0);
         }
       } else {
-        CustomToast().show(TextConstants().EMPTY_NAME, context,
-            gravity: isKeyboardOpen ? 2 : 0);
+        CustomToast().show(TextConstants().EMPTY_NAME, context, gravity: isKeyboardOpen ? 2 : 0);
       }
     } else {
-      CustomToast().show(TextConstants().EMPTY_NAME, context,
-          gravity: isKeyboardOpen ? 2 : 0);
+      CustomToast().show(TextConstants().EMPTY_NAME, context, gravity: isKeyboardOpen ? 2 : 0);
     }
   }
 
@@ -108,19 +100,14 @@ class _NewGroupState extends State<NewGroup> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).brightness == Brightness.light
-            ? AllColors().WHITE
-            : AllColors().Black,
+        backgroundColor: Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
         bottomSheet: GroupBottomSheet(
           onPressed: createGroup,
           message: '${selectedContacts!.length} Contacts Selected',
           buttontext: 'Done',
         ),
-        appBar: CustomAppBar(
-            titleText: 'New Group',
-            showTitle: true,
-            showBackButton: true,
-            showLeadingIcon: true),
+        appBar:
+            const CustomAppBar(titleText: 'New Group', showTitle: true, showBackButton: true, showLeadingIcon: true),
         body: Column(
           children: <Widget>[
             SizedBox(height: 20.toHeight),
@@ -132,7 +119,7 @@ class _NewGroupState extends State<NewGroup> {
                 ),
                 InkWell(
                   onTap: () async {
-                    var image = await ImagePicker().pickImage();
+                    Uint8List? image = await ImagePicker().pickImage();
                     setState(() {
                       selectedImageByteData = image;
                     });
@@ -150,8 +137,7 @@ class _NewGroupState extends State<NewGroup> {
                               width: 68.toWidth,
                               height: 68.toWidth,
                               child: CircleAvatar(
-                                backgroundImage:
-                                    Image.memory(selectedImageByteData!).image,
+                                backgroundImage: Image.memory(selectedImageByteData!).image,
                               ),
                             )
                           : Icon(Icons.add, color: AllColors().ORANGE),
@@ -162,9 +148,9 @@ class _NewGroupState extends State<NewGroup> {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       Text('Group name', style: TextStyle(fontSize: 18.toFont)),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.only(right: 15.0),
                         child: Container(
@@ -174,7 +160,7 @@ class _NewGroupState extends State<NewGroup> {
                             color: AllColors().INPUT_FIELD_COLOR,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                           child: Row(
                             children: <Widget>[
                               Expanded(
@@ -188,9 +174,7 @@ class _NewGroupState extends State<NewGroup> {
                                     // hintText: hintText,
                                     enabledBorder: InputBorder.none,
                                     border: InputBorder.none,
-                                    hintStyle: TextStyle(
-                                        color: AllColors().INPUT_FIELD_COLOR,
-                                        fontSize: 15.toFont),
+                                    hintStyle: TextStyle(color: AllColors().INPUT_FIELD_COLOR, fontSize: 15.toFont),
                                   ),
                                   onTap: () {
                                     if (showEmojiPicker) {
@@ -199,9 +183,9 @@ class _NewGroupState extends State<NewGroup> {
                                       });
                                     }
                                   },
-                                  onChanged: (val) {},
+                                  onChanged: (String val) {},
                                   controller: textController,
-                                  onSubmitted: (str) {},
+                                  onSubmitted: (String str) {},
                                 ),
                               ),
                               InkWell(
@@ -229,20 +213,19 @@ class _NewGroupState extends State<NewGroup> {
               ],
             ),
             SizedBox(height: 13.toHeight),
-            Divider(),
+            const Divider(),
             SizedBox(height: 13.toHeight),
             Expanded(
               child: Container(
                 width: double.infinity,
-                padding: EdgeInsets.only(right: 15, left: 15),
+                padding: const EdgeInsets.only(right: 15, left: 15),
                 child: SingleChildScrollView(
                   child: GridView.count(
-                    physics: ScrollPhysics(),
+                    physics: const ScrollPhysics(),
                     shrinkWrap: true,
                     crossAxisCount: 4,
-                    childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
-                        (SizeConfig().screenHeight * 0.2)),
-                    children: List.generate(selectedContacts!.length, (index) {
+                    childAspectRatio: ((SizeConfig().screenWidth * 0.25) / (SizeConfig().screenHeight * 0.2)),
+                    children: List<Widget>.generate(selectedContacts!.length, (int index) {
                       return CustomPersonVerticalTile(
                         imageLocation: null,
                         title: selectedContacts![index]!.atSign,
@@ -267,7 +250,7 @@ class _NewGroupState extends State<NewGroup> {
                     margin: EdgeInsets.only(bottom: 70.toHeight),
                     child: EmojiPicker(
                       key: UniqueKey(),
-                      config: Config(
+                      config: const Config(
                           columns: 7,
                           emojiSizeMax: 32.0,
                           verticalSpacing: 0,
@@ -281,16 +264,15 @@ class _NewGroupState extends State<NewGroup> {
                           showRecentsTab: true,
                           recentsLimit: 28,
                           noRecentsText: 'No Recents',
-                          noRecentsStyle: const TextStyle(
-                              fontSize: 20, color: Colors.black26),
-                          categoryIcons: const CategoryIcons(),
+                          noRecentsStyle: TextStyle(fontSize: 20, color: Colors.black26),
+                          categoryIcons: CategoryIcons(),
                           buttonMode: ButtonMode.MATERIAL),
-                      onEmojiSelected: (category, emoji) {
+                      onEmojiSelected: (Category category, Emoji emoji) {
                         textController.text += emoji.emoji;
                       },
                     ),
                   )
-                : SizedBox()
+                : const SizedBox()
           ],
         ),
       ),

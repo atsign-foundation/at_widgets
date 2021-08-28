@@ -14,12 +14,12 @@ class PolygonLayerOptions extends LayerOptions {
   /// screen space culling of polygons based on bounding box
   PolygonLayerOptions({
     Key? key,
-    this.polygons = const [],
+    this.polygons = const <Polygon>[],
     this.polygonCulling = false,
-    rebuild,
+    dynamic rebuild,
   }) : super(key: key, rebuild: rebuild) {
     if (polygonCulling) {
-      for (var polygon in polygons) {
+      for (Polygon polygon in polygons) {
         polygon.boundingBox = LatLngBounds.fromPoints(polygon.points);
       }
     }
@@ -28,7 +28,7 @@ class PolygonLayerOptions extends LayerOptions {
 
 class Polygon {
   final List<LatLng?>? points;
-  final List<Offset> offsets = [];
+  final List<Offset> offsets = <Offset>[];
   final List<List<LatLng>>? holePointsList;
   final List<List<Offset>>? holeOffsetsList;
   final Color color;
@@ -48,7 +48,7 @@ class Polygon {
     this.isDotted = false,
   }) : holeOffsetsList = null == holePointsList || holePointsList.isEmpty
             ? null
-            : List.generate(holePointsList.length, (_) => []);
+            : List< List<Offset>>.generate(holePointsList.length, (_) => <Offset>[]);
 }
 
 class PolygonLayerWidget extends StatelessWidget {
@@ -57,7 +57,7 @@ class PolygonLayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mapState = MapState.of(context)!;
+    MapState mapState = MapState.of(context)!;
     return PolygonLayer(options, mapState, mapState.onMoved);
   }
 }
@@ -65,7 +65,7 @@ class PolygonLayerWidget extends StatelessWidget {
 class PolygonLayer extends StatelessWidget {
   final PolygonLayerOptions polygonOpts;
   final MapState? map;
-  final Stream? stream;
+  final Stream<void>? stream;
 
   PolygonLayer(this.polygonOpts, this.map, this.stream)
       : super(key: polygonOpts.key);
@@ -74,23 +74,23 @@ class PolygonLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints bc) {
-        final size = Size(bc.maxWidth, bc.maxHeight);
+        Size size = Size(bc.maxWidth, bc.maxHeight);
         return _build(context, size);
       },
     );
   }
 
   Widget _build(BuildContext context, Size size) {
-    return StreamBuilder(
+    return StreamBuilder<void>(
       stream: stream, // a Stream<void> or null
       builder: (BuildContext context, _) {
-        var polygons = <Widget>[];
+        List<Widget> polygons = <Widget>[];
 
-        for (var polygon in polygonOpts.polygons) {
+        for (Polygon polygon in polygonOpts.polygons) {
           polygon.offsets.clear();
 
           if (null != polygon.holeOffsetsList) {
-            for (var offsets in polygon.holeOffsetsList!) {
+            for (List<Offset> offsets in polygon.holeOffsetsList!) {
               offsets.clear();
             }
           }
@@ -104,7 +104,7 @@ class PolygonLayer extends StatelessWidget {
           _fillOffsets(polygon.offsets, polygon.points!);
 
           if (null != polygon.holePointsList) {
-            for (var i = 0, len = polygon.holePointsList!.length;
+            for (int i = 0, len = polygon.holePointsList!.length;
                 i < len;
                 ++i) {
               _fillOffsets(
@@ -129,11 +129,11 @@ class PolygonLayer extends StatelessWidget {
     );
   }
 
-  void _fillOffsets(final List<Offset> offsets, final List<LatLng?> points) {
-    for (var i = 0, len = points.length; i < len; ++i) {
-      var point = points[i];
+  void _fillOffsets(List<Offset> offsets, List<LatLng?> points) {
+    for (int i = 0, len = points.length; i < len; ++i) {
+      LatLng? point = points[i];
 
-      var pos = map!.project(point);
+      CustomPoint<num> pos = map!.project(point);
       pos = pos.multiplyBy(map!.getZoomScale(map!.zoom, map!.zoom)) -
           map!.getPixelOrigin()!;
       offsets.add(Offset(pos.x.toDouble(), pos.y.toDouble()));
@@ -154,26 +154,26 @@ class PolygonPainter extends CustomPainter {
     if (polygonOpt.offsets.isEmpty) {
       return;
     }
-    final rect = Offset.zero & size;
+    Rect rect = Offset.zero & size;
     _paintPolygon(canvas, rect);
   }
 
   void _paintBorder(Canvas canvas) {
     if (polygonOpt.borderStrokeWidth > 0.0) {
-      var borderRadius = (polygonOpt.borderStrokeWidth / 2);
+      double borderRadius = (polygonOpt.borderStrokeWidth / 2);
 
-      final borderPaint = Paint()
+      Paint borderPaint = Paint()
         ..color = polygonOpt.borderColor
         ..strokeWidth = polygonOpt.borderStrokeWidth;
 
       if (polygonOpt.isDotted) {
-        var spacing = polygonOpt.borderStrokeWidth * 1.5;
+        double spacing = polygonOpt.borderStrokeWidth * 1.5;
         _paintDottedLine(
             canvas, polygonOpt.offsets, borderRadius, spacing, borderPaint);
 
         if (!polygonOpt.disableHolesBorder &&
             null != polygonOpt.holeOffsetsList) {
-          for (var offsets in polygonOpt.holeOffsetsList!) {
+          for (List<Offset> offsets in polygonOpt.holeOffsetsList!) {
             _paintDottedLine(
                 canvas, offsets, borderRadius, spacing, borderPaint);
           }
@@ -183,7 +183,7 @@ class PolygonPainter extends CustomPainter {
 
         if (!polygonOpt.disableHolesBorder &&
             null != polygonOpt.holeOffsetsList) {
-          for (var offsets in polygonOpt.holeOffsetsList!) {
+          for (List<Offset> offsets in polygonOpt.holeOffsetsList!) {
             _paintLine(canvas, offsets, borderRadius, borderPaint);
           }
         }
@@ -193,16 +193,16 @@ class PolygonPainter extends CustomPainter {
 
   void _paintDottedLine(Canvas canvas, List<Offset> offsets, double radius,
       double stepLength, Paint paint) {
-    var startDistance = 0.0;
-    for (var i = 0; i < offsets.length - 1; i++) {
-      var o0 = offsets[i];
-      var o1 = offsets[i + 1];
-      var totalDistance = _dist(o0, o1);
-      var distance = startDistance;
+    double startDistance = 0.0;
+    for (int i = 0; i < offsets.length - 1; i++) {
+      Offset o0 = offsets[i];
+      Offset o1 = offsets[i + 1];
+      double totalDistance = _dist(o0, o1);
+      double distance = startDistance;
       while (distance < totalDistance) {
-        var f1 = distance / totalDistance;
-        var f0 = 1.0 - f1;
-        var offset = Offset(o0.dx * f0 + o1.dx * f1, o0.dy * f0 + o1.dy * f1);
+        double f1 = distance / totalDistance;
+        double f0 = 1.0 - f1;
+        Offset offset = Offset(o0.dx * f0 + o1.dx * f1, o0.dy * f0 + o1.dy * f1);
         canvas.drawCircle(offset, radius, paint);
         distance += stepLength;
       }
@@ -215,21 +215,21 @@ class PolygonPainter extends CustomPainter {
 
   void _paintLine(
       Canvas canvas, List<Offset> offsets, double radius, Paint paint) {
-    canvas.drawPoints(PointMode.lines, [...offsets, offsets[0]], paint);
-    for (var offset in offsets) {
+    canvas.drawPoints(PointMode.lines, <Offset>[...offsets, offsets[0]], paint);
+    for (Offset offset in offsets) {
       canvas.drawCircle(offset, radius, paint);
     }
   }
 
   void _paintPolygon(Canvas canvas, Rect rect) {
-    final paint = Paint();
+    Paint paint = Paint();
 
     if (null != polygonOpt.holeOffsetsList) {
       canvas.saveLayer(rect, paint);
       paint.style = PaintingStyle.fill;
 
-      for (var offsets in polygonOpt.holeOffsetsList!) {
-        var path = Path();
+      for (List<Offset> offsets in polygonOpt.holeOffsetsList!) {
+        Path path = Path();
         path.addPolygon(offsets, true);
         canvas.drawPath(path, paint);
       }
@@ -238,7 +238,7 @@ class PolygonPainter extends CustomPainter {
         ..color = polygonOpt.color
         ..blendMode = BlendMode.srcOut;
 
-      var path = Path();
+      Path path = Path();
       path.addPolygon(polygonOpt.offsets, true);
       canvas.drawPath(path, paint);
 
@@ -251,7 +251,7 @@ class PolygonPainter extends CustomPainter {
         ..style = PaintingStyle.fill
         ..color = polygonOpt.color;
 
-      var path = Path();
+      Path path = Path();
       path.addPolygon(polygonOpt.offsets, true);
       canvas.drawPath(path, paint);
 

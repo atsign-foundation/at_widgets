@@ -15,31 +15,31 @@ import 'utils/constants/constants.dart';
 
 Widget eventShowLocation(List<HybridModel> users, LatLng venue) {
   print('FlutterMap called');
-  var _popupController = PopupController();
-  var mapController = MapController();
-  var markers = users.map((user) => user.marker).toList();
+  PopupController _popupController = PopupController();
+  MapController mapController = MapController();
+  List<Marker?> markers = users.map((HybridModel user) => user.marker).toList();
   print('markers length = ${markers.length}');
-  users.forEach((element) {
+  for(HybridModel element in users) {
     print('displayanme - ${element.displayName}');
-  });
-  markers.forEach((element) {
+  }
+  for(Marker? element in markers) {
     print('point - ${element!.point}');
-  });
+  }
 
-  var _eventData = users[users.indexWhere((e) => e.latLng == venue)];
+  HybridModel _eventData = users[users.indexWhere((HybridModel e) => e.latLng == venue)];
 
   return Stack(
-    children: [
+    children: <Widget>[
       FlutterMap(
         key: UniqueKey(),
         mapController: mapController,
         options: MapOptions(
           center: venue,
           zoom: markers.isNotEmpty ? 8 : 2,
-          plugins: [MarkerClusterPlugin(UniqueKey())],
+          plugins: <MapPlugin>[MarkerClusterPlugin(UniqueKey())],
           onTap: (_) => _popupController.hidePopup(),
         ),
-        layers: [
+        layers: <LayerOptions>[
           TileLayerOptions(
             minNativeZoom: 2,
             maxNativeZoom: 18,
@@ -50,26 +50,26 @@ Widget eventShowLocation(List<HybridModel> users, LatLng venue) {
           MarkerClusterLayerOptions(
             maxClusterRadius: 190,
             disableClusteringAtZoom: 16,
-            size: Size(200, 150),
+            size: const Size(200, 150),
             anchor: AnchorPos.align(AnchorAlign.center),
-            fitBoundsOptions: FitBoundsOptions(
+            fitBoundsOptions: const FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
             markers: markers,
-            polygonOptions: PolygonOptions(
+            polygonOptions: const PolygonOptions(
                 borderColor: Colors.blueAccent,
                 color: Colors.black12,
                 borderStrokeWidth: 3),
             popupOptions: PopupOptions(
                 popupSnap: PopupSnap.top,
                 popupController: _popupController,
-                popupBuilder: (_, marker) {
+                popupBuilder: (_, Marker? marker) {
                   return _popupController.streamController!.isClosed
-                      ? Text('Closed')
+                      ? const Text('Closed')
                       : buildPopup(users[markers.indexOf(marker)],
                           center: venue);
                 }),
-            builder: (context, markers) {
+            builder: (BuildContext context, List<Marker?> markers) {
               return buildMarkerCluster(markers, eventData: _eventData);
             },
           ),

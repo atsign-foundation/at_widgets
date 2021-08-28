@@ -16,10 +16,10 @@ class ErrorScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: <Widget>[
           Text(msg,
-              textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
-          SizedBox(height: 10),
+              textAlign: TextAlign.center, style: const TextStyle(fontSize: 20)),
+          const SizedBox(height: 10),
           onPressed != null
               ? CustomButton(
                   buttonText: 'Retry',
@@ -37,7 +37,7 @@ class ErrorScreen extends StatelessWidget {
                       ? AllColors().WHITE
                       : AllColors().Black,
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );

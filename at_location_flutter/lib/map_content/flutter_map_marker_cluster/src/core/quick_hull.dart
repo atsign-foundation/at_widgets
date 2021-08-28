@@ -10,22 +10,18 @@ class _QuickHullDistantPoint {
 
 class QuickHull {
   static double _getDistant(LatLng cpt, List<LatLng> bl) {
-    var vY = bl[1].latitude - bl[0].latitude,
-        vX = bl[0].longitude - bl[1].longitude;
-    return (vX * (cpt.latitude - bl[0].latitude) +
-        vY * (cpt.longitude - bl[0].longitude));
+    double vY = bl[1].latitude - bl[0].latitude, vX = bl[0].longitude - bl[1].longitude;
+    return (vX * (cpt.latitude - bl[0].latitude) + vY * (cpt.longitude - bl[0].longitude));
   }
 
-  static _QuickHullDistantPoint _findMostDistantPointFromBaseLine(
-      baseLine, latLngs) {
-    // ignore: omit_local_variable_types
+  static _QuickHullDistantPoint _findMostDistantPointFromBaseLine(List<LatLng> baseLine, List<LatLng> latLngs) {
     double maxD = 0;
     LatLng? maxPt;
-    var newPoints = <LatLng>[];
+    List<LatLng> newPoints = <LatLng>[];
 
-    for (var i = latLngs.length - 1; i >= 0; i--) {
-      var pt = latLngs[i];
-      var d = _getDistant(pt, baseLine);
+    for (int i = latLngs.length - 1; i >= 0; i--) {
+      LatLng pt = latLngs[i];
+      double d = _getDistant(pt, baseLine);
 
       if (d > 0) {
         newPoints.add(pt);
@@ -42,19 +38,18 @@ class QuickHull {
     return _QuickHullDistantPoint(maxPoint: maxPt, newPoints: newPoints);
   }
 
-  static List<LatLng?> _buildConvexHull(
-      List<LatLng> baseLine, List<LatLng> latLngs) {
-    var t = _findMostDistantPointFromBaseLine(baseLine, latLngs);
+  static List<LatLng?> _buildConvexHull(List<LatLng> baseLine, List<LatLng> latLngs) {
+    _QuickHullDistantPoint t = _findMostDistantPointFromBaseLine(baseLine, latLngs);
 
     if (t.maxPoint != null) {
       // if there is still a point "outside" the base line
-      return [
-        ..._buildConvexHull([baseLine[0], t.maxPoint!], t.newPoints!),
-        ..._buildConvexHull([t.maxPoint!, baseLine[1]], t.newPoints!)
+      return <LatLng?>[
+        ..._buildConvexHull(<LatLng>[baseLine[0], t.maxPoint!], t.newPoints!),
+        ..._buildConvexHull(<LatLng>[t.maxPoint!, baseLine[1]], t.newPoints!)
       ];
     } else {
       // if there is no more point "outside" the base line, the current base line is part of the convex hull
-      return [baseLine[0]];
+      return <LatLng?>[baseLine[0]];
     }
   }
 
@@ -64,8 +59,8 @@ class QuickHull {
 
     LatLng? maxLatPt, minLatPt, maxLngPt, minLngPt, maxPt, minPt;
 
-    for (var i = latLngs.length - 1; i >= 0; i--) {
-      var pt = latLngs[i];
+    for (int i = latLngs.length - 1; i >= 0; i--) {
+      LatLng pt = latLngs[i];
 
       if (maxLat == null || pt.latitude > maxLat) {
         maxLatPt = pt;
@@ -94,8 +89,8 @@ class QuickHull {
     }
 
     return <LatLng?>[
-      ..._buildConvexHull([minPt!, maxPt!], latLngs),
-      ..._buildConvexHull([maxPt, minPt], latLngs)
+      ..._buildConvexHull(<LatLng>[minPt!, maxPt!], latLngs),
+      ..._buildConvexHull(<LatLng>[maxPt, minPt], latLngs)
     ];
   }
 }

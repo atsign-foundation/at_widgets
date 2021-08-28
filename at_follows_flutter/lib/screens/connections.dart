@@ -1,3 +1,4 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_follows_flutter/domain/connection_model.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/services/sdk_service.dart';
@@ -17,7 +18,7 @@ import 'package:provider/provider.dart';
 ///To enable darkTheme set [isDarkTheme] as true.
 class Connections extends StatefulWidget {
   ///Perform operations like follow/following for a particular @sign.
-  final atClientserviceInstance;
+  final AtClientService atClientserviceInstance;
 
   ///color to match with your app theme. Defaults to [orange].
   final Color? appColor;
@@ -38,11 +39,11 @@ class Connections extends StatefulWidget {
 }
 
 class _ConnectionsState extends State<Connections> {
-  List<ConnectionTab> connectionTabs = [];
+  List<ConnectionTab> connectionTabs = <ConnectionTab>[];
   int? lastAccessedIndex;
   TextEditingController searchController = TextEditingController();
-  ConnectionProvider _connectionProvider = ConnectionProvider();
-  var _connectionService = ConnectionsService();
+  final ConnectionProvider _connectionProvider = ConnectionProvider();
+  final ConnectionsService _connectionService = ConnectionsService();
   // String followAtsignTitle;
   // String followerAtsignTitle;
 
@@ -58,7 +59,7 @@ class _ConnectionsState extends State<Connections> {
     Strings.directoryUrl = Strings.rootdomain == 'root.atsign.org'
         ? 'https://atsign.directory/'
         : 'https://directory.atsign.wtf/';
-    _connectionService.startMonitor().then((value) => setState(() {
+    _connectionService.startMonitor().then((bool value) => setState(() {
           _formConnectionTabs(2);
         }));
 
@@ -82,10 +83,10 @@ class _ConnectionsState extends State<Connections> {
               connectionTabs.isNotEmpty ? connectionTabs[1].isActive : false,
         ),
         body: ChangeNotifierProvider<ConnectionProvider>.value(
-          builder: (context, child) {
-            if (_connectionService.isMonitorStarted)
+          builder: (BuildContext context, Widget? child) {
+            if (_connectionService.isMonitorStarted) {
               return child!;
-            else {
+            } else {
               return SizedBox(
                 height: SizeConfig().screenHeight * 0.6,
                 width: SizeConfig().screenWidth,
@@ -112,11 +113,11 @@ class _ConnectionsState extends State<Connections> {
                     ),
                   )
                 : Column(
-                    children: [
+                    children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                        children: <Widget>[
                           for (int index = 0;
                               index < connectionTabs.length;
                               index++)
@@ -127,13 +128,14 @@ class _ConnectionsState extends State<Connections> {
                               width: 150.0.toWidth,
                               isActive: connectionTabs[index].isActive,
                               text: connectionTabs[index].name,
-                              onPressedCallBack: (isActive) {
+                              onPressedCallBack: (bool isActive) {
                                 if (index != lastAccessedIndex &&
                                     lastAccessedIndex != null &&
                                     !connectionTabs[index].isActive) {
-                                  if (_connectionProvider.status == null)
+                                  if (_connectionProvider.status == null) {
                                     _connectionProvider
                                         .setStatus(Status.getData);
+                                  }
                                   connectionTabs[lastAccessedIndex!].isActive =
                                       false;
                                   connectionTabs[index].isActive = isActive;
@@ -147,8 +149,8 @@ class _ConnectionsState extends State<Connections> {
                       SizedBox(height: 20.toHeight),
                       TextField(
                         style: CustomTextStyles.fontR16primary,
-                        onChanged: (value) {
-                          if (value == '') {
+                        onChanged: (String? value) {
+                          if (value == null || value.isEmpty) {
                             FocusScope.of(context).unfocus();
                           } else {
                             setState(() {});
@@ -160,7 +162,7 @@ class _ConnectionsState extends State<Connections> {
                             contentPadding: EdgeInsets.all(18.toFont),
                             filled: true,
                             fillColor: ColorConstants.fillColor,
-                            hintText: Strings.Search,
+                            hintText: Strings.search,
                             hintStyle: CustomTextStyles.fontR16primary,
                             prefixIcon: Icon(Icons.filter_list,
                                 size: 20.toFont, color: ColorConstants.primary),
@@ -201,7 +203,7 @@ class _ConnectionsState extends State<Connections> {
         ));
   }
 
-  _getCount() {
+  void _getCount() {
     bool isCalled = false;
     if (connectionTabs[0].count != ConnectionProvider().followersList!.length) {
       connectionTabs[0].count = ConnectionProvider().followersList!.length;
@@ -233,13 +235,13 @@ class _ConnectionsState extends State<Connections> {
     return countValue;
   }
 
-  _formConnectionTabs(int tabsCount) {
-    var isFollowingOption =
+  void _formConnectionTabs(int tabsCount) {
+    bool isFollowingOption =
         widget.followAtsignTitle != null || widget.followerAtsignTitle != null;
     lastAccessedIndex = isFollowingOption ? 1 : 0;
-    connectionTabs.addAll([
-      ConnectionTab(name: Strings.Followers, isActive: !isFollowingOption),
-      ConnectionTab(name: Strings.Following, isActive: isFollowingOption),
+    connectionTabs.addAll(<ConnectionTab>[
+      ConnectionTab(name: Strings.followers, isActive: !isFollowingOption),
+      ConnectionTab(name: Strings.following, isActive: isFollowingOption),
     ]);
   }
 }

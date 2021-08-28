@@ -25,90 +25,74 @@ class EventNotificationModel {
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
     isUpdate = data['isUpdate'] == 'true' ? true : false;
-    lat = data['lat'] != 'null' && data['lat'] != null
-        ? double.parse(data['lat'])
-        : null;
-    long = data['long'] != 'null' && data['long'] != null
-        ? double.parse(data['long'])
-        : null;
+    lat = data['lat'] != 'null' && data['lat'] != null ? double.parse(data['lat']) : null;
+    long = data['long'] != 'null' && data['long'] != null ? double.parse(data['long']) : null;
     if (data['venue'] != null) {
       venue = Venue.fromJson(jsonDecode(data['venue']));
     }
     if (data['event'] != null) {
-      event = data['event'] != null
-          ? Event.fromJson(jsonDecode(data['event']))
-          : null;
+      event = data['event'] != null ? Event.fromJson(jsonDecode(data['event'])) : null;
     }
 
     if (data['group'] != null) {
       data['group'] = jsonDecode(data['group']);
       group = AtGroup(data['group']['name']);
 
-      data['group']['members'].forEach((contact) {
-        var newContact = AtContact(atSign: contact['atSign']);
-        newContact.tags = {};
+      for (Map<String, dynamic> contact in data['group']['members']) {
+        AtContact newContact = AtContact(atSign: contact['atSign']);
+        newContact.tags = <String, dynamic>{};
         newContact.tags!['isAccepted'] = contact['tags']['isAccepted'];
         newContact.tags!['isSharing'] = contact['tags']['isSharing'];
         newContact.tags!['isExited'] = contact['tags']['isExited'];
-        newContact.tags!['shareFrom'] = contact['tags']['shareFrom'] != null &&
-                contact['tags']['shareFrom'] != 'null'
+        newContact.tags!['shareFrom'] = contact['tags']['shareFrom'] != null && contact['tags']['shareFrom'] != 'null'
             ? contact['tags']['shareFrom']
             : -1;
-        newContact.tags!['shareTo'] = contact['tags']['shareTo'] != null &&
-                contact['tags']['shareTo'] != 'null'
+        newContact.tags!['shareTo'] = contact['tags']['shareTo'] != null && contact['tags']['shareTo'] != 'null'
             ? contact['tags']['shareTo']
             : -1;
-        newContact.tags!['lat'] =
-            contact['tags']['lat'] != null && contact['tags']['lat'] != 'null'
-                ? double.parse(contact['tags']['lat'].toString())
-                : null;
-        newContact.tags!['long'] =
-            contact['tags']['long'] != null && contact['tags']['long'] != 'null'
-                ? double.parse(contact['tags']['long'].toString())
-                : null;
+        newContact.tags!['lat'] = contact['tags']['lat'] != null && contact['tags']['lat'] != 'null'
+            ? double.parse(contact['tags']['lat'].toString())
+            : null;
+        newContact.tags!['long'] = contact['tags']['long'] != null && contact['tags']['long'] != 'null'
+            ? double.parse(contact['tags']['long'].toString())
+            : null;
         group!.members!.add(newContact);
-      });
+      }
     }
   }
 
-  static String convertEventNotificationToJson(
-      EventNotificationModel eventNotification) {
-    var notification = json.encode({
-      'title': eventNotification.title != null
-          ? eventNotification.title.toString()
-          : '',
+  static String convertEventNotificationToJson(EventNotificationModel eventNotification) {
+    String notification = json.encode(<String, dynamic>{
+      'title': eventNotification.title != null ? eventNotification.title.toString() : '',
       'isCancelled': eventNotification.isCancelled.toString(),
       'isSharing': eventNotification.isSharing.toString(),
       'isUpdate': eventNotification.isUpdate.toString(),
       'atsignCreator': eventNotification.atsignCreator.toString(),
-      'key': '${eventNotification.key}',
+      'key': eventNotification.key,
       'group': json.encode(eventNotification.group),
       'lat': eventNotification.lat.toString(),
       'long': eventNotification.long.toString(),
 
       /// Update ['group']['updatedAt'] with DateTime.now()
-      'venue': json.encode({
+      'venue': json.encode(<String, dynamic>{
         'latitude': eventNotification.venue!.latitude.toString(),
         'longitude': eventNotification.venue!.longitude.toString(),
         'label': eventNotification.venue!.label
       }),
-      'event': json.encode({
+      'event': json.encode(<String, dynamic>{
         'isRecurring': eventNotification.event!.isRecurring.toString(),
         'date': eventNotification.event!.date.toString(),
         'endDate': eventNotification.event!.endDate.toString(),
-        'startTime': eventNotification.event!.startTime != null
-            ? eventNotification.event!.startTime!.toUtc().toString()
-            : null,
-        'endTime': eventNotification.event!.endTime != null
-            ? eventNotification.event!.endTime!.toUtc().toString()
-            : null,
+        'startTime':
+            eventNotification.event!.startTime != null ? eventNotification.event!.startTime!.toUtc().toString() : null,
+        'endTime':
+            eventNotification.event!.endTime != null ? eventNotification.event!.endTime!.toUtc().toString() : null,
         'repeatDuration': eventNotification.event!.repeatDuration.toString(),
         'repeatCycle': eventNotification.event!.repeatCycle.toString(),
         'occursOn': eventNotification.event!.occursOn.toString(),
         'endsOn': eventNotification.event!.endsOn.toString(),
         'endEventOnDate': eventNotification.event!.endEventOnDate.toString(),
-        'endEventAfterOccurance':
-            eventNotification.event!.endEventAfterOccurance.toString()
+        'endEventAfterOccurance': eventNotification.event!.endEventAfterOccurance.toString()
       })
     });
     return notification;
@@ -120,10 +104,8 @@ class Venue {
   double? latitude, longitude;
   String? label;
   Venue.fromJson(Map<String, dynamic> data)
-      : latitude =
-            data['latitude'] != 'null' ? double.parse(data['latitude']) : 0,
-        longitude =
-            data['longitude'] != 'null' ? double.parse(data['longitude']) : 0,
+      : latitude = data['latitude'] != 'null' ? double.parse(data['latitude']) : 0,
+        longitude = data['longitude'] != 'null' ? double.parse(data['longitude']) : 0,
         label = data['label'] != 'null' ? data['label'] : '';
 }
 
@@ -139,26 +121,17 @@ class Event {
   DateTime? endEventOnDate;
   int? endEventAfterOccurance;
   Event.fromJson(Map<String, dynamic> data) {
-    startTime = data['startTime'] != null
-        ? DateTime.parse(data['startTime']).toLocal()
-        : null;
-    endTime = data['endTime'] != null
-        ? DateTime.parse(data['endTime']).toLocal()
-        : null;
+    startTime = data['startTime'] != null ? DateTime.parse(data['startTime']).toLocal() : null;
+    endTime = data['endTime'] != null ? DateTime.parse(data['endTime']).toLocal() : null;
     isRecurring = data['isRecurring'] == 'true' ? true : false;
     if (!isRecurring!) {
       date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
-      endDate =
-          data['endDate'] != 'null' ? DateTime.parse(data['endDate']) : null;
+      endDate = data['endDate'] != 'null' ? DateTime.parse(data['endDate']) : null;
     } else {
-      repeatDuration = data['repeatDuration'] != 'null'
-          ? int.parse(data['repeatDuration'])
-          : null;
+      repeatDuration = data['repeatDuration'] != 'null' ? int.parse(data['repeatDuration']) : null;
       repeatCycle = (data['repeatCycle'] == RepeatCycle.WEEK.toString()
           ? RepeatCycle.WEEK
-          : (data['repeatCycle'] == RepeatCycle.MONTH.toString()
-              ? RepeatCycle.MONTH
-              : null));
+          : (data['repeatCycle'] == RepeatCycle.MONTH.toString() ? RepeatCycle.MONTH : null));
       switch (repeatCycle) {
         case RepeatCycle.WEEK:
           occursOn = (data['occursOn'] == Week.SUNDAY.toString()
@@ -173,10 +146,7 @@ class Event {
                               ? Week.THURSDAY
                               : (data['occursOn'] == Week.FRIDAY.toString()
                                   ? Week.FRIDAY
-                                  : (data['occursOn'] ==
-                                          Week.SATURDAY.toString()
-                                      ? Week.SATURDAY
-                                      : null)))))));
+                                  : (data['occursOn'] == Week.SATURDAY.toString() ? Week.SATURDAY : null)))))));
           break;
         case RepeatCycle.MONTH:
           date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
@@ -188,19 +158,14 @@ class Event {
           ? EndsOn.NEVER
           : (data['endsOn'] == EndsOn.ON.toString()
               ? EndsOn.ON
-              : (data['endsOn'] == EndsOn.AFTER.toString()
-                  ? EndsOn.AFTER
-                  : null)));
+              : (data['endsOn'] == EndsOn.AFTER.toString() ? EndsOn.AFTER : null)));
       switch (endsOn) {
         case EndsOn.ON:
-          endEventOnDate = data['endEventOnDate'] != 'null'
-              ? DateTime.parse(data['endEventOnDate'])
-              : null;
+          endEventOnDate = data['endEventOnDate'] != 'null' ? DateTime.parse(data['endEventOnDate']) : null;
           break;
         case EndsOn.AFTER:
-          endEventAfterOccurance = data['endEventAfterOccurance'] != 'null'
-              ? int.parse(data['endEventAfterOccurance'])
-              : null;
+          endEventAfterOccurance =
+              data['endEventAfterOccurance'] != 'null' ? int.parse(data['endEventAfterOccurance']) : null;
           break;
         case EndsOn.NEVER:
           break;
@@ -260,41 +225,34 @@ String getWeekString(Week? weekday) {
 }
 
 String timeOfDayToString(DateTime time) {
-  var minute = time.minute;
+  int minute = time.minute;
   if (minute < 10) return '${time.hour}: 0${time.minute}';
 
   return '${time.hour}: ${time.minute}';
 }
 
 String dateToString(DateTime date) {
-  var dateString = '${date.day}/${date.month}/${date.year}';
+  String dateString = '${date.day}/${date.month}/${date.year}';
   return dateString;
 }
 
-List<String> get repeatOccuranceOptions => ['Week', 'Month'];
-List<String> get occursOnWeekOptions => [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ];
+List<String> get repeatOccuranceOptions => <String>['Week', 'Month'];
+List<String> get occursOnWeekOptions =>
+    <String>['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 enum ATKEY_TYPE_ENUM { CREATEEVENT, ACKNOWLEDGEEVENT }
 
-Map<String, dynamic> get monthsList => {
-      '1': {'month': 'jan', 'days': 31, 'count': 1},
-      '2': {'month': 'feb', 'days': 28, 'count': 2},
-      '3': {'month': 'mar', 'days': 31, 'count': 3},
-      '4': {'month': 'apr', 'days': 30, 'count': 4},
-      '5': {'month': 'may', 'days': 31, 'count': 5},
-      '6': {'month': 'jun', 'days': 30, 'count': 6},
-      '7': {'month': 'jul', 'days': 31, 'count': 7},
-      '8': {'month': 'aug', 'days': 31, 'count': 8},
-      '9': {'month': 'sept', 'days': 30, 'count': 9},
-      '10': {'month': 'oct', 'days': 31, 'count': 10},
-      '11': {'month': 'nov', 'days': 30, 'count': 11},
-      '12': {'month': 'dec', 'days': 31, 'count': 12},
+Map<String, dynamic> get monthsList => <String, dynamic>{
+      '1': <String, dynamic>{'month': 'jan', 'days': 31, 'count': 1},
+      '2': <String, dynamic>{'month': 'feb', 'days': 28, 'count': 2},
+      '3': <String, dynamic>{'month': 'mar', 'days': 31, 'count': 3},
+      '4': <String, dynamic>{'month': 'apr', 'days': 30, 'count': 4},
+      '5': <String, dynamic>{'month': 'may', 'days': 31, 'count': 5},
+      '6': <String, dynamic>{'month': 'jun', 'days': 30, 'count': 6},
+      '7': <String, dynamic>{'month': 'jul', 'days': 31, 'count': 7},
+      '8': <String, dynamic>{'month': 'aug', 'days': 31, 'count': 8},
+      '9': <String, dynamic>{'month': 'sept', 'days': 30, 'count': 9},
+      '10': <String, dynamic>{'month': 'oct', 'days': 31, 'count': 10},
+      '11': <String, dynamic>{'month': 'nov', 'days': 30, 'count': 11},
+      '12': <String, dynamic>{'month': 'dec', 'days': 31, 'count': 12},
     };

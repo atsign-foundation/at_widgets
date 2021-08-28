@@ -21,7 +21,7 @@ class CustomPersonHorizontalTile extends StatelessWidget {
     this.icon,
   }) {
     if (image != null) {
-      var intList = image!.cast<int>();
+      List<int> intList = image!.cast<int>();
       image = Uint8List.fromList(intList);
     }
   }
@@ -33,13 +33,12 @@ class CustomPersonHorizontalTile extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Stack(
-            children: [
+            children: <Widget>[
               image != null
                   ? ClipRRect(
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(30.toWidth)),
+                      borderRadius: BorderRadius.all(Radius.circular(30.toWidth)),
                       child: Image.memory(
-                        image as Uint8List,
+                        Uint8List.fromList(image!.cast<int>()),
                         width: 50.toWidth,
                         height: 50.toWidth,
                         fit: BoxFit.fill,
@@ -47,12 +46,8 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                     )
                   : ContactInitial(initials: title ?? ' '),
               icon != null
-                  ? Positioned(
-                      top: isTopRight ? 0 : null,
-                      right: 0,
-                      bottom: !isTopRight ? 0 : null,
-                      child: Icon(icon))
-                  : SizedBox(),
+                  ? Positioned(top: isTopRight ? 0 : null, right: 0, bottom: !isTopRight ? 0 : null, child: Icon(icon))
+                  : const SizedBox(),
             ],
           ),
           SizedBox(width: 10.toHeight),
@@ -60,7 +55,7 @@ class CustomPersonHorizontalTile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 SizedBox(
                   width: 100,
                   child: title != null
@@ -70,7 +65,7 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ),
                 SizedBox(height: 5.toHeight),
                 subTitle != null
@@ -80,7 +75,7 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
               ],
             ),
           )

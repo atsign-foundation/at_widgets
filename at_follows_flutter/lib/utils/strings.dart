@@ -1,15 +1,15 @@
 import 'package:at_server_status/at_server_status.dart';
 
 class Strings {
-  static const String Followers = 'Followers';
-  static const String Following = 'Following';
-  static const String Follow = 'Follow';
-  static const String Unfollow = 'Unfollow';
-  static const String BackButton = 'Back';
-  static const String Title = 'Connections';
-  static const String Search = 'Filter @signs';
-  static const String Error = 'Error';
-  static const String Close = 'Close';
+  static const String followers = 'Followers';
+  static const String following = 'Following';
+  static const String follow = 'Follow';
+  static const String unfollow = 'Unfollow';
+  static const String backButton = 'Back';
+  static const String title = 'Connections';
+  static const String search = 'Filter @signs';
+  static const String error = 'Error';
+  static const String close = 'Close';
   static const String atsign = '@';
   static const String package = 'at_follows_flutter';
   static const String noFollowers = 'No Followers!';
@@ -25,7 +25,7 @@ class Strings {
       'Public cannot see your followers list when it’s set to private';
   static const String privateFollowingList =
       'Public cannot see your following list when it’s set to private';
-  static const List<String> publicDataKeys = [
+  static const List<String> publicDataKeys = <String>[
     'firstname.persona',
     'lastname.persona',
     'image.persona'

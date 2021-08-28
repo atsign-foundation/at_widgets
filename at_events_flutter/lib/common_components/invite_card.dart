@@ -14,12 +14,7 @@ class InviteCard extends StatefulWidget {
   final String? event, invitedPeopleCount, timeAndDate, atSign, memberCount;
   final bool isStartTime;
   InviteCard(
-      {this.event,
-      this.invitedPeopleCount,
-      this.timeAndDate,
-      this.atSign,
-      this.memberCount,
-      this.isStartTime = false});
+      {this.event, this.invitedPeopleCount, this.timeAndDate, this.atSign, this.memberCount, this.isStartTime = false});
 
   @override
   _InviteCardState createState() => _InviteCardState();
@@ -33,9 +28,9 @@ class _InviteCardState extends State<InviteCard> {
     if (widget.atSign != null) getAtsignDetails();
   }
 
-  // ignore: always_declare_return_types
-  getAtsignDetails() async {
-    var contact = await getAtSignDetails(widget.atSign!);
+  
+  Future<void> getAtsignDetails() async {
+    AtContact contact = await getAtSignDetails(widget.atSign!);
     if (contact.tags != null && contact.tags!['image'] != null) {
       List<int>? intList = contact.tags!['image'].cast<int>();
       setState(() {
@@ -52,7 +47,7 @@ class _InviteCardState extends State<InviteCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Stack(
-            children: [
+            children: <Widget>[
               CustomCircleAvatar(
                 size: 50,
                 isMemoryImage: true,
@@ -72,12 +67,12 @@ class _InviteCardState extends State<InviteCard> {
                         ),
                         child: Center(
                             child: Text(
-                          '${widget.memberCount}',
+                          widget.memberCount!,
                           style: CustomTextStyles().black10,
                         )),
                       ),
                     )
-                  : SizedBox()
+                  : const SizedBox()
             ],
           ),
           SizedBox(width: 10.toWidth),
@@ -85,20 +80,16 @@ class _InviteCardState extends State<InviteCard> {
             flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                widget.event != null
-                    ? Text(widget.event!, style: CustomTextStyles().black18)
-                    : SizedBox(),
+              children: <Widget>[
+                widget.event != null ? Text(widget.event!, style: CustomTextStyles().black18) : const SizedBox(),
                 SizedBox(height: 5.toHeight),
                 widget.invitedPeopleCount != null
-                    ? Text(widget.invitedPeopleCount!,
-                        style: CustomTextStyles().grey14)
-                    : SizedBox(),
+                    ? Text(widget.invitedPeopleCount!, style: CustomTextStyles().grey14)
+                    : const SizedBox(),
                 SizedBox(height: 10.toHeight),
                 widget.timeAndDate != null
-                    ? Text(widget.timeAndDate!,
-                        style: CustomTextStyles().black14)
-                    : SizedBox(),
+                    ? Text(widget.timeAndDate!, style: CustomTextStyles().black14)
+                    : const SizedBox(),
               ],
             ),
           ),

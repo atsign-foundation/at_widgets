@@ -1,15 +1,8 @@
-// ignore: import_of_legacy_library_into_null_safe
-import 'dart:io';
-
 import 'package:at_common_flutter/at_common_flutter.dart';
-// import 'package:at_common_flutter/services/size_config.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_invitation_flutter/services/invitation_service.dart';
 import 'package:at_invitation_flutter/utils/text_styles.dart'
-    as invitationTextStyles;
+    as invitation_text_styles;
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 
 class OTPDialog extends StatefulWidget {
@@ -37,8 +30,7 @@ class _OTPDialogState extends State<OTPDialog> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var _invitationService = InvitationService();
-    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    double deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,
@@ -50,20 +42,20 @@ class _OTPDialogState extends State<OTPDialog> {
               top: 20.toHeight, left: 25.toWidth, right: 25.toWidth),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Expanded(
                 child: Text(
                   'Invite confirmation',
                   textAlign: TextAlign.center,
-                  style: invitationTextStyles.CustomTextStyles.primaryBold18,
+                  style: invitation_text_styles.CustomTextStyles.primaryBold18,
                 ),
               )
             ],
           ),
           content: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: 200.toHeight),
-            child: Column(children: [
-              Text(
+            child: Column(children: <Widget>[
+              const Text(
                 'Please enter the OTP that you have recieved with the invite link',
                 textAlign: TextAlign.center,
               ),
@@ -84,11 +76,11 @@ class _OTPDialogState extends State<OTPDialog> {
                 keyboardType: TextInputType.number,
                 autoHideKeyboard: true,
                 borderColor: Colors.grey,
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                 ),
-                onComplete: (result) {
+                onComplete: (String result) {
                   // Your logic with code
                   print(result);
                   Navigator.pop(context, result);

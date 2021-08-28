@@ -12,9 +12,9 @@ class ErrorScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Something went wrong.'),
-          SizedBox(height: 10),
+        children: <Widget>[
+          const Text('Something went wrong.'),
+          const SizedBox(height: 10),
           CustomButton(
             buttonText: 'Retry',
             width: 120.toWidth,

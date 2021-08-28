@@ -1,29 +1,26 @@
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-void bottomSheet(BuildContext context, T, double height,
-    {Function? onSheetCLosed}) {
-  var future = showModalBottomSheet(
+Future<void> bottomSheet(BuildContext context, Widget? T, double height, {Function? onSheetCLosed}) async {
+  dynamic future = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: StadiumBorder(),
+      shape: const StadiumBorder(),
       builder: (BuildContext context) {
         return Container(
           height: height,
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.light
-                ? AllColors().WHITE
-                : AllColors().Black,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(12.0),
-              topRight: const Radius.circular(12.0),
+            color: Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12.0),
+              topRight: Radius.circular(12.0),
             ),
           ),
           child: T,
         );
       });
 
-  future.then((value) {
+  future!.then((dynamic value) {
     if (onSheetCLosed != null) onSheetCLosed();
   });
 }

@@ -1,4 +1,3 @@
-// ignore: must_be_immutable
 import 'dart:typed_data';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
@@ -18,24 +17,23 @@ import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class EventNotificationDialog extends StatefulWidget {
-  String? event, invitedPeopleCount, timeAndDate, userName;
+  final String? event, invitedPeopleCount, timeAndDate, userName;
   final EventNotificationModel? eventData;
-  bool showMembersCount;
+  late final bool showMembersCount;
 
-  int? minutes;
+  final int? minutes;
   EventNotificationDialog(
       {required this.eventData,
       this.event,
       this.invitedPeopleCount,
       this.timeAndDate,
       this.userName,
-      this.showMembersCount = false});
+      this.showMembersCount = false,
+      this.minutes});
 
   @override
-  _EventNotificationDialogState createState() =>
-      _EventNotificationDialogState();
+  _EventNotificationDialogState createState() => _EventNotificationDialogState();
 }
 
 class _EventNotificationDialogState extends State<EventNotificationDialog> {
@@ -57,37 +55,31 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     }
   }
 
-  // ignore: always_declare_return_types
-  getEventCreator() async {
-    var contact = await getAtSignDetails(widget.eventData != null
-        ? widget.eventData!.atsignCreator
-        : locationUserImageToShow);
-    // ignore: unnecessary_null_comparison
-    if (contact != null) {
+
+  Future<void> getEventCreator() async {
+    AtContact contact =
+        await getAtSignDetails(widget.eventData != null ? widget.eventData!.atsignCreator : locationUserImageToShow);
       if (contact.tags != null && contact.tags!['image'] != null) {
         List<int>? intList = contact.tags!['image'].cast<int>();
         setState(() {
           image = Uint8List.fromList(intList!);
         });
-      }
     }
   }
 
   void checkForEventOverlap() {
-    var allEventsExcludingCurrentEvent = <EventKeyLocationModel>[];
-    var allSavedEvents = EventKeyStreamService().allEventNotifications;
-    dynamic overlapData = [];
+    List<EventKeyLocationModel> allEventsExcludingCurrentEvent = <EventKeyLocationModel>[];
+    List<EventKeyLocationModel> allSavedEvents = EventKeyStreamService().allEventNotifications;
+    List<dynamic> overlapData = <dynamic>[];
 
-    allSavedEvents.forEach((event) {
-      var keyMicrosecondId = event.key!.split('createevent-')[1].split('@')[0];
+    for (EventKeyLocationModel event in allSavedEvents) {
+      String keyMicrosecondId = event.key!.split('createevent-')[1].split('@')[0];
       if (!event.key!.contains(keyMicrosecondId)) {
         allEventsExcludingCurrentEvent.add(event);
       }
-    });
+    }
     overlapData = EventService().isEventTimeSlotOverlap(
-        allEventsExcludingCurrentEvent
-            .map((e) => e.eventNotificationModel)
-            .toList(),
+        allEventsExcludingCurrentEvent.map((EventKeyLocationModel e) => e.eventNotificationModel).toList(),
         widget.eventData);
     isOverlap = overlapData[0];
     if (isOverlap != null) {
@@ -100,7 +92,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     print('EventNotificationDialog called');
     return Container(
       child: AlertDialog(
-        contentPadding: EdgeInsets.fromLTRB(10, 20, 5, 10),
+        contentPadding: const EdgeInsets.fromLTRB(10, 20, 5, 10),
         content: Container(
           child: SingleChildScrollView(
             child: Container(
@@ -111,13 +103,12 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                       '${widget.eventData!.atsignCreator} wants to share an event with you. Are you sure you want to join and share your location with the group?',
                       style: CustomTextStyles().grey16,
                       textAlign: TextAlign.center),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Stack(
-                    children: [
+                    children: <Widget>[
                       image != null
                           ? ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30.toFont)),
+                              borderRadius: BorderRadius.all(Radius.circular(30.toFont)),
                               child: Image.memory(
                                 image!,
                                 width: 50.toFont,
@@ -126,9 +117,8 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                               ),
                             )
                           : ContactInitial(
-                              initials: widget.eventData != null
-                                  ? widget.eventData!.atsignCreator
-                                  : locationUserImageToShow,
+                              initials:
+                                  widget.eventData != null ? widget.eventData!.atsignCreator : locationUserImageToShow,
                               size: 60,
                             ),
                       widget.showMembersCount
@@ -140,8 +130,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                 height: 30.toFont,
                                 decoration: BoxDecoration(
                                   color: AllColors().BLUE,
-                                  borderRadius:
-                                      BorderRadius.circular(20.toFont),
+                                  borderRadius: BorderRadius.circular(20.toFont),
                                 ),
                                 child: Center(
                                     child: Text(
@@ -150,7 +139,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                 )),
                               ),
                             )
-                          : SizedBox()
+                          : const SizedBox()
                     ],
                   ),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
@@ -160,7 +149,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                           style: CustomTextStyles().black18,
                           textAlign: TextAlign.center,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: widget.eventData != null ? 5.toHeight : 0),
                   widget.eventData != null
                       ? Text(
@@ -168,15 +157,15 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                               ? '${widget.eventData!.group!.members!.length} person invited'
                               : '${widget.eventData!.group!.members!.length} people invited',
                           style: CustomTextStyles().grey14)
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
                   widget.eventData != null
                       ? Text(
                           '${timeOfDayToString(widget.eventData!.event!.startTime!)} on ${dateToString(widget.eventData!.event!.date!)}',
                           style: CustomTextStyles().black14)
-                      : SizedBox(),
-                  isOverlap! ? SizedBox(height: 10.toHeight) : SizedBox(),
-                  isOverlap! ? Divider(height: 2) : SizedBox(),
+                      : const SizedBox(),
+                  isOverlap! ? SizedBox(height: 10.toHeight) : const SizedBox(),
+                  isOverlap! ? const Divider(height: 2) : const SizedBox(),
                   SizedBox(height: 10.toHeight),
                   isOverlap!
                       ? Text(
@@ -184,25 +173,22 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                           textAlign: TextAlign.center,
                           style: CustomTextStyles().grey16,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: 10.toHeight),
-                  isOverlap!
-                      ? Text(concurrentEvent!.title!,
-                          style: CustomTextStyles().black18)
-                      : SizedBox(),
+                  isOverlap! ? Text(concurrentEvent!.title!, style: CustomTextStyles().black18) : const SizedBox(),
                   SizedBox(height: 5.toHeight),
                   SizedBox(height: 10.toHeight),
                   isOverlap!
                       ? Text(
                           '${timeOfDayToString(concurrentEvent!.event!.startTime!)} on ${dateToString(concurrentEvent!.event!.date!)}',
                           style: CustomTextStyles().black14)
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: 10.toHeight),
                   loading!
-                      ? CircularProgressIndicator()
+                      ? const CircularProgressIndicator()
                       : CustomButton(
-                          onTap: () => () async {
-                            bottomSheet(
+                          onTap: () async {
+                            await bottomSheet(
                                 context,
                                 EventTimeSelection(
                                     eventNotificationModel: widget.eventData,
@@ -210,37 +196,26 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                     isStartTime: true,
                                     options: MixedConstants.startTimeOptions,
                                     onSelectionChanged: (dynamic startTime) {
-                                      widget.eventData!.group!.members!
-                                          .forEach((groupMember) {
-                                        if (groupMember.atSign ==
-                                            AtEventNotificationListener()
-                                                .currentAtSign) {
-                                          groupMember.tags!['shareFrom'] =
-                                              startTime.toString();
+                                      for (AtContact groupMember in widget.eventData!.group!.members!) {
+                                        if (groupMember.atSign == AtEventNotificationListener().currentAtSign) {
+                                          groupMember.tags!['shareFrom'] = startTime.toString();
                                         }
-                                      });
+                                      }
 
                                       bottomSheet(
                                           context,
                                           EventTimeSelection(
-                                            eventNotificationModel:
-                                                widget.eventData,
+                                            eventNotificationModel: widget.eventData,
                                             title: AllText().LOC_END_TIME_TITLE,
-                                            options:
-                                                MixedConstants.endTimeOptions,
-                                            onSelectionChanged:
-                                                (dynamic endTime) async {
+                                            options: MixedConstants.endTimeOptions,
+                                            onSelectionChanged: (dynamic endTime) async {
                                               startLoading();
 
-                                              widget.eventData!.group!.members!
-                                                  .forEach((groupMember) {
-                                                if (groupMember.atSign ==
-                                                    AtEventNotificationListener()
-                                                        .currentAtSign) {
-                                                  groupMember.tags!['shareTo'] =
-                                                      endTime.toString();
+                                              for (AtContact groupMember in widget.eventData!.group!.members!) {
+                                                if (groupMember.atSign == AtEventNotificationListener().currentAtSign) {
+                                                  groupMember.tags!['shareTo'] = endTime.toString();
                                                 }
-                                              });
+                                              }
 
                                               /// For inner bottomsheet
                                               Navigator.of(context).pop();
@@ -249,14 +224,9 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                               Navigator.of(context).pop();
 
                                               // updateEvent(widget.eventData);
-                                              await EventKeyStreamService()
-                                                  .actionOnEvent(
-                                                      widget.eventData!,
-                                                      ATKEY_TYPE_ENUM
-                                                          .ACKNOWLEDGEEVENT,
-                                                      isAccepted: true,
-                                                      isSharing: true,
-                                                      isExited: false);
+                                              await EventKeyStreamService().actionOnEvent(
+                                                  widget.eventData!, ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
+                                                  isAccepted: true, isSharing: true, isExited: false);
 
                                               stopLoading();
 
@@ -267,27 +237,22 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                           400);
                                     }),
                                 400);
-                          }(),
+                          },
                           bgColor: AllColors().Black,
                           width: 164,
                           height: 48.toHeight,
                           child: Text('Yes',
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  fontSize: 15.toFont)),
+                              style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor, fontSize: 15.toFont)),
                         ),
                   SizedBox(height: 10.toHeight),
                   loading!
-                      ? SizedBox()
+                      ? const SizedBox()
                       : InkWell(
                           onTap: () async {
                             startLoading();
                             await EventKeyStreamService().actionOnEvent(
-                                widget.eventData!,
-                                ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-                                isAccepted: false,
-                                isExited: true);
+                                widget.eventData!, ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
+                                isAccepted: false, isExited: true);
 
                             /// For dialog box
                             Navigator.of(context).pop();
@@ -350,9 +315,8 @@ void updateEvent(
   bool isSharing = true,
   bool isExited = false,
 }) {
-  EventKeyStreamService().actionOnEvent(
-      eventData, ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-      isAccepted: true, isSharing: true, isExited: false);
+  EventKeyStreamService()
+      .actionOnEvent(eventData, ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT, isAccepted: true, isSharing: true, isExited: false);
 
   ///
   // providerCallback<EventProvider>(NavService.navKey.currentContext,

@@ -74,7 +74,7 @@ class LocationNotificationModel {
             : null,
         rePrompt = json['rePrompt'] == 'true' ? true : false,
         updateMap = json['updateMap'] == 'true' ? true : false;
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'lat': lat,
         'long': long,
         'isAccepted': isAccepted,
@@ -84,7 +84,7 @@ class LocationNotificationModel {
       };
   static String convertLocationNotificationToJson(
       LocationNotificationModel locationNotificationModel) {
-    var notification = json.encode({
+    String notification = json.encode(<String, dynamic>{
       'atsignCreator': locationNotificationModel.atsignCreator,
       'receiver': locationNotificationModel.receiver,
       'lat': locationNotificationModel.lat.toString(),

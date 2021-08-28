@@ -31,8 +31,7 @@ class _SelectLocationState extends State<SelectLocation> {
   /// nearMe == false => dont search nearme
   /// nearMe == true => search nearme
   /// nearMe == false && currentLocation == null =>dont search nearme
-  // ignore: always_declare_return_types
-  calculateLocation() async {
+  Future<void> calculateLocation() async {
     currentLocation = await getMyLocation();
     if (currentLocation != null) {
       nearMe = true;
@@ -66,15 +65,14 @@ class _SelectLocationState extends State<SelectLocation> {
                       SearchLocationService().getAddressLatLng(str, null);
                     } else {
                       // ignore: await_only_futures
-                      SearchLocationService()
-                          .getAddressLatLng(str, currentLocation!);
+                      SearchLocationService().getAddressLatLng(str, currentLocation!);
                     }
 
                     setState(() {
                       isLoader = false;
                     });
                   },
-                  value: (val) {
+                  value: (String val) {
                     inputText = val;
                   },
                   icon: Icons.search,
@@ -87,8 +85,7 @@ class _SelectLocationState extends State<SelectLocation> {
                       SearchLocationService().getAddressLatLng(inputText, null);
                     } else {
                       // ignore: await_only_futures
-                      SearchLocationService()
-                          .getAddressLatLng(inputText, currentLocation!);
+                      SearchLocationService().getAddressLatLng(inputText, currentLocation!);
                     }
                     setState(() {
                       isLoader = false;
@@ -98,11 +95,9 @@ class _SelectLocationState extends State<SelectLocation> {
               ),
               SizedBox(width: 10.toWidth),
               Column(
-                children: [
+                children: <Widget>[
                   InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child:
-                          Text('Cancel', style: CustomTextStyles().orange16)),
+                      onTap: () => Navigator.pop(context), child: Text('Cancel', style: CustomTextStyles().orange16)),
                 ],
               ),
             ],
@@ -113,7 +108,7 @@ class _SelectLocationState extends State<SelectLocation> {
               Checkbox(
                 value: nearMe,
                 tristate: true,
-                onChanged: (value) async {
+                onChanged: (bool? value) async {
                   if (nearMe == null) return;
 
                   if (!nearMe!) {
@@ -137,24 +132,21 @@ class _SelectLocationState extends State<SelectLocation> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: <Widget>[
                     Text('Near me', style: CustomTextStyles().greyLabel14),
-                    ((nearMe == null) ||
-                            ((nearMe == false) && (currentLocation == null)))
+                    ((nearMe == null) || ((nearMe == false) && (currentLocation == null)))
                         ? Flexible(
                             child: Text('(Cannot access location permission)',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: CustomTextStyles().red12),
+                                maxLines: 1, overflow: TextOverflow.ellipsis, style: CustomTextStyles().red12),
                           )
-                        : SizedBox()
+                        : const SizedBox()
                   ],
                 ),
               )
             ],
           ),
           SizedBox(height: 5.toHeight),
-          Divider(),
+          const Divider(),
           SizedBox(height: 18.toHeight),
           InkWell(
             onTap: () async {
@@ -166,7 +158,7 @@ class _SelectLocationState extends State<SelectLocation> {
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text('Current Location', style: CustomTextStyles().greyLabel14),
                 SizedBox(height: 5.toHeight),
                 Text('Using GPS', style: CustomTextStyles().greyLabel12),
@@ -174,59 +166,53 @@ class _SelectLocationState extends State<SelectLocation> {
             ),
           ),
           SizedBox(height: 20.toHeight),
-          Divider(),
+          const Divider(),
           SizedBox(height: 20.toHeight),
           isLoader
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : SizedBox(),
-          StreamBuilder(
+              : const SizedBox(),
+          StreamBuilder<List<LocationModal>>(
             stream: SearchLocationService().atLocationStream,
-            builder: (BuildContext context,
-                AsyncSnapshot<List<LocationModal>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<LocationModal>> snapshot) {
               return snapshot.connectionState == ConnectionState.waiting
-                  ? SizedBox()
+                  ? const SizedBox()
                   : snapshot.hasData
                       // ignore: prefer_is_empty
                       ? snapshot.data!.length == 0
-                          ? Text('No such location found')
+                          ? const Text('No such location found')
                           : Expanded(
                               child: ListView.separated(
                                 itemCount: snapshot.data!.length,
-                                separatorBuilder: (context, index) {
+                                separatorBuilder: (BuildContext context, int index) {
                                   return Column(
-                                    children: [
+                                    children: const <Widget>[
                                       SizedBox(height: 20),
                                       Divider(),
                                     ],
                                   );
                                 },
-                                itemBuilder: (context, index) {
+                                itemBuilder: (BuildContext context, int index) {
                                   return InkWell(
                                     onTap: () => onLocationSelect(
                                       context,
-                                      LatLng(
-                                          double.parse(
-                                              snapshot.data![index].lat!),
-                                          double.parse(
-                                              snapshot.data![index].long!)),
-                                      displayName:
-                                          snapshot.data![index].displayName,
+                                      LatLng(double.parse(snapshot.data![index].lat!),
+                                          double.parse(snapshot.data![index].long!)),
+                                      displayName: snapshot.data![index].displayName,
                                     ),
                                     child: LocationTile(
                                       icon: Icons.location_on,
                                       title: snapshot.data![index].city,
-                                      subTitle:
-                                          snapshot.data![index].displayName,
+                                      subTitle: snapshot.data![index].displayName,
                                     ),
                                   );
                                 },
                               ),
                             )
                       : snapshot.hasError
-                          ? Text('Something Went wrong')
-                          : SizedBox();
+                          ? const Text('Something Went wrong')
+                          : const SizedBox();
             },
           ),
         ],
@@ -235,11 +221,9 @@ class _SelectLocationState extends State<SelectLocation> {
   }
 }
 
-void onLocationSelect(BuildContext context, LatLng point,
-    {String? displayName}) {
+void onLocationSelect(BuildContext context, LatLng point, {String? displayName}) {
   Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) =>
-              SelectedLocation(displayName ?? 'Your location', point)));
+      MaterialPageRoute<SelectedLocation>(
+          builder: (BuildContext context) => SelectedLocation(displayName ?? 'Your location', point)));
 }

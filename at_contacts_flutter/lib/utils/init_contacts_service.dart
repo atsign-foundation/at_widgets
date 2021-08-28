@@ -6,7 +6,7 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 
 void initializeContactsService(
     AtClientImpl atClientInstance, String currentAtSign,
-    {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
+    {String rootDomain = 'root.atsign.wtf', int rootPort = 64}) {
   ContactService().initContactsService(
       atClientInstance, currentAtSign, rootDomain, rootPort);
 }
@@ -16,10 +16,9 @@ void disposeContactsControllers() {
 }
 
 Future<AtContact> getAtSignDetails(String atSign) async {
-  // ignore: omit_local_variable_types
   AtContact? atContact = getCachedContactDetail(atSign);
   if (atContact == null) {
-    var contactDetails = await ContactService().getContactDetails(atSign, null);
+    Map<String, dynamic> contactDetails = await ContactService().getContactDetails(atSign, null);
     atContact = AtContact(
       atSign: atSign,
       tags: contactDetails,
@@ -45,9 +44,9 @@ AtContact? getCachedContactDetail(String atsign) {
     return ContactService().loggedInUserDetails;
   }
   if (ContactService().cachedContactList.isNotEmpty) {
-    var index = ContactService()
+    int index = ContactService()
         .cachedContactList
-        .indexWhere((element) => element!.atSign == atsign);
+        .indexWhere((AtContact? element) => element!.atSign == atsign);
     if (index > -1) return ContactService().cachedContactList[index];
   }
   return null;

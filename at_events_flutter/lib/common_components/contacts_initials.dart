@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 import '../utils/colors.dart';
-
 // ignore: must_be_immutable
 class ContactInitial extends StatelessWidget {
   final double size;

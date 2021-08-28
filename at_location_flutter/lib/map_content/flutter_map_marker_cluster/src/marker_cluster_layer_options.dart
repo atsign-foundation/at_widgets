@@ -55,7 +55,7 @@ typedef ClusterWidgetBuilder = Widget Function(
 
 class MarkerClusterLayerOptions extends LayerOptions {
   /// Cluster builder
-  final ClusterWidgetBuilder builder;
+  final ClusterWidgetBuilder? builder;
 
   /// List of markers
   final List<Marker?> markers;
@@ -67,7 +67,7 @@ class MarkerClusterLayerOptions extends LayerOptions {
   final Size Function(List<Marker?>)? computeSize;
 
   /// Cluster anchor
-  final AnchorPos? anchor;
+  final AnchorPos<dynamic>? anchor;
 
   /// A cluster will cover at most this many pixels from its center
   final int maxClusterRadius;
@@ -98,7 +98,7 @@ class MarkerClusterLayerOptions extends LayerOptions {
   final int circleSpiralSwitchover;
 
   /// Make it possible to provide custom function to calculate spiderfy shape positions
-  final List<Point> Function(int, Point)? spiderfyShapePositions;
+  final List<Point<num>> Function(int, Point<num>)? spiderfyShapePositions;
 
   /// If true show polygon then tap on cluster
   final bool showPolygon;
@@ -120,7 +120,7 @@ class MarkerClusterLayerOptions extends LayerOptions {
 
   MarkerClusterLayerOptions({
     required this.builder,
-    this.markers = const [],
+    this.markers = const <Marker?>[],
     this.size = const Size(30, 30),
     this.computeSize,
     this.anchor,
@@ -141,6 +141,5 @@ class MarkerClusterLayerOptions extends LayerOptions {
     this.onClusterTap,
     this.onMarkersClustered,
     this.popupOptions,
-    // ignore: unnecessary_null_comparison
   }) : assert(builder != null);
 }

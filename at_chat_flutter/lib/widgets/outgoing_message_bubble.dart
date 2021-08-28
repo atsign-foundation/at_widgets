@@ -29,7 +29,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
     return Flex(
       direction: Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [
+      children: <Widget>[
         Container(
           padding: EdgeInsets.all(30.toHeight),
           decoration: BoxDecoration(
@@ -45,7 +45,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
           width: 15.toWidth,
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 20),
+          margin: const EdgeInsets.only(bottom: 20),
           height: 45.toFont,
           width: 45.toFont,
           decoration: BoxDecoration(

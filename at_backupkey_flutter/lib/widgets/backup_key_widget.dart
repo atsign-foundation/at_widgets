@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:at_backupkey_flutter/services/backupkey_service.dart';
 import 'package:at_backupkey_flutter/utils/strings.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:flutter/material.dart';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -12,7 +13,7 @@ import 'package:at_utils/at_logger.dart';
 
 class BackupKeyWidget extends StatelessWidget {
   final AtSignLogger _logger = AtSignLogger('BackUp Key Widget');
-  final _backupKeyService = BackUpKeyService();
+  final BackUpKeyService _backupKeyService = BackUpKeyService();
 
   ///[required] to provide backup keys for `atsign` to save.
   final String atsign;
@@ -24,7 +25,7 @@ class BackupKeyWidget extends StatelessWidget {
   final bool? isIcon;
 
   ///[required] to provide backupkeys.
-  final atClientService;
+  final AtClientService atClientService;
 
   ///takes a `String` and displays on button. set [isButton] to `true` to use this.
   final String? buttonText;
@@ -64,34 +65,28 @@ class BackupKeyWidget extends StatelessWidget {
     return isButton
         ? GestureDetector(
             onTap: () async {
-              var result = await _onBackup(context);
-              if (result == false) {
-                _showAlertDialog(context);
+              bool result = await _onBackup(context);
+              if (!result) {
+                await _showAlertDialog(context);
               }
             },
             child: Container(
-              width: this.buttonWidth ?? 158.toWidth,
-              height: this.buttonHeight ?? (50.toHeight),
+              width: buttonWidth ?? 158.toWidth,
+              height: buttonHeight ?? (50.toHeight),
               padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.toWidth),
-                  color: this.buttonColor == null
-                      ? Colors.black
-                      : this.buttonColor),
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(30.toWidth), color: buttonColor ?? Colors.black),
               child: Center(
                 child: Text(buttonText!,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 16.toFont,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontSize: 16.toFont, color: Colors.white, fontWeight: FontWeight.bold)),
               ),
             ),
           )
         : IconButton(
             icon: Icon(
               Icons.file_copy,
-              color: this.iconColor,
+              color: iconColor,
             ),
             onPressed: () {
               _showDialog(context);
@@ -99,76 +94,69 @@ class BackupKeyWidget extends StatelessWidget {
           );
   }
 
-  _showAlertDialog(BuildContext context) {
-    showDialog(
+  Future<AlertDialog?> _showAlertDialog(BuildContext context) async {
+    await showDialog<AlertDialog>(
         context: context,
         barrierDismissible: false,
         builder: (_) {
           return AlertDialog(
             title: Row(
-              children: [
+              children: <Widget>[
                 Text(
                   'Error',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 14.toFont),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.toFont),
                 ),
                 Icon(Icons.sentiment_dissatisfied, size: 25.toFont)
               ],
             ),
             content: Text(
               'Couldn\'t able to backup the key file',
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 14.toFont),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.toFont),
             ),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.pop(_);
                 },
-                child: Text('Close'),
+                child: const Text('Close'),
               )
             ],
           );
         });
   }
 
-  _showDialog(BuildContext context) {
-    showDialog(
+  Future<AlertDialog?> _showDialog(BuildContext context) async {
+    await showDialog<AlertDialog>(
         context: context,
         builder: (BuildContext ctxt) {
           return AlertDialog(
-            title: Center(
+            title: const Center(
               child: Text(
                 Strings.backUpKeysTitle,
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
+              children: <Widget>[
                 Text(Strings.backUpKeysDescription,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[700])),
+                    textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[700])),
                 SizedBox(height: 20.toHeight),
                 Row(
-                  children: [
+                  children: <Widget>[
                     TextButton(
-                        child: Text(Strings.backButtonTitle,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold)),
+                        child: const Text(Strings.backButtonTitle,
+                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                         onPressed: () async {
-                          var result = await _onBackup(context);
+                          bool result = await _onBackup(context);
                           Navigator.pop(ctxt);
-                          if (result == false) {
-                            _showAlertDialog(context);
+                          if (!result) {
+                            await _showAlertDialog(context);
                           }
                         }),
-                    Spacer(),
+                    const Spacer(),
                     TextButton(
-                        child: Text(Strings.cancelButtonTitle,
-                            style: TextStyle(color: Colors.black)),
+                        child: const Text(Strings.cancelButtonTitle, style: TextStyle(color: Colors.black)),
                         onPressed: () {
                           Navigator.pop(context);
                         })
@@ -180,34 +168,34 @@ class BackupKeyWidget extends StatelessWidget {
         });
   }
 
-  _onBackup(BuildContext context) async {
-    var _size = MediaQuery.of(context).size;
+  Future<bool> _onBackup(BuildContext context) async {
+    Size _size = MediaQuery.of(context).size;
     try {
-      var aesEncryptedKeys = await _backupKeyService.getEncryptedKeys(atsign);
+      Map<String, String> aesEncryptedKeys = await _backupKeyService.getEncryptedKeys(atsign);
       if (aesEncryptedKeys.isEmpty) {
         return false;
       }
       String path = await _generateFile(aesEncryptedKeys);
-      await Share.shareFiles([path],
-          sharePositionOrigin:
-              Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
+      await Share.shareFiles(<String>[path], sharePositionOrigin: Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
+      return true;
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
+      return false;
     } on Error catch (err) {
       _logger.severe('BackingUp keys throws $err error');
+      return false;
     }
   }
 
   Future<String> _generateFile(Map<String, String> aesEncryptedKeys) async {
-    var status = await Permission.storage.status;
+    PermissionStatus status = await Permission.storage.status;
     if (status.isDenied || status.isRestricted) {
       await Permission.storage.request();
     }
-    var directory = await path_provider.getApplicationSupportDirectory();
+    Directory directory = await path_provider.getApplicationSupportDirectory();
     String path = directory.path.toString() + '/';
-    final encryptedKeysFile =
-        await File('$path' + '$atsign${Strings.backupKeyName}').create();
-    var keyString = jsonEncode(aesEncryptedKeys);
+    File encryptedKeysFile = await File(path + '$atsign${Strings.backupKeyName}').create();
+    String keyString = jsonEncode(aesEncryptedKeys);
     encryptedKeysFile.writeAsStringSync(keyString);
     return encryptedKeysFile.path;
   }

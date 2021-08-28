@@ -19,8 +19,8 @@ class FlutterMapState extends MapGestureMixin {
   final Key _layerStackKey = GlobalKey();
   final Key _positionedTapDetectorKey = GlobalKey();
   final MapControllerImpl mapController;
-  final List<StreamGroup<Null>> groups = <StreamGroup<Null>>[];
-  final _positionedTapController = PositionedTapController();
+  final List<StreamGroup<void>> groups = <StreamGroup<void>>[];
+  final PositionedTapController _positionedTapController = PositionedTapController();
   double rotation = 0.0;
 
   //// Removed because of nulls safety
@@ -47,11 +47,11 @@ class FlutterMapState extends MapGestureMixin {
     rotation = options.rotation;
     mapController.state = mapState;
     mapController.onRotationChanged =
-        (degree) => setState(() => rotation = degree);
+        (double degree) => setState(() => rotation = degree);
   }
 
   void _dispose() {
-    for (var group in groups) {
+    for (StreamGroup<void> group in groups) {
       group.close();
     }
 
@@ -64,17 +64,17 @@ class FlutterMapState extends MapGestureMixin {
     super.dispose();
   }
 
-  Stream<Null> _merge(LayerOptions options) {
+  Stream<void> _merge(LayerOptions options) {
     if (options.rebuild == null) return mapState!.onMoved;
 
-    var group = StreamGroup<Null>();
+    StreamGroup<void> group = StreamGroup<void>();
     group.add(mapState!.onMoved);
     group.add(options.rebuild!);
     groups.add(group);
     return group.stream;
   }
 
-  static const _rad90 = 90.0 * pi / 180.0;
+  static const double _rad90 = 90.0 * pi / 180.0;
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +88,8 @@ class FlutterMapState extends MapGestureMixin {
       // only do the rotation maths if we have a rotation
       if (rotation != 0.0) {
         angle = degToRadian(rotation);
-        final rangle90 = sin(_rad90 - angle).abs();
-        final sinangle = sin(angle).abs();
+        double rangle90 = sin(_rad90 - angle).abs();
+        double sinangle = sin(angle).abs();
         // to make sure that the whole screen is filled with the map after rotation
         // we enlarge the drawing area over the available screen size
         width = (constraints.maxWidth * rangle90) +
@@ -103,7 +103,7 @@ class FlutterMapState extends MapGestureMixin {
             CustomPoint<double>(constraints.maxWidth, constraints.maxHeight);
       }
 
-      var layerStack = Stack(
+      Stack layerStack = Stack(
         key: _layerStackKey,
         //// Removed because of nulls safety
         // children: [
@@ -112,10 +112,10 @@ class FlutterMapState extends MapGestureMixin {
         //           ((layer) => _createLayer(layer, widget.options.plugins)!)) ??
         //       [],
         // ],
-        children: [
+        children: <Widget>[
           ...widget.children,
           ...widget.layers
-              .map(((layer) => _createLayer(layer, widget.options.plugins)!)),
+              .map(((LayerOptions layer) => _createLayer(layer, widget.options.plugins)!)),
         ],
       );
 
@@ -129,7 +129,7 @@ class FlutterMapState extends MapGestureMixin {
           controller: _positionedTapController,
           onTap: handleTap,
           onLongPress: handleLongPress,
-          onDoubleTap: (_tapPosition) {
+          onDoubleTap: (TapPosition _tapPosition) {
             handleDoubleTap(_tapPosition,
                 returnPositionTapped: widget.returnPositionTapped,
                 absorbPointer: widget.absorbDoubleTapPointer);
@@ -176,7 +176,7 @@ class FlutterMapState extends MapGestureMixin {
   }
 
   Widget? _createLayer(LayerOptions options, List<MapPlugin> plugins) {
-    for (var plugin in plugins) {
+    for (MapPlugin plugin in plugins) {
       if (plugin.supportsLayer(options)) {
         return plugin.createLayer(options, mapState, _merge(options));
       }

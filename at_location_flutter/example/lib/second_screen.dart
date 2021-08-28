@@ -38,7 +38,7 @@ class _SecondScreenState extends State<SecondScreen> {
         showDialogBox: true,
       );
 
-      newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;
+      newStream = getAllNotification();
     } catch (e) {
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         showDialog(

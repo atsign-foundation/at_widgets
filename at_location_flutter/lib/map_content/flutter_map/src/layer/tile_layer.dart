@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/point.dart';
-import 'package:at_location_flutter/map_content/flutter_map/src/core/util.dart'
-    as util;
+import 'package:at_location_flutter/map_content/flutter_map/src/core/util.dart' as util;
 import 'package:at_location_flutter/map_content/flutter_map/src/geo/crs/crs.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/layer/tile_provider/tile_provider.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
@@ -233,36 +232,25 @@ class TileLayerOptions extends LayerOptions {
     this.overrideTilesWhenUrlChanges = false,
     this.retinaMode = false,
     this.errorTileCallback,
-    rebuild,
+    dynamic rebuild,
     this.darkMode = false,
-  })  : updateInterval =
-            updateInterval <= 0 ? null : Duration(milliseconds: updateInterval),
-        tileFadeInDuration = tileFadeInDuration <= 0
-            ? null
-            : Duration(milliseconds: tileFadeInDuration),
+  })  : updateInterval = updateInterval <= 0 ? null : Duration(milliseconds: updateInterval),
+        tileFadeInDuration = tileFadeInDuration <= 0 ? null : Duration(milliseconds: tileFadeInDuration),
         assert(tileFadeInStart >= 0.0 && tileFadeInStart <= 1.0),
-        assert(tileFadeInStartWhenOverride >= 0.0 &&
-            tileFadeInStartWhenOverride <= 1.0),
-        maxZoom =
-            wmsOptions == null && retinaMode && maxZoom > 0.0 && !zoomReverse
-                ? maxZoom - 1.0
-                : maxZoom,
+        assert(tileFadeInStartWhenOverride >= 0.0 && tileFadeInStartWhenOverride <= 1.0),
+        maxZoom = wmsOptions == null && retinaMode && maxZoom > 0.0 && !zoomReverse ? maxZoom - 1.0 : maxZoom,
         minZoom =
-            wmsOptions == null && retinaMode && maxZoom > 0.0 && zoomReverse
-                ? math.max(minZoom + 1.0, 0.0)
-                : minZoom,
+            wmsOptions == null && retinaMode && maxZoom > 0.0 && zoomReverse ? math.max(minZoom + 1.0, 0.0) : minZoom,
         zoomOffset = wmsOptions == null && retinaMode && maxZoom > 0.0
             ? (zoomReverse ? zoomOffset - 1.0 : zoomOffset + 1.0)
             : zoomOffset,
-        tileSize = wmsOptions == null && retinaMode && maxZoom > 0.0
-            ? (tileSize / 2.0).floorToDouble()
-            : tileSize,
+        tileSize = wmsOptions == null && retinaMode && maxZoom > 0.0 ? (tileSize / 2.0).floorToDouble() : tileSize,
         super(key: key, rebuild: rebuild);
 }
 
 class WMSTileLayerOptions {
-  final service = 'WMS';
-  final request = 'GetMap';
+  final String service = 'WMS';
+  final String request = 'GetMap';
 
   /// url of WMS service.
   /// Ex.: 'http://ows.mundialis.de/services/service?'
@@ -294,21 +282,21 @@ class WMSTileLayerOptions {
 
   WMSTileLayerOptions({
     required this.baseUrl,
-    this.layers = const [],
-    this.styles = const [],
+    this.layers = const <String>[],
+    this.styles = const <String>[],
     this.format = 'image/png',
     this.version = '1.1.1',
     this.transparent = true,
     this.crs = const Epsg3857(),
-    this.otherParameters = const {},
+    this.otherParameters = const <String, String>{},
   }) {
     _versionNumber = double.tryParse(version.split('.').take(2).join('.')) ?? 0;
     _encodedBaseUrl = _buildEncodedBaseUrl();
   }
 
   String _buildEncodedBaseUrl() {
-    final projectionKey = _versionNumber >= 1.3 ? 'crs' : 'srs';
-    final buffer = StringBuffer(baseUrl)
+    String projectionKey = _versionNumber >= 1.3 ? 'crs' : 'srs';
+    StringBuffer buffer = StringBuffer(baseUrl)
       ..write('&service=$service')
       ..write('&request=$request')
       ..write('&layers=${layers.map(Uri.encodeComponent).join(',')}')
@@ -317,25 +305,24 @@ class WMSTileLayerOptions {
       ..write('&$projectionKey=${Uri.encodeComponent(crs.code)}')
       ..write('&version=${Uri.encodeComponent(version)}')
       ..write('&transparent=$transparent');
-    otherParameters
-        .forEach((k, v) => buffer.write('&$k=${Uri.encodeComponent(v)}'));
+    otherParameters.forEach((String k, String v) => buffer.write('&$k=${Uri.encodeComponent(v)}'));
     return buffer.toString();
   }
 
-  String getUrl(Coords coords, int tileSize, bool retinaMode) {
-    final tileSizePoint = CustomPoint(tileSize, tileSize);
-    final nvPoint = coords.scaleBy(tileSizePoint);
-    final sePoint = nvPoint + tileSizePoint;
-    final nvCoords = crs.pointToLatLng(nvPoint, coords.z as double);
-    final seCoords = crs.pointToLatLng(sePoint, coords.z as double);
-    final nv = crs.projection.project(nvCoords);
-    final se = crs.projection.project(seCoords);
-    final bounds = Bounds(nv, se);
-    final bbox = (_versionNumber >= 1.3 && crs is Epsg4326)
-        ? [bounds.min.y, bounds.min.x, bounds.max.y, bounds.max.x]
-        : [bounds.min.x, bounds.min.y, bounds.max.x, bounds.max.y];
+  String getUrl(Coords<num> coords, int tileSize, bool retinaMode) {
+    CustomPoint<num> tileSizePoint = CustomPoint<num>(tileSize, tileSize);
+    CustomPoint<num> nvPoint = coords.scaleBy(tileSizePoint);
+    CustomPoint<num> sePoint = nvPoint + tileSizePoint;
+    LatLng? nvCoords = crs.pointToLatLng(nvPoint, coords.z!.toDouble());
+    LatLng? seCoords = crs.pointToLatLng(sePoint, coords.z!.toDouble());
+    CustomPoint<num> nv = crs.projection.project(nvCoords);
+    CustomPoint<num> se = crs.projection.project(seCoords);
+    Bounds<num> bounds = Bounds<num>(nv, se);
+    List<num> bbox = (_versionNumber >= 1.3 && crs is Epsg4326)
+        ? <num>[bounds.min.y, bounds.min.x, bounds.max.y, bounds.max.x]
+        : <num>[bounds.min.x, bounds.min.y, bounds.max.x, bounds.max.y];
 
-    final buffer = StringBuffer(_encodedBaseUrl!);
+    StringBuffer buffer = StringBuffer(_encodedBaseUrl!);
     buffer.write('&width=${retinaMode ? tileSize * 2 : tileSize}');
     buffer.write('&height=${retinaMode ? tileSize * 2 : tileSize}');
     buffer.write('&bbox=${bbox.join(',')}');
@@ -355,7 +342,7 @@ class TileLayerWidget extends StatefulWidget {
 class _TileLayerWidgetState extends State<TileLayerWidget> {
   @override
   Widget build(BuildContext context) {
-    final mapState = MapState.of(context)!;
+    MapState mapState = MapState.of(context)!;
 
     return TileLayer(
       mapState: mapState,
@@ -368,7 +355,7 @@ class _TileLayerWidgetState extends State<TileLayerWidget> {
 class TileLayer extends StatefulWidget {
   final TileLayerOptions options;
   final MapState? mapState;
-  final Stream<Null>? stream;
+  final Stream<void>? stream;
 
   TileLayer({
     required this.options,
@@ -386,23 +373,22 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   MapState? get map => widget.mapState;
 
   TileLayerOptions get options => widget.options;
-  Bounds? _globalTileRange;
+  Bounds<num>? _globalTileRange;
   Tuple2<double, double>? _wrapX;
   Tuple2<double, double>? _wrapY;
   double? _tileZoom;
-  //ignore: unused_field
   Level? _level;
-  StreamSubscription? _moveSub;
+  StreamSubscription<void>? _moveSub;
   StreamController<LatLng?>? _throttleUpdate;
-  CustomPoint? _tileSize;
+  CustomPoint<num>? _tileSize;
 
-  final Map<String, Tile> _tiles = {};
-  final Map<double, Level> _levels = {};
+  final Map<String, Tile> _tiles = <String, Tile>{};
+  final Map<double, Level> _levels = <double, Level>{};
 
   @override
   void initState() {
     super.initState();
-    _tileSize = CustomPoint(options.tileSize, options.tileSize);
+    _tileSize = CustomPoint<num>(options.tileSize, options.tileSize);
     _resetView();
     _update(null);
     _moveSub = widget.stream!.listen((_) => _handleMove());
@@ -413,10 +399,10 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(TileLayer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    var reloadTiles = false;
+    bool reloadTiles = false;
 
     if (oldWidget.options.tileSize != options.tileSize) {
-      _tileSize = CustomPoint(options.tileSize, options.tileSize);
+      _tileSize = CustomPoint<num>(options.tileSize, options.tileSize);
       reloadTiles = true;
     }
 
@@ -430,14 +416,12 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     }
 
     if (!reloadTiles) {
-      final oldUrl = oldWidget.options.wmsOptions?._encodedBaseUrl ??
-          oldWidget.options.urlTemplate;
-      final newUrl = options.wmsOptions?._encodedBaseUrl ?? options.urlTemplate;
+      String? oldUrl = oldWidget.options.wmsOptions?._encodedBaseUrl ?? oldWidget.options.urlTemplate;
+      String? newUrl = options.wmsOptions?._encodedBaseUrl ?? options.urlTemplate;
       if (oldUrl != newUrl) {
         if (options.overrideTilesWhenUrlChanges) {
-          for (var tile in _tiles.values) {
-            tile.imageProvider = options.tileProvider
-                .getImage(_wrapCoords(tile.coords!), options);
+          for (Tile tile in _tiles.values) {
+            tile.imageProvider = options.tileProvider.getImage(_wrapCoords(tile.coords!), options);
             tile.loadTileImage();
           }
         } else {
@@ -481,11 +465,9 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var tilesToRender = _tiles.values.toList()..sort();
+    List<Tile> tilesToRender = _tiles.values.toList()..sort();
 
-    var tileWidgets = <Widget>[
-      for (var tile in tilesToRender) _createTileWidget(tile)
-    ];
+    List<Widget> tileWidgets = <Widget>[for (Tile tile in tilesToRender) _createTileWidget(tile)];
 
     return Opacity(
       opacity: options.opacity,
@@ -499,21 +481,21 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   }
 
   Widget _createTileWidget(Tile tile) {
-    var tilePos = tile.tilePos!;
-    var level = tile.level!;
-    var tileSize = getTileSize()!;
-    var pos = (tilePos).multiplyBy(level.scale) + level.translatePoint;
+    CustomPoint<num> tilePos = tile.tilePos!;
+    Level level = tile.level!;
+    CustomPoint<num> tileSize = getTileSize()!;
+    CustomPoint<num> pos = (tilePos).multiplyBy(level.scale) + level.translatePoint;
     num width = tileSize.x * level.scale;
     num height = tileSize.y * level.scale;
 
-    final Widget content = AnimatedTile(
+    Widget content = AnimatedTile(
       tile: tile,
       errorImage: options.errorImage,
       darkMode: widget.options.darkMode,
     );
 
     return Positioned(
-      key: ValueKey(tile.coordsKey),
+      key: ValueKey<String?>(tile.coordsKey),
       left: pos.x.toDouble(),
       top: pos.y.toDouble(),
       width: width.toDouble(),
@@ -523,9 +505,9 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   }
 
   void _abortLoading() {
-    var toRemove = <String>[];
-    for (var entry in _tiles.entries) {
-      var tile = entry.value;
+    List<String> toRemove = <String>[];
+    for (MapEntry<String, Tile> entry in _tiles.entries) {
+      Tile tile = entry.value;
 
       if (tile.coords!.z != _tileZoom) {
         if (tile.loaded == null) {
@@ -534,8 +516,8 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
       }
     }
 
-    for (var key in toRemove) {
-      var tile = _tiles[key]!;
+    for (String key in toRemove) {
+      Tile tile = _tiles[key]!;
 
       tile.tileReady = null;
       tile.dispose();
@@ -543,12 +525,12 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     }
   }
 
-  CustomPoint? getTileSize() {
+  CustomPoint<num>? getTileSize() {
     return _tileSize;
   }
 
   bool _hasLevelChildren(double lvl) {
-    for (var tile in _tiles.values) {
+    for (Tile tile in _tiles.values) {
       if (tile.coords!.z == lvl) {
         return true;
       }
@@ -558,15 +540,15 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   }
 
   Level? _updateLevels() {
-    var zoom = _tileZoom;
-    var maxZoom = options.maxZoom;
+    double? zoom = _tileZoom;
+    double maxZoom = options.maxZoom;
 
     if (zoom == null) return null;
 
-    var toRemove = <double>[];
-    for (var entry in _levels.entries) {
-      var z = entry.key;
-      var lvl = entry.value;
+    List<double> toRemove = <double>[];
+    for (MapEntry<double, Level> entry in _levels.entries) {
+      double z = entry.key;
+      Level lvl = entry.value;
 
       if (z == zoom || _hasLevelChildren(z)) {
         lvl.zIndex = maxZoom - (zoom - z).abs();
@@ -575,13 +557,13 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
       }
     }
 
-    for (var z in toRemove) {
+    for (double z in toRemove) {
       _removeTilesAtZoom(z);
       _levels.remove(z);
     }
 
-    var level = _levels[zoom];
-    var map = this.map;
+    Level? level = _levels[zoom];
+    MapState? map = this.map;
 
     if (level == null) {
       level = _levels[zoom] = Level();
@@ -603,74 +585,74 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
       return;
     }
 
-    var zoom = _tileZoom;
+    double? zoom = _tileZoom;
     if (zoom == null) {
       _removeAllTiles();
       return;
     }
 
-    for (var entry in _tiles.entries) {
-      var tile = entry.value;
+    for (MapEntry<String, Tile> entry in _tiles.entries) {
+      Tile tile = entry.value;
       tile.retain = tile.current;
     }
 
-    for (var entry in _tiles.entries) {
-      var tile = entry.value;
+    for (MapEntry<String, Tile> entry in _tiles.entries) {
+      Tile tile = entry.value;
 
       if (tile.current && !tile.active) {
-        var coords = tile.coords!;
+        Coords<double> coords = tile.coords!;
         if (!_retainParent(coords.x, coords.y, coords.z!, coords.z! - 5)) {
           _retainChildren(coords.x, coords.y, coords.z, coords.z! + 2);
         }
       }
     }
 
-    var toRemove = <String>[];
-    for (var entry in _tiles.entries) {
-      var tile = entry.value;
+    List<String> toRemove = <String>[];
+    for (MapEntry<String, Tile> entry in _tiles.entries) {
+      Tile tile = entry.value;
 
       if (!tile.retain) {
         toRemove.add(entry.key);
       }
     }
 
-    for (var key in toRemove) {
+    for (String key in toRemove) {
       _removeTile(key);
     }
   }
 
   void _removeTilesAtZoom(double zoom) {
-    var toRemove = <String>[];
-    for (var entry in _tiles.entries) {
+    List<String> toRemove = <String>[];
+    for (MapEntry<String, Tile> entry in _tiles.entries) {
       if (entry.value.coords!.z != zoom) {
         continue;
       }
       toRemove.add(entry.key);
     }
 
-    for (var key in toRemove) {
+    for (String key in toRemove) {
       _removeTile(key);
     }
   }
 
   void _removeAllTiles() {
-    var toRemove = Map<String, Tile>.from(_tiles);
+    Map<String, Tile> toRemove = Map<String, Tile>.from(_tiles);
 
-    for (var key in toRemove.keys) {
+    for (String key in toRemove.keys) {
       _removeTile(key);
     }
   }
 
   bool _retainParent(double x, double y, double z, double minZoom) {
-    var x2 = (x / 2).floorToDouble();
-    var y2 = (y / 2).floorToDouble();
-    var z2 = z - 1;
-    var coords2 = Coords(x2, y2);
+    double x2 = (x / 2).floorToDouble();
+    double y2 = (y / 2).floorToDouble();
+    double z2 = z - 1;
+    Coords<double> coords2 = Coords<double>(x2, y2);
     coords2.z = z2;
 
-    var key = _tileCoordsToKey(coords2);
+    String key = _tileCoordsToKey(coords2);
 
-    var tile = _tiles[key];
+    Tile? tile = _tiles[key];
     if (tile != null) {
       if (tile.active) {
         tile.retain = true;
@@ -688,14 +670,14 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   }
 
   void _retainChildren(double x, double y, double? z, double maxZoom) {
-    for (var i = 2 * x; i < 2 * x + 2; i++) {
-      for (var j = 2 * y; j < 2 * y + 2; j++) {
-        var coords = Coords(i, j);
+    for (double i = 2 * x; i < 2 * x + 2; i++) {
+      for (double j = 2 * y; j < 2 * y + 2; j++) {
+        Coords<double> coords = Coords<double>(i, j);
         coords.z = z! + 1;
 
-        var key = _tileCoordsToKey(coords);
+        String key = _tileCoordsToKey(coords);
 
-        var tile = _tiles[key];
+        Tile? tile = _tiles[key];
         if (tile != null) {
           if (tile.active) {
             tile.retain = true;
@@ -729,7 +711,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   }
 
   void _setView(LatLng? center, double zoom) {
-    var tileZoom = _clampZoom(zoom.roundToDouble());
+    double? tileZoom = _clampZoom(zoom.roundToDouble());
     // ignore: unnecessary_null_comparison
     if ((options.maxZoom != null && tileZoom! > options.maxZoom) ||
         // ignore: unnecessary_null_comparison
@@ -754,29 +736,29 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   }
 
   void _setZoomTransforms(LatLng? center, double zoom) {
-    for (var i in _levels.keys) {
+    for (double i in _levels.keys) {
       _setZoomTransform(_levels[i]!, center, zoom);
     }
   }
 
   void _setZoomTransform(Level level, LatLng? center, double zoom) {
-    var scale = map!.getZoomScale(zoom, level.zoom);
-    var pixelOrigin = map!.getNewPixelOrigin(center, zoom).round();
+    double scale = map!.getZoomScale(zoom, level.zoom);
+    CustomPoint<num> pixelOrigin = map!.getNewPixelOrigin(center, zoom).round();
     if (level.origin == null) {
       return;
     }
-    var translate = level.origin!.multiplyBy(scale) - pixelOrigin;
+    CustomPoint<num> translate = level.origin!.multiplyBy(scale) - pixelOrigin;
     level.translatePoint = translate;
     level.scale = scale;
   }
 
   void _resetGrid() {
-    var map = this.map!;
-    var crs = map.options.crs;
-    var tileSize = getTileSize();
-    var tileZoom = _tileZoom;
+    MapState map = this.map!;
+    Crs crs = map.options.crs;
+    CustomPoint<num>? tileSize = getTileSize();
+    double? tileZoom = _tileZoom;
 
-    var bounds = map.getPixelWorldBounds(_tileZoom);
+    Bounds<num>? bounds = map.getPixelWorldBounds(_tileZoom);
     if (bounds != null) {
       _globalTileRange = _pxBoundsToTileRange(bounds);
     }
@@ -784,29 +766,21 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     // wrapping
     _wrapX = crs.wrapLng;
     if (_wrapX != null) {
-      var first = (map.project(LatLng(0.0, crs.wrapLng!.item1), tileZoom).x /
-              tileSize!.x)
-          .floorToDouble();
-      var second = (map.project(LatLng(0.0, crs.wrapLng!.item2), tileZoom).x /
-              tileSize.y)
-          .ceilToDouble();
-      _wrapX = Tuple2(first, second);
+      double first = (map.project(LatLng(0.0, crs.wrapLng!.item1), tileZoom).x / tileSize!.x).floorToDouble();
+      double second = (map.project(LatLng(0.0, crs.wrapLng!.item2), tileZoom).x / tileSize.y).ceilToDouble();
+      _wrapX = Tuple2<double, double>(first, second);
     }
 
     _wrapY = crs.wrapLat;
     if (_wrapY != null) {
-      var first = (map.project(LatLng(crs.wrapLat!.item1, 0.0), tileZoom).y /
-              tileSize!.x)
-          .floorToDouble();
-      var second = (map.project(LatLng(crs.wrapLat!.item2, 0.0), tileZoom).y /
-              tileSize.y)
-          .ceilToDouble();
-      _wrapY = Tuple2(first, second);
+      double first = (map.project(LatLng(crs.wrapLat!.item1, 0.0), tileZoom).y / tileSize!.x).floorToDouble();
+      double second = (map.project(LatLng(crs.wrapLat!.item2, 0.0), tileZoom).y / tileSize.y).ceilToDouble();
+      _wrapY = Tuple2<double, double>(first, second);
     }
   }
 
   void _handleMove() {
-    var tileZoom = _clampZoom(map!.zoom.roundToDouble());
+    double? tileZoom = _clampZoom(map!.zoom.roundToDouble());
 
     if (_tileZoom == null) {
       // if there is no _tileZoom available it means we are out within zoom level
@@ -844,12 +818,12 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     }
   }
 
-  Bounds _getTiledPixelBounds(LatLng center) {
-    var scale = map!.getZoomScale(map!.zoom, _tileZoom);
-    var pixelCenter = map!.project(center, _tileZoom).floor();
-    var halfSize = map!.size! / (scale * 2);
+  Bounds<num> _getTiledPixelBounds(LatLng center) {
+    double scale = map!.getZoomScale(map!.zoom, _tileZoom);
+    CustomPoint<num> pixelCenter = map!.project(center, _tileZoom).floor();
+    CustomPoint<num> halfSize = map!.size! / (scale * 2);
 
-    return Bounds(pixelCenter - halfSize, pixelCenter + halfSize);
+    return Bounds<num>(pixelCenter - halfSize, pixelCenter + halfSize);
   }
 
   // Private method to load tiles in the grid's active zoom level according to map bounds
@@ -858,29 +832,27 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
       return;
     }
 
-    var zoom = _clampZoom(map!.zoom)!;
+    double zoom = _clampZoom(map!.zoom)!;
     if ((zoom < 1) || (zoom > 18)) {
       return;
     }
     center ??= map!.center;
 
-    var pixelBounds = _getTiledPixelBounds(center!);
-    var tileRange = _pxBoundsToTileRange(pixelBounds);
-    var tileCenter = tileRange.getCenter();
-    var queue = <Coords<num>>[];
-    var margin = options.keepBuffer;
-    var noPruneRange = Bounds(
-      tileRange.bottomLeft - CustomPoint(margin, -margin),
-      tileRange.topRight + CustomPoint(margin, -margin),
+    Bounds<num> pixelBounds = _getTiledPixelBounds(center!);
+    Bounds<num> tileRange = _pxBoundsToTileRange(pixelBounds);
+    CustomPoint<double> tileCenter = tileRange.getCenter();
+    List<Coords<num>> queue = <Coords<num>>[];
+    int margin = options.keepBuffer;
+    Bounds<num> noPruneRange = Bounds<num>(
+      tileRange.bottomLeft - CustomPoint<num>(margin, -margin),
+      tileRange.topRight + CustomPoint<num>(margin, -margin),
     );
 
-    for (var entry in _tiles.entries) {
-      var tile = entry.value;
-      var c = tile.coords;
+    for (MapEntry<String, Tile> entry in _tiles.entries) {
+      Tile tile = entry.value;
+      Coords<double>? c = tile.coords;
 
-      if (tile.current == true &&
-          (c!.z != _tileZoom ||
-              !noPruneRange.contains(CustomPoint(c.x, c.y)))) {
+      if (tile.current == true && (c!.z != _tileZoom || !noPruneRange.contains(CustomPoint<num>(c.x, c.y)))) {
         tile.current = false;
       }
     }
@@ -893,16 +865,16 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     }
 
     // create a queue of coordinates to load tiles from
-    for (var j = tileRange.min.y; j <= tileRange.max.y; j++) {
-      for (var i = tileRange.min.x; i <= tileRange.max.x; i++) {
-        var coords = Coords(i.toDouble(), j.toDouble());
+    for (num j = tileRange.min.y; j <= tileRange.max.y; j++) {
+      for (num i = tileRange.min.x; i <= tileRange.max.x; i++) {
+        Coords<double> coords = Coords<double>(i.toDouble(), j.toDouble());
         coords.z = _tileZoom;
 
         if (!_isValidTile(coords)) {
           continue;
         }
 
-        var tile = _tiles[_tileCoordsToKey(coords)];
+        Tile? tile = _tiles[_tileCoordsToKey(coords)];
         if (tile != null) {
           tile.current = true;
         } else {
@@ -912,24 +884,21 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     }
 
     // sort tile queue to load tiles in order of their distance to center
-    queue.sort((a, b) =>
-        (a.distanceTo(tileCenter) - b.distanceTo(tileCenter)).toInt());
+    queue.sort((Coords<num> a, Coords<num> b) => (a.distanceTo(tileCenter) - b.distanceTo(tileCenter)).toInt());
 
-    for (var i = 0; i < queue.length; i++) {
+    for (int i = 0; i < queue.length; i++) {
       _addTile(queue[i] as Coords<double>);
     }
   }
 
-  bool _isValidTile(Coords coords) {
-    var crs = map!.options.crs;
+  bool _isValidTile(Coords<num> coords) {
+    Crs crs = map!.options.crs;
 
     if (!crs.infinite) {
       // don't load tile if it's out of bounds and not wrapped
-      var bounds = _globalTileRange;
-      if ((crs.wrapLng == null &&
-              (coords.x < bounds!.min.x || coords.x > bounds.max.x)) ||
-          (crs.wrapLat == null &&
-              (coords.y < bounds!.min.y || coords.y > bounds.max.y))) {
+      Bounds<num>? bounds = _globalTileRange;
+      if ((crs.wrapLng == null && (coords.x < bounds!.min.x || coords.x > bounds.max.x)) ||
+          (crs.wrapLat == null && (coords.y < bounds!.min.y || coords.y > bounds.max.y))) {
         return false;
       }
     }
@@ -937,21 +906,20 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     return true;
   }
 
-  String _tileCoordsToKey(Coords coords) {
+  String _tileCoordsToKey(Coords<num> coords) {
     return '${coords.x}:${coords.y}:${coords.z}';
   }
 
-  //ignore: unused_element
-  Coords _keyToTileCoords(String key) {
-    var k = key.split(':');
-    var coords = Coords(double.parse(k[0]), double.parse(k[1]));
+  Coords<num> _keyToTileCoords(String key) {
+    List<String> k = key.split(':');
+    Coords<double> coords = Coords<double>(double.parse(k[0]), double.parse(k[1]));
     coords.z = double.parse(k[2]);
 
     return coords;
   }
 
   void _removeTile(String key) {
-    var tile = _tiles[key];
+    Tile? tile = _tiles[key];
     if (tile == null) {
       return;
     }
@@ -961,15 +929,14 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   }
 
   void _addTile(Coords<double> coords) {
-    var tileCoordsToKey = _tileCoordsToKey(coords);
-    var tile = _tiles[tileCoordsToKey] = Tile(
+    String tileCoordsToKey = _tileCoordsToKey(coords);
+    Tile tile = _tiles[tileCoordsToKey] = Tile(
       coords: coords,
       coordsKey: tileCoordsToKey,
       tilePos: _getTilePos(coords),
       current: true,
       level: _levels[coords.z!],
-      imageProvider:
-          options.tileProvider.getImage(_wrapCoords(coords), options),
+      imageProvider: options.tileProvider.getImage(_wrapCoords(coords), options),
       tileReady: _tileReady,
     );
 
@@ -989,19 +956,15 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
       tile!.loadError = false;
     }
 
-    var key = _tileCoordsToKey(coords!);
+    String key = _tileCoordsToKey(coords!);
     tile = _tiles[key];
     if (null == tile) {
       return;
     }
 
-    var fadeInStart = tile.loaded == null
-        ? options.tileFadeInStart
-        : options.tileFadeInStartWhenOverride;
+    double fadeInStart = tile.loaded == null ? options.tileFadeInStart : options.tileFadeInStartWhenOverride;
     tile.loaded = DateTime.now();
-    if (options.tileFadeInDuration == null ||
-        fadeInStart == 1.0 ||
-        (tile.loadError && null == options.errorImage)) {
+    if (options.tileFadeInDuration == null || fadeInStart == 1.0 || (tile.loadError && null == options.errorImage)) {
       tile.active = true;
     } else {
       tile.startFadeInAnimation(
@@ -1018,7 +981,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     if (_noTilesToLoad()) {
       // Wait a bit more than tileFadeInDuration (the duration of the tile fade-in)
       // to trigger a pruning.
-      Future.delayed(
+      Future<dynamic>.delayed(
         options.tileFadeInDuration != null
             ? options.tileFadeInDuration! + const Duration(milliseconds: 50)
             : const Duration(milliseconds: 50),
@@ -1031,34 +994,30 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     }
   }
 
-  CustomPoint _getTilePos(Coords coords) {
-    var level = _levels[coords.z as double]!;
+  CustomPoint<num> _getTilePos(Coords<num> coords) {
+    Level level = _levels[coords.z!.toDouble()]!;
     return coords.scaleBy(getTileSize()!) - level.origin!;
   }
 
-  Coords _wrapCoords(Coords coords) {
-    var newCoords = Coords(
-      _wrapX != null
-          ? util.wrapNum(coords.x.toDouble(), _wrapX!)
-          : coords.x.toDouble(),
-      _wrapY != null
-          ? util.wrapNum(coords.y.toDouble(), _wrapY!)
-          : coords.y.toDouble(),
+  Coords<num> _wrapCoords(Coords<num> coords) {
+    Coords<num> newCoords = Coords<num>(
+      _wrapX != null ? util.wrapNum(coords.x.toDouble(), _wrapX!) : coords.x.toDouble(),
+      _wrapY != null ? util.wrapNum(coords.y.toDouble(), _wrapY!) : coords.y.toDouble(),
     );
     newCoords.z = coords.z!.toDouble();
     return newCoords;
   }
 
-  Bounds _pxBoundsToTileRange(Bounds bounds) {
-    var tileSize = getTileSize()!;
-    return Bounds(
+  Bounds<num> _pxBoundsToTileRange(Bounds<num> bounds) {
+    CustomPoint<num> tileSize = getTileSize()!;
+    return Bounds<num>(
       bounds.min.unscaleBy(tileSize).floor(),
-      bounds.max.unscaleBy(tileSize).ceil() - const CustomPoint(1, 1),
+      bounds.max.unscaleBy(tileSize).ceil() - const CustomPoint<num>(1, 1),
     );
   }
 
   bool _noTilesToLoad() {
-    for (var entry in _tiles.entries) {
+    for (MapEntry<String, Tile> entry in _tiles.entries) {
       if (entry.value.loaded == null) {
         return false;
       }
@@ -1067,8 +1026,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   }
 }
 
-typedef TileReady = void Function(
-    Coords<double>? coords, dynamic error, Tile tile);
+typedef TileReady = void Function(Coords<double>? coords, dynamic error, Tile tile);
 
 class Tile implements Comparable<Tile> {
   final String? coordsKey;
@@ -1084,9 +1042,7 @@ class Tile implements Comparable<Tile> {
   DateTime? loaded;
 
   AnimationController? animationController;
-  double get opacity => animationController == null
-      ? (active ? 1.0 : 0.0)
-      : animationController!.value;
+  double get opacity => animationController == null ? (active ? 1.0 : 0.0) : animationController!.value;
 
   // callback when tile is ready / error occurred
   // it maybe be null forinstance when download aborted
@@ -1110,8 +1066,8 @@ class Tile implements Comparable<Tile> {
 
   void loadTileImage() {
     try {
-      final oldImageStream = _imageStream;
-      _imageStream = imageProvider!.resolve(ImageConfiguration());
+      ImageStream? oldImageStream = _imageStream;
+      _imageStream = imageProvider!.resolve(const ImageConfiguration());
 
       if (_imageStream!.key != oldImageStream?.key) {
         oldImageStream?.removeListener(_listener);
@@ -1131,7 +1087,7 @@ class Tile implements Comparable<Tile> {
       imageProvider!
           .evict()
           .then((bool succ) => print('evict tile: $coords -> $succ'))
-          .catchError((error) => print('evict tile: $coords -> $error'));
+          .catchError((dynamic error) => print('evict tile: $coords -> $error'));
     }
 
     animationController?.removeStatusListener(_onAnimateEnd);
@@ -1139,12 +1095,10 @@ class Tile implements Comparable<Tile> {
     _imageStream?.removeListener(_listener);
   }
 
-  void startFadeInAnimation(Duration? duration, TickerProvider vsync,
-      {double? from}) {
+  void startFadeInAnimation(Duration? duration, TickerProvider vsync, {double? from}) {
     animationController?.removeStatusListener(_onAnimateEnd);
 
-    animationController = AnimationController(duration: duration, vsync: vsync)
-      ..addStatusListener(_onAnimateEnd);
+    animationController = AnimationController(duration: duration, vsync: vsync)..addStatusListener(_onAnimateEnd);
 
     animationController!.forward(from: from);
   }
@@ -1164,15 +1118,14 @@ class Tile implements Comparable<Tile> {
 
   void _tileOnError(dynamic exception, StackTrace? stackTrace) {
     if (null != tileReady) {
-      tileReady!(
-          coords, exception ?? 'Unknown exception during loadTileImage', this);
+      tileReady!(coords, exception ?? 'Unknown exception during loadTileImage', this);
     }
   }
 
   @override
   int compareTo(Tile other) {
-    var zIndexA = level!.zIndex;
-    var zIndexB = other.level!.zIndex;
+    double? zIndexA = level!.zIndex;
+    double? zIndexB = other.level!.zIndex;
 
     if (zIndexA == zIndexB) {
       return 0;
@@ -1185,7 +1138,7 @@ class Tile implements Comparable<Tile> {
   int get hashCode => coords.hashCode;
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     return other is Tile && coords == other.coords;
   }
 }
@@ -1195,9 +1148,7 @@ class AnimatedTile extends StatefulWidget {
   final ImageProvider? errorImage;
   final bool darkMode;
 
-  AnimatedTile(
-      {Key? key, required this.tile, this.errorImage, this.darkMode = false})
-      : super(key: key);
+  AnimatedTile({Key? key, required this.tile, this.errorImage, this.darkMode = false}) : super(key: key);
 
   @override
   _AnimatedTileState createState() => _AnimatedTileState();
@@ -1261,9 +1212,9 @@ class _AnimatedTileState extends State<AnimatedTile> {
 
 class Level {
   double? zIndex;
-  CustomPoint? origin;
+  CustomPoint<num>? origin;
   double? zoom;
-  late CustomPoint translatePoint;
+  late CustomPoint<num> translatePoint;
   late double scale;
 }
 

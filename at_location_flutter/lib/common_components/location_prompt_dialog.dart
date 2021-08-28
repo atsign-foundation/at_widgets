@@ -18,7 +18,7 @@ Future<void> locationPromptDialog(
     required bool isRequestLocationData,
     bool onlyText = false,
     LocationNotificationModel? locationNotificationModel}) {
-  var value = showDialog<void>(
+  Future<void> value = showDialog<void>(
     context: AtLocationNotificationListener().navKey.currentContext!,
     barrierDismissible: true,
     builder: (BuildContext context) {
@@ -67,18 +67,18 @@ class _LocationPromptState extends State<LocationPrompt> {
     return Container(
       width: SizeConfig().screenWidth * 0.8,
       child: AlertDialog(
-        contentPadding: EdgeInsets.fromLTRB(15, 30, 15, 20),
+        contentPadding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
         content: SingleChildScrollView(
           child: Container(
             child: widget.onlyText
                 ? Column(
-                    children: [
+                    children: <Widget>[
                       Text(
                         widget.text ?? '...',
                         style: CustomTextStyles().grey16,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       CustomButton(
                         onPressed: () => Navigator.of(context).pop(),
                         buttonText: 'Okay!',
@@ -95,9 +95,9 @@ class _LocationPromptState extends State<LocationPrompt> {
                         style: CustomTextStyles().grey16,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       loading
-                          ? Center(
+                          ? const Center(
                               child: CircularProgressIndicator(),
                             )
                           : CustomButton(
@@ -128,7 +128,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                               width: 164.toWidth,
                               height: 48.toHeight,
                             ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       InkWell(
                         onTap: () async {
                           if (widget.isShareLocationData) {
@@ -152,7 +152,7 @@ class _LocationPromptState extends State<LocationPrompt> {
   }
 
   Future<void> updateShareLocation() async {
-    var update = await SharingLocationService()
+    bool update = await SharingLocationService()
         .updateWithShareLocationAcknowledge(widget.locationNotificationModel!,
             rePrompt: widget.locationNotificationModel!.rePrompt);
 
@@ -169,7 +169,7 @@ class _LocationPromptState extends State<LocationPrompt> {
   }
 
   Future<void> updateRequestLocation() async {
-    var update = await RequestLocationService()
+    dynamic update = await RequestLocationService()
         .updateWithRequestLocationAcknowledge(widget.locationNotificationModel!,
             rePrompt: widget.locationNotificationModel!.rePrompt);
 

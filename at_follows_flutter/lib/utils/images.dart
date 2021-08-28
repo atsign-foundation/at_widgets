@@ -1,4 +1,4 @@
 class Images {
-  static String _baseurl = 'assets/images';
+  static final String _baseurl = 'assets/images';
   static String qrscan = '$_baseurl/qrscan.png';
 }

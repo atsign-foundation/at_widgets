@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:at_invitation_flutter/at_invitation_flutter.dart';
 import 'package:flutter/material.dart';
 import 'client_sdk_service.dart';
@@ -17,10 +16,6 @@ class _SecondScreenState extends State<SecondScreen> {
   GlobalKey<NavigatorState> scaffoldKey = GlobalKey();
   String chatWithAtSign = '';
   bool showOptions = false;
-
-  Uri? _latestUri;
-  Object? _err;
-  StreamSubscription? _sub;
 
   // for goup chat
   String groupId = '';
@@ -60,16 +55,15 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text(
-                  'Use this button to invite any of your contacts to this app using their email or phone number'),
+              child:
+                  Text('Use this button to invite any of your contacts to this app using their email or phone number'),
             ),
             SizedBox(
               height: 10.0,
             ),
             TextButton(
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.black12),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
               ),
               onPressed: () {
                 shareAndInvite(context, 'welcome');
@@ -84,8 +78,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             TextButton(
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.black12),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
               ),
               onPressed: () {
                 _checkForInvite();
@@ -116,15 +109,13 @@ class _SecondScreenState extends State<SecondScreen> {
 
   void _checkForInvite() async {
     String _url = "https://3cb8767f51fa.ngrok.io";
-    await canLaunch(_url)
-        ? await launch(_url, forceSafariVC: false)
-        : throw 'Could not launch $_url';
+    await canLaunch(_url) ? await launch(_url, forceSafariVC: false) : throw 'Could not launch $_url';
   }
 
   void _handleIncomingLinks() {
     // It will handle app links while the app is already started - be it in
     // the foreground or in the background.
-    _sub = uriLinkStream.listen((Uri? uri) {
+    uriLinkStream.listen((Uri? uri) {
       print('got uri: $uri');
       if (!mounted) {
         print('not mounted');
@@ -132,8 +123,7 @@ class _SecondScreenState extends State<SecondScreen> {
         if (uri != null) {
           var queryParameters = uri.queryParameters;
           print(queryParameters);
-          fetchInviteData(context, queryParameters['key'] ?? '',
-              queryParameters['atsign'] ?? '');
+          fetchInviteData(context, queryParameters['key'] ?? '', queryParameters['atsign'] ?? '');
         }
       }
     }, onError: (Object err) {

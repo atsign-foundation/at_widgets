@@ -52,7 +52,7 @@ class _CustomListTileState extends State<CustomListTile> {
     if (widget.contact!.tags != null &&
         widget.contact!.tags!['image'] != null) {
       List<int> intList = widget.contact!.tags!['image'].cast<int>();
-      var image = Uint8List.fromList(intList);
+      Uint8List image = Uint8List.fromList(intList);
       contactImage = CustomCircleAvatar(
         byteImage: image,
         nonAsset: true,
@@ -65,7 +65,7 @@ class _CustomListTileState extends State<CustomListTile> {
     return StreamBuilder<List<AtContact?>>(
         initialData: widget.contactService!.selectedContacts,
         stream: widget.contactService!.selectedContactStream,
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<AtContact?>> snapshot) {
           // ignore: omit_local_variable_types
           for (AtContact? contact in widget.contactService!.selectedContacts) {
             if (contact == widget.contact ||
@@ -123,7 +123,7 @@ class _CustomListTileState extends State<CustomListTile> {
             leading: Container(
                 height: 40.toHeight,
                 width: 40.toHeight,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.circle,
                 ),
@@ -138,8 +138,8 @@ class _CustomListTileState extends State<CustomListTile> {
                     },
               icon: (widget.asSelectionTile)
                   ? (isSelected)
-                      ? Icon(Icons.close)
-                      : Icon(Icons.add)
+                      ? const Icon(Icons.close)
+                      : const Icon(Icons.add)
                   : Image.asset(
                       ImageConstants.sendIcon,
                       width: 21.toWidth,

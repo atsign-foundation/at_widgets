@@ -22,12 +22,12 @@ import 'package:geolocator/geolocator.dart';
 /// [showDialogBox] if false dialog box wont be shown.
 ///
 /// [streamAlternative] a function which will return updated lists of [KeyLocationModel]
-void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
-    GlobalKey<NavigatorState> navKey,
+Future<void> initializeLocationService(
+    AtClientImpl atClientImpl, String currentAtSign, GlobalKey<NavigatorState> navKey,
     {required String mapKey,
     required String apiKey,
     bool showDialogBox = false,
-    String rootDomain = MixedConstants.ROOT_DOMAIN,
+    String rootDomain = MixedConstants.rootDomain,
     Function? getAtValue,
     Function(List<KeyLocationModel>)? streamAlternative}) async {
   /// initialise keys
@@ -42,38 +42,34 @@ void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
     print('Error in initializeLocationService $e');
   }
 
-  AtLocationNotificationListener().init(
-      atClientImpl, currentAtSign, navKey, rootDomain, showDialogBox,
-      newGetAtValueFromMainApp: getAtValue);
-  KeyStreamService().init(AtLocationNotificationListener().atClientInstance,
-      streamAlternative: streamAlternative);
+  AtLocationNotificationListener()
+      .init(atClientImpl, currentAtSign, navKey, rootDomain, showDialogBox, newGetAtValueFromMainApp: getAtValue);
+  await KeyStreamService()
+      .init(AtLocationNotificationListener().atClientInstance, streamAlternative: streamAlternative);
 }
 
 /// returns a Stream of 'KeyLocationModel' having all the shared and request location keys.
-Stream getAllNotification() {
+Stream<List<KeyLocationModel>?> getAllNotification() {
   return KeyStreamService().atNotificationsStream;
 }
 
 /// sends a share location notification to the [atsign], with a 'ttl' of [minutes].
 /// before calling this [atsign] should be checked if valid or not.
 Future<bool?> sendShareLocationNotification(String atsign, int? minutes) async {
-  var result = await SharingLocationService()
-      .sendShareLocationEvent(atsign, false, minutes: minutes);
+  bool? result = await SharingLocationService().sendShareLocationEvent(atsign, false, minutes: minutes);
   return result;
 }
 
 /// sends a request location notification to the [atsign].
 /// before calling this [atsign] should be checked if valid or not.
 Future<bool?> sendRequestLocationNotification(String atsign) async {
-  var result = await RequestLocationService().sendRequestLocationEvent(atsign);
+  bool? result = await RequestLocationService().sendRequestLocationEvent(atsign);
   return result;
 }
 
 /// deletes the location notification of the logged in atsign being shared with [locationNotificationModel].receiver
-Future<bool> deleteLocationData(
-    LocationNotificationModel locationNotificationModel) async {
-  var result =
-      await SendLocationNotification().sendNull(locationNotificationModel);
+Future<bool> deleteLocationData(LocationNotificationModel locationNotificationModel) async {
+  bool result = await SendLocationNotification().sendNull(locationNotificationModel);
   return result;
 }
 
@@ -84,7 +80,7 @@ void deleteAllLocationData() {
 
 /// returns the 'AtKey' of the [regexKey]
 AtKey getAtKey(String regexKey) {
-  var atKey = AtKey.fromString(regexKey);
+  AtKey atKey = AtKey.fromString(regexKey);
   atKey.metadata!.ttr = -1;
   return atKey;
 }

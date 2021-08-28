@@ -5,10 +5,10 @@ import 'package:at_follows_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatefulWidget {
-  final isActive;
-  final text;
-  final highLightColor;
-  final providerStatus;
+  final bool isActive;
+  final String text;
+  final Color? highLightColor;
+  // final providerStatus;
   final double? height;
   final double width;
   final Function onPressedCallBack;
@@ -18,15 +18,14 @@ class CustomButton extends StatefulWidget {
   CustomButton(
       {required this.text,
       required this.onPressedCallBack,
-      this.providerStatus,
-      textstyle,
-      highLightColor,
+      // this.providerStatus,
+      // textstyle,
+      this.highLightColor,
       this.height,
       this.width = 0.0,
       this.showCount = false,
       this.count,
-      this.isActive = false})
-      : this.highLightColor = highLightColor ?? ColorConstants.secondary;
+      this.isActive = false});
 
   @override
   _CustomButtonState createState() => _CustomButtonState();
@@ -49,35 +48,26 @@ class _CustomButtonState extends State<CustomButton> {
         widget.onPressedCallBack(!widget.isActive);
       },
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0.toFont),
-          side: BorderSide(color: ColorConstants.borderColor!)),
-      color: widget.isActive
-          ? ColorConstants.buttonHighLightColor
-          : ColorConstants.secondary,
-      highlightColor: widget.highLightColor,
+          borderRadius: BorderRadius.circular(5.0.toFont), side: BorderSide(color: ColorConstants.borderColor!)),
+      color: widget.isActive ? ColorConstants.buttonHighLightColor : ColorConstants.secondary,
+      highlightColor: widget.highLightColor ?? ColorConstants.secondary,
       child: widget.showCount
           ? Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0.toFont),
               child: Column(
-                children: [
+                children: <Widget>[
                   Text('${widget.count ?? 0}',
-                      style: widget.isActive
-                          ? CustomTextStyles.fontBold14light
-                          : CustomTextStyles.fontBold14primary),
+                      style: widget.isActive ? CustomTextStyles.fontBold14light : CustomTextStyles.fontBold14primary),
                   Text(
                     widget.text,
-                    style: widget.isActive
-                        ? CustomTextStyles.fontBold14light
-                        : CustomTextStyles.fontBold14primary,
+                    style: widget.isActive ? CustomTextStyles.fontBold14light : CustomTextStyles.fontBold14primary,
                   ),
                 ],
               ),
             )
           : Text(
               widget.text,
-              style: widget.isActive
-                  ? CustomTextStyles.fontR14light
-                  : CustomTextStyles.fontR14primary,
+              style: widget.isActive ? CustomTextStyles.fontR14light : CustomTextStyles.fontR14primary,
             ),
     );
   }

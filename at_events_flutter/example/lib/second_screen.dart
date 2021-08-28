@@ -1,6 +1,6 @@
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
-import 'package:at_events_flutter/screens/create_event.dart';
+import 'package:at_events_flutter/screens/createEvent.dart';
 import 'package:at_events_flutter/utils/init_events_service.dart';
 import 'package:at_events_flutter_example/main.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +26,7 @@ class _SecondScreenState extends State<SecondScreen> {
     super.initState();
 
     try {
-      activeAtSign =
-          clientSdkService.atClientServiceInstance!.atClient!.currentAtSign;
+      activeAtSign = clientSdkService.atClientServiceInstance!.atClient!.currentAtSign;
       initializeEventService();
       isAuthenticated = true;
     } catch (e) {
@@ -77,15 +76,12 @@ class _SecondScreenState extends State<SecondScreen> {
           ),
           TextButton(
             onPressed: () {
-              bottomSheet(
-                  CreateEvent(
-                      clientSdkService.atClientServiceInstance!.atClient),
+              bottomSheet(CreateEvent(clientSdkService.atClientServiceInstance!.atClient),
                   MediaQuery.of(context).size.height * 0.9);
             },
             child: Container(
               height: 40,
-              child:
-                  Text('Create event', style: TextStyle(color: Colors.black)),
+              child: Text('Create event', style: TextStyle(color: Colors.black)),
             ),
           ),
           SizedBox(
@@ -96,30 +92,19 @@ class _SecondScreenState extends State<SecondScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () {
-                      HomeEventService().onEventModelTap(
-                          events[index].eventNotificationModel!,
-                          events[index].haveResponded);
+                      HomeEventService()
+                          .onEventModelTap(events[index].eventNotificationModel!, events[index].haveResponded);
                     },
                     child: DisplayTile(
-                      atsignCreator:
-                          events[index].eventNotificationModel!.atsignCreator,
-                      number: events[index]
-                          .eventNotificationModel!
-                          .group!
-                          .members!
-                          .length,
-                      title: 'Event - ' +
-                          events[index].eventNotificationModel!.title!,
-                      subTitle: HomeEventService()
-                          .getSubTitle(events[index].eventNotificationModel!),
-                      semiTitle: HomeEventService().getSemiTitle(
-                          events[index].eventNotificationModel!,
-                          events[index].haveResponded),
-                      showRetry:
-                          HomeEventService().calculateShowRetry(events[index]),
+                      atsignCreator: events[index].eventNotificationModel!.atsignCreator,
+                      number: events[index].eventNotificationModel!.group!.members!.length,
+                      title: 'Event - ' + events[index].eventNotificationModel!.title!,
+                      subTitle: HomeEventService().getSubTitle(events[index].eventNotificationModel!),
+                      semiTitle: HomeEventService()
+                          .getSemiTitle(events[index].eventNotificationModel!, events[index].haveResponded),
+                      showRetry: HomeEventService().calculateShowRetry(events[index]),
                       onRetryTapped: () {
-                        HomeEventService().onEventModelTap(
-                            events[index].eventNotificationModel!, false);
+                        HomeEventService().onEventModelTap(events[index].eventNotificationModel!, false);
                       },
                     ),
                   );
@@ -137,12 +122,8 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void initializeEventService() {
-    initialiseEventService(
-        clientSdkService.atClientServiceInstance!.atClient!, NavService.navKey,
-        mapKey: '',
-        apiKey: '',
-        rootDomain: MixedConstants.ROOT_DOMAIN,
-        streamAlternative: updateEvents);
+    initialiseEventService(clientSdkService.atClientServiceInstance!.atClient!, NavService.navKey,
+        mapKey: '', apiKey: '', rootDomain: MixedConstants.rootDomain, streamAlternative: updateEvents);
   }
 
   void bottomSheet(

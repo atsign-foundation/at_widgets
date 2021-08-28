@@ -52,8 +52,7 @@ class AtLocationFlutterPlugin extends StatefulWidget {
     this.focusMapOn,
   });
   @override
-  _AtLocationFlutterPluginState createState() =>
-      _AtLocationFlutterPluginState();
+  _AtLocationFlutterPluginState createState() => _AtLocationFlutterPluginState();
 }
 
 class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
@@ -77,7 +76,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         addCurrentUserMarker: widget.addCurrentUserMarker,
         textForCenter: widget.textForCenter,
         showToast: showToast);
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
       LocationService().mapInitialized();
       LocationService().notifyListeners();
     });
@@ -101,13 +100,13 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     return SafeArea(
       child: Scaffold(
           body: Stack(
-        children: [
-          StreamBuilder(
+        children: <Widget>[
+          StreamBuilder<List<HybridModel?>>(
               stream: LocationService().atHybridUsersStream,
-              builder: (context, AsyncSnapshot<List<HybridModel?>> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<List<HybridModel?>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasError) {
-                    return Center(
+                    return const Center(
                       child: Text(
                         'error',
                         style: TextStyle(fontSize: 400),
@@ -116,16 +115,16 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                   } else {
                     print('FlutterMap called');
                     _popupController = PopupController();
-                    var users = snapshot.data!;
-                    var markers = users.map((user) => user!.marker).toList();
-                    points = users.map((user) => user!.latLng).toList();
+                    List<HybridModel?> users = snapshot.data!;
+                    List<Marker?> markers = users.map((HybridModel? user) => user!.marker).toList();
+                    points = users.map((HybridModel? user) => user!.latLng).toList();
                     print('markers length = ${markers.length}');
-                    users.forEach((element) {
+                    for (HybridModel? element in users) {
                       print('displayanme - ${element!.displayName}');
-                    });
-                    markers.forEach((element) {
+                    }
+                    for (Marker? element in markers) {
                       print('point - ${element!.point}');
-                    });
+                    }
 
                     try {
                       if (widget.focusMapOn == null) {
@@ -133,15 +132,12 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                           mapController!.move(markers[0]!.point, 10);
                         }
                       } else {
-                        if ((!mapAdjustedOnce) &&
-                            (markers.isNotEmpty) &&
-                            (mapController != null)) {
-                          var indexOfUser = users.indexWhere((element) =>
-                              element!.displayName == widget.focusMapOn);
+                        if ((!mapAdjustedOnce) && (markers.isNotEmpty) && (mapController != null)) {
+                          int indexOfUser =
+                              users.indexWhere((HybridModel? element) => element!.displayName == widget.focusMapOn);
 
                           if (indexOfUser > -1) {
-                            mapController!
-                                .move(markers[indexOfUser]!.point, 10);
+                            mapController!.move(markers[indexOfUser]!.point, 10);
 
                             /// If we want the map to only update once
                             /// And not keep the focus on user sharing his location
@@ -170,15 +166,12 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                           widget.bottom ?? 20,
                         )),
                         // ignore: unnecessary_null_comparison
-                        center: ((users != null) && (users.isNotEmpty))
-                            ? users[0]!.latLng
-                            : LatLng(45, 45),
+                        center: ((users != null) && (users.isNotEmpty)) ? users[0]!.latLng : LatLng(45, 45),
                         zoom: markers.isNotEmpty ? 8 : 2,
-                        plugins: [MarkerClusterPlugin(UniqueKey())],
-                        onTap: (_) => _popupController
-                            .hidePopup(), // Hide popup when the map is tapped.
+                        plugins: <MapPlugin>[MarkerClusterPlugin(UniqueKey())],
+                        onTap: (_) => _popupController.hidePopup(), // Hide popup when the map is tapped.
                       ),
-                      layers: [
+                      layers: <LayerOptions>[
                         TileLayerOptions(
                           minNativeZoom: 2,
                           maxNativeZoom: 18,
@@ -190,30 +183,24 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                           maxClusterRadius: 190,
                           disableClusteringAtZoom: 16,
                           size: showMarker
-                              ? ((markers.length > 1)
-                                  ? Size(200, 150)
-                                  : Size(5, 5))
-                              : Size(0, 0),
+                              ? ((markers.length > 1) ? const Size(200, 150) : const Size(5, 5))
+                              : const Size(0, 0),
                           anchor: AnchorPos.align(AnchorAlign.center),
-                          fitBoundsOptions: FitBoundsOptions(
+                          fitBoundsOptions: const FitBoundsOptions(
                             padding: EdgeInsets.all(50),
                           ),
-                          markers: showMarker ? markers : [],
-                          polygonOptions: PolygonOptions(
-                              borderColor: Colors.blueAccent,
-                              color: Colors.black12,
-                              borderStrokeWidth: 3),
+                          markers: showMarker ? markers : <Marker>[],
+                          polygonOptions: const PolygonOptions(
+                              borderColor: Colors.blueAccent, color: Colors.black12, borderStrokeWidth: 3),
                           popupOptions: PopupOptions(
                               popupSnap: PopupSnap.top,
                               popupController: _popupController,
-                              popupBuilder: (_, marker) {
-                                return _popupController
-                                        .streamController!.isClosed
-                                    ? Text('Closed')
-                                    : buildPopup(snapshot
-                                        .data![markers.indexOf(marker)]!);
+                              popupBuilder: (_, Marker? marker) {
+                                return _popupController.streamController!.isClosed
+                                    ? const Text('Closed')
+                                    : buildPopup(snapshot.data![markers.indexOf(marker)]!);
                               }),
-                          builder: (context, markers) {
+                          builder: (BuildContext context, List<Marker?> markers) {
                             return buildMarkerCluster(markers);
                           },
                         ),

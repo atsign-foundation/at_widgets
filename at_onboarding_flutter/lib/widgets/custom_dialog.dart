@@ -38,7 +38,7 @@ class CustomDialog extends StatefulWidget {
   final bool isAtsignForm;
 
   ///title of the dialog.
-  final String? title;
+  final dynamic title;
 
   ///reference for the dialog if the atsign not activated.
   final bool isQR;
@@ -237,12 +237,14 @@ class _CustomDialogState extends State<CustomDialog> {
                                           )
                                         : Container()
                                   ]))
-                          : widget.title != null
+                          : widget.title != null && widget.title is String
                               ? Text(
                                   widget.title!,
                                   style: CustomTextStyles.fontR16primary,
                                 )
-                              : widget.title as Widget?,
+                              : widget.title != null && widget.title is Widget
+                                  ? widget.title
+                                  : const SizedBox.shrink(),
                   content: widget.isAtsignForm && !isQrScanner
                       ? Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
@@ -720,12 +722,14 @@ class _CustomDialogState extends State<CustomDialog> {
         //displays list of atsign along with newAtsign
         else {
           await Navigator.push(
-              context,
-              MaterialPageRoute<dynamic>(
-                  builder: (_) => AtsignListScreen(
-                        atsigns: atsigns,
-                        newAtsign: responseData['newAtsign'],
-                      ))).then((dynamic value) async {
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (_) => AtsignListScreen(
+                atsigns: atsigns,
+                newAtsign: responseData['newAtsign'],
+              ),
+            ),
+          ).then((dynamic value) async {
             if (value == responseData['newAtsign']) {
               cramSecret = await validatePerson(value, email, otp, context, isConfirmation: true);
               return cramSecret;

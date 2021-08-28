@@ -14,15 +14,15 @@ class MarkerClusterNode {
   int? removeCount;
 
   List<MarkerNode> get markers {
-    var markers = <MarkerNode>[];
+    List<MarkerNode> markers = <MarkerNode>[];
 
     markers.addAll(children.whereType<MarkerNode>());
 
-    children.forEach((child) {
+    for (dynamic child in children) {
       if (child is MarkerClusterNode) {
         markers.addAll(child.markers);
       }
-    });
+    }
     return markers;
   }
 
@@ -30,12 +30,12 @@ class MarkerClusterNode {
     required this.zoom,
     required this.map,
   })  : bounds = LatLngBounds(),
-        children = [],
+        children = <dynamic>[],
         parent = null;
 
   LatLng? get point {
-    var swPoint = map!.project(bounds.southWest);
-    var nePoint = map!.project(bounds.northEast);
+    CustomPoint<num> swPoint = map!.project(bounds.southWest);
+    CustomPoint<num> nePoint = map!.project(bounds.northEast);
     return map!.unproject((swPoint + nePoint) / 2);
   }
 
@@ -54,31 +54,30 @@ class MarkerClusterNode {
   void recalculateBounds() {
     bounds = LatLngBounds();
 
-    markers.forEach((marker) {
+    for (MarkerNode marker in markers) {
       bounds.extend(marker.point);
-    });
+    }
 
-    children.forEach((child) {
+    for (dynamic child in children) {
       if (child is MarkerClusterNode) {
         child.recalculateBounds();
       }
-    });
+    }
   }
 
-  void recursively(
-      int? zoomLevel, int disableClusteringAtZoom, Function(dynamic) fn) {
+  void recursively(int? zoomLevel, int disableClusteringAtZoom, Function(dynamic) fn) {
     if (zoom == zoomLevel && zoomLevel! <= disableClusteringAtZoom) {
       fn(this);
       return;
     }
 
-    children.forEach((child) {
+    for (dynamic child in children) {
       if (child is MarkerNode) {
         fn(child);
       }
       if (child is MarkerClusterNode) {
         child.recursively(zoomLevel, disableClusteringAtZoom, fn);
       }
-    });
+    }
   }
 }

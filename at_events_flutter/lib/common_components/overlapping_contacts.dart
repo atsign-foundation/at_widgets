@@ -29,24 +29,20 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
       },
       child: Container(
         height: (isExpanded) ? 300.toHeight : 55,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color(0xffF7F7FF),
+          color: const Color(0xffF7F7FF),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Stack(
-          children: [
+          children: <Widget>[
             Stack(
               children: List<Positioned>.generate(
-                (widget.selectedList!.length > 3)
-                    ? 3
-                    : widget.selectedList!.length,
-                (index) {
+                (widget.selectedList!.length > 3) ? 3 : widget.selectedList!.length,
+                (int index) {
                   Uint8List? image;
-                  if (widget.selectedList![index].tags != null &&
-                      widget.selectedList![index].tags!['image'] != null) {
-                    List<int> intList =
-                        widget.selectedList![index].tags!['image'].cast<int>();
+                  if (widget.selectedList![index].tags != null && widget.selectedList![index].tags!['image'] != null) {
+                    List<int> intList = widget.selectedList![index].tags!['image'].cast<int>();
                     image = Uint8List.fromList(intList);
                   }
                   return Positioned(
@@ -55,10 +51,9 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                     child: Container(
                       height: 28.toHeight,
                       width: 28.toHeight,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
                       child: (widget.selectedList![index].tags != null &&
-                              widget.selectedList![index].tags!['image'] !=
-                                  null)
+                              widget.selectedList![index].tags!['image'] != null)
                           ? CustomCircleAvatar(
                               memoryImage: image,
                               isMemoryImage: true,
@@ -73,25 +68,24 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
             ),
             Positioned(
               top: 10.toHeight,
-              left: 40 +
-                  double.parse((widget.selectedList!.length * 25).toString()),
+              left: 40 + double.parse((widget.selectedList!.length * 25).toString()),
               child: Row(
                 // mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   (widget.selectedList!.isEmpty)
                       ? Container()
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
+                          children: <Widget>[
                             Container(
                               width: 160.toWidth,
                               child: Row(
-                                children: [
+                                children: <Widget>[
                                   Container(
                                     width: 60.toWidth,
                                     child: Text(
-                                      '${widget.selectedList![0].atSign}',
+                                      widget.selectedList![0].atSign!,
                                       // style:
                                       // CustomTextStyles.secondaryRegular14,
                                       overflow: TextOverflow.ellipsis,
@@ -117,7 +111,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                         ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
+                    children: <Widget>[
                       SizedBox(
                         width: 10.toWidth,
                       ),
@@ -133,9 +127,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
               child: Container(
                 width: 20.toWidth,
                 child: Icon(
-                  (isExpanded)
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
+                  (isExpanded) ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                   size: 15.toFont,
                 ),
               ),
@@ -148,43 +140,34 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                       width: SizeConfig().screenWidth - 60.toWidth,
                       child: ListView.builder(
                         itemCount: widget.selectedList!.length,
-                        itemBuilder: (context, index) {
+                        itemBuilder: (BuildContext context, int index) {
                           Uint8List? image;
                           if (widget.selectedList![index].tags != null &&
-                              widget.selectedList![index].tags!['image'] !=
-                                  null) {
-                            List<int> intList = widget
-                                .selectedList![index].tags!['image']
-                                .cast<int>();
+                              widget.selectedList![index].tags!['image'] != null) {
+                            List<int> intList = widget.selectedList![index].tags!['image'].cast<int>();
                             image = Uint8List.fromList(intList);
                           }
                           return ContactListTile(
                             onlyRemoveMethod: true,
                             onTileTap: () {},
-                            isSelected: widget.selectedList!
-                                .contains(widget.selectedList![index]),
+                            isSelected: widget.selectedList!.contains(widget.selectedList![index]),
                             onRemove: () {
                               EventService().removeSelectedContact(index);
                               EventService().update();
                             },
                             name: widget.selectedList![index].tags != null &&
-                                    widget.selectedList![index].tags!['name'] !=
-                                        null
+                                    widget.selectedList![index].tags!['name'] != null
                                 ? widget.selectedList![index].tags!['name']
-                                : widget.selectedList![index].atSign!
-                                    .substring(1),
+                                : widget.selectedList![index].atSign!.substring(1),
                             atSign: widget.selectedList![index].atSign,
                             image: (widget.selectedList![index].tags != null &&
-                                    widget.selectedList![index]
-                                            .tags!['image'] !=
-                                        null)
+                                    widget.selectedList![index].tags!['image'] != null)
                                 ? CustomCircleAvatar(
                                     memoryImage: image,
                                     isMemoryImage: true,
                                   )
                                 : ContactInitial(
-                                    initials:
-                                        widget.selectedList![index].atSign,
+                                    initials: widget.selectedList![index].atSign,
                                   ),
                           );
                         },

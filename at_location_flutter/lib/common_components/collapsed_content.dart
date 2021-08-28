@@ -1,4 +1,5 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/home_screen_service.dart';
 import 'package:at_location_flutter/service/location_service.dart';
@@ -35,11 +36,11 @@ class _CollapsedContentState extends State<CollapsedContent> {
     super.initState();
     isSharing = widget.userListenerKeyword!.isSharing;
 
-    LocationService().atHybridUsersStream.listen((e) {
+    LocationService().atHybridUsersStream.listen((List<HybridModel?> e) {
       setState(() {
         locationAvailable = false;
       });
-      for (var i = 0; i < e.length; i++) {
+      for (int i = 0; i < e.length; i++) {
         if (e[i]!.displayName == widget.userListenerKeyword!.atsignCreator) {
           setState(() {
             locationAvailable = true;
@@ -61,9 +62,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
       widget.currentAtSign = '@' + widget.currentAtSign!;
     }
 
-    var amICreator =
+    bool amICreator =
         widget.userListenerKeyword!.atsignCreator == widget.currentAtSign;
-    var to = widget.userListenerKeyword!.to;
+    DateTime? to = widget.userListenerKeyword!.to;
     String time;
     if (to != null) {
       time =
@@ -74,19 +75,19 @@ class _CollapsedContentState extends State<CollapsedContent> {
 
     return Container(
         height: widget.expanded ? 431.toHeight : 205.toHeight,
-        padding: EdgeInsets.fromLTRB(15, 3, 15, 0),
+        padding: const EdgeInsets.fromLTRB(15, 3, 15, 0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
           color: Theme.of(context).brightness == Brightness.light
               ? AllColors().WHITE
               : AllColors().Black,
-          boxShadow: [
+          boxShadow: <BoxShadow>[
             BoxShadow(
               color: AllColors().DARK_GREY,
               blurRadius: 10.0,
               spreadRadius: 1.0,
-              offset: Offset(0.0, 0.0),
+              offset: const Offset(0.0, 0.0),
             )
           ],
         ),
@@ -94,34 +95,34 @@ class _CollapsedContentState extends State<CollapsedContent> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [
+            children: <Widget>[
               amICreator
                   ? DraggableSymbol()
-                  : SizedBox(
+                  : const SizedBox(
                       height: 10,
                     ),
-              SizedBox(
+              const SizedBox(
                 height: 3,
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                children: <Widget>[
                   Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         DisplayTile(
                             title: amICreator
-                                ? '${widget.userListenerKeyword!.receiver}'
-                                : '${widget.userListenerKeyword!.atsignCreator}',
+                                ? widget.userListenerKeyword!.receiver
+                                : widget.userListenerKeyword!.atsignCreator,
                             showName: true,
                             atsignCreator: amICreator
-                                ? '${widget.userListenerKeyword!.receiver}'
-                                : '${widget.userListenerKeyword!.atsignCreator}',
+                                ? widget.userListenerKeyword!.receiver
+                                : widget.userListenerKeyword!.atsignCreator,
                             subTitle: amICreator
-                                ? '${widget.userListenerKeyword!.receiver}'
-                                : '${widget.userListenerKeyword!.atsignCreator}'),
+                                ? widget.userListenerKeyword!.receiver
+                                : widget.userListenerKeyword!.atsignCreator),
                         Text(
                           amICreator
                               ? 'This user does not share their location'
@@ -137,7 +138,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                 'Sharing my location $time',
                                 style: CustomTextStyles().black12,
                               )
-                            : SizedBox()
+                            : const SizedBox()
                       ],
                     ),
                   ),
@@ -165,13 +166,13 @@ class _CollapsedContentState extends State<CollapsedContent> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Divider(),
+                        children: <Widget>[
+                          const Divider(),
                           amICreator
                               ? Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
-                                  children: [
+                                  children: <Widget>[
                                     Text(
                                       'Share my Location',
                                       style: CustomTextStyles().darkGrey16,
@@ -181,12 +182,12 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                         onChanged: (widget
                                                     .userListenerKeyword!.to ==
                                                 null)
-                                            ? (value) async =>
+                                            ? (bool value) async =>
                                                 await removePerson()
-                                            : (value) async {
+                                            : (bool value) async {
                                                 LoadingDialog().show();
                                                 try {
-                                                  late var result;
+                                                  late bool result;
                                                   if (widget
                                                       .userListenerKeyword!.key!
                                                       .contains(
@@ -232,14 +233,14 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                               })
                                   ],
                                 )
-                              : SizedBox(),
-                          amICreator ? Divider() : SizedBox(),
+                              : const SizedBox(),
+                          amICreator ? const Divider() : const SizedBox(),
                           amICreator
                               ? Expanded(
                                   child: InkWell(
                                     onTap: () async {
                                       try {
-                                        var result =
+                                        bool? result =
                                             await RequestLocationService()
                                                 .sendRequestLocationEvent(widget
                                                     .userListenerKeyword!
@@ -265,8 +266,8 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                     ),
                                   ),
                                 )
-                              : SizedBox(),
-                          (amICreator) ? Divider() : SizedBox(),
+                              : const SizedBox(),
+                          (amICreator) ? const Divider() : const SizedBox(),
                           (amICreator)
                               ? Expanded(
                                   child: InkWell(
@@ -277,11 +278,11 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                     ),
                                   ),
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                         ],
                       ),
                     )
-                  : SizedBox(
+                  : const SizedBox(
                       height: 2,
                     )
             ]));
@@ -291,7 +292,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
   removePerson() async {
     LoadingDialog().show();
     try {
-      late var result;
+      late bool result;
       if (widget.userListenerKeyword!.key!.contains('sharelocation')) {
         result = await SharingLocationService()
             .deleteKey(widget.userListenerKeyword!);
@@ -318,7 +319,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
 
   Widget participants(Function() onTap) {
     return Padding(
-      padding: EdgeInsets.only(left: 56),
+      padding: const EdgeInsets.only(left: 56),
       child: InkWell(
         onTap: onTap,
         child: Text(

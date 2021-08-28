@@ -6,7 +6,7 @@ class FloatingIcon extends StatelessWidget {
   final Color? bgColor, iconColor;
   final IconData? icon;
   final bool isTopLeft;
-  final Function? onPressed;
+  final VoidCallback? onPressed;
 
   FloatingIcon(
       {this.bgColor,
@@ -22,16 +22,16 @@ class FloatingIcon extends StatelessWidget {
       width: 50.toHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
-          bottomLeft: !isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
-          bottomRight: isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
+          bottomLeft: !isTopLeft ? const Radius.circular(10.0) : const Radius.circular(0),
+          bottomRight: isTopLeft ? const Radius.circular(10.0) : const Radius.circular(0),
         ),
         color: bgColor ?? AllColors().Black,
-        boxShadow: [
+        boxShadow: <BoxShadow>[
           BoxShadow(
             color: iconColor ?? AllColors().GREY,
             blurRadius: 2.0,
             spreadRadius: 2.0,
-            offset: Offset(0.0, 0.0),
+            offset: const Offset(0.0, 0.0),
           )
         ],
       ),
@@ -43,7 +43,7 @@ class FloatingIcon extends StatelessWidget {
             color: iconColor ?? AllColors().WHITE,
             size: 27.toFont,
           ),
-          onPressed: onPressed as void Function()? ??
+          onPressed: onPressed ??
               () => Scaffold.of(context).openEndDrawer()),
     );
   }

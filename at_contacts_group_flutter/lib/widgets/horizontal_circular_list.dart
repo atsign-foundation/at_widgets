@@ -29,7 +29,7 @@ class _HorizontalCircularListState extends State<HorizontalCircularList> {
     return StreamBuilder<List<GroupContactsModel?>>(
         initialData: _groupService.selectedGroupContacts,
         stream: _groupService.selectedContactsStream,
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<GroupContactsModel?>> snapshot) {
           // ignore: omit_local_variable_types
           List<GroupContactsModel?> selectedContacts = snapshot.data!;
 
@@ -38,7 +38,7 @@ class _HorizontalCircularListState extends State<HorizontalCircularList> {
             child: ListView.builder(
               itemCount: selectedContacts.length,
               scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
+              itemBuilder: (BuildContext context, int index) {
                 return CircularContacts(
                   groupContact: selectedContacts[index],
                   onCrossPressed: () {

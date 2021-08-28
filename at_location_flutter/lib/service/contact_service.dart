@@ -4,9 +4,9 @@ import 'package:at_contact/at_contact.dart';
 import 'key_stream_service.dart';
 
 Future<AtContact> getAtSignDetails(String? atSign) async {
-  var atContact = getCachedContactDetail(atSign);
+  AtContact? atContact = getCachedContactDetail(atSign);
   if (atContact == null) {
-    var contactDetails = await getContactDetails(atSign);
+    Map<String, dynamic> contactDetails = await getContactDetails(atSign);
     atContact = AtContact(
       atSign: atSign,
       tags: contactDetails,
@@ -20,29 +20,27 @@ AtContact? getCachedContactDetail(String? atsign) {
     return KeyStreamService().loggedInUserDetails;
   }
   if (KeyStreamService().contactList.isNotEmpty) {
-    var index = KeyStreamService()
-        .contactList
-        .indexWhere((element) => element.atSign == atsign);
+    int index = KeyStreamService().contactList.indexWhere((AtContact element) => element.atSign == atsign);
     if (index > -1) return KeyStreamService().contactList[index];
   }
   return null;
 }
 
-Future<Map<String, dynamic>> getContactDetails(atSign) async {
-  var contactDetails = <String, dynamic>{};
+Future<Map<String, dynamic>> getContactDetails(String? atSign) async {
+  Map<String, dynamic> contactDetails = <String, dynamic>{};
 
   if (KeyStreamService().atClientInstance == null || atSign == null) {
     return contactDetails;
   } else if (!atSign.contains('@')) {
     atSign = '@' + atSign;
   }
-  var metadata = Metadata();
+  Metadata metadata = Metadata();
   metadata.isPublic = true;
   metadata.namespaceAware = false;
-  var key = AtKey();
+  AtKey key = AtKey();
   key.sharedBy = atSign;
   key.metadata = metadata;
-  var contactFields = [
+  List<String> contactFields = <String>[
     'firstname.persona',
     'lastname.persona',
     'image.persona',
@@ -51,19 +49,19 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
   try {
     // firstname
     key.key = contactFields[0];
-    var result = await KeyStreamService().atClientInstance!.get(key).catchError(
-        // ignore: return_of_invalid_type_from_catch_error
-        (e) => print('error in get ${e.errorCode} ${e.errorMessage}'));
-    var firstname = result.value;
+    AtValue result = await KeyStreamService().atClientInstance!.get(key).catchError((dynamic e) {
+      print('error in get ${e.errorCode} ${e.errorMessage}');
+    });
+    String firstname = result.value;
 
     // lastname
     key.key = contactFields[1];
     result = await KeyStreamService().atClientInstance!.get(key);
-    var lastname = result.value;
+    String lastname = result.value;
 
     // construct name
-    var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
-    if (name.length == 0) {
+    String name = ((firstname) + ' ' + (lastname)).trim();
+    if (name.isEmpty) {
       name = atSign.substring(1);
     }
 
@@ -71,7 +69,7 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
     key.metadata!.isBinary = true;
     key.key = contactFields[2];
     result = await KeyStreamService().atClientInstance!.get(key);
-    var image = result.value;
+    String image = result.value;
     contactDetails['name'] = name;
     contactDetails['image'] = image;
   } catch (e) {

@@ -52,17 +52,17 @@ class _QrScannerWidgetState extends State<QrScannerWidget> {
     if (status.isGranted) {
       return true;
     }
-    return (await <Permission>[Permission.camera].request())[0] ==
-        PermissionStatus.granted;
+    return (await <Permission>[Permission.camera].request())[0] == PermissionStatus.granted;
   }
 
-  Future<bool> onScan(
-      String data, List<Offset> offsets, BuildContext context) async {
+  Future<bool> onScan(String data, List<Offset> offsets, BuildContext context) async {
     late Future<bool> result;
 
     await _controller!.stopCamera();
-    String authenticateMessage = await onboardingService.authenticate(data);
-    if (authenticateMessage == ResponseStatus.AUTH_SUCCESS) return true;
+    dynamic authenticateMessage = await onboardingService.authenticate(data);
+    if (authenticateMessage == ResponseStatus.AUTH_SUCCESS) {
+      return true;
+    }
 
     // try again
     await _controller!.startCamera((String data, List<Offset> offsets) {

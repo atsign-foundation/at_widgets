@@ -9,16 +9,16 @@ class AtFollowServices {
   static final AtFollowServices _instance = AtFollowServices._();
   factory AtFollowServices() => _instance;
   bool isDataFetched = false;
-  var _connectionService = ConnectionsService();
-  ConnectionProvider _connectionProvider = ConnectionProvider();
+  final ConnectionsService _connectionService = ConnectionsService();
+  final ConnectionProvider _connectionProvider = ConnectionProvider();
 
-  Future initializeFollowService(
+  Future<void> initializeFollowService(
       AtClientService atClientserviceInstance) async {
     _connectionService.init(atClientserviceInstance.atClient!.currentAtSign!);
     _connectionProvider.init(atClientserviceInstance.atClient!.currentAtSign!);
     SDKService().setClientService = atClientserviceInstance;
     await _connectionService.getAtsignsList(isInit: true);
-    _connectionService.startMonitor();
+    await _connectionService.startMonitor();
   }
 
   ConnectionsService get connectionService => _connectionService;
@@ -33,15 +33,15 @@ class AtFollowServices {
     return _connectionService.following;
   }
 
-  Future unfollow(String atsign) async {
-    return await _connectionProvider.unfollow(atsign);
+  Future<dynamic> unfollow(String atsign) async {
+    return _connectionProvider.unfollow(atsign);
   }
 
-  Future follow(String atsign) async {
-    return await _connectionProvider.follow(atsign);
+  Future<dynamic> follow(String atsign) async {
+    return _connectionProvider.follow(atsign);
   }
 
   Future<bool> removeFollower(String atsign) async {
-    return await _connectionService.removeFollower(atsign);
+    return _connectionService.removeFollower(atsign);
   }
 }

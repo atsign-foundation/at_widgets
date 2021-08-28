@@ -79,9 +79,8 @@ class AtService {
   // startMonitor needs to be called at the beginning of session
   Future<bool> startMonitor() async {
     _atsign = await getAtSign();
-    String privateKey = await (getPrivateKey(_atsign!) as FutureOr<String>);
-    // ignore: await_only_futures
-    await atClientInstance!.startMonitor(privateKey, (response) {
+    String? privateKey = await getPrivateKey(_atsign!);
+    await atClientInstance!.startMonitor(privateKey!, (response) {
       acceptStream(response);
     });
     print("Monitor started");

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CircularContacts extends StatelessWidget {
-  final Function? onCrossPressed;
+  final VoidCallback? onCrossPressed;
 
   final AtContact? contact;
 
@@ -30,10 +30,10 @@ class CircularContacts extends StatelessWidget {
           EdgeInsets.symmetric(vertical: 9.toHeight, horizontal: 20.toWidth),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
+        children: <Widget>[
           Stack(
             alignment: AlignmentDirectional.topCenter,
-            children: [
+            children: <Widget>[
               Container(
                 height: 50.toHeight,
                 width: 50.toHeight,
@@ -52,11 +52,11 @@ class CircularContacts extends StatelessWidget {
                 right: 0,
                 bottom: 0,
                 child: GestureDetector(
-                  onTap: onCrossPressed as void Function()?,
+                  onTap: onCrossPressed,
                   child: Container(
                     height: 12.toHeight,
                     width: 12.toHeight,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Colors.black, shape: BoxShape.circle),
                     child: Icon(
                       Icons.close,
