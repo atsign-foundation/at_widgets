@@ -3,11 +3,11 @@ import 'package:at_commons/at_commons.dart';
 
 class SDKService {
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
-  Map<String, AtClientService>? atClientServiceMap ;
+  Map<String, AtClientService>? atClientServiceMap = Map<String, AtClientService>();
   List<String>? atSignsList ;
   String? currentAtsign;
   String? lastOnboardedAtsign;
-  Map<String, bool>? monitorConnectionMap ;
+  Map<String, bool>? monitorConnectionMap = Map<String, bool>();
 
   static final SDKService _singleton = SDKService._internal();
   SDKService._internal();
@@ -81,7 +81,7 @@ class SDKService {
 
 
   ///Resets [atsigns] list from device storage.
-  Future<void> resetAtsigns(List<dynamic> atsigns) async {
+  Future<void> resetAtsigns(List<String> atsigns) async {
     for (String atsign in atsigns) {
       await _keyChainManager.resetAtSignFromKeychain(atsign);
       atClientServiceMap!.remove(atsign);

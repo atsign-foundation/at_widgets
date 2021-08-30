@@ -55,8 +55,8 @@ class _CustomResetButtonState extends State<CustomResetButton> {
     bool isSelectAtsign = false;
     bool isSelectAll = false;
     List<String>? atsignsList = await SDKService().getAtsignList();
-    Map<String?,bool?>? atsignMap ;
-    if(atsignsList != null && atsignMap != null){
+    Map<String,bool?> atsignMap = Map<String,bool>();
+    if(atsignsList != null){
       for (String atsign in atsignsList) {
         atsignMap[atsign] = false;
       }
@@ -81,7 +81,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                     )
                   ],
                 ),
-                content: atsignsList == null && atsignMap == null
+                content: atsignsList == null
                     ? Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                   Text(Strings.noAtsignToReset,
                       style: TextStyle(fontSize: 15)),
@@ -119,7 +119,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                             )),
                         // trailing: Checkbox,
                       ),
-                      for (String atsign in atsignsList!)
+                      for (String atsign in atsignsList)
                         CheckboxListTile(
                           onChanged: (bool? value) {
                             atsignMap != null ? atsignMap[atsign] = value : true;
@@ -150,19 +150,18 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                       Row(children:<Widget> [
                         TextButton(
                           onPressed: () {
-                            Map<String?,bool?>? tempAtsignMap ;
-                            tempAtsignMap != null ? tempAtsignMap.addAll(atsignMap!): true;
-                            tempAtsignMap != null ? tempAtsignMap.removeWhere(
-                                    (String? key, bool? value) => value == false) : true;
-                            if(tempAtsignMap != null){
-                              if (tempAtsignMap.keys.toList() != null) {
+                            Map<String,bool?> tempAtsignMap = Map<String,bool>();
+                            tempAtsignMap.addAll(atsignMap);
+                            tempAtsignMap.removeWhere(
+                                    (String? key, bool? value) => value == false);
+                              if (tempAtsignMap.keys.toList().isEmpty) {
                               isSelectAtsign = true;
                               stateSet(() {});
                             } else {
                               isSelectAtsign = false;
                               _resetDevice(tempAtsignMap.keys.toList());
                             }
-                          }},
+                          },
                           child: Text(AppConstants.removeButton,
                               style: TextStyle(
                                   fontSize: 15,
@@ -184,7 +183,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
           // );
         });
   }
-  _resetDevice(List<dynamic> checkedAtsigns) async {
+  _resetDevice(List<String> checkedAtsigns) async {
     Navigator.of(context).pop();
     setState(() {
       widget.loading = true;
