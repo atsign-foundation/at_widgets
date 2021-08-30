@@ -1,8 +1,5 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -99,7 +96,10 @@ class _GroupContactViewState extends State<GroupContactView> {
         //     ? true
         //     : false,
         showTrailingIcon: true,
-        trailingIcon: const Icon(Icons.add),
+        trailingIcon: const Icon(
+          Icons.add,
+          color: Colors.black,
+        ),
         onTrailingIconPressed: () {
           showDialog(
             context: context,

@@ -13,3 +13,5 @@
 - Fix for setstate issue in init
 ## 2.0.3
 - Support for namespace migration changes
+## 2.0.4
+- ConnectionsService and ConnectionProvider instance exposed to app side
