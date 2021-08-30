@@ -7,7 +7,6 @@ import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_logger.dart';
-
 class SDKService {
   static final SDKService _singleton = SDKService._internal();
 
@@ -26,30 +25,30 @@ class SDKService {
 
   set setClientService(AtClientService service) {
     this._atClientServiceInstance = service;
-    this._atsign = _atClientServiceInstance.atClient!.currentAtSign;
+    this._atsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     Strings.rootdomain =
-        _atClientServiceInstance.atClient!.preference!.rootDomain;
+        AtClientManager.getInstance().atClient.getPreferences()!.rootDomain;
   }
 
   get atsign => this._atsign;
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await _atClientServiceInstance.getPkamPrivateKey(atsign).timeout(
+    return await KeychainUtil.getPkamPrivateKey(atsign).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
         onTimeout: () => _onTimeOut());
   }
 
   ///Returns `true` on deleting [atKey].
   Future<bool> delete(AtKey atKey) async {
-    return await _atClientServiceInstance.atClient!.delete(atKey).timeout(
+    return await AtClientManager.getInstance().atClient.delete(atKey).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
         onTimeout: () => _onTimeOut());
   }
 
   ///Returns `true` on storing/updating [atKey].
   Future<bool> put(AtKey atKey, String? value) async {
-    return await _atClientServiceInstance.atClient!.put(atKey, value).timeout(
+    return await AtClientManager.getInstance().atClient.put(atKey, value).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
         onTimeout: () => _onTimeOut());
   }
@@ -63,7 +62,7 @@ class SDKService {
       fromDateTime = DateTime.parse(fromDate).millisecondsSinceEpoch;
       fromDate = fromDate.split(' ')[0];
     }
-    var response = await _atClientServiceInstance.atClient!.notifyList(
+    var response = await AtClientManager.getInstance().atClient.notifyList(
         regex: ('${AppConstants.containsFollowing}|${AppConstants.containsFollowers}'),
         fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
@@ -91,7 +90,7 @@ class SDKService {
 
   ///Returns `AtFollowsValue` for [atKey].
   Future<AtFollowsValue> get(AtKey atkey) async {
-    var response = await _atClientServiceInstance.atClient!.get(atkey).timeout(
+    var response = await AtClientManager.getInstance().atClient.get(atkey).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
         onTimeout: () => _onTimeOut());
     AtFollowsValue val = AtFollowsValue();
@@ -105,16 +104,16 @@ class SDKService {
   ///Returns `true` on notifying [key] with [value], [operation].
   Future<bool> notify(AtKey key, String value, OperationEnum operation,
       Function onDone, Function onError) async {
-    return await _atClientServiceInstance.atClient!
+    return await AtClientManager.getInstance().atClient
         .notify(key, value, operation,
-            notifier: _atClientServiceInstance.atClient!.preference!.namespace)
+            notifier: AtClientManager.getInstance().atClient.getPreferences()!.namespace)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
   }
 
   ///Returns `AtFollowsValue` after scan with [regex], fetching data for that key.
   Future<AtFollowsValue> scanAndGet(String regex) async {
-    var scanKey = await _atClientServiceInstance.atClient!
+    var scanKey = await AtClientManager.getInstance().atClient
         .getAtKeys(regex: regex)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
@@ -137,21 +136,6 @@ class SDKService {
     return value;
   }
 
-  ///Returns `true` on starting monitor and passes [callback].
-  Future<bool> startMonitor(Function callback) async {
-    if (!monitorConnectionMap.containsKey(_atsign)) {
-      var privateKey =
-          await _atClientServiceInstance.getPkamPrivateKey(_atsign!);
-      await _atClientServiceInstance.atClient!.startMonitor(
-        privateKey!,
-        callback,
-      );
-      monitorConnectionMap.putIfAbsent(_atsign, () => true);
-      _logger.info('Monitor Started for $_atsign!');
-    }
-    return true;
-  }
-
   ///Returns `AtSignStatus` for [atsign].
   Future<AtSignStatus?> checkAtSignStatus(String atsign) async {
     var atStatusImpl = AtStatusImpl(rootUrl: Strings.rootdomain);
@@ -161,9 +145,9 @@ class SDKService {
 
   ///Performs sync for current @sign if syncStrategy is [SyncStrategy.ONDEMAND].
   sync() async {
-    if (_atClientServiceInstance.atClient!.preference!.syncStrategy ==
+    if (AtClientManager.getInstance().atClient.getPreferences()!.syncStrategy ==
         SyncStrategy.ONDEMAND)
-      await _atClientServiceInstance.atClient!.getSyncManager()!.sync();
+      await AtClientManager.getInstance().syncService.sync();
   }
 
   ///Throws [ResponseTimeOutException].
