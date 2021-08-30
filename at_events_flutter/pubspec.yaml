@@ -28,6 +28,11 @@ dependencies:
   pedantic: ^1.11.0
 
 dependency_overrides:
+  file_picker: ^4.0.0
+  at_client:
+    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client
+  at_client_mobile:
+    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client_mobile
 
 dev_dependencies:
   flutter_test:

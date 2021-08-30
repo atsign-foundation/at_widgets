@@ -19,7 +19,10 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
 
   eventListenerKeyword.group!.members!.forEach((groupMember) {
     if (groupMember.atSign ==
-        AtEventNotificationListener().atClientInstance!.currentAtSign) {
+        AtEventNotificationListener()
+            .atClientManager
+            .atClient
+            .getCurrentAtSign()) {
       isExited = groupMember.tags!['isExited'];
     }
   });
@@ -87,8 +90,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                                     .navKey!
                                     .currentContext!,
                                 CreateEvent(
-                                  AtEventNotificationListener()
-                                      .atClientInstance,
+                                  AtEventNotificationListener().atClientManager,
                                   isUpdate: true,
                                   eventData: eventListenerKeyword,
                                   onEventSaved: (event) {},

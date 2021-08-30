@@ -279,7 +279,7 @@ class EventLocationShare {
             _eventNotificationModel.atsignCreator);
 
         try {
-          await AtEventNotificationListener().atClientInstance!.put(
+          await AtEventNotificationListener().atClientManager.atClient.put(
               atKey,
               EventMemberLocation.convertLocationNotificationToJson(
                 _data,

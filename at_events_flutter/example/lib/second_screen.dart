@@ -26,8 +26,7 @@ class _SecondScreenState extends State<SecondScreen> {
     super.initState();
 
     try {
-      activeAtSign =
-          clientSdkService.atClientServiceInstance!.atClient!.currentAtSign;
+      activeAtSign = clientSdkService.currentAtsign;
       initializeEventService();
       isAuthenticated = true;
     } catch (e) {
@@ -78,8 +77,8 @@ class _SecondScreenState extends State<SecondScreen> {
           TextButton(
             onPressed: () {
               bottomSheet(
-                  CreateEvent(
-                      clientSdkService.atClientServiceInstance!.atClient),
+                  CreateEvent(clientSdkService
+                      .atClientServiceInstance!.atClientManager),
                   MediaQuery.of(context).size.height * 0.9);
             },
             child: Container(
@@ -138,7 +137,8 @@ class _SecondScreenState extends State<SecondScreen> {
 
   void initializeEventService() {
     initialiseEventService(
-        clientSdkService.atClientServiceInstance!.atClient!, NavService.navKey,
+        clientSdkService.atClientServiceInstance!.atClientManager,
+        NavService.navKey,
         mapKey: '',
         apiKey: '',
         rootDomain: MixedConstants.ROOT_DOMAIN,

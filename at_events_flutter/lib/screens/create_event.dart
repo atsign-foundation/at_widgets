@@ -20,12 +20,12 @@ import 'package:at_contact/at_contact.dart';
 import '../at_events_flutter.dart';
 
 class CreateEvent extends StatefulWidget {
-  final AtClientImpl? atClientInstance;
+  final AtClientManager atClientManager;
   final EventNotificationModel? eventData;
   final ValueChanged<EventNotificationModel>? onEventSaved;
   final List<EventNotificationModel>? createdEvents;
   final isUpdate;
-  CreateEvent(this.atClientInstance,
+  CreateEvent(this.atClientManager,
       {this.isUpdate = false,
       this.eventData,
       this.onEventSaved,
@@ -44,7 +44,7 @@ class _CreateEventState extends State<CreateEvent> {
     super.initState();
     isLoading = false;
     EventService().init(
-        widget.atClientInstance,
+        widget.atClientManager,
         // ignore: prefer_if_null_operators
         widget.isUpdate != null ? widget.isUpdate : false,
         // ignore: prefer_if_null_operators
@@ -326,7 +326,7 @@ class _CreateEventState extends State<CreateEvent> {
                             return Center(
                               child: ErrorScreen(
                                 onPressed: EventService().init(
-                                    widget.atClientInstance,
+                                    widget.atClientManager,
                                     // ignore: prefer_if_null_operators
                                     widget.isUpdate != null
                                         ? widget.isUpdate

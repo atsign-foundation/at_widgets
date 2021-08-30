@@ -23,7 +23,7 @@ class EventService {
   bool isEventUpdate = false;
 
   EventNotificationModel? eventNotificationModel;
-  AtClientImpl? atClientInstance;
+  late AtClientManager atClientManager;
   List<AtContact>? selectedContacts;
   List<String?> selectedContactsAtSigns = [];
   List<EventNotificationModel>? createdEvents;
@@ -38,7 +38,7 @@ class EventService {
       _atEventNotificationController.sink;
 
   // ignore: always_declare_return_types
-  init(AtClientImpl? _atClientInstance, bool isUpdate,
+  init(AtClientManager atClientManager, bool isUpdate,
       EventNotificationModel? eventData) {
     if (eventData != null) {
       EventService().eventNotificationModel = EventNotificationModel.fromJson(
@@ -55,7 +55,7 @@ class EventService {
     }
     isEventUpdate = isUpdate;
     print('isEventUpdate:$isEventUpdate');
-    atClientInstance = _atClientInstance;
+    this.atClientManager = atClientManager;
     Future.delayed(Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });
@@ -96,7 +96,7 @@ class EventService {
 
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
-      var result = await atClientInstance!
+      var result = await atClientManager.atClient
           .put(atKey, eventData, isDedicated: MixedConstants.isDedicated);
       atKey.sharedWith = jsonEncode(allAtsignList);
       await SyncSecondary().callSyncSecondary(
@@ -129,7 +129,8 @@ class EventService {
 
       eventNotification.key =
           'createevent-${DateTime.now().microsecondsSinceEpoch}';
-      eventNotification.atsignCreator = atClientInstance!.currentAtSign;
+      eventNotification.atsignCreator =
+          atClientManager.atClient.getCurrentAtSign();
       var notification = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
 
@@ -142,7 +143,7 @@ class EventService {
         ..key = eventNotification.key
         ..sharedBy = eventNotification.atsignCreator;
 
-      var putResult = await atClientInstance!.put(atKey, notification,
+      var putResult = await atClientManager.atClient.put(atKey, notification,
           isDedicated:
               true); // creating a key and saving it for creator without adding any receiver atsign
 
