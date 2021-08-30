@@ -299,7 +299,7 @@ monitorCallBack(var response) {
   response = response.toString().replaceAll('notification:', '').trim();
   var notification = AtNotification.fromJson(jsonDecode(response));
   print(
-      'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.fromAtSign} to:${notification.toAtSign}');
+      'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.from} to:${notification.to}');
 }
 
 AtClientPreference getAtSignPreference(String atsign) {
