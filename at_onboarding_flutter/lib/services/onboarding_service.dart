@@ -137,21 +137,21 @@ class OnboardingService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return KeyChainUtil.getPkamPrivateKey(atsign);
+    return KeychainUtil.getPkamPrivateKey(atsign);
   }
 
   ///Fetches publickey for [atsign] from device keychain.
   Future<String?> getPublicKey(String atsign) async {
-    return KeyChainUtil.getPkamPublicKey(atsign);
+    return KeychainUtil.getPkamPublicKey(atsign);
   }
 
   Future<String?> getAESKey(String atsign) async {
-    return KeyChainUtil.getAESKey(atsign);
+    return KeychainUtil.getAESKey(atsign);
   }
 
   Future<Map<String, String?>> getEncryptedKeys(String atsign) async {
     Map<String, String?> result =
-        await KeyChainUtil.getEncryptedKeys(atsign);
+        await KeychainUtil.getEncryptedKeys(atsign);
     result[atsign] = await getAESKey(atsign);
     return result;
   }
