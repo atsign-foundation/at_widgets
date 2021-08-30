@@ -34,7 +34,7 @@ class SDKService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await KeyChainUtil.getPkamPrivateKey(atsign).timeout(
+    return await KeychainUtil.getPkamPrivateKey(atsign).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
         onTimeout: () => _onTimeOut());
   }
