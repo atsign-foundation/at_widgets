@@ -1,4 +1,7 @@
 import 'dart:convert';
+
+import 'package:at_client/src/service/notification_service.dart';
+import 'package:at_client/src/service/notification_service_impl.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
@@ -7,6 +10,7 @@ import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_logger.dart';
+
 class SDKService {
   static final SDKService _singleton = SDKService._internal();
 
@@ -104,11 +108,13 @@ class SDKService {
   ///Returns `true` on notifying [key] with [value], [operation].
   Future<bool> notify(AtKey key, String value, OperationEnum operation,
       Function onDone, Function onError) async {
-    return await AtClientManager.getInstance().atClient
-        .notify(key, value, operation,
-            notifier: AtClientManager.getInstance().atClient.getPreferences()!.namespace)
-        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
+    var notificationResponse = await AtClientManager.getInstance()
+        .notificationService
+        .notify(NotificationParams.forUpdate(key, value: value)).timeout(
+        Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
+
+    return notificationResponse.notificationStatusEnum == NotificationStatusEnum.delivered;
   }
 
   ///Returns `AtFollowsValue` after scan with [regex], fetching data for that key.
