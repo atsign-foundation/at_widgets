@@ -14,8 +14,8 @@ class AtFollowServices {
 
   Future<void> initializeFollowService(
       AtClientService atClientserviceInstance) async {
-    _connectionService.init(atClientserviceInstance.atClient!.currentAtSign!);
-    _connectionProvider.init(atClientserviceInstance.atClient!.currentAtSign!);
+    _connectionService.init(AtClientManager.getInstance().atClient.getCurrentAtSign()!);
+    _connectionProvider.init(AtClientManager.getInstance().atClient.getCurrentAtSign()!);
     SDKService().setClientService = atClientserviceInstance;
     await _connectionService.getAtsignsList(isInit: true);
     await _connectionService.startMonitor();

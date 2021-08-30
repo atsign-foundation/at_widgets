@@ -69,14 +69,6 @@ class OnboardingService {
     return service;
   }
 
-  AtClientImpl? _getAtClientForAtsign({String? atsign}) {
-    atsign ??= _atsign;
-    if (atClientServiceMap.containsKey(atsign)) {
-      return atClientServiceMap[atsign]!.atClient;
-    }
-    return null;
-  }
-
   ///Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
     return _keyChainManager.getAtSign();
@@ -90,7 +82,7 @@ class OnboardingService {
         atClientPreference: _atClientPreference, atsign: _atsign);
     _atsign ??= await getAtSign();
     atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
-    await _sync();
+    await _sync(_atsign);
     return result;
   }
 
@@ -129,7 +121,7 @@ class OnboardingService {
         _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
         c.complete(ResponseStatus.AUTH_SUCCESS);
-        await _sync();
+        await _sync(_atsign);
       });
     } catch (e) {
       _logger.severe('error in authenticating =>  ${e.toString()}');
@@ -145,21 +137,21 @@ class OnboardingService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return atClientServiceMap[atsign]!.getPkamPrivateKey(atsign);
+    return KeychainUtil.getPkamPrivateKey(atsign);
   }
 
   ///Fetches publickey for [atsign] from device keychain.
   Future<String?> getPublicKey(String atsign) async {
-    return atClientServiceMap[atsign]!.getPkamPublicKey(atsign);
+    return KeychainUtil.getPkamPublicKey(atsign);
   }
 
   Future<String?> getAESKey(String atsign) async {
-    return atClientServiceMap[atsign]!.getAESKey(atsign);
+    return KeychainUtil.getAESKey(atsign);
   }
 
   Future<Map<String, String?>> getEncryptedKeys(String atsign) async {
     Map<String, String?> result =
-        await atClientServiceMap[atsign]!.getEncryptedKeys(atsign);
+        await KeychainUtil.getEncryptedKeys(atsign);
     result[atsign] = await getAESKey(atsign);
     return result;
   }
@@ -216,9 +208,12 @@ class OnboardingService {
     return status.status();
   }
 
-  Future<void> _sync() async {
+  Future<void> _sync(String? atSign) async {
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
-      await _getAtClientForAtsign()!.getSyncManager()!.sync();
+      await _getClientServiceForAtsign(atSign)!
+          .atClientManager
+          .syncService
+          .sync();
     }
   }
 }

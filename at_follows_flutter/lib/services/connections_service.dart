@@ -9,6 +9,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:at_lookup/at_lookup.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
 class ConnectionsService {
   static final ConnectionsService _singleton = ConnectionsService._internal();
@@ -429,15 +430,14 @@ class ConnectionsService {
     return atsign;
   }
 
-  Future<bool> startMonitor() async {
-    bool result = await _sdkService.startMonitor(acceptStream);
-    if (result) {
-      isMonitorStarted = true;
-      return true;
-    }
-    return false;
+  bool startMonitor() {
+    AtClientManager.getInstance().notificationService.subscribe().listen((notification) {
+      acceptStream(notification);
+    });
+    return true;
   }
 
+  //#TODO change this implementation when testing
   Future<void> acceptStream(String? response) async {
     if (response == null) {
       return;

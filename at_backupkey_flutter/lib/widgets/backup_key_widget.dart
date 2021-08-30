@@ -13,7 +13,6 @@ import 'package:at_utils/at_logger.dart';
 
 class BackupKeyWidget extends StatelessWidget {
   final AtSignLogger _logger = AtSignLogger('BackUp Key Widget');
-  final BackUpKeyService _backupKeyService = BackUpKeyService();
 
   ///[required] to provide backup keys for `atsign` to save.
   final String atsign;
@@ -56,7 +55,6 @@ class BackupKeyWidget extends StatelessWidget {
       this.buttonHeight,
       this.buttonColor,
       this.iconSize}) {
-    _backupKeyService.atClientService = atClientService;
   }
 
   @override
@@ -171,7 +169,8 @@ class BackupKeyWidget extends StatelessWidget {
   Future<bool> _onBackup(BuildContext context) async {
     Size _size = MediaQuery.of(context).size;
     try {
-      Map<String, String> aesEncryptedKeys = await _backupKeyService.getEncryptedKeys(atsign);
+      Map<String, String> aesEncryptedKeys = await BackUpKeyService.getEncryptedKeys(atsign);
+
       if (aesEncryptedKeys.isEmpty) {
         return false;
       }

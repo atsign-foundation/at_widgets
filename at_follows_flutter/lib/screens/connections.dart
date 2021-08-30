@@ -59,9 +59,11 @@ class _ConnectionsState extends State<Connections> {
     Strings.directoryUrl = Strings.rootdomain == 'root.atsign.org'
         ? 'https://atsign.directory/'
         : 'https://directory.atsign.wtf/';
-    _connectionService.startMonitor().then((bool value) => setState(() {
-          _formConnectionTabs(2);
-        }));
+    if (_connectionService.startMonitor()) {
+      setState(() {
+        _formConnectionTabs(2);
+      });
+    }
 
     _connectionService.followerAtsign = widget.followerAtsignTitle;
     _connectionService.followAtsign = widget.followAtsignTitle;
