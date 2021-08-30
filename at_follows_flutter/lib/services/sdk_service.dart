@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:at_client/src/service/notification_service.dart';
-import 'package:at_client/src/service/notification_service_impl.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
