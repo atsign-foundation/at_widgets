@@ -1,3 +1,6 @@
+## 2.0.2
+- borderRadius option added in CustomButton
+
 ## 2.0.1
 - Updated description, repository link
 - More options in CustomInputField

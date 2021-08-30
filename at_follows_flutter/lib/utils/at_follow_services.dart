@@ -17,9 +17,13 @@ class AtFollowServices {
     _connectionService.init(atClientserviceInstance.atClient!.currentAtSign!);
     _connectionProvider.init(atClientserviceInstance.atClient!.currentAtSign!);
     SDKService().setClientService = atClientserviceInstance;
-    await _connectionService.getAtsignsList();
+    await _connectionService.getAtsignsList(isInit: true);
     _connectionService.startMonitor();
   }
+
+  ConnectionsService get connectionService => _connectionService;
+
+  ConnectionProvider get connectionProvider => _connectionProvider;
 
   AtFollowsList? getFollowersList() {
     return _connectionService.followers;

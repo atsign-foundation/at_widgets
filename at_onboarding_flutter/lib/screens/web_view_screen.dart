@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
-import 'package:at_onboarding_flutter/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -28,23 +27,21 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(
-            title: Text(widget.title ??'FAQ',style: TextStyle(color: Colors.white),),
-            elevation: 1.0,
-            centerTitle: true,
-            backgroundColor: ColorConstants.appColor,
-          ),
-//      CustomAppBar(
-//        showBackButton: true,
-//        title: widget.title,
-//      ),
+      appBar: AppBar(
+        title: Text(
+          widget.title ?? 'FAQ',
+          style: const TextStyle(color: Colors.white),
+        ),
+        elevation: 1.0,
+        centerTitle: true,
+        backgroundColor: ColorConstants.appColor,
+      ),
       body: Stack(
-        children: [
+        children: <Widget>[
           WebView(
             initialUrl: widget.url,
             javascriptMode: JavascriptMode.unrestricted,
-            onPageFinished: (value) {
+            onPageFinished: (String value) {
               setState(() {
                 isLoading = false;
               });
@@ -57,7 +54,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     ColorConstants.appColor,
                   )),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );
