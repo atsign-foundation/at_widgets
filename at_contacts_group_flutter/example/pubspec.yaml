@@ -22,13 +22,43 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
-  at_onboarding_flutter: ^2.1.1
+  # at_onboarding_flutter: ^2.1.1
+  at_onboarding_flutter:
+    path: ../../at_onboarding_flutter
   at_contacts_flutter: ^2.0.3
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  at_contacts_flutter:
+    path: ../../at_contacts_flutter
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_lookup
+      ref: trunk
+  at_backupkey_flutter:
+    path: ../../at_backupkey_flutter
+  at_client_mobile:
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile
+    # git:
+    #   url: https://github.com/atsign-foundation/at_client_sdk.git
+    #   path: at_client_mobile
+    #   ref: trunk
+  at_client:
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
+    # git:
+    #   url: https://github.com/atsign-foundation/at_client_sdk.git
+    #   path: at_client
+    #   ref: trunk
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_commons
+      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
