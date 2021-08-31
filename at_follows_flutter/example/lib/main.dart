@@ -115,7 +115,7 @@ class _MyAppState extends State<MyApp> {
           ctxt,
           MaterialPageRoute(
               builder: (context) => Connections(
-                  atClientserviceInstance: atService.atClientServiceInstance,
+                  atClientserviceInstance: atService.atClientServiceInstance!,
                   appColor: Colors.blue)));
     } catch (e) {
       print('Fetching follows throws $e exception');
