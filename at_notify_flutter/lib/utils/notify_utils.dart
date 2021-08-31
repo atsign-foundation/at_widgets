@@ -28,7 +28,7 @@ notifyForUpdate(
   );
 }
 
-/// Notifyfor Delete
+/// Notify for Delete
 notifyForDelete(
     BuildContext context,
     String? atSign,

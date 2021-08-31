@@ -25,7 +25,6 @@ class NotifyService {
   late AtClientManager atClientManager;
   late AtClient atClient;
 
-  // late AtClientImpl atClientInstance;
   String? rootDomain;
   int? rootPort;
   String? currentAtSign;
@@ -69,21 +68,6 @@ class NotifyService {
     });
   }
 
-  // startMonitor needs to be called at the beginning of session
-  // called again if outbound connection is dropped
-  // Future<bool> startMonitor() async {
-  //   var privateKey = await getPrivateKey(currentAtSign!);
-  //   await atClient.startMonitor(privateKey, _notificationCallback);
-  //   print('Monitor started');
-  //   return true;
-  // }
-  //
-  // ///Fetches privatekey for [atsign] from device keychain.
-  // Future<String> getPrivateKey(String atSign) async {
-  //   var str = await atClientManager.atClient.getPrivateKey(atSign);
-  //   return str!;
-  // }
-
   /// Listen Notification
   void _notificationCallback(dynamic notification) async {
     AtNotification atNotification = notification;
@@ -105,13 +89,6 @@ class NotifyService {
      //   print('error in decrypting notify $e');
       });
       print('notify message => $decryptedMessage $fromAtsign');
-      // await addNotify(
-      //   Notify(
-      //     message: decryptedMessage,
-      //     atSign: fromAtsign,
-      //     time: responseJson['epochMillis'],
-      //   ),
-      // );
     }
   }
 
@@ -153,7 +130,7 @@ class NotifyService {
     this.sendToAtSign = sendToAtSign!;
   }
 
-  /// Send new notify to atClient
+  /// Create new notify to AtClient
   Future<bool> addNotify(Notify notify, {NotifyEnum? notifyType}) async {
     try {
       var key = AtKey()
@@ -179,6 +156,7 @@ class NotifyService {
     }
   }
 
+  /// Send Notify with NotificationService
   Future<bool> sendNotify(
     AtKey key,
     Notify notify,
