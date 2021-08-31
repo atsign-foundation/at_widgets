@@ -1,4 +1,6 @@
 import 'dart:convert';
+
+import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
@@ -7,6 +9,7 @@ import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_logger.dart';
+
 class SDKService {
   static final SDKService _singleton = SDKService._internal();
 
@@ -18,13 +21,9 @@ class SDKService {
     return _singleton;
   }
 
-  Map<String?, bool> monitorConnectionMap = {};
-
-  late AtClientService _atClientServiceInstance;
   String? _atsign;
 
   set setClientService(AtClientService service) {
-    this._atClientServiceInstance = service;
     this._atsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     Strings.rootdomain =
         AtClientManager.getInstance().atClient.getPreferences()!.rootDomain;
@@ -48,9 +47,11 @@ class SDKService {
 
   ///Returns `true` on storing/updating [atKey].
   Future<bool> put(AtKey atKey, String? value) async {
-    return await AtClientManager.getInstance().atClient.put(atKey, value).timeout(
-        Duration(seconds: AppConstants.responseTimeLimit),
-        onTimeout: () => _onTimeOut());
+    return await AtClientManager.getInstance()
+        .atClient
+        .put(atKey, value)
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
+            onTimeout: () => _onTimeOut());
   }
 
   ///Returns list of latest notifications of followers with `update` operation.
@@ -63,7 +64,8 @@ class SDKService {
       fromDate = fromDate.split(' ')[0];
     }
     var response = await AtClientManager.getInstance().atClient.notifyList(
-        regex: ('${AppConstants.containsFollowing}|${AppConstants.containsFollowers}'),
+        regex:
+            ('${AppConstants.containsFollowing}|${AppConstants.containsFollowers}'),
         fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
     if (response == 'null') {
@@ -73,14 +75,13 @@ class SDKService {
         List<Map<String, dynamic>>.from(jsonDecode(response)));
 
     notificationList
-        .retainWhere((notification) => notification.dateTime! > fromDateTime);
+        .retainWhere((notification) => notification.epochMillis > fromDateTime);
     notificationList.sort((notification1, notification2) =>
-        notification2.dateTime!.compareTo(notification1.dateTime!));
+        notification2.epochMillis.compareTo(notification1.epochMillis));
     Set<AtNotification> uniqueNotifications = {};
     Set<String> uniqueKeys = {};
     for (var notification in notificationList) {
-      bool isUnique =
-          uniqueKeys.add(notification.fromAtSign! + notification.key!);
+      bool isUnique = uniqueKeys.add(notification.from + notification.key);
       if (isUnique) {
         uniqueNotifications.add(notification);
       }
@@ -90,9 +91,11 @@ class SDKService {
 
   ///Returns `AtFollowsValue` for [atKey].
   Future<AtFollowsValue> get(AtKey atkey) async {
-    var response = await AtClientManager.getInstance().atClient.get(atkey).timeout(
-        Duration(seconds: AppConstants.responseTimeLimit),
-        onTimeout: () => _onTimeOut());
+    var response = await AtClientManager.getInstance()
+        .atClient
+        .get(atkey)
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
+            onTimeout: () => _onTimeOut());
     AtFollowsValue val = AtFollowsValue();
     val
       ..metadata = response.metadata
@@ -104,16 +107,19 @@ class SDKService {
   ///Returns `true` on notifying [key] with [value], [operation].
   Future<bool> notify(AtKey key, String value, OperationEnum operation,
       Function onDone, Function onError) async {
-    return await AtClientManager.getInstance().atClient
-        .notify(key, value, operation,
-            notifier: AtClientManager.getInstance().atClient.getPreferences()!.namespace)
-        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
+    var notificationResponse = await AtClientManager.getInstance()
+        .notificationService
+        .notify(NotificationParams.forUpdate(key, value: value)).timeout(
+        Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
+
+    return notificationResponse.notificationStatusEnum == NotificationStatusEnum.delivered;
   }
 
   ///Returns `AtFollowsValue` after scan with [regex], fetching data for that key.
   Future<AtFollowsValue> scanAndGet(String regex) async {
-    var scanKey = await AtClientManager.getInstance().atClient
+    var scanKey = await AtClientManager.getInstance()
+        .atClient
         .getAtKeys(regex: regex)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
@@ -162,6 +168,7 @@ class SDKService {
     response = response.replaceAll('notification:', '').trim();
     return AtNotification.fromJson(jsonDecode(response));
   }
+
   ///Returns `true` if key is old key else `false`.
   bool _isOldKey(String? key) {
     return !key!.contains(AppConstants.libraryNamespace);

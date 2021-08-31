@@ -5,10 +5,10 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 
 void initializeContactsService(
-    AtClientImpl atClientInstance, String currentAtSign,
+    AtClientManager atClientManager, String currentAtSign,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
   ContactService().initContactsService(
-      atClientInstance, currentAtSign, rootDomain, rootPort);
+      currentAtSign, rootDomain, rootPort, atClientManager);
 }
 
 void disposeContactsControllers() {

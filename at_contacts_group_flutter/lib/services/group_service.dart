@@ -17,7 +17,7 @@ class GroupService {
   List<AtContact?>? selecteContactList;
   List<GroupContactsModel?> allContacts = [], selectedGroupContacts = [];
   AtGroup? selectedGroup;
-  AtClientImpl? atClientInstance;
+  AtClientManager? atClientManager;
   late AtContactsImpl atContactImpl;
   String? rootDomain;
   int? rootPort;
@@ -68,9 +68,9 @@ class GroupService {
   List<AtContact?>? get selectedContactList => selecteContactList;
 
   // ignore: always_declare_return_types
-  init(AtClientImpl atClientImpl, String atSign, String rootDomainFromApp,
+  init(AtClientManager atClientManager, String atSign, String rootDomainFromApp,
       int rootPortFromApp) async {
-    atClientInstance = atClientImpl;
+    atClientManager = atClientManager;
     _atsign = atSign;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
@@ -78,7 +78,7 @@ class GroupService {
     await fetchGroupsAndContacts();
   }
 
-  Future<dynamic?> createGroup(AtGroup atGroup) async {
+  Future<dynamic> createGroup(AtGroup atGroup) async {
     try {
       AtGroup? group = await atContactImpl.createGroup(atGroup);
       if (group is AtGroup) {
