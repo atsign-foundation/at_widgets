@@ -1,6 +1,8 @@
 // ignore: implementation_imports
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
+
 import 'at_location_notification_listener.dart';
 
 /// A class to manage all the server calls.
@@ -103,21 +105,17 @@ class SyncSecondary {
       {bool isDedicated = MixedConstants.isDedicated}) async {
     var notifyAllResult = await AtLocationNotificationListener()
         .atClientInstance!
-        .notifyAll(atKey, notification, OperationEnum.update,
-            isDedicated: isDedicated);
+        .notifyAll(atKey, notification, OperationEnum.update);
 
     print('notifyAllResult $notifyAllResult');
   }
 
   Future<void> _syncSecondary() async {
     try {
-      var syncManager =
-          AtLocationNotificationListener().atClientInstance!.getSyncManager();
-      var isSynced = await syncManager!.isInSync();
+      var isSynced = await AtClientManager.getInstance().syncService.isInSync();
       print('already synced: $isSynced');
-      if (isSynced is bool && isSynced) {
-      } else {
-        await syncManager.sync();
+      if (isSynced is bool && !isSynced) {
+        await AtClientManager.getInstance().syncService.sync();
         print('sync done');
       }
     } catch (e) {
