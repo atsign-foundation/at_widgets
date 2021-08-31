@@ -47,9 +47,9 @@ class ConnectionProvider extends ChangeNotifier {
       _connectionsService = ConnectionsService();
       connectionslistStatus = ListStatus();
       _disposed = false;
+      this.setStatus(null);
       initialised = atsign;
     }
-    this.setStatus(null);
   }
 
   setStatus(Status? value) {
