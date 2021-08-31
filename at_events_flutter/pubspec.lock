@@ -81,16 +81,16 @@ packages:
   at_contacts_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../at_contacts_flutter"
+      relative: true
+    source: path
     version: "2.0.3"
   at_contacts_group_flutter:
     dependency: "direct main"
     description:
-      name: at_contacts_group_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../at_contacts_group_flutter"
+      relative: true
+    source: path
     version: "2.0.4"
   at_location_flutter:
     dependency: "direct main"

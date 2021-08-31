@@ -33,6 +33,10 @@ dependency_overrides:
     path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client
   at_client_mobile:
     path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client_mobile
+  at_contacts_flutter:
+    path: ../at_contacts_flutter
+  at_contacts_group_flutter:
+    path: ../at_contacts_group_flutter
 
 dev_dependencies:
   flutter_test:

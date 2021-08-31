@@ -28,8 +28,8 @@ class AtEventNotificationListener {
   void init(AtClientManager atClientManager, String currentAtSignFromApp,
       GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       {Function? newGetAtValueFromMainApp}) {
-    // initializeContactsService(atClientInstanceFromApp, currentAtSignFromApp,
-    //     rootDomain: rootDomain);
+    initializeContactsService(atClientManager, currentAtSignFromApp,
+        rootDomain: rootDomain);
 
     this.atClientManager = atClientManager;
     currentAtSign = currentAtSignFromApp;
