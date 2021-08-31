@@ -60,9 +60,10 @@ class _MyAppState extends State<MyApp> {
                               clientSdkService.atClientServiceInstance =
                                   value[atsign];
                               await Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SecondScreen()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SecondScreen()),
+                              );
                             },
                             onError: (error) async {
                               await showDialog(
