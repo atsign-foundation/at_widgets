@@ -1,8 +1,9 @@
 import 'package:at_chat_flutter/at_chat_flutter.dart';
 import 'package:flutter/material.dart';
+
 import 'client_sdk_service.dart';
-import 'third_screen.dart';
 import 'constants.dart';
+import 'third_screen.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -212,7 +213,7 @@ class _SecondScreenState extends State<SecondScreen> {
       activeAtSign = currentAtSign;
     });
     initializeChatService(
-        clientSdkService.atClientServiceInstance!.atClient!, activeAtSign!,
+        clientSdkService.atClientServiceInstance!.atClientManager.atClient, activeAtSign!,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 

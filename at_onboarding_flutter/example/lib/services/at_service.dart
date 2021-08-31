@@ -17,8 +17,7 @@ class AtService {
   String? _atsign;
 
   Future<AtClientPreference> getAtClientPreference() async {
-    Directory appDocumentDirectory =
-        await path_provider.getApplicationSupportDirectory();
+    Directory appDocumentDirectory = await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
     AtClientPreference _atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
@@ -32,10 +31,10 @@ class AtService {
 
   Map<String?, AtClientService> atClientServiceMap = <String, AtClientService>{};
 
-  AtClientImpl? _getAtClientForAtsign({String? atsign}) {
+  AtClient? _getAtClientForAtsign({String? atsign}) {
     atsign ??= _atsign;
     if (atClientServiceMap.containsKey(atsign)) {
-      return atClientServiceMap[atsign]!.atClient;
+      return AtClientManager.getInstance().atClient;
     }
     return null;
   }
@@ -62,7 +61,7 @@ class AtService {
 
   Future<bool> makeAtsignPrimary(String atsign) async {
     atsign = formatAtSign(atsign)!;
-    return atClientServiceMap[atsign]!.makeAtSignPrimary(atsign);
+    return _keyChainManager.makeAtSignPrimary(atsign);
   }
 
   ///Returns null if [atsign] is null else the formatted [atsign].
