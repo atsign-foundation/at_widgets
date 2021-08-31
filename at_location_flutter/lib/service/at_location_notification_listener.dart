@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:at_client/at_client.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/screens/notification_dialog/notification_dialog.dart';
@@ -16,19 +17,21 @@ import 'sync_secondary.dart';
 /// Starts monitor and listens for notifications related to this package.
 class AtLocationNotificationListener {
   AtLocationNotificationListener._();
+
   static final _instance = AtLocationNotificationListener._();
+
   factory AtLocationNotificationListener() => _instance;
   final String locationKey = 'locationnotify';
-  AtClientImpl? atClientInstance;
+  AtClient? atClientInstance;
   String? currentAtSign;
-  bool _monitorStarted = false;
   late bool showDialogBox;
   late GlobalKey<NavigatorState> navKey;
+
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
 
   void init(
-      AtClientImpl atClientInstanceFromApp,
+      AtClient atClientInstanceFromApp,
       String currentAtSignFromApp,
       GlobalKey<NavigatorState> navKeyFromMainApp,
       String rootDomain,
@@ -41,23 +44,21 @@ class AtLocationNotificationListener {
     ROOT_DOMAIN = rootDomain;
     MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
         newGetAtValueFromMainApp: newGetAtValueFromMainApp);
-
     startMonitor();
   }
 
-  Future<bool> startMonitor() async {
-    if (!_monitorStarted) {
-      var privateKey = await (getPrivateKey(currentAtSign!));
-      await atClientInstance!.startMonitor(privateKey!, fnCallBack);
-      print('Monitor started in location package');
-      _monitorStarted = true;
-    }
-    return true;
+  Future<void> startMonitor() async {
+    AtClientManager.getInstance()
+        .notificationService
+        .subscribe()
+        .listen((monitorNotification) {
+      _notificationCallback(monitorNotification);
+    });
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await atClientInstance!.getPrivateKey(atsign);
+    return await KeychainUtil.getPrivateKey(atsign);
   }
 
   void fnCallBack(var response) async {
@@ -68,15 +69,19 @@ class AtLocationNotificationListener {
 
   void _notificationCallback(dynamic notification) async {
     print('_notificationCallback called');
-    notification = notification.replaceFirst('notification:', '');
-    var responseJson = jsonDecode(notification);
-    var value = responseJson['value'];
-    var notificationKey = responseJson['key'];
+    var value = notification.value;
+    var notificationKey = notification.key;
     print(
         '_notificationCallback :$notification , notification key: $notificationKey');
-    var fromAtSign = responseJson['from'];
-    var atKey = notificationKey.split(':')[1];
-    var operation = responseJson['operation'];
+    var fromAtSign = notification.from;
+    var atKey;
+    if (notificationKey.toString().contains(':')) {
+      atKey = notificationKey.split(':')[1];
+    } else {
+      atKey = notificationKey;
+    }
+
+    var operation = notification.operation;
 
     if (operation == 'delete') {
       if (atKey.toString().toLowerCase().contains(locationKey)) {

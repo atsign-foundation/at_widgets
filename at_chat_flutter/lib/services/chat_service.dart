@@ -1,13 +1,13 @@
 /// A service to handle save and retrieve operation on chat
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:at_chat_flutter/models/message_model.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
-import 'package:at_chat_flutter/models/message_model.dart';
 
 class ChatService {
   ChatService._();
@@ -18,7 +18,7 @@ class ChatService {
   final String chatKey = 'chat';
   final String chatImageKey = 'chatimg';
 
-  late AtClientImpl atClientInstance;
+  late AtClient atClientInstance;
   String? rootDomain;
   int? rootPort;
   String? currentAtSign;
@@ -41,7 +41,7 @@ class ChatService {
   }
 
   void initChatService(
-      AtClientImpl atClientInstanceFromApp,
+      AtClient atClientInstanceFromApp,
       String currentAtSignFromApp,
       String rootDomainFromApp,
       int rootPortFromApp) async {
@@ -63,7 +63,7 @@ class ChatService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    var str = await atClientInstance.getPrivateKey(atsign);
+    var str = await KeychainUtil.getPrivateKey(atsign);
     return str!;
   }
 

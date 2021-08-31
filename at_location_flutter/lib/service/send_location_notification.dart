@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
@@ -11,6 +12,7 @@ import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
+
 import 'key_stream_service.dart';
 
 /// [masterSwitchState] will control whether location is sent to any user
@@ -31,9 +33,9 @@ class SendLocationNotification {
   bool masterSwitchState = true;
   Function? locationPromptDialog;
 
-  AtClientImpl? atClient;
+  AtClient? atClient;
 
-  void init(AtClientImpl? newAtClient) {
+  void init(AtClient? newAtClient) {
     if ((timer != null) && (timer!.isActive)) timer!.cancel();
     atClient = newAtClient;
     atsignsToShareLocationWith = [];
@@ -60,7 +62,7 @@ class SendLocationNotification {
     atsignsToShareLocationWith = [];
     KeyStreamService().allLocationNotifications.forEach((notification) {
       if ((notification.locationNotificationModel!.atsignCreator ==
-              atClient!.currentAtSign) &&
+              atClient!.getCurrentAtSign()) &&
           (notification.locationNotificationModel!.isSharing) &&
           (notification.locationNotificationModel!.isAccepted) &&
           (!notification.locationNotificationModel!.isExited)) {
@@ -254,7 +256,7 @@ class SendLocationNotification {
       ..metadata!.ccd = true
       ..key = key
       ..sharedWith = sharedWith
-      ..sharedBy = atClient!.currentAtSign;
+      ..sharedBy = atClient!.getCurrentAtSign();
     if (ttl != null) atKey.metadata!.ttl = ttl;
     return atKey;
   }
