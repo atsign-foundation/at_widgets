@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
@@ -5,11 +6,10 @@ import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/screens/home/home_screen.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
+import 'package:at_location_flutter_example/client_sdk_service.dart';
 import 'package:at_location_flutter_example/main.dart';
 import 'package:at_lookup/at_lookup.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:at_location_flutter_example/client_sdk_service.dart';
 import 'package:latlong2/latlong.dart';
 
 class SecondScreen extends StatefulWidget {
@@ -27,10 +27,11 @@ class _SecondScreenState extends State<SecondScreen> {
   void initState() {
     try {
       super.initState();
-      activeAtSign =
-          clientSdkService.atClientServiceInstance!.atClient!.currentAtSign;
+      activeAtSign = clientSdkService
+          .atClientServiceInstance!.atClientManager.atClient
+          .getCurrentAtSign();
       initializeLocationService(
-        clientSdkService.atClientServiceInstance!.atClient!,
+        clientSdkService.atClientServiceInstance!.atClientManager.atClient,
         activeAtSign!,
         NavService.navKey,
         mapKey: '',

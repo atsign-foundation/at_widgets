@@ -19,7 +19,7 @@ class AtLocationNotificationListener {
   static final _instance = AtLocationNotificationListener._();
   factory AtLocationNotificationListener() => _instance;
   final String locationKey = 'locationnotify';
-  AtClientImpl? atClientInstance;
+  AtClient? atClientInstance;
   String? currentAtSign;
   bool _monitorStarted = false;
   late bool showDialogBox;
@@ -28,7 +28,7 @@ class AtLocationNotificationListener {
   String? ROOT_DOMAIN;
 
   void init(
-      AtClientImpl atClientInstanceFromApp,
+      AtClient atClientInstanceFromApp,
       String currentAtSignFromApp,
       GlobalKey<NavigatorState> navKeyFromMainApp,
       String rootDomain,
@@ -57,7 +57,7 @@ class AtLocationNotificationListener {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await atClientInstance!.getPrivateKey(atsign);
+    return await KeychainUtil.getPrivateKey(atsign);
   }
 
   void fnCallBack(var response) async {
@@ -75,7 +75,13 @@ class AtLocationNotificationListener {
     print(
         '_notificationCallback :$notification , notification key: $notificationKey');
     var fromAtSign = responseJson['from'];
-    var atKey = notificationKey.split(':')[1];
+    var atKey;
+    if (notificationKey.toString().contains(':')) {
+      atKey = notificationKey.split(':')[1];
+    } else {
+      atKey = notificationKey;
+    }
+
     var operation = responseJson['operation'];
 
     if (operation == 'delete') {

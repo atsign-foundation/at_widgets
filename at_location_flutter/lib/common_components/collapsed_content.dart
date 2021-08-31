@@ -1,4 +1,5 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/home_screen_service.dart';
 import 'package:at_location_flutter/service/location_service.dart';
@@ -13,13 +14,12 @@ import 'custom_toast.dart';
 import 'display_tile.dart';
 import 'draggable_symbol.dart';
 import 'loading_widget.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 
 // ignore: must_be_immutable
 class CollapsedContent extends StatefulWidget {
   bool expanded;
   LocationNotificationModel? userListenerKeyword;
-  AtClientImpl? atClientInstance;
+  AtClient? atClientInstance;
   String? currentAtSign;
   CollapsedContent(this.expanded, this.atClientInstance,
       {Key? key, this.userListenerKeyword, required this.currentAtSign});
