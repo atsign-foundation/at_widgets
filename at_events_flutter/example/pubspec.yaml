@@ -26,13 +26,25 @@ dependencies:
   at_onboarding_flutter: ^2.1.1
 
 dependency_overrides:
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_lookup
+      ref: trunk
   file_picker: ^4.0.0
+  at_backupkey_flutter:
+    path: /Users/apple/Desktop/client_projects/at_company_github/at_widgets/at_backupkey_flutter
   at_onboarding_flutter:
     path: /Users/apple/Desktop/client_projects/at_company_github/at_widgets/at_onboarding_flutter
   at_client:
     path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client
   at_client_mobile:
     path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client_mobile
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_commons
+      ref: trunk
 
 
 dev_dependencies:
