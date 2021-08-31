@@ -436,6 +436,7 @@ class ConnectionsService {
         .listen((notification) {
       acceptStream(notification);
     });
+    isMonitorStarted = true;
     return true;
   }
 
