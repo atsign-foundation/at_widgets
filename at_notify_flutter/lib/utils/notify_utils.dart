@@ -3,15 +3,15 @@ import 'package:at_notify_flutter/services/notify_service.dart';
 import 'package:flutter/material.dart';
 
 enum NotifyEnum {
-  notify,
-  notifyAll,
-  notifyList,
+  notifyForUpdate,
+  notifyForDelete,
+  notifyText,
 }
 
 NotifyService _notifyService = NotifyService();
 
-/// Basic notify
-notify(
+/// Notify for Update
+notifyForUpdate(
   BuildContext context,
   String? atSign,
   String? sendToAtSign,
@@ -24,12 +24,12 @@ notify(
       atSign: atSign,
       message: message,
     ),
-    notifyType: NotifyEnum.notify,
+    notifyType: NotifyEnum.notifyForUpdate,
   );
 }
 
-/// Notify to All
-notifyAll(
+/// Notifyfor Delete
+notifyForDelete(
     BuildContext context,
     String? atSign,
     String? sendToAtSign,
@@ -42,12 +42,12 @@ notifyAll(
       atSign: atSign,
       message: message,
     ),
-    notifyType: NotifyEnum.notifyAll,
+    notifyType: NotifyEnum.notifyForDelete,
   );
 }
 
-/// Notify in List
-notifyList(
+/// Notify Text
+notifyText(
     BuildContext context,
     String? atSign,
     String? sendToAtSign,
@@ -60,6 +60,6 @@ notifyList(
       atSign: atSign,
       message: message,
     ),
-    notifyType: NotifyEnum.notifyList,
+    notifyType: NotifyEnum.notifyText,
   );
 }

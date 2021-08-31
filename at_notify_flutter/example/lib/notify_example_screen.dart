@@ -20,7 +20,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
 
   @override
   void initState() {
-    getAtSignAndInitializeBugReport();
+    getAtSignAndInitializeNotify();
     super.initState();
   }
 
@@ -66,7 +66,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      notify(
+                      notifyForUpdate(
                         context,
                         activeAtSign,
                         atSignController.text,
@@ -74,7 +74,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                       );
                     },
                     child: Text(
-                      'Send Notify',
+                      'Notify For Update',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
@@ -83,7 +83,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      notifyAll(
+                      notifyForDelete(
                         context,
                         activeAtSign,
                         atSignController.text,
@@ -91,7 +91,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                       );
                     },
                     child: Text(
-                      'Send Notify All',
+                      'Notify For Delete',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
@@ -100,7 +100,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      notifyList(
+                      notifyText(
                         context,
                         activeAtSign,
                         atSignController.text,
@@ -108,7 +108,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                       );
                     },
                     child: Text(
-                      'Send Notify List',
+                      'Notify Text',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
@@ -121,13 +121,16 @@ class _BugReportScreenState extends State<BugReportScreen> {
     );
   }
 
-  void getAtSignAndInitializeBugReport() async {
+  void getAtSignAndInitializeNotify() async {
     var currentAtSign = await clientSdkService.getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
     initializeNotifyService(
-        clientSdkService.atClientServiceInstance!.atClient!, activeAtSign!,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+      clientSdkService.atClientServiceInstance!.atClientManager,
+      activeAtSign!,
+      clientSdkService.atClientPreference,
+      rootDomain: MixedConstants.ROOT_DOMAIN,
+    );
   }
 }

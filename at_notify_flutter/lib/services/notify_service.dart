@@ -2,14 +2,13 @@
 
 import 'dart:async';
 import 'dart:convert';
-
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:at_client_mobile/at_client_mobile.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
+import 'package:at_client/at_client.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_notify_flutter/models/notify_model.dart';
 import 'package:at_notify_flutter/utils/notify_utils.dart';
+
+// ignore: implementation_imports
+import 'package:at_client/src/service/notification_service.dart';
 
 class NotifyService {
   NotifyService._();
@@ -23,7 +22,10 @@ class NotifyService {
 
   String sendToAtSign = '';
 
-  late AtClientImpl atClientInstance;
+  late AtClientManager atClientManager;
+  late AtClient atClient;
+
+  // late AtClientImpl atClientInstance;
   String? rootDomain;
   int? rootPort;
   String? currentAtSign;
@@ -43,62 +45,73 @@ class NotifyService {
   }
 
   void initNotifyService(
-      AtClientImpl atClientInstanceFromApp,
+      AtClientManager atClientManagerFromApp,
+      AtClientPreference atClientPreference,
       String currentAtSignFromApp,
       String rootDomainFromApp,
       int rootPortFromApp) async {
-    atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
-    await startMonitor();
+    atClientManager = atClientManagerFromApp;
+    atClientManager.setCurrentAtSign(
+        currentAtSignFromApp, '', atClientPreference);
+
+    atClient = atClientManager.atClient;
+
+    // notificationService.subscribe(regex: '.wavi').listen((notification) {
+    //   _notificationCallback(notification);
+    // });
+
+    //   await startMonitor();
+    atClientManager.notificationService.subscribe().listen((notification) {
+      _notificationCallback(notification);
+    });
   }
 
   // startMonitor needs to be called at the beginning of session
   // called again if outbound connection is dropped
-  Future<bool> startMonitor() async {
-    var privateKey = await getPrivateKey(currentAtSign!);
-    await atClientInstance.startMonitor(privateKey, _notificationCallback);
-    print('Monitor started');
-    return true;
-  }
-
-  ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    var str = await atClientInstance.getPrivateKey(atsign);
-    return str!;
-  }
+  // Future<bool> startMonitor() async {
+  //   var privateKey = await getPrivateKey(currentAtSign!);
+  //   await atClient.startMonitor(privateKey, _notificationCallback);
+  //   print('Monitor started');
+  //   return true;
+  // }
+  //
+  // ///Fetches privatekey for [atsign] from device keychain.
+  // Future<String> getPrivateKey(String atSign) async {
+  //   var str = await atClientManager.atClient.getPrivateKey(atSign);
+  //   return str!;
+  // }
 
   /// Listen Notification
   void _notificationCallback(dynamic notification) async {
-    notification = notification.replaceFirst('notification:', '');
-    var responseJson = jsonDecode(notification);
-    var notificationKey = responseJson['key'];
-    var fromAtsign = responseJson['from'];
+    AtNotification atNotification = notification;
+    var notificationKey = atNotification.key;
+    var fromAtsign = atNotification.from;
+    var toAtsign = atNotification.to;
 
     // remove from and to atsigns from the notification key
     if (notificationKey.contains(':')) {
       notificationKey = notificationKey.split(':')[1];
     }
-    notificationKey.replaceFirst(fromAtsign, '');
-    notificationKey.trim();
+    notificationKey = notificationKey.replaceFirst(fromAtsign, '').trim();
 
-    if ((notificationKey.startsWith(notifyKey) &&
-        fromAtsign == currentAtSign)) {
-      var message = responseJson['value'];
-      var decryptedMessage = await atClientInstance.encryptionService!
+    if ((notificationKey.startsWith(storageKey) && toAtsign == currentAtSign)) {
+      var message = atNotification.value ?? '';
+      var decryptedMessage = await atClient.encryptionService!
           .decrypt(message, fromAtsign)
           .catchError((e) {
-        print('error in decrypting bugReport ${e.errorCode} ${e.errorMessage}');
+     //   print('error in decrypting notify $e');
       });
       print('notify message => $decryptedMessage $fromAtsign');
-      await addNotify(
-        Notify(
-          message: decryptedMessage,
-          atSign: fromAtsign,
-          time: responseJson['epochMillis'],
-        ),
-      );
+      // await addNotify(
+      //   Notify(
+      //     message: decryptedMessage,
+      //     atSign: fromAtsign,
+      //     time: responseJson['epochMillis'],
+      //   ),
+      // );
     }
   }
 
@@ -112,7 +125,7 @@ class NotifyService {
         ..sharedWith = sendToAtSign
         ..metadata = Metadata();
 
-      var keyValue = await atClientInstance.get(key).catchError((e) {
+      var keyValue = await atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
 
@@ -152,26 +165,56 @@ class NotifyService {
       notifies.insert(0, notify);
       notifySink.add(notifies);
       notifiesJson!.add(notify.toJson());
-      await atClientInstance.put(key, json.encode(notifiesJson));
+      await atClient.put(key, json.encode(notifiesJson));
 
-      if (notifyType != null) {
-        if (notifyType == NotifyEnum.notifyAll) {
-          await atClientInstance.notifyAll(
-              key, json.encode(notifiesJson), OperationEnum.update);
-        } else if (notifyType == NotifyEnum.notifyList) {
-          await atClientInstance.notifyList();
-        } else {
-          await atClientInstance.notify(
-              key, json.encode(notifiesJson), OperationEnum.update);
-        }
-      } else {
-        await atClientInstance.notify(
-            key, json.encode(notifiesJson), OperationEnum.update);
-      }
+      sendNotify(key, notify, notifyType ?? NotifyEnum.notifyForUpdate);
+
+      // await atClientInstance.notify(
+      //     key, json.encode(notifiesJson), OperationEnum.update);
+
       return true;
     } catch (e) {
       print('Error in setting notify => $e');
       return false;
     }
+  }
+
+  Future<bool> sendNotify(
+    AtKey key,
+    Notify notify,
+    NotifyEnum notifyType,
+  ) async {
+    var notificationResponse;
+    if (notifyType == NotifyEnum.notifyForDelete) {
+      notificationResponse = await atClientManager.notificationService.notify(
+        NotificationParams.forDelete(key),
+      );
+    } else if (notifyType == NotifyEnum.notifyText) {
+      notificationResponse = await atClientManager.notificationService.notify(
+          NotificationParams.forText(notify.message ?? '', sendToAtSign));
+    } else {
+      notificationResponse = await atClientManager.notificationService.notify(
+        NotificationParams.forUpdate(key, value: json.encode(notifiesJson)),
+        // onSuccess: _onSuccessCallback,
+        // onError: _onErrorCallback,
+      );
+    }
+
+    if (notificationResponse.notificationStatusEnum ==
+        NotificationStatusEnum.delivered) {
+      print(notificationResponse.toString());
+    } else {
+      print(notificationResponse.atClientException.toString());
+      return false;
+    }
+    return true;
+  }
+
+  void _onSuccessCallback(notificationResult) {
+    print(notificationResult);
+  }
+
+  void _onErrorCallback(notificationResult) {
+    print(notificationResult.atClientException.toString());
   }
 }
