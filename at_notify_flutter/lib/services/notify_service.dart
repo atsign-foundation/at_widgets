@@ -80,9 +80,10 @@ class NotifyService {
       notificationKey = notificationKey.split(':')[1];
     }
     notificationKey = notificationKey.replaceFirst(fromAtsign, '').trim();
-
+    print('notificationKey = $notificationKey');
     if ((notificationKey.startsWith(storageKey) && toAtsign == currentAtSign)) {
       var message = atNotification.value ?? '';
+      print('value = $message');
       var decryptedMessage = await atClient.encryptionService!
           .decrypt(message, fromAtsign)
           .catchError((e) {
