@@ -42,6 +42,8 @@ class ClientSdkService {
     atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
     atClientPreference.downloadPath = downloadDirectory!.path;
+    atClientPreference.namespace = MixedConstants.appNamespace;
+    atClientPreference.syncRegex = MixedConstants.syncRegex;
     var result = await atClientServiceInstance!
         .onboard(atClientPreference: atClientPreference, atsign: atsign)
         .catchError((e) {

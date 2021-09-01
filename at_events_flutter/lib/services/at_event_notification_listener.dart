@@ -48,10 +48,8 @@ class AtEventNotificationListener {
       // await atClientInstance!.startMonitor(privateKey, fnCallBack);
 
       atClientManager.notificationService
-          .subscribe(
-              // regex:
-              // atClientManager.atClient.getPreferences()!.namespace ??
-              // 'rrive'
+          .subscribe(regex: atClientManager.atClient.getPreferences()!.namespace
+              // ?? 'rrive'
               )
           .listen((notification) {
         _notificationCallback(notification as AtNotification);
