@@ -2,10 +2,12 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:at_client/at_client.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_notify_flutter/models/notify_model.dart';
 import 'package:at_notify_flutter/utils/notify_utils.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // ignore: implementation_imports
 import 'package:at_client/src/service/notification_service.dart';
@@ -16,6 +18,13 @@ class NotifyService {
   static final NotifyService _instance = NotifyService._();
 
   factory NotifyService() => _instance;
+
+  late FlutterLocalNotificationsPlugin _notificationsPlugin;
+  late InitializationSettings initializationSettings;
+
+  // final BehaviorSubject<ReceivedNotification>
+  //     didReceivedLocalNotificationSubject =
+  //     BehaviorSubject<ReceivedNotification>();
 
   final String storageKey = 'notify.';
   final String notifyKey = 'notifyKey';
@@ -58,14 +67,59 @@ class NotifyService {
 
     atClient = atClientManager.atClient;
 
+    _notificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    // if (Platform.isIOS) {
+    //   _requestIOSPermission();
+    // }
+    // initializePlatformSpecifics();
+    //
+    // await _notificationsPlugin.initialize(
+    //   initializationSettings,
+    //   onSelectNotification: (payload) async {},
+    // );
+
     // notificationService.subscribe(regex: '.wavi').listen((notification) {
     //   _notificationCallback(notification);
     // });
 
-    //   await startMonitor();
     atClientManager.notificationService.subscribe().listen((notification) {
       _notificationCallback(notification);
     });
+  }
+
+  initializePlatformSpecifics() {
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('notification_icon');
+    var initializationSettingsIOS = IOSInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: false,
+      onDidReceiveLocalNotification: (id, title, body, payload) async {
+        var receivedNotification = ReceivedNotification(
+          id: id,
+          title: title!,
+          body: body!,
+          payload: payload!,
+        );
+        print('receivedNotification: ${receivedNotification?.toString()}');
+        //     didReceivedLocalNotificationSubject.add(receivedNotification);
+      },
+    );
+
+    initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  }
+
+  _requestIOSPermission() {
+    _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()!
+        .requestPermissions(
+          alert: false,
+          badge: true,
+          sound: true,
+        );
   }
 
   /// Listen Notification
@@ -87,9 +141,10 @@ class NotifyService {
       var decryptedMessage = await atClient.encryptionService!
           .decrypt(message, fromAtsign)
           .catchError((e) {
-     //   print('error in decrypting notify $e');
+        //   print('error in decrypting notify $e');
       });
       print('notify message => $decryptedMessage $fromAtsign');
+   //   await showNotification(decryptedMessage);
     }
   }
 
@@ -111,8 +166,8 @@ class NotifyService {
       if (keyValue != null && keyValue.value != null) {
         notifiesJson = json.decode((keyValue.value) as String) as List?;
         notifiesJson!.forEach((value) {
-          var bugReport = Notify.fromJson((value));
-          notifies.insert(0, bugReport);
+          var notify = Notify.fromJson((value));
+          notifies.insert(0, notify);
         });
         notifySink.add(notifies);
       } else {
@@ -134,11 +189,13 @@ class NotifyService {
   /// Create new notify to AtClient
   Future<bool> addNotify(Notify notify, {NotifyEnum? notifyType}) async {
     try {
+      var metadata = Metadata();
+      metadata.ttr = -1;
       var key = AtKey()
         ..key = storageKey + (currentAtSign ?? ' ').substring(1)
         ..sharedBy = currentAtSign
         ..sharedWith = sendToAtSign
-        ..metadata = Metadata();
+        ..metadata = metadata;
 
       notifies.insert(0, notify);
       notifySink.add(notifies);
@@ -196,4 +253,64 @@ class NotifyService {
   void _onErrorCallback(notificationResult) {
     print(notificationResult.atClientException.toString());
   }
+
+  Future<void> showNotification(String decryptedMessage) async {
+    List<dynamic>? valuesJson = [];
+    List<Notify> messages = [];
+    valuesJson = json.decode(decryptedMessage as String) as List?;
+    valuesJson!.forEach((value) {
+      var notify = Notify.fromJson((value));
+      messages.add(notify);
+    });
+
+    if (messages.isNotEmpty) {
+      print(
+          'notify lastestMessage => ${messages.first.message} ${messages.first.atSign}');
+      var androidChannelSpecifics = AndroidNotificationDetails(
+        'CHANNEL_ID',
+        'CHANNEL_NAME',
+        "CHANNEL_DESCRIPTION",
+        importance: Importance.high,
+        priority: Priority.high,
+        playSound: true,
+        timeoutAfter: 50000,
+        styleInformation: DefaultStyleInformation(true, true),
+      );
+      var iosChannelSpecifics = IOSNotificationDetails();
+
+      var platformChannelSpecifics = NotificationDetails(
+          android: androidChannelSpecifics, iOS: iosChannelSpecifics);
+      await _notificationsPlugin.show(
+        0,
+        '${messages.first.atSign}',
+        '${messages.first.message}',
+        platformChannelSpecifics,
+        payload: jsonEncode(
+          Notify(
+            atSign: messages.first.atSign,
+            message: messages.first.message,
+            time: messages.first.time,
+          ),
+        ),
+      );
+    }
+  }
+
+  cancelNotifications() async {
+    await _notificationsPlugin.cancelAll();
+  }
+}
+
+class ReceivedNotification {
+  final int id;
+  final String title;
+  final String body;
+  final String payload;
+
+  ReceivedNotification({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.payload,
+  });
 }

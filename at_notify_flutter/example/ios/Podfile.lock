@@ -42,6 +42,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_keychain (0.0.1):
     - Flutter
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_qr_reader (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -66,6 +68,7 @@ DEPENDENCIES:
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_keychain (from `.symlinks/plugins/flutter_keychain/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_qr_reader (from `.symlinks/plugins/flutter_qr_reader/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
@@ -93,6 +96,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_keychain:
     :path: ".symlinks/plugins/flutter_keychain/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_qr_reader:
     :path: ".symlinks/plugins/flutter_qr_reader/ios"
   path_provider:
@@ -115,6 +120,7 @@ SPEC CHECKSUMS:
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
+  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_qr_reader: d930dde3b2cfe2b3d0bb7d66e5ff3e514300a5e5
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
