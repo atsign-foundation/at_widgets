@@ -14,23 +14,23 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       {this.title,
       this.elevation = 0.0,
       this.showBackButton = false,
-      this.actionItems = const []});
+      this.actionItems = const <Widget>[]});
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: this.elevation,
-      leading: this.showBackButton
+      elevation: elevation,
+      leading: showBackButton
           ? IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(context);
               })
           : OnboardingService.getInstance().logo,
-      automaticallyImplyLeading: this.showBackButton,
+      automaticallyImplyLeading: showBackButton,
       backgroundColor: ColorConstants.appColor,
       centerTitle: true,
-      title: Text(this.title!, style: CustomTextStyles.fontR16secondary),
-      actions: this.actionItems.isEmpty ? null : actionItems,
+      title: Text(title!, style: CustomTextStyles.fontR16secondary),
+      actions: actionItems.isEmpty ? null : actionItems,
     );
   }
 

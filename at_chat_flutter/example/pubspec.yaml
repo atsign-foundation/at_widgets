@@ -1,6 +1,6 @@
 name: at_chat_flutter_example
 description: Demonstrates how to use the at_chat_flutter plugin.
-version: 0.0.1
+version: 1.0.0
 homepage: https://atsign.com/
 
 # The following line prevents the package from being accidentally published to

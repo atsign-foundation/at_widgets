@@ -1,3 +1,7 @@
+## 2.0.4
+- Added contactSelectedHistory parameter in GroupContactView
+- Updated packages
+
 ## 2.0.3
 - Bug fixes for group selection in GroupContactView
 - Updated at_contacts_flutter package
