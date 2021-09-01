@@ -48,8 +48,23 @@ class _ListBugReportScreenState extends State<ListBugReportScreen>
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onPressed: () async {
+            Navigator.of(context).pop();
+          },
+        ),
+        centerTitle: true,
         title: Text(
           widget.title,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -58,11 +73,11 @@ class _ListBugReportScreenState extends State<ListBugReportScreen>
           child: Column(
             children: [
               Container(
-                height: 40,
+                height: 50,
                 child: TabBar(
                   onTap: (index) {},
                   labelColor: Colors.black,
-                  indicatorWeight: 2.toHeight,
+                  indicatorWeight: 3.toHeight,
                   indicatorColor: Colors.black,
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelStyle: TextStyle(

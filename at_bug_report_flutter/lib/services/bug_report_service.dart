@@ -102,7 +102,7 @@ class BugReportService {
     }
   }
 
-  /// Get List Bug Report
+  /// Get List Bug Report of this AtSign
   Future<void> getBugReports({String? atsign}) async {
     try {
       bugReports = [];

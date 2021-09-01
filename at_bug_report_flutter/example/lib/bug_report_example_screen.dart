@@ -28,7 +28,15 @@ class _BugReportScreenState extends State<BugReportScreen> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Bug Report Example'),
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: Text(
+            'Bug Report Example',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+            ),
+          ),
         ),
         body: Builder(
           builder: (context) => Center(
@@ -40,7 +48,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                   style: TextStyle(fontSize: 24),
                 ),
                 SizedBox(
-                  height: 16.0,
+                  height: 64.0,
                 ),
                 TextButton(
                   onPressed: () async {
@@ -64,7 +72,10 @@ class _BugReportScreenState extends State<BugReportScreen> {
                   },
                   child: Text(
                     'Show issue report dialog',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
                 TextButton(
@@ -82,7 +93,10 @@ class _BugReportScreenState extends State<BugReportScreen> {
                   },
                   child: Text(
                     'Show reported issues list',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
