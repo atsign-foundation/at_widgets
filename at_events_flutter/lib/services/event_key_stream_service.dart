@@ -65,7 +65,7 @@ class EventKeyStreamService {
 
   /// adds all 'createevent' notifications to [atNotificationsSink]
   void getAllEventNotifications() async {
-    await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+    // await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
 
     var response = await atClientManager.atClient.getKeys(
       regex: 'createevent-',
@@ -595,8 +595,8 @@ class EventKeyStreamService {
   }
 
   /// Updates event data with received [locationData] of [fromAtSign]
-  void updateLocationData(EventMemberLocation locationData, String? atKey,
-      String? fromAtSign) async {
+  void updateLocationData(
+      EventMemberLocation locationData, String? fromAtSign) async {
     try {
       var eventId = locationData.key!.split('-')[1].split('@')[0];
 
@@ -653,12 +653,18 @@ class EventKeyStreamService {
 
       key.sharedWith = jsonEncode(allAtsignList);
 
-      await SyncSecondary().callSyncSecondary(
-        SyncOperation.notifyAll,
-        atKey: key,
-        notification: notification,
-        operation: OperationEnum.update,
-        isDedicated: MixedConstants.isDedicated,
+      // await SyncSecondary().callSyncSecondary(
+      //   SyncOperation.notifyAll,
+      //   atKey: key,
+      //   notification: notification,
+      //   operation: OperationEnum.update,
+      //   isDedicated: MixedConstants.isDedicated,
+      // );
+
+      await atClientManager.atClient.notifyAll(
+        key,
+        notification,
+        OperationEnum.update,
       );
 
       /// Dont sync as notifyAll is called
@@ -673,8 +679,8 @@ class EventKeyStreamService {
 
   /// Updates data of members of an event
   // ignore: always_declare_return_types
-  createEventAcknowledge(EventNotificationModel acknowledgedEvent,
-      String? atKey, String? fromAtSign) async {
+  createEventAcknowledge(
+      EventNotificationModel acknowledgedEvent, String? fromAtSign) async {
     try {
       var eventId =
           acknowledgedEvent.key!.split('createevent-')[1].split('@')[0];
@@ -752,12 +758,18 @@ class EventKeyStreamService {
 
       key.sharedWith = jsonEncode(allAtsignList);
 
-      await SyncSecondary().callSyncSecondary(
-        SyncOperation.notifyAll,
-        atKey: key,
-        notification: notification,
-        operation: OperationEnum.update,
-        isDedicated: MixedConstants.isDedicated,
+      // await SyncSecondary().callSyncSecondary(
+      //   SyncOperation.notifyAll,
+      //   atKey: key,
+      //   notification: notification,
+      //   operation: OperationEnum.update,
+      //   isDedicated: MixedConstants.isDedicated,
+      // );
+
+      await atClientManager.atClient.notifyAll(
+        key,
+        notification,
+        OperationEnum.update,
       );
 
       /// Dont sync as notifyAll is called

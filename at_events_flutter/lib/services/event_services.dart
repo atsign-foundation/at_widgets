@@ -143,6 +143,8 @@ class EventService {
         ..key = eventNotification.key
         ..sharedBy = eventNotification.atsignCreator;
 
+      print('key: ${atKey.key}');
+
       var putResult = await atClientManager.atClient.put(atKey, notification,
           isDedicated:
               true); // creating a key and saving it for creator without adding any receiver atsign
@@ -150,13 +152,19 @@ class EventService {
       atKey.sharedWith = jsonEncode(
           [...selectedContactsAtSigns]); //adding event members in atkey
 
-      await SyncSecondary().callSyncSecondary(
-        SyncOperation.notifyAll,
-        atKey: atKey,
-        notification: notification,
-        operation: OperationEnum.update,
-        isDedicated: MixedConstants.isDedicated,
+      await atClientManager.atClient.notifyAll(
+        atKey,
+        notification,
+        OperationEnum.update,
       );
+
+      // await SyncSecondary().callSyncSecondary(
+      //   SyncOperation.notifyAll,
+      //   atKey: atKey,
+      //   notification: notification,
+      //   operation: OperationEnum.update,
+      //   isDedicated: MixedConstants.isDedicated,
+      // );
 
       /// Dont need to sync as notifyAll is called
 

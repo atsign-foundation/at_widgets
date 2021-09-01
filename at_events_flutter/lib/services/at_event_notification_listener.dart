@@ -12,6 +12,7 @@ import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:at_client/src/response/at_notification.dart';
 
 /// Starts monitor and listens for notifications related to this package.
 class AtEventNotificationListener {
@@ -40,15 +41,20 @@ class AtEventNotificationListener {
 
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
-      var privateKey = (await (getPrivateKey(currentAtSign!))) ?? '';
+      var privateKey = (await (getPrivateKey(currentAtSign!))) ?? '.rrive';
+      print(
+          'atClientManager.atClient.getPreferences()!.namespace ${atClientManager.atClient.getPreferences()!.namespace}');
       // ignore: await_only_futures
       // await atClientInstance!.startMonitor(privateKey, fnCallBack);
 
       atClientManager.notificationService
           .subscribe(
-              regex: atClientManager.atClient.getPreferences()!.namespace ?? '')
+              // regex:
+              // atClientManager.atClient.getPreferences()!.namespace ??
+              // 'rrive'
+              )
           .listen((notification) {
-        fnCallBack(notification);
+        _notificationCallback(notification as AtNotification);
       });
 
       print('Monitor started in events package');
@@ -63,68 +69,78 @@ class AtEventNotificationListener {
     // return await atClientInstance!.getPrivateKey(atsign);
   }
 
-  void fnCallBack(var response) async {
-    print('fnCallBack called');
-    SyncSecondary()
-        .completePrioritySync(response, afterSync: _notificationCallback);
-  }
+  // void fnCallBack(var response) async {
+  //   print('fnCallBack called');
+  //   // SyncSecondary()
+  //   //     .completePrioritySync(response, afterSync: _notificationCallback);
+  // }
 
-  void _notificationCallback(dynamic response) async {
-    // print('fnCallBack called in event service');
+  void _notificationCallback(AtNotification notification) async {
+    print('fnCallBack called in event service');
+    print('notification $notification');
     // response = response.replaceFirst('notification:', '');
     // var responseJson = jsonDecode(response);
-    // var value = responseJson['value'];
-    // var notificationKey = responseJson['key'];
-    // var fromAtSign = responseJson['from'];
+    var value = notification.value;
+    var notificationKey = notification.key;
+    var fromAtSign = notification.from;
+
+    if ((!notificationKey.contains('createevent')) &&
+        (!notificationKey.contains('eventacknowledged')) &&
+        (!notificationKey.contains(MixedConstants.EVENT_MEMBER_LOCATION_KEY))) {
+      return;
+    }
+
     // var atKey = notificationKey.split(':')[1];
-    // var operation = responseJson['operation'];
-    // print('_notificationCallback opeartion $operation');
-    // if ((operation == 'delete') &&
-    //     atKey.toString().toLowerCase().contains('createevent')) {
-    //   // EventService().removeDeletedEventFromList(notificationKey);
-    //   return;
-    // }
+    var operation = notification.operation;
+    print('_notificationCallback opeartion $operation');
+    if ((operation == 'delete') &&
+        notificationKey.toString().toLowerCase().contains('createevent')) {
+      // EventService().removeDeletedEventFromList(notificationKey);
+      return;
+    }
 
-    // var decryptedMessage = await atClientInstance!.encryptionService!
-    //     .decrypt(value, fromAtSign)
-    //     .catchError((e) {
-    //   print('error in decrypting: $e');
-    // });
-    // print('decrypted message:$decryptedMessage');
+    var decryptedMessage = await atClientManager.atClient.encryptionService!
+        .decrypt(value ?? '', fromAtSign)
+        .catchError((e) {
+      print('error in decrypting: $e');
+    });
+    print('decrypted message:$decryptedMessage');
 
-    // if (atKey.toString().contains('createevent')) {
-    //   var eventData =
-    //       EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
-    //   if (eventData.isUpdate != null && eventData.isUpdate == false) {
-    //     // new event received
-    //     // show dialog
-    //     // add in event list
-    //     var _result = await EventKeyStreamService().addDataToList(eventData);
-    //     if (_result is EventKeyLocationModel) {
-    //       await showMyDialog(eventNotificationModel: eventData);
-    //     }
-    //   } else if (eventData.isUpdate!) {
-    //     // event updated received
-    //     // update event list
-    //     EventKeyStreamService().mapUpdatedEventDataToWidget(eventData);
-    //   }
+    if (notificationKey.toString().contains('createevent')) {
+      var eventData =
+          EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      if (eventData.isUpdate != null && eventData.isUpdate == false) {
+        // new event received
+        // show dialog
+        // add in event list
+        var _result = await EventKeyStreamService().addDataToList(eventData);
+        if (_result is EventKeyLocationModel) {
+          await showMyDialog(eventNotificationModel: eventData);
+        }
+      } else if (eventData.isUpdate!) {
+        // event updated received
+        // update event list
+        EventKeyStreamService().mapUpdatedEventDataToWidget(eventData);
+      }
 
-    //   return;
-    // }
+      return;
+    }
 
-    // if (atKey.toString().contains('eventacknowledged')) {
-    //   var msg = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
+    if (notificationKey.toString().contains('eventacknowledged')) {
+      var msg = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
 
-    //   EventKeyStreamService().createEventAcknowledge(msg, atKey, fromAtSign);
-    //   return;
-    // }
+      EventKeyStreamService().createEventAcknowledge(msg, fromAtSign);
+      return;
+    }
 
-    // if (atKey.toString().contains(MixedConstants.EVENT_MEMBER_LOCATION_KEY)) {
-    //   var msg = EventMemberLocation.fromJson(jsonDecode(decryptedMessage));
+    if (notificationKey
+        .toString()
+        .contains(MixedConstants.EVENT_MEMBER_LOCATION_KEY)) {
+      var msg = EventMemberLocation.fromJson(jsonDecode(decryptedMessage));
 
-    //   EventKeyStreamService().updateLocationData(msg, atKey, fromAtSign);
-    //   return;
-    // }
+      EventKeyStreamService().updateLocationData(msg, fromAtSign);
+      return;
+    }
   }
 
   Future<void> showMyDialog(

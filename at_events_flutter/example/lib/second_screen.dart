@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'client_sdk_service.dart';
 import 'constants.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_client/src/service/notification_service.dart';
+import 'package:at_commons/src/keystore/at_key.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -26,7 +28,16 @@ class _SecondScreenState extends State<SecondScreen> {
     super.initState();
 
     try {
-      activeAtSign = clientSdkService.currentAtsign;
+      activeAtSign = clientSdkService
+          .atClientServiceInstance!.atClientManager.atClient
+          .getCurrentAtSign();
+
+      clientSdkService.atClientServiceInstance!.atClientManager
+          .setCurrentAtSign(
+              activeAtSign!,
+              clientSdkService.atClientPreference.namespace,
+              clientSdkService.atClientPreference);
+
       initializeEventService();
       isAuthenticated = true;
     } catch (e) {
