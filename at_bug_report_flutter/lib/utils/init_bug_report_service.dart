@@ -6,10 +6,11 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 /// It is expected that the app will first create an AtClientService instance using the preferences
 /// and then use it to initialise the bug report service.
 void initializeBugReportService(
-    AtClientImpl atClientInstance, String currentAtSign,
+    AtClientManager atClientManager,
+    String currentAtSign, AtClientPreference atClientPreference,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
   BugReportService().initBugReportService(
-      atClientInstance, currentAtSign, rootDomain, rootPort);
+      atClientManager, atClientPreference, currentAtSign, rootDomain, rootPort);
 }
 
 void disposeContactsControllers() {

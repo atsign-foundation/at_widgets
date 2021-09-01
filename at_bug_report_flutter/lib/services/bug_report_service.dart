@@ -22,7 +22,9 @@ class BugReportService {
 
   String authorAtSign = '';
 
-  late AtClientImpl atClientInstance;
+  late AtClientManager atClientManager;
+  late AtClient atClient;
+
   String? rootDomain;
   int? rootPort;
   String? currentAtSign;
@@ -51,62 +53,52 @@ class BugReportService {
   }
 
   void initBugReportService(
-      AtClientImpl atClientInstanceFromApp,
+      AtClientManager atClientManagerFromApp,
+      AtClientPreference atClientPreference,
       String currentAtSignFromApp,
       String rootDomainFromApp,
       int rootPortFromApp) async {
-    atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
-    await startMonitor();
-  }
+    atClientManager = atClientManagerFromApp;
+    atClientManager.setCurrentAtSign(
+        currentAtSignFromApp, '', atClientPreference);
 
-  // startMonitor needs to be called at the beginning of session
-  // called again if outbound connection is dropped
-  Future<bool> startMonitor() async {
-    var privateKey = await getPrivateKey(currentAtSign!);
-    await atClientInstance.startMonitor(privateKey, _notificationCallback);
-    print('Monitor started');
-    return true;
-  }
+    atClient = atClientManager.atClient;
 
-  ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    var str = await atClientInstance.getPrivateKey(atsign);
-    return str!;
+    // notificationService.subscribe(regex: '.wavi').listen((notification) {
+    //   _notificationCallback(notification);
+    // });
+
+    //   await startMonitor();
+    atClientManager.notificationService.subscribe().listen((notification) {
+      _notificationCallback(notification);
+    });
   }
 
   /// Listen Notification
   void _notificationCallback(dynamic notification) async {
-    notification = notification.replaceFirst('notification:', '');
-    var responseJson = jsonDecode(notification);
-    var notificationKey = responseJson['key'];
-    var fromAtsign = responseJson['from'];
+    AtNotification atNotification = notification;
+    var notificationKey = atNotification.key;
+    var fromAtsign = atNotification.from;
+    var toAtsign = atNotification.to;
 
     // remove from and to atsigns from the notification key
     if (notificationKey.contains(':')) {
       notificationKey = notificationKey.split(':')[1];
     }
-    notificationKey.replaceFirst(fromAtsign, '');
-    notificationKey.trim();
-
-    if ((notificationKey.startsWith(bugReportKey) &&
-        fromAtsign == currentAtSign)) {
-      var message = responseJson['value'];
-      var decryptedMessage = await atClientInstance.encryptionService!
+    notificationKey = notificationKey.replaceFirst(fromAtsign, '').trim();
+    print('notificationKey = $notificationKey');
+    if ((notificationKey.startsWith(storageKey) && toAtsign == currentAtSign)) {
+      var message = atNotification.value ?? '';
+      print('value = $message');
+      var decryptedMessage = await atClient.encryptionService!
           .decrypt(message, fromAtsign)
           .catchError((e) {
-        print('error in decrypting bugReport ${e.errorCode} ${e.errorMessage}');
+        //   print('error in decrypting notify $e');
       });
-      print('chat message => $decryptedMessage $fromAtsign');
-      await setBugReport(
-        BugReport(
-          errorDetail: decryptedMessage,
-          atSign: fromAtsign,
-          time: responseJson['epochMillis'],
-        ),
-      );
+      print('notify message => $decryptedMessage $fromAtsign');
     }
   }
 
@@ -119,7 +111,7 @@ class BugReportService {
         ..sharedBy = currentAtSign!
         ..metadata = Metadata();
 
-      var keyValue = await atClientInstance.get(key).catchError((e) {
+      var keyValue = await atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
 
@@ -149,7 +141,7 @@ class BugReportService {
         ..sharedWith = authorAtSign
         ..metadata = Metadata();
 
-      var keyValue = await atClientInstance.get(key).catchError((e) {
+      var keyValue = await atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
 
@@ -185,7 +177,7 @@ class BugReportService {
       bugReports.insert(0, bugReport);
       bugReportSink.add(bugReports);
       bugReportsJson!.add(bugReport.toJson());
-      await atClientInstance.put(key, json.encode(bugReportsJson));
+      await atClient.put(key, json.encode(bugReportsJson));
       return true;
     } catch (e) {
       print('Error in setting bugReport => $e');

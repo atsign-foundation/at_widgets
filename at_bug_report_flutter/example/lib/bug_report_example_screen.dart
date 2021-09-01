@@ -99,7 +99,9 @@ class _BugReportScreenState extends State<BugReportScreen> {
       activeAtSign = currentAtSign;
     });
     initializeBugReportService(
-        clientSdkService.atClientServiceInstance!.atClient!, activeAtSign!,
+        clientSdkService.atClientServiceInstance!.atClientManager,
+        activeAtSign!,
+        clientSdkService.atClientPreference,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }

@@ -51,6 +51,6 @@ class ClientSdkService {
 
   ///Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
-    return await atClientServiceInstance!.getAtSign();
+    return atClientServiceInstance!.atClientManager.atClient.getCurrentAtSign();
   }
 }
