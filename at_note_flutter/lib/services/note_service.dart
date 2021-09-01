@@ -29,7 +29,9 @@ class NoteService {
 
   String? sendToAtSign;
 
-  late AtClientImpl atClientInstance;
+  late AtClientManager atClientManager;
+  late AtClient atClient;
+
   String? rootDomain;
   int? rootPort;
   String? currentAtSign;
@@ -38,7 +40,7 @@ class NoteService {
   List<dynamic>? notesJson = [];
 
   StreamController<List<Note>> noteStreamController =
-  StreamController<List<Note>>.broadcast();
+      StreamController<List<Note>>.broadcast();
 
   Sink get noteSink => noteStreamController.sink;
 
@@ -48,64 +50,57 @@ class NoteService {
     noteStreamController.close();
   }
 
-  void initNoteService(AtClientImpl atClientInstanceFromApp,
+  void initNoteService(
+      AtClientManager atClientManagerFromApp,
+      AtClientPreference atClientPreference,
       String currentAtSignFromApp,
       String rootDomainFromApp,
       int rootPortFromApp) async {
-    atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
-    await startMonitor();
+    atClientManager = atClientManagerFromApp;
+    atClientManager.setCurrentAtSign(
+        currentAtSignFromApp, '', atClientPreference);
+
+    atClient = atClientManager.atClient;
+
+    // notificationService.subscribe(regex: '.wavi').listen((notification) {
+    //   _notificationCallback(notification);
+    // });
+
+    //   await startMonitor();
+    atClientManager.notificationService.subscribe().listen((notification) {
+      _notificationCallback(notification);
+    });
   }
 
-  // startMonitor needs to be called at the beginning of session
-  // called again if outbound connection is dropped
-  Future<bool> startMonitor() async {
-    var privateKey = await getPrivateKey(currentAtSign!);
-    await atClientInstance.startMonitor(privateKey, _notificationCallback);
-    print('Monitor started');
-    return true;
-  }
-
-  ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    var str = await atClientInstance.getPrivateKey(atsign);
-    return str!;
-  }
-
+  /// Listen Notification
   void _notificationCallback(dynamic notification) async {
-    notification = notification.replaceFirst('notification:', '');
-    var responseJson = jsonDecode(notification);
-    var notificationKey = responseJson['key'];
-    var fromAtsign = responseJson['from'];
+    AtNotification atNotification = notification;
+    var notificationKey = atNotification.key;
+    var fromAtsign = atNotification.from;
+    var toAtsign = atNotification.to;
 
     // remove from and to atsigns from the notification key
     if (notificationKey.contains(':')) {
       notificationKey = notificationKey.split(':')[1];
     }
-    notificationKey.replaceFirst(fromAtsign, '');
-    notificationKey.trim();
-
-    if ((notificationKey.startsWith(noteKey) && fromAtsign == currentAtSign)) {
-      var message = responseJson['value'];
-      var decryptedMessage = await atClientInstance.encryptionService!
+    notificationKey = notificationKey.replaceFirst(fromAtsign, '').trim();
+    print('notificationKey = $notificationKey');
+    if ((notificationKey.startsWith(storageKey) && toAtsign == currentAtSign)) {
+      var message = atNotification.value ?? '';
+      print('value = $message');
+      var decryptedMessage = await atClient.encryptionService!
           .decrypt(message, fromAtsign)
           .catchError((e) {
-        print('error in decrypting note ${e.errorCode} ${e.errorMessage}');
+        //   print('error in decrypting notify $e');
       });
-      print('note message => $decryptedMessage $fromAtsign');
-      await addNote(
-        Note(
-          title: decryptedMessage,
-          atSign: fromAtsign,
-          time: responseJson['epochMillis'],
-        ),
-      );
+      print('notify message => $decryptedMessage $fromAtsign');
     }
   }
 
-  /// Get Note List from atClient
+  /// Get Note List from AtClient
   Future<void> getNotes({String? atsign}) async {
     try {
       notes = [];
@@ -115,7 +110,7 @@ class NoteService {
         ..sharedWith = sendToAtSign
         ..metadata = Metadata();
 
-      var keyValue = await atClientInstance.get(key).catchError((e) {
+      var keyValue = await atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
 
@@ -164,6 +159,7 @@ class NoteService {
     this.sendToAtSign = sendToAtSign!;
   }
 
+  /// Search Note
   Future<bool> searchNote(String text) async {
     var searchNotes = notes.where((element) {
       if (element.title != null) {
@@ -186,7 +182,7 @@ class NoteService {
         ..key = storageKey + (currentAtSign ?? ' ').substring(1) + '.$name'
         ..sharedBy = currentAtSign
         ..metadata = metadata;
-      bool isSuccess = await atClientInstance.put(key, uint8list);
+      bool isSuccess = await atClient.put(key, uint8list);
       print('Add Image Success $isSuccess');
 
       KeyModel newKey = KeyModel(
@@ -201,7 +197,7 @@ class NoteService {
     }
   }
 
-  /// Save Image In Note from atClient
+  /// Get Image from Key from atClient
   Future<Uint8List?> getImage(String keyImage) async {
     try {
       KeyModel newKey = KeyModel.fromJson(keyImage);
@@ -213,7 +209,7 @@ class NoteService {
         ..key = newKey.value
         ..sharedBy = newKey.sharedBy
         ..metadata = metaData;
-      var keyValue = await atClientInstance.get(key).catchError((e) {
+      var keyValue = await atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
 
@@ -231,7 +227,7 @@ class NoteService {
     }
   }
 
-  /// Add Note to atClient
+  /// Add Note to AtClient
   Future<bool> addNote(Note note) async {
     try {
       var key = AtKey()
@@ -244,7 +240,7 @@ class NoteService {
       notes.add(newNote);
       noteSink.add(notes);
       notesJson!.add(note.toJson());
-      bool isSuccess = await atClientInstance.put(key, json.encode(notesJson));
+      bool isSuccess = await atClient.put(key, json.encode(notesJson));
       print('Add Note Success $isSuccess');
       return true;
     } catch (e) {
@@ -253,7 +249,7 @@ class NoteService {
     }
   }
 
-  /// Edit Note to atClient
+  /// Edit Note to AtClient
   Future<bool> editNote(Note note, int index) async {
     try {
       var key = AtKey()
@@ -271,7 +267,7 @@ class NoteService {
         var note = value.toJson();
         notesJson!.add(note);
       });
-      bool isSuccess = await atClientInstance.put(key, json.encode(notesJson));
+      bool isSuccess = await atClient.put(key, json.encode(notesJson));
       print('Edit Note Success $isSuccess');
       return true;
     } catch (e) {
@@ -298,7 +294,7 @@ class NoteService {
         notesJson!.add(note);
       });
 
-      bool isSuccess = await atClientInstance.put(key, json.encode(notesJson));
+      bool isSuccess = await atClient.put(key, json.encode(notesJson));
       print('Remove Note Success $isSuccess');
       return true;
     } catch (e) {
@@ -331,7 +327,7 @@ class NoteService {
   }
 
   /// Handle Drag and Drop Note
-  Future<bool> reOrderNote(int oldIndex, int newIndex) async {
+  Future<bool> reorderNote(int oldIndex, int newIndex) async {
     try {
       Note oldNote = notes[oldIndex];
       Note newNote = notes[newIndex];
@@ -347,7 +343,7 @@ class NoteService {
     }
   }
 
-  /// Save ReOrder Result Notes
+  /// Update New Order of Notes after Drag and Drop
   Future<bool> updateNotes() async {
     try {
       var key = AtKey()
@@ -361,7 +357,7 @@ class NoteService {
         var note = value.toJson();
         notesJson!.add(note);
       });
-      bool isSuccess = await atClientInstance.put(key, json.encode(notesJson));
+      bool isSuccess = await atClient.put(key, json.encode(notesJson));
       print('Update Notes Success $isSuccess');
       return true;
     } catch (e) {

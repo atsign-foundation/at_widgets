@@ -71,7 +71,9 @@ class _NoteExampleScreenState extends State<NoteExampleScreen> {
       activeAtSign = currentAtSign;
     });
     initializeNoteService(
-        clientSdkService.atClientServiceInstance!.atClient!, activeAtSign!,
+        clientSdkService.atClientServiceInstance!.atClientManager,
+        activeAtSign!,
+        clientSdkService.atClientPreference,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }

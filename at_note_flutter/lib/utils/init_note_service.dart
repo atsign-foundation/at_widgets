@@ -5,10 +5,11 @@ import 'package:at_note_flutter/services/note_service.dart';
 /// The note service needs to be initialised.
 /// It is expected that the app will first create an AtClientService instance using the preferences
 /// and then use it to initialise the note service.
-void initializeNoteService(AtClientImpl atClientInstance, String currentAtSign,
+void initializeNoteService(AtClientManager atClientManager,
+    String currentAtSign, AtClientPreference atClientPreference,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
-  NoteService()
-      .initNoteService(atClientInstance, currentAtSign, rootDomain, rootPort);
+  NoteService().initNoteService(
+      atClientManager, atClientPreference, currentAtSign, rootDomain, rootPort);
 }
 
 void disposeNoteControllers() {

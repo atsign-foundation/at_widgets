@@ -144,7 +144,7 @@ class _NoteListScreenScreenState extends State<NoteListScreen> {
                       onReorder: (int oldIndex, int newIndex) async {
                         print(
                             'onReorder = ${DateTime.now().toString().substring(5, 22)}');
-                        await noteService.reOrderNote(oldIndex, newIndex);
+                        await noteService.reorderNote(oldIndex, newIndex);
                       },
                       onNoReorder: (int index) {
                         print(
