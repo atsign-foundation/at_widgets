@@ -61,11 +61,11 @@ class AtLocationNotificationListener {
     return await KeychainUtil.getPrivateKey(atsign);
   }
 
-  void fnCallBack(var response) async {
-    print('fnCallBack called');
-    SyncSecondary()
-        .completePrioritySync(response, afterSync: _notificationCallback);
-  }
+  // void fnCallBack(var response) async {
+  //   print('fnCallBack called');
+  //   SyncSecondary()
+  //       .completePrioritySync(response, afterSync: _notificationCallback);
+  // }
 
   void _notificationCallback(dynamic notification) async {
     print('_notificationCallback called');
@@ -79,6 +79,16 @@ class AtLocationNotificationListener {
       atKey = notificationKey.split(':')[1];
     } else {
       atKey = notificationKey;
+    }
+
+    if ((!notificationKey.contains(locationKey)) &&
+        (!notificationKey
+            .contains(MixedConstants.DELETE_REQUEST_LOCATION_ACK)) &&
+        (!notificationKey.contains(MixedConstants.SHARE_LOCATION_ACK)) &&
+        (!notificationKey.contains(MixedConstants.SHARE_LOCATION)) &&
+        (!notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) &&
+        (!notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
+      return;
     }
 
     var operation = notification.operation;
