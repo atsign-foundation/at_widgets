@@ -6,6 +6,7 @@
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
 import 'dart:typed_data';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
@@ -14,6 +15,7 @@ import 'package:at_contacts_flutter/utils/images.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -36,12 +38,14 @@ class CustomListTile extends StatefulWidget {
       this.contactService,
       this.selectedList})
       : super(key: key);
+
   @override
   _CustomListTileState createState() => _CustomListTileState();
 }
 
 class _CustomListTileState extends State<CustomListTile> {
   bool isSelected = false;
+
   @override
   Widget build(BuildContext context) {
     Widget contactImage;
@@ -107,7 +111,10 @@ class _CustomListTileState extends State<CustomListTile> {
               ),
             ),
             subtitle: Text(
-              widget.contact!.atSign!,
+              (widget.contact!.tags != null &&
+                      widget.contact!.tags!['nickname'] != null
+                  ? '${widget.contact!.tags!['nickname']} (${widget.contact!.atSign!})'
+                  : widget.contact!.atSign!),
               style: TextStyle(
                 color: ColorConstants.fadedText,
                 fontSize: 14.toFont,

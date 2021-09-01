@@ -6,15 +6,6 @@
 
 A flutter plugin to provide group functionality for atsign contacts. Helps to manage contacts.
 
-## Getting Started
-
-This plugin can be added to the project as git dependency in pubspec.yaml
-
-```
-dependencies:
-  at_contacts_group_flutter: ^1.0.0
-```
-
 ### Sample usage
 It is expected that the app will first create an AtClientService instance and authenticate an atsign.
 

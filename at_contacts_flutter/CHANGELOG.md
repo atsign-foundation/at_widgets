@@ -1,3 +1,6 @@
+## 2.0.3
+- Updated public persona keys
+
 ## 2.0.2
 - Updated repository link and description
 - Updated dependencies

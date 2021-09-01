@@ -19,7 +19,7 @@ class MasterLocationService {
   MasterLocationService._();
   static final MasterLocationService _instance = MasterLocationService._();
   factory MasterLocationService() => _instance;
-  late AtClientImpl atClientInstance;
+  late AtClient atClientInstance;
   late Function getAtValueFromMainApp;
 
   String? currentAtSign;
@@ -34,7 +34,7 @@ class MasterLocationService {
   StreamSink<List<HybridModel>?> get allReceivedUsersSink =>
       _allReceivedUsersController.sink as StreamSink<List<HybridModel>?>;
 
-  void init(String currentAtSignFromApp, AtClientImpl atClientInstanceFromApp,
+  void init(String currentAtSignFromApp, AtClient atClientInstanceFromApp,
       {Function? newGetAtValueFromMainApp}) {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
@@ -195,7 +195,7 @@ class MasterLocationService {
   }
 
   Future<dynamic> getAtValue(AtKey key) async {
-    print(atClientInstance.currentAtSign);
+    print(atClientInstance.getCurrentAtSign());
     try {
       var atvalue = await atClientInstance.get(key).catchError(
           // ignore: return_of_invalid_type_from_catch_error

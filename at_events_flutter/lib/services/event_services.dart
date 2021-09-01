@@ -297,29 +297,32 @@ class EventService {
     var isOverlap = false;
     EventNotificationModel? overlapEvent = EventNotificationModel();
 
-    hybridEvents.forEach((element) {
-      if (!eventNotificationModel!.event!.isRecurring!) {
-        if (dateToString(eventNotificationModel!.event!.date!) ==
+    for (var element in hybridEvents) {
+      if (!element!.event!.isRecurring!) {
+        if (dateToString(element.event!.date!) ==
             dateToString(newEvent!.event!.date!)) {
-          var event = eventNotificationModel!.event!;
+          var event = element.event!;
           if (event.startTime!.hour >= newEvent.event!.startTime!.hour &&
               event.startTime!.hour <= newEvent.event!.endTime!.hour) {
             isOverlap = true;
-            overlapEvent = eventNotificationModel;
+            overlapEvent = element;
+            return [isOverlap, overlapEvent];
           }
           if (event.startTime!.hour <= newEvent.event!.startTime!.hour &&
               event.endTime!.hour >= newEvent.event!.endTime!.hour) {
             isOverlap = true;
-            overlapEvent = eventNotificationModel;
+            overlapEvent = element;
+            return [isOverlap, overlapEvent];
           }
           if (event.endTime!.hour >= newEvent.event!.startTime!.hour &&
               event.endTime!.hour <= newEvent.event!.endTime!.hour) {
             isOverlap = true;
-            overlapEvent = eventNotificationModel;
+            overlapEvent = element;
           }
         }
       }
-    });
+    }
+
     return [isOverlap, overlapEvent];
   }
 

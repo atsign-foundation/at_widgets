@@ -1,3 +1,6 @@
+## 3.0.0
+- Resilient SDK changes uptake for monitor, notification and sync improvements
+
 ## 2.1.3
 - added QR code screen
 

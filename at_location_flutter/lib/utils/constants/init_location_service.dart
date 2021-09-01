@@ -22,7 +22,7 @@ import 'package:geolocator/geolocator.dart';
 /// [showDialogBox] if false dialog box wont be shown.
 ///
 /// [streamAlternative] a function which will return updated lists of [KeyLocationModel]
-void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
+void initializeLocationService(AtClient atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
     {required String mapKey,
     required String apiKey,
