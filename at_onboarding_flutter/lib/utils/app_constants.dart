@@ -18,7 +18,13 @@ class AppConstants {
   static int responseTimeLimit = 30;
   static String contactAddress = 'support@atsign.com';
 
-  static String get serverDomain => _rootDomain;
+  //Button titles
+  static const String closeButton = 'Close';
+  static const String submitButton = 'Submit';
+  static const String cancelButton = 'Cancel';
+  static const String removeButton = 'Remove';
+
+  static get serverDomain => _rootDomain;
 
   static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';

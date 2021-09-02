@@ -140,34 +140,52 @@ class _CustomDialogState extends State<CustomDialog> {
                       : widget.isAtsignForm
                           ? isQrScanner
                               ? Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 4.0.toFont),
-                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                    Text(
-                                      'Scan your QR!',
-                                      style: TextStyle(color: ColorConstants.appColor, fontSize: 16.toFont),
-                                    ),
-                                    SizedBox(height: 20.toHeight),
-                                    Container(
-                                      width: 300.toWidth,
-                                      height: 350.toHeight,
-                                      child: QrReaderView(
-                                        width: 300.toWidth,
-                                        height: 350.toHeight,
-                                        callback: (QrReaderViewController controller) {
-                                          _controller = controller;
-                                          _controller!.startCamera((String data, List<Offset> offsets) {
-                                            onScan(data, offsets, context);
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(height: 20.toHeight),
-                                    loading
-                                        ? Container(
-                                            width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 4.0.toFont),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          'Scan your QR!',
+                                          style: TextStyle(
+                                              color: ColorConstants.appColor,
+                                              fontSize: 16.toFont),
+                                        ),
+                                        SizedBox(height: 20.toHeight),
+                                        Container(
+                                          width: 300.toWidth,
+                                          height: 350.toHeight,
+                                          child: QrReaderView(
+                                            width: 300.toWidth,
+                                            height: 350.toHeight,
+                                            callback: (QrReaderViewController
+                                                controller) {
+                                              _controller = controller;
+                                              _controller!.startCamera(
+                                                  (String data,
+                                                      List<Offset> offsets) {
+                                                onScan(data, offsets, context);
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(height: 20.toHeight),
+                                        SizedBox(
+                                          child: Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                        SizedBox(height: 20.toHeight),
+                                        Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             child: ElevatedButton(
                                               style: ButtonStyle(
-                                                  backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.grey[800])),
                                               // key: Key(''),
                                               onPressed: () {
                                                 setState(() {
@@ -176,15 +194,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                               },
                                               child: Text(
                                                 'Cancel',
-                                                style: TextStyle(color: Colors.white, fontSize: 15.toFont),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15.toFont),
                                               ),
-                                            ))
-                                        : const SizedBox(
-                                            child: Center(
-                                              child: CircularProgressIndicator(),
-                                            ),
-                                          )
-                                  ]),
+                                            )),
+                                      ]),
                                 )
                               : Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 4.0.toFont),
@@ -527,7 +542,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     if (result != null && result != limitExceeded) {
                                                       List<String> params = result.split(':');
                                                       Navigator.pop(context);
-                                                      widget.onValidate!(params[0], params[1], false);
+                                                      this.widget.onValidate!(
+
+                                                          params[0],
+                                                          params[1],
+                                                          false);
                                                     }
                                                   }
                                                 },
@@ -569,7 +588,19 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 },
                                                 child: const Text(
                                                   'Wrong email?',
-                                                  style: TextStyle(color: Colors.grey),
+                                                  style: TextStyle(
+                                                      color: Colors.grey),
+                                                )),
+                                          if (widget.isQR)
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text(
+                                                  'Back',
+                                                  style: TextStyle(
+                                                      color: Colors.grey),
                                                 ))
                                         ]),
                                   if (!pair) ...<Widget>[
@@ -635,11 +666,8 @@ class _CustomDialogState extends State<CustomDialog> {
     return (await <Permission>[Permission.camera].request())[0] == PermissionStatus.granted;
   }
 
-  Future<void> onScan(String data, List<Offset> offsets, BuildContext context) async {
-    setState(() {
-      loading = true;
-    });
-    await _controller!.stopCamera();
+  void onScan(String data, List<Offset> offsets,BuildContext context) async {
+    _controller!.stopCamera();
     print('SCANNED: => $data');
     List<String> values = data.split(':');
     await widget.onValidate!(values[0], values[1], true);

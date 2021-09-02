@@ -56,6 +56,7 @@ class BackupKeyWidget extends StatelessWidget {
       this.buttonHeight,
       this.buttonColor,
       this.iconSize}) {
+    _backupKeyService.atClientService = atClientService;
   }
 
   @override
@@ -190,52 +191,10 @@ class BackupKeyWidget extends StatelessWidget {
         });
   }
 
-  _showFileLocationDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext ctxt) {
-          return AlertDialog(
-            title: Center(
-              child: Text(
-                'Key saved successfully!',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(Platform.isAndroid ? Strings.key_saved_android : Strings.key_saved_ios, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[700])),
-                SizedBox(height: 20.toHeight),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // TextButton(
-                    //     child: Text(Strings.backButtonTitle, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-                    //     onPressed: () async {m
-                    //       var result = await _onBackup(context, false);
-                    //       Navigator.pop(ctxt);
-                    //       if (result == false) {
-                    //         _showAlertDialog(context);
-                    //       }
-                    //     }),
-                    // Spacer(),
-                    TextButton(
-                        child: Text(Strings.okButtonTitle, style: TextStyle(color: Colors.black)),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        })
-                  ],
-                )
-              ],
-            ),
-          );
-        });
-  }
-
   _onBackup(BuildContext context, bool isShareClicked) async {
     var _size = MediaQuery.of(context).size;
     try {
-      var aesEncryptedKeys = await BackUpKeyService.getEncryptedKeys(atsign);
+      var aesEncryptedKeys = await _backupKeyService.getEncryptedKeys(atsign);
       if (aesEncryptedKeys.isEmpty) {
         return false;
       }
@@ -244,7 +203,6 @@ class BackupKeyWidget extends StatelessWidget {
       if (isShareClicked) {
         await Share.shareFiles([path], sharePositionOrigin: Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
       } else {
-        _showFileLocationDialog(context);
         Fluttertoast.showToast(
           msg: "Key saved to your device",
           toastLength: Toast.LENGTH_SHORT,
@@ -264,12 +222,7 @@ class BackupKeyWidget extends StatelessWidget {
       await Permission.storage.request();
     }
     var directory = await path_provider.getApplicationSupportDirectory();
-    String path = '';
-    if (Platform.isAndroid) {
-      path = "/storage/emulated/0/";
-    } else {
-      path = directory.path.toString() + '/';
-    }
+    String path = directory.path.toString() + '/';
     final encryptedKeysFile = await File('$path' + '$atsign${Strings.backupKeyName}').create();
     var keyString = jsonEncode(aesEncryptedKeys);
     encryptedKeysFile.writeAsStringSync(keyString);

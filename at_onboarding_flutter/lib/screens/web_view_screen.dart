@@ -36,6 +36,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
         centerTitle: true,
         backgroundColor: ColorConstants.appColor,
       ),
+
+//      CustomAppBar(
+//        showBackButton: true,
+//        title: widget.title,
+//      ),
       body: Stack(
         children: <Widget>[
           WebView(

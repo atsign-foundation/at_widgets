@@ -6,16 +6,17 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'dart:io';
-import 'package:at_backupkey_flutter_example/main.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
+
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../test/at_demo_credentials.dart' as demo_data;
+import 'package:at_backupkey_flutter_example/main.dart';
+
 import 'test_material_app.dart';
+import '../../test/at_demo_credentials.dart' as demo_data;
+import 'package:at_commons/at_commons.dart';
 
 void main() {
   Widget _homeWidget({@required Widget home}) {
@@ -35,7 +36,8 @@ void main() {
     // Verify that platform version is retrieved.
     expect(
       find.byWidgetPredicate(
-        (Widget widget) => widget is Text && widget.data.startsWith('Running on:'),
+        (Widget widget) =>
+            widget is Text && widget.data.startsWith('Running on:'),
       ),
       findsOneWidget,
     );
@@ -43,7 +45,9 @@ void main() {
 
   group('test backupkey widget', () {
     testWidgets('valid @sign', (WidgetTester tester) async {
-      tester.pumpWidget(_homeWidget(home: BackupKeyWidget(atsign: atsign, atClientService: atClientService)));
+      tester.pumpWidget(_homeWidget(
+          home: BackupKeyWidget(
+              atsign: atsign, atClientService: atClientService)));
     });
   });
 
@@ -66,10 +70,12 @@ Future<void> setUpFunc(String atsign) async {
 
   await AtClientImpl.createClient(atsign, 'persona', preference);
   var atClient = await AtClientImpl.getClient(atsign);
-  atClient.getSyncManager().init(atsign, preference, atClient.getRemoteSecondary(), atClient.getLocalSecondary());
+  atClient.getSyncManager().init(atsign, preference,
+      atClient.getRemoteSecondary(), atClient.getLocalSecondary());
   await atClient.getSyncManager().sync();
   // To setup encryption keys
-  await atClient.getLocalSecondary().putValue(AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]);
+  await atClient.getLocalSecondary().putValue(
+      AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]);
 }
 
 AtClientPreference getAtSignPreference(String atsign) {

@@ -56,6 +56,7 @@ class BackupKeyWidget extends StatelessWidget {
       this.buttonHeight,
       this.buttonColor,
       this.iconSize}) {
+    _backupKeyService.atClientService = atClientService;
   }
 
   @override
@@ -64,44 +65,37 @@ class BackupKeyWidget extends StatelessWidget {
     return isButton
         ? Row(
             children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    var result = await _onBackup(context, false);
-                    if (result == false) {
-                      _showAlertDialog(context);
-                    }
-                  },
-                  child: Container(
-                    //width: this.buttonWidth ?? 158.toWidth,
-                    height: this.buttonHeight ?? (50.toHeight),
-                    padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.toWidth), color: this.buttonColor == null ? Colors.black : this.buttonColor),
-                    child: Center(
-                      child: Text(buttonText!, textAlign: TextAlign.center, style: TextStyle(fontSize: 16.toFont, color: Colors.white, fontWeight: FontWeight.bold)),
-                    ),
+              GestureDetector(
+                onTap: () async {
+                  var result = await _onBackup(context);
+                  if (result == false) {
+                    _showAlertDialog(context);
+                  }
+                },
+                child: Container(
+                  //width: this.buttonWidth ?? 158.toWidth,
+                  height: this.buttonHeight ?? (50.toHeight),
+                  padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.toWidth), color: this.buttonColor == null ? Colors.black : this.buttonColor),
+                  child: Center(
+                    child: Text(buttonText!, textAlign: TextAlign.center, style: TextStyle(fontSize: 16.toFont, color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ),
-              SizedBox(
-                width: 30,
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    var result = await _onBackup(context, true);
-                    if (result == false) {
-                      _showAlertDialog(context);
-                    }
-                  },
-                  child: Container(
-                    //width: this.buttonWidth ?? 158.toWidth,
-                    height: this.buttonHeight ?? (50.toHeight),
-                    padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.toWidth), color: this.buttonColor == null ? Colors.black : this.buttonColor),
-                    child: Center(
-                      child: Text('Share', textAlign: TextAlign.center, style: TextStyle(fontSize: 16.toFont, color: Colors.white, fontWeight: FontWeight.bold)),
-                    ),
+              GestureDetector(
+                onTap: () async {
+                  var result = await _onBackup(context);
+                  if (result == false) {
+                    _showAlertDialog(context);
+                  }
+                },
+                child: Container(
+                  //width: this.buttonWidth ?? 158.toWidth,
+                  height: this.buttonHeight ?? (50.toHeight),
+                  padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.toWidth), color: this.buttonColor == null ? Colors.black : this.buttonColor),
+                  child: Center(
+                    child: Text(buttonText!, textAlign: TextAlign.center, style: TextStyle(fontSize: 16.toFont, color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ),
@@ -170,7 +164,7 @@ class BackupKeyWidget extends StatelessWidget {
                     TextButton(
                         child: Text(Strings.backButtonTitle, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                         onPressed: () async {
-                          var result = await _onBackup(context, false);
+                          var result = await _onBackup(context);
                           Navigator.pop(ctxt);
                           if (result == false) {
                             _showAlertDialog(context);
@@ -190,67 +184,23 @@ class BackupKeyWidget extends StatelessWidget {
         });
   }
 
-  _showFileLocationDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext ctxt) {
-          return AlertDialog(
-            title: Center(
-              child: Text(
-                'Key saved successfully!',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(Platform.isAndroid ? Strings.key_saved_android : Strings.key_saved_ios, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[700])),
-                SizedBox(height: 20.toHeight),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // TextButton(
-                    //     child: Text(Strings.backButtonTitle, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-                    //     onPressed: () async {m
-                    //       var result = await _onBackup(context, false);
-                    //       Navigator.pop(ctxt);
-                    //       if (result == false) {
-                    //         _showAlertDialog(context);
-                    //       }
-                    //     }),
-                    // Spacer(),
-                    TextButton(
-                        child: Text(Strings.okButtonTitle, style: TextStyle(color: Colors.black)),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        })
-                  ],
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  _onBackup(BuildContext context, bool isShareClicked) async {
+  _onBackup(BuildContext context) async {
     var _size = MediaQuery.of(context).size;
     try {
-      var aesEncryptedKeys = await BackUpKeyService.getEncryptedKeys(atsign);
+      var aesEncryptedKeys = await _backupKeyService.getEncryptedKeys(atsign);
       if (aesEncryptedKeys.isEmpty) {
         return false;
       }
       String path = await _generateFile(aesEncryptedKeys);
       print(path);
-      if (isShareClicked) {
-        await Share.shareFiles([path], sharePositionOrigin: Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
-      } else {
-        _showFileLocationDialog(context);
-        Fluttertoast.showToast(
-          msg: "Key saved to your device",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-      }
+      // await Share.shareFiles([path],
+      //     sharePositionOrigin:
+      //         Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
+      Fluttertoast.showToast(
+        msg: "Key saved to your device",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
     } on Error catch (err) {
@@ -264,12 +214,7 @@ class BackupKeyWidget extends StatelessWidget {
       await Permission.storage.request();
     }
     var directory = await path_provider.getApplicationSupportDirectory();
-    String path = '';
-    if (Platform.isAndroid) {
-      path = "/storage/emulated/0/";
-    } else {
-      path = directory.path.toString() + '/';
-    }
+    String path = directory.path.toString() + '/';
     final encryptedKeysFile = await File('$path' + '$atsign${Strings.backupKeyName}').create();
     var keyString = jsonEncode(aesEncryptedKeys);
     encryptedKeysFile.writeAsStringSync(keyString);
