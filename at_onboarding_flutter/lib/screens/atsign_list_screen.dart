@@ -22,8 +22,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
   Object? lastSelectedIndex;
   late int greyStartIndex;
   Future<void> intifuture() async {
-    List<String> atSignList = await OnboardingService.getInstance().getAtsignList();
-    pairedAtsignsList = atSignList;
+    pairedAtsignsList = await OnboardingService.getInstance().getAtsignList();
     setState(() {});
   }
 
