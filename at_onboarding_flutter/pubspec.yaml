@@ -48,6 +48,11 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_tools.git
       path: at_commons
       ref: trunk
+  at_backupkey_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: at_backupkey_flutter
+      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
