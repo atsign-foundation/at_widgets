@@ -283,8 +283,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         loading = true;
       });
       for (PlatformFile pickedFile in result?.files ?? <PlatformFile>[]) {
-        String path = pickedFile.path;
-        File selectedFile = File(path);
+        String? path = pickedFile.path;
+        File selectedFile = File(path!);
         int length = selectedFile.lengthSync();
         if (length < 10) {
           await _showAlertDialog(_incorrectKeyFile);
