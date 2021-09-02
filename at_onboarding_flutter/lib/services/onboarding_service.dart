@@ -1,10 +1,11 @@
 import 'dart:async';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_server_status/at_server_status.dart';
-import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:flutter/material.dart';
 
 class OnboardingService {
   static final OnboardingService _singleton = OnboardingService._internal();
@@ -69,14 +70,6 @@ class OnboardingService {
     return service;
   }
 
-  AtClientImpl? _getAtClientForAtsign({String? atsign}) {
-    atsign ??= _atsign;
-    if (atClientServiceMap.containsKey(atsign)) {
-      return atClientServiceMap[atsign]!.atClient;
-    }
-    return null;
-  }
-
   ///Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
     return _keyChainManager.getAtSign();
@@ -90,7 +83,7 @@ class OnboardingService {
         atClientPreference: _atClientPreference, atsign: _atsign);
     _atsign ??= await getAtSign();
     atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
-    await _sync();
+    await _sync(_atsign);
     return result;
   }
 
@@ -122,15 +115,15 @@ class OnboardingService {
       if (cramSecret != null) {
         _atClientPreference.privateKey = null;
       }
-      await atClientService
+      bool isAuthenticated = await atClientService
           .authenticate(atsign, _atClientPreference,
-              jsonData: jsonData, decryptKey: decryptKey, status: status)
-          .then((bool value) async {
-        _atsign = atsign;
+              jsonData: jsonData, decryptKey: decryptKey, status: status);
+        if(isAuthenticated){
+            _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
         c.complete(ResponseStatus.AUTH_SUCCESS);
-        await _sync();
-      });
+        await _sync(_atsign);
+      }
     } catch (e) {
       _logger.severe('error in authenticating =>  ${e.toString()}');
       if (e == ResponseStatus.TIME_OUT) {
@@ -145,21 +138,21 @@ class OnboardingService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return atClientServiceMap[atsign]!.getPkamPrivateKey(atsign);
+    return KeychainUtil.getPkamPrivateKey(atsign);
   }
 
   ///Fetches publickey for [atsign] from device keychain.
   Future<String?> getPublicKey(String atsign) async {
-    return atClientServiceMap[atsign]!.getPkamPublicKey(atsign);
+    return KeychainUtil.getPkamPublicKey(atsign);
   }
 
   Future<String?> getAESKey(String atsign) async {
-    return atClientServiceMap[atsign]!.getAESKey(atsign);
+    return KeychainUtil.getAESKey(atsign);
   }
 
   Future<Map<String, String?>> getEncryptedKeys(String atsign) async {
     Map<String, String?> result =
-        await atClientServiceMap[atsign]!.getEncryptedKeys(atsign);
+        await KeychainUtil.getEncryptedKeys(atsign);
     result[atsign] = await getAESKey(atsign);
     return result;
   }
@@ -175,9 +168,9 @@ class OnboardingService {
     return atsign;
   }
 
-  Future<bool?> isExistingAtsign(String? atsign) async {
+  Future<bool> isExistingAtsign(String? atsign) async {
     if (atsign == null) {
-      return null;
+      return false;
     }
     atsign = formatAtSign(atsign);
     List<String>? atSignsList = await getAtsignList();
@@ -216,9 +209,12 @@ class OnboardingService {
     return status.status();
   }
 
-  Future<void> _sync() async {
+  Future<void> _sync(String? atSign) async {
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
-      await _getAtClientForAtsign()!.getSyncManager()!.sync();
+      await _getClientServiceForAtsign(atSign)!
+          .atClientManager
+          .syncService
+          .sync();
     }
   }
 }

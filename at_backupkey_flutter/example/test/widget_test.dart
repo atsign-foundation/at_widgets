@@ -6,18 +6,16 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'dart:io';
-
+import 'package:at_backupkey_flutter_example/main.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_commons/at_commons.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:at_backupkey_flutter_example/main.dart';
-
-import 'test_material_app.dart';
 import '../../test/at_demo_credentials.dart' as demo_data;
-import 'package:at_commons/at_commons.dart';
+import 'test_material_app.dart';
 
 void main() {
   Widget _homeWidget({@required Widget home}) {

@@ -18,7 +18,7 @@ This is the library portion of a two package toolkit, please see [at_app](https:
 
 ### Templates
 
-Currently we include a
+Currently we include a single main.dart file for a template @platform application.
 
 ### Models
 

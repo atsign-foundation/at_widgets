@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'dart:async';
-
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -22,12 +20,12 @@ import 'package:at_onboarding_flutter/widgets/custom_button.dart';
 import 'package:at_onboarding_flutter/widgets/custom_dialog.dart';
 import 'package:at_onboarding_flutter/widgets/custom_strings.dart';
 import 'package:at_server_status/at_server_status.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:at_utils/at_logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PairAtsignWidget extends StatefulWidget {
   final OnboardingStatus? onboardStatus;
@@ -101,8 +99,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = true;
       });
-      bool isExist =
-          await (_onboardingService.isExistingAtsign(atsign) as FutureOr<bool>);
+      bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
         setState(() {
           loading = false;
@@ -286,7 +283,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         loading = true;
       });
       for (PlatformFile pickedFile in result?.files ?? <PlatformFile>[]) {
-        String path = pickedFile.path!;
+        String path = pickedFile.path;
         File selectedFile = File(path);
         int length = selectedFile.lengthSync();
         if (length < 10) {
@@ -636,7 +633,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     _atsignStatus = atsignStatus ?? AtSignStatus.error;
     switch (_atsignStatus) {
       case AtSignStatus.teapot:
-        if (isExist!) {
+        if (isExist) {
           await _showAlertDialog(CustomStrings().pairedAtsign(atsign),
               getClose: true, onClose: _getAtsignForm);
           break;
@@ -669,7 +666,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
         break;
       case AtSignStatus.activated:
-        if (isExist!) {
+        if (isExist) {
           await _showAlertDialog(CustomStrings().pairedAtsign(atsign),
               getClose: true, onClose: _getAtsignForm);
           break;
