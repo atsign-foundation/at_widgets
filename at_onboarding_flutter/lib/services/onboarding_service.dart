@@ -211,7 +211,7 @@ class OnboardingService {
 
   Future<void> _sync(String? atSign) async {
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
-      await _getClientServiceForAtsign(atSign)!
+       _getClientServiceForAtsign(atSign)!
           .atClientManager
           .syncService
           .sync();
