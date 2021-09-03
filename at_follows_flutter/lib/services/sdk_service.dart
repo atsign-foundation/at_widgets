@@ -109,11 +109,21 @@ class SDKService {
       Function onDone, Function onError) async {
     var notificationResponse = await AtClientManager.getInstance()
         .notificationService
-        .notify(NotificationParams.forUpdate(key, value: value)).timeout(
-        Duration(seconds: AppConstants.responseTimeLimit),
+        .notify(_getNotificationParams(key, value, operation))
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
 
-    return notificationResponse.notificationStatusEnum == NotificationStatusEnum.delivered;
+    return notificationResponse.notificationStatusEnum ==
+        NotificationStatusEnum.delivered;
+  }
+
+  /// Returns the [NotificationParams] basing on the operation
+  NotificationParams _getNotificationParams(
+      AtKey key, String value, OperationEnum operation) {
+    if (operation == OperationEnum.delete) {
+      return NotificationParams.forDelete(key);
+    }
+    return NotificationParams.forUpdate(key, value: value);
   }
 
   ///Returns `AtFollowsValue` after scan with [regex], fetching data for that key.
