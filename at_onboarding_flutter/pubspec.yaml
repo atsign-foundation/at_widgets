@@ -33,16 +33,21 @@ dev_dependencies:
     sdk: flutter
   lints: ^1.0.1
 dependency_overrides:
+  at_backupkey_flutter:
+    path: ../at_backupkey_flutter
   at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: trunk
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile
+
+    # git:
+    #   url: https://github.com/atsign-foundation/at_client_sdk.git
+    #   path: at_client_mobile
+    #   ref: trunk
   at_client:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client
-      ref: trunk
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
+    # git:
+    #   url: https://github.com/atsign-foundation/at_client_sdk.git
+    #   path: at_client
+    #   ref: trunk
   at_commons:
     git:
       url: https://github.com/atsign-foundation/at_tools.git

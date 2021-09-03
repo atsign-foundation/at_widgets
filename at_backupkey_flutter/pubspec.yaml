@@ -15,18 +15,24 @@ dependencies:
   permission_handler: ^8.1.1
   path_provider: ^2.0.2
   at_utils: ^2.0.1
-  at_client_mobile: ^2.0.2
+  # at_client_mobile: ^2.0.2
+  at_client_mobile:
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 dependency_overrides:
+  at_client:
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
   at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: trunk
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile
+  # at_client_mobile:
+    # git:
+    #   url: https://github.com/atsign-foundation/at_client_sdk.git
+    #   path: at_client_mobile
+    #   ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

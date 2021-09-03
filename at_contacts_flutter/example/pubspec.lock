@@ -30,12 +30,12 @@ packages:
     source: hosted
     version: "2.6.1"
   at_backupkey_flutter:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: at_backupkey_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
+      path: "../../at_backupkey_flutter"
+      relative: true
+    source: path
+    version: "3.0.0"
   at_base2e15:
     dependency: transitive
     description:
@@ -44,68 +44,72 @@ packages:
     source: hosted
     version: "1.0.0"
   at_client:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: at_client
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.3"
+      path: "/Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client"
+      relative: false
+    source: path
+    version: "3.0.0"
   at_client_mobile:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: at_client_mobile
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.3"
+      path: "/Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile"
+      relative: false
+    source: path
+    version: "3.0.0"
   at_common_flutter:
     dependency: transitive
     description:
       name: at_common_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.2"
   at_commons:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: at_commons
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.3"
+      path: at_commons
+      ref: trunk
+      resolved-ref: "0070f910427b83a9f2d770db1d4ba2e40e0f8868"
+      url: "https://github.com/atsign-foundation/at_tools.git"
+    source: git
+    version: "3.0.0"
   at_contact:
     dependency: transitive
     description:
       name: at_contact
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.3"
   at_contacts_flutter:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "2.0.1"
-  at_lookup:
-    dependency: transitive
-    description:
-      name: at_lookup
-      url: "https://pub.dartlang.org"
-    source: hosted
     version: "2.0.3"
+  at_lookup:
+    dependency: "direct overridden"
+    description:
+      path: at_lookup
+      ref: trunk
+      resolved-ref: "74823fdbd036cc2304e9f9666578dbe9bbcd08bb"
+      url: "https://github.com/atsign-foundation/at_libraries.git"
+    source: git
+    version: "3.0.0"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      name: at_onboarding_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.2"
+      path: "../../at_onboarding_flutter"
+      relative: true
+    source: path
+    version: "3.0.0"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.6"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -119,7 +123,7 @@ packages:
       name: at_server_status
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   at_utf7:
     dependency: transitive
     description:
@@ -133,7 +137,7 @@ packages:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   boolean_selector:
     dependency: transitive
     description:
@@ -182,7 +186,7 @@ packages:
       name: cron
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "0.3.2"
   crypto:
     dependency: transitive
     description:
@@ -196,21 +200,21 @@ packages:
       name: crypton
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.1"
   cupertino_icons:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.3"
   encrypt:
     dependency: transitive
     description:
       name: encrypt
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "5.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -238,7 +242,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.4"
+    version: "4.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -303,6 +307,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  internet_connection_checker:
+    dependency: transitive
+    description:
+      name: internet_connection_checker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+2"
   intl:
     dependency: transitive
     description:
@@ -421,7 +432,7 @@ packages:
       name: platform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.2"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -435,7 +446,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.2"
+    version: "3.3.2"
   process:
     dependency: transitive
     description:
@@ -538,14 +549,14 @@ packages:
       name: url_launcher_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.4"
   url_launcher_windows:
     dependency: transitive
     description:
       name: url_launcher_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   uuid:
     dependency: transitive
     description:
@@ -566,14 +577,14 @@ packages:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.10"
+    version: "2.0.12"
   win32:
     dependency: transitive
     description:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.5"
+    version: "2.2.8"
   xdg_directories:
     dependency: transitive
     description:

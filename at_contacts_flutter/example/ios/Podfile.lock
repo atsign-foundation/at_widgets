@@ -1,7 +1,9 @@
 PODS:
+  - at_backupkey_flutter (0.0.1):
+    - Flutter
   - at_contacts_flutter (0.0.1):
     - Flutter
-  - atsign_authentication_helper (0.0.1):
+  - at_onboarding_flutter (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.3.2):
     - DKImagePickerController/ImageDataManager
@@ -42,11 +44,9 @@ PODS:
     - Flutter
   - flutter_qr_reader (0.0.1):
     - Flutter
-  - image_picker (0.0.1):
-    - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - "permission_handler (5.0.1+1)":
+  - "permission_handler (5.1.0+2)":
     - Flutter
   - SDWebImage (5.9.2):
     - SDWebImage/Core (= 5.9.2)
@@ -54,20 +54,23 @@ PODS:
   - share (0.0.1):
     - Flutter
   - SwiftyGif (5.3.0)
+  - url_launcher (0.0.1):
+    - Flutter
   - webview_flutter (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - at_backupkey_flutter (from `.symlinks/plugins/at_backupkey_flutter/ios`)
   - at_contacts_flutter (from `.symlinks/plugins/at_contacts_flutter/ios`)
-  - atsign_authentication_helper (from `.symlinks/plugins/atsign_authentication_helper/ios`)
+  - at_onboarding_flutter (from `.symlinks/plugins/at_onboarding_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_keychain (from `.symlinks/plugins/flutter_keychain/ios`)
   - flutter_qr_reader (from `.symlinks/plugins/flutter_qr_reader/ios`)
-  - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - share (from `.symlinks/plugins/share/ios`)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
@@ -78,10 +81,12 @@ SPEC REPOS:
     - SwiftyGif
 
 EXTERNAL SOURCES:
+  at_backupkey_flutter:
+    :path: ".symlinks/plugins/at_backupkey_flutter/ios"
   at_contacts_flutter:
     :path: ".symlinks/plugins/at_contacts_flutter/ios"
-  atsign_authentication_helper:
-    :path: ".symlinks/plugins/atsign_authentication_helper/ios"
+  at_onboarding_flutter:
+    :path: ".symlinks/plugins/at_onboarding_flutter/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
@@ -90,34 +95,35 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_keychain/ios"
   flutter_qr_reader:
     :path: ".symlinks/plugins/flutter_qr_reader/ios"
-  image_picker:
-    :path: ".symlinks/plugins/image_picker/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
   share:
     :path: ".symlinks/plugins/share/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
+  at_backupkey_flutter: 2fc3d01138175e41bce8b574387a47544c53e01b
   at_contacts_flutter: 11ad3deb3c2a8f1e9daf302ac5962dadd48e21fb
-  atsign_authentication_helper: e9b9daa614ed4efdbf741aaeea6b790a51272320
+  at_onboarding_flutter: e8219b6d0bfb236d3837ec3528871aebdcc56e8d
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
-  flutter_qr_reader: 254fd9eea45a65ef461e050d6607daf9cfb753e8
-  image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
+  flutter_qr_reader: d930dde3b2cfe2b3d0bb7d66e5ff3e514300a5e5
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   SDWebImage: 0b42b8719ab0c5257177d5894306e8a336b21cbb
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   SwiftyGif: e466e86c660d343357ab944a819a101c4127cb40
-  webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
 
 PODFILE CHECKSUM: 67509bdfc9e7e3da0e68d53ab26669daba079215
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.9.3
