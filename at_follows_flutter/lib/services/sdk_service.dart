@@ -163,7 +163,7 @@ class SDKService {
   sync() async {
     if (AtClientManager.getInstance().atClient.getPreferences()!.syncStrategy ==
         SyncStrategy.ONDEMAND)
-      await AtClientManager.getInstance().syncService.sync();
+      AtClientManager.getInstance().syncService.sync();
   }
 
   ///Throws [ResponseTimeOutException].
