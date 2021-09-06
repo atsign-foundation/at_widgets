@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:at_client/at_client.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_notify_flutter/models/notify_model.dart';
 import 'package:at_notify_flutter/utils/notify_utils.dart';
@@ -69,15 +70,15 @@ class NotifyService {
 
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    // if (Platform.isIOS) {
-    //   _requestIOSPermission();
-    // }
-    // initializePlatformSpecifics();
-    //
-    // await _notificationsPlugin.initialize(
-    //   initializationSettings,
-    //   onSelectNotification: (payload) async {},
-    // );
+    if (Platform.isIOS) {
+      _requestIOSPermission();
+    }
+    initializePlatformSpecifics();
+
+    await _notificationsPlugin.initialize(
+      initializationSettings,
+      onSelectNotification: (payload) async {},
+    );
 
     // notificationService.subscribe(regex: '.wavi').listen((notification) {
     //   _notificationCallback(notification);
@@ -144,7 +145,7 @@ class NotifyService {
         //   print('error in decrypting notify $e');
       });
       print('notify message => $decryptedMessage $fromAtsign');
-   //   await showNotification(decryptedMessage);
+      await showNotification(decryptedMessage);
     }
   }
 
@@ -188,30 +189,28 @@ class NotifyService {
 
   /// Create new notify to AtClient
   Future<bool> addNotify(Notify notify, {NotifyEnum? notifyType}) async {
+    var metadata = Metadata();
+    metadata.ttr = -1;
+    var key = AtKey()
+      ..key = storageKey + (currentAtSign ?? ' ').substring(1)
+      ..sharedBy = currentAtSign
+      ..sharedWith = sendToAtSign
+      ..metadata = metadata;
     try {
-      var metadata = Metadata();
-      metadata.ttr = -1;
-      var key = AtKey()
-        ..key = storageKey + (currentAtSign ?? ' ').substring(1)
-        ..sharedBy = currentAtSign
-        ..sharedWith = sendToAtSign
-        ..metadata = metadata;
-
       notifies.insert(0, notify);
       notifySink.add(notifies);
       notifiesJson!.add(notify.toJson());
       await atClient.put(key, json.encode(notifiesJson));
-
-      sendNotify(key, notify, notifyType ?? NotifyEnum.notifyForUpdate);
-
       // await atClientInstance.notify(
       //     key, json.encode(notifiesJson), OperationEnum.update);
 
-      return true;
+    //  return true;
     } catch (e) {
       print('Error in setting notify => $e');
-      return false;
+    //  return false;
     }
+    await sendNotify(key, notify, notifyType ?? NotifyEnum.notifyForUpdate);
+    return true;
   }
 
   /// Send Notify with NotificationService
@@ -260,7 +259,7 @@ class NotifyService {
     valuesJson = json.decode(decryptedMessage as String) as List?;
     valuesJson!.forEach((value) {
       var notify = Notify.fromJson((value));
-      messages.add(notify);
+      messages.insert(0, notify);
     });
 
     if (messages.isNotEmpty) {

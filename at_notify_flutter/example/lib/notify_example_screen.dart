@@ -40,10 +40,10 @@ class _BugReportScreenState extends State<BugReportScreen> {
                 children: [
                   Text(
                     'Welcome $activeAtSign',
-                    style: TextStyle(fontSize: 24),
+                    style: TextStyle(fontSize: 20),
                   ),
                   SizedBox(
-                    height: 24.0,
+                    height: 16.0,
                   ),
                   TextField(
                     controller: atSignController,
@@ -52,7 +52,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                     onChanged: (text) {},
                   ),
                   SizedBox(
-                    height: 16.0,
+                    height: 8.0,
                   ),
                   TextField(
                     controller: messageController,
@@ -62,7 +62,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                     onChanged: (text) {},
                   ),
                   SizedBox(
-                    height: 32.0,
+                    height: 16.0,
                   ),
                   TextButton(
                     onPressed: () async {
@@ -75,11 +75,8 @@ class _BugReportScreenState extends State<BugReportScreen> {
                     },
                     child: Text(
                       'Notify For Update',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 16),
                     ),
-                  ),
-                  SizedBox(
-                    height: 8.0,
                   ),
                   TextButton(
                     onPressed: () async {
@@ -92,11 +89,8 @@ class _BugReportScreenState extends State<BugReportScreen> {
                     },
                     child: Text(
                       'Notify For Delete',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 16),
                     ),
-                  ),
-                  SizedBox(
-                    height: 8.0,
                   ),
                   TextButton(
                     onPressed: () async {
@@ -109,7 +103,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                     },
                     child: Text(
                       'Notify Text',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 16),
                     ),
                   ),
                 ],
