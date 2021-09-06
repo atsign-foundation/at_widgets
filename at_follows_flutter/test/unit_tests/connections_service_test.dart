@@ -20,19 +20,25 @@ void main() {
 
   setUp(() async {
     _sdkService.setClientService = await setUpFunc(senderAtsign);
-    _connectionsService.init();
-    ConnectionProvider().init();
-    await _sdkService.startMonitor(monitorCallBack);
+    final atClientManager = AtClientManager.getInstance();
+    _connectionsService.init(senderAtsign);
+    ConnectionProvider().init(senderAtsign);
+    atClientManager.notificationService.subscribe().listen((notification) {
+      monitorCallBack(notification);
+    });
   });
 
   group('test follow functionality', () {
     test('with valid @sign', () async {
       String receiverAtsign = '@bob🛠';
 
-      var receiverAtClientService = await setUpFunc(receiverAtsign);
-      final String privateKey = demo_data.pkamPrivateKeyMap[receiverAtsign]!;
-      await receiverAtClientService.atClient!
-          .startMonitor(privateKey, monitorCallBack);
+      await setUpFunc(receiverAtsign);
+      AtClientManager.getInstance()
+          .notificationService
+          .subscribe()
+          .listen((notification) {
+        monitorCallBack(notification);
+      });
       Atsign atsign = await (_connectionsService.follow(receiverAtsign)
           as FutureOr<Atsign>);
       expect(atsign.title, receiverAtsign);
@@ -71,8 +77,8 @@ void main() {
         ..key = 'lastname.persona'
         ..metadata = metadata;
 
-      await bobClientService.atClient!.put(bobFirstname, 'Bob');
-      await bobClientService.atClient!.put(bobLastname, 'Geller');
+      await AtClientManager.getInstance().atClient.put(bobFirstname, 'Bob');
+      await AtClientManager.getInstance().atClient.put(bobLastname, 'Geller');
 
       var secondAtSign = '@colin🛠';
       var colinClientService = await setUpFunc(secondAtSign);
@@ -84,8 +90,8 @@ void main() {
         ..key = 'lastname'
         ..metadata = metadata1;
 
-      await colinClientService.atClient!.put(colinFirstname, 'Colin');
-      await colinClientService.atClient!.put(colinLastname, 'Felton');
+      await AtClientManager.getInstance().atClient.put(colinFirstname, 'Colin');
+      await AtClientManager.getInstance().atClient.put(colinLastname, 'Felton');
 
       Atsign atsign =
           await (_connectionsService.follow(firstAtSign) as FutureOr<Atsign>);
@@ -176,8 +182,8 @@ void main() {
         ..key = 'lastname.persona'
         ..metadata = metadata;
 
-      await bobClientService.atClient!.put(bobFirstname, 'Bob');
-      await bobClientService.atClient!.put(bobLastname, 'Geller');
+      await AtClientManager.getInstance().atClient.put(bobFirstname, 'Bob');
+      await AtClientManager.getInstance().atClient.put(bobLastname, 'Geller');
 
       var secondAtSign = '@colin🛠';
       var colinClientService = await setUpFunc(secondAtSign);
@@ -189,8 +195,8 @@ void main() {
         ..key = 'lastname'
         ..metadata = metadata1;
 
-      await colinClientService.atClient!.put(colinFirstname, 'Colin');
-      await colinClientService.atClient!.put(colinLastname, 'Felton');
+      await AtClientManager.getInstance().atClient.put(colinFirstname, 'Colin');
+      await AtClientManager.getInstance().atClient.put(colinLastname, 'Felton');
 
       var atMetadata = Metadata()..isPublic = true;
       var atKey1 = AtKey()
@@ -278,13 +284,10 @@ Future<void> tearDownFunc() async {
 
 Future<AtClientService> setUpFunc(String atsign) async {
   var preference = getAtSignPreference(atsign);
-
+  final atClientManager = AtClientManager.getInstance();
   AtClientService atClientService = AtClientService();
-
-  await AtClientImpl.createClient(atsign, 'wavi', preference);
-  var atClient = await (AtClientImpl.getClient(atsign) as FutureOr<AtClient>);
-  atClientService.atClient = atClient as AtClientImpl;
-  await atClient.getSyncManager()!.sync();
+  final atClient = atClientManager.atClient;
+  await atClientManager.syncService.sync();
   await setEncryptionKeys(atClient, atsign);
   return atClientService;
 }
@@ -296,7 +299,7 @@ monitorCallBack(var response) {
   response = response.toString().replaceAll('notification:', '').trim();
   var notification = AtNotification.fromJson(jsonDecode(response));
   print(
-      'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.fromAtSign} to:${notification.toAtSign}');
+      'Received notification:: id:${notification.id} key:${notification.key} operation:${notification.operation} from:${notification.from} to:${notification.to}');
 }
 
 AtClientPreference getAtSignPreference(String atsign) {
@@ -310,7 +313,7 @@ AtClientPreference getAtSignPreference(String atsign) {
   return preference;
 }
 
-setEncryptionKeys(AtClientImpl atClient, String atsign) async {
+setEncryptionKeys(AtClient atClient, String atsign) async {
   try {
     var metadata = Metadata();
     metadata.namespaceAware = false;

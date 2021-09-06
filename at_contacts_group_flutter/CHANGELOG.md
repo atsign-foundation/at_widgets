@@ -1,16 +1,24 @@
-## [2.0.1] - 07/09/2021
+## 2.0.4
+- Added contactSelectedHistory parameter in GroupContactView
+- Updated packages
 
-* Updated packages
+## 2.0.3
+- Bug fixes for group selection in GroupContactView
+- Updated at_contacts_flutter package
 
-## [2.0.0] - 07/02/2021
+## 2.0.2
+- Updated repository link and description
+- Updated packages
 
-* Null safe version
+## 2.0.1
+- Updated packages
 
-## [1.0.1] - 05/13/2021
+## 2.0.0
+- Null safe version
 
-* The referenced packages are updated
-* Improved avatar placeholder
+## 1.0.1
+- The referenced packages are updated
+- Improved avatar placeholder
 
-## [1.0.0] - 04/20/2021
-
-* The initial release consists of two screens - A screen to list the created groups and screen to view group details.
+## 1.0.0
+- The initial release consists of two screens - A screen to list the created groups and screen to view group details.

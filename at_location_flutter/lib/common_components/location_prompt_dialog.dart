@@ -4,6 +4,7 @@ import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
+import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -156,9 +157,14 @@ class _LocationPromptState extends State<LocationPrompt> {
             rePrompt: widget.locationNotificationModel!.rePrompt);
 
     if (update) {
-      CustomToast().show('Share Location Request sent', context);
+      CustomToast().show(
+          'Share Location Request sent to ${widget.locationNotificationModel!.receiver}',
+          context);
     } else {
-      CustomToast().show('Something went wrong!', context);
+      CustomToast().show(
+          'Something went wrong for ${widget.locationNotificationModel!.receiver}',
+          context,
+          bgColor: AllColors().RED);
     }
   }
 
@@ -168,9 +174,14 @@ class _LocationPromptState extends State<LocationPrompt> {
             rePrompt: widget.locationNotificationModel!.rePrompt);
 
     if (update) {
-      CustomToast().show('Prompted again', context);
+      CustomToast().show(
+          'Prompted again to ${widget.locationNotificationModel!.atsignCreator}',
+          context);
     } else {
-      CustomToast().show('Something went wrong!', context);
+      CustomToast().show(
+          'Something went wrong for ${widget.locationNotificationModel!.atsignCreator}',
+          context,
+          bgColor: AllColors().RED);
     }
   }
 }

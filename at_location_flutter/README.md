@@ -6,15 +6,6 @@
 
 A flutter plugin project to share location between two atsigns.
 
-## Getting Started
-
-This plugin can be added to the project as git dependency in pubspec.yaml
-
-```
-dependencies:
-  at_location_flutter: ^2.0.2
-```
-
 ### Sample usage
 It is expected that the app will first create an AtClientService instance and authenticate an atsign.
 

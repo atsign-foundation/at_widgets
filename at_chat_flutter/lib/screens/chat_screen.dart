@@ -10,6 +10,8 @@ import 'package:at_chat_flutter/widgets/send_message.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 
 class ChatScreen extends StatefulWidget {
   final double? height;
@@ -185,20 +187,41 @@ class _ChatScreenState extends State<ChatScreen> {
                                     );
                                   });
                     })),
-            SendMessage(
-              messageCallback: (s) {
-                message = s;
-              },
-              hintText: widget.hintText,
-              onSend: () async {
-                if (message != '') {
-                  await _chatService.sendMessage(message);
-                }
-              },
-            ),
+            _buildMessageInputWidget(),
+            //Make sure view inside SafeArea
+            SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildMessageInputWidget() {
+    return SendMessage(
+      messageCallback: (s) {
+        message = s;
+      },
+      hintText: widget.hintText,
+      onSend: () async {
+        if (message != '') {
+          await _chatService.sendMessage(message);
+        }
+      },
+      onMediaPressed: showImagePicker,
+    );
+  }
+
+  void showImagePicker() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowCompression: true,
+      withData: true,
+    );
+    if ((result?.files ?? []).isNotEmpty) {
+      final file = File(result!.files.first.path!);
+      await _chatService.sendImageFile(file);
+    } else {
+      // User canceled the picker
+    }
   }
 }

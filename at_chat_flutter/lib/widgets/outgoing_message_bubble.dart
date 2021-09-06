@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/services/chat_service.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
@@ -36,23 +38,19 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
         });
       },
       child: Flex(
-        direction: Axis.horizontal,
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.all(16.toHeight),
-            decoration: BoxDecoration(
-              color: widget.color,
-              borderRadius: BorderRadius.circular(10.toWidth),
-            ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 165.toWidth),
-              child: Text(
-                widget.message?.message ?? ' ',
-                textAlign: TextAlign.right,
-              ),
-            ),
+      direction: Axis.horizontal,
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.all(30.toHeight),
+          decoration: BoxDecoration(
+            color: widget.color,
+            borderRadius: BorderRadius.circular(10.toWidth),
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 165.toWidth),
+            child: _buildContentMessage(),
           ),
           SizedBox(
             width: 15.toWidth,
@@ -72,6 +70,20 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
           )
         ],
       ),
-    );
+    ));
+  }
+
+  Widget _buildContentMessage() {
+    if (widget.message?.contentType == MessageContentType.IMAGE) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 165.toWidth),
+        child: Image.memory(base64Decode(widget.message?.message ?? '')),
+      );
+    } else {
+      return Text(
+        widget.message?.message ?? ' ',
+        textAlign: TextAlign.right,
+      );
+    }
   }
 }

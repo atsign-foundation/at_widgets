@@ -1,14 +1,14 @@
 /// A service to handle save and retrieve operation on chat
-
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:at_chat_flutter/models/message_model.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
-import 'package:at_chat_flutter/models/message_model.dart';
 
 class ChatService {
   ChatService._();
@@ -17,10 +17,11 @@ class ChatService {
 
   factory ChatService() => _instance;
 
-  final String storageKey = 'chatHistory.';
+  final String storageKey = 'chathistory.';
   final String chatKey = 'chat';
+  final String chatImageKey = 'chatimg';
 
-  late AtClientImpl atClientInstance;
+  late AtClient atClientInstance;
   String? rootDomain;
   int? rootPort;
   String? currentAtSign;
@@ -46,7 +47,7 @@ class ChatService {
   }
 
   void initChatService(
-      AtClientImpl atClientInstanceFromApp,
+      AtClient atClientInstanceFromApp,
       String currentAtSignFromApp,
       String rootDomainFromApp,
       int rootPortFromApp) async {
@@ -68,7 +69,7 @@ class ChatService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    var str = await atClientInstance.getPrivateKey(atsign);
+    var str = await KeychainUtil.getPrivateKey(atsign);
     return str!;
   }
 
@@ -84,9 +85,13 @@ class ChatService {
     }
     notificationKey.replaceFirst(fromAtsign, '');
     notificationKey.trim();
-    if ((notificationKey.startsWith(chatKey) && fromAtsign == chatWithAtSign) ||
+
+    if (((notificationKey.startsWith(chatKey) ||
+                notificationKey.startsWith(chatImageKey)) &&
+            fromAtsign == chatWithAtSign) ||
         (isGroupChat &&
-            notificationKey.startsWith(chatKey + groupChatId!) &&
+            (notificationKey.startsWith(chatKey + groupChatId!) ||
+                notificationKey.startsWith(chatImageKey + groupChatId!)) &&
             groupChatMembers!.contains(fromAtsign))) {
       var message = responseJson['value'];
       var decryptedMessage = await atClientInstance.encryptionService!
@@ -304,6 +309,39 @@ class ChatService {
     } catch (e) {
       print('error in deleting => $e');
       return false;
+    }
+  }
+
+  Future<void> sendImageFile(File file) async {
+    List<int> imageBytes = file.readAsBytesSync();
+    final base64Image = base64Encode(imageBytes);
+    await setChatHistory(Message(
+      message: base64Image,
+      sender: currentAtSign,
+      time: DateTime.now().millisecondsSinceEpoch,
+      type: MessageType.OUTGOING,
+      contentType: MessageContentType.IMAGE,
+    ));
+
+    final metadata = Metadata();
+    var atKey = AtKey()
+      ..metadata = metadata
+      ..metadata?.ttr = -1
+      ..key = chatImageKey +
+          (isGroupChat ? groupChatId! : '') +
+          DateTime.now().millisecondsSinceEpoch.toString();
+    if (isGroupChat) {
+      await Future.forEach(groupChatMembers!, (dynamic member) async {
+        if (member != currentAtSign) {
+          atKey.sharedWith = member;
+          var result = await atClientInstance.put(atKey, base64Image);
+          print('send notification for groupChat => $result');
+        }
+      });
+    } else {
+      atKey.sharedWith = chatWithAtSign;
+      var result = await atClientInstance.put(atKey, base64Image);
+      print('send notification => $result');
     }
   }
 }

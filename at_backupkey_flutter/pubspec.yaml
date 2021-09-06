@@ -1,6 +1,6 @@
 name: at_backupkey_flutter
-description: A flutter plugin project for saving backup key of any @sign that is being onboarded with @protocol apps. Backup key can used to authenticate in any @protocol apps. 
-version: 2.0.1
+description: A Flutter plugin project for saving the backup key of any @‎sign that is being onboarded with @‎platform apps. The backup key can be used to authenticate in other @‎platform apps.
+version: 3.0.0
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
 
@@ -20,6 +20,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: at_client_mobile
+      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

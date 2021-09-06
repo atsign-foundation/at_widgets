@@ -1,27 +1,27 @@
-## [2.0.0] - 06/15/2021
+## 2.0.2
+- borderRadius option added in CustomButton
 
-* Null safety support
+## 2.0.1
+- Updated description, repository link
+- More options in CustomInputField
 
-## [1.0.1] - 06/14/2021
+## 2.0.0
+- Null safety support
 
-* Updated documentation
+## 1.0.1
+- Updated documentation
 
-## [1.0.0] - 04/20/2021
+## 1.0.0
+- Updated authentication in example app
 
-* Updated authentication in example app
+## 0.0.4
+- Updated example app
 
-## [0.0.4] - 03/24/2021
+## 0.0.3
+- Updated with example app
 
-* Updated example app
+## 0.0.2
+- BREAKING CHANGES - This release consists of parameter change in custom button and custom input field
 
-## [0.0.3] - 02/17/2021
-
-* Updated with example app
-
-## [0.0.2] - 02/03/2021
-
-* BREAKING CHANGES - This release consists of parameter change in custom button and custom input field
-
-## [0.0.1] - 12/18/2020
-
-* The initial release consists of custom appBar, custom button and custom input field
+## 0.0.1
+- The initial release consists of custom appBar, custom button and custom input field

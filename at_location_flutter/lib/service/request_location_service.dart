@@ -119,7 +119,7 @@ class RequestLocationService {
         ..key = atKey.key
         ..isRequest = true
         ..receiver =
-            AtLocationNotificationListener().atClientInstance!.currentAtSign;
+            AtLocationNotificationListener().atClientInstance!.getCurrentAtSign();
 
       result = await AtLocationNotificationListener().atClientInstance!.put(
             atKey,
@@ -343,7 +343,7 @@ class RequestLocationService {
       ..key = key
       ..sharedWith = sharedWith
       ..sharedBy =
-          AtLocationNotificationListener().atClientInstance!.currentAtSign;
+          AtLocationNotificationListener().atClientInstance!.getCurrentAtSign();
     if (ttl != null) atKey.metadata!.ttl = ttl;
     if (expiresAt != null) atKey.metadata!.expiresAt = expiresAt;
 

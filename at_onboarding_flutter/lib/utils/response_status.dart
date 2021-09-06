@@ -1,1 +1,6 @@
-enum ResponseStatus { SERVER_NOT_REACHED, AUTH_SUCCESS, AUTH_FAILED, TIME_OUT }
+enum ResponseStatus {
+  SERVER_NOT_REACHED,
+  AUTH_SUCCESS,
+  AUTH_FAILED,
+  TIME_OUT,
+}

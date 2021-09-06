@@ -45,7 +45,7 @@ class AtExceptionHandler {
       case ResponseTimeOutException:
         return 'Server response timed out!\nPlease check your network connection and try again. Contact support@atsign.com if the issue still persists.';
       default:
-        return 'Unknown error.';
+        return 'loading';
     }
   }
 }

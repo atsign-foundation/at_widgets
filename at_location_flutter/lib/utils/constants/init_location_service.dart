@@ -22,7 +22,7 @@ import 'package:geolocator/geolocator.dart';
 /// [showDialogBox] if false dialog box wont be shown.
 ///
 /// [streamAlternative] a function which will return updated lists of [KeyLocationModel]
-void initializeLocationService(AtClientImpl atClientImpl, String currentAtSign,
+void initializeLocationService(AtClient atClientImpl, String currentAtSign,
     GlobalKey<NavigatorState> navKey,
     {required String mapKey,
     required String apiKey,
@@ -56,7 +56,7 @@ Stream getAllNotification() {
 
 /// sends a share location notification to the [atsign], with a 'ttl' of [minutes].
 /// before calling this [atsign] should be checked if valid or not.
-Future<bool?> sendShareLocationNotification(String atsign, int minutes) async {
+Future<bool?> sendShareLocationNotification(String atsign, int? minutes) async {
   var result = await SharingLocationService()
       .sendShareLocationEvent(atsign, false, minutes: minutes);
   return result;

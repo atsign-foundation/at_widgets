@@ -202,8 +202,6 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                       ? CircularProgressIndicator()
                       : CustomButton(
                           onTap: () => () async {
-                            startLoading();
-
                             bottomSheet(
                                 context,
                                 EventTimeSelection(
@@ -232,6 +230,8 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                 MixedConstants.endTimeOptions,
                                             onSelectionChanged:
                                                 (dynamic endTime) async {
+                                              startLoading();
+
                                               widget.eventData!.group!.members!
                                                   .forEach((groupMember) {
                                                 if (groupMember.atSign ==

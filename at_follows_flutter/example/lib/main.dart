@@ -115,7 +115,7 @@ class _MyAppState extends State<MyApp> {
           ctxt,
           MaterialPageRoute(
               builder: (context) => Connections(
-                  atClientserviceInstance: atService.atClientServiceInstance,
+                  atClientserviceInstance: atService.atClientServiceInstance!,
                   appColor: Colors.blue)));
     } catch (e) {
       print('Fetching follows throws $e exception');
@@ -131,6 +131,7 @@ class _MyAppState extends State<MyApp> {
 
     Onboarding(
       domain: AppConstants.rootDomain,
+      appAPIKey: AppConstants.devAPIKey,
       context: context,
       onboard: (value, atsign) async {
         atService.atClientServiceInstance = value[atsign];

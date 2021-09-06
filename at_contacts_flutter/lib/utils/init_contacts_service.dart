@@ -19,7 +19,7 @@ Future<AtContact> getAtSignDetails(String atSign) async {
   // ignore: omit_local_variable_types
   AtContact? atContact = getCachedContactDetail(atSign);
   if (atContact == null) {
-    var contactDetails = await ContactService().getContactDetails(atSign);
+    var contactDetails = await ContactService().getContactDetails(atSign, null);
     atContact = AtContact(
       atSign: atSign,
       tags: contactDetails,

@@ -51,6 +51,11 @@ class _CreateEventState extends State<CreateEvent> {
         widget.eventData != null ? widget.eventData : null);
     if (widget.createdEvents != null) {
       EventService().createdEvents = widget.createdEvents;
+    } else {
+      EventService().createdEvents = EventKeyStreamService()
+          .allEventNotifications
+          .map((e) => e.eventNotificationModel!)
+          .toList();
     }
 
     if (widget.onEventSaved != null) {
@@ -375,7 +380,13 @@ class _CreateEventState extends State<CreateEvent> {
     }
 
     var isOverlap = EventService().showConcurrentEventDialog(
-        widget.createdEvents, EventService().eventNotificationModel, context)!;
+        widget.createdEvents ??
+            EventKeyStreamService()
+                .allEventNotifications
+                .map((e) => e.eventNotificationModel!)
+                .toList(),
+        EventService().eventNotificationModel,
+        context)!;
 
     if (isOverlap) {
       setState(() {
