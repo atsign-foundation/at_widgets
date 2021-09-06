@@ -1,10 +1,11 @@
 import 'dart:async';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_server_status/at_server_status.dart';
-import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:flutter/material.dart';
 
 class OnboardingService {
   static final OnboardingService _singleton = OnboardingService._internal();
@@ -114,15 +115,15 @@ class OnboardingService {
       if (cramSecret != null) {
         _atClientPreference.privateKey = null;
       }
-      await atClientService
+      bool isAuthenticated = await atClientService
           .authenticate(atsign, _atClientPreference,
-              jsonData: jsonData, decryptKey: decryptKey, status: status)
-          .then((bool value) async {
-        _atsign = atsign;
+              jsonData: jsonData, decryptKey: decryptKey, status: status);
+        if(isAuthenticated){
+            _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
         c.complete(ResponseStatus.AUTH_SUCCESS);
         await _sync(_atsign);
-      });
+      }
     } catch (e) {
       _logger.severe('error in authenticating =>  ${e.toString()}');
       if (e == ResponseStatus.TIME_OUT) {
@@ -167,9 +168,9 @@ class OnboardingService {
     return atsign;
   }
 
-  Future<bool?> isExistingAtsign(String? atsign) async {
+  Future<bool> isExistingAtsign(String? atsign) async {
     if (atsign == null) {
-      return null;
+      return false;
     }
     atsign = formatAtSign(atsign);
     List<String>? atSignsList = await getAtsignList();
@@ -210,7 +211,7 @@ class OnboardingService {
 
   Future<void> _sync(String? atSign) async {
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
-      await _getClientServiceForAtsign(atSign)!
+       _getClientServiceForAtsign(atSign)!
           .atClientManager
           .syncService
           .sync();

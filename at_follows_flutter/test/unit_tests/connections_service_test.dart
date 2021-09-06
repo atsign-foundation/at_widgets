@@ -287,7 +287,7 @@ Future<AtClientService> setUpFunc(String atsign) async {
   final atClientManager = AtClientManager.getInstance();
   AtClientService atClientService = AtClientService();
   final atClient = atClientManager.atClient;
-  await atClientManager.syncService.sync();
+  atClientManager.syncService.sync();
   await setEncryptionKeys(atClient, atsign);
   return atClientService;
 }

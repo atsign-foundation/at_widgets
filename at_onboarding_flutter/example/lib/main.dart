@@ -5,6 +5,7 @@ import 'package:at_onboarding_flutter_example/services/at_service.dart';
 import 'package:at_onboarding_flutter_example/utils/app_constants.dart';
 import 'package:at_onboarding_flutter_example/utils/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:at_onboarding_flutter/widgets/custom_reset_button.dart';
 
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart';
@@ -36,7 +37,9 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Builder(
           builder: (BuildContext context) => Center(
-            child: TextButton(
+              child: Column(
+                  children:<Widget>[
+                        TextButton(
                 onPressed: () async {
                   Onboarding(
                       context: context,
@@ -54,8 +57,16 @@ class _MyAppState extends State<MyApp> {
                       appAPIKey: AppConstants.devAPIKey);
                 },
                 child: const Text(AppStrings.scan_qr)),
+                        CustomResetButton(
+                          loading: false,
+                          buttonText: "Reset",
+                          width: 90,
+                          height: 40,
+                        ),
+                  ],
+              ),
           ),
-        ),
+       ),
       ),
     );
   }
