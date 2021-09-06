@@ -55,6 +55,12 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_tools.git
       path: at_commons
       ref: trunk
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: trunk
+
   at_onboarding_flutter:
     path: ../../at_onboarding_flutter
 

@@ -64,11 +64,23 @@ class NotifyService {
     rootPort = rootPortFromApp;
     atClientManager = atClientManagerFromApp;
     atClientManager.setCurrentAtSign(
-        currentAtSignFromApp, '', atClientPreference);
+        currentAtSignFromApp, atClientPreference.namespace, atClientPreference);
 
     atClient = atClientManager.atClient;
 
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    // notificationService.subscribe(regex: '.wavi').listen((notification) {
+    //   _notificationCallback(notification);
+    // });
+
+    print('nameSpace = ${atClientPreference.namespace}');
+
+    atClientManager.notificationService
+        .subscribe(regex: '.${atClientPreference.namespace}')
+        .listen((notification) {
+      _notificationCallback(notification);
+    });
 
     if (Platform.isIOS) {
       _requestIOSPermission();
@@ -79,19 +91,11 @@ class NotifyService {
       initializationSettings,
       onSelectNotification: (payload) async {},
     );
-
-    // notificationService.subscribe(regex: '.wavi').listen((notification) {
-    //   _notificationCallback(notification);
-    // });
-
-    atClientManager.notificationService.subscribe().listen((notification) {
-      _notificationCallback(notification);
-    });
   }
 
   initializePlatformSpecifics() {
     var initializationSettingsAndroid =
-        AndroidInitializationSettings('notification_icon');
+        AndroidInitializationSettings('ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -139,13 +143,16 @@ class NotifyService {
     if ((notificationKey.startsWith(storageKey) && toAtsign == currentAtSign)) {
       var message = atNotification.value ?? '';
       print('value = $message');
-      var decryptedMessage = await atClient.encryptionService!
-          .decrypt(message, fromAtsign)
-          .catchError((e) {
-        //   print('error in decrypting notify $e');
-      });
-      print('notify message => $decryptedMessage $fromAtsign');
-      await showNotification(decryptedMessage);
+      if (message.isNotEmpty && message != 'null') {
+        var decryptedMessage = await atClient.encryptionService!
+            .decrypt(message, fromAtsign)
+            .catchError((e) {
+          //   print('error in decrypting notify $e');
+        });
+        print('notify decryptedMessage => $decryptedMessage $fromAtsign');
+        await showNotification(decryptedMessage);
+      }
+      print('notify message => $message $fromAtsign');
     }
   }
 
@@ -204,10 +211,10 @@ class NotifyService {
       // await atClientInstance.notify(
       //     key, json.encode(notifiesJson), OperationEnum.update);
 
-    //  return true;
+      //  return true;
     } catch (e) {
       print('Error in setting notify => $e');
-    //  return false;
+      //  return false;
     }
     await sendNotify(key, notify, notifyType ?? NotifyEnum.notifyForUpdate);
     return true;
