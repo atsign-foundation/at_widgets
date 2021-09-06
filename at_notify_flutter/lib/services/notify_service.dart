@@ -1,4 +1,4 @@
-/// A service to handle save and retrieve operation on chat
+/// A service to handle save and retrieve operation on notify
 
 import 'dart:async';
 import 'dart:convert';
@@ -22,10 +22,6 @@ class NotifyService {
 
   late FlutterLocalNotificationsPlugin _notificationsPlugin;
   late InitializationSettings initializationSettings;
-
-  // final BehaviorSubject<ReceivedNotification>
-  //     didReceivedLocalNotificationSubject =
-  //     BehaviorSubject<ReceivedNotification>();
 
   final String storageKey = 'notify.';
   final String notifyKey = 'notifyKey';
@@ -65,16 +61,8 @@ class NotifyService {
     atClientManager = atClientManagerFromApp;
     atClientManager.setCurrentAtSign(
         currentAtSignFromApp, atClientPreference.namespace, atClientPreference);
-
     atClient = atClientManager.atClient;
-
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    // notificationService.subscribe(regex: '.wavi').listen((notification) {
-    //   _notificationCallback(notification);
-    // });
-
-    print('nameSpace = ${atClientPreference.namespace}');
 
     atClientManager.notificationService
         .subscribe(regex: '.${atClientPreference.namespace}')
@@ -85,15 +73,11 @@ class NotifyService {
     if (Platform.isIOS) {
       _requestIOSPermission();
     }
-    initializePlatformSpecifics();
-
-    await _notificationsPlugin.initialize(
-      initializationSettings,
-      onSelectNotification: (payload) async {},
-    );
+    await initializePlatformSpecifics();
   }
 
-  initializePlatformSpecifics() {
+  /// Initialized Notification Settings
+  initializePlatformSpecifics() async {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings(
@@ -111,11 +95,16 @@ class NotifyService {
         //     didReceivedLocalNotificationSubject.add(receivedNotification);
       },
     );
-
     initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
+    await _notificationsPlugin.initialize(
+      initializationSettings,
+      onSelectNotification: (payload) async {},
+    );
   }
 
+  /// Request Alert, Badge, Sound Permission for IOS
   _requestIOSPermission() {
     _notificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -142,7 +131,7 @@ class NotifyService {
     print('notificationKey = $notificationKey');
     if ((notificationKey.startsWith(storageKey) && toAtsign == currentAtSign)) {
       var message = atNotification.value ?? '';
-      print('value = $message');
+      print('notify message => $message $fromAtsign');
       if (message.isNotEmpty && message != 'null') {
         var decryptedMessage = await atClient.encryptionService!
             .decrypt(message, fromAtsign)
@@ -152,7 +141,6 @@ class NotifyService {
         print('notify decryptedMessage => $decryptedMessage $fromAtsign');
         await showNotification(decryptedMessage);
       }
-      print('notify message => $message $fromAtsign');
     }
   }
 
@@ -208,19 +196,14 @@ class NotifyService {
       notifySink.add(notifies);
       notifiesJson!.add(notify.toJson());
       await atClient.put(key, json.encode(notifiesJson));
-      // await atClientInstance.notify(
-      //     key, json.encode(notifiesJson), OperationEnum.update);
-
-      //  return true;
     } catch (e) {
       print('Error in setting notify => $e');
-      //  return false;
     }
     await sendNotify(key, notify, notifyType ?? NotifyEnum.notifyForUpdate);
     return true;
   }
 
-  /// Send Notify with NotificationService
+  /// Call Notify in NotificationService
   Future<bool> sendNotify(
     AtKey key,
     Notify notify,
@@ -236,7 +219,7 @@ class NotifyService {
           NotificationParams.forText(notify.message ?? '', sendToAtSign));
     } else {
       notificationResponse = await atClientManager.notificationService.notify(
-        NotificationParams.forUpdate(key, value: json.encode(notifiesJson)),
+        NotificationParams.forUpdate(key, value: notify.toJson()),
         // onSuccess: _onSuccessCallback,
         // onError: _onErrorCallback,
       );
@@ -260,49 +243,37 @@ class NotifyService {
     print(notificationResult.atClientException.toString());
   }
 
+  /// Show Local Notification in Device
   Future<void> showNotification(String decryptedMessage) async {
     List<dynamic>? valuesJson = [];
-    List<Notify> messages = [];
-    valuesJson = json.decode(decryptedMessage as String) as List?;
-    valuesJson!.forEach((value) {
-      var notify = Notify.fromJson((value));
-      messages.insert(0, notify);
-    });
+    Notify notify = Notify.fromJson((decryptedMessage));
+    print('showNotification => ${notify.message} ${notify.atSign}');
 
-    if (messages.isNotEmpty) {
-      print(
-          'notify lastestMessage => ${messages.first.message} ${messages.first.atSign}');
-      var androidChannelSpecifics = AndroidNotificationDetails(
-        'CHANNEL_ID',
-        'CHANNEL_NAME',
-        "CHANNEL_DESCRIPTION",
-        importance: Importance.high,
-        priority: Priority.high,
-        playSound: true,
-        timeoutAfter: 50000,
-        styleInformation: DefaultStyleInformation(true, true),
-      );
-      var iosChannelSpecifics = IOSNotificationDetails();
+    var androidChannelSpecifics = AndroidNotificationDetails(
+      'notify_id',
+      'notify',
+      "notify_description",
+      importance: Importance.high,
+      priority: Priority.high,
+      playSound: true,
+      timeoutAfter: 50000,
+      styleInformation: DefaultStyleInformation(true, true),
+    );
+    var iosChannelSpecifics = IOSNotificationDetails();
 
-      var platformChannelSpecifics = NotificationDetails(
-          android: androidChannelSpecifics, iOS: iosChannelSpecifics);
-      await _notificationsPlugin.show(
-        0,
-        '${messages.first.atSign}',
-        '${messages.first.message}',
-        platformChannelSpecifics,
-        payload: jsonEncode(
-          Notify(
-            atSign: messages.first.atSign,
-            message: messages.first.message,
-            time: messages.first.time,
-          ),
-        ),
-      );
-    }
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidChannelSpecifics, iOS: iosChannelSpecifics);
+    await _notificationsPlugin.show(
+      0,
+      '${notify.atSign}',
+      '${notify.message}',
+      platformChannelSpecifics,
+      payload: notify.toJson(),
+    );
   }
 
-  cancelNotifications() async {
+  /// Cancel All notification
+  void cancelNotifications() async {
     await _notificationsPlugin.cancelAll();
   }
 }
