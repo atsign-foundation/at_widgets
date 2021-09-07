@@ -14,6 +14,7 @@ dependencies:
   provider: ^5.0.0
   flutter_qr_reader: ^1.0.5
   permission_handler: ^8.1.1
+  flutter_local_notifications: ^5.0.0+1
   webview_flutter: ^2.0.8
   url_launcher: ^6.0.6
   collection: ^1.15.0
