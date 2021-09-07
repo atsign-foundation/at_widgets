@@ -29,7 +29,7 @@ dependencies:
   at_client_mobile: ^2.0.3
   at_client: ^2.0.1
   at_onboarding_flutter: ^2.1.2
-  flutter_local_notifications: ^5.0.0
+  flutter_local_notifications: ^6.0.0
 
 dev_dependencies:
   flutter_test:

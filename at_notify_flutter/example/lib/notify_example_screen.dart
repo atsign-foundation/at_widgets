@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:at_notify_flutter/utils/init_notify_service.dart';
 import 'package:at_notify_flutter/utils/notify_utils.dart';
 import 'package:flutter/material.dart';

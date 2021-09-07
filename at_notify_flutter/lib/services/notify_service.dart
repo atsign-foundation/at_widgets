@@ -100,8 +100,17 @@ class NotifyService {
 
     await _notificationsPlugin.initialize(
       initializationSettings,
-      onSelectNotification: (payload) async {},
+      onSelectNotification: (payload) async {
+
+      },
     );
+  }
+
+  void setSendToAtSign(String? sendToAtSign) {
+    if (sendToAtSign != null && sendToAtSign[0] != '@') {
+      sendToAtSign = '@' + sendToAtSign;
+    }
+    this.sendToAtSign = sendToAtSign!;
   }
 
   /// Request Alert, Badge, Sound Permission for IOS
@@ -175,13 +184,6 @@ class NotifyService {
     }
   }
 
-  void setSendToAtSign(String? sendToAtSign) {
-    if (sendToAtSign != null && sendToAtSign[0] != '@') {
-      sendToAtSign = '@' + sendToAtSign;
-    }
-    this.sendToAtSign = sendToAtSign!;
-  }
-
   /// Create new notify to AtClient
   Future<bool> addNotify(Notify notify, {NotifyEnum? notifyType}) async {
     var metadata = Metadata();
@@ -203,7 +205,7 @@ class NotifyService {
     return true;
   }
 
-  /// Call Notify in NotificationService
+  /// Call Notify in NotificationService, send notify to others
   Future<bool> sendNotify(
     AtKey key,
     Notify notify,
