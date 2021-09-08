@@ -294,13 +294,20 @@ class EventKeyStreamService {
 
               createEventAtKey.sharedWith = jsonEncode(allAtsignList);
 
-              await SyncSecondary().callSyncSecondary(SyncOperation.notifyAll,
-                  atKey: createEventAtKey,
-                  notification:
-                      EventNotificationModel.convertEventNotificationToJson(
-                          storedEvent),
-                  operation: OperationEnum.update,
-                  isDedicated: MixedConstants.isDedicated);
+              // await SyncSecondary().callSyncSecondary(SyncOperation.notifyAll,
+              //     atKey: createEventAtKey,
+              //     notification:
+              //         EventNotificationModel.convertEventNotificationToJson(
+              //             storedEvent),
+              //     operation: OperationEnum.update,
+              //     isDedicated: MixedConstants.isDedicated);
+
+              await atClientManager.atClient.notifyAll(
+                createEventAtKey,
+                EventNotificationModel.convertEventNotificationToJson(
+                    storedEvent),
+                OperationEnum.update,
+              );
 
               if (updateResult is bool && updateResult == true) {
                 mapUpdatedEventDataToWidget(storedEvent);
@@ -468,14 +475,17 @@ class EventKeyStreamService {
       var notification =
           EventNotificationModel.convertEventNotificationToJson(eventData);
 
-      var result = await atClientManager.atClient
-          .put(key, notification, isDedicated: MixedConstants.isDedicated);
+      var result = await atClientManager.atClient.put(
+        key,
+        notification,
+        // isDedicated: MixedConstants.isDedicated,
+      );
       if (result is bool) {
         if (result) {
-          if (MixedConstants.isDedicated) {
-            await SyncSecondary()
-                .callSyncSecondary(SyncOperation.syncSecondary);
-          }
+          // if (MixedConstants.isDedicated) {
+          //   await SyncSecondary()
+          //       .callSyncSecondary(SyncOperation.syncSecondary);
+          // }
         }
         print('event acknowledged:$result');
         return result;
@@ -560,12 +570,15 @@ class EventKeyStreamService {
 
       var notification =
           EventNotificationModel.convertEventNotificationToJson(eventData);
-      var result = await atClientManager.atClient
-          .put(key, notification, isDedicated: MixedConstants.isDedicated);
+      var result = await atClientManager.atClient.put(
+        key,
+        notification,
+        // isDedicated: MixedConstants.isDedicated,
+      );
 
-      if (MixedConstants.isDedicated) {
-        await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-      }
+      // if (MixedConstants.isDedicated) {
+      //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+      // }
       // if key type is createevent, we have to notify all members
       if (keyType == ATKEY_TYPE_ENUM.CREATEEVENT) {
         mapUpdatedEventDataToWidget(eventData);
@@ -576,12 +589,18 @@ class EventKeyStreamService {
         });
 
         key.sharedWith = jsonEncode(allAtsignList);
-        await SyncSecondary().callSyncSecondary(
-          SyncOperation.notifyAll,
-          atKey: key,
-          notification: notification,
-          operation: OperationEnum.update,
-          isDedicated: MixedConstants.isDedicated,
+        // await SyncSecondary().callSyncSecondary(
+        //   SyncOperation.notifyAll,
+        //   atKey: key,
+        //   notification: notification,
+        //   operation: OperationEnum.update,
+        //   isDedicated: MixedConstants.isDedicated,
+        // );
+
+        await atClientManager.atClient.notifyAll(
+          key,
+          notification,
+          OperationEnum.update,
         );
       } else {
         ///  update pending status if receiver, add more if checks like already responded
@@ -652,8 +671,10 @@ class EventKeyStreamService {
 
       var key = EventService().getAtKey(presentEventData.key!);
 
-      var result = await atClientManager.atClient
-          .put(key, notification, isDedicated: MixedConstants.isDedicated);
+      var result = await atClientManager.atClient.put(
+        key, notification,
+        // isDedicated: MixedConstants.isDedicated
+      );
 
       key.sharedWith = jsonEncode(allAtsignList);
 
@@ -757,8 +778,11 @@ class EventKeyStreamService {
 
       // print('notification $notification');
 
-      var result = await atClientManager.atClient
-          .put(key, notification, isDedicated: MixedConstants.isDedicated);
+      var result = await atClientManager.atClient.put(
+        key,
+        notification,
+        // isDedicated: MixedConstants.isDedicated,
+      );
 
       key.sharedWith = jsonEncode(allAtsignList);
 

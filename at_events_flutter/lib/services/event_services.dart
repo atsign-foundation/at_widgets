@@ -96,15 +96,24 @@ class EventService {
 
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
-      var result = await atClientManager.atClient
-          .put(atKey, eventData, isDedicated: MixedConstants.isDedicated);
+      var result = await atClientManager.atClient.put(
+        atKey, eventData,
+        //  isDedicated: MixedConstants.isDedicated,
+      );
       atKey.sharedWith = jsonEncode(allAtsignList);
-      await SyncSecondary().callSyncSecondary(
-        SyncOperation.notifyAll,
-        atKey: atKey,
-        notification: eventData,
-        operation: OperationEnum.update,
-        isDedicated: MixedConstants.isDedicated,
+
+      // await SyncSecondary().callSyncSecondary(
+      //   SyncOperation.notifyAll,
+      //   atKey: atKey,
+      //   notification: eventData,
+      //   operation: OperationEnum.update,
+      //   isDedicated: MixedConstants.isDedicated,
+      // );
+
+      await atClientManager.atClient.notifyAll(
+        atKey,
+        eventData,
+        OperationEnum.update,
       );
 
       EventKeyStreamService()

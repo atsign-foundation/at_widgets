@@ -6,7 +6,7 @@ class MixedConstants {
   // for production server
   // static const String ROOT_DOMAIN = 'root.atsign.org';
 
-  static const bool isDedicated = false;
+  // static const bool isDedicated = false;
   static const String CREATE_EVENT = 'createevent';
 
   static const String EVENT_MEMBER_LOCATION_KEY = 'updateeventlocation';
