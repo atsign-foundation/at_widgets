@@ -23,7 +23,6 @@ class AtService {
       ..isLocalStoreRequired = true
       ..commitLogPath = path
       ..namespace = AppConstants.appNamespace
-      ..syncStrategy = SyncStrategy.ONDEMAND
       ..rootDomain = AppConstants.rootDomain
       ..hiveStoragePath = path;
     return _atClientPreference;

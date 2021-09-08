@@ -5,7 +5,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_server_status/at_server_status.dart';
 
 class AtErrorDialog {
-  static getAlertDialog(Object error, BuildContext context) {
+  static AlertDialog getAlertDialog(Object error, BuildContext context) {
     String errorMessage = _getErrorMessage(error);
     String title = 'Error';
     return AlertDialog(
@@ -13,10 +13,9 @@ class AtErrorDialog {
         children: <Widget>[
           Text(
             title,
-            style:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
           ),
-          Icon(Icons.sentiment_dissatisfied)
+          const Icon(Icons.sentiment_dissatisfied)
         ],
       ),
       content: Text('$errorMessage'),
@@ -25,14 +24,14 @@ class AtErrorDialog {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('Close'),
+          child: const Text('Close'),
         )
       ],
     );
   }
 
   ///Returns corresponding errorMessage for [error].
-  static String _getErrorMessage( Object error) {
+  static String _getErrorMessage(Object error) {
     switch (error.runtimeType) {
       case AtClientException:
         return 'Unable to perform this action. Please try again.';

@@ -20,7 +20,7 @@ linter:
     non_constant_identifier_names: false
     avoid_type_to_string: true
     camel_case_types: false
-    not_initialized_non_nullable_instance_field: false
+    not_initialized_non_nullable_instance_field: true
     empty_constructor_bodies: true
     prefer_const_constructors: true
     sort_constructors_first: false

@@ -44,7 +44,7 @@ class Onboarding {
   final Widget? fistTimeAuthNextScreen;
 
   /// API authentication key for getting free atsigns
-  final String appAPIKey;
+  final String? appAPIKey;
 
   final AtSignLogger _logger = AtSignLogger('At Onboarding Flutter');
 
@@ -60,25 +60,27 @@ class Onboarding {
       this.appColor,
       this.logo,
       this.domain,
-      required this.appAPIKey}) {
+      this.appAPIKey}) {
     _show();
   }
   void _show() {
     WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
       showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) => OnboardingWidget(
-              atsign: atsign,
-              onboard: onboard,
-              onError: onError,
-              nextScreen: nextScreen,
-              fistTimeAuthNextScreen: fistTimeAuthNextScreen,
-              atClientPreference: atClientPreference,
-              appColor: appColor,
-              logo: logo,
-              domain: domain,
-              appAPIKey: appAPIKey));
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => OnboardingWidget(
+          atsign: atsign,
+          onboard: onboard,
+          onError: onError,
+          nextScreen: nextScreen,
+          fistTimeAuthNextScreen: fistTimeAuthNextScreen,
+          atClientPreference: atClientPreference,
+          appColor: appColor,
+          logo: logo,
+          domain: domain ?? AppConstants.rootEnvironment.domain,
+          appAPIKey: appAPIKey ?? AppConstants.rootEnvironment.apikey!,
+        ),
+      );
     });
 
     _logger.info('Onboarding...!');
@@ -176,8 +178,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
           if (snapshot.hasData) {
             CustomNav().pop(context);
             WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
-              widget.onboard(_onboardingService.atClientServiceMap,
-                  _onboardingService.currentAtsign);
+              widget.onboard(_onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
             });
             if (widget.nextScreen != null) {
               CustomNav().push(widget.nextScreen, context);
@@ -188,8 +189,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
               return PairAtsignWidget(
                 getAtSign: true,
               );
-            } else if (snapshot.error == OnboardingStatus.ACTIVATE ||
-                snapshot.error == OnboardingStatus.RESTORE) {
+            } else if (snapshot.error == OnboardingStatus.ACTIVATE || snapshot.error == OnboardingStatus.RESTORE) {
               return PairAtsignWidget(
                 onboardStatus: snapshot.error as OnboardingStatus?,
               );

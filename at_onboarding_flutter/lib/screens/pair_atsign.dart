@@ -212,8 +212,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       loading = true;
     });
     try {
-      bool? isExist = await _onboardingService.isExistingAtsign(atsign);
-      if (isExist != null && isExist) {
+      bool isExist = await _onboardingService.isExistingAtsign(atsign);
+      if (isExist) {
         setState(() {
           loading = false;
         });

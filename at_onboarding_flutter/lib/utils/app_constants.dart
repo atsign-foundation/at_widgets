@@ -13,6 +13,7 @@ class AppConstants {
   static String apiPath = '/api/app/v2/';
   static String package = 'at_onboarding_flutter';
   static String encryptKeys = '_encrypt_keys';
+  static const String deviceapikey = '477b-876u-bcez-c42z-6a3d';
   static String backupFileExtension = '.atKeys';
   static String backupZipExtension = '_atKeys.zip';
   static int responseTimeLimit = 30;
@@ -25,6 +26,7 @@ class AppConstants {
   static const String removeButton = 'Remove';
 
   static String get serverDomain => _rootDomain;
+  static RootEnvironment rootEnvironment = RootEnvironment.Staging;
 
   static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';
@@ -54,6 +56,62 @@ extension customMessages on OnboardingStatus {
         return 'Fatal error occurred. Please contact support@atsign.com';
       case (OnboardingStatus.RESTORE):
         return 'Please restore it with the available backup zip file as the local keys were missing.';
+      default:
+        return '';
+    }
+  }
+}
+
+enum RootEnvironment { Staging, Production, Testing }
+
+extension value on RootEnvironment {
+  String get domain {
+    switch (this) {
+      case RootEnvironment.Staging:
+        return 'root.atsign.wtf';
+      case RootEnvironment.Production:
+        return 'root.atsign.org';
+      case RootEnvironment.Testing:
+        return 'vip.ve.atsign.zone';
+      default:
+        return '';
+    }
+  }
+
+  String? get apikey {
+    switch (this) {
+      case RootEnvironment.Staging:
+        return AppConstants.deviceapikey;
+      case RootEnvironment.Production:
+        return AppConstants.apiKey;
+      case RootEnvironment.Testing:
+        return AppConstants.deviceapikey;
+      default:
+        return '';
+    }
+  }
+
+  String get website {
+    switch (this) {
+      case RootEnvironment.Staging:
+        return 'https://atsign.wtf';
+      case RootEnvironment.Production:
+        return 'https://atsign.com';
+      case RootEnvironment.Testing:
+        return 'https://atsign.wtf';
+      default:
+        return '';
+    }
+  }
+
+  String get previewLink {
+    switch (this) {
+      case RootEnvironment.Staging:
+        return 'https://directory.atsign.wtf/';
+      case RootEnvironment.Production:
+        return 'https://wavi.ng/';
+      case RootEnvironment.Staging:
+        return 'https://directory.atsign.wtf/';
       default:
         return '';
     }
