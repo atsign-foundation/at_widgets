@@ -52,8 +52,7 @@ class _MyAppState extends State<MyApp> {
                         onError: (Object? error) {
                           _logger.severe('Onboarding throws $error error');
                         },
-                        domain: AppConstants.rootDomain,
-                        appAPIKey: AppConstants.devAPIKey,
+                        rootEnvironment: 'staging',
                         nextScreen: DashBoard(),
                       );
                     },

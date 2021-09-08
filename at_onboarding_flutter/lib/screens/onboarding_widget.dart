@@ -46,6 +46,27 @@ class Onboarding {
   /// API authentication key for getting free atsigns
   final String? appAPIKey;
 
+  /// Setting up RootEnvironment to **Staging** will use the staging environment for onboarding.
+  ///
+  ///```dart
+  /// rootEnvironment: 'staging'
+  ///```
+  ///
+  /// Setting up RootEnvironment to **Production** will use the production environment for onboarding.
+  ///
+  ///```dart
+  /// rootEnvironment: 'production'
+  ///```
+  ///
+  /// Setting up RootEnvironment to **Testing** will use the testing(docker) environment for onboarding.
+  ///
+  ///```dart
+  /// rootEnvironment: 'testing'
+  ///```
+  ///
+  /// **Note:**
+  /// API Key is required when you set [rootEnvironment] to production.
+  final String rootEnvironment;
   final AtSignLogger _logger = AtSignLogger('At Onboarding Flutter');
 
   Onboarding(
@@ -60,12 +81,33 @@ class Onboarding {
       this.appColor,
       this.logo,
       this.domain,
+      required this.rootEnvironment,
       this.appAPIKey}) {
-    _show();
+    switch (rootEnvironment.toLowerCase()) {
+      case 'staging':
+        AppConstants.rootEnvironment = RootEnvironment.Staging;
+        break;
+      case 'production':
+        AppConstants.rootEnvironment = RootEnvironment.Production;
+        break;
+      case 'testing':
+        AppConstants.rootEnvironment = RootEnvironment.Testing;
+        break;
+      default:
+        AppConstants.rootEnvironment = RootEnvironment.Staging;
+        break;
+    }
+    print(appAPIKey ?? AppConstants.rootEnvironment.apikey);
+    print(domain ?? AppConstants.rootEnvironment.domain);
+    if (AppConstants.rootEnvironment == RootEnvironment.Production && appAPIKey == null) {
+      throw ('App API Key is required for production environment');
+    } else {
+      _show();
+    }
   }
   void _show() {
-    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
-      showDialog(
+    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) async {
+      await showDialog(
         context: context,
         barrierDismissible: false,
         builder: (_) => OnboardingWidget(

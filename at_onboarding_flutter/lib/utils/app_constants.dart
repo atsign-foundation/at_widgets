@@ -74,7 +74,7 @@ extension value on RootEnvironment {
       case RootEnvironment.Testing:
         return 'vip.ve.atsign.zone';
       default:
-        return '';
+        return 'root.atsign.wtf';
     }
   }
 
@@ -87,7 +87,7 @@ extension value on RootEnvironment {
       case RootEnvironment.Testing:
         return AppConstants.deviceapikey;
       default:
-        return '';
+        return AppConstants.deviceapikey;
     }
   }
 
@@ -100,7 +100,7 @@ extension value on RootEnvironment {
       case RootEnvironment.Testing:
         return 'https://atsign.wtf';
       default:
-        return '';
+        return 'https://atsign.wtf';
     }
   }
 
@@ -110,10 +110,10 @@ extension value on RootEnvironment {
         return 'https://directory.atsign.wtf/';
       case RootEnvironment.Production:
         return 'https://wavi.ng/';
-      case RootEnvironment.Staging:
+      case RootEnvironment.Testing:
         return 'https://directory.atsign.wtf/';
       default:
-        return '';
+        return 'https://directory.atsign.wtf/';
     }
   }
 }
