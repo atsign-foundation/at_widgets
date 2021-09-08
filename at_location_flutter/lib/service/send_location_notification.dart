@@ -85,10 +85,10 @@ class SendLocationNotification {
       if (masterSwitchState) {
         await prepareLocationDataAndSend(notification!, myLocation);
 
-        if (MixedConstants.isDedicated) {
-          // ignore: unawaited_futures
-          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   // ignore: unawaited_futures
+        //   SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
       } else {
         /// method from main app
         if (locationPromptDialog != null) {
@@ -143,10 +143,10 @@ class SendLocationNotification {
           await prepareLocationDataAndSend(notification,
               LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
         });
-        if (MixedConstants.isDedicated) {
-          // ignore: unawaited_futures
-          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   // ignore: unawaited_futures
+        //   SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
       }
 
       ///
@@ -159,10 +159,10 @@ class SendLocationNotification {
             prepareLocationDataAndSend(notification,
                 LatLng(myLocation.latitude, myLocation.longitude));
           });
-          if (MixedConstants.isDedicated) {
-            // ignore: unawaited_futures
-            SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-          }
+          // if (MixedConstants.isDedicated) {
+          //   // ignore: unawaited_futures
+          //   SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+          // }
         }
       });
     }
@@ -201,12 +201,13 @@ class SendLocationNotification {
         ..long = myLocation.longitude
         ..key = 'locationnotify-$atkeyMicrosecondId';
       try {
-        await atClient!.put(
+        var _res = await atClient!.put(
           atKey,
           LocationNotificationModel.convertLocationNotificationToJson(
               newLocationNotificationModel),
-          isDedicated: MixedConstants.isDedicated,
+          // isDedicated: MixedConstants.isDedicated,
         );
+        print('prepareLocationDataAndSend in location package ========> $_res');
       } catch (e) {
         print('error in sending location: $e');
       }
@@ -219,13 +220,15 @@ class SendLocationNotification {
         locationNotificationModel.key!.split('-')[1].split('@')[0];
     var atKey = newAtKey(-1, 'locationnotify-$atkeyMicrosecondId',
         locationNotificationModel.receiver);
-    var result =
-        await atClient!.delete(atKey, isDedicated: MixedConstants.isDedicated);
+    var result = await atClient!.delete(
+      atKey,
+      //  isDedicated: MixedConstants.isDedicated,
+    );
     print('$atKey delete operation $result');
     if (result) {
-      if (MixedConstants.isDedicated) {
-        await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-      }
+      // if (MixedConstants.isDedicated) {
+      //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+      // }
     }
     return result;
   }
@@ -238,15 +241,17 @@ class SendLocationNotification {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);
-        var result = await atClient!
-            .delete(atKey, isDedicated: MixedConstants.isDedicated);
+        var result = await atClient!.delete(
+          atKey,
+          // isDedicated: MixedConstants.isDedicated,
+        );
         print('$key is deleted ? $result');
       }
     });
 
-    if (MixedConstants.isDedicated) {
-      await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-    }
+    // if (MixedConstants.isDedicated) {
+    //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+    // }
   }
 
   AtKey newAtKey(int ttr, String key, String? sharedWith, {int? ttl}) {

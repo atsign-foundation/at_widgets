@@ -136,14 +136,14 @@ class SharingLocationService {
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
-            isDedicated: MixedConstants.isDedicated,
+            // isDedicated: MixedConstants.isDedicated,
           );
       print('sendLocationNotification:$result');
 
       if (result) {
-        if (MixedConstants.isDedicated) {
-          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
         await KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
@@ -174,13 +174,13 @@ class SharingLocationService {
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
-            isDedicated: MixedConstants.isDedicated,
+            // isDedicated: MixedConstants.isDedicated,
           );
       print('sendLocationNotificationAcknowledgment:$result');
       if (result) {
-        if (MixedConstants.isDedicated) {
-          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
         KeyStreamService().updatePendingStatus(locationNotificationModel);
       }
       return result;
@@ -238,12 +238,12 @@ class SharingLocationService {
       var result = await AtLocationNotificationListener().atClientInstance!.put(
             key,
             notification,
-            isDedicated: MixedConstants.isDedicated,
+            // isDedicated: MixedConstants.isDedicated,
           );
       if (result) {
-        if (MixedConstants.isDedicated) {
-          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
         KeyStreamService()
             .mapUpdatedLocationDataToWidget(locationNotificationModel);
       }
@@ -290,13 +290,15 @@ class SharingLocationService {
 
       locationNotificationModel.isAcknowledgment = true;
 
-      var result = await AtLocationNotificationListener()
-          .atClientInstance!
-          .delete(key, isDedicated: MixedConstants.isDedicated);
+      var result =
+          await AtLocationNotificationListener().atClientInstance!.delete(
+                key,
+                // isDedicated: MixedConstants.isDedicated,
+              );
       if (result) {
-        if (MixedConstants.isDedicated) {
-          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
         KeyStreamService().removeData(key.key);
       }
       return result;
@@ -315,16 +317,18 @@ class SharingLocationService {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);
-        var result = await AtLocationNotificationListener()
-            .atClientInstance!
-            .delete(atKey, isDedicated: MixedConstants.isDedicated);
+        var result =
+            await AtLocationNotificationListener().atClientInstance!.delete(
+                  atKey,
+                  // isDedicated: MixedConstants.isDedicated,
+                );
         print('$key is deleted ? $result');
       }
     });
 
-    if (MixedConstants.isDedicated) {
-      await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-    }
+    // if (MixedConstants.isDedicated) {
+    //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+    // }
   }
 
   AtKey newAtKey(int ttr, String key, String? sharedWith,

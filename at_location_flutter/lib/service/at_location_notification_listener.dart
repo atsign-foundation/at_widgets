@@ -68,11 +68,11 @@ class AtLocationNotificationListener {
   // }
 
   void _notificationCallback(dynamic notification) async {
-    print('_notificationCallback called');
+    // print('_notificationCallback called');
     var value = notification.value;
     var notificationKey = notification.key;
     print(
-        '_notificationCallback :$notification , notification key: $notificationKey');
+        '_notificationCallback notification received in location package ===========> :$notification , notification key: $notificationKey');
     var fromAtSign = notification.from;
     var atKey;
     if (notificationKey.toString().contains(':')) {
@@ -88,6 +88,8 @@ class AtLocationNotificationListener {
         (!notificationKey.contains(MixedConstants.SHARE_LOCATION)) &&
         (!notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) &&
         (!notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
+      print(
+          'returned from _notificationCallback in location package ===========>');
       return;
     }
 

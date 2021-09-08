@@ -30,7 +30,7 @@ class SyncSecondary {
     AtKey? atKey,
     String? notification,
     OperationEnum? operation,
-    bool isDedicated = MixedConstants.isDedicated,
+    // bool isDedicated = MixedConstants.isDedicated,
   }) async {
     _operations.insert(
       0,
@@ -39,7 +39,7 @@ class SyncSecondary {
         atKey: atKey,
         notification: notification,
         operation: operation,
-        isDedicated: isDedicated,
+        // isDedicated: isDedicated,
       ),
     );
     if (syncing) {
@@ -101,8 +101,11 @@ class SyncSecondary {
   }
 
   Future<void> _notifyAllInSync(
-      AtKey atKey, String notification, OperationEnum operation,
-      {bool isDedicated = MixedConstants.isDedicated}) async {
+    AtKey atKey,
+    String notification,
+    OperationEnum operation,
+    // {bool isDedicated = MixedConstants.isDedicated}
+  ) async {
     var notifyAllResult = await AtLocationNotificationListener()
         .atClientInstance!
         .notifyAll(atKey, notification, OperationEnum.update);
@@ -112,12 +115,12 @@ class SyncSecondary {
 
   Future<void> _syncSecondary() async {
     try {
-      var isSynced = await AtClientManager.getInstance().syncService.isInSync();
-      print('already synced: $isSynced');
-      if (isSynced is bool && !isSynced) {
-        await AtClientManager.getInstance().syncService.sync();
-        print('sync done');
-      }
+      // var isSynced = await AtClientManager.getInstance().syncService.isInSync();
+      // print('already synced: $isSynced');
+      // if (isSynced is bool && !isSynced) {
+      //   // await AtClientManager.getInstance().syncService.sync();
+      //   print('sync done');
+      // }
     } catch (e) {
       print('error in _syncSecondary $e');
     }

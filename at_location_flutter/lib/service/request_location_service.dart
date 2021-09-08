@@ -118,21 +118,22 @@ class RequestLocationService {
         ..atsignCreator = atsign
         ..key = atKey.key
         ..isRequest = true
-        ..receiver =
-            AtLocationNotificationListener().atClientInstance!.getCurrentAtSign();
+        ..receiver = AtLocationNotificationListener()
+            .atClientInstance!
+            .getCurrentAtSign();
 
       result = await AtLocationNotificationListener().atClientInstance!.put(
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
-            isDedicated: MixedConstants.isDedicated,
+            // isDedicated: MixedConstants.isDedicated,
           );
       print('requestLocationNotification:$result');
 
       if (result) {
-        if (MixedConstants.isDedicated) {
-          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
         await KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
@@ -183,14 +184,14 @@ class RequestLocationService {
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
-            isDedicated: MixedConstants.isDedicated,
+            // isDedicated: MixedConstants.isDedicated,
           );
       print('requestLocationAcknowledgment $result');
 
       if (result) {
-        if (MixedConstants.isDedicated) {
-          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
         KeyStreamService().updatePendingStatus(locationNotificationModel);
       }
 
@@ -250,13 +251,13 @@ class RequestLocationService {
       result = await AtLocationNotificationListener().atClientInstance!.put(
             key,
             notification,
-            isDedicated: MixedConstants.isDedicated,
+            // isDedicated: MixedConstants.isDedicated,
           );
 
       if (result) {
-        if (MixedConstants.isDedicated) {
-          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
         KeyStreamService()
             .mapUpdatedLocationDataToWidget(locationNotificationModel);
       }
@@ -287,13 +288,13 @@ class RequestLocationService {
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
-            isDedicated: MixedConstants.isDedicated,
+            // isDedicated: MixedConstants.isDedicated,
           );
       print('sendDeleteAck $result');
       if (result) {
-        if (MixedConstants.isDedicated) {
-          await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
+        // if (MixedConstants.isDedicated) {
+        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+        // }
       }
       return result;
     } catch (e) {
@@ -321,14 +322,14 @@ class RequestLocationService {
     var result =
         await AtLocationNotificationListener().atClientInstance!.delete(
               key,
-              isDedicated: MixedConstants.isDedicated,
+              // isDedicated: MixedConstants.isDedicated,
             );
     print('$key delete operation $result');
 
     if (result) {
-      if (MixedConstants.isDedicated) {
-        await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-      }
+      // if (MixedConstants.isDedicated) {
+      //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+      // }
       KeyStreamService().removeData(key.key);
     }
     return result;
