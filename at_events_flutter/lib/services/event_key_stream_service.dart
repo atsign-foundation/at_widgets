@@ -315,28 +315,32 @@ class EventKeyStreamService {
   }
 
   /// Adds new [EventKeyLocationModel] data for new received notification
-  Future<dynamic> addDataToList(
-      EventNotificationModel eventNotificationModel) async {
+  Future<dynamic> addDataToList(EventNotificationModel eventNotificationModel,
+      {String? receivedkey}) async {
     String newLocationDataKeyId;
     String? key;
     newLocationDataKeyId =
         eventNotificationModel.key!.split('createevent-')[1].split('@')[0];
 
-    var keys = <String>[];
-    keys = await atClientManager.atClient.getKeys(
-      regex: 'createevent-',
-    );
+    if (receivedkey != null) {
+      key = receivedkey;
+    } else {
+      var keys = <String>[];
+      keys = await atClientManager.atClient.getKeys(
+        regex: 'createevent-',
+      );
 
-    keys.forEach((regex) {
-      if (regex.contains('$newLocationDataKeyId')) {
-        key = regex;
+      keys.forEach((regex) {
+        if (regex.contains('$newLocationDataKeyId')) {
+          key = regex;
+        }
+      });
+
+      print('key $key');
+
+      if (key == null) {
+        return;
       }
-    });
-
-    print('key $key');
-
-    if (key == null) {
-      return;
     }
 
     var tempEventKeyLocationModel = EventKeyLocationModel(key: key);

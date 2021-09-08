@@ -47,12 +47,15 @@ class AtEventNotificationListener {
       // ignore: await_only_futures
       // await atClientInstance!.startMonitor(privateKey, fnCallBack);
 
-      atClientManager.notificationService
-          .subscribe(regex: atClientManager.atClient.getPreferences()!.namespace
+      AtClientManager.getInstance()
+          .notificationService
+          .subscribe(
+              // regex: atClientManager.atClient.getPreferences()!.namespace
               // ?? 'rrive'
+              // '.*'
               )
           .listen((notification) {
-        _notificationCallback(notification as AtNotification);
+        _notificationCallback(notification);
       });
 
       print('Monitor started in events package');
@@ -74,8 +77,8 @@ class AtEventNotificationListener {
   // }
 
   void _notificationCallback(AtNotification notification) async {
-    print('fnCallBack called in event service');
-    print('notification $notification');
+    // print('fnCallBack called in event service');
+    print('notification received in events package ===========> $notification');
     // response = response.replaceFirst('notification:', '');
     // var responseJson = jsonDecode(response);
     var value = notification.value;
@@ -85,6 +88,8 @@ class AtEventNotificationListener {
     if ((!notificationKey.contains('createevent')) &&
         (!notificationKey.contains('eventacknowledged')) &&
         (!notificationKey.contains(MixedConstants.EVENT_MEMBER_LOCATION_KEY))) {
+      print(
+          'returned from _notificationCallback in events package ===========>');
       return;
     }
 
@@ -111,7 +116,8 @@ class AtEventNotificationListener {
         // new event received
         // show dialog
         // add in event list
-        var _result = await EventKeyStreamService().addDataToList(eventData);
+        var _result = await EventKeyStreamService()
+            .addDataToList(eventData, receivedkey: notificationKey);
         if (_result is EventKeyLocationModel) {
           await showMyDialog(eventNotificationModel: eventData);
         }

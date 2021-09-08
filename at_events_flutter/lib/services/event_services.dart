@@ -145,9 +145,11 @@ class EventService {
 
       print('key: ${atKey.key}');
 
-      var putResult = await atClientManager.atClient.put(atKey, notification,
-          isDedicated:
-              true); // creating a key and saving it for creator without adding any receiver atsign
+      var putResult = await atClientManager.atClient.put(
+        atKey,
+        notification,
+        // isDedicated: true,
+      ); // creating a key and saving it for creator without adding any receiver atsign
 
       atKey.sharedWith = jsonEncode(
           [...selectedContactsAtSigns]); //adding event members in atkey
