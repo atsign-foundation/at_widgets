@@ -64,7 +64,9 @@ class AppTheme {
       primaryColor: primaryColor,
       backgroundColor: backgroundColor,
       scaffoldBackgroundColor: backgroundColor,
-      accentColor: accentColor,
+      colorScheme: ThemeData()
+          .colorScheme
+          .copyWith(secondary: accentColor, brightness: brightness),
     );
   }
 

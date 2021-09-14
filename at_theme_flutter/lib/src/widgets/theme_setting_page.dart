@@ -1,3 +1,4 @@
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
 import 'package:at_theme_flutter/src/widgets/color_card.dart';
 import 'package:at_theme_flutter/src/widgets/theme_mode_card.dart';
@@ -35,6 +36,7 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Theme(
       data: _appTheme.toThemeData(),
       child: Scaffold(
@@ -49,7 +51,8 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
             children: [
               Text(
                 "Theme",
-                style: TextStyle().copyWith(fontWeight: FontWeight.bold),
+                style: TextStyle()
+                    .copyWith(fontWeight: FontWeight.bold, fontSize: 15.toFont),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -92,7 +95,8 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
               SizedBox(height: 32),
               Text(
                 "Colour",
-                style: TextStyle().copyWith(fontWeight: FontWeight.bold),
+                style: TextStyle()
+                    .copyWith(fontWeight: FontWeight.bold, fontSize: 15.toFont),
               ),
               Expanded(
                 child: Container(
@@ -130,11 +134,13 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                         widget.onPreviewPressed?.call(_appTheme);
                       },
                       child: Container(
-                        width: 80,
+                        width: 80.toWidth,
+                        padding: EdgeInsets.all(10),
                         child: Center(
                           child: Text(
                             "Preview",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 15.toFont),
                           ),
                         ),
                       ),
@@ -149,11 +155,13 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      width: 80,
+                      width: 80.toWidth,
+                      padding: EdgeInsets.all(10),
                       child: Center(
                         child: Text(
                           "Apply",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 15.toFont),
                         ),
                       ),
                     ),

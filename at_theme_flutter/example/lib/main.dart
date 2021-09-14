@@ -10,7 +10,7 @@ void main() {
 }
 
 final StreamController<AppTheme> appThemeController =
-StreamController<AppTheme>.broadcast();
+    StreamController<AppTheme>.broadcast();
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

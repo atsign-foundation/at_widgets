@@ -1,6 +1,8 @@
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
 import 'package:example/main.dart';
 import 'package:example/src/utils/color_constants.dart';
+import 'package:example/src/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -21,13 +23,13 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     final appTheme = AppTheme.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -37,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage>
         actions: [
           IconButton(
             onPressed: _onOpenSettingPressed,
-            icon: Icon(Icons.settings_outlined),
+            icon: Icon(Icons.settings_outlined, size: 18.toFont),
           ),
         ],
       ),
@@ -56,10 +58,15 @@ class _ProfilePageState extends State<ProfilePage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Atsign"),
+                      Text(
+                        "Atsign",
+                        style: TextStyle(fontSize: 15.toFont),
+                      ),
                       Text(
                         "@atsign",
-                        style: TextStyle(color: appTheme.secondaryColor),
+                        style: TextStyle(
+                            color: appTheme.secondaryColor,
+                            fontSize: 15.toFont),
                       ),
                     ],
                   ),
@@ -67,18 +74,18 @@ class _ProfilePageState extends State<ProfilePage>
               ],
             ),
             Container(
-              height: 56,
+              height: 56.toHeight,
               margin: EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 // color: appTheme.primary,
-                borderRadius: BorderRadius.circular(28),
+                borderRadius: BorderRadius.circular(28.toHeight),
                 border: Border.all(width: 1, color: Colors.grey),
               ),
               child: TabBar(
                 controller: tabController,
                 indicator: BoxDecoration(
                   borderRadius: BorderRadius.circular(
-                    28.0,
+                    28.0.toHeight,
                   ),
                   color: appTheme.primaryColor,
                 ),
@@ -87,13 +94,22 @@ class _ProfilePageState extends State<ProfilePage>
                 enableFeedback: false,
                 tabs: <Widget>[
                   Center(
-                    child: Text("Tab One"),
+                    child: Text(
+                      "Tab One",
+                      style: TextStyles.text15,
+                    ),
                   ),
                   Center(
-                    child: Text("Tab Two"),
+                    child: Text(
+                      "Tab Two",
+                      style: TextStyles.text15,
+                    ),
                   ),
                   Center(
-                    child: Text("Tab Three"),
+                    child: Text(
+                      "Tab Three",
+                      style: TextStyles.text15,
+                    ),
                   ),
                 ],
               ),
@@ -101,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage>
             Text(
               "Basic Details",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.toFont,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -118,31 +134,31 @@ class _ProfilePageState extends State<ProfilePage>
                   Text(
                     "Phone number",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.toFont,
                       color: Color(0xFF707070),
                     ),
                   ),
                   Text(
                     "+1 408 432 9012",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 18.toFont,
                       color: appTheme.primaryColor,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8.toHeight),
                   Divider(height: 1),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8.toHeight),
                   Text(
                     "Email Address",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.toFont,
                       color: Color(0xFF707070),
                     ),
                   ),
                   Text(
                     "atsign@atsign.com",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 18.toFont,
                       color: appTheme.primaryColor,
                     ),
                   ),
@@ -164,16 +180,17 @@ class _ProfilePageState extends State<ProfilePage>
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  title: Text("Default theme setting"),
-                  trailing: Icon(Icons.chevron_right),
+                  title:
+                      Text("Default theme setting", style: TextStyles.text15),
+                  trailing: Icon(Icons.chevron_right, size: 15.toFont),
                   onTap: () {
                     Navigator.of(context).pop();
                     _openDefaultThemSetting();
                   },
                 ),
                 ListTile(
-                  title: Text("Custom theme setting"),
-                  trailing: Icon(Icons.chevron_right),
+                  title: Text("Custom theme setting", style: TextStyles.text15),
+                  trailing: Icon(Icons.chevron_right, size: 15.toFont),
                   onTap: () {
                     Navigator.of(context).pop();
                     _openCustomThemSetting();
