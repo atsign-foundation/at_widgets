@@ -77,8 +77,8 @@ class SDKService {
     return atClientServiceMap!.containsKey(atsign);
   }
 
-  sync() async {
-    await AtClientManager.getInstance().syncService.sync();
+  sync() {
+    AtClientManager.getInstance().syncService.sync();
   }
 
   ///Returns null if [atsign] is null else the formatted [atsign].
