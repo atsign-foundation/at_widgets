@@ -9,7 +9,7 @@ import 'package:at_app_flutter/at_app_flutter.dart';
 
 void main() {
   AtEnv.load();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 Future<AtClientPreference> loadAtClientPreference() async {
@@ -19,13 +19,14 @@ Future<AtClientPreference> loadAtClientPreference() async {
         ..namespace = AtEnv.appNamespace
         ..hiveStoragePath = dir.path
         ..commitLogPath = dir.path
-      // ..isLocalStoreRequired = true
-      // ..syncStrategy = SyncStrategy.ONDEMAND
+        ..isLocalStoreRequired = true
+        ..syncStrategy = SyncStrategy.ONDEMAND
       // TODO set the rest of your AtClientPreference here
       ;
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -65,11 +66,11 @@ class _MyAppState extends State<MyApp> {
                   onError: (error) {
                     _logger.severe('Onboarding throws $error error');
                   },
-                  nextScreen: HomeScreen(),
+                  nextScreen: const HomeScreen(),
                   appAPIKey: AtEnv.appApiKey,
                 );
               },
-              child: Text(
+              child: const Text(
                 'Onboard an @sign',
                 style: TextStyle(fontSize: 36),
               ),
@@ -95,6 +96,8 @@ class _MyAppState extends State<MyApp> {
 
 //* The next screen after onboarding (second screen)
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // * Get the AtContext from build context
@@ -109,12 +112,13 @@ class HomeScreen extends StatelessWidget {
     /// atContext.switchAtsign("@example");
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: const Text('Dashboard'),
       ),
       body: Center(
         child: Column(
           children: [
-            Text('Successfully onboarded and navigated to FirstAppScreen'),
+            const Text(
+                'Successfully onboarded and navigated to FirstAppScreen'),
             Text('Current @sign: ${atContext.currentAtSign}'),
           ],
         ),
