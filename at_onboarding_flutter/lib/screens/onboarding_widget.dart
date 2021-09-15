@@ -66,7 +66,7 @@ class Onboarding {
   ///
   /// **Note:**
   /// API Key is required when you set [rootEnvironment] to production.
-  final String rootEnvironment;
+  final RootEnvironment rootEnvironment;
   final AtSignLogger _logger = AtSignLogger('At Onboarding Flutter');
 
   Onboarding(
@@ -83,20 +83,7 @@ class Onboarding {
       this.domain,
       required this.rootEnvironment,
       this.appAPIKey}) {
-    switch (rootEnvironment.toLowerCase()) {
-      case 'staging':
-        AppConstants.rootEnvironment = RootEnvironment.Staging;
-        break;
-      case 'production':
-        AppConstants.rootEnvironment = RootEnvironment.Production;
-        break;
-      case 'testing':
-        AppConstants.rootEnvironment = RootEnvironment.Testing;
-        break;
-      default:
-        AppConstants.rootEnvironment = RootEnvironment.Staging;
-        break;
-    }
+    AppConstants.rootEnvironment = this.rootEnvironment;
     print(appAPIKey ?? AppConstants.rootEnvironment.apikey);
     print(domain ?? AppConstants.rootEnvironment.domain);
     if (AppConstants.rootEnvironment == RootEnvironment.Production && appAPIKey == null) {

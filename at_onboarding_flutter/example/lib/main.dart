@@ -1,8 +1,8 @@
 import 'package:at_client/src/preference/at_client_preference.dart';
 import 'package:at_client_mobile/src/at_client_service.dart';
+import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter_example/dashboard.dart';
 import 'package:at_onboarding_flutter_example/services/at_service.dart';
-import 'package:at_onboarding_flutter_example/utils/app_constants.dart';
 import 'package:at_onboarding_flutter_example/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/widgets/custom_reset_button.dart';
@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
                         onError: (Object? error) {
                           _logger.severe('Onboarding throws $error error');
                         },
-                        rootEnvironment: 'staging',
+                        rootEnvironment: RootEnvironment.Production,
                         nextScreen: DashBoard(),
                       );
                     },

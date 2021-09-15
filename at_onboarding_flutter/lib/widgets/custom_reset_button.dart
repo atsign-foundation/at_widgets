@@ -58,8 +58,8 @@ class _CustomResetButtonState extends State<CustomResetButton> {
     bool isSelectAtsign = false;
     bool isSelectAll = false;
     List<String>? atsignsList = await SDKService().getAtsignList();
-    Map<String,bool?> atsignMap = Map<String,bool>();
-    if(atsignsList != null){
+    Map<String, bool?> atsignMap = <String, bool>{};
+    if (atsignsList != null) {
       for (String atsign in atsignsList) {
         atsignMap[atsign] = false;
       }
@@ -102,7 +102,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                             CheckboxListTile(
                               onChanged: (bool? value) {
                                 isSelectAll = value!;
-                                atsignMap != null
+                                atsignMap.isNotEmpty
                                     ? atsignMap.updateAll((String? key, bool? value1) => value1 = value)
                                     : true;
                                 // atsignMap[atsign] = value;
@@ -121,10 +121,10 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                             for (String atsign in atsignsList)
                               CheckboxListTile(
                                 onChanged: (bool? value) {
-                                  atsignMap != null ? atsignMap[atsign] = value : true;
+                                  atsignMap.isNotEmpty ? atsignMap[atsign] = value : true;
                                   stateSet(() {});
                                 },
-                                value: atsignMap != null ? atsignMap[atsign] : true,
+                                value: atsignMap.isNotEmpty ? atsignMap[atsign] : true,
                                 checkColor: Colors.white,
                                 activeColor: const Color.fromARGB(255, 240, 94, 62),
                                 title: Text('$atsign'),

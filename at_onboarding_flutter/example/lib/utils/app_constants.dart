@@ -1,4 +1,6 @@
 class AppConstants {
+  // static String rootDomain = 'root.atsign.org';
+  /// Comment the below variable and uncomment the above variable to test the example in production mode
   static String rootDomain = 'root.atsign.wtf';
   static String appNamespace = 'follows';
   static String regex = '.$appNamespace@';

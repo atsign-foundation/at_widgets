@@ -17,7 +17,7 @@ dependencies:
   at_client_mobile: ^2.0.2
   at_commons: ^2.0.1
   at_server_status: ^1.0.2
-  at_utils: ^2.0.1
+  at_utils: ^3.0.0
   file_picker: ^4.0.0
   flutter:
     sdk: flutter
