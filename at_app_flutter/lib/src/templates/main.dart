@@ -7,6 +7,13 @@ import 'package:at_utils/at_logger.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_app_flutter/at_app_flutter.dart';
 
+//
+// WARNING
+//
+// If you see this comment you are using a legacy version of at_app
+// this version of at_app will be deprecated at the next release of at_app_flutter
+// please update as soon as possible
+
 void main() {
   AtEnv.load();
   runApp(const MyApp());
