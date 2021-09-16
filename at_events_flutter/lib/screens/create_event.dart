@@ -372,7 +372,7 @@ class _CreateEventState extends State<CreateEvent> {
 
     var formValid = EventService().createEventFormValidation();
     if (formValid is String) {
-      CustomToast().show(formValid, context);
+      CustomToast().show(formValid, context, isError: true);
       setState(() {
         isLoading = false;
       });
@@ -400,13 +400,15 @@ class _CreateEventState extends State<CreateEvent> {
     if (result is bool && result == true) {
       CustomToast().show(
           EventService().isEventUpdate ? 'Event updated' : 'Event added',
-          context);
+          context,
+          isSuccess: true);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show('Something went wrong ${result.toString()}', context);
+      CustomToast().show('Something went wrong ${result.toString()}', context,
+          isError: true);
       setState(() {
         isLoading = false;
       });

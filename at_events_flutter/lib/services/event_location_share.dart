@@ -136,7 +136,8 @@ class EventLocationShare {
     } else {
       if (AtEventNotificationListener().navKey != null) {
         CustomToast().show('Location permission not granted',
-            AtEventNotificationListener().navKey!.currentContext);
+            AtEventNotificationListener().navKey!.currentContext,
+            isError: true);
       }
     }
 

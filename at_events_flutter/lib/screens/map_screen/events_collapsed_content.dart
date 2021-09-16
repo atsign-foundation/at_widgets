@@ -269,21 +269,24 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                               'Request to update data is submitted',
                               AtEventNotificationListener()
                                   .navKey!
-                                  .currentContext);
+                                  .currentContext,
+                              isSuccess: true);
                         }
                       } else {
                         CustomToast().show(
                             'something went wrong , please try again.',
                             AtEventNotificationListener()
                                 .navKey!
-                                .currentContext);
+                                .currentContext,
+                            isError: true);
                       }
                       LoadingDialog().hide();
                     } catch (e) {
                       print(e);
                       CustomToast().show(
                           'something went wrong , please try again.',
-                          AtEventNotificationListener().navKey!.currentContext);
+                          AtEventNotificationListener().navKey!.currentContext,
+                          isError: true);
                       LoadingDialog().hide();
                     }
                   })
@@ -322,14 +325,16 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                                   'Request to update data is submitted',
                                   AtEventNotificationListener()
                                       .navKey!
-                                      .currentContext);
+                                      .currentContext,
+                                  isSuccess: true);
                             }
                           } else {
                             CustomToast().show(
                                 'something went wrong , please try again.',
                                 AtEventNotificationListener()
                                     .navKey!
-                                    .currentContext);
+                                    .currentContext,
+                                isError: true);
                           }
                           LoadingDialog().hide();
                           Navigator.of(AtEventNotificationListener()
@@ -340,14 +345,16 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                               'Request to update data is submitted',
                               AtEventNotificationListener()
                                   .navKey!
-                                  .currentContext);
+                                  .currentContext,
+                              isSuccess: true);
                         } catch (e) {
                           print(e);
                           CustomToast().show(
                               'something went wrong , please try again.',
                               AtEventNotificationListener()
                                   .navKey!
-                                  .currentContext);
+                                  .currentContext,
+                              isError: true);
                           LoadingDialog().hide();
                         }
                       }
@@ -382,7 +389,8 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                                 'something went wrong , please try again.',
                                 AtEventNotificationListener()
                                     .navKey!
-                                    .currentContext);
+                                    .currentContext,
+                                isError: true);
                           }
                           LoadingDialog().hide();
                           Navigator.of(AtEventNotificationListener()
@@ -395,7 +403,8 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                               'something went wrong , please try again.',
                               AtEventNotificationListener()
                                   .navKey!
-                                  .currentContext);
+                                  .currentContext,
+                              isError: true);
                           LoadingDialog().hide();
                         }
                       }

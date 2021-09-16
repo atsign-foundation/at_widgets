@@ -265,13 +265,15 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                     'Request to update data is submitted',
                                                     AtEventNotificationListener()
                                                         .navKey!
-                                                        .currentContext);
+                                                        .currentContext,
+                                                    isSuccess: true);
                                               } else {
                                                 CustomToast().show(
                                                     'Something went wrong , please try again.',
                                                     AtEventNotificationListener()
                                                         .navKey!
-                                                        .currentContext);
+                                                        .currentContext,
+                                                    isError: true);
                                               }
 
                                               stopLoading();
@@ -309,13 +311,15 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                   'Request to update data is submitted',
                                   AtEventNotificationListener()
                                       .navKey!
-                                      .currentContext);
+                                      .currentContext,
+                                  isSuccess: true);
                             } else {
                               CustomToast().show(
                                   'Something went wrong , please try again.',
                                   AtEventNotificationListener()
                                       .navKey!
-                                      .currentContext);
+                                      .currentContext,
+                                  isError: true);
                             }
 
                             /// For dialog box

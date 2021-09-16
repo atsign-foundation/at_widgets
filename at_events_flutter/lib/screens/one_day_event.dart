@@ -177,8 +177,9 @@ class _OneDayEventState extends State<OneDayEvent> {
                                   initialEntryMode: TimePickerEntryMode.input);
 
                               if (eventData.event!.endDate == null) {
-                                CustomToast()
-                                    .show('Select start time first', context);
+                                CustomToast().show(
+                                    'Select start time first', context,
+                                    isError: true);
                                 return;
                               }
 
@@ -205,7 +206,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                         .checForOneDayEventFormValidation(eventData);
                     print(formValid);
                     if (formValid is String) {
-                      CustomToast().show(formValid, context);
+                      CustomToast().show(formValid, context, isError: true);
                       return;
                     }
                     EventService().eventNotificationModel!.event!.isRecurring =
