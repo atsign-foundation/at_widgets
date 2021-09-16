@@ -2,10 +2,11 @@
 import 'package:at_chat_flutter/services/chat_service.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 
-void initializeChatService(AtClient atClientInstance, String currentAtSign,
+void initializeChatService(
+    AtClientManager atClientManager, String currentAtSign,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
   ChatService()
-      .initChatService(atClientInstance, currentAtSign, rootDomain, rootPort);
+      .initChatService(atClientManager, currentAtSign, rootDomain, rootPort);
 }
 
 void setChatWithAtSign(String? atsign,

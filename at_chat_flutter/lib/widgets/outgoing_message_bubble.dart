@@ -38,19 +38,20 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
         });
       },
       child: Flex(
-      direction: Axis.horizontal,
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.all(30.toHeight),
-          decoration: BoxDecoration(
-            color: widget.color,
-            borderRadius: BorderRadius.circular(10.toWidth),
-          ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 165.toWidth),
-            child: _buildContentMessage(),
+        direction: Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(30.toHeight),
+            decoration: BoxDecoration(
+              color: widget.color,
+              borderRadius: BorderRadius.circular(10.toWidth),
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 165.toWidth),
+              child: _buildContentMessage(),
+            ),
           ),
           SizedBox(
             width: 15.toWidth,
@@ -70,7 +71,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
           )
         ],
       ),
-    ));
+    );
   }
 
   Widget _buildContentMessage() {

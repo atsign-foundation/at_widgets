@@ -213,7 +213,8 @@ class _SecondScreenState extends State<SecondScreen> {
       activeAtSign = currentAtSign;
     });
     initializeChatService(
-        clientSdkService.atClientServiceInstance!.atClientManager.atClient, activeAtSign!,
+        clientSdkService.atClientServiceInstance!.atClientManager,
+        activeAtSign!,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 

@@ -11,14 +11,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  at_contact: ^2.0.2
+  at_contact:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_contact
+      ref: trunk
   at_common_flutter: ^2.0.1
-  at_commons: ^2.0.3
+  at_commons: ^3.0.0
   at_client_mobile: ^2.0.3
-  at_lookup: ^2.0.3
+  at_lookup: ^3.0.1
   pedantic: ^1.11.0
   #Picker
-  file_picker: ^3.0.2+2
+  file_picker: ^4.0.0
 
 dependency_overrides:
   at_client_mobile:

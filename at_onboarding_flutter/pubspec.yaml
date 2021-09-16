@@ -20,12 +20,17 @@ dependencies:
   webview_flutter: ^2.0.8
   http: ^0.13.3
   pin_code_fields: ^7.2.0
-  at_utils: ^2.0.1
+  at_utils: ^3.0.0
   at_client: ^2.0.1
-  at_commons: ^2.0.1
-  at_backupkey_flutter: ^2.0.1
+  at_commons: ^3.0.0
+  at_backupkey_flutter:
+    path: ../at_backupkey_flutter
   at_client_mobile: ^2.0.2
-  at_server_status: ^1.0.0
+  at_server_status:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_server_status
+      ref: trunk
  
 
 dev_dependencies:
