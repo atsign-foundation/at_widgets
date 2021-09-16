@@ -1,8 +1,8 @@
 import 'package:at_client/src/preference/at_client_preference.dart';
 import 'package:at_client_mobile/src/at_client_service.dart';
+import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter_example/dashboard.dart';
 import 'package:at_onboarding_flutter_example/services/at_service.dart';
-import 'package:at_onboarding_flutter_example/utils/app_constants.dart';
 import 'package:at_onboarding_flutter_example/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/widgets/custom_reset_button.dart';
@@ -37,36 +37,36 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Builder(
           builder: (BuildContext context) => Center(
-              child: Column(
-                  children:<Widget>[
-                        TextButton(
-                onPressed: () async {
-                  Onboarding(
-                      context: context,
-                      atClientPreference: atClientPrefernce,
-                      domain: AppConstants.rootDomain,
-                      appColor: const Color.fromARGB(255, 240, 94, 62),
-                      onboard: (Map<String?, AtClientService> value, String? atsign) {
-                        AtService.getInstance().atClientServiceMap = value;
-                        _logger.finer('Successfully onboarded $atsign');
-                      },
-                      onError: (Object? error) {
-                        _logger.severe('Onboarding throws $error error');
-                      },
-                      nextScreen: DashBoard(),
-                      appAPIKey: AppConstants.devAPIKey);
-                },
-                child: const Text(AppStrings.scan_qr)),
-                        CustomResetButton(
-                          loading: false,
-                          buttonText: "Reset",
-                          width: 90,
-                          height: 40,
-                        ),
-                  ],
-              ),
+            child: Column(
+              children: <Widget>[
+                TextButton(
+                    onPressed: () async {
+                      Onboarding(
+                        context: context,
+                        atClientPreference: atClientPrefernce,
+                        appColor: const Color.fromARGB(255, 240, 94, 62),
+                        onboard: (Map<String?, AtClientService> value, String? atsign) {
+                          AtService.getInstance().atClientServiceMap = value;
+                          _logger.finer('Successfully onboarded $atsign');
+                        },
+                        onError: (Object? error) {
+                          _logger.severe('Onboarding throws $error error');
+                        },
+                        rootEnvironment: RootEnvironment.Staging,
+                        nextScreen: DashBoard(),
+                      );
+                    },
+                    child: const Text(AppStrings.scan_qr)),
+                CustomResetButton(
+                  loading: false,
+                  buttonText: 'Reset',
+                  width: 90,
+                  height: 40,
+                ),
+              ],
+            ),
           ),
-       ),
+        ),
       ),
     );
   }

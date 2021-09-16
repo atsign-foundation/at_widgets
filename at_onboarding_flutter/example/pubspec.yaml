@@ -39,6 +39,16 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_tools.git
       path: at_commons
       ref: trunk
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: trunk
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_lookup
+      ref: trunk
   at_backupkey_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git
@@ -48,6 +58,7 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
