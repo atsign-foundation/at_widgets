@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
+import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/sync_secondary.dart';
@@ -192,15 +193,27 @@ class RequestLocationService {
         // if (MixedConstants.isDedicated) {
         //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
         // }
+        CustomToast().show('Request to update data is submitted',
+            AtLocationNotificationListener().navKey.currentContext,
+            isSuccess: true);
+
         KeyStreamService().updatePendingStatus(locationNotificationModel);
+      } else {
+        CustomToast().show('Something went wrong , please try again.',
+            AtLocationNotificationListener().navKey.currentContext!,
+            isError: true);
       }
 
-      if ((result) && (!isSharing!)) {
+      if ((isSharing != null) && (result) && (!isSharing)) {
         KeyStreamService().removeData(atKey.key);
       }
 
       return result;
     } catch (e) {
+      CustomToast().show('Something went wrong , please try again.',
+          AtLocationNotificationListener().navKey.currentContext,
+          isError: true);
+      print('Error in requestLocationAcknowledgment $e');
       return false;
     }
   }

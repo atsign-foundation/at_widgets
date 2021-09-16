@@ -56,12 +56,13 @@ class SharingLocationService {
       if (_state == true) {
         CustomToast().show(
             'Share Location Request sent to ${selectedContact.atSign!}',
-            AtLocationNotificationListener().navKey.currentContext!);
+            AtLocationNotificationListener().navKey.currentContext!,
+            isSuccess: true);
       } else if (_state == false) {
         CustomToast().show(
             'Something went wrong for ${selectedContact.atSign!}',
             AtLocationNotificationListener().navKey.currentContext!,
-            bgColor: AllColors().RED);
+            isError: true);
       }
     });
   }
@@ -181,10 +182,21 @@ class SharingLocationService {
         // if (MixedConstants.isDedicated) {
         //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
         // }
+        CustomToast().show('Request to update data is submitted',
+            AtLocationNotificationListener().navKey.currentContext,
+            isSuccess: true);
         KeyStreamService().updatePendingStatus(locationNotificationModel);
+      } else {
+        CustomToast().show('Something went wrong , please try again.',
+            AtLocationNotificationListener().navKey.currentContext,
+            isError: true);
       }
       return result;
     } catch (e) {
+      CustomToast().show('Something went wrong , please try again.',
+          AtLocationNotificationListener().navKey.currentContext,
+          isError: true);
+
       print('sending share awk failed $e');
       return false;
     }

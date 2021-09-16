@@ -122,12 +122,12 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
       setState(() {
         isLoading = false;
       });
-      CustomToast().show('Atsign not valid', context);
+      CustomToast().show('Atsign not valid', context, isError: true);
       return;
     }
 
     if (selectedOption == null) {
-      CustomToast().show('Select time', context);
+      CustomToast().show('Select time', context, isError: true);
       return;
     }
 
@@ -149,13 +149,15 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     }
 
     if (result == true) {
-      CustomToast().show('Share Location Request sent', context);
+      CustomToast()
+          .show('Share Location Request sent', context, isSuccess: true);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show('some thing went wrong , try again.', context);
+      CustomToast()
+          .show('some thing went wrong , try again.', context, isError: true);
       setState(() {
         isLoading = false;
       });

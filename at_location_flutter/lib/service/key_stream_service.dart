@@ -312,11 +312,19 @@ class KeyStreamService {
           locationData.key!.split('requestlocation-')[1].split('@')[0];
     }
 
+    //// TODO: If we want to add any such notification that is not in the list, but we get a update
+    // var _locationDataNotPresent = true;
+
     for (var i = 0; i < allLocationNotifications.length; i++) {
       if (allLocationNotifications[i].key!.contains(newLocationDataKeyId)) {
         allLocationNotifications[i].locationNotificationModel = locationData;
+        // _locationDataNotPresent = false;
       }
     }
+
+    // if (_locationDataNotPresent) {
+    //   addDataToList(locationData);
+    // }
     notifyListeners();
 
     // Update location sharing
