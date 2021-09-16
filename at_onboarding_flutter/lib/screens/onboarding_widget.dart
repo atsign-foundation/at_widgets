@@ -46,22 +46,22 @@ class Onboarding {
   /// API authentication key for getting free atsigns
   final String? appAPIKey;
 
-  /// Setting up RootEnvironment to **Staging** will use the staging environment for onboarding.
+  /// Setting up [RootEnvironment] to **Staging** will use the staging environment for onboarding.
   ///
   ///```dart
-  /// rootEnvironment: 'staging'
+  /// RootEnvironment.Staging
   ///```
   ///
   /// Setting up RootEnvironment to **Production** will use the production environment for onboarding.
   ///
   ///```dart
-  /// rootEnvironment: 'production'
+  /// RootEnvironment.Production
   ///```
   ///
   /// Setting up RootEnvironment to **Testing** will use the testing(docker) environment for onboarding.
   ///
   ///```dart
-  /// rootEnvironment: 'testing'
+  /// RootEnvironment.Testing
   ///```
   ///
   /// **Note:**
@@ -84,8 +84,6 @@ class Onboarding {
       required this.rootEnvironment,
       this.appAPIKey}) {
     AppConstants.rootEnvironment = this.rootEnvironment;
-    print(appAPIKey ?? AppConstants.rootEnvironment.apikey);
-    print(domain ?? AppConstants.rootEnvironment.domain);
     if (AppConstants.rootEnvironment == RootEnvironment.Production && appAPIKey == null) {
       throw ('App API Key is required for production environment');
     } else {

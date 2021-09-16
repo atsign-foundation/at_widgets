@@ -62,7 +62,18 @@ extension customMessages on OnboardingStatus {
   }
 }
 
-enum RootEnvironment { Staging, Production, Testing }
+enum RootEnvironment {
+  /// Staging will provide you all the flexibility of
+  /// latest server updates which are used for testing,
+  /// but will not be available for production.
+  Staging,
+
+  /// Production is used for production environment.
+  Production,
+
+  /// Testing is used for testing(docker) environment.
+  Testing,
+}
 
 extension value on RootEnvironment {
   String get domain {

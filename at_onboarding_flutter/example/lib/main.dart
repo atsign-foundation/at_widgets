@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
                         onError: (Object? error) {
                           _logger.severe('Onboarding throws $error error');
                         },
-                        rootEnvironment: RootEnvironment.Production,
+                        rootEnvironment: RootEnvironment.Staging,
                         nextScreen: DashBoard(),
                       );
                     },
