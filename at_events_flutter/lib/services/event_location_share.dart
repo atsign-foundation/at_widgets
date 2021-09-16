@@ -184,7 +184,7 @@ class EventLocationShare {
           await Future.forEach(eventsToShareLocationWith,
               (dynamic notification) async {
             // ignore: unawaited_futures
-            prepareLocationDataAndSend(notification,
+            await prepareLocationDataAndSend(notification,
                 LatLng(myLocation.latitude, myLocation.longitude));
           });
           // if (MixedConstants.isDedicated) {

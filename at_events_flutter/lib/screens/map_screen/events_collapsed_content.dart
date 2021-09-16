@@ -295,26 +295,42 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
               : Expanded(
                   child: InkWell(
                     onTap: () async {
-                      var isExited = true;
-                      eventListenerKeyword.group!.members!
-                          .forEach((groupMember) {
-                        if (groupMember.atSign == currentAtSign) {
-                          if (groupMember.tags!['isExited'] == false) {
-                            isExited = false;
-                          }
-                        }
-                      });
-                      if (!isExited) {
+                      // var isExited = true;
+                      // eventListenerKeyword.group!.members!
+                      //     .forEach((groupMember) {
+                      //   if (groupMember.atSign == currentAtSign) {
+                      //     if (groupMember.tags!['isExited'] == false) {
+                      //       isExited = false;
+                      //     }
+                      //   }
+                      // });
+                      if (!(isExited!)) {
                         //if member has not exited then only following code will run.
                         LoadingDialog().show();
                         try {
-                          await EventKeyStreamService().actionOnEvent(
+                          var result =
+                              await EventKeyStreamService().actionOnEvent(
                             eventListenerKeyword,
                             isAdmin!
                                 ? ATKEY_TYPE_ENUM.CREATEEVENT
                                 : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
                             isExited: true,
                           );
+                          if (result == true) {
+                            if (!isAdmin) {
+                              CustomToast().show(
+                                  'Request to update data is submitted',
+                                  AtEventNotificationListener()
+                                      .navKey!
+                                      .currentContext);
+                            }
+                          } else {
+                            CustomToast().show(
+                                'something went wrong , please try again.',
+                                AtEventNotificationListener()
+                                    .navKey!
+                                    .currentContext);
+                          }
                           LoadingDialog().hide();
                           Navigator.of(AtEventNotificationListener()
                                   .navKey!
@@ -354,11 +370,20 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                                 : 'Sending request to update data');
                         try {
                           // await LocationService().onEventCancel();
-                          await EventKeyStreamService().actionOnEvent(
+                          var result =
+                              await EventKeyStreamService().actionOnEvent(
                             eventListenerKeyword,
                             ATKEY_TYPE_ENUM.CREATEEVENT,
                             isCancelled: true,
                           );
+                          if (result == true) {
+                          } else {
+                            CustomToast().show(
+                                'something went wrong , please try again.',
+                                AtEventNotificationListener()
+                                    .navKey!
+                                    .currentContext);
+                          }
                           LoadingDialog().hide();
                           Navigator.of(AtEventNotificationListener()
                                   .navKey!

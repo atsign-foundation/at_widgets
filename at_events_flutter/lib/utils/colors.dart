@@ -37,6 +37,8 @@ class AllColors {
   // ignore: non_constant_identifier_names
   Color RED = Color(0xFFe34040);
   // ignore: non_constant_identifier_names
+  Color GREEN = Colors.green;
+  // ignore: non_constant_identifier_names
   Color LIGHT_GREY_LABEL = Color(0xFFB3B6BE);
 }
 

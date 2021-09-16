@@ -324,6 +324,14 @@ class EventKeyStreamService {
   /// Adds new [EventKeyLocationModel] data for new received notification
   Future<dynamic> addDataToList(EventNotificationModel eventNotificationModel,
       {String? receivedkey}) async {
+    /// with rSDK we can get previous notification, this will restrict us to add one notification twice
+    for (var _eventNotification in allEventNotifications) {
+      if (_eventNotification.eventNotificationModel!.key ==
+          eventNotificationModel.key) {
+        return;
+      }
+    }
+
     String newLocationDataKeyId;
     String? key;
     newLocationDataKeyId =
@@ -606,6 +614,8 @@ class EventKeyStreamService {
         ///  update pending status if receiver, add more if checks like already responded
         if (result) {
           updatePendingStatus(eventData);
+        } else {
+          print('Ack failed');
         }
         notifyListeners();
       }
