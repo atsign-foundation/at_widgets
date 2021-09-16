@@ -35,6 +35,29 @@ dependencies:
   at_common_flutter: ^2.0.2
   pedantic: ^1.11.0
 
+dependency_overrides:
+  at_client:
+    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client
+  at_client_mobile:
+    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client_mobile
+  at_chat_flutter:
+    path: ../at_chat_flutter
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_commons
+      ref: trunk
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_lookup
+      ref: trunk
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: trunk
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -107,6 +107,8 @@ class KeyStreamService {
     checkForDeleteRequestAck();
 
     SendLocationNotification().init(atClientInstance);
+
+    /// TODO: start monitor after this, so that our list is calculated, and any new/old upcoming notification can be compared
   }
 
   /// Updates any received notification with [haveResponded] true, if already responded.
@@ -337,8 +339,16 @@ class KeyStreamService {
   }
 
   /// Adds new [KeyLocationModel] data for new received notification
-  Future<KeyLocationModel> addDataToList(
+  Future<dynamic> addDataToList(
       LocationNotificationModel locationNotificationModel) async {
+    /// with rSDK we can get previous notification, this will restrict us to add one notification twice
+    for (var _locationNotification in allLocationNotifications) {
+      if (_locationNotification.locationNotificationModel!.key ==
+          locationNotificationModel.key) {
+        return;
+      }
+    }
+
     String newLocationDataKeyId;
     String tempKey;
     if (locationNotificationModel.key!
@@ -373,6 +383,10 @@ class KeyStreamService {
             ? locationNotificationModel.atsignCreator
             : locationNotificationModel.receiver,
       );
+    }
+
+    if (key.isEmpty) {
+      return;
     }
 
     var tempHyridNotificationModel = KeyLocationModel(key: key[0]);

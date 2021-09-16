@@ -61,35 +61,35 @@ class SyncSecondary {
   }
 
   Future<void> _startSyncing() async {
-    syncing = true;
+    // syncing = true;
 
-    while ((_operations.isNotEmpty) || (_priorityOperations.isNotEmpty)) {
-      if (_priorityOperations.isNotEmpty) {
-        var _tempPriorityOperations = _priorityOperations;
-        _priorityOperations = [];
-        _operations.removeWhere((_operation) =>
-            _operation.syncOperation == SyncOperation.syncSecondary);
-        await _syncSecondary();
-        _executeAfterSynced(_tempPriorityOperations);
-      }
+    // while ((_operations.isNotEmpty) || (_priorityOperations.isNotEmpty)) {
+    //   if (_priorityOperations.isNotEmpty) {
+    //     var _tempPriorityOperations = _priorityOperations;
+    //     _priorityOperations = [];
+    //     _operations.removeWhere((_operation) =>
+    //         _operation.syncOperation == SyncOperation.syncSecondary);
+    //     await _syncSecondary();
+    //     _executeAfterSynced(_tempPriorityOperations);
+    //   }
 
-      if (_operations.isNotEmpty) {
-        var _syncOperationDetails = _operations.removeLast();
-        if (_syncOperationDetails.syncOperation == SyncOperation.notifyAll) {
-          await _notifyAllInSync(
-            _syncOperationDetails.atKey!,
-            _syncOperationDetails.notification!,
-            _syncOperationDetails.operation!,
-          );
-        } else {
-          _operations.removeWhere((_operation) =>
-              _operation.syncOperation == SyncOperation.syncSecondary);
-          await _syncSecondary();
-        }
-      }
-    }
+    //   if (_operations.isNotEmpty) {
+    //     var _syncOperationDetails = _operations.removeLast();
+    //     if (_syncOperationDetails.syncOperation == SyncOperation.notifyAll) {
+    //       await _notifyAllInSync(
+    //         _syncOperationDetails.atKey!,
+    //         _syncOperationDetails.notification!,
+    //         _syncOperationDetails.operation!,
+    //       );
+    //     } else {
+    //       _operations.removeWhere((_operation) =>
+    //           _operation.syncOperation == SyncOperation.syncSecondary);
+    //       await _syncSecondary();
+    //     }
+    //   }
+    // }
 
-    syncing = false;
+    // syncing = false;
   }
 
   void _executeAfterSynced(List<SyncOperationDetails> _tempPriorityOperations) {
@@ -106,11 +106,11 @@ class SyncSecondary {
     OperationEnum operation,
     // {bool isDedicated = MixedConstants.isDedicated}
   ) async {
-    var notifyAllResult = await AtLocationNotificationListener()
-        .atClientInstance!
-        .notifyAll(atKey, notification, OperationEnum.update);
+    // var notifyAllResult = await AtLocationNotificationListener()
+    //     .atClientInstance!
+    //     .notifyAll(atKey, notification, OperationEnum.update);
 
-    print('notifyAllResult $notifyAllResult');
+    // print('notifyAllResult $notifyAllResult');
   }
 
   Future<void> _syncSecondary() async {
