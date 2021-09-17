@@ -13,47 +13,47 @@ dependencies:
     sdk: flutter
   path_provider: ^2.0.1
   at_onboarding_flutter:
+    path: ../
     # When depending on this package from a real application you should use:
     #   at_onboarding_flutter: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
-    path: ../
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-dependency_overrides:
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: trunk
-  at_client:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client
-      ref: trunk
-  at_commons:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_commons
-      ref: trunk
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_utils
-      ref: trunk
-  at_lookup:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: at_lookup
-      ref: trunk
-  at_backupkey_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: at_backupkey_flutter
-      ref: trunk
+#dependency_overrides:
+#  at_client_mobile:
+#    git:
+#      url: https://github.com/atsign-foundation/at_client_sdk.git
+#      path: at_client_mobile
+#      ref: trunk
+#  at_client:
+#    git:
+#      url: https://github.com/atsign-foundation/at_client_sdk.git
+#      path: at_client
+#      ref: trunk
+#  at_commons:
+#    git:
+#      url: https://github.com/atsign-foundation/at_tools.git
+#      path: at_commons
+#      ref: trunk
+#  at_utils:
+#    git:
+#      url: https://github.com/atsign-foundation/at_tools.git
+#      path: at_utils
+#      ref: trunk
+#  at_lookup:
+#    git:
+#      url: https://github.com/atsign-foundation/at_libraries.git
+#      path: at_lookup
+#      ref: trunk
+#  at_backupkey_flutter:
+#    git:
+#      url: https://github.com/atsign-foundation/at_widgets.git
+#      path: at_backupkey_flutter
+#      ref: trunk
 
 dev_dependencies:
   flutter_test:
