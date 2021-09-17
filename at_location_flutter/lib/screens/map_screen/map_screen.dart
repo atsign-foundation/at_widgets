@@ -112,9 +112,9 @@ class _MapScreenState extends State<MapScreen> {
 
   // ignore: always_declare_return_types
   getAtSignAndInitializeChat() async {
-    initializeChatService(AtLocationNotificationListener().atClientInstance!,
-        AtLocationNotificationListener().currentAtSign!,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+    // initializeChatService(AtLocationNotificationListener().atClientInstance!,
+    //     AtLocationNotificationListener().currentAtSign!,
+    //     rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
   // ignore: always_declare_return_types

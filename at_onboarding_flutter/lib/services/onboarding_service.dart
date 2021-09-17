@@ -150,8 +150,7 @@ class OnboardingService {
   }
 
   Future<Map<String, String?>> getEncryptedKeys(String atsign) async {
-    Map<String, String?> result =
-        await KeychainUtil.getEncryptedKeys(atsign);
+    Map<String, String?> result = await KeychainUtil.getEncryptedKeys(atsign);
     result[atsign] = await getAESKey(atsign);
     return result;
   }
@@ -210,10 +209,7 @@ class OnboardingService {
 
   Future<void> _sync(String? atSign) async {
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
-      await _getClientServiceForAtsign(atSign)!
-          .atClientManager
-          .syncService
-          .sync();
+      _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
     }
   }
 }
