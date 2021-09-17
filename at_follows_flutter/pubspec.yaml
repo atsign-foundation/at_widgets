@@ -20,6 +20,7 @@ dependencies:
   collection: ^1.15.0
   at_utils: ^3.0.0
   at_commons: ^3.0.0
+  at_client: ^3.0.0
   at_client_mobile: ^3.0.0
   at_server_status: ^1.0.3
   at_lookup: ^3.0.0
