@@ -47,6 +47,24 @@ dependency_overrides:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: at_client
       ref: trunk
+ 
+  at_chat_flutter:
+    path: ../at_chat_flutter
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_commons
+      ref: trunk
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_lookup
+      ref: trunk
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: trunk
 
 dev_dependencies:
   flutter_test:

@@ -32,7 +32,7 @@ AtContact? getCachedContactDetail(String? atsign) {
 Future<Map<String, dynamic>> getContactDetails(atSign) async {
   var contactDetails = <String, dynamic>{};
 
-  if (EventKeyStreamService().atClientInstance == null || atSign == null) {
+  if (EventKeyStreamService().atClientManager == null || atSign == null) {
     return contactDetails;
   } else if (!atSign.contains('@')) {
     atSign = '@' + atSign;
@@ -52,15 +52,18 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
   try {
     // firstname
     key.key = contactFields[0];
-    var result =
-        await EventKeyStreamService().atClientInstance!.get(key).catchError(
+    var result = await EventKeyStreamService()
+        .atClientManager
+        .atClient
+        .get(key)
+        .catchError(
             // ignore: return_of_invalid_type_from_catch_error
             (e) => print('error in get ${e.errorCode} ${e.errorMessage}'));
     var firstname = result.value;
 
     // lastname
     key.key = contactFields[1];
-    result = await EventKeyStreamService().atClientInstance!.get(key);
+    result = await EventKeyStreamService().atClientManager.atClient.get(key);
     var lastname = result.value;
 
     // construct name
@@ -72,7 +75,7 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
     // profile picture
     key.metadata!.isBinary = true;
     key.key = contactFields[2];
-    result = await EventKeyStreamService().atClientInstance!.get(key);
+    result = await EventKeyStreamService().atClientManager.atClient.get(key);
     var image = result.value;
     contactDetails['name'] = name;
     contactDetails['image'] = image;

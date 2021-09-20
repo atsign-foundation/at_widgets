@@ -35,13 +35,13 @@ dependency_overrides:
   at_backupkey_flutter:
     path: ../at_backupkey_flutter
   at_client_mobile:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile
+    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client_mobile
     # git:
     #   url: https://github.com/atsign-foundation/at_client_sdk.git
     #   path: at_client_mobile
     #   ref: trunk
   at_client:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
+    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client
     # git:
     #   url: https://github.com/atsign-foundation/at_client_sdk.git
     #   path: at_client

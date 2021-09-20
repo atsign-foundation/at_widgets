@@ -31,8 +31,6 @@ class _SecondScreenState extends State<SecondScreen> {
           .atClientServiceInstance!.atClientManager.atClient
           .getCurrentAtSign();
       initializeLocationService(
-        clientSdkService.atClientServiceInstance!.atClientManager.atClient,
-        activeAtSign!,
         NavService.navKey,
         mapKey: '',
         apiKey: '',

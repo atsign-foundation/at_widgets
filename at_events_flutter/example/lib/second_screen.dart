@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'client_sdk_service.dart';
 import 'constants.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_client/src/service/notification_service.dart';
+import 'package:at_commons/src/keystore/at_key.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -26,8 +28,16 @@ class _SecondScreenState extends State<SecondScreen> {
     super.initState();
 
     try {
-      activeAtSign =
-          clientSdkService.atClientServiceInstance!.atClient!.currentAtSign;
+      activeAtSign = clientSdkService
+          .atClientServiceInstance!.atClientManager.atClient
+          .getCurrentAtSign();
+
+      clientSdkService.atClientServiceInstance!.atClientManager
+          .setCurrentAtSign(
+              activeAtSign!,
+              clientSdkService.atClientPreference.namespace,
+              clientSdkService.atClientPreference);
+
       initializeEventService();
       isAuthenticated = true;
     } catch (e) {
@@ -78,8 +88,8 @@ class _SecondScreenState extends State<SecondScreen> {
           TextButton(
             onPressed: () {
               bottomSheet(
-                  CreateEvent(
-                      clientSdkService.atClientServiceInstance!.atClient),
+                  CreateEvent(clientSdkService
+                      .atClientServiceInstance!.atClientManager),
                   MediaQuery.of(context).size.height * 0.9);
             },
             child: Container(
@@ -137,8 +147,7 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void initializeEventService() {
-    initialiseEventService(
-        clientSdkService.atClientServiceInstance!.atClient!, NavService.navKey,
+    initialiseEventService(NavService.navKey,
         mapKey: '',
         apiKey: '',
         rootDomain: MixedConstants.ROOT_DOMAIN,

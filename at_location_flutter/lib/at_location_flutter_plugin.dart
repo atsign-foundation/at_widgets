@@ -83,8 +83,11 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     });
   }
 
-  void showToast(String msg) {
-    if (globalContext != null) CustomToast().show(msg, globalContext!);
+  void showToast(String msg, {bool isError = false, isSuccess = false}) {
+    if (globalContext != null) {
+      CustomToast()
+          .show(msg, globalContext!, isError: isError, isSuccess: isSuccess);
+    }
   }
 
   @override

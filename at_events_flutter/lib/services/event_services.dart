@@ -23,7 +23,7 @@ class EventService {
   bool isEventUpdate = false;
 
   EventNotificationModel? eventNotificationModel;
-  AtClientImpl? atClientInstance;
+  late AtClientManager atClientManager;
   List<AtContact>? selectedContacts;
   List<String?> selectedContactsAtSigns = [];
   List<EventNotificationModel>? createdEvents;
@@ -38,8 +38,7 @@ class EventService {
       _atEventNotificationController.sink;
 
   // ignore: always_declare_return_types
-  init(AtClientImpl? _atClientInstance, bool isUpdate,
-      EventNotificationModel? eventData) {
+  init(bool isUpdate, EventNotificationModel? eventData) {
     if (eventData != null) {
       EventService().eventNotificationModel = EventNotificationModel.fromJson(
           jsonDecode(EventNotificationModel.convertEventNotificationToJson(
@@ -55,7 +54,7 @@ class EventService {
     }
     isEventUpdate = isUpdate;
     print('isEventUpdate:$isEventUpdate');
-    atClientInstance = _atClientInstance;
+    atClientManager = AtClientManager.getInstance();
     Future.delayed(Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });
@@ -96,15 +95,24 @@ class EventService {
 
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
-      var result = await atClientInstance!
-          .put(atKey, eventData, isDedicated: MixedConstants.isDedicated);
+      var result = await atClientManager.atClient.put(
+        atKey, eventData,
+        //  isDedicated: MixedConstants.isDedicated,
+      );
       atKey.sharedWith = jsonEncode(allAtsignList);
-      await SyncSecondary().callSyncSecondary(
-        SyncOperation.notifyAll,
-        atKey: atKey,
-        notification: eventData,
-        operation: OperationEnum.update,
-        isDedicated: MixedConstants.isDedicated,
+
+      // await SyncSecondary().callSyncSecondary(
+      //   SyncOperation.notifyAll,
+      //   atKey: atKey,
+      //   notification: eventData,
+      //   operation: OperationEnum.update,
+      //   isDedicated: MixedConstants.isDedicated,
+      // );
+
+      await atClientManager.atClient.notifyAll(
+        atKey,
+        eventData,
+        OperationEnum.update,
       );
 
       EventKeyStreamService()
@@ -129,7 +137,8 @@ class EventService {
 
       eventNotification.key =
           'createevent-${DateTime.now().microsecondsSinceEpoch}';
-      eventNotification.atsignCreator = atClientInstance!.currentAtSign;
+      eventNotification.atsignCreator =
+          atClientManager.atClient.getCurrentAtSign();
       var notification = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
 
@@ -142,20 +151,30 @@ class EventService {
         ..key = eventNotification.key
         ..sharedBy = eventNotification.atsignCreator;
 
-      var putResult = await atClientInstance!.put(atKey, notification,
-          isDedicated:
-              true); // creating a key and saving it for creator without adding any receiver atsign
+      print('key: ${atKey.key}');
+
+      var putResult = await atClientManager.atClient.put(
+        atKey,
+        notification,
+        // isDedicated: true,
+      ); // creating a key and saving it for creator without adding any receiver atsign
 
       atKey.sharedWith = jsonEncode(
           [...selectedContactsAtSigns]); //adding event members in atkey
 
-      await SyncSecondary().callSyncSecondary(
-        SyncOperation.notifyAll,
-        atKey: atKey,
-        notification: notification,
-        operation: OperationEnum.update,
-        isDedicated: MixedConstants.isDedicated,
+      await atClientManager.atClient.notifyAll(
+        atKey,
+        notification,
+        OperationEnum.update,
       );
+
+      // await SyncSecondary().callSyncSecondary(
+      //   SyncOperation.notifyAll,
+      //   atKey: atKey,
+      //   notification: notification,
+      //   operation: OperationEnum.update,
+      //   isDedicated: MixedConstants.isDedicated,
+      // );
 
       /// Dont need to sync as notifyAll is called
 

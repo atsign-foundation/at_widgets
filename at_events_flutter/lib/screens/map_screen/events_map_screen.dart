@@ -198,9 +198,9 @@ class EventsMapScreenData {
 
   // ignore: always_declare_return_types
   _getAtSignAndInitializeChat() async {
-    initializeChatService(AtEventNotificationListener().atClientInstance!,
-        AtEventNotificationListener().currentAtSign!,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+    // initializeChatService(AtEventNotificationListener().atClientManager,
+    //     AtEventNotificationListener().currentAtSign!,
+    //     rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
   // ignore: always_declare_return_types
@@ -212,14 +212,19 @@ class EventsMapScreenData {
     });
     groupMembers.remove(AtEventNotificationListener().currentAtSign);
     var atkeyMicrosecondId = _event.key!.split('createevent-')[1].split('@')[0];
-    if ((AtEventNotificationListener().atClientInstance!.preference != null) &&
+    if ((AtEventNotificationListener()
+                .atClientManager
+                .atClient
+                .getPreferences() !=
+            null) &&
         (AtEventNotificationListener()
-                .atClientInstance!
-                .preference!
+                .atClientManager
+                .atClient
+                .getPreferences()!
                 .namespace !=
             null)) {
       atkeyMicrosecondId = atkeyMicrosecondId.replaceAll(
-          '.${AtEventNotificationListener().atClientInstance!.preference!.namespace!}',
+          '.${AtEventNotificationListener().atClientManager.atClient.getPreferences()!.namespace!}',
           '');
     }
     print('atkeyMicrosecondId $atkeyMicrosecondId');
