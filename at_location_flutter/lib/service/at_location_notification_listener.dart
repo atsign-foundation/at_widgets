@@ -31,19 +31,15 @@ class AtLocationNotificationListener {
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
 
-  void init(
-      AtClient atClientInstanceFromApp,
-      String currentAtSignFromApp,
-      GlobalKey<NavigatorState> navKeyFromMainApp,
-      String rootDomain,
+  void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       bool showDialogBox,
       {Function? newGetAtValueFromMainApp}) {
-    atClientInstance = atClientInstanceFromApp;
-    currentAtSign = currentAtSignFromApp;
+    atClientInstance = AtClientManager.getInstance().atClient;
+    currentAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     navKey = navKeyFromMainApp;
     this.showDialogBox = showDialogBox;
     ROOT_DOMAIN = rootDomain;
-    MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
+    MasterLocationService().init(currentAtSign!, atClientInstance!,
         newGetAtValueFromMainApp: newGetAtValueFromMainApp);
 
     /// TODO: start monitor from KeyStreamService().getAllNotifications(), so that our list is calculated, and any new/old upcoming notification can be compared
