@@ -148,6 +148,7 @@ class _GroupViewState extends State<GroupView> {
                                         }
                                       },
                                       child: CustomPersonVerticalTile(
+                                        key: UniqueKey(),
                                         imageLocation: null,
                                         title: groupData.members!
                                                     .elementAt(index)

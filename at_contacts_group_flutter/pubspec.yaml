@@ -30,11 +30,8 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
-  at_lookup:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: at_lookup
-      ref: trunk
+  at_utils : ^3.0.0
+  at_lookup: ^3.0.0
   at_backupkey_flutter:
     path: ../at_backupkey_flutter
   at_client_mobile:

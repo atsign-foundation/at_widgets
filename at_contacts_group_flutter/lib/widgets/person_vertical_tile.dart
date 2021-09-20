@@ -14,9 +14,12 @@ class CustomPersonVerticalTile extends StatefulWidget {
   final IconData? icon;
   final Function? onCrossPressed;
   final Uint8List? imageIntList;
+  @override
+  Key? key;
 
   CustomPersonVerticalTile(
-      {this.imageLocation,
+      {this.key,
+      this.imageLocation,
       this.title,
       this.subTitle,
       this.isTopRight = false,

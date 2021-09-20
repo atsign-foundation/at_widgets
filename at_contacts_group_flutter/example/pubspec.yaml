@@ -33,6 +33,7 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
+  at_utils : ^3.0.0
   at_contacts_flutter:
     path: ../../at_contacts_flutter
   at_lookup:

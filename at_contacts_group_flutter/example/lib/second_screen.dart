@@ -103,13 +103,7 @@ class _SecondScreenState extends State<SecondScreen> {
     setState(() {
       activeAtSign = currentAtSign;
     });
-    initializeContactsService(
-        clientSdkService.atClientServiceInstance!.atClientManager,
-        currentAtSign!,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
-    initializeGroupService(
-        clientSdkService.atClientServiceInstance!.atClientManager,
-        currentAtSign,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }
