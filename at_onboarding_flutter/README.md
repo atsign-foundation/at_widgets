@@ -8,11 +8,11 @@ A flutter plugin project to cover the onboarding flow of @protocol apps.
 
 ## Getting Started
 
-To use this plugin in app, first add it to pubspec.yaml
+To use this plugin in the app. First, add it to `pubspec.yaml`. Replace the `latest` with the current version.
 
 ```
 dependencies:
-  at_onboarding_flutter: ^2.1.2
+  at_onboarding_flutter: latest
 ```
 
 ### API Key
@@ -101,17 +101,18 @@ Click on `Upload backup key file` to upload a zip file of the restore keys or pr
 This screen will help to save the restore keys generated after a successful CRAM authentication in a zip format. The continue option navigates to the screen provided in the `nextScreen` parameter.
 
 ### Sample usage
-The plugin will return a Map<String, AtClientService> on successful onboarding and  throws an error if encounters any. Also, the navigation decision can be covered in the app logic.
+The plugin will return a Map<String, AtClientService> on successful onboarding and throws an error if encounters any. Also, the navigation decision can be covered in the app logic.
 
-```
+```dart
 TextButton(
   color: Colors.black12,
   onPressed: () async {
     Onboarding(
       context: context,
+      // This domain parameter is optional.
+      domain: AppConstants.rootDomain,
       logo: Icon(Icons.ac_unit),
       atClientPreference: atClientPrefernce,
-      domain: AppConstants.rootDomain,
       appColor: Color.fromARGB(255, 240, 94, 62),
       onboard: (atClientServiceMap, atsign) {
       //assign this atClientServiceMap in the app.
@@ -121,7 +122,11 @@ TextButton(
       },
       nextScreen: DashBoard(),
       fistTimeAuthNextScreen: Details(),
-      appAPIKey: AppConstants.devAPIKey
+      // rootEnviroment is a required parameter for setting the environment 
+      // for the onboarding flow.
+      rootEnviroment: RootEnviroment.Staging,
+      // API Key is mandatory for production environment.
+      // appAPIKey: YOUR_API_KEY_HERE
     )
   },
   child: Text('Onboard my @sign'))

@@ -25,6 +25,18 @@ dependencies:
   at_lookup: ^2.0.1
   at_utils: ^2.0.1
 
+dependency_overrides:
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: at_client_mobile
+      ref: trunk
+
+  at_client:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: at_client
+      ref: trunk
 dev_dependencies:
   flutter_test:
     sdk: flutter
