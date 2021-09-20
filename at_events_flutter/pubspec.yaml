@@ -24,7 +24,8 @@ dependencies:
   at_lookup: ^2.0.4
   at_contacts_group_flutter: ^2.0.3
   at_chat_flutter: ^2.0.2
-  at_location_flutter: ^2.0.4
+  at_location_flutter:
+    path: ../at_location_flutter
   pedantic: ^1.11.0
 
 dependency_overrides:
@@ -37,6 +38,23 @@ dependency_overrides:
     path: ../at_contacts_flutter
   at_contacts_group_flutter:
     path: ../at_contacts_group_flutter
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_commons
+      ref: trunk
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: at_lookup
+      ref: trunk
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: at_utils
+      ref: trunk
+  at_location_flutter:
+    path: ../at_location_flutter
 
 dev_dependencies:
   flutter_test:

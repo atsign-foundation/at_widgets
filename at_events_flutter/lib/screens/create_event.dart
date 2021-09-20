@@ -44,7 +44,6 @@ class _CreateEventState extends State<CreateEvent> {
     super.initState();
     isLoading = false;
     EventService().init(
-        widget.atClientManager,
         // ignore: prefer_if_null_operators
         widget.isUpdate != null ? widget.isUpdate : false,
         // ignore: prefer_if_null_operators
@@ -326,7 +325,6 @@ class _CreateEventState extends State<CreateEvent> {
                             return Center(
                               child: ErrorScreen(
                                 onPressed: EventService().init(
-                                    widget.atClientManager,
                                     // ignore: prefer_if_null_operators
                                     widget.isUpdate != null
                                         ? widget.isUpdate

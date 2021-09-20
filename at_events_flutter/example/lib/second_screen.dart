@@ -147,9 +147,7 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void initializeEventService() {
-    initialiseEventService(
-        clientSdkService.atClientServiceInstance!.atClientManager,
-        NavService.navKey,
+    initialiseEventService(NavService.navKey,
         mapKey: '',
         apiKey: '',
         rootDomain: MixedConstants.ROOT_DOMAIN,

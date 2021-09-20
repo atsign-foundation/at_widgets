@@ -41,10 +41,9 @@ class EventKeyStreamService {
 
   Function(List<EventKeyLocationModel>)? streamAlternative;
 
-  void init(AtClientManager atClientManager,
-      {Function(List<EventKeyLocationModel>)? streamAlternative}) async {
+  void init({Function(List<EventKeyLocationModel>)? streamAlternative}) async {
     loggedInUserDetails = null;
-    this.atClientManager = atClientManager;
+    atClientManager = AtClientManager.getInstance();
     currentAtSign = atClientManager.atClient.getCurrentAtSign();
     allEventNotifications = [];
     allPastEventNotifications = [];

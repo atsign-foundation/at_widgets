@@ -22,8 +22,7 @@ import 'package:flutter/cupertino.dart';
 /// [initLocation] pass this as false if location package is initialised outside, so it is not initialised more than once.
 ///
 /// [streamAlternative] a function which will return updated lists of [EventKeyLocationModel]
-void initialiseEventService(AtClientManager atClientManager,
-    GlobalKey<NavigatorState> navKeyFromMainApp,
+void initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
     {required String mapKey,
     required String apiKey,
     rootDomain = 'root.atsign.wtf',
@@ -35,9 +34,8 @@ void initialiseEventService(AtClientManager atClientManager,
   MixedConstants.setMapKey(mapKey);
 
   if (initLocation) {
-    // initializeLocationService(
-    //     atClientInstance, atClientInstance.currentAtSign!, navKeyFromMainApp,
-    //     apiKey: MixedConstants.API_KEY!, mapKey: MixedConstants.MAP_KEY!);
+    initializeLocationService(navKeyFromMainApp,
+        apiKey: MixedConstants.API_KEY!, mapKey: MixedConstants.MAP_KEY!);
   }
 
   /// To have eta in events
@@ -46,14 +44,9 @@ void initialiseEventService(AtClientManager atClientManager,
     calculateETA: true,
   );
 
-  AtEventNotificationListener().init(
-      atClientManager,
-      atClientManager.atClient.getCurrentAtSign()!,
-      navKeyFromMainApp,
-      rootDomain);
+  AtEventNotificationListener().init(navKeyFromMainApp, rootDomain);
 
-  EventKeyStreamService()
-      .init(atClientManager, streamAlternative: streamAlternative);
+  EventKeyStreamService().init(streamAlternative: streamAlternative);
 }
 
 Future<bool> createEvent(EventNotificationModel eventData) async {

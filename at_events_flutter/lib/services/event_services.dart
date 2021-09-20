@@ -38,8 +38,7 @@ class EventService {
       _atEventNotificationController.sink;
 
   // ignore: always_declare_return_types
-  init(AtClientManager atClientManager, bool isUpdate,
-      EventNotificationModel? eventData) {
+  init(bool isUpdate, EventNotificationModel? eventData) {
     if (eventData != null) {
       EventService().eventNotificationModel = EventNotificationModel.fromJson(
           jsonDecode(EventNotificationModel.convertEventNotificationToJson(
@@ -55,7 +54,7 @@ class EventService {
     }
     isEventUpdate = isUpdate;
     print('isEventUpdate:$isEventUpdate');
-    this.atClientManager = atClientManager;
+    atClientManager = AtClientManager.getInstance();
     Future.delayed(Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });

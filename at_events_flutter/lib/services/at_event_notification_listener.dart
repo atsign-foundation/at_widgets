@@ -26,14 +26,14 @@ class AtEventNotificationListener {
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
 
-  void init(AtClientManager atClientManager, String currentAtSignFromApp,
-      GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
+  void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       {Function? newGetAtValueFromMainApp}) {
-    initializeContactsService(atClientManager, currentAtSignFromApp,
+    atClientManager = AtClientManager.getInstance();
+    currentAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
+
+    initializeContactsService(atClientManager, currentAtSign!,
         rootDomain: rootDomain);
 
-    this.atClientManager = atClientManager;
-    currentAtSign = currentAtSignFromApp;
     navKey = navKeyFromMainApp;
     ROOT_DOMAIN = rootDomain;
     startMonitor();
@@ -76,6 +76,7 @@ class AtEventNotificationListener {
   //   //     .completePrioritySync(response, afterSync: _notificationCallback);
   // }
 
+  //// TODO: Filter past events
   void _notificationCallback(AtNotification notification) async {
     // print('fnCallBack called in event service');
     print('notification received in events package ===========> $notification');
