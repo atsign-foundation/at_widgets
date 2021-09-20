@@ -15,34 +15,20 @@ dependencies:
   flutter_slidable: ^0.6.0
   pedantic: ^1.11.0
 
-  at_client_mobile: ^2.0.3
-  at_commons: ^2.0.3
-  at_lookup: ^2.0.3
-  at_contact: ^2.0.2
+  at_client_mobile: ^3.0.0
+  at_commons: ^3.0.0
+  at_lookup: ^3.0.1
+  at_contact: ^2.0.3
   at_common_flutter: ^2.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 dependency_overrides:
-  at_client_mobile:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile 
-    # git:
-    #   url: https://github.com/atsign-foundation/at_client_sdk.git
-    #   path: at_client_mobile
-    #   ref: trunk
-  at_client:
-    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
-    # git:
-    #   url: https://github.com/atsign-foundation/at_client_sdk.git
-    #   path: at_client
-    #   ref: trunk
-  at_commons:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_commons
-      ref: trunk
-
+  at_client_mobile: ^3.0.0
+  at_client: ^3.0.0
+  at_commons: ^3.0.0
+  at_utils : ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

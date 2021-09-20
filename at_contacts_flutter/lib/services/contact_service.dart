@@ -28,7 +28,8 @@ class ContactService {
   late String rootDomain;
   late int rootPort;
   AtContact? loggedInUserDetails;
-  AtClientManager? atClientManager;
+  late AtClientManager atClientManager;
+  late String currentAtsign;
 
   StreamController<List<AtContact?>> contactStreamController =
       StreamController<List<AtContact?>>.broadcast();
@@ -70,16 +71,16 @@ class ContactService {
   List<String> allContactsList = [];
 
   // ignore: always_declare_return_types
-  initContactsService(String currentAtSign, String rootDomainFromApp,
-      int rootPortFromApp, AtClientManager atClientManager) async {
+  initContactsService(String rootDomainFromApp, int rootPortFromApp) async {
     loggedInUserDetails = null;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
-    atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
-    loggedInUserDetails = await getAtSignDetails(currentAtSign);
+    atClientManager = AtClientManager.getInstance();
+    currentAtsign = atClientManager.atClient.getCurrentAtSign()!;
+    atContactImpl = await AtContactsImpl.getInstance(currentAtsign);
+    loggedInUserDetails = await getAtSignDetails(currentAtsign);
     cachedContactList = await atContactImpl.listContacts();
     await fetchBlockContactList();
-    this.atClientManager = atClientManager;
   }
 
   // ignore: always_declare_return_types
@@ -169,7 +170,7 @@ class ContactService {
     }
     atSign = atSign.toLowerCase().trim();
 
-    if (atSign == atClientManager?.atClient.getCurrentAtSign()) {
+    if (atSign == atClientManager.atClient.getCurrentAtSign()) {
       getAtSignError = TextStrings().addingLoggedInUser;
 
       return true;
@@ -275,7 +276,7 @@ class ContactService {
       String? atSign, String? nickName) async {
     var contactDetails = <String, dynamic>{};
 
-    if (atClientManager?.atClient == null || atSign == null) {
+    if (atClientManager.atClient == null || atSign == null) {
       return contactDetails;
     } else if (!atSign.contains('@')) {
       atSign = '@' + atSign;
@@ -291,15 +292,15 @@ class ContactService {
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientManager?.atClient.get(key).catchError((e) {
+      var result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
-      var firstname = result!.value;
+      var firstname = result.value;
 
       // lastname
       key.key = contactFields[1];
-      result = await atClientManager?.atClient.get(key);
-      var lastname = result!.value;
+      result = await atClientManager.atClient.get(key);
+      var lastname = result.value;
 
       // construct name
       var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
@@ -310,8 +311,8 @@ class ContactService {
       // profile picture
       key.metadata?.isBinary = true;
       key.key = contactFields[2];
-      result = await atClientManager?.atClient.get(key);
-      var image = result!.value;
+      result = await atClientManager.atClient.get(key);
+      var image = result.value;
       contactDetails['name'] = name;
       contactDetails['image'] = image;
       contactDetails['nickname'] = nickName != '' ? nickName : null;
