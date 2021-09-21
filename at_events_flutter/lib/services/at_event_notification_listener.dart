@@ -11,7 +11,6 @@ import 'package:at_events_flutter/services/event_key_stream_service.dart';
 // import 'package:at_events_flutter/services/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client/src/response/at_notification.dart';
 
 /// Starts monitor and listens for notifications related to this package.
 class AtEventNotificationListener {
@@ -60,10 +59,7 @@ class AtEventNotificationListener {
 
   //// TODO: Filter past events
   void _notificationCallback(AtNotification notification) async {
-    // print('fnCallBack called in event service');
     print('notification received in events package ===========> $notification');
-    // response = response.replaceFirst('notification:', '');
-    // var responseJson = jsonDecode(response);
     var value = notification.value;
     var notificationKey = notification.key;
     var fromAtSign = notification.from;
@@ -76,7 +72,6 @@ class AtEventNotificationListener {
       return;
     }
 
-    // var atKey = notificationKey.split(':')[1];
     var operation = notification.operation;
     print('_notificationCallback opeartion $operation');
     if ((operation == 'delete') &&
