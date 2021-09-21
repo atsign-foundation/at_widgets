@@ -740,8 +740,11 @@ class EventKeyStreamService {
 
   void updatePendingStatus(EventNotificationModel notificationModel) async {
     for (var i = 0; i < allEventNotifications.length; i++) {
-      if (allEventNotifications[i].eventNotificationModel!.key ==
-          notificationModel.key) {
+      if (allEventNotifications[i]
+          .eventNotificationModel!
+          .key!
+          .contains(notificationModel.key!)) {
+        print('${notificationModel.key} updated haveResponded');
         allEventNotifications[i].haveResponded = true;
       }
     }
