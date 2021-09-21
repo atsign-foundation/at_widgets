@@ -54,26 +54,26 @@ class AtService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await atClientServiceInstance!.getPrivateKey(atsign);
+    return await KeychainUtil.getPrivateKey(atsign);
   }
 
   ///Fetches publickey for [atsign] from device keychain.
   Future<String?> getPublicKey(String atsign) async {
-    return await atClientServiceInstance!.getPublicKey(atsign);
+    return await KeychainUtil.getPublicKey(atsign);
   }
 
   ///Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
-    return await atClientServiceInstance!.getAtSign();
+    return await KeychainUtil.getAtSign();
   }
 
   ///Fetches atsign list from device keychain.
   Future<List<String>?> getAtSignList() async {
-    return await atClientServiceInstance!.getAtsignList();
+    return await KeychainUtil.getAtsignList();
   }
 
   Future<void> deleteAtsign(String atsign) async {
-    return await atClientServiceInstance!.deleteAtSignFromKeychain(atsign);
+    return await KeychainUtil.deleteAtSignFromKeychain(atsign);
   }
 
   // startMonitor needs to be called at the beginning of session

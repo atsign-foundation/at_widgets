@@ -162,28 +162,28 @@ class _CustomDialogState extends State<CustomDialog> {
                                       ),
                                     ),
                                     SizedBox(height: 20.toHeight),
-                                    loading
-                                        ? Container(
-                                            width: MediaQuery.of(context).size.width,
-                                            child: ElevatedButton(
-                                              style: ButtonStyle(
-                                                  backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
-                                              // key: Key(''),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isQrScanner = false;
-                                                });
-                                              },
-                                              child: Text(
-                                                'Cancel',
-                                                style: TextStyle(color: Colors.white, fontSize: 15.toFont),
-                                              ),
-                                            ))
-                                        : const SizedBox(
-                                            child: Center(
-                                              child: CircularProgressIndicator(),
-                                            ),
-                                          )
+                                    const SizedBox(
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20.toHeight),
+                                    Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: ElevatedButton(
+                                          style:
+                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
+                                          // key: Key(''),
+                                          onPressed: () {
+                                            setState(() {
+                                              isQrScanner = false;
+                                            });
+                                          },
+                                          child: Text(
+                                            'Cancel',
+                                            style: TextStyle(color: Colors.white, fontSize: 15.toFont),
+                                          ),
+                                        ))
                                   ]),
                                 )
                               : Padding(
@@ -570,6 +570,16 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 child: const Text(
                                                   'Wrong email?',
                                                   style: TextStyle(color: Colors.grey),
+                                                )),
+                                          if (widget.isQR)
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text(
+                                                  'Back',
+                                                  style: TextStyle(color: Colors.grey),
                                                 ))
                                         ]),
                                   if (!pair) ...<Widget>[
@@ -636,9 +646,9 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Future<void> onScan(String data, List<Offset> offsets, BuildContext context) async {
-    setState(() {
-      loading = true;
-    });
+    // setState(() {
+    //   loading = true;
+    // });
     await _controller!.stopCamera();
     print('SCANNED: => $data');
     List<String> values = data.split(':');
