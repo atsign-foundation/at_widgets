@@ -20,9 +20,7 @@ dependencies:
     # See https://dart.dev/tools/pub/dependencies#version-constraints
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
-    path: ../
-  # atsign_authentication_helper: ^0.0.5
-  # at_onboarding_flutter: ^2.1.1
+    path: ../ 
   at_onboarding_flutter: ^3.0.0
 
 
