@@ -23,9 +23,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
   at_onboarding_flutter: ^3.0.0
-  # at_contacts_flutter: ^2.0.3
-  at_contacts_flutter: 
-    path: ../../at_contacts_flutter
+  at_contacts_flutter: ^3.0.0
 
 
 dev_dependencies:
