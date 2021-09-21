@@ -37,7 +37,7 @@ AtContact checkForCachedContactDetail(String atSign) {
 }
 
 AtContact? getCachedContactDetail(String atsign) {
-  if (atsign == ContactService().atContactImpl.atClient?.currentAtSign &&
+  if (atsign == ContactService().atContactImpl.atClient?.getCurrentAtSign() &&
       ContactService().loggedInUserDetails != null) {
     return ContactService().loggedInUserDetails;
   }
