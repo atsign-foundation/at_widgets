@@ -9,7 +9,6 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
 // import 'package:at_events_flutter/services/sync_secondary.dart';
-import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client/src/response/at_notification.dart';
@@ -31,8 +30,7 @@ class AtEventNotificationListener {
     atClientManager = AtClientManager.getInstance();
     currentAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
 
-    initializeContactsService(atClientManager, currentAtSign!,
-        rootDomain: rootDomain);
+    initializeContactsService(rootDomain: rootDomain);
 
     navKey = navKeyFromMainApp;
     ROOT_DOMAIN = rootDomain;
@@ -41,17 +39,12 @@ class AtEventNotificationListener {
 
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
-      var privateKey = (await (getPrivateKey(currentAtSign!))) ?? '.rrive';
       print(
           'atClientManager.atClient.getPreferences()!.namespace ${atClientManager.atClient.getPreferences()!.namespace}');
-      // ignore: await_only_futures
-      // await atClientInstance!.startMonitor(privateKey, fnCallBack);
-
       AtClientManager.getInstance()
           .notificationService
           .subscribe(
               // regex: atClientManager.atClient.getPreferences()!.namespace
-              // ?? 'rrive'
               // '.*'
               )
           .listen((notification) {
@@ -64,17 +57,6 @@ class AtEventNotificationListener {
 
     return true;
   }
-
-  ///Fetches privatekey for [atsign] from device keychain.
-  Future<String?> getPrivateKey(String atsign) async {
-    // return await atClientInstance!.getPrivateKey(atsign);
-  }
-
-  // void fnCallBack(var response) async {
-  //   print('fnCallBack called');
-  //   // SyncSecondary()
-  //   //     .completePrioritySync(response, afterSync: _notificationCallback);
-  // }
 
   //// TODO: Filter past events
   void _notificationCallback(AtNotification notification) async {

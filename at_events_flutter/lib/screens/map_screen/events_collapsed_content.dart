@@ -149,68 +149,6 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
               ],
             ),
           ),
-          // StreamBuilder(
-          //     stream: LocationService().atHybridUsersStream,
-          //     builder: (context, AsyncSnapshot<List<HybridModel>> snapshot) {
-          //       if (snapshot.connectionState == ConnectionState.active) {
-          //         if (snapshot.hasError) {
-          //           return SeeParticipants(() => null);
-          //         } else {
-          //           var data = snapshot.data;
-
-          //           ParticipantsData().putData(data);
-          //           ParticipantsData()
-          //               .putAtsign(LocationService().atsignsAtMonitor);
-
-          //           return SeeParticipants(() => bottomSheet(
-          //               context,
-          //               Participants(
-          //                 true,
-          //                 data: data,
-          //                 atsign: LocationService().atsignsAtMonitor,
-          //               ),
-          //               422));
-          //         }
-          //       } else {
-          //         ParticipantsData().putData([]);
-          //         ParticipantsData()
-          //             .putAtsign(LocationService().atsignsAtMonitor);
-
-          //         return SeeParticipants(() => bottomSheet(
-          //             context,
-          //             Participants(
-          //               false,
-          //               atsign: LocationService().atsignsAtMonitor,
-          //             ),
-          //             422));
-          //       }
-          //     }),
-          ///
-          // isSharingEvent = false;
-          //           if (widget.isAdmin) {
-          //             if (snapshot.data.isSharing) isSharingEvent = true;
-          //           } else {
-          //             if (snapshot.data != null) {
-          //               snapshot.data.group.members.forEach((groupMember) {
-          //                 if (groupMember.atSign ==
-          //                     BackendService.getInstance()
-          //                         .atClientServiceInstance
-          //                         .atClient
-          //                         .currentAtSign) {
-          //                   if (groupMember.tags['isSharing'] == true) {
-          //                     isSharingEvent = true;
-          //                   }
-          //                 }
-          //               });
-          //             }
-          //           }
-          // return
-
-          /// Next
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   mainAxisSize: MainAxisSize.min,
-          // children: [
           InkWell(
             onTap: () => bottomSheet(
                 AtEventNotificationListener().navKey!.currentContext!,

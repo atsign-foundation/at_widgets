@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:at_chat_flutter/at_chat_flutter.dart';
+// import 'package:at_chat_flutter/at_chat_flutter.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/common_components/floating_icon.dart';
@@ -228,8 +228,8 @@ class EventsMapScreenData {
           '');
     }
     print('atkeyMicrosecondId $atkeyMicrosecondId');
-    setChatWithAtSign('',
-        isGroup: true, groupId: atkeyMicrosecondId, groupMembers: groupMembers);
+    // setChatWithAtSign('',
+    //     isGroup: true, groupId: atkeyMicrosecondId, groupMembers: groupMembers);
   }
 
   void dispose() {
@@ -307,16 +307,16 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: FloatingIcon(
-                        bgColor: AllColors().Black,
-                        icon: Icons.message_outlined,
-                        iconColor: Theme.of(context).scaffoldBackgroundColor,
-                        onPressed: () => scaffoldKey.currentState!
-                            .showBottomSheet((context) => ChatScreen())),
-                  ),
+                  // Positioned(
+                  //   top: 0,
+                  //   right: 0,
+                  //   child: FloatingIcon(
+                  //       bgColor: AllColors().Black,
+                  //       icon: Icons.message_outlined,
+                  //       iconColor: Theme.of(context).scaffoldBackgroundColor,
+                  //       onPressed: () => scaffoldKey.currentState!
+                  //           .showBottomSheet((context) => ChatScreen())),
+                  // ),
                   SlidingUpPanel(
                     controller: pc,
                     minHeight: 205.toHeight,
