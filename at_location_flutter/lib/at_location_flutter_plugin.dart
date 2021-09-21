@@ -242,8 +242,5 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     if (LocationService().hybridUsersList.isNotEmpty) {
       mapController!.move(LocationService().hybridUsersList[0]!.latLng, 4);
     }
-    // LocationService().hybridUsersList.isNotEmpty
-    //     ? mapController.move(LocationService().hybridUsersList[0].latLng, 4)
-    //     : null;
   }
 }

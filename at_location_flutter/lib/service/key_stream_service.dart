@@ -60,7 +60,7 @@ class KeyStreamService {
 
   /// adds all share and request location notifications to [atNotificationsSink]
   void getAllNotifications() async {
-    await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+    AtClientManager.getInstance().syncService.sync();
 
     var allResponse = await atClientInstance!.getKeys(
       regex: 'sharelocation-',

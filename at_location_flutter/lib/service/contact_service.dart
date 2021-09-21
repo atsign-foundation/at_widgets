@@ -16,7 +16,8 @@ Future<AtContact> getAtSignDetails(String? atSign) async {
 }
 
 AtContact? getCachedContactDetail(String? atsign) {
-  if (atsign == KeyStreamService().atContactImpl?.atClient?.currentAtSign) {
+  if (atsign ==
+      KeyStreamService().atContactImpl?.atClient?.getCurrentAtSign()) {
     return KeyStreamService().loggedInUserDetails;
   }
   if (KeyStreamService().contactList.isNotEmpty) {

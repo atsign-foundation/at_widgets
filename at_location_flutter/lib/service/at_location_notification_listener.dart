@@ -60,14 +60,7 @@ class AtLocationNotificationListener {
     return await KeychainUtil.getPrivateKey(atsign);
   }
 
-  // void fnCallBack(var response) async {
-  //   print('fnCallBack called');
-  //   SyncSecondary()
-  //       .completePrioritySync(response, afterSync: _notificationCallback);
-  // }
-
   void _notificationCallback(AtNotification notification) async {
-    // print('_notificationCallback called');
     var value = notification.value;
     var notificationKey = notification.key;
     print(
