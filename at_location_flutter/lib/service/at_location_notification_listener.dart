@@ -66,7 +66,7 @@ class AtLocationNotificationListener {
   //       .completePrioritySync(response, afterSync: _notificationCallback);
   // }
 
-  void _notificationCallback(dynamic notification) async {
+  void _notificationCallback(AtNotification notification) async {
     // print('_notificationCallback called');
     var value = notification.value;
     var notificationKey = notification.key;
@@ -121,7 +121,7 @@ class AtLocationNotificationListener {
     }
 
     var decryptedMessage = await atClientInstance!.encryptionService!
-        .decrypt(value, fromAtSign)
+        .decrypt(value ?? '', fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) => print('error in decrypting: $e'));
 
@@ -166,7 +166,8 @@ class AtLocationNotificationListener {
           await showMyDialog(fromAtSign, locationData);
         }
       } else {
-        var _result = await KeyStreamService().addDataToList(locationData);
+        var _result = await KeyStreamService()
+            .addDataToList(locationData, receivedkey: notificationKey);
         if (_result is KeyLocationModel) {
           await showMyDialog(fromAtSign, locationData);
         }
@@ -198,7 +199,8 @@ class AtLocationNotificationListener {
           await showMyDialog(fromAtSign, locationData);
         }
       } else {
-        var _result = await KeyStreamService().addDataToList(locationData);
+        var _result = await KeyStreamService()
+            .addDataToList(locationData, receivedkey: notificationKey);
         if (_result is KeyLocationModel) {
           await showMyDialog(fromAtSign, locationData);
         }
