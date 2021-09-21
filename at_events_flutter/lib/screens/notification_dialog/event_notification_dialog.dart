@@ -325,25 +325,6 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                             /// For dialog box
                             Navigator.of(context).pop();
 
-                            // providerCallback<EventProvider>(context,
-                            //     task: (t) => t.actionOnEvent(widget.eventData,
-                            //         ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-                            //         isAccepted: false, isExited: true),
-                            //     text: 'Sending request to reject event',
-                            //     taskName: (t) => t.UPDATE_EVENTS,
-                            //     showDialog: false,
-                            //     onError: (t) {
-                            //       Navigator.of(context).pop();
-                            //       CustomToast().show(
-                            //           'Something went wrong! ${t.toString()}',
-                            //           NavService.navKey.currentContext);
-                            //     },
-                            //     onSuccess: (t) {
-                            //       Navigator.of(context).pop();
-                            //       CustomToast().show(
-                            //           'Request to reject event is submitted',
-                            //           context);
-                            //     });
                             stopLoading();
                           },
                           child: Text(
@@ -376,32 +357,3 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     }
   }
 }
-
-// void updateEvent(
-//   EventNotificationModel eventData, {
-//   bool isAccepted = true,
-//   bool isSharing = true,
-//   bool isExited = false,
-// }) {
-//   EventKeyStreamService().actionOnEvent(
-//       eventData, ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-//       isAccepted: true, isSharing: true, isExited: false);
-
-//   ///
-//   // providerCallback<EventProvider>(NavService.navKey.currentContext,
-//   //     task: (t) => t.actionOnEvent(eventData, ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-//   //         isAccepted: true, isSharing: true, isExited: false),
-//   //     taskName: (t) => t.UPDATE_EVENTS,
-//   //     text: 'Sending request to accept event',
-//   //     showDialog: false,
-//   //     onError: (t) {
-//   //       CustomToast().show('Something went wrong! ${t.toString()}',
-//   //           NavService.navKey.currentContext);
-//   //     },
-//   //     onSuccess: (t) {
-//   //       Navigator.of(NavService.navKey.currentContext).pop();
-//   //       Navigator.of(NavService.navKey.currentContext).pop();
-//   //       CustomToast().show('Request to accept event is submitted',
-//   //           NavService.navKey.currentContext);
-//   //     });
-// }
