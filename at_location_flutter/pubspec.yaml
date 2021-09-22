@@ -27,44 +27,14 @@ dependencies:
   http: ^0.13.1
   fluttertoast: ^8.0.3
 
-  at_chat_flutter: ^2.0.2
-  at_client_mobile: ^2.0.3
-  at_lookup: ^2.0.3
-  at_commons: ^2.0.3
-  at_contact: ^2.0.2
+  # at_chat_flutter: ^2.0.2
+  at_client_mobile: ^3.0.1
+  at_lookup: ^3.0.3
+  at_commons: ^3.0.0
+  at_contact: ^3.0.0
   at_common_flutter: ^2.0.2
   pedantic: ^1.11.0
 
-dependency_overrides:
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: trunk
-
-  at_client:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client
-      ref: trunk
- 
-  at_chat_flutter:
-    path: ../at_chat_flutter
-  at_commons:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_commons
-      ref: trunk
-  at_lookup:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: at_lookup
-      ref: trunk
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_utils
-      ref: trunk
 
 dev_dependencies:
   flutter_test:

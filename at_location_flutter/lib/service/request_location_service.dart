@@ -4,7 +4,6 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
-import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
@@ -127,14 +126,10 @@ class RequestLocationService {
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
-            // isDedicated: MixedConstants.isDedicated,
           );
       print('requestLocationNotification:$result');
 
       if (result) {
-        // if (MixedConstants.isDedicated) {
-        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        // }
         await KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
@@ -185,14 +180,10 @@ class RequestLocationService {
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
-            // isDedicated: MixedConstants.isDedicated,
           );
       print('requestLocationAcknowledgment $result');
 
       if (result) {
-        // if (MixedConstants.isDedicated) {
-        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        // }
         CustomToast().show('Request to update data is submitted',
             AtLocationNotificationListener().navKey.currentContext,
             isSuccess: true);
@@ -264,13 +255,9 @@ class RequestLocationService {
       result = await AtLocationNotificationListener().atClientInstance!.put(
             key,
             notification,
-            // isDedicated: MixedConstants.isDedicated,
           );
 
       if (result) {
-        // if (MixedConstants.isDedicated) {
-        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        // }
         KeyStreamService()
             .mapUpdatedLocationDataToWidget(locationNotificationModel);
       }
@@ -301,14 +288,9 @@ class RequestLocationService {
             atKey,
             LocationNotificationModel.convertLocationNotificationToJson(
                 locationNotificationModel),
-            // isDedicated: MixedConstants.isDedicated,
           );
       print('sendDeleteAck $result');
-      if (result) {
-        // if (MixedConstants.isDedicated) {
-        //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        // }
-      }
+      if (result) {}
       return result;
     } catch (e) {
       print('sendDeleteAck error $e');
@@ -335,14 +317,10 @@ class RequestLocationService {
     var result =
         await AtLocationNotificationListener().atClientInstance!.delete(
               key,
-              // isDedicated: MixedConstants.isDedicated,
             );
     print('$key delete operation $result');
 
     if (result) {
-      // if (MixedConstants.isDedicated) {
-      //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-      // }
       KeyStreamService().removeData(key.key);
     }
     return result;

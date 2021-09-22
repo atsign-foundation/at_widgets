@@ -11,7 +11,6 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
 import 'package:at_events_flutter/services/event_location_share.dart';
 // import 'package:at_events_flutter/services/sync_secondary.dart';
-import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
@@ -64,7 +63,7 @@ class EventKeyStreamService {
 
   /// adds all 'createevent' notifications to [atNotificationsSink]
   void getAllEventNotifications() async {
-    // await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+    AtClientManager.getInstance().syncService.sync();
 
     var response = await atClientManager.atClient.getKeys(
       regex: 'createevent-',
@@ -178,14 +177,6 @@ class EventKeyStreamService {
 
   /// Checks for any missed notifications and updates respective notification
   Future<void> updateEventDataAccordingToAcknowledgedData() async {
-    // var allEventKey = await atClientManager.atClient.getKeys(
-    //   regex: 'createevent-',
-    // );
-
-    // if (allEventKey.isEmpty) {
-    //   return;
-    // }
-
     var allRegexResponses = [], allEventUserLocationResponses = [];
     for (var i = 0; i < allEventNotifications.length; i++) {
       allRegexResponses = [];
@@ -293,14 +284,6 @@ class EventKeyStreamService {
 
               createEventAtKey.sharedWith = jsonEncode(allAtsignList);
 
-              // await SyncSecondary().callSyncSecondary(SyncOperation.notifyAll,
-              //     atKey: createEventAtKey,
-              //     notification:
-              //         EventNotificationModel.convertEventNotificationToJson(
-              //             storedEvent),
-              //     operation: OperationEnum.update,
-              //     isDedicated: MixedConstants.isDedicated);
-
               await atClientManager.atClient.notifyAll(
                 createEventAtKey,
                 EventNotificationModel.convertEventNotificationToJson(
@@ -312,8 +295,6 @@ class EventKeyStreamService {
                 mapUpdatedEventDataToWidget(storedEvent);
               }
             }
-            // }
-            // }
           }
         }
       }
@@ -367,14 +348,6 @@ class EventKeyStreamService {
 
     notifyListeners();
 
-    // if ((tempHyridNotificationModel.locationNotificationModel!.isSharing)) {
-    //   if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==
-    //       currentAtSign) {
-    //     // ignore: unawaited_futures
-    //     SendLocationNotification()
-    //         .addMember(tempHyridNotificationModel.locationNotificationModel);
-    //   }
-    // }
     checkLocationSharingForEventData(
         tempEventKeyLocationModel.eventNotificationModel!);
 
@@ -433,14 +406,6 @@ class EventKeyStreamService {
       }
     }
     notifyListeners();
-
-    // if ((eventData.isSharing) && (eventData.isAccepted)) {
-    //   if (eventData.atsignCreator == currentAtSign) {
-    //     SendLocationNotification().addMember(eventData);
-    //   }
-    // } else {
-    //   SendLocationNotification().removeMember(eventData.key);
-    // }
   }
 
   /// Checks current status of [currentAtSign] in an event and updates [EventLocationShare] location sending list.
@@ -485,15 +450,9 @@ class EventKeyStreamService {
       var result = await atClientManager.atClient.put(
         key,
         notification,
-        // isDedicated: MixedConstants.isDedicated,
       );
       if (result is bool) {
-        if (result) {
-          // if (MixedConstants.isDedicated) {
-          //   await SyncSecondary()
-          //       .callSyncSecondary(SyncOperation.syncSecondary);
-          // }
-        }
+        if (result) {}
         print('event acknowledged:$result');
         return result;
         // ignore: unnecessary_null_comparison
@@ -572,7 +531,6 @@ class EventKeyStreamService {
       var key = formAtKey(keyType, atkeyMicrosecondId, eventData.atsignCreator,
           currentAtsign, event)!;
 
-      // TODO : Check whther key is correct
       print('key $key');
 
       var notification =
@@ -580,12 +538,8 @@ class EventKeyStreamService {
       var result = await atClientManager.atClient.put(
         key,
         notification,
-        // isDedicated: MixedConstants.isDedicated,
       );
 
-      // if (MixedConstants.isDedicated) {
-      //   await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-      // }
       // if key type is createevent, we have to notify all members
       if (keyType == ATKEY_TYPE_ENUM.CREATEEVENT) {
         mapUpdatedEventDataToWidget(eventData);
@@ -596,13 +550,6 @@ class EventKeyStreamService {
         });
 
         key.sharedWith = jsonEncode(allAtsignList);
-        // await SyncSecondary().callSyncSecondary(
-        //   SyncOperation.notifyAll,
-        //   atKey: key,
-        //   notification: notification,
-        //   operation: OperationEnum.update,
-        //   isDedicated: MixedConstants.isDedicated,
-        // );
 
         await atClientManager.atClient.notifyAll(
           key,
@@ -639,8 +586,6 @@ class EventKeyStreamService {
           presentEventData = EventNotificationModel.fromJson(jsonDecode(
               EventNotificationModel.convertEventNotificationToJson(
                   allEventNotifications[i].eventNotificationModel!)));
-          // print(
-          //     'presentEventData ${EventNotificationModel.convertEventNotificationToJson(presentEventData)}');
           break;
         }
       }
@@ -664,8 +609,6 @@ class EventKeyStreamService {
 
           break;
         }
-
-        // print('presentGroupMember ${presentGroupMember.tags}');
       }
 
       presentEventData.isUpdate = true;
@@ -681,19 +624,11 @@ class EventKeyStreamService {
       var key = EventService().getAtKey(presentEventData.key!);
 
       var result = await atClientManager.atClient.put(
-        key, notification,
-        // isDedicated: MixedConstants.isDedicated
+        key,
+        notification,
       );
 
       key.sharedWith = jsonEncode(allAtsignList);
-
-      // await SyncSecondary().callSyncSecondary(
-      //   SyncOperation.notifyAll,
-      //   atKey: key,
-      //   notification: notification,
-      //   operation: OperationEnum.update,
-      //   isDedicated: MixedConstants.isDedicated,
-      // );
 
       await atClientManager.atClient.notifyAll(
         key,
@@ -760,20 +695,14 @@ class EventKeyStreamService {
 
           if (fromAtSign![0] != '@') fromAtSign = '@' + fromAtSign!;
 
-          // print(
-          //     'acknowledgedGroupMember.atSign ${acknowledgedGroupMember.atSign}, presentGroupMember.atSign ${presentGroupMember.atSign}, fromAtSign $fromAtSign');
-
           if (acknowledgedGroupMember.atSign!.toLowerCase() ==
                   presentGroupMember.atSign!.toLowerCase() &&
               acknowledgedGroupMember.atSign!.toLowerCase() ==
                   fromAtSign!.toLowerCase()) {
-            // print(
-            //     'acknowledgedGroupMember.tags ${acknowledgedGroupMember.tags}');
             presentGroupMember.tags = acknowledgedGroupMember.tags;
             tags = presentGroupMember.tags;
           }
         });
-        // print('presentGroupMember.tags ${presentGroupMember.tags}');
       });
 
       presentEventData.isUpdate = true;
@@ -785,23 +714,12 @@ class EventKeyStreamService {
       var notification = EventNotificationModel.convertEventNotificationToJson(
           presentEventData);
 
-      // print('notification $notification');
-
       var result = await atClientManager.atClient.put(
         key,
         notification,
-        // isDedicated: MixedConstants.isDedicated,
       );
 
       key.sharedWith = jsonEncode(allAtsignList);
-
-      // await SyncSecondary().callSyncSecondary(
-      //   SyncOperation.notifyAll,
-      //   atKey: key,
-      //   notification: notification,
-      //   operation: OperationEnum.update,
-      //   isDedicated: MixedConstants.isDedicated,
-      // );
 
       await atClientManager.atClient.notifyAll(
         key,
@@ -812,15 +730,8 @@ class EventKeyStreamService {
       /// Dont sync as notifyAll is called
 
       if (result is bool && result) {
-        //   mapUpdatedDataToWidget(
-        //       convertEventToHybrid(NotificationType.Event,
-        //           eventNotificationModel: presentEventData),
-        //       tags: tags,
-        //       tagOfAtsign: fromAtSign);
-
         mapUpdatedEventDataToWidget(presentEventData,
             tags: tags, tagOfAtsign: fromAtSign);
-        // print('acknowledgement for $fromAtSign completed');
       }
     } catch (e) {
       print('error in event acknowledgement: $e');
@@ -829,8 +740,11 @@ class EventKeyStreamService {
 
   void updatePendingStatus(EventNotificationModel notificationModel) async {
     for (var i = 0; i < allEventNotifications.length; i++) {
-      if (allEventNotifications[i].eventNotificationModel!.key ==
-          notificationModel.key) {
+      if (allEventNotifications[i]
+          .eventNotificationModel!
+          .key!
+          .contains(notificationModel.key!)) {
+        print('${notificationModel.key} updated haveResponded');
         allEventNotifications[i].haveResponded = true;
       }
     }
@@ -927,14 +841,6 @@ class EventKeyStreamService {
 
   void notifyListeners() {
     print('allEventNotifications');
-    // allEventNotifications.forEach((element) {
-    //   print(
-    //       'element.atKey: ${element.atKey}, ${element.atValue}, , ${element.key}, ');
-    //   print('element.key: ${element.key}, ');
-    //   print('element.atValue: ${element.atValue}');
-    //   print(
-    //       'element.eventNotificationModel: ${element.eventNotificationModel}');
-    // });
     if (streamAlternative != null) {
       streamAlternative!(allEventNotifications);
     }

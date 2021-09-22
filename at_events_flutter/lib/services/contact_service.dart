@@ -17,7 +17,7 @@ Future<AtContact> getAtSignDetails(String? atSign) async {
 
 AtContact? getCachedContactDetail(String? atsign) {
   if (atsign ==
-      EventKeyStreamService().atContactImpl?.atClient?.currentAtSign) {
+      EventKeyStreamService().atContactImpl?.atClient?.getCurrentAtSign()) {
     return EventKeyStreamService().loggedInUserDetails;
   }
   if (EventKeyStreamService().contactList.isNotEmpty) {

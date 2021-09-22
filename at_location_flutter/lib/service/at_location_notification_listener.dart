@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:at_client/at_client.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
@@ -13,7 +12,6 @@ import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
 import 'sharing_location_service.dart';
-import 'sync_secondary.dart';
 
 /// Starts monitor and listens for notifications related to this package.
 class AtLocationNotificationListener {
@@ -60,14 +58,7 @@ class AtLocationNotificationListener {
     return await KeychainUtil.getPrivateKey(atsign);
   }
 
-  // void fnCallBack(var response) async {
-  //   print('fnCallBack called');
-  //   SyncSecondary()
-  //       .completePrioritySync(response, afterSync: _notificationCallback);
-  // }
-
-  void _notificationCallback(dynamic notification) async {
-    // print('_notificationCallback called');
+  void _notificationCallback(AtNotification notification) async {
     var value = notification.value;
     var notificationKey = notification.key;
     print(
@@ -121,7 +112,7 @@ class AtLocationNotificationListener {
     }
 
     var decryptedMessage = await atClientInstance!.encryptionService!
-        .decrypt(value, fromAtSign)
+        .decrypt(value ?? '', fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) => print('error in decrypting: $e'));
 
@@ -166,7 +157,8 @@ class AtLocationNotificationListener {
           await showMyDialog(fromAtSign, locationData);
         }
       } else {
-        var _result = await KeyStreamService().addDataToList(locationData);
+        var _result = await KeyStreamService()
+            .addDataToList(locationData, receivedkey: notificationKey);
         if (_result is KeyLocationModel) {
           await showMyDialog(fromAtSign, locationData);
         }
@@ -198,7 +190,8 @@ class AtLocationNotificationListener {
           await showMyDialog(fromAtSign, locationData);
         }
       } else {
-        var _result = await KeyStreamService().addDataToList(locationData);
+        var _result = await KeyStreamService()
+            .addDataToList(locationData, receivedkey: notificationKey);
         if (_result is KeyLocationModel) {
           await showMyDialog(fromAtSign, locationData);
         }

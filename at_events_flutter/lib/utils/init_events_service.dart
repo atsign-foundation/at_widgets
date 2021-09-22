@@ -83,28 +83,6 @@ Future<bool> createEvent(EventNotificationModel eventData) async {
   }
 }
 
-// Future<bool> updateEvent(EventNotificationModel eventData, String key) async {
-//   String regexKey;
-//   EventNotificationModel currentEventData;
-//   regexKey = await getRegexKeyFromKey(key);
-//   if (regexKey == null) {
-//     throw Exception('Event key not found');
-//   }
-//   currentEventData = await getValue(regexKey);
-//   eventData.atsignCreator = currentEventData.atsignCreator;
-
-//   try {
-//     var atKey = EventService().getAtKey(regexKey);
-//     var eventJson =
-//         EventNotificationModel.convertEventNotificationToJson(eventData);
-//     var result = await EventService().atClientInstance.put(atKey, eventJson);
-//     return result;
-//   } catch (e) {
-//     print('error in creating event:$e');
-//     return false;
-//   }
-// }
-
 Future<bool> deleteEvent(String key) async {
   String? regexKey, currentAtsign;
   EventNotificationModel? eventData;
@@ -124,10 +102,7 @@ Future<bool> deleteEvent(String key) async {
     var atKey = EventService().getAtKey(regexKey);
     var result = await EventService().atClientManager.atClient.delete(atKey);
     // ignore: unnecessary_null_comparison
-    if (result != null && result) {
-      // EventService().allEvents.removeWhere((element) => element.key == key);
-      // EventService().eventListSink.add(EventService().allEvents);
-    }
+    if (result != null && result) {}
     return result;
   } catch (e) {
     return false;
@@ -166,8 +141,6 @@ Future<List<EventNotificationModel>?> getEvents() async {
       );
 
   if (regexList.isEmpty) {
-    // EventService().allEvents = allEvents;
-    // EventService().eventListSink.add(allEvents);
     return [];
   }
 
@@ -181,10 +154,7 @@ Future<List<EventNotificationModel>?> getEvents() async {
       }
     }
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      // EventService().allEvents = allEvents;
-      // EventService().eventListSink.add(allEvents);
-    });
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {});
     return allEvents;
   } catch (e) {
     print(e);

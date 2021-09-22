@@ -1,6 +1,6 @@
 name: at_events_flutter
 description: A Flutter plugin project to manage events (time, place and attendees) using the @‎platform.
-version: 2.0.3
+version: 3.0.0
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
 
@@ -16,45 +16,19 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   geolocator: ^7.0.3
   
+  at_commons: ^3.0.0
+  at_client_mobile: ^3.0.1
+  at_contact: ^3.0.0
+  at_lookup: ^3.0.3
+
+  at_contacts_group_flutter: ^3.0.0
+  # at_chat_flutter: ^2.0.2
+  at_contacts_flutter: ^3.0.0
+  at_location_flutter: ^3.0.0
   at_common_flutter: ^2.0.2
-  at_contacts_flutter: ^2.0.3
-  at_commons: ^2.0.5
-  at_client_mobile: ^2.0.3
-  at_contact: ^2.0.3
-  at_lookup: ^2.0.4
-  at_contacts_group_flutter: ^2.0.3
-  at_chat_flutter: ^2.0.2
-  at_location_flutter:
-    path: ../at_location_flutter
+
   pedantic: ^1.11.0
 
-dependency_overrides:
-  file_picker: ^4.0.0
-  at_client:
-    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client
-  at_client_mobile:
-    path: /Users/apple/Desktop/client_projects/at_client_sdk/at_client_mobile
-  at_contacts_flutter:
-    path: ../at_contacts_flutter
-  at_contacts_group_flutter:
-    path: ../at_contacts_group_flutter
-  at_commons:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_commons
-      ref: trunk
-  at_lookup:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: at_lookup
-      ref: trunk
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: at_utils
-      ref: trunk
-  at_location_flutter:
-    path: ../at_location_flutter
 
 dev_dependencies:
   flutter_test:

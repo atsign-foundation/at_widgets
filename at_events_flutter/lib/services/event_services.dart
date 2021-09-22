@@ -7,7 +7,6 @@ import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_events_flutter/common_components/concurrent_event_request_dialog.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 // import 'package:at_events_flutter/services/sync_secondary.dart';
-import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
@@ -96,18 +95,10 @@ class EventService {
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
       var result = await atClientManager.atClient.put(
-        atKey, eventData,
-        //  isDedicated: MixedConstants.isDedicated,
+        atKey,
+        eventData,
       );
       atKey.sharedWith = jsonEncode(allAtsignList);
-
-      // await SyncSecondary().callSyncSecondary(
-      //   SyncOperation.notifyAll,
-      //   atKey: atKey,
-      //   notification: eventData,
-      //   operation: OperationEnum.update,
-      //   isDedicated: MixedConstants.isDedicated,
-      // );
 
       await atClientManager.atClient.notifyAll(
         atKey,
@@ -156,7 +147,6 @@ class EventService {
       var putResult = await atClientManager.atClient.put(
         atKey,
         notification,
-        // isDedicated: true,
       ); // creating a key and saving it for creator without adding any receiver atsign
 
       atKey.sharedWith = jsonEncode(
@@ -167,14 +157,6 @@ class EventService {
         notification,
         OperationEnum.update,
       );
-
-      // await SyncSecondary().callSyncSecondary(
-      //   SyncOperation.notifyAll,
-      //   atKey: atKey,
-      //   notification: notification,
-      //   operation: OperationEnum.update,
-      //   isDedicated: MixedConstants.isDedicated,
-      // );
 
       /// Dont need to sync as notifyAll is called
 
