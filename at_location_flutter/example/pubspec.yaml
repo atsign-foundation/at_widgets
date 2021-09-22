@@ -21,9 +21,6 @@ dependencies:
     path: ../
   latlong2: ^0.8.0
   at_onboarding_flutter: ^3.0.0
-  at_client_mobile: ^3.0.1
-  at_lookup: ^3.0.3
-  at_utils: ^3.0.0
   
 dev_dependencies:
   flutter_test:
