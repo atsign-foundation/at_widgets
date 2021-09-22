@@ -12,4 +12,7 @@ class MixedConstants {
 
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
   static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
+
+  static const String appNamespace = '';
+  static const String syncRegex = '';
 }

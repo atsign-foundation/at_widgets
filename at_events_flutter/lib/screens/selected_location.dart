@@ -144,8 +144,9 @@ class _SelectedLocationState extends State<SelectedLocation> {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                             } else {
-                              CustomToast()
-                                  .show('Cannot leave LABEL empty', context);
+                              CustomToast().show(
+                                  'Cannot leave LABEL empty', context,
+                                  isError: true);
                             }
                           },
                           width: 165.toWidth,
