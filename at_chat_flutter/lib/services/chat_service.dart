@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:at_chat_flutter/models/message_model.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -9,6 +10,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
+import 'package:flutter/material.dart';
 
 class ChatService {
   ChatService._();
@@ -88,6 +90,11 @@ class ChatService {
     var notificationKey = notification.key;
     var fromAtsign = notification.from;
 
+    // ignore notification for image key delete
+    if (notification.operation == 'delete') {
+      print('delete notification - ignored');
+      return;
+    }
     // remove from and to atsigns from the notification key
     if (notificationKey.contains(':')) {
       notificationKey = notificationKey.split(':')[1];
@@ -108,10 +115,10 @@ class ChatService {
           .catchError((e) {
         print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
       });
-      print('chat message => $decryptedMessage $fromAtsign');
       chatHistoryMessagesOther =
           json.decode((decryptedMessage) as String) as List;
-      chatHistory = interleave(chatHistoryMessages, chatHistoryMessagesOther);
+      chatHistory =
+          await interleave(chatHistoryMessages, chatHistoryMessagesOther);
       chatSink.add(chatHistory);
     }
   }
@@ -172,8 +179,8 @@ class ChatService {
       } else {
         chatHistoryMessagesOther = [];
       }
-
-      chatHistory = interleave(chatHistoryMessages, chatHistoryMessagesOther);
+      chatHistory =
+          await interleave(chatHistoryMessages, chatHistoryMessagesOther);
       chatSink.add(chatHistory);
     } catch (error) {
       print('Error in getting chat -> $error');
@@ -181,7 +188,7 @@ class ChatService {
     }
   }
 
-  List<Message> interleave<T>(List a, List b) {
+  Future<List<Message>> interleave<T>(List a, List b) async {
     List result = [];
     final ita = a.iterator;
     final itb = b.iterator;
@@ -191,8 +198,14 @@ class ChatService {
     while (hasa | hasb) {
       if (hasa && hasb) {
         valueA = Message.fromJson(ita.current);
+        if (valueA.contentType == MessageContentType.IMAGE) {
+          valueA.imageData = await getImage(valueA.message);
+        }
         valueB = Message.fromJson(itb.current);
         valueB.type = MessageType.INCOMING;
+        if (valueB.contentType == MessageContentType.IMAGE) {
+          valueB.imageData = await getImage(valueB.message);
+        }
         if (valueA.time > valueB.time) {
           result.add(valueA);
           hasa = ita.moveNext();
@@ -202,18 +215,30 @@ class ChatService {
         }
       } else if (hasa) {
         valueA = Message.fromJson(ita.current);
+        if (valueA.contentType == MessageContentType.IMAGE) {
+          valueA.imageData = await getImage(valueA.message);
+        }
         result.add(valueA);
         while (hasa = ita.moveNext()) {
           valueA = Message.fromJson(ita.current);
+          if (valueA.contentType == MessageContentType.IMAGE) {
+            valueA.imageData = await getImage(valueA.message);
+          }
           result.add(valueA);
         }
       } else if (hasb) {
         valueB = Message.fromJson(itb.current);
         valueB.type = MessageType.INCOMING;
+        if (valueB.contentType == MessageContentType.IMAGE) {
+          valueB.imageData = await getImage(valueB.message);
+        }
         result.add(valueB);
         while (hasb = itb.moveNext()) {
           valueB = Message.fromJson(itb.current);
           valueB.type = MessageType.INCOMING;
+          if (valueB.contentType == MessageContentType.IMAGE) {
+            valueB.imageData = await getImage(valueB.message);
+          }
           result.add(valueB);
         }
       }
@@ -222,7 +247,7 @@ class ChatService {
     return finalResult;
   }
 
-  Future<void> setChatHistory(Message message) async {
+  Future<void> setChatHistory(Message message, {Uint8List? imageData}) async {
     try {
       var key = AtKey()
         ..key = storageKey +
@@ -234,9 +259,12 @@ class ChatService {
       key.metadata?.ccd = true;
       key.metadata?.ttr = -1;
 
-      chatHistory.insert(0, message);
-      chatSink.add(chatHistory);
       chatHistoryMessages.insert(0, message.toJson());
+      if (message.contentType == MessageContentType.IMAGE) {
+        message.imageData = imageData ?? Uint8List(0);
+        chatHistory.insert(0, message);
+      }
+      chatSink.add(chatHistory);
       await atClientManager.atClient.put(key, json.encode(chatHistoryMessages));
     } catch (e) {
       print('Error in setting chat => $e');
@@ -250,27 +278,6 @@ class ChatService {
         sender: currentAtSign,
         time: DateTime.now().millisecondsSinceEpoch,
         type: MessageType.OUTGOING));
-
-    // TODO: change logic for group chat to accomodate delete
-    // var atKey = AtKey()
-    //   ..metadata = Metadata()
-    //   ..metadata?.ttr = -1
-    //   ..key = chatKey +
-    //       (isGroupChat ? groupChatId! : '') +
-    //       DateTime.now().millisecondsSinceEpoch.toString();
-    // if (isGroupChat) {
-    //   await Future.forEach(groupChatMembers!, (dynamic member) async {
-    //     if (member != currentAtSign) {
-    //       atKey.sharedWith = member;
-    //       var result = await atClientInstance.put(atKey, message);
-    //       print('send notification for groupChat => $result');
-    //     }
-    //   });
-    // } else {
-    //   atKey.sharedWith = chatWithAtSign;
-    //   var result = await atClientInstance.put(atKey, message);
-    //   print('send notification => $result');
-    // }
   }
 
   // deletes self owned messages only
@@ -283,8 +290,18 @@ class ChatService {
       ..sharedWith = chatWithAtSign
       ..metadata = Metadata();
     key.metadata?.ccd = true;
-
     try {
+      for (var i = 0; i < chatHistoryMessages.length; i++) {
+        var message = Message.fromJson(chatHistoryMessages[i]);
+        if (message.contentType == MessageContentType.IMAGE) {
+          // removing 'AtKey{' and ending '}'
+          var savedKey =
+              message.message?.substring(6, (message.message?.length ?? 1) - 1);
+
+          var key = constructKey(savedKey ?? '');
+          await atClientManager.atClient.delete(key);
+        }
+      }
       chatHistoryMessages = [];
       var result = await atClientManager.atClient
           .put(key, json.encode(chatHistoryMessages));
@@ -307,6 +324,18 @@ class ChatService {
     key.metadata?.ccd = true;
 
     try {
+      for (var i = 0; i < chatHistoryMessages.length; i++) {
+        var message = Message.fromJson(chatHistoryMessages[i]);
+        if (message.id == id &&
+            message.contentType == MessageContentType.IMAGE) {
+          // removing 'AtKey{' and ending '}'
+          var savedKey =
+              message.message?.substring(6, (message.message?.length ?? 1) - 1);
+          var key = constructKey(savedKey ?? '');
+
+          await atClientManager.atClient.delete(key);
+        }
+      }
       chatHistoryMessages.removeWhere((e) {
         var message = Message.fromJson(e);
         return message.id == id;
@@ -321,36 +350,93 @@ class ChatService {
     }
   }
 
-  Future<void> sendImageFile(File file) async {
-    List<int> imageBytes = file.readAsBytesSync();
-    final base64Image = base64Encode(imageBytes);
-    await setChatHistory(Message(
-      message: base64Image,
-      sender: currentAtSign,
-      time: DateTime.now().millisecondsSinceEpoch,
-      type: MessageType.OUTGOING,
-      contentType: MessageContentType.IMAGE,
-    ));
-
-    final metadata = Metadata();
-    var atKey = AtKey()
-      ..metadata = metadata
-      ..metadata?.ttr = -1
-      ..key = chatImageKey +
-          (isGroupChat ? groupChatId! : '') +
-          DateTime.now().millisecondsSinceEpoch.toString();
-    if (isGroupChat) {
-      await Future.forEach(groupChatMembers!, (dynamic member) async {
-        if (member != currentAtSign) {
-          atKey.sharedWith = member;
-          var result = await atClientManager.atClient.put(atKey, base64Image);
-          print('send notification for groupChat => $result');
-        }
-      });
+  Future<void> sendImageFile(BuildContext context, File file) async {
+    Uint8List imageBytes = file.readAsBytesSync();
+    var size = imageBytes.length;
+    if (size > 512000) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Image exceeds the maximum limit of 512KB. Please try with an image of lower size.')));
     } else {
-      atKey.sharedWith = chatWithAtSign;
-      var result = await atClientManager.atClient.put(atKey, base64Image);
-      print('send notification => $result');
+      var key = AtKey()
+        ..key = chatImageKey +
+            (isGroupChat ? groupChatId! : '') +
+            DateTime.now().millisecondsSinceEpoch.toString()
+        ..sharedBy = currentAtSign!
+        ..sharedWith = chatWithAtSign
+        ..metadata = Metadata();
+      key.metadata?.ccd = true;
+      key.metadata?.ttr = -1;
+      key.metadata?.isBinary = true;
+
+      if (isGroupChat) {
+        await Future.forEach(groupChatMembers!, (dynamic member) async {
+          if (member != currentAtSign) {
+            key.sharedWith = member;
+            var result = await atClientManager.atClient.put(key, imageBytes);
+            print('send notification for groupChat => $result');
+          }
+        });
+      } else {
+        var result = await atClientManager.atClient.put(key, imageBytes);
+        print('send notification => $result');
+      }
+      await setChatHistory(
+          Message(
+            message: key.toString(),
+            sender: currentAtSign,
+            time: DateTime.now().millisecondsSinceEpoch,
+            type: MessageType.OUTGOING,
+            contentType: MessageContentType.IMAGE,
+          ),
+          imageData: imageBytes);
     }
+  }
+
+  Future<Uint8List> getImage(String savedKey) async {
+    if (savedKey.startsWith('AtKey{')) {
+      // removing 'AtKey{' and ending '}'
+      savedKey = savedKey.substring(6, savedKey.length - 1);
+
+      var key = constructKey(savedKey);
+      var keyValue = await atClientManager.atClient.get(key).catchError((e) {
+        print('error in get ${e.errorCode} ${e.errorMessage}');
+      });
+      // ignore: unnecessary_null_comparison
+      if (keyValue != null && keyValue.value != null) {
+        return keyValue.value;
+      } else {
+        // return empty list
+        return Uint8List(0);
+      }
+    } else {
+      print('Invalid image key => $savedKey');
+      return Uint8List(0);
+    }
+  }
+
+  AtKey constructKey(String savedKey) {
+    var key = AtKey();
+    Map<String, String> keyFields = fieldSeparator(savedKey);
+    // construct key
+    key.key = keyFields['key'];
+    key.sharedBy = keyFields['sharedBy'];
+    key.sharedWith = keyFields['sharedWith'];
+    // prepare metadata
+    key.metadata = Metadata();
+    key.metadata?.ccd = true;
+    key.metadata?.ttr = -1;
+    key.metadata?.isBinary = true;
+    return key;
+  }
+
+  Map<String, String> fieldSeparator(String data) {
+    var fieldStrings = data.split(',');
+    Map<String, String> keyValues = {};
+    fieldStrings.forEach((value) {
+      var subParts = value.split(':');
+      keyValues[subParts[0].trim()] = subParts[1].trim();
+    });
+    return keyValues;
   }
 }

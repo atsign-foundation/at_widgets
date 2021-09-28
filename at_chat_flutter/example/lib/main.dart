@@ -93,24 +93,7 @@ class _MyAppState extends State<MyApp> {
                                 },
                               );
                             },
-                            child: Text('Show QR scanner screen',
-                                style: TextStyle(color: Colors.black)))),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Center(
-                        child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.black12),
-                            ),
-                            onPressed: () async {
-                              await Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SecondScreen()));
-                            },
-                            child: Text('Already authenticated',
+                            child: Text('Start onboarding',
                                 style: TextStyle(color: Colors.black)))),
                     SizedBox(
                       height: 25,
@@ -135,7 +118,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void runInitialOnboarding() async {
-    await clientSdkService.onboard();
+    await clientSdkService.onboard(context);
     setState(() {
       showOptions = true;
     });

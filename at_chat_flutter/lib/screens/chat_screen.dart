@@ -219,7 +219,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
     if ((result?.files ?? []).isNotEmpty) {
       final file = File(result!.files.first.path!);
-      await _chatService.sendImageFile(file);
+      await _chatService.sendImageFile(context, file);
     } else {
       // User canceled the picker
     }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/services/chat_service.dart';
@@ -78,7 +79,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
     if (widget.message?.contentType == MessageContentType.IMAGE) {
       return ConstrainedBox(
         constraints: BoxConstraints(maxHeight: 165.toWidth),
-        child: Image.memory(base64Decode(widget.message?.message ?? '')),
+        child: Image.memory(widget.message?.imageData ?? Uint8List(0)),
       );
     } else {
       return Text(
