@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -212,8 +211,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       loading = true;
     });
     try {
-      bool? isExist = await _onboardingService.isExistingAtsign(atsign);
-      if (isExist != null && isExist) {
+      bool isExist = await _onboardingService.isExistingAtsign(atsign);
+      if (isExist) {
         setState(() {
           loading = false;
         });
@@ -262,8 +261,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         loading = true;
       });
       for (PlatformFile pickedFile in result?.files ?? <PlatformFile>[]) {
-        String? path = pickedFile.path.toString();
-        File selectedFile = File(path.toString());
+        String? path = pickedFile.path;
+        if (path == null) {
+          throw const FileSystemException('FilePicker.pickFiles returned a null path');
+        }
+        File selectedFile = File(path);
         int length = selectedFile.lengthSync();
         if (length < 10) {
           await _showAlertDialog(_incorrectKeyFile);
@@ -292,7 +294,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         } else if (pickedFile.name.contains('atKeys')) {
           fileContents = File(path.toString()).readAsStringSync();
         } else if (aesKey == null && atsign == null && pickedFile.name.contains('_private_key.png')) {
-//read scan QRcode and extract atsign,aeskey
+          //read scan QRcode and extract atsign,aeskey
           String result = await FlutterQrReader.imgScan(path.toString());
           List<String> params = result.split(':');
           atsign = params[0];

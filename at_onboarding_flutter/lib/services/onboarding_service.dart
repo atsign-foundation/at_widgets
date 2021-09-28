@@ -163,10 +163,10 @@ class OnboardingService {
       return false;
     }
     atsign = formatAtSign(atsign);
-    List<String>? atSignsList = await getAtsignList();
+    List<String> atSignsList = await getAtsignList();
     ServerStatus? status = await _checkAtSignServerStatus(atsign!)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit), onTimeout: () => throw ResponseStatus.TIME_OUT);
-    bool isExist = atSignsList != null ? atSignsList.contains(atsign) : false;
+    bool isExist = atSignsList.isNotEmpty ? atSignsList.contains(atsign) : false;
     if (status == ServerStatus.teapot) {
       isExist = false;
     }
@@ -197,11 +197,9 @@ class OnboardingService {
   }
 
   Future<void> _sync(String? atSign) async {
+    // ignore: deprecated_member_use
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
-       _getClientServiceForAtsign(atSign)!
-          .atClientManager
-          .syncService
-          .sync();
+      _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
     }
   }
 }

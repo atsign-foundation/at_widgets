@@ -22,8 +22,7 @@ import 'package:geolocator/geolocator.dart';
 /// [showDialogBox] if false dialog box wont be shown.
 ///
 /// [streamAlternative] a function which will return updated lists of [KeyLocationModel]
-void initializeLocationService(AtClient atClientImpl, String currentAtSign,
-    GlobalKey<NavigatorState> navKey,
+void initializeLocationService(GlobalKey<NavigatorState> navKey,
     {required String mapKey,
     required String apiKey,
     bool showDialogBox = false,
@@ -42,8 +41,7 @@ void initializeLocationService(AtClient atClientImpl, String currentAtSign,
     print('Error in initializeLocationService $e');
   }
 
-  AtLocationNotificationListener().init(
-      atClientImpl, currentAtSign, navKey, rootDomain, showDialogBox,
+  AtLocationNotificationListener().init(navKey, rootDomain, showDialogBox,
       newGetAtValueFromMainApp: getAtValue);
   KeyStreamService().init(AtLocationNotificationListener().atClientInstance,
       streamAlternative: streamAlternative);

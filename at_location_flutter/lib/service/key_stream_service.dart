@@ -60,7 +60,7 @@ class KeyStreamService {
 
   /// adds all share and request location notifications to [atNotificationsSink]
   void getAllNotifications() async {
-    await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
+    AtClientManager.getInstance().syncService.sync();
 
     var allResponse = await atClientInstance!.getKeys(
       regex: 'sharelocation-',
@@ -107,11 +107,14 @@ class KeyStreamService {
     checkForDeleteRequestAck();
 
     SendLocationNotification().init(atClientInstance);
+
+    /// TODO: start monitor after this, so that our list is calculated, and any new/old upcoming notification can be compared
   }
 
   /// Updates any received notification with [haveResponded] true, if already responded.
   Future<void> checkForPendingLocations() async {
-    allLocationNotifications.forEach((notification) async {
+    await Future.forEach(allLocationNotifications,
+        (KeyLocationModel notification) async {
       if (notification.key!.contains(MixedConstants.SHARE_LOCATION)) {
         if ((notification.locationNotificationModel!.atsignCreator !=
                 currentAtSign) &&
@@ -233,17 +236,17 @@ class KeyStreamService {
   /// Checks for any missed notifications and updates respective notification
   void updateEventAccordingToAcknowledgedData() async {
     await Future.forEach((allLocationNotifications),
-        (dynamic notification) async {
-      if (notification.key.contains(MixedConstants.SHARE_LOCATION)) {
-        if ((notification.locationNotificationModel.atsignCreator ==
+        (KeyLocationModel notification) async {
+      if (notification.key!.contains(MixedConstants.SHARE_LOCATION)) {
+        if ((notification.locationNotificationModel!.atsignCreator ==
                 currentAtSign) &&
-            (!notification.locationNotificationModel.isAcknowledgment)) {
+            (!notification.locationNotificationModel!.isAcknowledgment)) {
           forShareLocation(notification);
         }
-      } else if (notification.key.contains(MixedConstants.REQUEST_LOCATION)) {
-        if ((notification.locationNotificationModel.atsignCreator ==
+      } else if (notification.key!.contains(MixedConstants.REQUEST_LOCATION)) {
+        if ((notification.locationNotificationModel!.atsignCreator ==
                 currentAtSign) &&
-            (!notification.locationNotificationModel.isAcknowledgment)) {
+            (!notification.locationNotificationModel!.isAcknowledgment)) {
           forRequestLocation(notification);
         }
       }
@@ -268,8 +271,8 @@ class KeyStreamService {
 
       var acknowledgedEvent =
           LocationNotificationModel.fromJson(jsonDecode(result.value));
-      // ignore: unawaited_futures
-      SharingLocationService()
+
+      await SharingLocationService()
           .updateWithShareLocationAcknowledge(acknowledgedEvent);
     }
   }
@@ -293,8 +296,8 @@ class KeyStreamService {
 
       var acknowledgedEvent =
           LocationNotificationModel.fromJson(jsonDecode(result.value));
-      // ignore: unawaited_futures
-      RequestLocationService()
+
+      await RequestLocationService()
           .updateWithRequestLocationAcknowledge(acknowledgedEvent);
     }
   }
@@ -310,11 +313,19 @@ class KeyStreamService {
           locationData.key!.split('requestlocation-')[1].split('@')[0];
     }
 
+    //// TODO: If we want to add any such notification that is not in the list, but we get a update
+    // var _locationDataNotPresent = true;
+
     for (var i = 0; i < allLocationNotifications.length; i++) {
       if (allLocationNotifications[i].key!.contains(newLocationDataKeyId)) {
         allLocationNotifications[i].locationNotificationModel = locationData;
+        // _locationDataNotPresent = false;
       }
     }
+
+    // if (_locationDataNotPresent) {
+    //   addDataToList(locationData);
+    // }
     notifyListeners();
 
     // Update location sharing
@@ -337,47 +348,68 @@ class KeyStreamService {
   }
 
   /// Adds new [KeyLocationModel] data for new received notification
-  Future<KeyLocationModel> addDataToList(
-      LocationNotificationModel locationNotificationModel) async {
-    String newLocationDataKeyId;
-    String tempKey;
-    if (locationNotificationModel.key!
-        .contains(MixedConstants.SHARE_LOCATION)) {
-      newLocationDataKeyId = locationNotificationModel.key!
-          .split('sharelocation-')[1]
-          .split('@')[0];
-      tempKey = 'sharelocation-$newLocationDataKeyId';
+  Future<dynamic> addDataToList(
+      LocationNotificationModel locationNotificationModel,
+      {String? receivedkey}) async {
+    /// with rSDK we can get previous notification, this will restrict us to add one notification twice
+    for (var _locationNotification in allLocationNotifications) {
+      if (_locationNotification.locationNotificationModel!.key ==
+          locationNotificationModel.key) {
+        return;
+      }
+    }
+
+    String? key;
+
+    if (receivedkey != null) {
+      key = receivedkey;
     } else {
-      newLocationDataKeyId = locationNotificationModel.key!
-          .split('requestlocation-')[1]
-          .split('@')[0];
-      tempKey = 'requestlocation-$newLocationDataKeyId';
+      String tempKey;
+      String newLocationDataKeyId;
+      if (locationNotificationModel.key!
+          .contains(MixedConstants.SHARE_LOCATION)) {
+        newLocationDataKeyId = locationNotificationModel.key!
+            .split('sharelocation-')[1]
+            .split('@')[0];
+        tempKey = 'sharelocation-$newLocationDataKeyId';
+      } else {
+        newLocationDataKeyId = locationNotificationModel.key!
+            .split('requestlocation-')[1]
+            .split('@')[0];
+        tempKey = 'requestlocation-$newLocationDataKeyId';
+      }
+
+      var keys = <String>[];
+      if (keys.isEmpty) {
+        keys = await atClientInstance!.getKeys(
+          regex: tempKey,
+        );
+      }
+      if (keys.isEmpty) {
+        keys = await atClientInstance!.getKeys(
+          regex: tempKey,
+          sharedWith: locationNotificationModel.receiver,
+        );
+      }
+      if (keys.isEmpty) {
+        keys = await atClientInstance!.getKeys(
+          regex: tempKey,
+          sharedBy: locationNotificationModel.key!.contains('share')
+              ? locationNotificationModel.atsignCreator
+              : locationNotificationModel.receiver,
+        );
+      }
+
+      if (keys.isEmpty) {
+        return;
+      }
+
+      key = keys[0];
     }
 
-    var key = <String>[];
-    if (key.isEmpty) {
-      key = await atClientInstance!.getKeys(
-        regex: tempKey,
-      );
-    }
-    if (key.isEmpty) {
-      key = await atClientInstance!.getKeys(
-        regex: tempKey,
-        sharedWith: locationNotificationModel.receiver,
-      );
-    }
-    if (key.isEmpty) {
-      key = await atClientInstance!.getKeys(
-        regex: tempKey,
-        sharedBy: locationNotificationModel.key!.contains('share')
-            ? locationNotificationModel.atsignCreator
-            : locationNotificationModel.receiver,
-      );
-    }
+    var tempHyridNotificationModel = KeyLocationModel(key: key);
 
-    var tempHyridNotificationModel = KeyLocationModel(key: key[0]);
-
-    tempHyridNotificationModel.atKey = getAtKey(key[0]);
+    tempHyridNotificationModel.atKey = getAtKey(key);
     tempHyridNotificationModel.atValue =
         await (getAtValue(tempHyridNotificationModel.atKey!));
     tempHyridNotificationModel.locationNotificationModel =

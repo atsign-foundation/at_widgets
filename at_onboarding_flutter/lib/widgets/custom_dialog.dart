@@ -169,22 +169,21 @@ class _CustomDialogState extends State<CustomDialog> {
                                     ),
                                     SizedBox(height: 20.toHeight),
                                     Container(
-                                            width: MediaQuery.of(context).size.width,
-                                            child: ElevatedButton(
-                                              style: ButtonStyle(
-                                                  backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
-                                              // key: Key(''),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isQrScanner = false;
-                                                });
-                                              },
-                                              child: Text(
-                                                'Cancel',
-                                                style: TextStyle(color: Colors.white, fontSize: 15.toFont),
-                                              ),
-                                            ))
-
+                                        width: MediaQuery.of(context).size.width,
+                                        child: ElevatedButton(
+                                          style:
+                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
+                                          // key: Key(''),
+                                          onPressed: () {
+                                            setState(() {
+                                              isQrScanner = false;
+                                            });
+                                          },
+                                          child: Text(
+                                            'Cancel',
+                                            style: TextStyle(color: Colors.white, fontSize: 15.toFont),
+                                          ),
+                                        ))
                                   ]),
                                 )
                               : Padding(
@@ -572,17 +571,16 @@ class _CustomDialogState extends State<CustomDialog> {
                                                   'Wrong email?',
                                                   style: TextStyle(color: Colors.grey),
                                                 )),
-                                    if (widget.isQR)
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            'Back',
-                                            style: TextStyle(
-                                                color: Colors.grey),
-                                          ))
+                                          if (widget.isQR)
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text(
+                                                  'Back',
+                                                  style: TextStyle(color: Colors.grey),
+                                                ))
                                         ]),
                                   if (!pair) ...<Widget>[
                                     SizedBox(height: 15.toHeight),
