@@ -83,9 +83,16 @@ class AtEventNotificationListener {
     var decryptedMessage = await atClientManager.atClient.encryptionService!
         .decrypt(value ?? '', fromAtSign)
         .catchError((e) {
-      print('error in decrypting: $e');
+      print('error in decrypting event: $e');
+      // TODO: only showing error dialog for closed testing group
+      showErrorDialog(e.toString());
     });
     print('decrypted message:$decryptedMessage');
+
+    if (decryptedMessage == null || decryptedMessage == '') {
+      showErrorDialog('error in decrpyting notification');
+      return;
+    }
 
     if (notificationKey.toString().contains('createevent')) {
       var eventData =
@@ -132,6 +139,26 @@ class AtEventNotificationListener {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return EventNotificationDialog(eventData: eventNotificationModel);
+      },
+    );
+  }
+
+  void showErrorDialog(String msg) {
+    showDialog(
+      context: navKey!.currentContext!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Something went wrong'),
+          content: Text(msg, style: TextStyle(fontSize: 16)),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(navKey!.currentContext!).pop();
+              },
+              child: Text('Ok', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        );
       },
     );
   }

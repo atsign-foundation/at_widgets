@@ -114,7 +114,15 @@ class AtLocationNotificationListener {
     var decryptedMessage = await atClientInstance!.encryptionService!
         .decrypt(value ?? '', fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
-        .catchError((e) => print('error in decrypting: $e'));
+        .catchError((e) {
+      print('error in decrypting: $e');
+      showErrorDialog(e.toString());
+    });
+
+    if (decryptedMessage == null || decryptedMessage == '') {
+      showErrorDialog('error in decrpyting notification');
+      return;
+    }
 
     if (atKey
         .toString()
@@ -215,5 +223,25 @@ class AtLocationNotificationListener {
         },
       );
     }
+  }
+
+  void showErrorDialog(String msg) {
+    showDialog(
+      context: navKey.currentContext!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Something went wrong'),
+          content: Text(msg, style: TextStyle(fontSize: 16)),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(navKey.currentContext!).pop();
+              },
+              child: Text('Ok', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
