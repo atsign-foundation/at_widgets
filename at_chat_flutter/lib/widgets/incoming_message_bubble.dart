@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
@@ -29,12 +30,12 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
     return Flex(
       direction: Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: 20.toWidth,
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 20),
           height: 45.toFont,
           width: 45.toFont,
           decoration: BoxDecoration(
@@ -49,7 +50,7 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
           width: 15.toWidth,
         ),
         Container(
-          padding: EdgeInsets.all(30.toHeight),
+          padding: EdgeInsets.all(16.toHeight),
           decoration: BoxDecoration(
             color: widget.color,
             borderRadius: BorderRadius.circular(10.toWidth),
@@ -67,7 +68,7 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
     if (widget.message?.contentType == MessageContentType.IMAGE) {
       return ConstrainedBox(
         constraints: BoxConstraints(maxHeight: 165.toWidth),
-        child: Image.memory(base64Decode(widget.message?.message ?? '')),
+        child: Image.memory(widget.message?.imageData ?? Uint8List(0)),
       );
     } else {
       return Text(
