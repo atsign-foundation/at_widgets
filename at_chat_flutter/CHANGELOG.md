@@ -1,3 +1,8 @@
+## 3.0.0
+- added ability to handle images
+- added ability to delete messages
+- Updated packages to rSDK
+
 ## 2.0.2
 - Updated repository link, description
 - Updated packages
