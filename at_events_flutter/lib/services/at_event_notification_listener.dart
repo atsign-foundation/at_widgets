@@ -90,7 +90,7 @@ class AtEventNotificationListener {
     print('decrypted message:$decryptedMessage');
 
     if (decryptedMessage == null || decryptedMessage == '') {
-      showErrorDialog('error in decrpyting notification');
+      showErrorDialog('error in decrypting notification');
       return;
     }
 

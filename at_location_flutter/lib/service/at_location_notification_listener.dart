@@ -120,7 +120,7 @@ class AtLocationNotificationListener {
     });
 
     if (decryptedMessage == null || decryptedMessage == '') {
-      showErrorDialog('error in decrpyting notification');
+      showErrorDialog('error in decrypting notification');
       return;
     }
 
