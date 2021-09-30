@@ -29,8 +29,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   at_common_flutter: ^2.0.2
   cupertino_icons: ^1.0.2
+  at_onboarding_flutter: ^2.1.1
   at_theme_flutter:
     path: ..
+
+# dependency_overrides:
+#   at_client:
+#     path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
+#   at_utils: ^3.0.0
+#   at_lookup: ^3.0.1
 
 dev_dependencies:
   flutter_test:

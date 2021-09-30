@@ -8,9 +8,20 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  at_common_flutter: ^2.0.2
   flutter:
     sdk: flutter
+  at_client_mobile: ^2.0.3
+  # at_client_mobile:
+  #   path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client_mobile
+  at_common_flutter: ^2.0.2
+  at_commons: ^2.0.5
+
+# dependency_overrides:
+#   at_client:
+#     path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
+#   at_utils: ^3.0.0
+#   at_lookup: ^3.0.1
+
 
 dev_dependencies:
   flutter_test:

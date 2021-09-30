@@ -1,5 +1,6 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
+import 'package:at_theme_flutter/services/theme_service.dart';
 import 'package:at_theme_flutter/src/widgets/color_card.dart';
 import 'package:at_theme_flutter/src/widgets/theme_mode_card.dart';
 import 'package:flutter/material.dart';
@@ -150,7 +151,8 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                       ),
                     ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      await ThemeService().updateThemeData(_appTheme);
                       widget.onApplyPressed?.call(_appTheme);
                       Navigator.pop(context);
                     },

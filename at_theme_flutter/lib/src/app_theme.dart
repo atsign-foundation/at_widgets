@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'color_constants.dart';
@@ -75,4 +77,17 @@ class AppTheme {
         .dependOnInheritedWidgetOfExactType<InheritedAppTheme>()!
         .theme;
   }
+
+  encoded() {
+    var appTheme = {
+      'brightness': brightness.toString(),
+      'primaryColor': primaryColor.toString(),
+      'secondaryColor': secondaryColor.toString(),
+      'backgroundColor': backgroundColor.toString()
+    };
+
+    return jsonEncode(appTheme);
+  }
+
+  decode(jsonMap) {}
 }

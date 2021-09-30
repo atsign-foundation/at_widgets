@@ -1,7 +1,11 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
+import 'package:at_theme_flutter/services/theme_service.dart';
+import 'package:at_theme_flutter/utils/init_theme_flutter.dart';
+import 'package:example/client_sdk_service.dart';
 import 'package:example/main.dart';
 import 'package:example/src/utils/color_constants.dart';
+import 'package:example/src/utils/constants.dart';
 import 'package:example/src/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -20,11 +24,18 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
+  ClientSdkService clientSdkService = ClientSdkService.getInstance();
 
   @override
   void initState() {
     super.initState();
+    print('clientSdkService.currentAtsign : ${clientSdkService.currentAtsign}');
+
+    initializeThemeService(clientSdkService.atClientServiceInstance!.atClient!,
+        clientSdkService.currentAtsign!,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
     tabController = TabController(length: 3, vsync: this);
+    getThemeData();
   }
 
   @override
@@ -63,7 +74,7 @@ class _ProfilePageState extends State<ProfilePage>
                         style: TextStyle(fontSize: 15.toFont),
                       ),
                       Text(
-                        "@atsign",
+                        clientSdkService.currentAtsign ?? 'Atsign',
                         style: TextStyle(
                             color: appTheme.secondaryColor,
                             fontSize: 15.toFont),
