@@ -20,7 +20,6 @@ Future<AtClientPreference> loadAtClientPreference() async {
         ..hiveStoragePath = dir.path
         ..commitLogPath = dir.path
         ..isLocalStoreRequired = true
-        ..syncStrategy = SyncStrategy.ONDEMAND
       // TODO set the rest of your AtClientPreference here
       ;
 }
@@ -34,8 +33,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
-
-  AtClientService? atClientService;
   AtClientPreference? atClientPreference;
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
@@ -57,17 +54,15 @@ class _MyAppState extends State<MyApp> {
                   context: context,
                   atClientPreference: atClientPreference!,
                   domain: AtEnv.rootDomain,
+                  rootEnvironment: AtEnv.rootEnvironment,
+                  appAPIKey: AtEnv.appApiKey,
                   onboard: (value, atsign) {
-                    setState(() {
-                      atClientService = value[atsign]!;
-                    });
                     _logger.finer('Successfully onboarded $atsign');
                   },
                   onError: (error) {
                     _logger.severe('Onboarding throws $error error');
                   },
                   nextScreen: const HomeScreen(),
-                  appAPIKey: AtEnv.appApiKey,
                 );
               },
               child: const Text(
@@ -81,9 +76,8 @@ class _MyAppState extends State<MyApp> {
 
       // * The context provider for the app
       builder: (BuildContext context, Widget? child) {
-        if (atClientService != null && atClientPreference != null) {
+        if (atClientPreference != null) {
           return AtContext(
-            atClientService: atClientService!,
             atClientPreference: atClientPreference!,
             child: child ?? Container(),
           );
@@ -105,11 +99,11 @@ class HomeScreen extends StatelessWidget {
     AtContext atContext = AtContext.of(context);
 
     // * Example Uses
-    /// AtClientService atClientService = atContext.atClientService;
+    /// AtClientManager atClientManager = atContext.atClientManager;
     /// AtClientImpl? atClientInstance = atContext.atClient;
     /// String? currentAtSign = atContext.currentAtSign;
     /// AtClientPreference atClientPreference = atContext.atClientPreference;
-    /// atContext.switchAtsign("@example");
+    /// atContext.setCurrentAtSign("@example");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -117,7 +111,8 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            const Text('Successfully onboarded and navigated to FirstAppScreen'),
+            const Text(
+                'Successfully onboarded and navigated to FirstAppScreen'),
             Text('Current @sign: ${atContext.currentAtSign}'),
           ],
         ),
