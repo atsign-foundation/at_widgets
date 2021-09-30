@@ -1,3 +1,6 @@
+## 3.0.0
+- package updated with rsdk changes
+
 ## 2.0.3
 - Updated public persona keys
 

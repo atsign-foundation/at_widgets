@@ -55,14 +55,16 @@ class _MyAppState extends State<MyApp> {
                             domain: MixedConstants.ROOT_DOMAIN,
                             appAPIKey: MixedConstants.devAPIKey,
                             appColor: Color.fromARGB(255, 240, 94, 62),
+                            rootEnvironment: RootEnvironment.Production,
                             onboard: (Map<String?, AtClientService> value,
                                 String? atsign) async {
                               clientSdkService.atClientServiceInstance =
                                   value[atsign];
                               await Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SecondScreen()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SecondScreen()),
+                              );
                             },
                             onError: (error) async {
                               await showDialog(

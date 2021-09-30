@@ -219,14 +219,16 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                   } else {
                                                     CustomToast().show(
                                                         'Something went wrong, try again.',
-                                                        context);
+                                                        context,
+                                                        isError: true);
                                                   }
                                                   LoadingDialog().hide();
                                                 } catch (e) {
                                                   print(e);
                                                   CustomToast().show(
                                                       'Something went wrong , please try again.',
-                                                      context);
+                                                      context,
+                                                      isError: true);
                                                   LoadingDialog().hide();
                                                 }
                                               })
@@ -246,17 +248,20 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                     .receiver);
                                         if (result == true) {
                                           CustomToast().show(
-                                              'Request Location sent', context);
+                                              'Request Location sent', context,
+                                              isSuccess: true);
                                         } else {
                                           CustomToast().show(
                                               'Something went wrong, try again.',
-                                              context);
+                                              context,
+                                              isError: true);
                                         }
                                       } catch (e) {
                                         print(e);
                                         CustomToast().show(
                                             'Something went wrong, try again.',
-                                            context);
+                                            context,
+                                            isError: true);
                                       }
                                     },
                                     child: Text(
@@ -307,11 +312,13 @@ class _CollapsedContentState extends State<CollapsedContent> {
       } else {
         LoadingDialog().hide();
 
-        CustomToast().show('Something went wrong, try again.', context);
+        CustomToast()
+            .show('Something went wrong, try again.', context, isError: true);
       }
     } catch (e) {
       print(e);
-      CustomToast().show('something went wrong , please try again.', context);
+      CustomToast().show('something went wrong , please try again.', context,
+          isError: true);
       LoadingDialog().hide();
     }
   }

@@ -1,3 +1,6 @@
+## 3.0.0
+- Resilient SDK changes for notification improvements
+
 ## 2.0.3
 - Bug fixes
 

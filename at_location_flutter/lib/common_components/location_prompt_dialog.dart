@@ -159,12 +159,13 @@ class _LocationPromptState extends State<LocationPrompt> {
     if (update) {
       CustomToast().show(
           'Share Location Request sent to ${widget.locationNotificationModel!.receiver}',
-          context);
+          context,
+          isSuccess: true);
     } else {
       CustomToast().show(
           'Something went wrong for ${widget.locationNotificationModel!.receiver}',
           context,
-          bgColor: AllColors().RED);
+          isError: true);
     }
   }
 
@@ -176,12 +177,13 @@ class _LocationPromptState extends State<LocationPrompt> {
     if (update) {
       CustomToast().show(
           'Prompted again to ${widget.locationNotificationModel!.atsignCreator}',
-          context);
+          context,
+          isSuccess: true);
     } else {
       CustomToast().show(
           'Something went wrong for ${widget.locationNotificationModel!.atsignCreator}',
           context,
-          bgColor: AllColors().RED);
+          isError: true);
     }
   }
 }

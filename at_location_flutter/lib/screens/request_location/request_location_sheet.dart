@@ -89,7 +89,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
       setState(() {
         isLoading = false;
       });
-      CustomToast().show('Atsign not valid', context);
+      CustomToast().show('Atsign not valid', context, isError: true);
       return;
     }
 
@@ -105,13 +105,14 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     }
 
     if (result == true) {
-      CustomToast().show('Request Location sent', context);
+      CustomToast().show('Request Location sent', context, isSuccess: true);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show('some thing went wrong , try again.', context);
+      CustomToast()
+          .show('some thing went wrong , try again.', context, isError: true);
       setState(() {
         isLoading = false;
       });

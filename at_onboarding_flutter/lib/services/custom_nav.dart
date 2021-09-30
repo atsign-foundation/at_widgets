@@ -18,6 +18,8 @@ class CustomNav {
   }
 
   void pop(BuildContext context) {
-    Navigator.pop(context);
+    if (Navigator.of(context).canPop()) {
+      Navigator.pop(context);
+    }
   }
 }

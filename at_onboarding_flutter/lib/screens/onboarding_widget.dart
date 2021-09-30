@@ -44,8 +44,29 @@ class Onboarding {
   final Widget? fistTimeAuthNextScreen;
 
   /// API authentication key for getting free atsigns
-  final String appAPIKey;
+  final String? appAPIKey;
 
+  /// Setting up [RootEnvironment] to **Staging** will use the staging environment for onboarding.
+  ///
+  ///```dart
+  /// RootEnvironment.Staging
+  ///```
+  ///
+  /// Setting up RootEnvironment to **Production** will use the production environment for onboarding.
+  ///
+  ///```dart
+  /// RootEnvironment.Production
+  ///```
+  ///
+  /// Setting up RootEnvironment to **Testing** will use the testing(docker) environment for onboarding.
+  ///
+  ///```dart
+  /// RootEnvironment.Testing
+  ///```
+  ///
+  /// **Note:**
+  /// API Key is required when you set [rootEnvironment] to production.
+  final RootEnvironment rootEnvironment;
   final AtSignLogger _logger = AtSignLogger('At Onboarding Flutter');
 
   Onboarding(
@@ -60,25 +81,33 @@ class Onboarding {
       this.appColor,
       this.logo,
       this.domain,
-      required this.appAPIKey}) {
-    _show();
+      required this.rootEnvironment,
+      this.appAPIKey}) {
+    AppConstants.rootEnvironment = this.rootEnvironment;
+    if (AppConstants.rootEnvironment == RootEnvironment.Production && appAPIKey == null) {
+      throw ('App API Key is required for production environment');
+    } else {
+      _show();
+    }
   }
   void _show() {
-    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) => OnboardingWidget(
-              atsign: atsign,
-              onboard: onboard,
-              onError: onError,
-              nextScreen: nextScreen,
-              fistTimeAuthNextScreen: fistTimeAuthNextScreen,
-              atClientPreference: atClientPreference,
-              appColor: appColor,
-              logo: logo,
-              domain: domain,
-              appAPIKey: appAPIKey));
+    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) async {
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => OnboardingWidget(
+          atsign: atsign,
+          onboard: onboard,
+          onError: onError,
+          nextScreen: nextScreen,
+          fistTimeAuthNextScreen: fistTimeAuthNextScreen,
+          atClientPreference: atClientPreference,
+          appColor: appColor,
+          logo: logo,
+          domain: domain ?? AppConstants.rootEnvironment.domain,
+          appAPIKey: appAPIKey ?? AppConstants.rootEnvironment.apikey!,
+        ),
+      );
     });
 
     _logger.info('Onboarding...!');
@@ -176,8 +205,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
           if (snapshot.hasData) {
             CustomNav().pop(context);
             WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
-              widget.onboard(_onboardingService.atClientServiceMap,
-                  _onboardingService.currentAtsign);
+              widget.onboard(_onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
             });
             if (widget.nextScreen != null) {
               CustomNav().push(widget.nextScreen, context);
@@ -188,8 +216,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
               return PairAtsignWidget(
                 getAtSign: true,
               );
-            } else if (snapshot.error == OnboardingStatus.ACTIVATE ||
-                snapshot.error == OnboardingStatus.RESTORE) {
+            } else if (snapshot.error == OnboardingStatus.ACTIVATE || snapshot.error == OnboardingStatus.RESTORE) {
               return PairAtsignWidget(
                 onboardStatus: snapshot.error as OnboardingStatus?,
               );

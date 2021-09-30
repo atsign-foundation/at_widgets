@@ -2,6 +2,8 @@
 
 ### Now for some internet optimism.
 
+[![GitHub License](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+
 # at_widgets
 This is a common repository for various flutter packages that are published on [pub.dev](https://pub.dev/publishers/atsign.org/packages)
 

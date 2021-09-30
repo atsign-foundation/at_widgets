@@ -1,3 +1,9 @@
+## 3.0.1
+- bug fix in image picker
+
+## 3.0.0
+- updated package with rsdk changes
+
 ## 2.0.4
 - Added contactSelectedHistory parameter in GroupContactView
 - Updated packages
