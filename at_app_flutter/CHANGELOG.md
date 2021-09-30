@@ -1,6 +1,10 @@
+## 1.1.0
+
+- Skipped version to match [at_app](https://pub.dev/packages/at_app)
+
 ## 1.0.0-rc
 
-- rsdk changes
+- Added rsdk support [at_client_mobile version 3.x.x](https://pub.dev/packages/at_client_mobile)
 
 ## 0.2.0-rc
 
