@@ -6,10 +6,7 @@ import '../../at_app_flutter.dart';
 /// AtContext is a wrapper class around the widget tree to provide global access
 /// to [atClientService] and [atClientPreference] via the BuildContext
 class AtContext extends InheritedWidget {
-  AtContext(
-      {Key? key,
-      required Widget child,
-      required this.atClientPreference})
+  AtContext({Key? key, required Widget child, required this.atClientPreference})
       : super(key: key, child: child);
 
   /// The AtClientManager is the abstraction over the at_client sdk
