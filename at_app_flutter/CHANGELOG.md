@@ -1,3 +1,7 @@
+## 1.0.0-rc
+
+- rsdk changes
+
 ## 0.2.0-rc
 
 - Updated the default AtClientPreference configuration
