@@ -262,8 +262,8 @@ class ChatService {
       chatHistoryMessages.insert(0, message.toJson());
       if (message.contentType == MessageContentType.IMAGE) {
         message.imageData = imageData ?? Uint8List(0);
-        chatHistory.insert(0, message);
       }
+      chatHistory.insert(0, message);
       chatSink.add(chatHistory);
       await atClientManager.atClient.put(key, json.encode(chatHistoryMessages));
     } catch (e) {
