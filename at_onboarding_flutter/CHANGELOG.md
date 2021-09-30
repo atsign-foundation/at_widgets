@@ -1,3 +1,6 @@
+## 3.0.1
+- bug fixes
+
 ## 3.0.0
 - Resilient SDK changes uptake for monitor, notification, and sync improvements.
 - Removed the domain parameter from the `Onboarding` widget.
