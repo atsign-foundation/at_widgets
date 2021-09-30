@@ -15,6 +15,7 @@ extension MessageContentTypeExt on MessageContentType {
   }
 }
 
+/// data of each message
 class Message {
   String? id;
   int? time;

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+/// default colors for message bubbles
 class CustomColors {
   static const Color incomingMessageColor = Color(0xffF1F2F3);
   static const Color outgoingMessageColor = Color(0xffC0D9EA);
   static const Color defaultColor = Color(0xFFF05E3E);
 }
 
+/// randomize the avatar background color based on alphabet
 class ContactInitialsColors {
   static final color = {
     'A': Color(0xFFAA0DFE),

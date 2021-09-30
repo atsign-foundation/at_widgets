@@ -13,23 +13,32 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
-class ChatScreen extends StatefulWidget {
-  final double? height;
-  final bool isScreen;
-  final Color outgoingMessageColor;
-  final Color incomingMessageColor;
-  final Color senderAvatarColor;
-  final Color receiverAvatarColor;
-  final String title;
-  final String? hintText;
+/// Widget to display chats as a screen or a bottom sheet.
 
-  /// Widget to display chats as a screen or a bottom sheet.
+class ChatScreen extends StatefulWidget {
   /// [height] specifies the height of bottom sheet/screen,
+  final double? height;
+
   /// [isScreen] toggles the screen behaviour to adapt for screen or bottom sheet,
+  final bool isScreen;
+
   /// [outgoingMessageColor] defines the color of outgoing message color,
+  final Color outgoingMessageColor;
+
   /// [incomingMessageColor] defines the color of incoming message color.
+  final Color incomingMessageColor;
+
+  /// [senderAvatarColor] defines the color of sender's avatar
+  final Color senderAvatarColor;
+
+  /// [receiverAvatarColor] defines the color of receiver's avatar
+  final Color receiverAvatarColor;
+
   /// [title] specifies the title text to be displayed.
+  final String title;
+
   /// [hintText] specifies the hint text to be displayed in the input box.
+  final String? hintText;
 
   const ChatScreen(
       {Key? key,
@@ -157,15 +166,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                             )
                                           : OutgoingMessageBubble(
                                               (id) async {
-                                                // final confirmed = await confirm(
-                                                //   this.context,
-                                                //   title: 'Confirm Dialog',
-                                                //   message: 'Do you want to delete this message?',
-                                                //   positiveActionTitle: 'Yes',
-                                                //   negativeActionTitle: 'No',
-                                                // );
-                                                // if (!confirmed) return;
-
                                                 var result = await _chatService
                                                     .deleteSelectedMessage(id);
                                                 Navigator.of(context).pop();

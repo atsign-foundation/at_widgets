@@ -49,6 +49,7 @@ class ChatService {
     chatStreamController.close();
   }
 
+  /// function to set parameters passed from the calling app
   void initChatService(
       AtClientManager atClientManagerFromApp,
       String currentAtSignFromApp,
@@ -61,8 +62,8 @@ class ChatService {
     await startMonitor();
   }
 
-  // startMonitor needs to be called at the beginning of session
-  // called again if outbound connection is dropped
+  /// startMonitor needs to be called at the beginning of session
+  /// called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
       AtClientManager.getInstance()
@@ -84,6 +85,7 @@ class ChatService {
     return str!;
   }
 
+  /// Captures and processes notifications
   void _notificationCallback(dynamic notification) async {
     print('notification received: $notification');
 
@@ -188,6 +190,7 @@ class ChatService {
     }
   }
 
+  /// function to mix the incoming and outgoing messages by timestamp
   Future<List<Message>> interleave<T>(List a, List b) async {
     List result = [];
     final ita = a.iterator;
@@ -280,7 +283,7 @@ class ChatService {
         type: MessageType.OUTGOING));
   }
 
-  // deletes self owned messages only
+  /// deletes self owned messages only
   Future<bool> deleteMessages() async {
     var key = AtKey()
       ..key = storageKey +
