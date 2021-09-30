@@ -5,14 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final preference = AtClientPreference()..namespace = 'PREF_NAMESPACE';
-  final atClientService = AtClientService();
 
   const titleText = 'title';
   const textWidget = Text(titleText);
   final contextWidget = AtContext(
     child: textWidget,
     atClientPreference: preference,
-    atClientService: atClientService,
   );
   group('AtContext Test', () {
     testWidgets('Widget Tree Test', (WidgetTester tester) async {
@@ -37,8 +35,6 @@ void main() {
 
       expect(atContext.atClientPreference, preference,
           reason: 'AtClientPreference did not match the context.');
-      expect(atContext.atClientService, atClientService,
-          reason: 'AtClientService did not match the context.');
     });
   });
 }
