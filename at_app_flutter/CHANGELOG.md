@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Fixed a bug causing atContext to be including in the widget tree prematurely.
+
 ## 1.1.0
 
 - Skipped version to match [at_app](https://pub.dev/packages/at_app)
