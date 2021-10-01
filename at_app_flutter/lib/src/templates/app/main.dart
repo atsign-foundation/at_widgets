@@ -37,6 +37,8 @@ class _MyAppState extends State<MyApp> {
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
+  bool isOnboarded = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -58,6 +60,9 @@ class _MyAppState extends State<MyApp> {
                   appAPIKey: AtEnv.appApiKey,
                   onboard: (value, atsign) {
                     _logger.finer('Successfully onboarded $atsign');
+                    setState(() {
+                      isOnboarded = true;
+                    });
                   },
                   onError: (error) {
                     _logger.severe('Onboarding throws $error error');
@@ -76,7 +81,7 @@ class _MyAppState extends State<MyApp> {
 
       // * The context provider for the app
       builder: (BuildContext context, Widget? child) {
-        if (atClientPreference != null) {
+        if (isOnboarded) {
           return AtContext(
             atClientPreference: atClientPreference!,
             child: child ?? Container(),
