@@ -1,4 +1,4 @@
-## 2.0.0-rc
+## 2.0.0
 
 - Remove the AtContext model which is no longer needed with at_client_mobile 3.x.x
 
@@ -9,13 +9,7 @@
 ## 1.1.0
 
 - Skipped version to match [at_app](https://pub.dev/packages/at_app)
-
-## 1.0.0-rc
-
 - Added rsdk support [at_client_mobile version 3.x.x](https://pub.dev/packages/at_client_mobile)
-
-## 0.2.0-rc
-
 - Updated the default AtClientPreference configuration
 - Adjusted folder structure to support multiple template types (more templates will come in a later update)
 
