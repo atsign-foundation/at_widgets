@@ -1,4 +1,4 @@
-## 2.0.0
+## 2.0.0-rc
 
 - Remove the AtContext model which is no longer needed with at_client_mobile 3.x.x
 
