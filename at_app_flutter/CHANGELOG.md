@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Remove the AtContext model which is no longer needed with at_client_mobile 3.x.x
+
 ## 1.1.1
 
 - Fixed a bug causing atContext to be including in the widget tree prematurely.
