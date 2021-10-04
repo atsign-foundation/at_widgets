@@ -37,8 +37,6 @@ class _MyAppState extends State<MyApp> {
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
-  bool isOnboarded = false;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,9 +47,12 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Builder(
           builder: (context) => Center(
-            child: TextButton(
+            child: ElevatedButton(
               onPressed: () async {
-                atClientPreference = await futurePreference;
+                var preference = await futurePreference;
+                setState(() {
+                  atClientPreference = preference;
+                });
                 Onboarding(
                   context: context,
                   atClientPreference: atClientPreference!,
@@ -60,9 +61,6 @@ class _MyAppState extends State<MyApp> {
                   appAPIKey: AtEnv.appApiKey,
                   onboard: (value, atsign) {
                     _logger.finer('Successfully onboarded $atsign');
-                    setState(() {
-                      isOnboarded = true;
-                    });
                   },
                   onError: (error) {
                     _logger.severe('Onboarding throws $error error');
@@ -70,25 +68,11 @@ class _MyAppState extends State<MyApp> {
                   nextScreen: const HomeScreen(),
                 );
               },
-              child: const Text(
-                'Onboard an @sign',
-                style: TextStyle(fontSize: 36),
-              ),
+              child: const Text('Onboard an @sign'),
             ),
           ),
         ),
       ),
-
-      // * The context provider for the app
-      builder: (BuildContext context, Widget? child) {
-        if (isOnboarded) {
-          return AtContext(
-            atClientPreference: atClientPreference!,
-            child: child ?? Container(),
-          );
-        }
-        return child ?? Container();
-      },
     );
   }
 }
@@ -99,16 +83,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // * Get the AtContext from build context
-    // ! NOTE: Only use this after successfully onboarding the @sign
-    AtContext atContext = AtContext.of(context);
+    /// Get the AtClientManager instance
+    var atClientManager = AtClientManager.getInstance();
 
-    // * Example Uses
-    /// AtClientManager atClientManager = atContext.atClientManager;
-    /// AtClientImpl? atClientInstance = atContext.atClient;
-    /// String? currentAtSign = atContext.currentAtSign;
-    /// AtClientPreference atClientPreference = atContext.atClientPreference;
-    /// atContext.setCurrentAtSign("@example");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -118,7 +95,10 @@ class HomeScreen extends StatelessWidget {
           children: [
             const Text(
                 'Successfully onboarded and navigated to FirstAppScreen'),
-            Text('Current @sign: ${atContext.currentAtSign}'),
+
+            /// Use the AtClientManager instance to get the current atsign
+            Text(
+                'Current @sign: ${atClientManager.atClient.getCurrentAtSign()}'),
           ],
         ),
       ),
