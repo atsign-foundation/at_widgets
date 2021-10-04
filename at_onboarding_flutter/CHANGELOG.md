@@ -1,3 +1,6 @@
+## 3.0.2
+- Added hide references to hide webpage references in custom dialog
+
 ## 3.0.1
 - bug fixes
 
