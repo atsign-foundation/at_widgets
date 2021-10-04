@@ -28,6 +28,9 @@ class CustomDialog extends StatefulWidget {
   ///will display the dialog with the [title] and the error details if set to true else displays the [message]. By default it is set to true.
   final bool isErrorDialog;
 
+  ///will hide webpage references.
+  final bool hideReferences;
+
   ///if set to true will display the close button.
   final bool showClose;
 
@@ -63,6 +66,7 @@ class CustomDialog extends StatefulWidget {
   CustomDialog(
       {this.context,
       this.isErrorDialog = false,
+      this.hideReferences = false,
       this.message,
       this.title,
       this.isAtsignForm = false,
@@ -132,9 +136,7 @@ class _CustomDialogState extends State<CustomDialog> {
                               widget.title ?? Strings.errorTitle,
                               style: CustomTextStyles.fontR16primary,
                             ),
-                            widget.message == ResponseStatus.TIME_OUT
-                                ? Icon(Icons.access_time, size: 18.toFont)
-                                : Icon(Icons.sentiment_dissatisfied, size: 18.toFont)
+                            widget.message == ResponseStatus.TIME_OUT ? Icon(Icons.access_time, size: 18.toFont) : Icon(Icons.sentiment_dissatisfied, size: 18.toFont)
                           ],
                         )
                       : widget.isAtsignForm
@@ -171,8 +173,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                     Container(
                                         width: MediaQuery.of(context).size.width,
                                         child: ElevatedButton(
-                                          style:
-                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
+                                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
                                           // key: Key(''),
                                           onPressed: () {
                                             setState(() {
@@ -211,28 +212,28 @@ class _CustomDialogState extends State<CustomDialog> {
                                             style: CustomTextStyles.fontR16primary,
                                           ),
                                         ),
-                                        IconButton(
-                                            icon: Icon(
-                                              Icons.help,
-                                              color: ColorConstants.appColor,
-                                              size: 18.toFont,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute<Widget>(
-                                                      builder: (BuildContext context) => WebViewScreen(
-                                                            title: Strings.faqTitle,
-                                                            url: Strings.faqUrl,
-                                                          )));
-                                            })
+                                        widget.hideReferences
+                                            ? SizedBox()
+                                            : IconButton(
+                                                icon: Icon(
+                                                  Icons.help,
+                                                  color: ColorConstants.appColor,
+                                                  size: 18.toFont,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute<Widget>(
+                                                          builder: (BuildContext context) => WebViewScreen(
+                                                                title: Strings.faqTitle,
+                                                                url: Strings.faqUrl,
+                                                              )));
+                                                })
                                       ],
                                     ),
                                     otp
                                         ? Text(
-                                            !widget.isQR
-                                                ? 'A verification code has been sent to ${_emailController.text}'
-                                                : 'A verification code has been sent to your registered email.',
+                                            !widget.isQR ? 'A verification code has been sent to ${_emailController.text}' : 'A verification code has been sent to your registered email.',
                                             style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.toFont),
                                           )
                                         : Container()
@@ -283,8 +284,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                       RegExp('[a-zA-Z0-9.@_]'),
                                                     ),
                                               // This inputFormatter function will convert all the input to lowercase.
-                                              TextInputFormatter.withFunction(
-                                                  (TextEditingValue oldValue, TextEditingValue newValue) {
+                                              TextInputFormatter.withFunction((TextEditingValue oldValue, TextEditingValue newValue) {
                                                 return newValue.copyWith(
                                                   text: newValue.text.toLowerCase(),
                                                   selection: newValue.selection,
@@ -351,8 +351,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                       ),
                                       SizedBox(width: 15.toWidth),
                                       ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(ColorConstants.appColor)),
+                                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(ColorConstants.appColor)),
                                         key: const Key(Strings.submitButton),
                                         onPressed: () async {
                                           if (_formKey.currentState!.validate()) {
@@ -373,8 +372,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                   Container(
                                       width: MediaQuery.of(context).size.width,
                                       child: ElevatedButton(
-                                        style:
-                                            ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
+                                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
                                         // key: Key(''),
                                         onPressed: () async {
                                           loading = true;
@@ -398,8 +396,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                   Container(
                                       width: MediaQuery.of(context).size.width,
                                       child: ElevatedButton(
-                                        style:
-                                            ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
+                                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
                                         // key: Key(''),
                                         onPressed: () async {
                                           await _verifyCameraPermissions();
@@ -420,8 +417,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                           ? Container(
                                               width: MediaQuery.of(context).size.width,
                                               child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
+                                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[800])),
                                                 // key: Key(''),
                                                 onPressed: () async {
                                                   loading = true;
@@ -430,8 +426,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                   loading = false;
                                                   stateSet(() {});
                                                 },
-                                                child:
-                                                    Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                                                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
                                                   Center(
                                                       child: Text(
                                                     'Refresh',
@@ -447,11 +442,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                               Container(
                                                   width: MediaQuery.of(context).size.width,
                                                   child: ElevatedButton(
-                                                    style: ButtonStyle(
-                                                        backgroundColor: MaterialStateProperty.all(
-                                                            (_emailController.text != '')
-                                                                ? Colors.grey[800]
-                                                                : Colors.grey[400])),
+                                                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all((_emailController.text != '') ? Colors.grey[800] : Colors.grey[400])),
                                                     // key: Key(''),
                                                     onPressed: () async {
                                                       if (_emailController.text != '') {
@@ -459,12 +450,9 @@ class _CustomDialogState extends State<CustomDialog> {
                                                         stateSet(() {});
                                                         bool status = false;
                                                         if (!wrongEmail) {
-                                                          status = await registerPersona(
-                                                              _atsignController.text, _emailController.text, context);
+                                                          status = await registerPersona(_atsignController.text, _emailController.text, context);
                                                         } else {
-                                                          status = await registerPersona(
-                                                              _atsignController.text, _emailController.text, context,
-                                                              oldEmail: oldEmail);
+                                                          status = await registerPersona(_atsignController.text, _emailController.text, context, oldEmail: oldEmail);
                                                         }
                                                         loading = false;
                                                         stateSet(() {});
@@ -503,11 +491,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                           Container(
                                               width: MediaQuery.of(context).size.width,
                                               child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all(
-                                                        (_emailController.text != '' || widget.isQR)
-                                                            ? Colors.grey[800]
-                                                            : Colors.grey[400])),
+                                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all((_emailController.text != '' || widget.isQR) ? Colors.grey[800] : Colors.grey[400])),
                                                 onPressed: () async {
                                                   if ((_emailController.text != '') || widget.isQR) {
                                                     loading = true;
@@ -515,11 +499,9 @@ class _CustomDialogState extends State<CustomDialog> {
 
                                                     String? result;
                                                     if (widget.isQR) {
-                                                      result = await validatewithAtsign(
-                                                          widget.atsign, verificationCode!, context);
+                                                      result = await validatewithAtsign(widget.atsign, verificationCode!, context);
                                                     } else {
-                                                      result = await validatePerson(_atsignController.text,
-                                                          _emailController.text, verificationCode, context);
+                                                      result = await validatePerson(_atsignController.text, _emailController.text, verificationCode, context);
                                                     }
 
                                                     loading = false;
@@ -546,8 +528,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                   if (widget.isQR) {
                                                     await loginWithAtsign(widget.atsign, context);
                                                   } else {
-                                                    await registerPersona(
-                                                        _atsignController.text, _emailController.text, context);
+                                                    await registerPersona(_atsignController.text, _emailController.text, context);
                                                   }
 
                                                   loading = false;
@@ -587,8 +568,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                     Container(
                                         width: MediaQuery.of(context).size.width,
                                         child: ElevatedButton(
-                                          style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(ColorConstants.appColor)),
+                                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(ColorConstants.appColor)),
                                           onPressed: () async {
                                             pair = true;
                                             _emailController.text = '';
@@ -704,8 +684,7 @@ class _CustomDialogState extends State<CustomDialog> {
     return status;
   }
 
-  Future<String?> validatePerson(String atsign, String email, String? otp, BuildContext context,
-      {bool isConfirmation = false}) async {
+  Future<String?> validatePerson(String atsign, String email, String? otp, BuildContext context, {bool isConfirmation = false}) async {
     dynamic data;
     String? cramSecret;
     List<String> atsigns = <String>[];
@@ -764,8 +743,7 @@ class _CustomDialogState extends State<CustomDialog> {
     return cramSecret;
   }
 
-  Future<String> validatewithAtsign(String atsign, String otp, BuildContext context,
-      {bool isConfirmation = false}) async {
+  Future<String> validatewithAtsign(String atsign, String otp, BuildContext context, {bool isConfirmation = false}) async {
     dynamic data;
     String? cramSecret;
 
@@ -843,9 +821,7 @@ class _CustomDialogState extends State<CustomDialog> {
           if (_onboardingService.isPkam!) {
             return 'Please provide valid backupkey file to continue.';
           } else {
-            return _onboardingService.serverStatus == ServerStatus.activated
-                ? 'Please provide a relevant backupkey file to authenticate.'
-                : 'Please provide a valid QRcode to authenticate.';
+            return _onboardingService.serverStatus == ServerStatus.activated ? 'Please provide a relevant backupkey file to authenticate.' : 'Please provide a valid QRcode to authenticate.';
           }
         } else if (error == ResponseStatus.TIME_OUT) {
           return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AppConstants.contactAddress} if the issue still persists.';
@@ -900,11 +876,7 @@ class _CustomDialogState extends State<CustomDialog> {
                   ),
                   TextSpan(
                       text: 'https://my.atsign.com',
-                      style: TextStyle(
-                          fontSize: 16.toFont,
-                          color: ColorConstants.appColor,
-                          letterSpacing: 0.5,
-                          decoration: TextDecoration.underline),
+                      style: TextStyle(fontSize: 16.toFont, color: ColorConstants.appColor, letterSpacing: 0.5, decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
                           String url = 'https://my.atsign.com';
@@ -956,11 +928,7 @@ class _CustomDialogState extends State<CustomDialog> {
           ),
           TextSpan(
               text: highLightText,
-              style: TextStyle(
-                  fontSize: 16.toFont,
-                  fontWeight: FontWeight.bold,
-                  color: ColorConstants.appColor,
-                  decoration: TextDecoration.underline),
+              style: TextStyle(fontSize: 16.toFont, fontWeight: FontWeight.bold, color: ColorConstants.appColor, decoration: TextDecoration.underline),
               recognizer: TapGestureRecognizer()
                 ..onTap = () async {
                   Uri params = Uri(
