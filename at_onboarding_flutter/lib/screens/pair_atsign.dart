@@ -29,7 +29,8 @@ import 'package:permission_handler/permission_handler.dart';
 class PairAtsignWidget extends StatefulWidget {
   final OnboardingStatus? onboardStatus;
   final bool getAtSign;
-  PairAtsignWidget({Key? key, this.onboardStatus, this.getAtSign = false}) : super(key: key);
+  final bool hideReferences;
+  PairAtsignWidget({Key? key, this.onboardStatus, this.getAtSign = false, this.hideReferences = false}) : super(key: key);
   @override
   _PairAtsignWidgetState createState() => _PairAtsignWidgetState();
 }
@@ -112,13 +113,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             return;
           }
           if (isScanner) Navigator.pop(context);
-          await Navigator.pushReplacement(context,
-              MaterialPageRoute<OnboardingService>(builder: (BuildContext context) => _onboardingService.nextScreen!));
+          await Navigator.pushReplacement(context, MaterialPageRoute<OnboardingService>(builder: (BuildContext context) => _onboardingService.nextScreen!));
         } else {
           await Navigator.pushReplacement(
             context,
-            MaterialPageRoute<PrivateKeyQRCodeGenScreen>(
-                builder: (BuildContext context) => PrivateKeyQRCodeGenScreen()),
+            MaterialPageRoute<PrivateKeyQRCodeGenScreen>(builder: (BuildContext context) => PrivateKeyQRCodeGenScreen()),
           );
         }
       }
@@ -226,8 +225,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
         } else {
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
-          await Navigator.pushReplacement(
-              context, MaterialPageRoute<Widget>(builder: (BuildContext context) => _onboardingService.nextScreen!));
+          await Navigator.pushReplacement(context, MaterialPageRoute<Widget>(builder: (BuildContext context) => _onboardingService.nextScreen!));
         }
       }
     } catch (e) {
@@ -357,12 +355,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         context: context,
         builder: (BuildContext context) {
           return CustomDialog(
-              context: context,
-              isErrorDialog: true,
-              showClose: true,
-              message: errorMessage,
-              title: title,
-              onClose: getClose == true ? onClose : () {});
+              context: context, hideReferences: widget.hideReferences, isErrorDialog: true, showClose: true, message: errorMessage, title: title, onClose: getClose == true ? onClose : () {});
         });
   }
 
@@ -395,17 +388,19 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           showBackButton: true,
           title: Strings.pairAtsignTitle,
           actionItems: <Widget>[
-            IconButton(
-                icon: Icon(Icons.help, size: 16.toFont),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute<Widget>(
-                          builder: (BuildContext context) => WebViewScreen(
-                                title: Strings.faqTitle,
-                                url: Strings.faqUrl,
-                              )));
-                }),
+            widget.hideReferences
+                ? SizedBox()
+                : IconButton(
+                    icon: Icon(Icons.help, size: 16.toFont),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute<Widget>(
+                              builder: (BuildContext context) => WebViewScreen(
+                                    title: Strings.faqTitle,
+                                    url: Strings.faqUrl,
+                                  )));
+                    }),
           ],
         ),
         body: SingleChildScrollView(
@@ -423,10 +418,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                       ),
                       RichText(
                           textAlign: TextAlign.center,
-                          text: TextSpan(style: CustomTextStyles.fontR16primary, children: <InlineSpan>[
-                            TextSpan(text: _pairingAtsign ?? ', ', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: Strings.backupKeyDescription)
-                          ])),
+                          text: TextSpan(
+                              style: CustomTextStyles.fontR16primary,
+                              children: <InlineSpan>[TextSpan(text: _pairingAtsign ?? ', ', style: const TextStyle(fontWeight: FontWeight.bold)), const TextSpan(text: Strings.backupKeyDescription)])),
                       SizedBox(
                         height: 25.toHeight,
                       ),
@@ -460,14 +454,12 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                                       Row(
                                         children: <Widget>[
                                           Center(
-                                            child: CircularProgressIndicator(
-                                                valueColor: AlwaysStoppedAnimation<Color>(ColorConstants.appColor)),
+                                            child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(ColorConstants.appColor)),
                                           ),
                                           SizedBox(width: 6.toWidth),
                                           Flexible(
                                             flex: 7,
-                                            child: Text(Strings.recurr_server_check,
-                                                textAlign: TextAlign.start, style: CustomTextStyles.fontR16primary),
+                                            child: Text(Strings.recurr_server_check, textAlign: TextAlign.start, style: CustomTextStyles.fontR16primary),
                                           ),
                                         ],
                                       ),
@@ -494,8 +486,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                             width: SizeConfig().screenWidth,
                             child: Center(
                                 child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                              CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(ColorConstants.appColor)),
+                              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(ColorConstants.appColor)),
                               SizedBox(height: 20.toHeight),
                               if (_loadingMessage != null)
                                 Text(
@@ -539,6 +530,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           child: CustomDialog(
             context: context,
             isAtsignForm: true,
+            hideReferences: widget.hideReferences,
             onLimitExceed: (List<String> atsignsList, String message) {
               Navigator.push(
                   context,
@@ -594,6 +586,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                   },
                   child: CustomDialog(
                     context: context,
+                    hideReferences: widget.hideReferences,
                     onValidate: (String atsign, String secret, bool isScanner) async {
                       _loadingMessage = Strings.loadingAtsignReady;
                       setState(() {});
@@ -668,6 +661,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             },
             child: CustomDialog(
               context: context,
+              hideReferences: widget.hideReferences,
               onValidate: (String atsign, String secret, bool isScanner) async {
                 _loadingMessage = Strings.loadingAtsignReady;
                 setState(() {});
@@ -710,6 +704,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         builder: (BuildContext context) {
           return CustomDialog(
             context: context,
+            hideReferences: widget.hideReferences,
             isErrorDialog: true,
             showClose: true,
             message: errorMessage,

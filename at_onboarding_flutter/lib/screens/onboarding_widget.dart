@@ -12,6 +12,9 @@ class Onboarding {
   ///Required field as for navigation.
   final BuildContext context;
 
+  ///hides the references to webpages if set to true
+  final bool? hideReferences;
+
   ///Onboards the given [atsign] if not null.
   ///if [atsign] is null then takes the atsign from keychain.
   ///if[atsign] is empty then it directly jumps into authenticate without performing onboarding. (or)
@@ -72,6 +75,7 @@ class Onboarding {
   Onboarding(
       {Key? key,
       required this.context,
+      this.hideReferences,
       this.atsign,
       required this.onboard,
       required this.onError,
@@ -99,6 +103,7 @@ class Onboarding {
           atsign: atsign,
           onboard: onboard,
           onError: onError,
+          hideReferences: this.hideReferences,
           nextScreen: nextScreen,
           fistTimeAuthNextScreen: fistTimeAuthNextScreen,
           atClientPreference: atClientPreference,
@@ -121,6 +126,9 @@ class OnboardingWidget extends StatefulWidget {
   ///if [atsign] is empty then it just presents pairAtSign screen without onboarding the atsign. (or)
   ///Just provide an empty string for ignoring existing atsign in keychain or app's atsign.
   final String? atsign;
+
+  ///hides the references to webpages if set to true
+  final bool? hideReferences;
 
   ///The atClientPreference [required] to continue with the onboarding.
   final AtClientPreference atClientPreference;
@@ -153,6 +161,7 @@ class OnboardingWidget extends StatefulWidget {
   OnboardingWidget(
       {Key? key,
       this.atsign,
+      this.hideReferences,
       required this.onboard,
       required this.onError,
       this.nextScreen,
@@ -196,6 +205,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
     if (widget.atsign == '') {
       return PairAtsignWidget(
         getAtSign: true,
+        hideReferences: widget.hideReferences ?? false,
       );
     }
 
@@ -215,10 +225,12 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
             if (snapshot.error == OnboardingStatus.ATSIGN_NOT_FOUND) {
               return PairAtsignWidget(
                 getAtSign: true,
+                hideReferences: widget.hideReferences ?? false,
               );
             } else if (snapshot.error == OnboardingStatus.ACTIVATE || snapshot.error == OnboardingStatus.RESTORE) {
               return PairAtsignWidget(
                 onboardStatus: snapshot.error as OnboardingStatus?,
+                hideReferences: widget.hideReferences ?? false,
               );
             } else {
               CustomNav().pop(context);
