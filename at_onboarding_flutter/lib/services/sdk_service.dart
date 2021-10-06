@@ -5,8 +5,9 @@ import 'package:at_commons/at_commons.dart';
 
 class SDKService {
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
-  Map<String?, AtClientService>? atClientServiceMap = Map<String?, AtClientService>();
-  List<String>? atSignsList ;
+  Map<String?, AtClientService>? atClientServiceMap =
+      Map<String?, AtClientService>();
+  List<String>? atSignsList;
   String? currentAtsign;
   String? lastOnboardedAtsign;
   Map<String?, bool>? monitorConnectionMap = Map<String?, bool>();
@@ -42,7 +43,7 @@ class SDKService {
   ///Returns list of atsigns stored in device storage.
   Future<List<String>?> getAtsignList() async {
     atSignsList = await _keyChainManager.getAtSignListFromKeychain();
-    return atSignsList ;
+    return atSignsList;
   }
 
   ///Makes [atsign] as primary in device storage and returns `true` for successful change.
@@ -69,7 +70,7 @@ class SDKService {
     }
     this.currentAtsign = null;
     this.lastOnboardedAtsign = null;
-    this.atSignsList ;
+    this.atSignsList;
   }
 
   ///Returns `true` if [atsign] is onboarded in the app.
@@ -77,6 +78,7 @@ class SDKService {
     return atClientServiceMap!.containsKey(atsign);
   }
 
+  /// Method used to sync local and remote server's data
   void sync() {
     AtClientManager.getInstance().syncService.sync();
   }

@@ -68,12 +68,15 @@ class _CustomResetButtonState extends State<CustomResetButton> {
         barrierDismissible: true,
         context: context,
         builder: (BuildContext context) {
-          return StatefulBuilder(builder: (BuildContext context, void Function(void Function()) stateSet) {
+          return StatefulBuilder(builder:
+              (BuildContext context, void Function(void Function()) stateSet) {
             return AlertDialog(
                 title: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: const <Widget>[
-                    Text(Strings.resetDescription, textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
+                    Text(Strings.resetDescription,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 15)),
                     SizedBox(
                       height: 10,
                     ),
@@ -84,7 +87,8 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                 ),
                 content: atsignsList == null
                     ? Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                        const Text(Strings.noAtsignToReset, style: TextStyle(fontSize: 15)),
+                        const Text(Strings.noAtsignToReset,
+                            style: TextStyle(fontSize: 15)),
                         Align(
                           alignment: Alignment.bottomRight,
                           child: TextButton(
@@ -92,7 +96,10 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                                 Navigator.pop(context);
                               },
                               child: const Text(AppConstants.closeButton,
-                                  style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 240, 94, 62)))),
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color:
+                                          Color.fromARGB(255, 240, 94, 62)))),
                         )
                       ])
                     : SingleChildScrollView(
@@ -103,14 +110,17 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                               onChanged: (bool? value) {
                                 isSelectAll = value!;
                                 atsignMap.isNotEmpty
-                                    ? atsignMap.updateAll((String? key, bool? value1) => value1 = value)
+                                    ? atsignMap.updateAll(
+                                        (String? key, bool? value1) =>
+                                            value1 = value)
                                     : true;
                                 // atsignMap[atsign] = value;
                                 stateSet(() {});
                               },
                               value: isSelectAll,
                               checkColor: Colors.white,
-                              activeColor: const Color.fromARGB(255, 240, 94, 62),
+                              activeColor:
+                                  const Color.fromARGB(255, 240, 94, 62),
                               title: const Text('Select All',
                                   style: TextStyle(
                                     // fontSize: 14,
@@ -121,33 +131,45 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                             for (String atsign in atsignsList)
                               CheckboxListTile(
                                 onChanged: (bool? value) {
-                                  atsignMap.isNotEmpty ? atsignMap[atsign] = value : true;
+                                  atsignMap.isNotEmpty
+                                      ? atsignMap[atsign] = value
+                                      : true;
                                   stateSet(() {});
                                 },
-                                value: atsignMap.isNotEmpty ? atsignMap[atsign] : true,
+                                value: atsignMap.isNotEmpty
+                                    ? atsignMap[atsign]
+                                    : true,
                                 checkColor: Colors.white,
-                                activeColor: const Color.fromARGB(255, 240, 94, 62),
+                                activeColor:
+                                    const Color.fromARGB(255, 240, 94, 62),
                                 title: Text('$atsign'),
                                 // trailing: Checkbox,
                               ),
                             const Divider(thickness: 0.8),
                             if (isSelectAtsign)
-                              const Text(Strings.resetErrorText, style: TextStyle(color: Colors.red, fontSize: 14)),
+                              const Text(Strings.resetErrorText,
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 14)),
                             const SizedBox(
                               height: 10,
                             ),
                             Text(Strings.resetWarningText,
                                 style: TextStyle(
-                                    color: ColorConstants.primary, fontWeight: FontWeight.bold, fontSize: 14)),
+                                    color: ColorConstants.primary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14)),
                             const SizedBox(
                               height: 10,
                             ),
                             Row(children: <Widget>[
                               TextButton(
                                 onPressed: () {
-                                  Map<String, bool?> tempAtsignMap = <String, bool>{};
+                                  Map<String, bool?> tempAtsignMap =
+                                      <String, bool>{};
                                   tempAtsignMap.addAll(atsignMap);
-                                  tempAtsignMap.removeWhere((String? key, bool? value) => value == false);
+                                  tempAtsignMap.removeWhere(
+                                      (String? key, bool? value) =>
+                                          value == false);
                                   if (tempAtsignMap.keys.toList().isEmpty) {
                                     isSelectAtsign = true;
                                     stateSet(() {});
@@ -157,7 +179,10 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                                   }
                                 },
                                 child: const Text(AppConstants.removeButton,
-                                    style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 240, 94, 62))),
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color:
+                                            Color.fromARGB(255, 240, 94, 62))),
                               ),
                               const Spacer(),
                               TextButton(
@@ -165,7 +190,8 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                                     Navigator.pop(context);
                                   },
                                   child: const Text(AppConstants.cancelButton,
-                                      style: TextStyle(fontSize: 15, color: Colors.black)))
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.black)))
                             ])
                           ],
                         ),
