@@ -203,7 +203,7 @@ class OnboardingService {
     return status.serverStatus;
   }
 
-  /// Returns the status of the atsign
+  /// Return a Future nullable [AtSignStatus].
   Future<AtSignStatus?> checkAtsignStatus({String? atsign}) async {
     atsign = atsign ?? _atsign;
     if (atsign == null) {
