@@ -97,7 +97,8 @@ class AtEventNotificationListener {
     if (notificationKey.toString().contains('createevent')) {
       var eventData =
           EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
-      if (eventData.isUpdate != null && eventData.isUpdate == false) {
+      if ((eventData.isUpdate != null && eventData.isUpdate == false) ||
+          !EventKeyStreamService().isEventSharedWithMe(eventData)) {
         // new event received
         // show dialog
         // add in event list

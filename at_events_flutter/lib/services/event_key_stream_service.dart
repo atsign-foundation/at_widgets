@@ -408,6 +408,15 @@ class EventKeyStreamService {
     notifyListeners();
   }
 
+  bool isEventSharedWithMe(EventNotificationModel eventData) {
+    for (var i = 0; i < allEventNotifications.length; i++) {
+      if (allEventNotifications[i].key!.contains(eventData.key!)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /// Checks current status of [currentAtSign] in an event and updates [EventLocationShare] location sending list.
   void checkLocationSharingForEventData(
       EventNotificationModel eventNotificationModel) {

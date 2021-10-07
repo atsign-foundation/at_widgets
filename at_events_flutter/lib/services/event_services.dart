@@ -23,7 +23,7 @@ class EventService {
 
   EventNotificationModel? eventNotificationModel;
   late AtClientManager atClientManager;
-  List<AtContact>? selectedContacts;
+  List<AtContact>? selectedContacts = [];
   List<String?> selectedContactsAtSigns = [];
   List<EventNotificationModel>? createdEvents;
   Function? onEventSaved;
@@ -189,27 +189,18 @@ class EventService {
 
   // ignore: always_declare_return_types
   addNewContactAndGroupMembers(List<GroupContactsModel?> selectedList) {
-    EventService().selectedContacts = [];
-    EventService().selectedContactsAtSigns = [];
-    EventService().eventNotificationModel!.group!.members = {};
+    if (EventService().eventNotificationModel!.group!.members == null) {
+      EventService().eventNotificationModel!.group!.members = {};
+    }
 
     selectedList.forEach((element) {
       if (element!.contact != null) {
         var newContact = getGroupMemberContact(element.contact!);
-        // EventService().eventNotificationModel!.group!.members!.add(newContact);
-        // EventService().selectedContacts!.add(newContact);
-        // selectedContactsAtSigns.add(newContact.atSign);
         addContactToList(newContact);
       } else if (element.group != null) {
         element.group!.members!.forEach((groupMember) {
           var newContact = getGroupMemberContact(groupMember);
-          // EventService()
-          //     .eventNotificationModel!
-          //     .group!
-          //     .members!
-          //     .add(newContact);
-          // EventService().selectedContacts!.add(newContact);
-          // selectedContactsAtSigns.add(newContact.atSign);
+
           addContactToList(newContact);
         });
       }
