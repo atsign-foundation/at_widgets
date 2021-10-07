@@ -629,7 +629,12 @@ class _CustomDialogState extends State<CustomDialog> {
     // setState(() {
     //   loading = true;
     // });
-    await _controller!.stopCamera();
+    try {
+      //await _controller!.stopCamera();
+      _controller!.stopCamera();
+    } catch (e) {
+      print(e.toString());
+    }
     print('SCANNED: => $data');
     List<String> values = data.split(':');
     await widget.onValidate!(values[0], values[1], true);
