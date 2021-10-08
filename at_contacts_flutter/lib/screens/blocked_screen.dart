@@ -69,7 +69,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                         initialData: _contactService.baseBlockedList,
                         stream: _contactService.blockedContactStream,
                         builder: (context,
-                            AsyncSnapshot<List<BaseContact>> snapshot) {
+                            AsyncSnapshot<List<BaseContact?>> snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.active) {
                             return (snapshot.data!.isEmpty)
@@ -94,7 +94,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                                     itemBuilder: (context, index) {
                                       return BlockedUserCard(
                                         blockeduser:
-                                            snapshot.data?[index].contact,
+                                            snapshot.data?[index]?.contact,
                                       );
                                     },
                                   );

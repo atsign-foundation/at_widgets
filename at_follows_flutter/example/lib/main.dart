@@ -115,7 +115,7 @@ class _MyAppState extends State<MyApp> {
           ctxt,
           MaterialPageRoute(
               builder: (context) => Connections(
-                  atClientserviceInstance: atService.atClientServiceInstance,
+                  atClientserviceInstance: atService.atClientServiceInstance!,
                   appColor: Colors.blue)));
     } catch (e) {
       print('Fetching follows throws $e exception');
@@ -128,25 +128,25 @@ class _MyAppState extends State<MyApp> {
   _onboard(context) async {
     var atService = AtService.getInstance();
     var preference = await atService.getAtClientPreference();
-
-    Onboarding(
-      domain: AppConstants.rootDomain,
-      appAPIKey: AppConstants.devAPIKey,
-      context: context,
-      onboard: (value, atsign) async {
-        atService.atClientServiceInstance = value[atsign];
-        atService.atClientInstance =
-            atService.atClientServiceInstance!.atClient;
-        _atsign = await atService.getAtSign();
-        Future.delayed(Duration(milliseconds: 300), () {
-          setState(() {});
-        });
-      },
-      onError: (error) {
-        Center(child: Text('Onboarding throws $error'));
-      },
-      nextScreen: null,
-      atClientPreference: preference,
-    );
+//
+//    Onboarding(
+//      domain: AppConstants.rootDomain,
+//      appAPIKey: AppConstants.devAPIKey,
+//      context: context,
+//      onboard: (value, atsign) async {
+//        atService.atClientServiceInstance = value[atsign];
+//        atService.atClientInstance =
+//            atService.atClientServiceInstance!.atClient;
+//        _atsign = await atService.getAtSign();
+//        Future.delayed(Duration(milliseconds: 300), () {
+//          setState(() {});
+//        });
+//      },
+//      onError: (error) {
+//        Center(child: Text('Onboarding throws $error'));
+//      },
+//      nextScreen: null,
+//      atClientPreference: preference,
+//    );
   }
 }

@@ -15,15 +15,20 @@ class TextStrings {
   String delete = 'Delete';
   String block = 'Block';
   String unblock = 'Unblock';
-  String emptyBlockedList = 'No blocked contacts';
+  String emptyBlockedList = 'No blocked @Signs';
   String blockContact = 'Block Contact';
   String unblockContact = 'Unblock Contact';
-  String blockedContacts = 'Blocked Contacts';
+  String blockedContacts = 'Blocked @Signs';
   String addContactHeading =
       'Are you sure you want to add the user to your contact list?';
   String yes = 'Yes';
   String no = 'No';
   List<String> contactFields = [
+    'firstname.wavi',
+    'lastname.wavi',
+    'image.wavi',
+  ];
+  List<String> contactFieldsPersona = [
     'firstname.persona',
     'lastname.persona',
     'image.persona',

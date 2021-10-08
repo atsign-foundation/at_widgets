@@ -1,11 +1,13 @@
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_chat_flutter/services/chat_service.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
-void initializeChatService(AtClientImpl atClientInstance, String currentAtSign,
+/// function exposed to calling app to set certain parameters
+void initializeChatService(
+    AtClientManager atClientManager, String currentAtSign,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
   ChatService()
-      .initChatService(atClientInstance, currentAtSign, rootDomain, rootPort);
+      .initChatService(atClientManager, currentAtSign, rootDomain, rootPort);
 }
 
 void setChatWithAtSign(String? atsign,
@@ -15,4 +17,9 @@ void setChatWithAtSign(String? atsign,
 
 void disposeContactsControllers() {
   ChatService().disposeControllers();
+}
+
+/// function to delete all messages from the calling app.
+Future<bool> deleteMessages() async {
+  return await ChatService().deleteMessages();
 }

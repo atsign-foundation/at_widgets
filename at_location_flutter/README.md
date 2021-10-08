@@ -6,15 +6,6 @@
 
 A flutter plugin project to share location between two atsigns.
 
-## Getting Started
-
-This plugin can be added to the project as git dependency in pubspec.yaml
-
-```
-dependencies:
-  at_location_flutter: ^0.0.3
-```
-
 ### Sample usage
 It is expected that the app will first create an AtClientService instance and authenticate an atsign.
 
@@ -24,7 +15,10 @@ The location service needs to be initialised with the `atClient` from the `AtCli
 initializeLocationService(
           clientSdkService.atClientServiceInstance.atClient,
           activeAtSign,
-          NavService.navKey);
+          NavService.navKey,
+          mapKey: 'xxxx',
+          apiKey: 'xxxx',
+          showDialogBox: true);
 ```
 
 Navigating to the maps view is done simply by using:

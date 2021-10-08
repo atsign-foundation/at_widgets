@@ -1,37 +1,41 @@
-## [2.0.1] - 07/09/2021
+## 3.0.1
+- updated documentation
+- bug fix for outgoing message not displayed immediately
 
-* Updated packages
+## 3.0.0
+- added ability to handle images
+- added ability to delete messages
+- Updated packages to rSDK
 
-## [2.0.0] - 07/01/2021
+## 2.0.2
+- Updated repository link, description
+- Updated packages
 
-* Null safe version
+## 2.0.1
+- Updated packages
 
-## [1.0.2] - 06/10/2021
+## 2.0.0
+- Null safe version
 
-* Fix for key saving failure
+## 1.0.2
+- Fix for key saving failure
 
-## [1.0.1] - 05/13/2021
+## 1.0.1
+- Updated dependent packages
+- Improved avatar placeholder
 
-* Updated dependent packages
-* Improved avatar placeholder
+## 1.0.0
+- Updated example app
 
-## [1.0.0] - 04/20/2021
+## 0.0.4
+- Updated dependent packages
 
-* Updated example app
+## 0.0.3
+- Fix for messages from different atsigns getting mixed on posting message
 
-## [0.0.4] - 02/18/2021
+## 0.0.2
+- Fix for messages from different atsigns getting mixed
+- Updated dependency packages for adding monitoring refresh from sdk
 
-* Updated dependent packages
-
-## [0.0.3] - 02/08/2021
-
-* Fix for messages from different atsigns getting mixed on posting message
-
-## [0.0.2] - 02/03/2021
-
-* Fix for messages from different atsigns getting mixed
-* Updated dependency packages for adding monitoring refresh from sdk
-
-## [0.0.1] - 01/14/2021
-
-* The initial release provides a widget screen for one on one chat.
+## 0.0.1
+- The initial release provides a widget screen for one on one chat.

@@ -1,14 +1,25 @@
-## 1.0.0
-- Initial version
-
-## 1.0.0+1
-- Notifications fix
-
-## 1.0.0+2
-- upgraded some packages to resolve dependency issues
-
+## 3.0.0
+- Resilient SDK changes uptake for monitor, notification and sync improvements
+## 2.0.4
+- ConnectionsService and ConnectionProvider instance exposed to app side
+## 2.0.3
+- Support for namespace migration changes
+## 2.0.2
+- Fix for setstate issue in init
+## 2.0.1
+- Fix sync related issues in follows list
 ## 2.0.0
 - support for .wavi keys and minor bug fixes
 - null-safety migration
-## 2.0.1
-- Fix sync related issues in follows list
+## 1.0.0+2
+- upgraded some packages to resolve dependency issues
+## 1.0.0+1
+- Notifications fix
+## 1.0.0
+- Initial version
+
+
+
+
+
+

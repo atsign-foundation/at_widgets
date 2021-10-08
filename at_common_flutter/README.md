@@ -8,15 +8,6 @@ A Flutter package to provide custom widgets for other atsign packages.
 
 ## Getting Started
 
-This plugin can be added to the project as git dependency in pubspec.yaml
-
-```
-dependencies:
-  at_common_flutter: ^1.0.0
-```
-
-### Plugin description
-
 This package provides the following custom widgets:
 
 #### CustomAppBar

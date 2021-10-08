@@ -2,13 +2,15 @@
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
+
 // ignore: library_prefixes
 import 'package:at_contacts_flutter/utils/text_strings.dart' as contactStrings;
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart'
-    // ignore: library_prefixes
+// ignore: library_prefixes
     as contactTextStyles;
 import 'package:flutter/material.dart';
 
@@ -23,7 +25,9 @@ class AddContactDialog extends StatefulWidget {
 
 class _AddContactDialogState extends State<AddContactDialog> {
   String atsignName = '';
+  String nickName = '';
   TextEditingController atSignController = TextEditingController();
+
   @override
   void dispose() {
     atSignController.dispose();
@@ -43,7 +47,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
     var _contactService = ContactService();
     var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
-      height: 100.toHeight * deviceTextFactor,
+      height: 140.toHeight * deviceTextFactor,
       width: 100.toWidth,
       child: SingleChildScrollView(
         child: AlertDialog(
@@ -66,8 +70,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
           content: ConstrainedBox(
             constraints: BoxConstraints(
                 maxHeight: (_contactService.getAtSignError == '')
-                    ? 280.toHeight
-                    : 310.toHeight * deviceTextFactor),
+                    ? 320.toHeight
+                    : 370.toHeight * deviceTextFactor),
             child: Column(
               children: [
                 SizedBox(
@@ -87,9 +91,11 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   ),
                   style: TextStyle(fontSize: 15.toFont),
                 ),
-                SizedBox(
-                  height: 10.toHeight,
-                ),
+                (_contactService.getAtSignError == '')
+                    ? Container()
+                    : SizedBox(
+                        height: 10.toHeight,
+                      ),
                 (_contactService.getAtSignError == '')
                     ? Container()
                     : Row(
@@ -102,6 +108,20 @@ class _AddContactDialogState extends State<AddContactDialog> {
                           )
                         ],
                       ),
+                SizedBox(
+                  height: 10.toHeight,
+                ),
+                TextFormField(
+                  autofocus: true,
+                  onChanged: (value) {
+                    nickName = value;
+                  },
+                  // validator: Validators.validateAdduser,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Nick Name',
+                  ),
+                  style: TextStyle(fontSize: 15.toFont),
+                ),
                 SizedBox(
                   height: 45.toHeight,
                 ),
@@ -118,8 +138,11 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               setState(() {
                                 isLoading = true;
                               });
-                              await _contactService.addAtSign(context,
-                                  atSign: atsignName);
+                              await _contactService.addAtSign(
+                                context,
+                                atSign: atsignName,
+                                nickName: nickName,
+                              );
 
                               setState(() {
                                 isLoading = false;

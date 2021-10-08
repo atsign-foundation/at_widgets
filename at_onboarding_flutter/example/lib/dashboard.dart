@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class DashBoard extends StatelessWidget {
+  const DashBoard({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: const Text('Dashboard'),
       ),
-      body: Center(child: Text('Successfully onboarded to dashboard')),
+      body: const Center(child: Text('Successfully onboarded to dashboard')),
     );
   }
 }

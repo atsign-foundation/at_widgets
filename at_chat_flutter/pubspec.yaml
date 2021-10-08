@@ -1,8 +1,8 @@
 name: at_chat_flutter
-description: A flutter plugin project to provide chat feature using atsigns and atprotocol.
-version: 2.0.1
-homepage: https://atsign.com/
-repository: https://github.com/atsign-foundation/at_widgets/tree/master/at_chat_flutter
+description: A Flutter plugin project to provide a chat feature between @‎signs built on the @‎platform to any Flutter application.
+version: 3.0.1
+homepage: https://atsign.dev
+repository: https://github.com/atsign-foundation/at_widgets
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -11,12 +11,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  at_contact: ^2.0.0
-  at_common_flutter: ^2.0.0
-  at_commons: ^2.0.1
-  at_client_mobile: ^2.0.2
-  at_lookup: ^2.0.1
+  at_contact: ^3.0.0
+  at_common_flutter: ^2.0.1
+  at_commons: ^3.0.0
+  at_client_mobile: ^3.0.1
+  at_client: ^3.0.1
+  at_lookup: ^3.0.1
   pedantic: ^1.11.0
+  #Picker
+  file_picker: ^4.0.0
 
 dev_dependencies:
   flutter_test:

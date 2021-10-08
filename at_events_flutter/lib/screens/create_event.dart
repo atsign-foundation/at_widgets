@@ -20,12 +20,12 @@ import 'package:at_contact/at_contact.dart';
 import '../at_events_flutter.dart';
 
 class CreateEvent extends StatefulWidget {
-  final AtClientImpl? atClientInstance;
+  final AtClientManager atClientManager;
   final EventNotificationModel? eventData;
   final ValueChanged<EventNotificationModel>? onEventSaved;
   final List<EventNotificationModel>? createdEvents;
   final isUpdate;
-  CreateEvent(this.atClientInstance,
+  CreateEvent(this.atClientManager,
       {this.isUpdate = false,
       this.eventData,
       this.onEventSaved,
@@ -44,13 +44,17 @@ class _CreateEventState extends State<CreateEvent> {
     super.initState();
     isLoading = false;
     EventService().init(
-        widget.atClientInstance,
         // ignore: prefer_if_null_operators
         widget.isUpdate != null ? widget.isUpdate : false,
         // ignore: prefer_if_null_operators
         widget.eventData != null ? widget.eventData : null);
     if (widget.createdEvents != null) {
       EventService().createdEvents = widget.createdEvents;
+    } else {
+      EventService().createdEvents = EventKeyStreamService()
+          .allEventNotifications
+          .map((e) => e.eventNotificationModel!)
+          .toList();
     }
 
     if (widget.onEventSaved != null) {
@@ -321,7 +325,6 @@ class _CreateEventState extends State<CreateEvent> {
                             return Center(
                               child: ErrorScreen(
                                 onPressed: EventService().init(
-                                    widget.atClientInstance,
                                     // ignore: prefer_if_null_operators
                                     widget.isUpdate != null
                                         ? widget.isUpdate
@@ -367,7 +370,7 @@ class _CreateEventState extends State<CreateEvent> {
 
     var formValid = EventService().createEventFormValidation();
     if (formValid is String) {
-      CustomToast().show(formValid, context);
+      CustomToast().show(formValid, context, isError: true);
       setState(() {
         isLoading = false;
       });
@@ -375,7 +378,13 @@ class _CreateEventState extends State<CreateEvent> {
     }
 
     var isOverlap = EventService().showConcurrentEventDialog(
-        widget.createdEvents, EventService().eventNotificationModel, context)!;
+        widget.createdEvents ??
+            EventKeyStreamService()
+                .allEventNotifications
+                .map((e) => e.eventNotificationModel!)
+                .toList(),
+        EventService().eventNotificationModel,
+        context)!;
 
     if (isOverlap) {
       setState(() {
@@ -389,13 +398,15 @@ class _CreateEventState extends State<CreateEvent> {
     if (result is bool && result == true) {
       CustomToast().show(
           EventService().isEventUpdate ? 'Event updated' : 'Event added',
-          context);
+          context,
+          isSuccess: true);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show('Something went wrong ${result.toString()}', context);
+      CustomToast().show('Something went wrong ${result.toString()}', context,
+          isError: true);
       setState(() {
         isLoading = false;
       });

@@ -60,7 +60,7 @@ class DesktopCustomInputField extends StatelessWidget {
                   hintStyle:
                       TextStyle(color: Color(0xFFBFBFBF), fontSize: 15.toFont),
                 ),
-                onTap: onTap as void Function() ?? () {},
+                onTap: (onTap ?? () {})(),
                 onChanged: (val) {
                   value!(val);
                 },
@@ -74,8 +74,7 @@ class DesktopCustomInputField extends StatelessWidget {
             ),
             icon != null
                 ? InkWell(
-                    onTap: onIconTap as void Function() ??
-                        onTap as void Function(),
+                    onTap: (onIconTap ?? onTap ?? () {})(),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Icon(

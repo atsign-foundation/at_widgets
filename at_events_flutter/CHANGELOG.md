@@ -1,16 +1,25 @@
-## [2.0.0] - 07/09/2021
+## 3.0.0
+- Resilient SDK changes for notification improvements
 
-* Null safe version
+## 2.0.3
+- Bug fixes
 
-## [1.0.2] - 05/13/2021
+## 2.0.2
+- Updated repository link and description
+- Updated packages
 
-* Updated dependent packages
-* Improved notification handling
+## 2.0.1
+- Updated documentation
 
-## [1.0.1] - 04/23/2021
+## 2.0.0
+- Null safe version
 
-* Resolved static analysis issues
+## 1.0.2
+- Updated dependent packages
+- Improved notification handling
 
-## [1.0.0] - 04/20/2021
+## 1.0.1
+- Resolved static analysis issues
 
-* The initial release consists of two functionalities - create a new event and view a list of already created events
+## 1.0.0
+- The initial release consists of two functionalities - create a new event and view a list of already created events

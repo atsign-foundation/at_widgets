@@ -22,7 +22,7 @@ class ColorConstants {
   static const Color redText = Color(0xFFF05E3E);
 
   ///dark background color
-  static Color dark = Color.fromARGB(255, 45, 42, 48);
+  static Color dark = const Color.fromARGB(255, 45, 42, 48);
 
   static Color light = Colors.white;
 
@@ -31,7 +31,7 @@ class ColorConstants {
   static Color? lightBackgroundColor = Colors.grey[600];
 
   static set setAppColor(Color? color) => _highLightColor = color;
-  static get appColor => _highLightColor ?? Colors.black;
+  static Color get appColor => _highLightColor ?? Colors.black;
 
   static set darkTheme(bool value) {
     _isDarkTheme = value;

@@ -7,7 +7,6 @@ import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_events_flutter/common_components/concurrent_event_request_dialog.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 // import 'package:at_events_flutter/services/sync_secondary.dart';
-import 'package:at_location_flutter/service/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,7 @@ class EventService {
   bool isEventUpdate = false;
 
   EventNotificationModel? eventNotificationModel;
-  AtClientImpl? atClientInstance;
+  late AtClientManager atClientManager;
   List<AtContact>? selectedContacts;
   List<String?> selectedContactsAtSigns = [];
   List<EventNotificationModel>? createdEvents;
@@ -38,8 +37,7 @@ class EventService {
       _atEventNotificationController.sink;
 
   // ignore: always_declare_return_types
-  init(AtClientImpl? _atClientInstance, bool isUpdate,
-      EventNotificationModel? eventData) {
+  init(bool isUpdate, EventNotificationModel? eventData) {
     if (eventData != null) {
       EventService().eventNotificationModel = EventNotificationModel.fromJson(
           jsonDecode(EventNotificationModel.convertEventNotificationToJson(
@@ -55,7 +53,7 @@ class EventService {
     }
     isEventUpdate = isUpdate;
     print('isEventUpdate:$isEventUpdate');
-    atClientInstance = _atClientInstance;
+    atClientManager = AtClientManager.getInstance();
     Future.delayed(Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });
@@ -96,15 +94,16 @@ class EventService {
 
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
-      var result = await atClientInstance!
-          .put(atKey, eventData, isDedicated: MixedConstants.isDedicated);
+      var result = await atClientManager.atClient.put(
+        atKey,
+        eventData,
+      );
       atKey.sharedWith = jsonEncode(allAtsignList);
-      await SyncSecondary().callSyncSecondary(
-        SyncOperation.notifyAll,
-        atKey: atKey,
-        notification: eventData,
-        operation: OperationEnum.update,
-        isDedicated: MixedConstants.isDedicated,
+
+      await atClientManager.atClient.notifyAll(
+        atKey,
+        eventData,
+        OperationEnum.update,
       );
 
       EventKeyStreamService()
@@ -129,7 +128,8 @@ class EventService {
 
       eventNotification.key =
           'createevent-${DateTime.now().microsecondsSinceEpoch}';
-      eventNotification.atsignCreator = atClientInstance!.currentAtSign;
+      eventNotification.atsignCreator =
+          atClientManager.atClient.getCurrentAtSign();
       var notification = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
 
@@ -142,19 +142,20 @@ class EventService {
         ..key = eventNotification.key
         ..sharedBy = eventNotification.atsignCreator;
 
-      var putResult = await atClientInstance!.put(atKey, notification,
-          isDedicated:
-              true); // creating a key and saving it for creator without adding any receiver atsign
+      print('key: ${atKey.key}');
+
+      var putResult = await atClientManager.atClient.put(
+        atKey,
+        notification,
+      ); // creating a key and saving it for creator without adding any receiver atsign
 
       atKey.sharedWith = jsonEncode(
           [...selectedContactsAtSigns]); //adding event members in atkey
 
-      await SyncSecondary().callSyncSecondary(
-        SyncOperation.notifyAll,
-        atKey: atKey,
-        notification: notification,
-        operation: OperationEnum.update,
-        isDedicated: MixedConstants.isDedicated,
+      await atClientManager.atClient.notifyAll(
+        atKey,
+        notification,
+        OperationEnum.update,
       );
 
       /// Dont need to sync as notifyAll is called
@@ -195,22 +196,45 @@ class EventService {
     selectedList.forEach((element) {
       if (element!.contact != null) {
         var newContact = getGroupMemberContact(element.contact!);
-        EventService().eventNotificationModel!.group!.members!.add(newContact);
-        EventService().selectedContacts!.add(newContact);
-        selectedContactsAtSigns.add(newContact.atSign);
+        // EventService().eventNotificationModel!.group!.members!.add(newContact);
+        // EventService().selectedContacts!.add(newContact);
+        // selectedContactsAtSigns.add(newContact.atSign);
+        addContactToList(newContact);
       } else if (element.group != null) {
         element.group!.members!.forEach((groupMember) {
           var newContact = getGroupMemberContact(groupMember);
-          EventService()
-              .eventNotificationModel!
-              .group!
-              .members!
-              .add(newContact);
-          EventService().selectedContacts!.add(newContact);
-          selectedContactsAtSigns.add(newContact.atSign);
+          // EventService()
+          //     .eventNotificationModel!
+          //     .group!
+          //     .members!
+          //     .add(newContact);
+          // EventService().selectedContacts!.add(newContact);
+          // selectedContactsAtSigns.add(newContact.atSign);
+          addContactToList(newContact);
         });
       }
     });
+  }
+
+  void addContactToList(AtContact _selectedContact) {
+    var _containsContact = false;
+
+    // to prevent one contact from getting added again
+    EventService().selectedContacts!.forEach((_contact) {
+      if (_selectedContact.atSign == _contact.atSign) {
+        _containsContact = true;
+      }
+    });
+
+    if (!_containsContact) {
+      EventService()
+          .eventNotificationModel!
+          .group!
+          .members!
+          .add(_selectedContact);
+      EventService().selectedContacts!.add(_selectedContact);
+      selectedContactsAtSigns.add(_selectedContact.atSign);
+    }
   }
 
   // ignore: always_declare_return_types
@@ -274,29 +298,32 @@ class EventService {
     var isOverlap = false;
     EventNotificationModel? overlapEvent = EventNotificationModel();
 
-    hybridEvents.forEach((element) {
-      if (!eventNotificationModel!.event!.isRecurring!) {
-        if (dateToString(eventNotificationModel!.event!.date!) ==
+    for (var element in hybridEvents) {
+      if (!element!.event!.isRecurring!) {
+        if (dateToString(element.event!.date!) ==
             dateToString(newEvent!.event!.date!)) {
-          var event = eventNotificationModel!.event!;
+          var event = element.event!;
           if (event.startTime!.hour >= newEvent.event!.startTime!.hour &&
               event.startTime!.hour <= newEvent.event!.endTime!.hour) {
             isOverlap = true;
-            overlapEvent = eventNotificationModel;
+            overlapEvent = element;
+            return [isOverlap, overlapEvent];
           }
           if (event.startTime!.hour <= newEvent.event!.startTime!.hour &&
               event.endTime!.hour >= newEvent.event!.endTime!.hour) {
             isOverlap = true;
-            overlapEvent = eventNotificationModel;
+            overlapEvent = element;
+            return [isOverlap, overlapEvent];
           }
           if (event.endTime!.hour >= newEvent.event!.startTime!.hour &&
               event.endTime!.hour <= newEvent.event!.endTime!.hour) {
             isOverlap = true;
-            overlapEvent = eventNotificationModel;
+            overlapEvent = element;
           }
         }
       }
-    });
+    }
+
     return [isOverlap, overlapEvent];
   }
 

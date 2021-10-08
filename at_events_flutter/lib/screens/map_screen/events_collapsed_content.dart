@@ -19,7 +19,10 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
 
   eventListenerKeyword.group!.members!.forEach((groupMember) {
     if (groupMember.atSign ==
-        AtEventNotificationListener().atClientInstance!.currentAtSign) {
+        AtEventNotificationListener()
+            .atClientManager
+            .atClient
+            .getCurrentAtSign()) {
       isExited = groupMember.tags!['isExited'];
     }
   });
@@ -87,8 +90,7 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                                     .navKey!
                                     .currentContext!,
                                 CreateEvent(
-                                  AtEventNotificationListener()
-                                      .atClientInstance,
+                                  AtEventNotificationListener().atClientManager,
                                   isUpdate: true,
                                   eventData: eventListenerKeyword,
                                   onEventSaved: (event) {},
@@ -147,68 +149,6 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
               ],
             ),
           ),
-          // StreamBuilder(
-          //     stream: LocationService().atHybridUsersStream,
-          //     builder: (context, AsyncSnapshot<List<HybridModel>> snapshot) {
-          //       if (snapshot.connectionState == ConnectionState.active) {
-          //         if (snapshot.hasError) {
-          //           return SeeParticipants(() => null);
-          //         } else {
-          //           var data = snapshot.data;
-
-          //           ParticipantsData().putData(data);
-          //           ParticipantsData()
-          //               .putAtsign(LocationService().atsignsAtMonitor);
-
-          //           return SeeParticipants(() => bottomSheet(
-          //               context,
-          //               Participants(
-          //                 true,
-          //                 data: data,
-          //                 atsign: LocationService().atsignsAtMonitor,
-          //               ),
-          //               422));
-          //         }
-          //       } else {
-          //         ParticipantsData().putData([]);
-          //         ParticipantsData()
-          //             .putAtsign(LocationService().atsignsAtMonitor);
-
-          //         return SeeParticipants(() => bottomSheet(
-          //             context,
-          //             Participants(
-          //               false,
-          //               atsign: LocationService().atsignsAtMonitor,
-          //             ),
-          //             422));
-          //       }
-          //     }),
-          ///
-          // isSharingEvent = false;
-          //           if (widget.isAdmin) {
-          //             if (snapshot.data.isSharing) isSharingEvent = true;
-          //           } else {
-          //             if (snapshot.data != null) {
-          //               snapshot.data.group.members.forEach((groupMember) {
-          //                 if (groupMember.atSign ==
-          //                     BackendService.getInstance()
-          //                         .atClientServiceInstance
-          //                         .atClient
-          //                         .currentAtSign) {
-          //                   if (groupMember.tags['isSharing'] == true) {
-          //                     isSharingEvent = true;
-          //                   }
-          //                 }
-          //               });
-          //             }
-          //           }
-          // return
-
-          /// Next
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   mainAxisSize: MainAxisSize.min,
-          // children: [
           InkWell(
             onTap: () => bottomSheet(
                 AtEventNotificationListener().navKey!.currentContext!,
@@ -267,21 +207,24 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                               'Request to update data is submitted',
                               AtEventNotificationListener()
                                   .navKey!
-                                  .currentContext);
+                                  .currentContext,
+                              isSuccess: true);
                         }
                       } else {
                         CustomToast().show(
                             'something went wrong , please try again.',
                             AtEventNotificationListener()
                                 .navKey!
-                                .currentContext);
+                                .currentContext,
+                            isError: true);
                       }
                       LoadingDialog().hide();
                     } catch (e) {
                       print(e);
                       CustomToast().show(
                           'something went wrong , please try again.',
-                          AtEventNotificationListener().navKey!.currentContext);
+                          AtEventNotificationListener().navKey!.currentContext,
+                          isError: true);
                       LoadingDialog().hide();
                     }
                   })
@@ -293,26 +236,44 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
               : Expanded(
                   child: InkWell(
                     onTap: () async {
-                      var isExited = true;
-                      eventListenerKeyword.group!.members!
-                          .forEach((groupMember) {
-                        if (groupMember.atSign == currentAtSign) {
-                          if (groupMember.tags!['isExited'] == false) {
-                            isExited = false;
-                          }
-                        }
-                      });
-                      if (!isExited) {
+                      // var isExited = true;
+                      // eventListenerKeyword.group!.members!
+                      //     .forEach((groupMember) {
+                      //   if (groupMember.atSign == currentAtSign) {
+                      //     if (groupMember.tags!['isExited'] == false) {
+                      //       isExited = false;
+                      //     }
+                      //   }
+                      // });
+                      if (!(isExited!)) {
                         //if member has not exited then only following code will run.
                         LoadingDialog().show();
                         try {
-                          await EventKeyStreamService().actionOnEvent(
+                          var result =
+                              await EventKeyStreamService().actionOnEvent(
                             eventListenerKeyword,
                             isAdmin!
                                 ? ATKEY_TYPE_ENUM.CREATEEVENT
                                 : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
                             isExited: true,
                           );
+                          if (result == true) {
+                            if (!isAdmin) {
+                              CustomToast().show(
+                                  'Request to update data is submitted',
+                                  AtEventNotificationListener()
+                                      .navKey!
+                                      .currentContext,
+                                  isSuccess: true);
+                            }
+                          } else {
+                            CustomToast().show(
+                                'something went wrong , please try again.',
+                                AtEventNotificationListener()
+                                    .navKey!
+                                    .currentContext,
+                                isError: true);
+                          }
                           LoadingDialog().hide();
                           Navigator.of(AtEventNotificationListener()
                                   .navKey!
@@ -322,14 +283,16 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                               'Request to update data is submitted',
                               AtEventNotificationListener()
                                   .navKey!
-                                  .currentContext);
+                                  .currentContext,
+                              isSuccess: true);
                         } catch (e) {
                           print(e);
                           CustomToast().show(
                               'something went wrong , please try again.',
                               AtEventNotificationListener()
                                   .navKey!
-                                  .currentContext);
+                                  .currentContext,
+                              isError: true);
                           LoadingDialog().hide();
                         }
                       }
@@ -352,11 +315,21 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                                 : 'Sending request to update data');
                         try {
                           // await LocationService().onEventCancel();
-                          await EventKeyStreamService().actionOnEvent(
+                          var result =
+                              await EventKeyStreamService().actionOnEvent(
                             eventListenerKeyword,
                             ATKEY_TYPE_ENUM.CREATEEVENT,
                             isCancelled: true,
                           );
+                          if (result == true) {
+                          } else {
+                            CustomToast().show(
+                                'something went wrong , please try again.',
+                                AtEventNotificationListener()
+                                    .navKey!
+                                    .currentContext,
+                                isError: true);
+                          }
                           LoadingDialog().hide();
                           Navigator.of(AtEventNotificationListener()
                                   .navKey!
@@ -368,7 +341,8 @@ Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
                               'something went wrong , please try again.',
                               AtEventNotificationListener()
                                   .navKey!
-                                  .currentContext);
+                                  .currentContext,
+                              isError: true);
                           LoadingDialog().hide();
                         }
                       }

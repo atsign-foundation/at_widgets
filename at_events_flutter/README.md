@@ -6,23 +6,18 @@
 
 A flutter plugin project to manage events.
 
-## Getting Started
-
-This plugin can be added to the project as git dependency in pubspec.yaml
-
-```
-dependencies:
-  at_events_flutter: ^1.0.0
-```
-
 ### Sample usage
 It is expected that the app will first create an AtClientService instance and authenticate an atsign.
 
 The event service needs to be initialised with the `atClient` from the `AtClientService` and the root server.
 
 ```
-initialiseEventService(clientSdkService.atClientServiceInstance.atClient,
-    rootDomain: MixedConstants.ROOT_DOMAIN);
+initialiseEventService(
+  clientSdkService.atClientServiceInstance.atClient,
+  NavService.navKey,
+  rootDomain: MixedConstants.ROOT_DOMAIN,
+  mapKey: 'xxxx',
+  apiKey: 'xxxx');
 ```
 
 To create a new event:
