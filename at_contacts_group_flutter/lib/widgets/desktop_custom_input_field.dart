@@ -7,7 +7,8 @@ class DesktopCustomInputField extends StatelessWidget {
   final String hintText, initialValue;
   final double width, height;
   final IconData? icon;
-  final Function? onTap, onIconTap, onSubmitted;
+  final Function()? onTap, onIconTap;
+  final Function? onSubmitted;
   final Color? iconColor, backgroundColor;
   final ValueChanged<String>? value;
   final bool isReadOnly;
@@ -60,7 +61,7 @@ class DesktopCustomInputField extends StatelessWidget {
                   hintStyle:
                       TextStyle(color: Color(0xFFBFBFBF), fontSize: 15.toFont),
                 ),
-                onTap: (onTap ?? () {})(),
+                onTap: onTap ?? () {},
                 onChanged: (val) {
                   value!(val);
                 },
@@ -74,7 +75,7 @@ class DesktopCustomInputField extends StatelessWidget {
             ),
             icon != null
                 ? InkWell(
-                    onTap: (onIconTap ?? onTap ?? () {})(),
+                    onTap: onIconTap ?? onTap ?? () {},
                     child: Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Icon(
