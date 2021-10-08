@@ -17,7 +17,8 @@ class AtService {
   String? _atsign;
 
   Future<AtClientPreference> getAtClientPreference() async {
-    Directory appDocumentDirectory = await path_provider.getApplicationSupportDirectory();
+    Directory appDocumentDirectory =
+        await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
     AtClientPreference _atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
@@ -28,7 +29,8 @@ class AtService {
     return _atClientPreference;
   }
 
-  Map<String?, AtClientService> atClientServiceMap = <String, AtClientService>{};
+  Map<String?, AtClientService> atClientServiceMap =
+      <String, AtClientService>{};
 
   AtClient? _getAtClientForAtsign({String? atsign}) {
     atsign ??= _atsign;
