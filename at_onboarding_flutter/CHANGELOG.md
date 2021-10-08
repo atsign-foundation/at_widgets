@@ -1,4 +1,4 @@
-## 3.0.2
+## 3.0.3
 - Resolved Qr scanning issue in ios
 
 ## 3.0.2

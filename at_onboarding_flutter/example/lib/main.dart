@@ -25,7 +25,9 @@ class _MyAppState extends State<MyApp> {
   final AtSignLogger _logger = AtSignLogger('Plugin example app');
   @override
   void initState() {
-    AtService.getInstance().getAtClientPreference().then((AtClientPreference value) => atClientPrefernce = value);
+    AtService.getInstance()
+        .getAtClientPreference()
+        .then((AtClientPreference value) => atClientPrefernce = value);
     super.initState();
   }
 
@@ -48,7 +50,8 @@ class _MyAppState extends State<MyApp> {
                         domain: AppConstants.rootDomain,
                         atClientPreference: atClientPrefernce,
                         appColor: const Color.fromARGB(255, 240, 94, 62),
-                        onboard: (Map<String?, AtClientService> value, String? atsign) {
+                        onboard: (Map<String?, AtClientService> value,
+                            String? atsign) {
                           AtService.getInstance().atClientServiceMap = value;
                           _logger.finer('Successfully onboarded $atsign');
                         },
