@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/screens/notification_dialog/notification_dialog.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
@@ -11,72 +12,78 @@ import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
 import 'sharing_location_service.dart';
-import 'sync_secondary.dart';
 
 /// Starts monitor and listens for notifications related to this package.
 class AtLocationNotificationListener {
   AtLocationNotificationListener._();
+
   static final _instance = AtLocationNotificationListener._();
+
   factory AtLocationNotificationListener() => _instance;
   final String locationKey = 'locationnotify';
-  AtClientImpl? atClientInstance;
+  AtClient? atClientInstance;
   String? currentAtSign;
-  bool _monitorStarted = false;
   late bool showDialogBox;
   late GlobalKey<NavigatorState> navKey;
+
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
 
-  void init(
-      AtClientImpl atClientInstanceFromApp,
-      String currentAtSignFromApp,
-      GlobalKey<NavigatorState> navKeyFromMainApp,
-      String rootDomain,
+  void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       bool showDialogBox,
       {Function? newGetAtValueFromMainApp}) {
-    atClientInstance = atClientInstanceFromApp;
-    currentAtSign = currentAtSignFromApp;
+    atClientInstance = AtClientManager.getInstance().atClient;
+    currentAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     navKey = navKeyFromMainApp;
     this.showDialogBox = showDialogBox;
     ROOT_DOMAIN = rootDomain;
-    MasterLocationService().init(currentAtSignFromApp, atClientInstanceFromApp,
+    MasterLocationService().init(currentAtSign!, atClientInstance!,
         newGetAtValueFromMainApp: newGetAtValueFromMainApp);
 
+    /// TODO: start monitor from KeyStreamService().getAllNotifications(), so that our list is calculated, and any new/old upcoming notification can be compared
     startMonitor();
   }
 
-  Future<bool> startMonitor() async {
-    if (!_monitorStarted) {
-      var privateKey = await (getPrivateKey(currentAtSign!));
-      await atClientInstance!.startMonitor(privateKey!, fnCallBack);
-      print('Monitor started in location package');
-      _monitorStarted = true;
-    }
-    return true;
+  Future<void> startMonitor() async {
+    AtClientManager.getInstance()
+        .notificationService
+        .subscribe()
+        .listen((monitorNotification) {
+      _notificationCallback(monitorNotification);
+    });
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await atClientInstance!.getPrivateKey(atsign);
+    return await KeychainUtil.getPrivateKey(atsign);
   }
 
-  void fnCallBack(var response) async {
-    print('fnCallBack called');
-    SyncSecondary()
-        .completePrioritySync(response, afterSync: _notificationCallback);
-  }
-
-  void _notificationCallback(dynamic notification) async {
-    print('_notificationCallback called');
-    notification = notification.replaceFirst('notification:', '');
-    var responseJson = jsonDecode(notification);
-    var value = responseJson['value'];
-    var notificationKey = responseJson['key'];
+  void _notificationCallback(AtNotification notification) async {
+    var value = notification.value;
+    var notificationKey = notification.key;
     print(
-        '_notificationCallback :$notification , notification key: $notificationKey');
-    var fromAtSign = responseJson['from'];
-    var atKey = notificationKey.split(':')[1];
-    var operation = responseJson['operation'];
+        '_notificationCallback notification received in location package ===========> :$notification , notification key: $notificationKey');
+    var fromAtSign = notification.from;
+    var atKey;
+    if (notificationKey.toString().contains(':')) {
+      atKey = notificationKey.split(':')[1];
+    } else {
+      atKey = notificationKey;
+    }
+
+    if ((!notificationKey.contains(locationKey)) &&
+        (!notificationKey
+            .contains(MixedConstants.DELETE_REQUEST_LOCATION_ACK)) &&
+        (!notificationKey.contains(MixedConstants.SHARE_LOCATION_ACK)) &&
+        (!notificationKey.contains(MixedConstants.SHARE_LOCATION)) &&
+        (!notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) &&
+        (!notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
+      print(
+          'returned from _notificationCallback in location package ===========>');
+      return;
+    }
+
+    var operation = notification.operation;
 
     if (operation == 'delete') {
       if (atKey.toString().toLowerCase().contains(locationKey)) {
@@ -105,7 +112,7 @@ class AtLocationNotificationListener {
     }
 
     var decryptedMessage = await atClientInstance!.encryptionService!
-        .decrypt(value, fromAtSign)
+        .decrypt(value ?? '', fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) => print('error in decrypting: $e'));
 
@@ -150,8 +157,11 @@ class AtLocationNotificationListener {
           await showMyDialog(fromAtSign, locationData);
         }
       } else {
-        await KeyStreamService().addDataToList(locationData);
-        await showMyDialog(fromAtSign, locationData);
+        var _result = await KeyStreamService()
+            .addDataToList(locationData, receivedkey: notificationKey);
+        if (_result is KeyLocationModel) {
+          await showMyDialog(fromAtSign, locationData);
+        }
       }
       return;
     }
@@ -180,8 +190,11 @@ class AtLocationNotificationListener {
           await showMyDialog(fromAtSign, locationData);
         }
       } else {
-        await KeyStreamService().addDataToList(locationData);
-        await showMyDialog(fromAtSign, locationData);
+        var _result = await KeyStreamService()
+            .addDataToList(locationData, receivedkey: notificationKey);
+        if (_result is KeyLocationModel) {
+          await showMyDialog(fromAtSign, locationData);
+        }
       }
       return;
     }

@@ -1,42 +1,56 @@
 /// A service to handle CRUD operation on contacts
 
 import 'dart:async';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
+import 'package:at_client/src/manager/at_client_manager.dart';
 
 class ContactService {
   ContactService._();
+
   static final ContactService _instance = ContactService._();
+
   factory ContactService() => _instance;
 
   late AtContactsImpl atContactImpl;
-  AtClientImpl? atClientInstance;
   late String rootDomain;
   late int rootPort;
   AtContact? loggedInUserDetails;
+  late AtClientManager atClientManager;
+  late String currentAtsign;
 
   StreamController<List<AtContact?>> contactStreamController =
       StreamController<List<AtContact?>>.broadcast();
+
   Sink get contactSink => contactStreamController.sink;
+
   Stream<List<AtContact?>> get contactStream => contactStreamController.stream;
 
   StreamController<List<AtContact?>> blockedContactStreamController =
       StreamController<List<AtContact?>>.broadcast();
+
   Sink get blockedContactSink => blockedContactStreamController.sink;
+
   Stream<List<AtContact?>> get blockedContactStream =>
       blockedContactStreamController.stream;
 
   StreamController<List<AtContact?>> selectedContactStreamController =
       StreamController<List<AtContact?>>.broadcast();
+
   Sink get selectedContactSink => selectedContactStreamController.sink;
+
   Stream<List<AtContact?>> get selectedContactStream =>
       selectedContactStreamController.stream;
 
@@ -57,17 +71,14 @@ class ContactService {
   List<String> allContactsList = [];
 
   // ignore: always_declare_return_types
-  initContactsService(
-      AtClientImpl atClientInstanceFromApp,
-      String currentAtSign,
-      String rootDomainFromApp,
-      int rootPortFromApp) async {
+  initContactsService(String rootDomainFromApp, int rootPortFromApp) async {
     loggedInUserDetails = null;
-    atClientInstance = atClientInstanceFromApp;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
-    atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
-    loggedInUserDetails = await getAtSignDetails(currentAtSign);
+    atClientManager = AtClientManager.getInstance();
+    currentAtsign = atClientManager.atClient.getCurrentAtSign()!;
+    atContactImpl = await AtContactsImpl.getInstance(currentAtsign);
+    loggedInUserDetails = await getAtSignDetails(currentAtsign);
     cachedContactList = await atContactImpl.listContacts();
     await fetchBlockContactList();
   }
@@ -145,7 +156,11 @@ class ContactService {
     }
   }
 
-  Future<dynamic> addAtSign(context, {String? atSign}) async {
+  Future<dynamic> addAtSign(
+    context, {
+    String? atSign,
+    String? nickName,
+  }) async {
     if (atSign == null || atSign == '') {
       getAtSignError = TextStrings().emptyAtsign;
 
@@ -155,7 +170,7 @@ class ContactService {
     }
     atSign = atSign.toLowerCase().trim();
 
-    if (atSign == atClientInstance?.currentAtSign) {
+    if (atSign == atClientManager.atClient.getCurrentAtSign()) {
       getAtSignError = TextStrings().addingLoggedInUser;
 
       return true;
@@ -180,7 +195,7 @@ class ContactService {
         });
       }
       if (!isContactPresent && checkAtSign!) {
-        var details = await getContactDetails(atSign);
+        var details = await getContactDetails(atSign, nickName);
         contact = AtContact(
           atSign: atSign,
           tags: details,
@@ -257,10 +272,11 @@ class ContactService {
     return checkPresence != null;
   }
 
-  Future<Map<String, dynamic>> getContactDetails(String? atSign) async {
+  Future<Map<String, dynamic>> getContactDetails(
+      String? atSign, String? nickName) async {
     var contactDetails = <String, dynamic>{};
 
-    if (atClientInstance == null || atSign == null) {
+    if (atClientManager.atClient == null || atSign == null) {
       return contactDetails;
     } else if (!atSign.contains('@')) {
       atSign = '@' + atSign;
@@ -276,14 +292,14 @@ class ContactService {
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientInstance!.get(key).catchError((e) {
+      var result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
       var firstname = result.value;
 
       // lastname
       key.key = contactFields[1];
-      result = await atClientInstance!.get(key);
+      result = await atClientManager.atClient.get(key);
       var lastname = result.value;
 
       // construct name
@@ -295,13 +311,15 @@ class ContactService {
       // profile picture
       key.metadata?.isBinary = true;
       key.key = contactFields[2];
-      result = await atClientInstance!.get(key);
+      result = await atClientManager.atClient.get(key);
       var image = result.value;
       contactDetails['name'] = name;
       contactDetails['image'] = image;
+      contactDetails['nickname'] = nickName != '' ? nickName : null;
     } catch (e) {
       contactDetails['name'] = null;
       contactDetails['image'] = null;
+      contactDetails['nickname'] = null;
     }
     return contactDetails;
   }

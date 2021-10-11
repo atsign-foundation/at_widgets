@@ -8,17 +8,11 @@ A flutter plugin project for CRUD operations on contacts.
 
 ## Getting Started
 
-This plugin can be added to the project as git dependency in pubspec.yaml
-
-```
-dependencies:
-  at_contacts_flutter: ^1.0.0
-```
-
-### Plugin description
 This plugin provides two screens:
+
 #### Contacts
 This lists the contacts. From this screen a new contact can be added. Also, an existing contact can be blocked or deleted.
+
 #### Blocked Contacts
 This screen lists the blocked contacts. It also gives the option to unblock a contact in it.
 

@@ -55,7 +55,6 @@ class BackupKeyWidget extends StatelessWidget {
       this.buttonHeight,
       this.buttonColor,
       this.iconSize}) {
-    _backupKeyService.atClientService = atClientService;
   }
 
   @override
@@ -183,7 +182,7 @@ class BackupKeyWidget extends StatelessWidget {
   _onBackup(BuildContext context) async {
     var _size = MediaQuery.of(context).size;
     try {
-      var aesEncryptedKeys = await _backupKeyService.getEncryptedKeys(atsign);
+      var aesEncryptedKeys = await BackUpKeyService.getEncryptedKeys(atsign);
       if (aesEncryptedKeys.isEmpty) {
         return false;
       }

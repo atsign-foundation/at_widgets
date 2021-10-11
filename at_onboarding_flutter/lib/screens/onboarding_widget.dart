@@ -12,6 +12,9 @@ class Onboarding {
   ///Required field as for navigation.
   final BuildContext context;
 
+  ///hides the references to webpages if set to true
+  final bool? hideReferences;
+
   ///Onboards the given [atsign] if not null.
   ///if [atsign] is null then takes the atsign from keychain.
   ///if[atsign] is empty then it directly jumps into authenticate without performing onboarding. (or)
@@ -44,13 +47,35 @@ class Onboarding {
   final Widget? fistTimeAuthNextScreen;
 
   /// API authentication key for getting free atsigns
-  final String appAPIKey;
+  final String? appAPIKey;
 
+  /// Setting up [RootEnvironment] to **Staging** will use the staging environment for onboarding.
+  ///
+  ///```dart
+  /// RootEnvironment.Staging
+  ///```
+  ///
+  /// Setting up RootEnvironment to **Production** will use the production environment for onboarding.
+  ///
+  ///```dart
+  /// RootEnvironment.Production
+  ///```
+  ///
+  /// Setting up RootEnvironment to **Testing** will use the testing(docker) environment for onboarding.
+  ///
+  ///```dart
+  /// RootEnvironment.Testing
+  ///```
+  ///
+  /// **Note:**
+  /// API Key is required when you set [rootEnvironment] to production.
+  final RootEnvironment rootEnvironment;
   final AtSignLogger _logger = AtSignLogger('At Onboarding Flutter');
 
   Onboarding(
       {Key? key,
       required this.context,
+      this.hideReferences,
       this.atsign,
       required this.onboard,
       required this.onError,
@@ -60,25 +85,35 @@ class Onboarding {
       this.appColor,
       this.logo,
       this.domain,
-      required this.appAPIKey}) {
-    _show();
+      required this.rootEnvironment,
+      this.appAPIKey}) {
+    AppConstants.rootEnvironment = this.rootEnvironment;
+    if (AppConstants.rootEnvironment == RootEnvironment.Production &&
+        appAPIKey == null) {
+      throw ('App API Key is required for production environment');
+    } else {
+      _show();
+    }
   }
   void _show() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) => OnboardingWidget(
-              atsign: this.atsign,
-              onboard: this.onboard,
-              onError: this.onError,
-              nextScreen: this.nextScreen,
-              fistTimeAuthNextScreen: this.fistTimeAuthNextScreen,
-              atClientPreference: this.atClientPreference,
-              appColor: this.appColor,
-              logo: this.logo,
-              domain: this.domain,
-              appAPIKey: this.appAPIKey));
+    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) async {
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => OnboardingWidget(
+          atsign: atsign,
+          onboard: onboard,
+          onError: onError,
+          hideReferences: this.hideReferences,
+          nextScreen: nextScreen,
+          fistTimeAuthNextScreen: fistTimeAuthNextScreen,
+          atClientPreference: atClientPreference,
+          appColor: appColor,
+          logo: logo,
+          domain: domain ?? AppConstants.rootEnvironment.domain,
+          appAPIKey: appAPIKey ?? AppConstants.rootEnvironment.apikey!,
+        ),
+      );
     });
 
     _logger.info('Onboarding...!');
@@ -92,6 +127,9 @@ class OnboardingWidget extends StatefulWidget {
   ///if [atsign] is empty then it just presents pairAtSign screen without onboarding the atsign. (or)
   ///Just provide an empty string for ignoring existing atsign in keychain or app's atsign.
   final String? atsign;
+
+  ///hides the references to webpages if set to true
+  final bool? hideReferences;
 
   ///The atClientPreference [required] to continue with the onboarding.
   final AtClientPreference atClientPreference;
@@ -124,6 +162,7 @@ class OnboardingWidget extends StatefulWidget {
   OnboardingWidget(
       {Key? key,
       this.atsign,
+      this.hideReferences,
       required this.onboard,
       required this.onError,
       this.nextScreen,
@@ -138,10 +177,10 @@ class OnboardingWidget extends StatefulWidget {
 }
 
 class _OnboardingWidgetState extends State<OnboardingWidget> {
-  var _onboardingService = OnboardingService.getInstance();
+  final OnboardingService _onboardingService = OnboardingService.getInstance();
   Future<bool>? _future;
-  var data;
-  var error;
+  dynamic data;
+  dynamic error;
   @override
   void initState() {
     AppConstants.rootDomain = widget.domain;
@@ -167,41 +206,44 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
     if (widget.atsign == '') {
       return PairAtsignWidget(
         getAtSign: true,
+        hideReferences: widget.hideReferences ?? false,
       );
     }
 
     return FutureBuilder<bool>(
         future: _future,
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             CustomNav().pop(context);
-            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+            WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
               widget.onboard(_onboardingService.atClientServiceMap,
                   _onboardingService.currentAtsign);
             });
             if (widget.nextScreen != null) {
               CustomNav().push(widget.nextScreen, context);
             }
-            return Center();
+            return const Center();
           } else if (snapshot.hasError) {
             if (snapshot.error == OnboardingStatus.ATSIGN_NOT_FOUND) {
               return PairAtsignWidget(
                 getAtSign: true,
+                hideReferences: widget.hideReferences ?? false,
               );
             } else if (snapshot.error == OnboardingStatus.ACTIVATE ||
                 snapshot.error == OnboardingStatus.RESTORE) {
               return PairAtsignWidget(
                 onboardStatus: snapshot.error as OnboardingStatus?,
+                hideReferences: widget.hideReferences ?? false,
               );
             } else {
               CustomNav().pop(context);
-              Future.delayed((Duration(milliseconds: 200)), () {
+              Future<dynamic>.delayed((const Duration(milliseconds: 200)), () {
                 widget.onError(snapshot.error);
               });
-              return Center();
+              return const Center();
             }
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         });
   }

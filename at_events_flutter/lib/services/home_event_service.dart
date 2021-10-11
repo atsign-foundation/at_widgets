@@ -15,8 +15,10 @@ class HomeEventService {
     if (event.isCancelled!) return true;
 
     var isRequired = true;
-    var currentAtsign =
-        AtEventNotificationListener().atClientInstance!.currentAtSign;
+    var currentAtsign = AtEventNotificationListener()
+        .atClientManager
+        .atClient
+        .getCurrentAtSign();
 
     if (event.group!.members!.isEmpty) return true;
 
@@ -40,8 +42,10 @@ class HomeEventService {
   String getActionString(EventNotificationModel event, bool haveResponded) {
     if (event.isCancelled!) return 'Cancelled';
     var label = 'Action required';
-    var currentAtsign =
-        AtEventNotificationListener().atClientInstance!.currentAtSign;
+    var currentAtsign = AtEventNotificationListener()
+        .atClientManager
+        .atClient
+        .getCurrentAtSign();
 
     if (event.group!.members!.isEmpty) return '';
 

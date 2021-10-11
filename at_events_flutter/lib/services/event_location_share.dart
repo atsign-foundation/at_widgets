@@ -119,10 +119,6 @@ class EventLocationShare {
     if (myLocation != null) {
       if (masterSwitchState) {
         await prepareLocationDataAndSend(_newData, myLocation);
-        if (MixedConstants.isDedicated) {
-          // ignore: unawaited_futures
-          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
       } else {
         /// method from main app
         if (locationPromptDialog != null) {
@@ -136,7 +132,8 @@ class EventLocationShare {
     } else {
       if (AtEventNotificationListener().navKey != null) {
         CustomToast().show('Location permission not granted',
-            AtEventNotificationListener().navKey!.currentContext);
+            AtEventNotificationListener().navKey!.currentContext,
+            isError: true);
       }
     }
 
@@ -171,10 +168,6 @@ class EventLocationShare {
           await prepareLocationDataAndSend(notification,
               LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
         });
-        if (MixedConstants.isDedicated) {
-          // ignore: unawaited_futures
-          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
       }
 
       ///
@@ -184,13 +177,9 @@ class EventLocationShare {
           await Future.forEach(eventsToShareLocationWith,
               (dynamic notification) async {
             // ignore: unawaited_futures
-            prepareLocationDataAndSend(notification,
+            await prepareLocationDataAndSend(notification,
                 LatLng(myLocation.latitude, myLocation.longitude));
           });
-          if (MixedConstants.isDedicated) {
-            // ignore: unawaited_futures
-            SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-          }
         }
       });
     }
@@ -279,12 +268,14 @@ class EventLocationShare {
             _eventNotificationModel.atsignCreator);
 
         try {
-          await AtEventNotificationListener().atClientInstance!.put(
-              atKey,
-              EventMemberLocation.convertLocationNotificationToJson(
-                _data,
-              ),
-              isDedicated: MixedConstants.isDedicated);
+          var _res =
+              await AtEventNotificationListener().atClientManager.atClient.put(
+                    atKey,
+                    EventMemberLocation.convertLocationNotificationToJson(
+                      _data,
+                    ),
+                  );
+          print('prepareLocationDataAndSend in events package ========> $_res');
         } catch (e) {
           print('error in sending location: $e');
         }

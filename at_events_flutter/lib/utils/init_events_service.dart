@@ -22,8 +22,7 @@ import 'package:flutter/cupertino.dart';
 /// [initLocation] pass this as false if location package is initialised outside, so it is not initialised more than once.
 ///
 /// [streamAlternative] a function which will return updated lists of [EventKeyLocationModel]
-void initialiseEventService(
-    AtClientImpl atClientInstance, GlobalKey<NavigatorState> navKeyFromMainApp,
+void initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
     {required String mapKey,
     required String apiKey,
     rootDomain = 'root.atsign.wtf',
@@ -35,8 +34,7 @@ void initialiseEventService(
   MixedConstants.setMapKey(mapKey);
 
   if (initLocation) {
-    initializeLocationService(
-        atClientInstance, atClientInstance.currentAtSign!, navKeyFromMainApp,
+    initializeLocationService(navKeyFromMainApp,
         apiKey: MixedConstants.API_KEY!, mapKey: MixedConstants.MAP_KEY!);
   }
 
@@ -46,11 +44,9 @@ void initialiseEventService(
     calculateETA: true,
   );
 
-  AtEventNotificationListener().init(atClientInstance,
-      atClientInstance.currentAtSign!, navKeyFromMainApp, rootDomain);
+  AtEventNotificationListener().init(navKeyFromMainApp, rootDomain);
 
-  EventKeyStreamService()
-      .init(atClientInstance, streamAlternative: streamAlternative);
+  EventKeyStreamService().init(streamAlternative: streamAlternative);
 }
 
 Future<bool> createEvent(EventNotificationModel eventData) async {
@@ -78,7 +74,8 @@ Future<bool> createEvent(EventNotificationModel eventData) async {
       ..sharedBy = eventData.atsignCreator;
     var eventJson =
         EventNotificationModel.convertEventNotificationToJson(eventData);
-    var result = await EventService().atClientInstance!.put(atKey, eventJson);
+    var result =
+        await EventService().atClientManager.atClient.put(atKey, eventJson);
     return result;
   } catch (e) {
     print('error in creating event:$e');
@@ -86,32 +83,10 @@ Future<bool> createEvent(EventNotificationModel eventData) async {
   }
 }
 
-// Future<bool> updateEvent(EventNotificationModel eventData, String key) async {
-//   String regexKey;
-//   EventNotificationModel currentEventData;
-//   regexKey = await getRegexKeyFromKey(key);
-//   if (regexKey == null) {
-//     throw Exception('Event key not found');
-//   }
-//   currentEventData = await getValue(regexKey);
-//   eventData.atsignCreator = currentEventData.atsignCreator;
-
-//   try {
-//     var atKey = EventService().getAtKey(regexKey);
-//     var eventJson =
-//         EventNotificationModel.convertEventNotificationToJson(eventData);
-//     var result = await EventService().atClientInstance.put(atKey, eventJson);
-//     return result;
-//   } catch (e) {
-//     print('error in creating event:$e');
-//     return false;
-//   }
-// }
-
 Future<bool> deleteEvent(String key) async {
   String? regexKey, currentAtsign;
   EventNotificationModel? eventData;
-  currentAtsign = EventService().atClientInstance!.currentAtSign;
+  currentAtsign = EventService().atClientManager.atClient.getCurrentAtSign();
   regexKey = await getRegexKeyFromKey(key);
   if (regexKey == null) {
     throw Exception('Event key not found');
@@ -125,12 +100,9 @@ Future<bool> deleteEvent(String key) async {
 
   try {
     var atKey = EventService().getAtKey(regexKey);
-    var result = await EventService().atClientInstance!.delete(atKey);
+    var result = await EventService().atClientManager.atClient.delete(atKey);
     // ignore: unnecessary_null_comparison
-    if (result != null && result) {
-      // EventService().allEvents.removeWhere((element) => element.key == key);
-      // EventService().eventListSink.add(EventService().allEvents);
-    }
+    if (result != null && result) {}
     return result;
   } catch (e) {
     return false;
@@ -146,8 +118,11 @@ Future<EventNotificationModel?> getEventDetails(String key) async {
   }
   try {
     var atkey = EventService().getAtKey(regexKey);
-    var atvalue =
-        await EventService().atClientInstance!.get(atkey).catchError((e) {
+    var atvalue = await EventService()
+        .atClientManager
+        .atClient
+        .get(atkey)
+        .catchError((e) {
       print('error in get ${e.errorCode} ${e.errorMessage}');
       // ignore: invalid_return_type_for_catch_error
       return null;
@@ -161,30 +136,25 @@ Future<EventNotificationModel?> getEventDetails(String key) async {
 
 Future<List<EventNotificationModel>?> getEvents() async {
   var allEvents = <EventNotificationModel>[];
-  var regexList = await EventService().atClientInstance!.getKeys(
+  var regexList = await EventService().atClientManager.atClient.getKeys(
         regex: 'createevent-',
       );
 
   if (regexList.isEmpty) {
-    // EventService().allEvents = allEvents;
-    // EventService().eventListSink.add(allEvents);
     return [];
   }
 
   try {
     for (var i = 0; i < regexList.length; i++) {
       var atkey = EventService().getAtKey(regexList[i]);
-      var atValue = await EventService().atClientInstance!.get(atkey);
+      var atValue = await EventService().atClientManager.atClient.get(atkey);
       if (atValue.value != null) {
         var event = EventNotificationModel.fromJson(jsonDecode(atValue.value));
         allEvents.add(event);
       }
     }
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      // EventService().allEvents = allEvents;
-      // EventService().eventListSink.add(allEvents);
-    });
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {});
     return allEvents;
   } catch (e) {
     print(e);
@@ -193,7 +163,7 @@ Future<List<EventNotificationModel>?> getEvents() async {
 }
 
 Future<List<String>> getRegexKeys() async {
-  var regexList = await EventService().atClientInstance!.getKeys(
+  var regexList = await EventService().atClientManager.atClient.getKeys(
         regex: 'createevent-',
       );
 
@@ -204,7 +174,7 @@ Future<EventNotificationModel?> getValue(String key) async {
   try {
     EventNotificationModel? event;
     var atKey = EventService().getAtKey(key);
-    var atValue = await EventService().atClientInstance!.get(atKey);
+    var atValue = await EventService().atClientManager.atClient.get(atKey);
     if (atValue.value != null) {
       event = EventNotificationModel.fromJson(jsonDecode(atValue.value));
     }

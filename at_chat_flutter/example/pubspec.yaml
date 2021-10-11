@@ -1,6 +1,6 @@
 name: at_chat_flutter_example
 description: Demonstrates how to use the at_chat_flutter plugin.
-version: 0.0.1
+version: 1.0.0
 homepage: https://atsign.com/
 
 # The following line prevents the package from being accidentally published to
@@ -25,9 +25,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
-  at_onboarding_flutter: ^2.1.1
-
-
+  at_onboarding_flutter: ^3.0.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

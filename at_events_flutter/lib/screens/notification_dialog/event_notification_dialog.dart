@@ -5,6 +5,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_events_flutter/common_components/bottom_sheet.dart';
 import 'package:at_events_flutter/common_components/contacts_initials.dart';
 import 'package:at_events_flutter/common_components/custom_button.dart';
+import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/common_components/event_time_selection.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -41,7 +42,7 @@ class EventNotificationDialog extends StatefulWidget {
 class _EventNotificationDialogState extends State<EventNotificationDialog> {
   int? minutes;
   EventNotificationModel? concurrentEvent;
-  bool? isOverlap = false, loading = false, result;
+  bool? isOverlap = false, loading = false;
   AtContact? contact;
   Uint8List? image;
   String? locationUserImageToShow;
@@ -202,8 +203,6 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                       ? CircularProgressIndicator()
                       : CustomButton(
                           onTap: () => () async {
-                            startLoading();
-
                             bottomSheet(
                                 context,
                                 EventTimeSelection(
@@ -232,6 +231,8 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                 MixedConstants.endTimeOptions,
                                             onSelectionChanged:
                                                 (dynamic endTime) async {
+                                              startLoading();
+
                                               widget.eventData!.group!.members!
                                                   .forEach((groupMember) {
                                                 if (groupMember.atSign ==
@@ -249,14 +250,31 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                               Navigator.of(context).pop();
 
                                               // updateEvent(widget.eventData);
-                                              await EventKeyStreamService()
-                                                  .actionOnEvent(
-                                                      widget.eventData!,
-                                                      ATKEY_TYPE_ENUM
-                                                          .ACKNOWLEDGEEVENT,
-                                                      isAccepted: true,
-                                                      isSharing: true,
-                                                      isExited: false);
+                                              var result =
+                                                  await EventKeyStreamService()
+                                                      .actionOnEvent(
+                                                          widget.eventData!,
+                                                          ATKEY_TYPE_ENUM
+                                                              .ACKNOWLEDGEEVENT,
+                                                          isAccepted: true,
+                                                          isSharing: true,
+                                                          isExited: false);
+
+                                              if (result == true) {
+                                                CustomToast().show(
+                                                    'Request to update data is submitted',
+                                                    AtEventNotificationListener()
+                                                        .navKey!
+                                                        .currentContext,
+                                                    isSuccess: true);
+                                              } else {
+                                                CustomToast().show(
+                                                    'Something went wrong , please try again.',
+                                                    AtEventNotificationListener()
+                                                        .navKey!
+                                                        .currentContext,
+                                                    isError: true);
+                                              }
 
                                               stopLoading();
 
@@ -283,34 +301,30 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                       : InkWell(
                           onTap: () async {
                             startLoading();
-                            await EventKeyStreamService().actionOnEvent(
-                                widget.eventData!,
-                                ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-                                isAccepted: false,
-                                isExited: true);
+                            var result = await EventKeyStreamService()
+                                .actionOnEvent(widget.eventData!,
+                                    ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
+                                    isAccepted: false, isExited: true);
+
+                            if (result == true) {
+                              CustomToast().show(
+                                  'Request to update data is submitted',
+                                  AtEventNotificationListener()
+                                      .navKey!
+                                      .currentContext,
+                                  isSuccess: true);
+                            } else {
+                              CustomToast().show(
+                                  'Something went wrong , please try again.',
+                                  AtEventNotificationListener()
+                                      .navKey!
+                                      .currentContext,
+                                  isError: true);
+                            }
 
                             /// For dialog box
                             Navigator.of(context).pop();
 
-                            // providerCallback<EventProvider>(context,
-                            //     task: (t) => t.actionOnEvent(widget.eventData,
-                            //         ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-                            //         isAccepted: false, isExited: true),
-                            //     text: 'Sending request to reject event',
-                            //     taskName: (t) => t.UPDATE_EVENTS,
-                            //     showDialog: false,
-                            //     onError: (t) {
-                            //       Navigator.of(context).pop();
-                            //       CustomToast().show(
-                            //           'Something went wrong! ${t.toString()}',
-                            //           NavService.navKey.currentContext);
-                            //     },
-                            //     onSuccess: (t) {
-                            //       Navigator.of(context).pop();
-                            //       CustomToast().show(
-                            //           'Request to reject event is submitted',
-                            //           context);
-                            //     });
                             stopLoading();
                           },
                           child: Text(
@@ -342,33 +356,4 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
       });
     }
   }
-}
-
-void updateEvent(
-  EventNotificationModel eventData, {
-  bool isAccepted = true,
-  bool isSharing = true,
-  bool isExited = false,
-}) {
-  EventKeyStreamService().actionOnEvent(
-      eventData, ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-      isAccepted: true, isSharing: true, isExited: false);
-
-  ///
-  // providerCallback<EventProvider>(NavService.navKey.currentContext,
-  //     task: (t) => t.actionOnEvent(eventData, ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-  //         isAccepted: true, isSharing: true, isExited: false),
-  //     taskName: (t) => t.UPDATE_EVENTS,
-  //     text: 'Sending request to accept event',
-  //     showDialog: false,
-  //     onError: (t) {
-  //       CustomToast().show('Something went wrong! ${t.toString()}',
-  //           NavService.navKey.currentContext);
-  //     },
-  //     onSuccess: (t) {
-  //       Navigator.of(NavService.navKey.currentContext).pop();
-  //       Navigator.of(NavService.navKey.currentContext).pop();
-  //       CustomToast().show('Request to accept event is submitted',
-  //           NavService.navKey.currentContext);
-  //     });
 }

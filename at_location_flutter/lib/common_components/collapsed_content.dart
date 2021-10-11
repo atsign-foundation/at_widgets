@@ -1,4 +1,5 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/home_screen_service.dart';
 import 'package:at_location_flutter/service/location_service.dart';
@@ -13,13 +14,12 @@ import 'custom_toast.dart';
 import 'display_tile.dart';
 import 'draggable_symbol.dart';
 import 'loading_widget.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 
 // ignore: must_be_immutable
 class CollapsedContent extends StatefulWidget {
   bool expanded;
   LocationNotificationModel? userListenerKeyword;
-  AtClientImpl? atClientInstance;
+  AtClient? atClientInstance;
   String? currentAtSign;
   CollapsedContent(this.expanded, this.atClientInstance,
       {Key? key, this.userListenerKeyword, required this.currentAtSign});
@@ -219,14 +219,16 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                   } else {
                                                     CustomToast().show(
                                                         'Something went wrong, try again.',
-                                                        context);
+                                                        context,
+                                                        isError: true);
                                                   }
                                                   LoadingDialog().hide();
                                                 } catch (e) {
                                                   print(e);
                                                   CustomToast().show(
                                                       'Something went wrong , please try again.',
-                                                      context);
+                                                      context,
+                                                      isError: true);
                                                   LoadingDialog().hide();
                                                 }
                                               })
@@ -246,17 +248,20 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                     .receiver);
                                         if (result == true) {
                                           CustomToast().show(
-                                              'Request Location sent', context);
+                                              'Request Location sent', context,
+                                              isSuccess: true);
                                         } else {
                                           CustomToast().show(
                                               'Something went wrong, try again.',
-                                              context);
+                                              context,
+                                              isError: true);
                                         }
                                       } catch (e) {
                                         print(e);
                                         CustomToast().show(
                                             'Something went wrong, try again.',
-                                            context);
+                                            context,
+                                            isError: true);
                                       }
                                     },
                                     child: Text(
@@ -307,11 +312,13 @@ class _CollapsedContentState extends State<CollapsedContent> {
       } else {
         LoadingDialog().hide();
 
-        CustomToast().show('Something went wrong, try again.', context);
+        CustomToast()
+            .show('Something went wrong, try again.', context, isError: true);
       }
     } catch (e) {
       print(e);
-      CustomToast().show('something went wrong , please try again.', context);
+      CustomToast().show('something went wrong , please try again.', context,
+          isError: true);
       LoadingDialog().hide();
     }
   }

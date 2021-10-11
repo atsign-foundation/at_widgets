@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -27,12 +30,12 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
     return Flex(
       direction: Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: 20.toWidth,
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 20),
           height: 45.toFont,
           width: 45.toFont,
           decoration: BoxDecoration(
@@ -47,21 +50,32 @@ class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {
           width: 15.toWidth,
         ),
         Container(
-          padding: EdgeInsets.all(30.toHeight),
+          padding: EdgeInsets.all(16.toHeight),
           decoration: BoxDecoration(
             color: widget.color,
             borderRadius: BorderRadius.circular(10.toWidth),
           ),
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 170.toWidth),
-            child: Text(
-              widget.message?.message ?? ' ',
-              textAlign: TextAlign.right,
-              maxLines: 3,
-            ),
+            child: _buildContentMessage(),
           ),
         ),
       ],
     );
+  }
+
+  Widget _buildContentMessage() {
+    if (widget.message?.contentType == MessageContentType.IMAGE) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 165.toWidth),
+        child: Image.memory(widget.message?.imageData ?? Uint8List(0)),
+      );
+    } else {
+      return Text(
+        widget.message?.message ?? ' ',
+        textAlign: TextAlign.right,
+        maxLines: 3,
+      );
+    }
   }
 }

@@ -1,31 +1,44 @@
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/services/chat_service.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
+import 'package:at_chat_flutter/utils/dialog_utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_chat_flutter/widgets/incoming_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/outgoing_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/send_message.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+
+/// Widget to display chats as a screen or a bottom sheet.
 
 class ChatScreen extends StatefulWidget {
-  final double? height;
-  final bool isScreen;
-  final Color outgoingMessageColor;
-  final Color incomingMessageColor;
-  final Color senderAvatarColor;
-  final Color receiverAvatarColor;
-  final String title;
-  final String? hintText;
-
-  /// Widget to display chats as a screen or a bottom sheet.
   /// [height] specifies the height of bottom sheet/screen,
+  final double? height;
+
   /// [isScreen] toggles the screen behaviour to adapt for screen or bottom sheet,
+  final bool isScreen;
+
   /// [outgoingMessageColor] defines the color of outgoing message color,
+  final Color outgoingMessageColor;
+
   /// [incomingMessageColor] defines the color of incoming message color.
+  final Color incomingMessageColor;
+
+  /// [senderAvatarColor] defines the color of sender's avatar
+  final Color senderAvatarColor;
+
+  /// [receiverAvatarColor] defines the color of receiver's avatar
+  final Color receiverAvatarColor;
+
   /// [title] specifies the title text to be displayed.
+  final String title;
+
   /// [hintText] specifies the hint text to be displayed in the input box.
+  final String? hintText;
 
   const ChatScreen(
       {Key? key,
@@ -38,6 +51,7 @@ class ChatScreen extends StatefulWidget {
       this.title = 'Messages',
       this.hintText})
       : super(key: key);
+
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -47,6 +61,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String? message;
   ScrollController? _scrollController;
   late ChatService _chatService;
+
   @override
   void initState() {
     super.initState();
@@ -150,6 +165,19 @@ class _ChatScreenState extends State<ChatScreen> {
                                                   widget.senderAvatarColor,
                                             )
                                           : OutgoingMessageBubble(
+                                              (id) async {
+                                                var result = await _chatService
+                                                    .deleteSelectedMessage(id);
+                                                Navigator.of(context).pop();
+
+                                                var message = result
+                                                    ? 'Message is deleted'
+                                                    : 'Failed to delete';
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content:
+                                                            Text(message)));
+                                              },
                                               message: snapshot.data![index],
                                               color:
                                                   widget.outgoingMessageColor,
@@ -159,20 +187,41 @@ class _ChatScreenState extends State<ChatScreen> {
                                     );
                                   });
                     })),
-            SendMessage(
-              messageCallback: (s) {
-                message = s;
-              },
-              hintText: widget.hintText,
-              onSend: () async {
-                if (message != '') {
-                  await _chatService.sendMessage(message);
-                }
-              },
-            ),
+            _buildMessageInputWidget(),
+            //Make sure view inside SafeArea
+            SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildMessageInputWidget() {
+    return SendMessage(
+      messageCallback: (s) {
+        message = s;
+      },
+      hintText: widget.hintText,
+      onSend: () async {
+        if (message != '') {
+          await _chatService.sendMessage(message);
+        }
+      },
+      onMediaPressed: showImagePicker,
+    );
+  }
+
+  void showImagePicker() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowCompression: true,
+      withData: true,
+    );
+    if ((result?.files ?? []).isNotEmpty) {
+      final file = File(result!.files.first.path!);
+      await _chatService.sendImageFile(context, file);
+    } else {
+      // User canceled the picker
+    }
   }
 }

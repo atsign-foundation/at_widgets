@@ -1,3 +1,4 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_follows_flutter/domain/connection_model.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/services/sdk_service.dart';
@@ -17,7 +18,7 @@ import 'package:provider/provider.dart';
 ///To enable darkTheme set [isDarkTheme] as true.
 class Connections extends StatefulWidget {
   ///Perform operations like follow/following for a particular @sign.
-  final atClientserviceInstance;
+  final AtClientService atClientserviceInstance;
 
   ///color to match with your app theme. Defaults to [orange].
   final Color? appColor;
@@ -48,8 +49,10 @@ class _ConnectionsState extends State<Connections> {
 
   @override
   void initState() {
-    String currentAtsign =
-        (widget.atClientserviceInstance.atClient!.currentAtSign) ?? '';
+    String currentAtsign = (widget
+            .atClientserviceInstance.atClientManager.atClient
+            .getCurrentAtSign()) ??
+        '';
     _connectionService.init(currentAtsign);
     _connectionProvider.init(currentAtsign);
     ColorConstants.darkTheme = false;
@@ -58,9 +61,11 @@ class _ConnectionsState extends State<Connections> {
     Strings.directoryUrl = Strings.rootdomain == 'root.atsign.org'
         ? 'https://atsign.directory/'
         : 'https://directory.atsign.wtf/';
-    _connectionService.startMonitor().then((value) => setState(() {
-          _formConnectionTabs(2);
-        }));
+    if (_connectionService.startMonitor()) {
+      setState(() {
+        _formConnectionTabs(2);
+      });
+    }
 
     _connectionService.followerAtsign = widget.followerAtsignTitle;
     _connectionService.followAtsign = widget.followAtsignTitle;
