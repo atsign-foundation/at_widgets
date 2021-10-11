@@ -234,6 +234,7 @@ class EventService {
     for (var contact
         in EventService().eventNotificationModel!.group!.members!) {
       selectedContacts!.add(contact);
+      selectedContactsAtSigns.add(contact.atSign);
     }
   }
 
