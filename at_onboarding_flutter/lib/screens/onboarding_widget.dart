@@ -15,6 +15,9 @@ class Onboarding {
   ///hides the references to webpages if set to true
   final bool? hideReferences;
 
+  ///hides the qr functionality if set to true
+  final bool? hideQrScan;
+
   ///Onboards the given [atsign] if not null.
   ///if [atsign] is null then takes the atsign from keychain.
   ///if[atsign] is empty then it directly jumps into authenticate without performing onboarding. (or)
@@ -76,6 +79,7 @@ class Onboarding {
       {Key? key,
       required this.context,
       this.hideReferences,
+      this.hideQrScan,
       this.atsign,
       required this.onboard,
       required this.onError,
@@ -88,8 +92,7 @@ class Onboarding {
       required this.rootEnvironment,
       this.appAPIKey}) {
     AppConstants.rootEnvironment = this.rootEnvironment;
-    if (AppConstants.rootEnvironment == RootEnvironment.Production &&
-        appAPIKey == null) {
+    if (AppConstants.rootEnvironment == RootEnvironment.Production && appAPIKey == null) {
       throw ('App API Key is required for production environment');
     } else {
       _show();
@@ -105,6 +108,7 @@ class Onboarding {
           onboard: onboard,
           onError: onError,
           hideReferences: this.hideReferences,
+          hideQrScan: this.hideQrScan,
           nextScreen: nextScreen,
           fistTimeAuthNextScreen: fistTimeAuthNextScreen,
           atClientPreference: atClientPreference,
@@ -130,6 +134,7 @@ class OnboardingWidget extends StatefulWidget {
 
   ///hides the references to webpages if set to true
   final bool? hideReferences;
+  final bool? hideQrScan;
 
   ///The atClientPreference [required] to continue with the onboarding.
   final AtClientPreference atClientPreference;
@@ -163,6 +168,7 @@ class OnboardingWidget extends StatefulWidget {
       {Key? key,
       this.atsign,
       this.hideReferences,
+      this.hideQrScan,
       required this.onboard,
       required this.onError,
       this.nextScreen,
@@ -207,6 +213,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
       return PairAtsignWidget(
         getAtSign: true,
         hideReferences: widget.hideReferences ?? false,
+        hideQrScan: widget.hideQrScan ?? false,
       );
     }
 
@@ -216,8 +223,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
           if (snapshot.hasData) {
             CustomNav().pop(context);
             WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
-              widget.onboard(_onboardingService.atClientServiceMap,
-                  _onboardingService.currentAtsign);
+              widget.onboard(_onboardingService.atClientServiceMap, _onboardingService.currentAtsign);
             });
             if (widget.nextScreen != null) {
               CustomNav().push(widget.nextScreen, context);
@@ -228,12 +234,13 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
               return PairAtsignWidget(
                 getAtSign: true,
                 hideReferences: widget.hideReferences ?? false,
+                hideQrScan: widget.hideQrScan ?? false,
               );
-            } else if (snapshot.error == OnboardingStatus.ACTIVATE ||
-                snapshot.error == OnboardingStatus.RESTORE) {
+            } else if (snapshot.error == OnboardingStatus.ACTIVATE || snapshot.error == OnboardingStatus.RESTORE) {
               return PairAtsignWidget(
                 onboardStatus: snapshot.error as OnboardingStatus?,
                 hideReferences: widget.hideReferences ?? false,
+                hideQrScan: widget.hideQrScan ?? false,
               );
             } else {
               CustomNav().pop(context);
