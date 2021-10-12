@@ -50,6 +50,7 @@ class _MyAppState extends State<MyApp> {
                         ),
                         onPressed: () async {
                           Onboarding(
+                            rootEnvironment: RootEnvironment.Staging,
                             context: context,
                             atClientPreference:
                             clientSdkService.atClientPreference,

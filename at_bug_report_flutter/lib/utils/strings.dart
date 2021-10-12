@@ -5,7 +5,7 @@ class Strings {
   static const String showDetailsBugReport = 'Show Details';
   static const String bugReportTitle = 'Bug Report';
   static const String bugReportDescription =
-      'Do you want to share this bug report?';
+      'Do you want to share this bug report with ';
   static const String sentTitle = 'Sent';
   static const String receivedTitle = 'Received';
   static const String backupKeyName = '_key.atKeys';

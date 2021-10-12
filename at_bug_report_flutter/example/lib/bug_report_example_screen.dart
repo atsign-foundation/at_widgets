@@ -56,7 +56,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                     showBugReportDialog(
                       context,
                       activeAtSign,
-                      '',
+                      MixedConstants.authorAtsign,
                       'This is error ${Random().nextInt(100)} from Bug Report Example Screen',
                       isSuccessCallback: () {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -86,7 +86,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                       MaterialPageRoute(
                         builder: (context) => ListBugReportScreen(
                           atSign: activeAtSign,
-                          authorAtSign: '',
+                          authorAtSign: MixedConstants.authorAtsign,
                         ),
                       ),
                     );

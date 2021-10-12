@@ -1,18 +1,15 @@
-import 'package:at_bug_report_flutter/models/bug_report_model.dart';
+import 'package:at_bug_report_flutter/screens/bug_report_tab_user.dart';
 import 'package:at_bug_report_flutter/services/bug_report_service.dart';
 import 'package:at_bug_report_flutter/utils/strings.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'bug_report_tab.dart';
+import 'bug_report_tab_author.dart';
 
 class ListBugReportScreen extends StatefulWidget {
   final String title;
   final String? atSign;
   final String? authorAtSign;
-
   const ListBugReportScreen({
     Key? key,
     this.title = 'List Reported Issues',
@@ -30,7 +27,6 @@ class _ListBugReportScreenState extends State<ListBugReportScreen>
 
   GlobalKey<ScaffoldState>? scaffoldKey;
   late BugReportService _bugReportService;
-
   @override
   void initState() {
     super.initState();
@@ -48,6 +44,7 @@ class _ListBugReportScreenState extends State<ListBugReportScreen>
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(
@@ -72,51 +69,52 @@ class _ListBugReportScreenState extends State<ListBugReportScreen>
           height: SizeConfig().screenHeight,
           child: Column(
             children: [
-              Container(
-                height: 50,
-                child: TabBar(
-                  onTap: (index) {},
-                  labelColor: Colors.black,
-                  indicatorWeight: 3.toHeight,
-                  indicatorColor: Colors.black,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  labelStyle: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14.toFont,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  unselectedLabelStyle: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14.toFont,
-                      fontWeight: FontWeight.normal),
-                  controller: _controller,
-                  tabs: [
-                    Text(
-                      Strings.sentTitle,
-                    ),
-                    Text(
-                      Strings.receivedTitle,
+              (widget.authorAtSign == widget.atSign)
+                  ? Container(
+                      height: 50,
+                      child: TabBar(
+                          onTap: (index) {},
+                          labelColor: Colors.black,
+                          indicatorWeight: 3.toHeight,
+                          indicatorColor: Colors.black,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.toFont,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          unselectedLabelStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14.toFont,
+                              fontWeight: FontWeight.normal),
+                          controller: _controller,
+                          tabs: [
+                            Text(
+                              Strings.sentTitle,
+                            ),
+                            Text(
+                              Strings.receivedTitle,
+                            )
+                          ]),
                     )
-                  ],
-                ),
-              ),
+                  : SizedBox(),
               Expanded(
-                child: TabBarView(
-                  controller: _controller,
-                  children: [
-                    ListBugReportTab(
-                      bugReportService: _bugReportService,
-                      isAuthorAtSign: false,
-                      atSign: widget.atSign,
-                    ),
-                    ListBugReportTab(
-                      bugReportService: _bugReportService,
-                      isAuthorAtSign: true,
-                      atSign: widget.atSign,
-                    ),
-                  ],
-                ),
-              )
+                  child: (widget.authorAtSign == widget.atSign)
+                      ? TabBarView(controller: _controller, children: [
+                          Center(
+                            child: Text('No bug report found'),
+                          ),
+                          ListBugReportTabAuthor(
+                            bugReportService: _bugReportService,
+                            isAuthorAtSign: false,
+                            atSign: widget.atSign,
+                          ),
+                        ])
+                      : ListBugReportTagUser(
+                          bugReportService: _bugReportService,
+                          atSign: widget.atSign,
+                          isAuthorAtSign: false,
+                        ))
             ],
           ),
         ),

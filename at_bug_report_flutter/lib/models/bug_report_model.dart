@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class BugReport {
-  int? time;
+  String? time;
   String? atSign;
   String? errorDetail;
 
@@ -12,7 +12,7 @@ class BugReport {
   });
 
   BugReport copyWith(
-      {int? time, String? atSign, String? errorDetail}) {
+      {String? time, String? atSign, String? errorDetail}) {
     return BugReport(
         time: time ?? this.time,
         atSign: atSign ?? this.atSign,
@@ -60,7 +60,6 @@ class BugReport {
         o.atSign == atSign &&
         o.errorDetail == errorDetail;
   }
-
   @override
   int get hashCode =>
       time.hashCode ^ atSign.hashCode ^ errorDetail.hashCode;
