@@ -3,6 +3,8 @@
 ### Now for some internet optimism.
 
 [![GitHub License](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+[![Build Status](https://github.com/atsign-foundation/at_widgets/actions/workflows/autobug.yaml/badge.svg)](https://github.com/atsign-foundation/at_widgets/actions/workflows/autobug.yaml)
+
 
 # at_widgets
 This is a common repository for various flutter packages that are published on [pub.dev](https://pub.dev/publishers/atsign.org/packages)
