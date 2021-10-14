@@ -23,10 +23,7 @@ class NotifyService {
   late FlutterLocalNotificationsPlugin _notificationsPlugin;
   late InitializationSettings initializationSettings;
 
-  final String storageKey = 'notify.';
-  final String notifyKey = 'notifyKey';
-
-  String sendToAtSign = '';
+  final String storageKey = 'at_notify';
 
   late AtClientManager atClientManager;
   late AtClient atClient;
@@ -36,7 +33,6 @@ class NotifyService {
   String? currentAtSign;
 
   List<Notify> notifies = [];
-  List<dynamic>? notifiesJson = [];
 
   StreamController<List<Notify>> notifyStreamController =
       StreamController<List<Notify>>.broadcast();
@@ -50,7 +46,6 @@ class NotifyService {
   }
 
   void initNotifyService(
-      AtClientManager atClientManagerFromApp,
       AtClientPreference atClientPreference,
       String currentAtSignFromApp,
       String rootDomainFromApp,
@@ -58,10 +53,10 @@ class NotifyService {
     currentAtSign = currentAtSignFromApp;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
-    atClientManager = atClientManagerFromApp;
-    atClientManager.setCurrentAtSign(
+    atClientManager = AtClientManager.getInstance();
+    AtClientManager.getInstance().setCurrentAtSign(
         currentAtSignFromApp, atClientPreference.namespace, atClientPreference);
-    atClient = atClientManager.atClient;
+    atClient = AtClientManager.getInstance().atClient;
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
     atClientManager.notificationService
@@ -100,17 +95,8 @@ class NotifyService {
 
     await _notificationsPlugin.initialize(
       initializationSettings,
-      onSelectNotification: (payload) async {
-
-      },
+      onSelectNotification: (payload) async {},
     );
-  }
-
-  void setSendToAtSign(String? sendToAtSign) {
-    if (sendToAtSign != null && sendToAtSign[0] != '@') {
-      sendToAtSign = '@' + sendToAtSign;
-    }
-    this.sendToAtSign = sendToAtSign!;
   }
 
   /// Request Alert, Badge, Sound Permission for IOS
@@ -127,6 +113,7 @@ class NotifyService {
 
   /// Listen Notification
   void _notificationCallback(dynamic notification) async {
+    print('_notificationCallback called in at_notify_flutter');
     AtNotification atNotification = notification;
     var notificationKey = atNotification.key;
     var fromAtsign = atNotification.from;
@@ -138,6 +125,11 @@ class NotifyService {
     }
     notificationKey = notificationKey.replaceFirst(fromAtsign, '').trim();
     print('notificationKey = $notificationKey');
+
+    if (atNotification.id == -1) {
+      return;
+    }
+
     if ((notificationKey.startsWith(storageKey) && toAtsign == currentAtSign)) {
       var message = atNotification.value ?? '';
       print('notify message => $message $fromAtsign');
@@ -145,10 +137,10 @@ class NotifyService {
         var decryptedMessage = await atClient.encryptionService!
             .decrypt(message, fromAtsign)
             .catchError((e) {
-          //   print('error in decrypting notify $e');
+          print('error in decrypting notify $e');
         });
         print('notify decryptedMessage => $decryptedMessage $fromAtsign');
-        await showNotification(decryptedMessage);
+        await showNotification(decryptedMessage, fromAtsign);
       }
     }
   }
@@ -157,75 +149,47 @@ class NotifyService {
   Future<void> getNotifies({String? atsign}) async {
     try {
       notifies = [];
-      var key = AtKey()
-        ..key = storageKey + (atsign ?? currentAtSign ?? ' ').substring(1)
-        ..sharedBy = currentAtSign
-        ..sharedWith = sendToAtSign
-        ..metadata = Metadata();
+      var notifications =
+          await atClient.notifyList(regex: storageKey, fromDate: '2021-10-14');
 
-      var keyValue = await atClient.get(key).catchError((e) {
-        print('error in get ${e.errorCode} ${e.errorMessage}');
-      });
+      var _jsonData = (json.decode(notifications.replaceFirst('data:', '')));
 
-      // ignore: unnecessary_null_comparison
-      if (keyValue != null && keyValue.value != null) {
-        notifiesJson = json.decode((keyValue.value) as String) as List?;
-        notifiesJson!.forEach((value) {
-          var notify = Notify.fromJson((value));
-          notifies.insert(0, notify);
+      await Future.forEach(_jsonData, (_data) async {
+        var decryptedMessage = await atClient.encryptionService!
+            .decrypt((_data! as Map<String, dynamic>)["value"],
+                (_data! as Map<String, dynamic>)['from'])
+            .catchError((e) {
+          print('error in decrypting notify $e');
         });
+        print('decryptedMessage ${decryptedMessage}');
+
+        var _newNotifyObj = Notify.fromJson(decryptedMessage);
+        notifies.insert(0, _newNotifyObj);
         notifySink.add(notifies);
-      } else {
-        notifiesJson = [];
-        notifySink.add(notifies);
-      }
+      });
     } catch (error) {
       print('Error in getting bug Report -> $error');
     }
   }
 
-  /// Create new notify to AtClient
-  Future<bool> addNotify(Notify notify, {NotifyEnum? notifyType}) async {
+  /// Call Notify in NotificationService, send notify to others
+  Future<bool> sendNotify(
+      String sendToAtSign, Notify notify, NotifyEnum notifyType,
+      {int noOfDays = 30}) async {
+    var notificationResponse;
+    notificationResponse = await atClientManager.notificationService
+        .notify(NotificationParams.forText(notify.message ?? '', sendToAtSign));
     var metadata = Metadata();
     metadata.ttr = -1;
+    metadata.ttl = 30 * 24 * 60 * 60000; // in milliseconds
     var key = AtKey()
-      ..key = storageKey + (currentAtSign ?? ' ').substring(1)
+      ..key = storageKey
       ..sharedBy = currentAtSign
       ..sharedWith = sendToAtSign
       ..metadata = metadata;
-    try {
-      notifies.insert(0, notify);
-      notifySink.add(notifies);
-      notifiesJson!.add(notify.toJson());
-      await atClient.put(key, json.encode(notifiesJson));
-    } catch (e) {
-      print('Error in setting notify => $e');
-    }
-    await sendNotify(key, notify, notifyType ?? NotifyEnum.notifyForUpdate);
-    return true;
-  }
-
-  /// Call Notify in NotificationService, send notify to others
-  Future<bool> sendNotify(
-    AtKey key,
-    Notify notify,
-    NotifyEnum notifyType,
-  ) async {
-    var notificationResponse;
-    if (notifyType == NotifyEnum.notifyForDelete) {
-      notificationResponse = await atClientManager.notificationService.notify(
-        NotificationParams.forDelete(key),
-      );
-    } else if (notifyType == NotifyEnum.notifyText) {
-      notificationResponse = await atClientManager.notificationService.notify(
-          NotificationParams.forText(notify.message ?? '', sendToAtSign));
-    } else {
-      notificationResponse = await atClientManager.notificationService.notify(
-        NotificationParams.forUpdate(key, value: notify.toJson()),
-        // onSuccess: _onSuccessCallback,
-        // onError: _onErrorCallback,
-      );
-    }
+    notificationResponse = await atClientManager.notificationService.notify(
+      NotificationParams.forUpdate(key, value: notify.toJson()),
+    );
 
     if (notificationResponse.notificationStatusEnum ==
         NotificationStatusEnum.delivered) {
@@ -246,7 +210,7 @@ class NotifyService {
   }
 
   /// Show Local Notification in Device
-  Future<void> showNotification(String decryptedMessage) async {
+  Future<void> showNotification(String decryptedMessage, String atSign) async {
     List<dynamic>? valuesJson = [];
     Notify notify = Notify.fromJson((decryptedMessage));
     print('showNotification => ${notify.message} ${notify.atSign}');
@@ -267,10 +231,10 @@ class NotifyService {
         android: androidChannelSpecifics, iOS: iosChannelSpecifics);
     await _notificationsPlugin.show(
       0,
-      '${notify.atSign}',
+      '${atSign}',
       '${notify.message}',
       platformChannelSpecifics,
-      payload: notify.toJson(),
+      payload: notify.message,
     );
   }
 

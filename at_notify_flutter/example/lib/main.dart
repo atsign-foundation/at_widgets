@@ -46,20 +46,21 @@ class _MyAppState extends State<MyApp> {
                     child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black12),
+                              MaterialStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () async {
                           Onboarding(
+                            rootEnvironment: RootEnvironment.Production,
                             context: context,
                             atClientPreference:
-                            clientSdkService.atClientPreference,
+                                clientSdkService.atClientPreference,
                             domain: MixedConstants.ROOT_DOMAIN,
                             appAPIKey: MixedConstants.devAPIKey,
                             appColor: Color.fromARGB(255, 240, 94, 62),
                             onboard: (Map<String?, AtClientService> value,
                                 String? atsign) async {
                               clientSdkService.atClientServiceInstance =
-                              value[atsign];
+                                  value[atsign];
                               await Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -94,7 +95,7 @@ class _MyAppState extends State<MyApp> {
                     child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black12),
+                              MaterialStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () async {
                           await Navigator.pushReplacement(
@@ -113,7 +114,7 @@ class _MyAppState extends State<MyApp> {
                     child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black12),
+                              MaterialStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () async {
                           await clientSdkService.deleteKey();

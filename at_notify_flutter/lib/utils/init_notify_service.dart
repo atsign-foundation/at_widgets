@@ -8,8 +8,8 @@ import 'package:at_notify_flutter/services/notify_service.dart';
 void initializeNotifyService(AtClientManager atClientManager,
     String currentAtSign, AtClientPreference atClientPreference,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
-  NotifyService()
-      .initNotifyService(atClientManager, atClientPreference, currentAtSign, rootDomain, rootPort);
+  NotifyService().initNotifyService(
+      atClientPreference, currentAtSign, rootDomain, rootPort);
 }
 
 void disposeNotifyControllers() {

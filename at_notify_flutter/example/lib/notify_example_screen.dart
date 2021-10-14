@@ -1,3 +1,5 @@
+import 'package:at_notify_flutter/screens/notify_screen.dart';
+import 'package:at_notify_flutter/services/notify_service.dart';
 import 'package:at_notify_flutter/utils/init_notify_service.dart';
 import 'package:at_notify_flutter/utils/notify_utils.dart';
 import 'package:flutter/material.dart';
@@ -65,29 +67,15 @@ class _BugReportScreenState extends State<BugReportScreen> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      notifyForUpdate(
+                      Navigator.push(
                         context,
-                        activeAtSign,
-                        atSignController.text,
-                        messageController.text,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                NotifyScreen(notifyService: NotifyService())),
                       );
                     },
                     child: Text(
-                      'Notify For Update',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      notifyForDelete(
-                        context,
-                        activeAtSign,
-                        atSignController.text,
-                        messageController.text,
-                      );
-                    },
-                    child: Text(
-                      'Notify For Delete',
+                      'Get past notifications',
                       style: TextStyle(fontSize: 16),
                     ),
                   ),

@@ -10,56 +10,19 @@ enum NotifyEnum {
 
 NotifyService _notifyService = NotifyService();
 
-/// Notify for Update
-notifyForUpdate(
+/// Notify Text
+notifyText(
   BuildContext context,
   String? atSign,
   String? sendToAtSign,
   String? message,
 ) {
-  _notifyService.setSendToAtSign(sendToAtSign);
-  _notifyService.addNotify(
-    Notify(
-      time: DateTime.now().millisecondsSinceEpoch,
-      atSign: atSign,
-      message: message,
-    ),
-    notifyType: NotifyEnum.notifyForUpdate,
-  );
-}
-
-/// Notify for Delete
-notifyForDelete(
-    BuildContext context,
-    String? atSign,
-    String? sendToAtSign,
-    String? message,
-    ) {
-  _notifyService.setSendToAtSign(sendToAtSign);
-  _notifyService.addNotify(
-    Notify(
-      time: DateTime.now().millisecondsSinceEpoch,
-      atSign: atSign,
-      message: message,
-    ),
-    notifyType: NotifyEnum.notifyForDelete,
-  );
-}
-
-/// Notify Text
-notifyText(
-    BuildContext context,
-    String? atSign,
-    String? sendToAtSign,
-    String? message,
-    ) {
-  _notifyService.setSendToAtSign(sendToAtSign);
-  _notifyService.addNotify(
-    Notify(
-      time: DateTime.now().millisecondsSinceEpoch,
-      atSign: atSign,
-      message: message,
-    ),
-    notifyType: NotifyEnum.notifyText,
-  );
+  _notifyService.sendNotify(
+      sendToAtSign!,
+      Notify(
+        time: DateTime.now().millisecondsSinceEpoch,
+        atSign: atSign,
+        message: message,
+      ),
+      NotifyEnum.notifyText);
 }

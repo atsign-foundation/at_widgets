@@ -37,46 +37,48 @@ class _NotifyScreenState extends State<NotifyScreen>
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return StreamBuilder<List<Notify>>(
-      stream: widget.notifyService!.notifyStream,
-      initialData: widget.notifyService!.notifies,
-      builder: (context, snapshot) {
-        return (snapshot.connectionState == ConnectionState.waiting)
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : (snapshot.data == null || snapshot.data!.isEmpty)
-                ? Center(
-                    child: Text('No bug report found'),
-                  )
-                : ListView.separated(
-                    controller: _scrollController,
-                    shrinkWrap: true,
-                    itemCount: snapshot.data?.length ?? 0,
-                    padding: EdgeInsets.symmetric(vertical: 12.toHeight),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 12.toHeight, horizontal: 12.toWidth),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              snapshot.data?[index]?.message ?? 'Error',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
+    return Scaffold(
+      body: StreamBuilder<List<Notify>>(
+        stream: widget.notifyService!.notifyStream,
+        initialData: widget.notifyService!.notifies,
+        builder: (context, snapshot) {
+          return (snapshot.connectionState == ConnectionState.waiting)
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : (snapshot.data == null || snapshot.data!.isEmpty)
+                  ? Center(
+                      child: Text('No bug report found'),
+                    )
+                  : ListView.separated(
+                      controller: _scrollController,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data?.length ?? 0,
+                      padding: EdgeInsets.symmetric(vertical: 12.toHeight),
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12.toHeight, horizontal: 12.toWidth),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                snapshot.data?[index]?.message ?? 'Error',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider();
-                    },
-                  );
-      },
+                            ],
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider();
+                      },
+                    );
+        },
+      ),
     );
   }
 
