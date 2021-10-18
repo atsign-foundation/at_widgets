@@ -146,13 +146,28 @@ class NotifyService {
   }
 
   /// Get Notify List From AtClient
-  Future<void> getNotifies({String? atsign}) async {
+  Future<void> getNotifies({String? atsign, int days = 1}) async {
     try {
+      var currentDate = DateTime.now().subtract(Duration(days: days));
+      var _fromDate = '${currentDate.year}-${currentDate.month}';
+
+      if (currentDate.day < 10) {
+        _fromDate = '$_fromDate-0${currentDate.day}';
+      } else {
+        _fromDate = '$_fromDate-${currentDate.day}';
+      }
+
       notifies = [];
+      notifySink.add(notifies);
+
       var notifications =
-          await atClient.notifyList(regex: storageKey, fromDate: '2021-10-14');
+          await atClient.notifyList(regex: storageKey, fromDate: _fromDate);
 
       var _jsonData = (json.decode(notifications.replaceFirst('data:', '')));
+
+      if (_jsonData == null) {
+        return;
+      }
 
       await Future.forEach(_jsonData, (_data) async {
         var decryptedMessage = await atClient.encryptionService!
@@ -168,7 +183,7 @@ class NotifyService {
         notifySink.add(notifies);
       });
     } catch (error) {
-      print('Error in getting bug Report -> $error');
+      print('Error in getNotifies -> $error');
     }
   }
 
