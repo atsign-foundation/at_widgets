@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
       // * The onboarding screen (first screen)
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('MyApp'),
+          title: const Text('AtLogin Example App'),
         ),
         body: Builder(
           builder: (context) => Center(
@@ -117,7 +117,8 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            const Text('Successfully onboarded and navigated to FirstAppScreen'),
+            const Text(
+                'Successfully onboarded and navigated to FirstAppScreen'),
             Text('Current @sign: ${atContext.currentAtSign}'),
           ],
         ),

@@ -7,9 +7,9 @@ class AppConstants {
   static String appUrl = 'atprotocol://at_login';
   static const int responseTimeLimit = 30;
   static String _rootDomain = 'root.atsign.org';
-  static String website;
+  static String? website;
   static get serverDomain => _rootDomain;
-  static set rootDomain(String domain) {
+  static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';
     website = _rootDomain == 'root.atsign.org'
         ? 'https://atsign.com'

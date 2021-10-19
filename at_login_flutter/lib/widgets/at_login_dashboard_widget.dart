@@ -9,56 +9,51 @@ class AtLoginDashboard extends StatefulWidget {
   final AtClientPreference atClientPreference;
 
   ///color to match with your app theme. Defaults to [orange].
-  final Color appColor;
+  final Color? appColor;
 
-  final String atSign;
+  final String? atSign;
 
   final Widget nextScreen;
 
-
-  AtLoginDashboard(
-      {
-        Key key,
-        @required this.atClientPreference,
-        @required this.atSign,
-        @required this.nextScreen,
-        this.appColor,
-      }): super(key: key);
+  AtLoginDashboard({
+    Key? key,
+    required this.atClientPreference,
+    required this.atSign,
+    required this.nextScreen,
+    this.appColor,
+  }) : super(key: key);
 
   @override
   _AtLoginDashboardState createState() => _AtLoginDashboardState(this.atSign);
 }
 
 class _AtLoginDashboardState extends State<AtLoginDashboard> {
-  String atSign;
+  late AtLoginService _atLoginService;
+  String? atSign;
+  List<AtLoginObj> atLoginList = [];
+
   _AtLoginDashboardState(atSign) {
     print('atSign is $atSign');
-    this.atSign = atSign;
+    this.atSign = widget.atSign;
   }
   bool _loading = false;
-  Map<AtKey, AtValue> _atLogins = {};
-  AtLoginService _atLoginService;
 
   @override
   void initState() {
-    _atLoginService = AtLoginService();
-    _atLoginService.setAtClientPreference = widget.atClientPreference;
+    // atLoginService = AtLoginService().init(this.atSign!);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_atLogins.isEmpty) {
-      _getAtLoginList(atSign);
+    if (atLoginList.isEmpty) {
+      _getAtLoginList();
     }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text(
-              this.atSign == null || this.atSign == ''?
-              Strings.dashboardTitle : this.atSign
-          ),
+          title: Text(this.atSign ?? Strings.dashboardTitle),
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
@@ -66,9 +61,7 @@ class _AtLoginDashboardState extends State<AtLoginDashboard> {
                 onPressed: () async {
                   await Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => widget.nextScreen
-                    ),
+                    MaterialPageRoute(builder: (context) => widget.nextScreen),
                   );
                 },
               );
@@ -100,28 +93,22 @@ class _AtLoginDashboardState extends State<AtLoginDashboard> {
     );
   }
 
-  _getAtLoginList(atSign) async {
-    Map<AtKey, AtValue> atLoginMap;
-    await _atLoginService.setAtsign(atSign);
-    atLoginMap = await _atLoginService.getAtLogins();
-    return atLoginMap;
+  Future<List<AtValue>> _getAtLoginList() async {
+    return await _atLoginService.getAtLoginObjs();
   }
 
   _buildAtLoginWidgets() {
     List<Widget> widgets = [];
-    _atLogins.forEach((k,v) =>
-        widgets.addAll(_atLoginListTile(k,v))
-    );
+    atLoginList.forEach((element) => widgets.addAll(_atLoginListTile(element)));
     return widgets;
   }
 
-  _atLoginListTile(AtKey atKey, AtValue atValue) {
-    AtLoginObj atLoginObj = atValue.value;
+  _atLoginListTile(AtLoginObj atLoginObj) {
     // var meta = atValue.metadata;
     return <Widget>[
       ListTile(
         leading: Text(
-          atLoginObj.requestorUrl,
+          atLoginObj.requestorUrl!,
           overflow: TextOverflow.ellipsis,
         ),
         trailing: Row(
@@ -133,12 +120,10 @@ class _AtLoginDashboardState extends State<AtLoginDashboard> {
                   setState(() {
                     _loading = true;
                   });
-                  await _atLoginService.delete(atKey);
+                  await _atLoginService.deleteAtLoginObj(atLoginObj.key!);
                   await Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => widget.nextScreen
-                    ),
+                    MaterialPageRoute(builder: (context) => widget.nextScreen),
                   );
 
                   setState(() {

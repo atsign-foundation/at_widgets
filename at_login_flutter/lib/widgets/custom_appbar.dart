@@ -9,21 +9,20 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showTitle;
   final bool showQr;
   final bool showNotifications;
-  final String title;
+  final String? title;
   final showBackButton;
 
-  CustomAppBar(
-      {this.showTitle = false,
-      this.showQr = false,
-      this.showNotifications = false,
-      this.showBackButton = false,
-      this.title,
-      });
+  CustomAppBar({
+    this.showTitle = false,
+    this.showQr = false,
+    this.showNotifications = false,
+    this.showBackButton = false,
+    this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      brightness: ColorConstants.brightness,
       elevation: 0,
       backgroundColor: ColorConstants.backgroundColor,
       leading: null,
@@ -82,16 +81,16 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       title: Row(
         children: [
           if (showBackButton)
-          Flexible(
-            fit: FlexFit.loose,
-            flex: 2,
-            child: GestureDetector(
-                child: Text(Strings.backButton,
-                    style: CustomTextStyles.fontR14light),
-                onTap: () {
-                  Navigator.pop(context);
-                }),
-          ),
+            Flexible(
+              fit: FlexFit.loose,
+              flex: 2,
+              child: GestureDetector(
+                  child: Text(Strings.BackButton,
+                      style: CustomTextStyles.fontR14light),
+                  onTap: () {
+                    Navigator.pop(context);
+                  }),
+            ),
           SizedBox(width: MediaQuery.of(context).size.width * 0.10),
           if (showTitle)
             Flexible(
