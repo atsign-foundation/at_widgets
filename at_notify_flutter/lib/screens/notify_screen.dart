@@ -48,43 +48,53 @@ class _NotifyScreenState extends State<NotifyScreen>
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: (snapshot.data?.length ?? 0) > 0 ? 50 : 0,
+              ),
               Text(
-                'No of Days: ',
+                'No of Days: $_selectedDate',
                 style: TextStyle(
                   color: Color(0xFF000000),
                   fontSize: 16.toFont,
                 ),
               ),
-              Center(
-                child: DropdownButton(
-                  isExpanded: false,
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  underline: SizedBox(),
-                  elevation: 0,
-                  dropdownColor: Colors.white,
-                  value: _selectedDate,
-                  hint: Text('Occurs on'),
-                  items: List.generate(30, (index) => (index + 1))
-                      .map((int option) {
-                    return DropdownMenuItem<int>(
-                      value: option,
-                      child: Text(option.toString(),
-                          style: TextStyle(
-                            color: Color(0xFF000000),
-                            fontSize: 14.toFont,
-                          )),
-                    );
-                  }).toList(),
-                  onChanged: (int? value) {
-                    setState(() {
-                      _selectedDate = value!;
-                      widget.notifyService!.getNotifies(
-                        atsign: widget.atSign,
-                        days: _selectedDate,
-                      );
-                    });
-                  },
+              Slider(
+                activeColor: Theme.of(context).primaryColor,
+                inactiveColor: Colors.grey[200],
+                value: _selectedDate.toDouble(),
+                min: 1,
+                max: 30,
+                divisions: 30,
+                label: 'Select days',
+                onChanged: (double value) {
+                  setState(() {
+                    _selectedDate = value.toInt();
+                  });
+                },
+              ),
+              TextButton(
+                onPressed: () async {
+                  widget.notifyService!.getNotifies(
+                    atsign: widget.atSign,
+                    days: _selectedDate,
+                  );
+                },
+                child: Text(
+                  'Get notifications',
+                  style: TextStyle(fontSize: 16),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 22.0),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Notifications: ',
+                      style: TextStyle(fontSize: 18),
+                    )),
+              ),
+              SizedBox(
+                height: 10,
               ),
               (snapshot.connectionState == ConnectionState.waiting)
                   ? Center(
@@ -94,33 +104,36 @@ class _NotifyScreenState extends State<NotifyScreen>
                       ? Center(
                           child: Text('No notifications found'),
                         )
-                      : ListView.separated(
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          itemCount: snapshot.data?.length ?? 0,
-                          padding: EdgeInsets.symmetric(vertical: 12.toHeight),
-                          itemBuilder: (context, index) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12.toHeight,
-                                  horizontal: 12.toWidth),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    snapshot.data?[index]?.message ?? 'Error',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
+                      : Expanded(
+                          child: ListView.separated(
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            itemCount: snapshot.data?.length ?? 0,
+                            padding:
+                                EdgeInsets.symmetric(vertical: 12.toHeight),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12.toHeight,
+                                    horizontal: 12.toWidth),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      snapshot.data?[index]?.message ?? 'Error',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return Divider();
-                          },
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return Divider();
+                            },
+                          ),
                         )
             ],
           );
