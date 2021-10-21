@@ -59,6 +59,10 @@ class AtLocationNotificationListener {
   }
 
   void _notificationCallback(AtNotification notification) async {
+    if (notification.id == '-1') {
+      return;
+    }
+
     var value = notification.value;
     var notificationKey = notification.key;
     print(
@@ -116,11 +120,9 @@ class AtLocationNotificationListener {
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) {
       print('error in decrypting: $e');
-      showErrorDialog(e.toString());
     });
 
     if (decryptedMessage == null || decryptedMessage == '') {
-      showErrorDialog('error in decrypting notification');
       return;
     }
 
@@ -223,25 +225,5 @@ class AtLocationNotificationListener {
         },
       );
     }
-  }
-
-  void showErrorDialog(String msg) {
-    showDialog(
-      context: navKey.currentContext!,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Something went wrong'),
-          content: Text(msg, style: TextStyle(fontSize: 16)),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                Navigator.of(navKey.currentContext!).pop();
-              },
-              child: Text('Ok', style: TextStyle(color: Colors.black)),
-            ),
-          ],
-        );
-      },
-    );
   }
 }
