@@ -59,6 +59,10 @@ class AtEventNotificationListener {
 
   //// TODO: Filter past events
   void _notificationCallback(AtNotification notification) async {
+    if (notification.id == '-1') {
+      return;
+    }
+
     print('notification received in events package ===========> $notification');
     var value = notification.value;
     var notificationKey = notification.key;
@@ -85,12 +89,10 @@ class AtEventNotificationListener {
         .catchError((e) {
       print('error in decrypting event: $e');
       // TODO: only showing error dialog for closed testing group
-      showErrorDialog(e.toString());
     });
     print('decrypted message:$decryptedMessage');
 
     if (decryptedMessage == null || decryptedMessage == '') {
-      showErrorDialog('error in decrypting notification');
       return;
     }
 
@@ -140,26 +142,6 @@ class AtEventNotificationListener {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return EventNotificationDialog(eventData: eventNotificationModel);
-      },
-    );
-  }
-
-  void showErrorDialog(String msg) {
-    showDialog(
-      context: navKey!.currentContext!,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Something went wrong'),
-          content: Text(msg, style: TextStyle(fontSize: 16)),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                Navigator.of(navKey!.currentContext!).pop();
-              },
-              child: Text('Ok', style: TextStyle(color: Colors.black)),
-            ),
-          ],
-        );
       },
     );
   }
