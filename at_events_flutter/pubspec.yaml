@@ -17,8 +17,8 @@ dependencies:
   geolocator: ^7.0.3
   
   at_commons: ^3.0.0
-  at_client_mobile: ^3.0.1
-  at_contact: ^3.0.0
+  at_client_mobile: ^3.0.3
+  at_contact: ^3.0.1
   at_lookup: ^3.0.3
 
   at_contacts_group_flutter: ^3.0.0
