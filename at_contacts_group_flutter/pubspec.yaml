@@ -51,7 +51,6 @@ flutter:
   assets:
     - assets/images/empty_group.png
     - assets/images/send.png
-    - assets/images/group_photo.png
     # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   #
