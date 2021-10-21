@@ -76,7 +76,7 @@ class RequestLocationService {
         if (isNotResponded) {
           await locationPromptDialog(
               text:
-                  'You have already requested $atsign. But your request has not been responded yet. Would you like to prompt them again?',
+                  'You have already requested $atsign\'s location but they have not yet responded. Would you like to prompt them again?',
               locationNotificationModel: newLocationNotificationModel,
               isShareLocationData: false,
               isRequestLocationData: true,
@@ -90,7 +90,7 @@ class RequestLocationService {
         if (isRejected) {
           await locationPromptDialog(
             text:
-                'You have already requested $atsign. But your request has been rejected. Would you like to prompt them again?',
+                'You have already requested $atsign\'s location and your request was rejected. Would you like to prompt them again?',
             locationNotificationModel: newLocationNotificationModel,
             isShareLocationData: false,
             isRequestLocationData: true,

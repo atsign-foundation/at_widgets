@@ -20,7 +20,7 @@ dependencies:
     # the parent directory to use the current plugin's version.
     path: ../
   latlong2: ^0.8.0
-  at_onboarding_flutter: ^3.0.0
+  at_onboarding_flutter: ^3.0.4
   
 dev_dependencies:
   flutter_test:

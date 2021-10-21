@@ -128,9 +128,9 @@ class _LocationPromptState extends State<LocationPrompt> {
                               width: 164.toWidth,
                               height: 48.toHeight,
                             ),
-                      SizedBox(height: 20),
-                      InkWell(
-                        onTap: () async {
+                      SizedBox(height: 10),
+                      CustomButton(
+                        onPressed: () async {
                           if (widget.isShareLocationData) {
                             CustomToast().show('Update cancelled', context);
                           } else if (widget.isRequestLocationData) {
@@ -138,11 +138,12 @@ class _LocationPromptState extends State<LocationPrompt> {
                           }
                           Navigator.of(context).pop();
                         },
-                        child: Text(
-                          widget.noText ?? 'No!',
-                          style: CustomTextStyles().black14,
-                        ),
-                      ),
+                        buttonText: widget.noText ?? 'No!',
+                        buttonColor: Colors.white,
+                        fontColor: Colors.black,
+                        width: 164.toWidth,
+                        height: 48.toHeight,
+                      )
                     ],
                   ),
           ),

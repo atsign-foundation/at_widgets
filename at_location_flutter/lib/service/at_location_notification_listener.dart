@@ -59,6 +59,10 @@ class AtLocationNotificationListener {
   }
 
   void _notificationCallback(AtNotification notification) async {
+    if (notification.id == '-1') {
+      return;
+    }
+
     var value = notification.value;
     var notificationKey = notification.key;
     print(
@@ -114,7 +118,13 @@ class AtLocationNotificationListener {
     var decryptedMessage = await atClientInstance!.encryptionService!
         .decrypt(value ?? '', fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
-        .catchError((e) => print('error in decrypting: $e'));
+        .catchError((e) {
+      print('error in decrypting: $e');
+    });
+
+    if (decryptedMessage == null || decryptedMessage == '') {
+      return;
+    }
 
     if (atKey
         .toString()
