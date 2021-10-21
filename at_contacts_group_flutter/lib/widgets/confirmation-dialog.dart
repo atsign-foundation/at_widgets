@@ -154,20 +154,21 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                               ? AllColors().WHITE
                               : AllColors().Black,
                     ),
-              SizedBox(height: 15.toHeight),
-              InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: !isLoading
-                      ? Text(
-                          'No',
-                          style: TextStyle(
-                              fontSize: 14.toFont,
-                              color: Theme.of(context).brightness ==
-                                      Brightness.light
-                                  ? AllColors().Black
-                                  : AllColors().WHITE),
-                        )
-                      : SizedBox())
+              SizedBox(height: 10.toHeight),
+              CustomButton(
+                height: 60.toHeight,
+                width: double.infinity,
+                buttonText: 'No',
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+                buttonColor: Theme.of(context).brightness == Brightness.light
+                    ? AllColors().WHITE
+                    : AllColors().Black,
+                fontColor: Theme.of(context).brightness == Brightness.light
+                    ? AllColors().Black
+                    : AllColors().WHITE,
+              )
             ],
           ),
         ),

@@ -99,6 +99,7 @@ class _GroupEditState extends State<GroupEdit> {
                 var group = widget.group;
                 group.displayName = groupName!;
                 group.groupName = groupName!;
+                group.groupPicture = groupPicture;
                 setState(() {
                   isLoading = true;
                 });
@@ -119,22 +120,19 @@ class _GroupEditState extends State<GroupEdit> {
           },
         ),
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (widget.group.groupPicture != null && groupPicture != null)
+            (groupPicture != null)
                 ? Image.memory(
                     groupPicture!,
-                    width: double.infinity,
                     height: 272.toHeight,
                     fit: BoxFit.fill,
                   )
-                : Image.asset(
-                    AllImages().GROUP_PHOTO,
+                : SizedBox(
                     height: 272.toHeight,
                     width: double.infinity,
-                    fit: BoxFit.fitWidth,
-                    package: 'at_contacts_group_flutter',
-                  ),
+                    child: Icon(Icons.groups_rounded,
+                        size: 200, color: AllColors().LIGHT_GREY)),
+            Divider(height: 1),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: 27.toWidth, vertical: 15.toHeight),
@@ -298,10 +296,11 @@ class _GroupEditState extends State<GroupEdit> {
                   InkWell(
                     onTap: () async {
                       var image = await ImagePicker().pickImage();
-                      setState(() {
-                        widget.group.groupPicture = image;
-                        groupPicture = image;
-                      });
+                      if (image != null) {
+                        setState(() {
+                          groupPicture = image;
+                        });
+                      }
                       Navigator.of(context).pop();
                     },
                     child: Text(
@@ -313,7 +312,6 @@ class _GroupEditState extends State<GroupEdit> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        widget.group.groupPicture = null;
                         groupPicture = null;
                       });
                       Navigator.of(context).pop();
