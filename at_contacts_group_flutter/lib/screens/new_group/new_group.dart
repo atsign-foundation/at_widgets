@@ -244,6 +244,7 @@ class _NewGroupState extends State<NewGroup> {
                         (SizeConfig().screenHeight * 0.2)),
                     children: List.generate(selectedContacts!.length, (index) {
                       return CustomPersonVerticalTile(
+                        key: UniqueKey(),
                         imageLocation: null,
                         title: selectedContacts![index]!.atSign,
                         subTitle: selectedContacts![index]!.atSign,

@@ -33,10 +33,10 @@ dependencies:
   at_commons: ^3.0.0
   at_contact: ^3.0.1
   at_common_flutter: ^2.0.2
-  pedantic: ^1.11.0
 
 
 dev_dependencies:
+  flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
 
