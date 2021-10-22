@@ -15,7 +15,8 @@ The chat service needs to be initialised. It is expected that the app will first
 
 ```
 initializeChatService(
-        clientSdkService.atClientServiceInstance.atClient, activeAtSign,
+        clientSdkService.atClientServiceInstance!.atClientManager,
+        activeAtSign!,
         rootDomain: MixedConstants.ROOT_DOMAIN);
 ```
 

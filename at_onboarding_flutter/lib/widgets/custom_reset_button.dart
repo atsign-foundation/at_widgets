@@ -8,35 +8,38 @@ import 'package:flutter/material.dart';
 /// Custom reset button widget is to reset an atsign from keychain list,
 
 class CustomResetButton extends StatefulWidget {
-
   bool? loading;
   final String? buttonText;
   final double? width;
   final double? height;
-  CustomResetButton(
-      {Key? key,
-        this.loading = false,
-        this.buttonText,
-        this.height,
-        this.width,
-      })
-      : super(key: key);
+  CustomResetButton({
+    Key? key,
+    this.loading = false,
+    this.buttonText,
+    this.height,
+    this.width,
+  }) : super(key: key);
 
   @override
   State<CustomResetButton> createState() => _CustomResetButtonState();
 }
 
 class _CustomResetButtonState extends State<CustomResetButton> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   widget.loading = false;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _showResetDialog,
       child: Container(
-        width: widget.width ,
+        width: widget.width,
         height: widget.height,
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-            color: Colors.grey[200]),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(color: Colors.grey[200]),
         child: Center(
           child: Text(
             widget.buttonText!,
@@ -51,12 +54,12 @@ class _CustomResetButtonState extends State<CustomResetButton> {
     );
   }
 
-  _showResetDialog() async {
+  Future<void> _showResetDialog() async {
     bool isSelectAtsign = false;
     bool isSelectAll = false;
     List<String>? atsignsList = await SDKService().getAtsignList();
-    Map<String,bool?> atsignMap = Map<String,bool>();
-    if(atsignsList != null){
+    Map<String, bool?> atsignMap = <String, bool>{};
+    if (atsignsList != null) {
       for (String atsign in atsignsList) {
         atsignMap[atsign] = false;
       }
@@ -65,11 +68,12 @@ class _CustomResetButtonState extends State<CustomResetButton> {
         barrierDismissible: true,
         context: context,
         builder: (BuildContext context) {
-          return StatefulBuilder(builder: (BuildContext context, void Function(void Function()) stateSet) {
+          return StatefulBuilder(builder:
+              (BuildContext context, void Function(void Function()) stateSet) {
             return AlertDialog(
                 title: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+                  children: const <Widget>[
                     Text(Strings.resetDescription,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 15)),
@@ -83,107 +87,121 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                 ),
                 content: atsignsList == null
                     ? Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                  Text(Strings.noAtsignToReset,
-                      style: TextStyle(fontSize: 15)),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(AppConstants.closeButton,
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Color.fromARGB(255, 240, 94, 62)))),
-                  )
-                ])
-                    : SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      CheckboxListTile(
-                        onChanged: (bool? value) {
-                          isSelectAll = value!;
-                          atsignMap != null ? atsignMap
-                              .updateAll((String? key,bool? value1) => value1 = value):true;
-                          // atsignMap[atsign] = value;
-                          stateSet(() {});
-                        },
-                        value: isSelectAll,
-                        checkColor: Colors.white,
-                        activeColor: Color.fromARGB(255, 240, 94, 62),
-                        title: Text('Select All',
-                            style: TextStyle(
-                              // fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            )),
-                        // trailing: Checkbox,
-                      ),
-                      for (String atsign in atsignsList)
-                        CheckboxListTile(
-                          onChanged: (bool? value) {
-                            atsignMap != null ? atsignMap[atsign] = value : true;
-                            stateSet(() {});
-                          },
-                          value: atsignMap != null ? atsignMap[atsign]:true,
-                          checkColor: Colors.white,
-                          activeColor: Color.fromARGB(255, 240, 94, 62),
-                          title: Text('$atsign'),
-                          // trailing: Checkbox,
-                        ),
-                      Divider(thickness: 0.8),
-                      if (isSelectAtsign)
-                        Text(Strings.resetErrorText,
-                            style: TextStyle(
-                                color: Colors.red, fontSize: 14)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(Strings.resetWarningText,
-                          style: TextStyle(
-                              color: ColorConstants.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(children:<Widget> [
-                        TextButton(
-                          onPressed: () {
-                            Map<String,bool?> tempAtsignMap = Map<String,bool>();
-                            tempAtsignMap.addAll(atsignMap);
-                            tempAtsignMap.removeWhere(
-                                    (String? key, bool? value) => value == false);
-                              if (tempAtsignMap.keys.toList().isEmpty) {
-                              isSelectAtsign = true;
-                              stateSet(() {});
-                            } else {
-                              isSelectAtsign = false;
-                              _resetDevice(tempAtsignMap.keys.toList());
-                            }
-                          },
-                          child: Text(AppConstants.removeButton,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Color.fromARGB(255, 240, 94, 62))),
-                        ),
-                        Spacer(),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text(AppConstants.cancelButton,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.black)))
+                        const Text(Strings.noAtsignToReset,
+                            style: TextStyle(fontSize: 15)),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text(AppConstants.closeButton,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color:
+                                          Color.fromARGB(255, 240, 94, 62)))),
+                        )
                       ])
-                    ],
-                  ),
-                ));
+                    : SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            CheckboxListTile(
+                              onChanged: (bool? value) {
+                                isSelectAll = value!;
+                                atsignMap.isNotEmpty
+                                    ? atsignMap.updateAll(
+                                        (String? key, bool? value1) =>
+                                            value1 = value)
+                                    : true;
+                                // atsignMap[atsign] = value;
+                                stateSet(() {});
+                              },
+                              value: isSelectAll,
+                              checkColor: Colors.white,
+                              activeColor:
+                                  const Color.fromARGB(255, 240, 94, 62),
+                              title: const Text('Select All',
+                                  style: TextStyle(
+                                    // fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              // trailing: Checkbox,
+                            ),
+                            for (String atsign in atsignsList)
+                              CheckboxListTile(
+                                onChanged: (bool? value) {
+                                  atsignMap.isNotEmpty
+                                      ? atsignMap[atsign] = value
+                                      : true;
+                                  stateSet(() {});
+                                },
+                                value: atsignMap.isNotEmpty
+                                    ? atsignMap[atsign]
+                                    : true,
+                                checkColor: Colors.white,
+                                activeColor:
+                                    const Color.fromARGB(255, 240, 94, 62),
+                                title: Text('$atsign'),
+                                // trailing: Checkbox,
+                              ),
+                            const Divider(thickness: 0.8),
+                            if (isSelectAtsign)
+                              const Text(Strings.resetErrorText,
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 14)),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(Strings.resetWarningText,
+                                style: TextStyle(
+                                    color: ColorConstants.primary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14)),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(children: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Map<String, bool?> tempAtsignMap =
+                                      <String, bool>{};
+                                  tempAtsignMap.addAll(atsignMap);
+                                  tempAtsignMap.removeWhere(
+                                      (String? key, bool? value) =>
+                                          value == false);
+                                  if (tempAtsignMap.keys.toList().isEmpty) {
+                                    isSelectAtsign = true;
+                                    stateSet(() {});
+                                  } else {
+                                    isSelectAtsign = false;
+                                    _resetDevice(tempAtsignMap.keys.toList());
+                                  }
+                                },
+                                child: const Text(AppConstants.removeButton,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color:
+                                            Color.fromARGB(255, 240, 94, 62))),
+                              ),
+                              const Spacer(),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(AppConstants.cancelButton,
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.black)))
+                            ])
+                          ],
+                        ),
+                      ));
           });
           // );
         });
   }
-  _resetDevice(List<String> checkedAtsigns) async {
+
+  Future<void> _resetDevice(List<String> checkedAtsigns) async {
     Navigator.of(context).pop();
     setState(() {
       widget.loading = true;

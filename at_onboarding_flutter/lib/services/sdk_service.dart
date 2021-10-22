@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_client/at_client.dart';
 import 'package:at_commons/at_commons.dart';
 
 class SDKService {
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
-  Map<String?, AtClientService>? atClientServiceMap = Map<String?, AtClientService>();
-  List<String>? atSignsList ;
+  Map<String?, AtClientService>? atClientServiceMap =
+      Map<String?, AtClientService>();
+  List<String>? atSignsList;
   String? currentAtsign;
   String? lastOnboardedAtsign;
   Map<String?, bool>? monitorConnectionMap = Map<String?, bool>();
@@ -26,7 +27,7 @@ class SDKService {
 
   ///Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
-    return await _keyChainManager.getAtSign();
+    return _keyChainManager.getAtSign();
   }
 
   ///Deletes the [atsign] from device storage.
@@ -42,22 +43,22 @@ class SDKService {
   ///Returns list of atsigns stored in device storage.
   Future<List<String>?> getAtsignList() async {
     atSignsList = await _keyChainManager.getAtSignListFromKeychain();
-    return atSignsList ;
+    return atSignsList;
   }
 
   ///Makes [atsign] as primary in device storage and returns `true` for successful change.
   Future<bool> makeAtSignPrimary(String atsign) async {
-    return await _keyChainManager.makeAtSignPrimary(atsign);
+    return _keyChainManager.makeAtSignPrimary(atsign);
   }
 
   ///Returns `true` on updating [atKey] with [value] for current @sign.
   Future<bool> put(AtKey atKey, dynamic value) async {
-    return await _getAtClientForAtsign().put(atKey, value);
+    return _getAtClientForAtsign().put(atKey, value);
   }
 
   ///Returns `true` on deleting [atKey] for current @sign.
   Future<bool> delete(AtKey atKey) async {
-    return await _getAtClientForAtsign().delete(atKey);
+    return _getAtClientForAtsign().delete(atKey);
   }
 
   ///Resets [atsigns] list from device storage.
@@ -69,7 +70,7 @@ class SDKService {
     }
     this.currentAtsign = null;
     this.lastOnboardedAtsign = null;
-    this.atSignsList ;
+    this.atSignsList;
   }
 
   ///Returns `true` if [atsign] is onboarded in the app.
@@ -77,7 +78,7 @@ class SDKService {
     return atClientServiceMap!.containsKey(atsign);
   }
 
-  sync() {
+  void sync() {
     AtClientManager.getInstance().syncService.sync();
   }
 

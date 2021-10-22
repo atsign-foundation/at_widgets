@@ -1,5 +1,20 @@
+## 3.0.4
+- Added hide qr scan to hide qr scan in custom dialog
+
+## 3.0.3
+- Resolved Qr scanning issue in ios
+
+## 3.0.2
+- Added hide references to hide webpage references in custom dialog
+
+## 3.0.1
+- bug fixes
+
 ## 3.0.0
-- Resilient SDK changes uptake for monitor, notification and sync improvements
+- Resilient SDK changes uptake for monitor, notification, and sync improvements.
+- Removed the domain parameter from the `Onboarding` widget.
+- Added `rootEnvironment` parameter to the `Onboarding` widget.
+- Made API Key mandatory for production environment.
 
 ## 2.1.3
 - added QR code screen

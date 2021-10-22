@@ -99,7 +99,8 @@ class LocationService {
       // ignore: unnecessary_null_comparison
       if (AtLocationNotificationListener().navKey != null) {
         CustomToast().show('Location permission not granted',
-            AtLocationNotificationListener().navKey.currentContext!);
+            AtLocationNotificationListener().navKey.currentContext!,
+            isError: true);
       }
     }
   }
@@ -222,7 +223,7 @@ class LocationService {
       }
     } catch (e) {
       print(e);
-      if (showToast != null) showToast!('Something went wrong');
+      if (showToast != null) showToast!('Something went wrong', isError: true);
     }
   }
 

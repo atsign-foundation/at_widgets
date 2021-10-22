@@ -267,7 +267,8 @@ String timeOfDayToString(DateTime time) {
 }
 
 String dateToString(DateTime date) {
-  var dateString = '${date.day}/${date.month}/${date.year}';
+  var dateString = '${date.month}/${date.day}/${date.year}';
+
   return dateString;
 }
 

@@ -115,11 +115,11 @@ class OnboardingService {
       if (cramSecret != null) {
         _atClientPreference.privateKey = null;
       }
-      bool isAuthenticated = await atClientService
-          .authenticate(atsign, _atClientPreference,
-              jsonData: jsonData, decryptKey: decryptKey, status: status);
-        if(isAuthenticated){
-            _atsign = atsign;
+      bool isAuthenticated = await atClientService.authenticate(
+          atsign, _atClientPreference,
+          jsonData: jsonData, decryptKey: decryptKey, status: status);
+      if (isAuthenticated) {
+        _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
         c.complete(ResponseStatus.AUTH_SUCCESS);
         await _sync(_atsign);
@@ -151,8 +151,7 @@ class OnboardingService {
   }
 
   Future<Map<String, String?>> getEncryptedKeys(String atsign) async {
-    Map<String, String?> result =
-        await KeychainUtil.getEncryptedKeys(atsign);
+    Map<String, String?> result = await KeychainUtil.getEncryptedKeys(atsign);
     result[atsign] = await getAESKey(atsign);
     return result;
   }
@@ -173,20 +172,22 @@ class OnboardingService {
       return false;
     }
     atsign = formatAtSign(atsign);
-    List<String>? atSignsList = await getAtsignList();
+    List<String> atSignsList = await getAtsignList();
     ServerStatus? status = await _checkAtSignServerStatus(atsign!).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
         onTimeout: () => throw ResponseStatus.TIME_OUT);
-    bool isExist = atSignsList != null ? atSignsList.contains(atsign) : false;
+    bool isExist =
+        atSignsList.isNotEmpty ? atSignsList.contains(atsign) : false;
     if (status == ServerStatus.teapot) {
       isExist = false;
     }
     return isExist;
   }
 
-  Future<List<String>?> getAtsignList() async {
+  Future<List<String>> getAtsignList() async {
     List<String>? atSignsList =
         await _keyChainManager.getAtSignListFromKeychain();
+    atSignsList == null ? atSignsList = <String>[] : atSignsList = atSignsList;
     return atSignsList;
   }
 
@@ -210,11 +211,9 @@ class OnboardingService {
   }
 
   Future<void> _sync(String? atSign) async {
+    // ignore: deprecated_member_use
     if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
-       _getClientServiceForAtsign(atSign)!
-          .atClientManager
-          .syncService
-          .sync();
+      _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
     }
   }
 }

@@ -20,17 +20,16 @@ class AtsignListScreen extends StatefulWidget {
 class _AtsignListScreenState extends State<AtsignListScreen> {
   List<String>? pairedAtsignsList = <String>[];
   Object? lastSelectedIndex;
-  late String message;
   late int greyStartIndex;
+  Future<void> intifuture() async {
+    pairedAtsignsList = await OnboardingService.getInstance().getAtsignList();
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
-    OnboardingService.getInstance().getAtsignList().then((List<String>? value) {
-      pairedAtsignsList = value!;
-      setState(() {});
-    });
-    message = widget.message ??
-        'You already have some existing atsigns. Please select an @sign or else continue with the new one.';
+    intifuture();
   }
 
   @override
@@ -58,7 +57,10 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
               ))
             : Column(
                 children: <Widget>[
-                  Text(message, style: CustomTextStyles.fontBold14primary),
+                  Text(
+                      widget.message ??
+                          'You already have some existing atsigns. Please select an @sign or else continue with the new one.',
+                      style: CustomTextStyles.fontBold14primary),
                   const SizedBox(height: 10),
                   if (widget.newAtsign != null) ...<Widget>[
                     const Divider(thickness: 0.8),

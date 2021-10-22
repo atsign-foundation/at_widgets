@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -30,7 +29,14 @@ import 'package:permission_handler/permission_handler.dart';
 class PairAtsignWidget extends StatefulWidget {
   final OnboardingStatus? onboardStatus;
   final bool getAtSign;
-  PairAtsignWidget({Key? key, this.onboardStatus, this.getAtSign = false})
+  final bool hideReferences;
+  final bool hideQrScan;
+  PairAtsignWidget(
+      {Key? key,
+      this.onboardStatus,
+      this.getAtSign = false,
+      this.hideReferences = false,
+      this.hideQrScan = false})
       : super(key: key);
   @override
   _PairAtsignWidgetState createState() => _PairAtsignWidgetState();
@@ -226,8 +232,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       loading = true;
     });
     try {
-      bool? isExist = await _onboardingService.isExistingAtsign(atsign);
-      if (isExist != null && isExist) {
+      bool isExist = await _onboardingService.isExistingAtsign(atsign);
+      if (isExist) {
         setState(() {
           loading = false;
         });
@@ -284,7 +290,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       });
       for (PlatformFile pickedFile in result?.files ?? <PlatformFile>[]) {
         String? path = pickedFile.path;
-        File selectedFile = File(path!);
+        if (path == null) {
+          throw const FileSystemException(
+              'FilePicker.pickFiles returned a null path');
+        }
+        File selectedFile = File(path);
         int length = selectedFile.lengthSync();
         if (length < 10) {
           await _showAlertDialog(_incorrectKeyFile);
@@ -313,12 +323,12 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             }
           }
         } else if (pickedFile.name.contains('atKeys')) {
-          fileContents = File(path).readAsStringSync();
+          fileContents = File(path.toString()).readAsStringSync();
         } else if (aesKey == null &&
             atsign == null &&
             pickedFile.name.contains('_private_key.png')) {
-//read scan QRcode and extract atsign,aeskey
-          String result = await FlutterQrReader.imgScan(path);
+          //read scan QRcode and extract atsign,aeskey
+          String result = await FlutterQrReader.imgScan(path.toString());
           List<String> params = result.split(':');
           atsign = params[0];
           aesKey = params[1];
@@ -386,6 +396,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         builder: (BuildContext context) {
           return CustomDialog(
               context: context,
+              hideReferences: widget.hideReferences,
+              hideQrScan: widget.hideQrScan,
               isErrorDialog: true,
               showClose: true,
               message: errorMessage,
@@ -423,17 +435,19 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           showBackButton: true,
           title: Strings.pairAtsignTitle,
           actionItems: <Widget>[
-            IconButton(
-                icon: Icon(Icons.help, size: 16.toFont),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute<Widget>(
-                          builder: (BuildContext context) => WebViewScreen(
-                                title: Strings.faqTitle,
-                                url: Strings.faqUrl,
-                              )));
-                }),
+            widget.hideReferences
+                ? SizedBox()
+                : IconButton(
+                    icon: Icon(Icons.help, size: 16.toFont),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute<Widget>(
+                              builder: (BuildContext context) => WebViewScreen(
+                                    title: Strings.faqTitle,
+                                    url: Strings.faqUrl,
+                                  )));
+                    }),
           ],
         ),
         body: SingleChildScrollView(
@@ -592,6 +606,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           child: CustomDialog(
             context: context,
             isAtsignForm: true,
+            hideReferences: widget.hideReferences,
+            hideQrScan: widget.hideQrScan,
             onLimitExceed: (List<String> atsignsList, String message) {
               Navigator.push(
                   context,
@@ -651,6 +667,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                   },
                   child: CustomDialog(
                     context: context,
+                    hideReferences: widget.hideReferences,
+                    hideQrScan: widget.hideQrScan,
                     onValidate:
                         (String atsign, String secret, bool isScanner) async {
                       _loadingMessage = Strings.loadingAtsignReady;
@@ -730,6 +748,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             },
             child: CustomDialog(
               context: context,
+              hideReferences: widget.hideReferences,
+              hideQrScan: widget.hideQrScan,
               onValidate: (String atsign, String secret, bool isScanner) async {
                 _loadingMessage = Strings.loadingAtsignReady;
                 setState(() {});
@@ -774,6 +794,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         builder: (BuildContext context) {
           return CustomDialog(
             context: context,
+            hideReferences: widget.hideReferences,
+            hideQrScan: widget.hideQrScan,
             isErrorDialog: true,
             showClose: true,
             message: errorMessage,

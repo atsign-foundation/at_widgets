@@ -1,3 +1,9 @@
+## 3.0.1
+- Bug fixes
+
+## 3.0.0
+- Resilient SDK changes for notification improvements
+
 ## 2.0.4
 - Bug fixes
 - Added send location to group

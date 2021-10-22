@@ -6,8 +6,6 @@ import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/my_location.dart';
-import 'package:at_location_flutter/service/sync_secondary.dart';
-import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -84,11 +82,6 @@ class SendLocationNotification {
     if (myLocation != null) {
       if (masterSwitchState) {
         await prepareLocationDataAndSend(notification!, myLocation);
-
-        if (MixedConstants.isDedicated) {
-          // ignore: unawaited_futures
-          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
       } else {
         /// method from main app
         if (locationPromptDialog != null) {
@@ -103,7 +96,8 @@ class SendLocationNotification {
       // ignore: unnecessary_null_comparison
       if (AtLocationNotificationListener().navKey != null) {
         CustomToast().show('Location permission not granted',
-            AtLocationNotificationListener().navKey.currentContext!);
+            AtLocationNotificationListener().navKey.currentContext!,
+            isError: true);
       }
     }
 
@@ -143,10 +137,6 @@ class SendLocationNotification {
           await prepareLocationDataAndSend(notification,
               LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
         });
-        if (MixedConstants.isDedicated) {
-          // ignore: unawaited_futures
-          SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-        }
       }
 
       ///
@@ -159,10 +149,6 @@ class SendLocationNotification {
             prepareLocationDataAndSend(notification,
                 LatLng(myLocation.latitude, myLocation.longitude));
           });
-          if (MixedConstants.isDedicated) {
-            // ignore: unawaited_futures
-            SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-          }
         }
       });
     }
@@ -201,12 +187,12 @@ class SendLocationNotification {
         ..long = myLocation.longitude
         ..key = 'locationnotify-$atkeyMicrosecondId';
       try {
-        await atClient!.put(
+        var _res = await atClient!.put(
           atKey,
           LocationNotificationModel.convertLocationNotificationToJson(
               newLocationNotificationModel),
-          isDedicated: MixedConstants.isDedicated,
         );
+        print('prepareLocationDataAndSend in location package ========> $_res');
       } catch (e) {
         print('error in sending location: $e');
       }
@@ -219,34 +205,28 @@ class SendLocationNotification {
         locationNotificationModel.key!.split('-')[1].split('@')[0];
     var atKey = newAtKey(-1, 'locationnotify-$atkeyMicrosecondId',
         locationNotificationModel.receiver);
-    var result =
-        await atClient!.delete(atKey, isDedicated: MixedConstants.isDedicated);
+    var result = await atClient!.delete(
+      atKey,
+    );
     print('$atKey delete operation $result');
-    if (result) {
-      if (MixedConstants.isDedicated) {
-        await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-      }
-    }
+    if (result) {}
     return result;
   }
 
   void deleteAllLocationKey() async {
-    var response = await atClient!.getKeys(
+    var response = await atClient?.getKeys(
       regex: '$locationKey',
     );
-    await Future.forEach(response, (dynamic key) async {
+    await Future.forEach(response ?? [], (dynamic key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);
-        var result = await atClient!
-            .delete(atKey, isDedicated: MixedConstants.isDedicated);
+        var result = await atClient!.delete(
+          atKey,
+        );
         print('$key is deleted ? $result');
       }
     });
-
-    if (MixedConstants.isDedicated) {
-      await SyncSecondary().callSyncSecondary(SyncOperation.syncSecondary);
-    }
   }
 
   AtKey newAtKey(int ttr, String key, String? sharedWith, {int? ttl}) {

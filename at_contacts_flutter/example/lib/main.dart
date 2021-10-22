@@ -28,89 +28,88 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData.light(),
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Builder(
-          builder: (context) => Column(
-            children: [
-              Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Center(
-                    child: Text(
-                        'A client service should create an atClient instance and call onboard method before navigating to QR scanner screen',
-                        textAlign: TextAlign.center),
-                  )),
-              Center(
-                  child: TextButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.black12),
-                      ),
-                      onPressed: () async {
-                        Onboarding(
-                          context: context,
-                          atClientPreference:
-                              clientSdkService.atClientPreference,
-                          domain: MixedConstants.ROOT_DOMAIN,
-                          appAPIKey: MixedConstants.devAPIKey,
-                          appColor: Color.fromARGB(255, 240, 94, 62),
-                          onboard: (Map<String?, AtClientService> value,
-                              String? atsign) async {
-                            clientSdkService.atClientServiceInstance =
-                                value[atsign];
-                            print(
-                                'clientSdkService.atClientServiceInstance 1: ${clientSdkService.atClientServiceInstance}');
-                            await Navigator.pushReplacement(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: Builder(
+            builder: (context) => Column(
+              children: [
+                Container(
+                    padding: EdgeInsets.all(10.0),
+                    child: Center(
+                      child: Text(
+                          'A client service should create an atClient instance and call onboard method before navigating to QR scanner screen',
+                          textAlign: TextAlign.center),
+                    )),
+                Center(
+                    child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black12),
+                        ),
+                        onPressed: () async {
+                          Onboarding(
+                            context: context,
+                            atClientPreference:
+                                clientSdkService.atClientPreference,
+                            domain: MixedConstants.ROOT_DOMAIN,
+                            appAPIKey: MixedConstants.devAPIKey,
+                            appColor: Color.fromARGB(255, 240, 94, 62),
+                            rootEnvironment: RootEnvironment.Production,
+                            onboard: (Map<String?, AtClientService> value,
+                                String? atsign) async {
+                              clientSdkService.atClientServiceInstance =
+                                  value[atsign];
+                              await Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SecondScreen()));
-                          },
-                          onError: (error) async {
-                            await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: Text('Something went wrong'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('ok'))
-                                    ],
-                                  );
-                                });
-                          },
-                        );
-                      },
-                      child: Text(
-                        'Show QR scanner screen',
-                        style: TextStyle(color: Colors.black),
-                      ))),
-              SizedBox(
-                height: 25,
-              ),
-              Center(
-                  child: TextButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.black12),
-                      ),
-                      onPressed: () async {
-                        await Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SecondScreen()));
-                      },
-                      child: Text(
-                        'Already authenticated',
-                        style: TextStyle(color: Colors.black),
-                      ))),
-            ],
-          ),
-        ),
-      ),
+                                    builder: (context) => SecondScreen()),
+                              );
+                            },
+                            onError: (error) async {
+                              await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: Text('Something went wrong'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('ok'))
+                                      ],
+                                    );
+                                  });
+                            },
+                          );
+                        },
+                        child: Text(
+                          'Show QR scanner screen',
+                          style: TextStyle(color: Colors.black),
+                        ))),
+                SizedBox(
+                  height: 25,
+                ),
+                Center(
+                    child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black12),
+                        ),
+                        onPressed: () async {
+                          await Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SecondScreen()));
+                        },
+                        child: Text(
+                          'Already authenticated',
+                          style: TextStyle(color: Colors.black),
+                        ))),
+              ],
+            ),
+          )),
     );
   }
 }
