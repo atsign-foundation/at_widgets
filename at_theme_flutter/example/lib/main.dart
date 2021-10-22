@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
+import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
 import 'package:example/client_sdk_service.dart';
 import 'package:example/src/utils/constants.dart';
@@ -69,6 +70,7 @@ class _MyAppState extends State<MyApp> {
                                 domain: MixedConstants.ROOT_DOMAIN,
                                 appAPIKey: MixedConstants.devAPIKey,
                                 appColor: Color.fromARGB(255, 240, 94, 62),
+                                rootEnvironment: RootEnvironment.Staging,
                                 onboard: (Map<String?, AtClientService> value,
                                     String? atsign) async {
                                   clientSdkService.atClientServiceInstance =

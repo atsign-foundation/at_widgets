@@ -4,59 +4,52 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
 import 'package:at_theme_flutter/utils/constants.dart';
-import 'package:flutter/material.dart';
 
 class ThemeService {
   ThemeService._();
   static final ThemeService _instance = ThemeService._();
   factory ThemeService() => _instance;
 
-  AtClientImpl? atClientInstance;
   String? rootDomain;
   int? rootPort;
   String? currentAtsign;
 
-  initThemeService(AtClientImpl atClientInstanceFromApp, String atsign,
-      String rootDomainFromApp, int rootPortFromApp) {
-    atClientInstance = atClientInstanceFromApp;
+  initThemeService(String rootDomainFromApp, int rootPortFromApp) {
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
-    currentAtsign = atsign;
+    if (AtClientManager.getInstance().atClient != null) {
+      currentAtsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
+    }
   }
 
   Future<bool> updateThemeData(AppTheme themeData) async {
-    var color = Color(0xffffffff);
-    print('Color(0xffffffff) : ${color.hashCode}');
-    print('Color value : ${color.value}');
-    Color color2 = Color(color.value);
-    // TODO: incomplete
-    return true;
-
     AtKey atKey = getAtkey();
-    print('themeData : ${themeData}');
-    var json = jsonDecode(themeData.encoded());
-    // Color color = json['backgroundColor'] as Color;
-    print('color : ${json['backgroundColor']}');
-    print('color: ${json['backgroundColor'].runtimeType}');
-    print('json data : ${themeData.encoded()}');
-    return true;
-    return await atClientInstance!.put(atKey, jsonEncode(themeData));
-  }
-
-  Future getThemeData() async {
-    AtKey atKey = getAtkey();
-    var atValue = await atClientInstance!.get(atKey);
-
-    if (atValue.value == null) {
+    try {
+      var result = await AtClientManager.getInstance()
+          .atClient
+          .put(atKey, themeData.encoded());
+      return result;
+    } catch (e) {
+      print('error in updating theme data: ${e.toString()}');
       return false;
     }
+  }
 
-    // ThemeData themeData = jsonDecode(atValue.value);
-    // if (themeData == null) {
-    //   return false;
-    // }
+  Future<AppTheme?> getThemeData() async {
+    try {
+      AtKey atKey = getAtkey();
+      var atValue = await AtClientManager.getInstance().atClient.get(atKey);
 
-    print('atValue : ${atValue}');
+      if (atValue.value == null) {
+        return null;
+      }
+
+      AppTheme? themeData = AppTheme.decode(jsonDecode(atValue.value));
+      print('jsonDecode(atValue.value) : ${jsonDecode(atValue.value)}');
+      return themeData;
+    } catch (e) {
+      print('error in getThemeData : ${e.toString()}');
+    }
   }
 
   AtKey getAtkey() {

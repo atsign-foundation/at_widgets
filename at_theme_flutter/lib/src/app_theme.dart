@@ -81,13 +81,35 @@ class AppTheme {
   encoded() {
     var appTheme = {
       'brightness': brightness.toString(),
-      'primaryColor': primaryColor.toString(),
-      'secondaryColor': secondaryColor.toString(),
-      'backgroundColor': backgroundColor.toString()
+      'primaryColor': primaryColor.value.toString(),
+      'secondaryColor': secondaryColor.value.toString(),
+      'backgroundColor': backgroundColor.value.toString()
     };
 
     return jsonEncode(appTheme);
   }
 
-  decode(jsonMap) {}
+  static decode(Map<String, dynamic> jsonMap) {
+    try {
+      return AppTheme(
+        brightness: jsonMap['brightness'] == 'Brightness.dark'
+            ? Brightness.dark
+            : Brightness.light,
+        primaryColor: jsonMap['primaryColor'] != null
+            ? Color(int.parse(jsonMap['primaryColor']))
+            : Color(0xFF6EBCB7),
+        secondaryColor: jsonMap['secondaryColor'] != null
+            ? Color(int.parse(jsonMap['secondaryColor']))
+            : Color(0xFF6EBCB7),
+        backgroundColor: jsonMap['backgroundColor'] != null
+            ? Color(int.parse(jsonMap['backgroundColor']))
+            : Colors.white,
+      );
+    } catch (e) {
+      print('error in decode theme data: ${e.toString()}');
+      return AppTheme.from(
+          secondaryColor: ColorConstants.secondary,
+          backgroundColor: ColorConstants.backgroundDark);
+    }
+  }
 }

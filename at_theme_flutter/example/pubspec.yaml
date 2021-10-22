@@ -29,7 +29,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   at_common_flutter: ^2.0.2
   cupertino_icons: ^1.0.2
-  at_onboarding_flutter: ^2.1.1
+  at_onboarding_flutter: ^3.0.4
   at_theme_flutter:
     path: ..
 

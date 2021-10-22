@@ -41,7 +41,6 @@ class ClientSdkService {
 
     atClientPreference.isLocalStoreRequired = true;
     atClientPreference.commitLogPath = path;
-    // atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
     atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
     atClientPreference.downloadPath = downloadDirectory!.path;
@@ -50,11 +49,14 @@ class ClientSdkService {
         .catchError((e) {
       print('Error in Onboarding: $e');
     });
+    if (result) {
+      _atsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
+    }
     return result;
   }
 
   ///Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
-    return await atClientServiceInstance!.getAtSign();
+    return KeychainUtil.getAtSign();
   }
 }

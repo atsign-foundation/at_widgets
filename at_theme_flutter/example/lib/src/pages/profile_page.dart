@@ -29,13 +29,15 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    print('clientSdkService.currentAtsign : ${clientSdkService.currentAtsign}');
 
-    initializeThemeService(clientSdkService.atClientServiceInstance!.atClient!,
-        clientSdkService.currentAtsign!,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+    initializeThemeService(rootDomain: MixedConstants.ROOT_DOMAIN);
     tabController = TabController(length: 3, vsync: this);
-    getThemeData();
+    getSavedTheme();
+  }
+
+  getSavedTheme() async {
+    AppTheme? appTheme = await getThemeData();
+    if (appTheme != null) appThemeController.sink.add(appTheme);
   }
 
   @override
@@ -273,6 +275,21 @@ class _ProfilePageState extends State<ProfilePage>
           ],
           onApplyPressed: (appTheme) {
             appThemeController.sink.add(appTheme);
+          },
+          onPreviewPressed: (appTheme) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Theme(
+                  data: appTheme.toThemeData(),
+                  child: InheritedAppTheme(
+                    theme: appTheme,
+                    child: ProfilePage(
+                      title: "Preview",
+                    ),
+                  ),
+                ),
+              ),
+            );
           },
         ),
       ),
