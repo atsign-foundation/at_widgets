@@ -45,7 +45,6 @@ class ThemeService {
       }
 
       AppTheme? themeData = AppTheme.decode(jsonDecode(atValue.value));
-      print('jsonDecode(atValue.value) : ${jsonDecode(atValue.value)}');
       return themeData;
     } catch (e) {
       print('error in getThemeData : ${e.toString()}');

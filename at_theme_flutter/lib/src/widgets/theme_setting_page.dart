@@ -28,6 +28,7 @@ class ThemeSettingPage extends StatefulWidget {
 
 class _ThemeSettingPageState extends State<ThemeSettingPage> {
   late AppTheme _appTheme;
+  bool isLoader = false;
 
   @override
   void initState() {
@@ -151,20 +152,23 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                       ),
                     ),
                   ElevatedButton(
-                    onPressed: () async {
-                      await ThemeService().updateThemeData(_appTheme);
-                      widget.onApplyPressed?.call(_appTheme);
-                      Navigator.pop(context);
-                    },
+                    onPressed: themeApply,
                     child: Container(
                       width: 80.toWidth,
                       padding: EdgeInsets.all(10),
                       child: Center(
-                        child: Text(
-                          "Apply",
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 15.toFont),
-                        ),
+                        child: isLoader
+                            ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                    color: Colors.white),
+                              )
+                            : Text(
+                                "Apply",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15.toFont),
+                              ),
                       ),
                     ),
                     style: ButtonStyle(
@@ -180,5 +184,25 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
         ),
       ),
     );
+  }
+
+  themeApply() async {
+    setState(() {
+      isLoader = true;
+    });
+
+    var res = await ThemeService().updateThemeData(_appTheme);
+
+    if (mounted) {
+      setState(() {
+        isLoader = false;
+      });
+    }
+
+    if (res) widget.onApplyPressed?.call(_appTheme);
+
+    if (Navigator.of(context).canPop() && res) {
+      Navigator.pop(context);
+    }
   }
 }
