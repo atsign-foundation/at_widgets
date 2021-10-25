@@ -66,6 +66,7 @@ class AppTheme {
       primaryColor: primaryColor,
       backgroundColor: backgroundColor,
       scaffoldBackgroundColor: backgroundColor,
+      appBarTheme: AppBarTheme(color: primaryColor),
       colorScheme: ThemeData()
           .colorScheme
           .copyWith(secondary: accentColor, brightness: brightness),

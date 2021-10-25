@@ -40,7 +40,7 @@ class ThemeService {
       AtKey atKey = getAtkey();
       var atValue = await AtClientManager.getInstance().atClient.get(atKey);
 
-      if (atValue.value == null) {
+      if (atValue.value == null && atValue.value == 'null') {
         return null;
       }
 

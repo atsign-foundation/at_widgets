@@ -2,6 +2,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
 import 'package:at_theme_flutter/services/theme_service.dart';
 import 'package:at_theme_flutter/src/widgets/color_card.dart';
+import 'package:at_theme_flutter/src/widgets/custom_toast.dart';
 import 'package:at_theme_flutter/src/widgets/theme_mode_card.dart';
 import 'package:flutter/material.dart';
 
@@ -152,7 +153,7 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                       ),
                     ),
                   ElevatedButton(
-                    onPressed: themeApply,
+                    onPressed: applyTheme,
                     child: Container(
                       width: 80.toWidth,
                       padding: EdgeInsets.all(10),
@@ -186,7 +187,7 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
     );
   }
 
-  themeApply() async {
+  applyTheme() async {
     setState(() {
       isLoader = true;
     });
@@ -203,6 +204,10 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
 
     if (Navigator.of(context).canPop() && res) {
       Navigator.pop(context);
+    }
+
+    if (!res) {
+      CustomToast().show('Something went wrong', context);
     }
   }
 }

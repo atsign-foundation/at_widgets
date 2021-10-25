@@ -209,6 +209,21 @@ class _ProfilePageState extends State<ProfilePage>
                     _openCustomThemSetting();
                   },
                 ),
+
+                /// we can save theme data without using package ui by using setAppTheme function.
+                ListTile(
+                  title: Text("Set theme without using package UI",
+                      style: TextStyles.text15),
+                  trailing: Icon(Icons.chevron_right, size: 15.toFont),
+                  onTap: () async {
+                    var appTheme = AppTheme.from();
+                    var res = await setAppTheme(appTheme);
+                    if (res) {
+                      Navigator.of(context).pop();
+                      appThemeController.sink.add(appTheme);
+                    }
+                  },
+                ),
               ],
             ),
           );
