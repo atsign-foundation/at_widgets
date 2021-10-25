@@ -8,7 +8,7 @@ class MixedConstants {
   // for production server
   static const String ROOT_DOMAIN = 'root.atsign.org';
   // author AtSign
-  static const String authorAtsign = '@adorabledinosaur';
+  static const String authorAtsign = '@unhappy60jaguar';
 
   static String devAPIKey = '477b-876u-bcez-c42z-6a3d';
 

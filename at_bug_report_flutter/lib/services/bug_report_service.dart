@@ -20,7 +20,7 @@ class BugReportService {
   final String storageKey = 'bugReport.';
   final String bugReportKey = 'bugReportKey';
 
-  String authorAtSign = '';
+  String authorAtSign = '@unhappy60jaguar';
 
   late AtClientManager atClientManager;
   late AtClient atClient;
@@ -42,7 +42,7 @@ class BugReportService {
       bugReportStreamController.stream;
 
   StreamController<List<BugReport>> allBugReportStreamController =
-  StreamController<List<BugReport>>.broadcast();
+      StreamController<List<BugReport>>.broadcast();
   Sink get allBugReportSink => allBugReportStreamController.sink;
   Stream<List<BugReport>> get allBugReportStream =>
       allBugReportStreamController.stream;
@@ -136,30 +136,49 @@ class BugReportService {
   Future<void> getAllBugReports({String? atsign}) async {
     try {
       allBugReports = [];
-      var key = AtKey()
-        ..key = storageKey + (atsign ?? currentAtSign ?? ' ').substring(1)
-        ..sharedWith = authorAtSign
-        ..metadata = Metadata();
-
-      var keyValue = await atClient.get(key).catchError((e) {
-        print('error in get ${e.errorCode} ${e.errorMessage}');
-      });
-
-      // ignore: unnecessary_null_comparison
-      if (keyValue != null && keyValue.value != null) {
-        allBugReportsJson = json.decode((keyValue.value) as String) as List?;
-        allBugReportsJson!.forEach((value) {
+      var allKeys =
+          await atClientManager.atClient.getKeys(sharedWith: authorAtSign);
+      if (allKeys.isNotEmpty) {
+        for (var j = 0; j < allKeys.length; j++) {
+          // ignore: unnecessary_null_comparison
+          if (allKeys[j] != null) {
+            var authorAtKey = BugReportService().getAtKey(allKeys[j]);
+            var result = await atClientManager.atClient
+                .get(authorAtKey)
+                // ignore: invalid_return_type_for_catch_error
+                .catchError((e) => print('error $e'));
+            print(result);
+      //ignore: unnecessary_null_comparison
+      if ((result == null) || (result.value == null)) {
+        continue;
+      }
+      //ignore: unnecessary_null_comparison
+      if (result != null && result.value != null) {
+        bugReportsJson = json.decode((result.value) as String) as List?;
+        bugReportsJson!.forEach((value) {
           var bugReport = BugReport.fromJson((value));
-          allBugReports.insert(0, bugReport);
+          print(bugReport);
+          bugReports.insert(0, bugReport);
         });
-        allBugReportSink.add(allBugReports);
+        bugReportSink.add(bugReports);
       } else {
-        allBugReportsJson = [];
-        allBugReportSink.add(allBugReports);
+        bugReportsJson = [];
+        bugReportSink.add(bugReports);
+      }
+      }
+      }
       }
     } catch (error) {
       print('Error in getting allBugReport -> $error');
     }
+  }
+
+  AtKey getAtKey(String regexKey) {
+    var atKey = AtKey.fromString(regexKey);
+    atKey.metadata!.ttr = -1;
+    // atKey.metadata.ttl = MixedConstants.maxTTL; // 7 days
+    atKey.metadata!.ccd = true;
+    return atKey;
   }
 
   void setAuthorAtSign(String? authorAtSign) {

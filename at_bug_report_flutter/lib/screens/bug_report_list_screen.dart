@@ -99,22 +99,18 @@ class _ListBugReportScreenState extends State<ListBugReportScreen>
                     )
                   : SizedBox(),
               Expanded(
-                  child: (widget.authorAtSign == widget.atSign)
-                      ? TabBarView(controller: _controller, children: [
-                          Center(
-                            child: Text('No bug report found'),
-                          ),
-                          ListBugReportTabAuthor(
-                            bugReportService: _bugReportService,
-                            isAuthorAtSign: false,
-                            atSign: widget.atSign,
-                          ),
-                        ])
-                      : ListBugReportTagUser(
+                  child: TabBarView(controller: _controller, children: [
+                          ListBugReportTagUser(
                           bugReportService: _bugReportService,
                           atSign: widget.atSign,
                           isAuthorAtSign: false,
-                        ))
+                        ),
+                        ListBugReportTabAuthor(
+                            bugReportService: _bugReportService,
+                            isAuthorAtSign: true,
+                            atSign: widget.atSign,
+                          ), 
+                        ]))
             ],
           ),
         ),
