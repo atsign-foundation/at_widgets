@@ -113,7 +113,8 @@ class _BugReportDialogState extends State<BugReportDialog> {
                     var isSuccess = await _bugReportService.setBugReport(
                       BugReport(
                         time: DateTime.now().toString(),
-                        atSign: widget.authorAtSign,
+                        atSign: widget.atSign,
+                        authorAtSign: widget.authorAtSign,
                         errorDetail: widget.errorDetail,
                       ),
                     );

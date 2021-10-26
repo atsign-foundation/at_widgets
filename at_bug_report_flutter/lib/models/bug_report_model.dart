@@ -3,19 +3,21 @@ import 'dart:convert';
 class BugReport {
   String? time;
   String? atSign;
+  String? authorAtSign;
   String? errorDetail;
 
   BugReport({
     this.time,
     this.atSign,
+    this.authorAtSign,
     this.errorDetail,
   });
 
-  BugReport copyWith(
-      {String? time, String? atSign, String? errorDetail}) {
+  BugReport copyWith({String? time, String? atSign, String? errorDetail}) {
     return BugReport(
         time: time ?? this.time,
         atSign: atSign ?? this.atSign,
+        authorAtSign: authorAtSign ?? this.authorAtSign,
         errorDetail: errorDetail ?? this.errorDetail);
   }
 
@@ -25,6 +27,7 @@ class BugReport {
     return BugReport(
         time: map['time'],
         atSign: map['atSign'],
+        authorAtSign: map['authorAtSign'],
         errorDetail: map['errorDetail']);
   }
 
@@ -38,6 +41,7 @@ class BugReport {
     return {
       'time': time,
       'atSign': atSign,
+      'authorAtSign':authorAtSign,
       'errorDetail': errorDetail,
     };
   }
@@ -49,7 +53,7 @@ class BugReport {
 
   @override
   String toString() =>
-      'BugReport(time: $time, atSign: $atSign, errorDetail: $errorDetail)';
+      'BugReport(time: $time, atSign: $atSign, authorAtSign: $authorAtSign,errorDetail: $errorDetail)';
 
   @override
   bool operator ==(Object o) {
@@ -58,9 +62,10 @@ class BugReport {
     return o is BugReport &&
         o.time == time &&
         o.atSign == atSign &&
+        o.authorAtSign == authorAtSign &&
         o.errorDetail == errorDetail;
   }
+
   @override
-  int get hashCode =>
-      time.hashCode ^ atSign.hashCode ^ errorDetail.hashCode;
+  int get hashCode => time.hashCode ^ atSign.hashCode ^ errorDetail.hashCode;
 }

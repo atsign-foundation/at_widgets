@@ -7,10 +7,11 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 /// and then use it to initialise the bug report service.
 void initializeBugReportService(
     AtClientManager atClientManager,
+    String authorAtSign,
     String currentAtSign, AtClientPreference atClientPreference,
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
   BugReportService().initBugReportService(
-      atClientManager, atClientPreference, currentAtSign, rootDomain, rootPort);
+      atClientManager, atClientPreference, authorAtSign,currentAtSign, rootDomain, rootPort);
 }
 
 void disposeContactsControllers() {

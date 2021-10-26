@@ -114,6 +114,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
     });
     initializeBugReportService(
         clientSdkService.atClientServiceInstance!.atClientManager,
+        MixedConstants.authorAtsign,
         activeAtSign!,
         clientSdkService.atClientPreference,
         rootDomain: MixedConstants.ROOT_DOMAIN);

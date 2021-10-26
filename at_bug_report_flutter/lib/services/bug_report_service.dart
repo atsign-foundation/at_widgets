@@ -9,6 +9,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
+import 'package:intl/intl.dart';
 
 class BugReportService {
   BugReportService._();
@@ -19,8 +20,10 @@ class BugReportService {
 
   final String storageKey = 'bugReport.';
   final String bugReportKey = 'bugReportKey';
+  final String dateKey = DateFormat('dd-MM-yyy – hh:mm a')
+      .format(DateTime.parse(DateTime.now().toString()));
 
-  String authorAtSign = '@unhappy60jaguar';
+  String? authorAtSign;
 
   late AtClientManager atClientManager;
   late AtClient atClient;
@@ -33,7 +36,7 @@ class BugReportService {
   List<dynamic>? allBugReportsJson = [];
 
   List<BugReport> bugReports = [];
-  List<dynamic>? bugReportsJson = [];
+  List<dynamic> bugReportsJson = [];
 
   StreamController<List<BugReport>> bugReportStreamController =
       StreamController<List<BugReport>>.broadcast();
@@ -55,9 +58,11 @@ class BugReportService {
   void initBugReportService(
       AtClientManager atClientManagerFromApp,
       AtClientPreference atClientPreference,
+      String authorAtSignFromApp,
       String currentAtSignFromApp,
       String rootDomainFromApp,
       int rootPortFromApp) async {
+    authorAtSign = authorAtSignFromApp;
     currentAtSign = currentAtSignFromApp;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
@@ -117,8 +122,8 @@ class BugReportService {
 
       // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
-        bugReportsJson = json.decode((keyValue.value) as String) as List?;
-        bugReportsJson!.forEach((value) {
+        bugReportsJson = json.decode((keyValue.value) as String) as List;
+        bugReportsJson.forEach((value) {
           var bugReport = BugReport.fromJson((value));
           bugReports.insert(0, bugReport);
         });
@@ -136,38 +141,11 @@ class BugReportService {
   Future<void> getAllBugReports({String? atsign}) async {
     try {
       allBugReports = [];
-      var allKeys =
-          await atClientManager.atClient.getKeys(sharedWith: authorAtSign);
-      if (allKeys.isNotEmpty) {
-        for (var j = 0; j < allKeys.length; j++) {
-          // ignore: unnecessary_null_comparison
-          if (allKeys[j] != null) {
-            var authorAtKey = BugReportService().getAtKey(allKeys[j]);
-            var result = await atClientManager.atClient
-                .get(authorAtKey)
-                // ignore: invalid_return_type_for_catch_error
-                .catchError((e) => print('error $e'));
-            print(result);
-      //ignore: unnecessary_null_comparison
-      if ((result == null) || (result.value == null)) {
-        continue;
-      }
-      //ignore: unnecessary_null_comparison
-      if (result != null && result.value != null) {
-        bugReportsJson = json.decode((result.value) as String) as List?;
-        bugReportsJson!.forEach((value) {
-          var bugReport = BugReport.fromJson((value));
-          print(bugReport);
-          bugReports.insert(0, bugReport);
-        });
-        bugReportSink.add(bugReports);
-      } else {
-        bugReportsJson = [];
-        bugReportSink.add(bugReports);
-      }
-      }
-      }
-      }
+      var allKeys = await atClientManager.atClient
+          .getAtKeys(regex: authorAtSign, sharedWith: authorAtSign);
+      print('+++++++++++++++++');
+      print(allKeys);
+      print('******************');
     } catch (error) {
       print('Error in getting allBugReport -> $error');
     }
@@ -189,13 +167,13 @@ class BugReportService {
   Future<bool> setBugReport(BugReport bugReport) async {
     try {
       var key = AtKey()
-        ..key = storageKey + (currentAtSign ?? ' ').substring(1)
+        ..key = dateKey
         ..sharedBy = currentAtSign
+        ..sharedWith = authorAtSign
         ..metadata = Metadata();
-
       bugReports.insert(0, bugReport);
       bugReportSink.add(bugReports);
-      bugReportsJson!.add(bugReport.toJson());
+      bugReportsJson.add(bugReport.toJson());
       await atClient.put(key, json.encode(bugReportsJson));
       return true;
     } catch (e) {
