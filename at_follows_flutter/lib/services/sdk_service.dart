@@ -134,7 +134,7 @@ class SDKService {
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
     AtFollowsValue value =
-        scanKey.isNotEmpty ? regex == "following_by_self" && scanKey.length>1 ? await this.get(scanKey[1]) : await this.get(scanKey[0]) : AtFollowsValue();
+        scanKey.isNotEmpty ? regex == "following_by_self" && scanKey.length>1 ? await this.get(scanKey[scanKey.length-1]) : await this.get(scanKey[scanKey.length-1]) : AtFollowsValue();
         //scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
     //migrates to newnamespace
     if (scanKey.isNotEmpty &&
