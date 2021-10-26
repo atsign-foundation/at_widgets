@@ -9,6 +9,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class BugReportService {
@@ -18,8 +19,9 @@ class BugReportService {
 
   factory BugReportService() => _instance;
 
-  final String storageKey = 'bugReport.';
-  final String bugReportKey = 'bugReportKey';
+  // final String storageKey = 'bugReport.';
+  final String bugReportKey = 'bug_report_key';
+
   final String dateKey = DateFormat('dd-MM-yyy – hh:mm a')
       .format(DateTime.parse(DateTime.now().toString()));
 
@@ -83,8 +85,9 @@ class BugReportService {
   }
 
   /// Listen Notification
-  void _notificationCallback(dynamic notification) async {
-    AtNotification atNotification = notification;
+  void _notificationCallback(AtNotification atNotification) async {
+    // AtNotification atNotification = notification;
+    print('atNotification : ${atNotification.toJson()}');
     var notificationKey = atNotification.key;
     var fromAtsign = atNotification.from;
     var toAtsign = atNotification.to;
@@ -95,15 +98,21 @@ class BugReportService {
     }
     notificationKey = notificationKey.replaceFirst(fromAtsign, '').trim();
     print('notificationKey = $notificationKey');
-    if ((notificationKey.startsWith(storageKey) && toAtsign == currentAtSign)) {
+    if ((notificationKey.startsWith(bugReportKey.toLowerCase()))) {
+      print('atNotification.value : ${atNotification.value}');
       var message = atNotification.value ?? '';
       print('value = $message');
       var decryptedMessage = await atClient.encryptionService!
           .decrypt(message, fromAtsign)
           .catchError((e) {
-        //   print('error in decrypting notify $e');
+        print('error in decrypting notify $e');
+        return '';
       });
+      // allBugReports.insert(0, element);
       print('notify message => $decryptedMessage $fromAtsign');
+      BugReport bugReport = BugReport.fromJson(decryptedMessage);
+      allBugReports.insert(0, bugReport);
+      allBugReportSink.add(allBugReports);
     }
   }
 
@@ -111,27 +120,19 @@ class BugReportService {
   Future<void> getBugReports({String? atsign}) async {
     try {
       bugReports = [];
-      var key = AtKey()
-        ..key = storageKey + (atsign ?? currentAtSign ?? ' ').substring(1)
-        ..sharedBy = currentAtSign!
-        ..metadata = Metadata();
-
-      var keyValue = await atClient.get(key).catchError((e) {
-        print('error in get ${e.errorCode} ${e.errorMessage}');
-      });
-
-      // ignore: unnecessary_null_comparison
-      if (keyValue != null && keyValue.value != null) {
-        bugReportsJson = json.decode((keyValue.value) as String) as List;
-        bugReportsJson.forEach((value) {
-          var bugReport = BugReport.fromJson((value));
+      var allKeys = await atClientManager.atClient.getAtKeys(
+          regex: bugReportKey.toLowerCase(), sharedBy: currentAtSign);
+      Future.forEach(allKeys, (AtKey atKey) async {
+        if (currentAtSign!
+            .toLowerCase()
+            .contains(atKey.sharedBy!.toLowerCase())) {
+          var successValue =
+              await AtClientManager.getInstance().atClient.get(atKey);
+          BugReport bugReport = BugReport.fromJson(successValue.value);
           bugReports.insert(0, bugReport);
-        });
-        bugReportSink.add(bugReports);
-      } else {
-        bugReportsJson = [];
-        bugReportSink.add(bugReports);
-      }
+        }
+      });
+      bugReportSink.add(bugReports);
     } catch (error) {
       print('Error in getting bug Report -> $error');
     }
@@ -142,10 +143,14 @@ class BugReportService {
     try {
       allBugReports = [];
       var allKeys = await atClientManager.atClient
-          .getAtKeys(regex: authorAtSign, sharedWith: authorAtSign);
-      print('+++++++++++++++++');
-      print(allKeys);
-      print('******************');
+          .getAtKeys(regex: bugReportKey.toLowerCase());
+      Future.forEach(allKeys, (AtKey atKey) async {
+        var successValue =
+            await AtClientManager.getInstance().atClient.get(atKey);
+        BugReport bugReport = BugReport.fromJson(successValue.value);
+        allBugReports.insert(0, bugReport);
+      });
+      allBugReportSink.add(allBugReports);
     } catch (error) {
       print('Error in getting allBugReport -> $error');
     }
@@ -167,14 +172,19 @@ class BugReportService {
   Future<bool> setBugReport(BugReport bugReport) async {
     try {
       var key = AtKey()
-        ..key = dateKey
+        ..key = bugReportKey +
+            '_' +
+            DateTime.now().microsecondsSinceEpoch.toString()
         ..sharedBy = currentAtSign
         ..sharedWith = authorAtSign
-        ..metadata = Metadata();
-      bugReports.insert(0, bugReport);
-      bugReportSink.add(bugReports);
-      bugReportsJson.add(bugReport.toJson());
-      await atClient.put(key, json.encode(bugReportsJson));
+        ..metadata = Metadata()
+        ..metadata!.ttr = -1;
+
+      var res = await atClient.put(key, bugReport.toJson());
+      if (res) {
+        bugReports.insert(0, bugReport);
+        bugReportSink.add(bugReports);
+      }
       return true;
     } catch (e) {
       print('Error in setting bugReport => $e');
