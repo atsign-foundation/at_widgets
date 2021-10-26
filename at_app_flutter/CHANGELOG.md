@@ -1,5 +1,6 @@
-## 3.0.0-rc+1
+## 3.0.0-rc+2
 
+- Cleaned imports to reduce autocomplete pollution for the developer
 - Replace dotenv with flutter_config
 
 ## 2.0.0

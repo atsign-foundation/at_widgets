@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:at_utils/at_logger.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:at_app_flutter/at_app_flutter.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
+    show Onboarding;
+import 'package:at_utils/at_logger.dart' show AtSignLogger;
+import 'package:path_provider/path_provider.dart'
+    show getApplicationSupportDirectory;
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 
 Future<void> main() async {
   await AtEnv.load();
@@ -13,7 +15,7 @@ Future<void> main() async {
 }
 
 Future<AtClientPreference> loadAtClientPreference() async {
-  var dir = await path_provider.getApplicationSupportDirectory();
+  var dir = await getApplicationSupportDirectory();
   return AtClientPreference()
         ..rootDomain = AtEnv.rootDomain
         ..namespace = AtEnv.appNamespace

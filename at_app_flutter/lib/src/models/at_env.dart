@@ -1,6 +1,7 @@
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_config/flutter_config.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
+    show RootEnvironment;
+import 'package:flutter/material.dart' show WidgetsFlutterBinding;
+import 'package:flutter_config/flutter_config.dart' show FlutterConfig;
 
 /// AtEnv is a helper class to load in the environment variables from the .env file
 class AtEnv {
