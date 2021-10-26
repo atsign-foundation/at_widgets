@@ -1,3 +1,6 @@
+## 3.0.1
+- Updated pubspec.yaml dependencies with latest versions
+- Fixes for follows screen bugs
 ## 3.0.0
 - Resilient SDK changes uptake for monitor, notification and sync improvements
 ## 2.0.4
