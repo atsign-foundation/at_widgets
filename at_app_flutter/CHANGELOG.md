@@ -1,4 +1,4 @@
-## 3.0.0-rc
+## 3.0.0-rc+1
 
 - Replace dotenv with flutter_config
 

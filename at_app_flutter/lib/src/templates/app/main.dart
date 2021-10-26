@@ -7,8 +7,8 @@ import 'package:at_utils/at_logger.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_app_flutter/at_app_flutter.dart';
 
-void main() {
-  AtEnv.load();
+Future<void> main() async {
+  await AtEnv.load();
   runApp(const MyApp());
 }
 
