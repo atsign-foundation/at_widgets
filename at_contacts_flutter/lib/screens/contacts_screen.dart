@@ -344,6 +344,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                               ],
                                               child: Container(
                                                 child: CustomListTile(
+                                                  key: UniqueKey(),
                                                   contactService:
                                                       _contactService,
                                                   onTap: () {},

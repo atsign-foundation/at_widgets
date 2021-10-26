@@ -124,7 +124,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                 : '${widget.userListenerKeyword!.atsignCreator}'),
                         Text(
                           amICreator
-                              ? 'This user does not share their location'
+                              ? 'This person is not currently sharing their location with you'
                               : locationAvailable
                                   ? ('Sharing their location $time')
                                   : ("This user's location sharing is turned off"),
@@ -250,7 +250,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                           CustomToast().show(
                                               'Request Location sent', context,
                                               isSuccess: true);
-                                        } else {
+                                        } else if (result == false) {
                                           CustomToast().show(
                                               'Something went wrong, try again.',
                                               context,

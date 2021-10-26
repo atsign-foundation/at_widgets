@@ -1,3 +1,6 @@
+## 3.0.1
+- Updated dependencies and bug fixes
+
 ## 3.0.0
 - package updated with rsdk changes
 

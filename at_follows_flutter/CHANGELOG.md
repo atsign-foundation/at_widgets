@@ -1,3 +1,6 @@
+## 3.0.1
+- Upgraded to latest version of at_client
+- Fixes for follows screen bugs
 ## 3.0.0
 - Resilient SDK changes uptake for monitor, notification and sync improvements
 ## 2.0.4

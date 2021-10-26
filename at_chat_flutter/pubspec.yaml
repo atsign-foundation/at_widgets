@@ -17,12 +17,13 @@ dependencies:
   at_client_mobile: ^3.0.1
   at_client: ^3.0.1
   at_lookup: ^3.0.1
-  pedantic: ^1.11.0
+
   #Picker
   file_picker: ^4.0.0
 
 dev_dependencies:
-  flutter_test:
+  flutter_lints: ^1.0.4
+  flutter_test: 
     sdk: flutter
 
 # For information on the generic Dart part of this file, see the

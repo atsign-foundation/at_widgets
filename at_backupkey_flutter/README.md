@@ -2,18 +2,11 @@
 
 ### Now for a little internet optimism
 
+[![Pub Package](https://img.shields.io/pub/v/at_backupkey_flutter)](https://pub.dev/packages/at_backupkey_flutter)
+
 # at_backupkey_flutter
 
 A flutter plugin project to provide backup keys of an @sign generated during onboarding flow of @protocol.
-
-## Getting Started
-
-This plugin can be added to the project as git dependency in pubspec.yaml
-
-```
-dependencies:
-  at_backupkey_flutter: ^2.0.0
-```
 
 ### Android
 Add the following permissions to AndroidManifest.xml
