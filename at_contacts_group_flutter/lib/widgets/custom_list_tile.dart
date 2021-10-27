@@ -5,6 +5,7 @@
 /// @param [contact] for details of the contact
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
+import 'dart:io';
 import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
@@ -112,11 +113,13 @@ class _CustomListTileState extends State<CustomListTile> {
           widget.item?.contact?.tags!['image'] != null)) {
         List<int> intList = widget.item?.contact?.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
-        image = await FlutterImageCompress.compressWithList(
-          image,
-          minWidth: 400,
-          minHeight: 200,
-        );
+        if (Platform.isAndroid || Platform.isIOS) {
+          image = await FlutterImageCompress.compressWithList(
+            image,
+            minWidth: 400,
+            minHeight: 200,
+          );
+        }
 
         contactImage = CustomCircleAvatar(
           byteImage: image,
