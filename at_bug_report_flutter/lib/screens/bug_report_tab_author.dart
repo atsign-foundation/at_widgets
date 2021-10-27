@@ -111,6 +111,28 @@ class _ListBugReportTabAuthorState extends State<ListBugReportTabAuthor>
                                     ],
                                   ),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                          16.toWidth,
+                                          2.toHeight,
+                                          16.toWidth,
+                                          2.toHeight,
+                                        ),
+                                        child: Text(
+                                        'Reported By: ${snapshot.data?[index]?.atSign ?? 'atsign'}',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12.toFont,
+                                            height: 1.7,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Container(
