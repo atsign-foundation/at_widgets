@@ -15,7 +15,11 @@ dependencies:
   permission_handler: ^8.1.1
   path_provider: ^2.0.2
   at_utils: ^3.0.0
-  at_client_mobile: ^3.0.0
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: at_client_mobile
+      ref: desktop-compatible
   
 dev_dependencies:
   flutter_test:
