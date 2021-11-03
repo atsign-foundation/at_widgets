@@ -80,7 +80,7 @@ class _ListBugReportTagUserState extends State<ListBugReportTagUser>
                               ),
                               child: ExpansionTile(
                                 title: Text(
-                                  'Bug Report ${index + 1}',
+                                  'Issue@ ${DateFormat('dd-MM-yyy – hh:mm a').format(bugReportTime)}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 12.toFont,

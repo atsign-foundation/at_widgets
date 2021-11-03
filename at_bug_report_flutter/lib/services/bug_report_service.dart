@@ -4,6 +4,7 @@ import 'dart:async';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_bug_report_flutter/models/bug_report_model.dart';
+import 'package:at_bug_report_flutter/utils/strings.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
@@ -30,7 +31,9 @@ class BugReportService {
   String? rootDomain;
   int? rootPort;
   String? currentAtSign;
-
+  String getAtSignError = '';
+  String atSignFilter = '';
+  bool filterList = false;
   List<BugReport> allBugReports = [];
   List<dynamic>? allBugReportsJson = [];
 
@@ -136,16 +139,33 @@ class BugReportService {
   /// Get All Bug Report of App
   Future<void> getAllBugReports({String? atsign}) async {
     try {
-      allBugReports = [];
-      var allKeys = await atClientManager.atClient
-          .getAtKeys(regex: bugReportKey.toLowerCase());
-      Future.forEach(allKeys, (AtKey atKey) async {
-        var successValue =
-            await AtClientManager.getInstance().atClient.get(atKey);
-        BugReport bugReport = BugReport.fromJson(successValue.value);
-        allBugReports.insert(0, bugReport);
-      });
-      allBugReportSink.add(allBugReports);
+      if (filterList == true) {
+        print('**********FILTER APPLIED*****');
+        bugReports = [];
+        var allKeys = await atClientManager.atClient.getAtKeys(
+            regex: bugReportKey.toLowerCase(), sharedBy: '@meatpattypleasant');
+        Future.forEach(allKeys, (AtKey atKey) async {
+          if (atsign!.toLowerCase().contains(atKey.sharedBy!.toLowerCase())) {
+            var successValue =
+                await AtClientManager.getInstance().atClient.get(atKey);
+            BugReport bugReport = BugReport.fromJson(successValue.value);
+            bugReports.insert(0, bugReport);
+            print(bugReport);
+          }
+        });
+        bugReportSink.add(bugReports);
+      } else {
+        allBugReports = [];
+        var allKeys = await atClientManager.atClient
+            .getAtKeys(regex: bugReportKey.toLowerCase());
+        Future.forEach(allKeys, (AtKey atKey) async {
+          var successValue =
+              await AtClientManager.getInstance().atClient.get(atKey);
+          BugReport bugReport = BugReport.fromJson(successValue.value);
+          allBugReports.insert(0, bugReport);
+        });
+        allBugReportSink.add(allBugReports);
+      }
     } catch (error) {
       print('Error in getting allBugReport -> $error');
     }
@@ -163,9 +183,25 @@ class BugReportService {
     this.authorAtSign = authorAtSign!;
   }
 
+  // ignore: always_declare_return_types
+  resetData() {
+    getAtSignError = '';
+  }
+
+  // Filter atsign
+  Future<dynamic> filterAtSign(context, String atSign) async {
+    if (atSign == null || atSign == '') {
+      getAtSignError = Strings.emptyAtsign;
+      return true;
+    } else if (atSign[0] != '@') {
+      atSign = '@' + atSign;
+    }
+    getAtSignError = '';
+  }
+
   /// Add New Bug Report to AtClient
   Future<bool> setBugReport(BugReport bugReport) async {
-   try {
+    try {
       var key = AtKey()
         ..key = bugReportKey +
             '_' +

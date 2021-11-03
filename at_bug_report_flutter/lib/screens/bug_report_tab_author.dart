@@ -79,7 +79,7 @@ class _ListBugReportTabAuthorState extends State<ListBugReportTabAuthor>
                               ),
                               child: ExpansionTile(
                                 title: Text(
-                                  'Bug Report ${index + 1}',
+                                  'Issue@ ${DateFormat('dd-MM-yyy – hh:mm a').format(bugReportTime)}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 12.toFont,
@@ -121,7 +121,7 @@ class _ListBugReportTabAuthorState extends State<ListBugReportTabAuthor>
                                           2.toHeight,
                                         ),
                                         child: Text(
-                                        'Reported By: ${snapshot.data?[index]?.atSign ?? 'atsign'}',
+                                          'Reported By: ${snapshot.data?[index]?.atSign ?? 'atsign'}',
                                           textAlign: TextAlign.end,
                                           style: TextStyle(
                                             color: Colors.black,

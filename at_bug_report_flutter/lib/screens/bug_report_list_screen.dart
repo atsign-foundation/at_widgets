@@ -1,5 +1,6 @@
 import 'package:at_bug_report_flutter/screens/bug_report_tab_user.dart';
 import 'package:at_bug_report_flutter/services/bug_report_service.dart';
+import 'package:at_bug_report_flutter/utils/filter_atSign_dialog_utils.dart';
 import 'package:at_bug_report_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class ListBugReportScreen extends StatefulWidget {
   final String? authorAtSign;
   const ListBugReportScreen({
     Key? key,
-    this.title = 'List Reported Issues',
+    this.title = 'Reported Issues',
     this.atSign = '',
     this.authorAtSign = '',
   }) : super(key: key);
@@ -63,6 +64,21 @@ class _ListBugReportScreenState extends State<ListBugReportScreen>
             fontSize: 16,
           ),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showFilterDialog(
+                  context,
+                );
+              },
+              icon: Icon(
+                // _bugReportService.filterList == true
+                //     ? 
+                    Icons.filter_alt_rounded,
+                    // : Icons.cancel_rounded,
+                color: Colors.black,
+              ))
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -100,17 +116,17 @@ class _ListBugReportScreenState extends State<ListBugReportScreen>
                   : SizedBox(),
               Expanded(
                   child: TabBarView(controller: _controller, children: [
-                          ListBugReportTagUser(
-                          bugReportService: _bugReportService,
-                          atSign: widget.atSign,
-                          isAuthorAtSign: false,
-                        ),
-                        ListBugReportTabAuthor(
-                            bugReportService: _bugReportService,
-                            isAuthorAtSign: true,
-                            atSign: widget.atSign,
-                          ), 
-                        ]))
+                ListBugReportTagUser(
+                  bugReportService: _bugReportService,
+                  atSign: widget.atSign,
+                  isAuthorAtSign: false,
+                ),
+                ListBugReportTabAuthor(
+                  bugReportService: _bugReportService,
+                  isAuthorAtSign: true,
+                  atSign: widget.atSign,
+                ),
+              ]))
             ],
           ),
         ),
