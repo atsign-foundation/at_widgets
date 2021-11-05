@@ -32,7 +32,7 @@ class BugReportService {
   int? rootPort;
   String? currentAtSign;
   String getAtSignError = '';
-  String atSignFilter = '';
+  String? filterAtsign;
   bool filterList = false;
   List<BugReport> allBugReports = [];
   List<dynamic>? allBugReportsJson = [];
@@ -140,20 +140,22 @@ class BugReportService {
   Future<void> getAllBugReports({String? atsign}) async {
     try {
       if (filterList == true) {
-        print('**********FILTER APPLIED*****');
-        bugReports = [];
+        print(filterAtsign);
+        allBugReports = [];
         var allKeys = await atClientManager.atClient.getAtKeys(
-            regex: bugReportKey.toLowerCase(), sharedBy: '@meatpattypleasant');
+            regex: bugReportKey.toLowerCase(), sharedBy: filterAtsign);
         Future.forEach(allKeys, (AtKey atKey) async {
-          if (atsign!.toLowerCase().contains(atKey.sharedBy!.toLowerCase())) {
+          if (filterAtsign!
+              .toLowerCase()
+              .contains(atKey.sharedBy!.toLowerCase())) {
             var successValue =
                 await AtClientManager.getInstance().atClient.get(atKey);
             BugReport bugReport = BugReport.fromJson(successValue.value);
-            bugReports.insert(0, bugReport);
-            print(bugReport);
+            print('Filtered List $bugReport');
+            allBugReports.insert(0, bugReport);
           }
         });
-        bugReportSink.add(bugReports);
+        allBugReportSink.add(allBugReports);
       } else {
         allBugReports = [];
         var allKeys = await atClientManager.atClient
@@ -188,7 +190,7 @@ class BugReportService {
     getAtSignError = '';
   }
 
-  // Filter atsign
+  // Filter atsign text field validation
   Future<dynamic> filterAtSign(context, String atSign) async {
     if (atSign == null || atSign == '') {
       getAtSignError = Strings.emptyAtsign;

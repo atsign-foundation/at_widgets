@@ -16,7 +16,7 @@ class BugReportScreen extends StatefulWidget {
 class _BugReportScreenState extends State<BugReportScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
   String? activeAtSign;
-
+  String? bugReport;
   @override
   void initState() {
     getAtSignAndInitializeBugReport();
@@ -53,11 +53,23 @@ class _BugReportScreenState extends State<BugReportScreen> {
                 TextButton(
                   onPressed: () async {
                     print('activeAtSign = $activeAtSign');
+                    // Example Try catch function to catch exception from app
+                    try {
+                      int result = 12 ~/ 0;
+                      print("The result is $result");
+                    } catch (e) {
+                      setState(() {
+                        bugReport = e.toString();
+                      });
+                      print("The exception thrown is $e");
+                    }
+                    // End of function
+                    print(bugReport);
                     showBugReportDialog(
                       context,
                       activeAtSign,
                       MixedConstants.authorAtsign,
-                      'This is error ${Random().nextInt(100)} from Bug Report Example Screen',
+                      bugReport,
                       isSuccessCallback: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

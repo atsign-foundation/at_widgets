@@ -91,8 +91,8 @@ class _FilterDialogState extends State<FilterDialog> {
                     Navigator.pop(context);
                   },
                   child: Container(
-                    width: 128.toWidth,
-                    height: 40.toHeight,
+                    width: 122.toWidth,
+                    height: 36.toHeight,
                     padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30.toWidth),
@@ -113,14 +113,15 @@ class _FilterDialogState extends State<FilterDialog> {
                 GestureDetector(
                   onTap: () {
                     _bugReportService.filterList = true;
+                    _bugReportService.filterAtsign = atsignName;
                     _bugReportService.filterAtSign(context, atsignName);
                     _bugReportService.getAllBugReports(
                         atsign: '@' + atsignName);
                     Navigator.pop(context);
                   },
                   child: Container(
-                    width: 128.toWidth,
-                    height: 40.toHeight,
+                    width: 122.toWidth,
+                    height: 36.toHeight,
                     padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30.toWidth),
