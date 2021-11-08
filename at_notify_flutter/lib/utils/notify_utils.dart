@@ -11,13 +11,13 @@ enum NotifyEnum {
 NotifyService _notifyService = NotifyService();
 
 /// Notify Text
-notifyText(
+Future<bool> notifyText(
   BuildContext context,
   String? atSign,
   String? sendToAtSign,
   String? message,
-) {
-  _notifyService.sendNotify(
+) async {
+  var _res = await _notifyService.sendNotify(
       sendToAtSign!,
       Notify(
         time: DateTime.now().millisecondsSinceEpoch,
@@ -25,4 +25,5 @@ notifyText(
         message: message,
       ),
       NotifyEnum.notifyText);
+  return _res;
 }

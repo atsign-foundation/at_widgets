@@ -18,17 +18,27 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  var _showAlreadyAuthenticatedButton = false;
   @override
   void initState() {
-    clientSdkService.onboard();
+    onboard();
     super.initState();
+  }
+
+  onboard() async {
+    await clientSdkService.onboard();
+    setState(() {
+      _showAlreadyAuthenticatedButton = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light(),
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
+          bottomSheet: _bottomSheet(),
           appBar: AppBar(
             title: const Text('At Notify Plugin Example'),
           ),
@@ -64,7 +74,8 @@ class _MyAppState extends State<MyApp> {
                               await Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => BugReportScreen()));
+                                      builder: (context) =>
+                                          NotifyExampleScreen()));
                             },
                             onError: (error) async {
                               await showDialog(
@@ -97,15 +108,21 @@ class _MyAppState extends State<MyApp> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.black12),
                         ),
-                        onPressed: () async {
-                          await Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BugReportScreen()));
-                        },
+                        onPressed: _showAlreadyAuthenticatedButton
+                            ? () async {
+                                await Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            NotifyExampleScreen()));
+                              }
+                            : null,
                         child: Text(
                           'Already authenticated',
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(
+                              color: _showAlreadyAuthenticatedButton
+                                  ? Colors.black
+                                  : Colors.black54),
                         ))),
                 SizedBox(
                   height: 25,
@@ -127,5 +144,27 @@ class _MyAppState extends State<MyApp> {
             ),
           )),
     );
+  }
+
+  Widget _bottomSheet() {
+    if (_showAlreadyAuthenticatedButton) {
+      return SizedBox();
+    } else {
+      return Container(
+        height: 40,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(color: Colors.black87, boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0.0, 1.0),
+            blurRadius: 3.0,
+          ),
+        ]),
+        child: Text(
+          'Checking authentication state...',
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    }
   }
 }

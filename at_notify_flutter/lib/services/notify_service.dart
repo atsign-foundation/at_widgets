@@ -191,9 +191,9 @@ class NotifyService {
   Future<bool> sendNotify(
       String sendToAtSign, Notify notify, NotifyEnum notifyType,
       {int noOfDays = 30}) async {
-    var notificationResponse;
-    notificationResponse = await atClientManager.notificationService
-        .notify(NotificationParams.forText(notify.message ?? '', sendToAtSign));
+    if (!sendToAtSign.contains('@')) {
+      sendToAtSign = '@' + sendToAtSign;
+    }
     var metadata = Metadata();
     metadata.ttr = -1;
     metadata.ttl = 30 * 24 * 60 * 60000; // in milliseconds
@@ -202,7 +202,7 @@ class NotifyService {
       ..sharedBy = currentAtSign
       ..sharedWith = sendToAtSign
       ..metadata = metadata;
-    notificationResponse = await atClientManager.notificationService.notify(
+    var notificationResponse = await atClientManager.notificationService.notify(
       NotificationParams.forUpdate(key, value: notify.toJson()),
     );
 
