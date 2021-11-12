@@ -26,7 +26,7 @@ class ThemeModeCard extends StatelessWidget {
       onPressed: onPressed,
       child: Container(
         width: double.infinity,
-        height: 166.toHeight,
+        height: 166.toHeight < 150 ? 150 : 166.toHeight,
         child: Stack(
           children: [
             Column(

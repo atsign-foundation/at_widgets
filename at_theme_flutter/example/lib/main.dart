@@ -115,6 +115,24 @@ class _MyAppState extends State<MyApp> {
                                   Colors.black12),
                             ),
                             onPressed: () async {
+                              if (clientSdkService.currentAtsign == null) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext c) {
+                                      return AlertDialog(
+                                        content: Text('Atsign not found.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Okay'),
+                                          )
+                                        ],
+                                      );
+                                    });
+                                return;
+                              }
                               await Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

@@ -35,6 +35,7 @@ class _ProfilePageState extends State<ProfilePage>
     getSavedTheme();
   }
 
+  /// getting saved theme
   getSavedTheme() async {
     AppTheme? appTheme = await getThemeData();
     if (appTheme != null) appThemeController.sink.add(appTheme);
