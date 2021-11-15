@@ -23,6 +23,8 @@ dependencies:
   webview_flutter: ^2.0.8
   http: ^0.13.3
   pin_code_fields: ^7.2.0
+  zxing2: ^0.1.0
+  image: ^3.0.8
 
   # desktop - dependencies
   file_selector: ^0.8.2+1
