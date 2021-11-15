@@ -39,6 +39,9 @@ class AtLocationFlutterPlugin extends StatefulWidget {
   /// [addCurrentUserMarker] if logged in users current location should be added to the map.
   bool calculateETA, addCurrentUserMarker;
 
+  /// needed to track details of a specific notification (event/p2p).
+  String? notificationID;
+
   AtLocationFlutterPlugin(
     this.atsignsToTrack, {
     this.left,
@@ -50,6 +53,7 @@ class AtLocationFlutterPlugin extends StatefulWidget {
     this.textForCenter = 'Centre',
     this.etaFrom,
     this.focusMapOn,
+    this.notificationID,
   });
   @override
   _AtLocationFlutterPluginState createState() =>
@@ -76,7 +80,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         calculateETA: widget.calculateETA,
         addCurrentUserMarker: widget.addCurrentUserMarker,
         textForCenter: widget.textForCenter,
-        showToast: showToast);
+        showToast: showToast,
+        notificationID: widget.notificationID);
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       LocationService().mapInitialized();
       LocationService().notifyListeners();

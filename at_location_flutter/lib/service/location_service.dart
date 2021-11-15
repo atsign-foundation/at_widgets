@@ -31,6 +31,9 @@ class LocationService {
   Function? showToast;
   StreamSubscription<Position>? myLocationStream;
 
+  String?
+      notificationID; // needed to track details of a specific notification (event/p2p)
+
   List<HybridModel?> hybridUsersList = [];
 
   late StreamController _atHybridUsersController =
@@ -45,7 +48,8 @@ class LocationService {
       bool? calculateETA,
       bool? addCurrentUserMarker,
       String? textForCenter,
-      Function? showToast}) async {
+      Function? showToast,
+      String? notificationID}) async {
     hybridUsersList = [];
     _atHybridUsersController = StreamController<List<HybridModel?>>.broadcast();
     atsignsToTrack = atsignsToTrackFromApp;
@@ -54,6 +58,7 @@ class LocationService {
     this.addCurrentUserMarker = addCurrentUserMarker;
     this.textForCenter = textForCenter;
     this.showToast = showToast;
+    this.notificationID = notificationID;
 
     // ignore: unawaited_futures
     if (myLocationStream != null) myLocationStream!.cancel();
@@ -143,9 +148,12 @@ class LocationService {
 
   /// called for the first time pckage is entered from main app
   void updateHybridList() async {
-    await Future.forEach(MasterLocationService().allReceivedUsersList!,
-        (dynamic user) async {
-      if (atsignsToTrack!.contains(user.displayName)) await updateDetails(user);
+    await Future.forEach(atsignsToTrack ?? [], (dynamic _atsign) async {
+      var _user =
+          MasterLocationService().getHybridModel(_atsign, id: notificationID);
+      if (_user != null) {
+        await updateDetails(_user);
+      }
     });
 
     if (hybridUsersList.isNotEmpty) {
@@ -155,14 +163,14 @@ class LocationService {
   }
 
   /// called when any new/updated data is received in the main app
-  void newList() async {
-    if (atsignsToTrack != null) {
-      await Future.forEach(MasterLocationService().allReceivedUsersList!,
-          (dynamic user) async {
-        if (atsignsToTrack!.contains(user.displayName)) {
-          await updateDetails(user);
-        }
-      });
+  void newList(String _updatedAtsign) async {
+    if ((atsignsToTrack != null) &&
+        ((atsignsToTrack ?? []).contains(_updatedAtsign))) {
+      var _user = MasterLocationService()
+          .getHybridModel(_updatedAtsign, id: notificationID);
+      if (_user != null) {
+        await updateDetails(_user);
+      }
 
       if (!_atHybridUsersController.isClosed) {
         _atHybridUsersController.add(hybridUsersList);
