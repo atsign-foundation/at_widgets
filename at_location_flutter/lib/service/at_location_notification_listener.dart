@@ -25,13 +25,15 @@ class AtLocationNotificationListener {
   String? currentAtSign;
   late bool showDialogBox;
   late GlobalKey<NavigatorState> navKey;
+  bool isEventInUse = false;
 
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
 
   void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       bool showDialogBox,
-      {Function? newGetAtValueFromMainApp}) {
+      {Function? newGetAtValueFromMainApp, bool isEventInUse = false}) {
+    this.isEventInUse = isEventInUse;
     atClientInstance = AtClientManager.getInstance().atClient;
     currentAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     navKey = navKeyFromMainApp;
