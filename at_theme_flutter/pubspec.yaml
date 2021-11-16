@@ -1,7 +1,9 @@
 name: at_theme_flutter
-description: A new Flutter project.
-version: 0.0.1
-homepage:
+description: A Flutter plugin project to provide theme selection in @‎platform
+  apps with ease.
+version: 1.0.0
+homepage: https://atsign.dev
+repository: https://github.com/atsign-foundation/at_widgets
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -14,12 +16,6 @@ dependencies:
   at_common_flutter: ^2.0.2
   at_commons: ^3.0.0
   fluttertoast: ^8.0.5
-
-# dependency_overrides:
-#   at_client:
-#     path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
-#   at_utils: ^3.0.0
-#   at_lookup: ^3.0.1
 
 
 dev_dependencies:

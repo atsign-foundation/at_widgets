@@ -31,13 +31,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   at_onboarding_flutter: ^3.0.4
   at_theme_flutter:
-    path: ..
-
-# dependency_overrides:
-#   at_client:
-#     path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_client_sdk/at_client
-#   at_utils: ^3.0.0
-#   at_lookup: ^3.0.1
+    path: ../
 
 dev_dependencies:
   flutter_test:
