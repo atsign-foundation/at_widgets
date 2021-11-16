@@ -11,8 +11,7 @@ class Notify {
     this.message,
   });
 
-  Notify copyWith(
-      {int? time, String? atSign, String? message}) {
+  Notify copyWith({int? time, String? atSign, String? message}) {
     return Notify(
         time: time ?? this.time,
         atSign: atSign ?? this.atSign,
@@ -23,9 +22,7 @@ class Notify {
     if (map == null) return Notify();
 
     return Notify(
-        time: map['time'],
-        atSign: map['atSign'],
-        message: map['message']);
+        time: map['time'], atSign: map['atSign'], message: map['message']);
   }
 
   Map<String, dynamic> toMap() {
@@ -38,8 +35,7 @@ class Notify {
 
   String toJson() => json.encode(toMap());
 
-  factory Notify.fromJson(String source) =>
-      Notify.fromMap(json.decode(source));
+  factory Notify.fromJson(String source) => Notify.fromMap(json.decode(source));
 
   @override
   String toString() =>
@@ -56,6 +52,5 @@ class Notify {
   }
 
   @override
-  int get hashCode =>
-      time.hashCode ^ atSign.hashCode ^ message.hashCode;
+  int get hashCode => time.hashCode ^ atSign.hashCode ^ message.hashCode;
 }

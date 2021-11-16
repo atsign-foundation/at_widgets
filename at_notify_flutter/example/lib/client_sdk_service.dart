@@ -26,13 +26,13 @@ class ClientSdkService {
     Directory? downloadDirectory;
     if (Platform.isIOS) {
       downloadDirectory =
-      await path_provider.getApplicationDocumentsDirectory();
+          await path_provider.getApplicationDocumentsDirectory();
     } else {
       downloadDirectory = await path_provider.getExternalStorageDirectory();
     }
 
     final appSupportDirectory =
-    await path_provider.getApplicationSupportDirectory();
+        await path_provider.getApplicationSupportDirectory();
     var path = appSupportDirectory.path;
     atClientPreference = AtClientPreference();
 
