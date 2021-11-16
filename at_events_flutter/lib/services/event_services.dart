@@ -50,6 +50,7 @@ class EventService {
       eventNotificationModel!.event = Event();
       eventNotificationModel!.group = AtGroup('');
       selectedContacts = [];
+      selectedContactsAtSigns = [];
     }
     isEventUpdate = isUpdate;
     print('isEventUpdate:$isEventUpdate');
