@@ -28,18 +28,11 @@ dependencies:
     path: ../
 
   cupertino_icons: ^1.0.3
-  at_onboarding_flutter: ^2.1.1
+  at_onboarding_flutter: ^3.0.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-dependency_overrides:
-  at_onboarding_flutter:
-   git:
-     url: https://github.com/atsign-foundation/at_widgets.git
-     path: at_onboarding_flutter
-     ref: trunk
 
 
 # For information on the generic Dart part of this file, see the

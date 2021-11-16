@@ -1,9 +1,10 @@
 name: at_notify_flutter
-description: A new Flutter application.
+description: A Flutter plugin project to send notification to any @‎sign in @‎platform
+  apps with ease.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+# publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -15,32 +16,27 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.0
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
+  flutter: ">=1.20.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  at_client_mobile: ^3.0.1
-  at_client: ^3.0.0
-  at_onboarding_flutter: ^2.1.2
+  at_client_mobile: ^3.0.3
+  at_client: ^3.0.5
+  at_commons: ^3.0.0
+  at_common_flutter: ^2.0.2
   flutter_local_notifications: ^6.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-dependency_overrides:
-  at_onboarding_flutter:
-   git:
-     url: https://github.com/atsign-foundation/at_widgets.git
-     path: at_onboarding_flutter
-     ref: trunk
 
 
 # For information on the generic Dart part of this file, see the

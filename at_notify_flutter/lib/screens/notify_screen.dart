@@ -1,6 +1,6 @@
 import 'package:at_notify_flutter/models/notify_model.dart';
 import 'package:at_notify_flutter/services/notify_service.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:flutter/material.dart';
 
 class NotifyScreen extends StatefulWidget {

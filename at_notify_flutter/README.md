@@ -4,19 +4,18 @@
 
 # at_notify_flutter
 
-A flutter plugin to handle notify.
-
-## Getting Started
-
-This plugin handles notify.
+A flutter plugin project to handle notifications in @protocol apps.
 
 ### Initialising
 The notify service needs to be initialised. It is expected that the app will first create an AtClientService instance using the preferences and then use it to initialise the notify service.
 
 ```
 initializeNotifyService(
-        clientSdkService.atClientServiceInstance.atClient, activeAtSign,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+      clientSdkService.atClientServiceInstance!.atClientManager,
+      activeAtSign!,
+      clientSdkService.atClientPreference,
+      rootDomain: MixedConstants.ROOT_DOMAIN,
+    );
 ```
 
 ### Sample Usage
