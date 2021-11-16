@@ -30,6 +30,7 @@ class LocationNotificationModel {
   DateTime? from, to;
   AtContact? atContact;
   LocationNotificationModel({
+    this.key,
     this.lat,
     this.long,
     this.atsignCreator,
