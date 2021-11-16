@@ -75,66 +75,34 @@ class EventKeyStreamService {
       return;
     }
 
-    response.forEach((key) {
-      var eventKeyLocationModel = EventKeyLocationModel(key: key);
-      allEventNotifications.add(eventKeyLocationModel);
-    });
+    await Future.forEach(response, (String key) async {
+      var _atKey = EventService().getAtKey(key);
+      AtValue? _atValue = await getAtValue(_atKey);
+      if (_atValue != null) {
+        try {
+          // ignore: unrelated_type_equality_checks
+          if ((_atValue.value != null) && (_atValue.value != 'null')) {
+            var event =
+                EventNotificationModel.fromJson(jsonDecode(_atValue.value));
 
-    allEventNotifications.forEach((notification) {
-      var atKey = EventService().getAtKey(notification.key!);
-      notification.atKey = atKey;
-    });
-
-    // TODO
-    // filterBlockedContactsforEvents();
-
-    for (var i = 0; i < allEventNotifications.length; i++) {
-      AtValue? value = await (getAtValue(allEventNotifications[i].atKey!));
-      if (value != null) {
-        allEventNotifications[i].atValue = value;
+            // ignore: unnecessary_null_comparison
+            if (event != null && event.group!.members!.isNotEmpty) {
+              event.key = key;
+              allEventNotifications
+                  .add(EventKeyLocationModel(eventNotificationModel: event));
+            }
+          }
+        } catch (e) {
+          print('Error in converting to event $e');
+        }
       }
-    }
+    });
 
-    convertJsonToEventModel();
     filterPastEventsFromList();
-
     await checkForPendingEvents();
-
     notifyListeners();
 
     EventLocationShare().init();
-
-    // ignore: unawaited_futures
-    updateEventDataAccordingToAcknowledgedData();
-  }
-
-  void convertJsonToEventModel() {
-    var tempRemoveEventArray = <EventKeyLocationModel>[];
-
-    for (var i = 0; i < allEventNotifications.length; i++) {
-      try {
-        // ignore: unrelated_type_equality_checks
-        if (allEventNotifications[i].atValue != 'null' &&
-            allEventNotifications[i].atValue != null) {
-          var event = EventNotificationModel.fromJson(
-              jsonDecode(allEventNotifications[i].atValue!.value));
-
-          // ignore: unnecessary_null_comparison
-          if (event != null && event.group!.members!.isNotEmpty) {
-            event.key = allEventNotifications[i].key;
-
-            allEventNotifications[i].eventNotificationModel = event;
-          }
-        } else {
-          tempRemoveEventArray.add(allEventNotifications[i]);
-        }
-      } catch (e) {
-        tempRemoveEventArray.add(allEventNotifications[i]);
-      }
-    }
-
-    allEventNotifications
-        .removeWhere((element) => tempRemoveEventArray.contains(element));
   }
 
   /// Removes past notifications and notification where data is null.
@@ -155,14 +123,20 @@ class EventKeyStreamService {
 
   /// Updates any received notification with [haveResponded] true, if already responded.
   Future<void> checkForPendingEvents() async {
-    allEventNotifications.forEach((notification) async {
-      notification.eventNotificationModel!.group!.members!
-          .forEach((member) async {
+    await Future.forEach(allEventNotifications,
+        (EventKeyLocationModel notification) async {
+      await Future.forEach(
+          (notification.eventNotificationModel!.group!.members!),
+          (AtContact member) async {
         if ((member.atSign == currentAtSign) &&
             (member.tags!['isAccepted'] == false) &&
             (member.tags!['isExited'] == false)) {
-          var atkeyMicrosecondId =
-              notification.key!.split('createevent-')[1].split('@')[0];
+          var atkeyMicrosecondId = notification.eventNotificationModel!.key!
+              .split('createevent-')[1]
+              .split('@')[0];
+          print(
+              'atkeyMicrosecondId in checkForPendingEvents $atkeyMicrosecondId');
+
           var acknowledgedKeyId = 'eventacknowledged-$atkeyMicrosecondId';
           var allRegexResponses =
               await atClientManager.atClient.getKeys(regex: acknowledgedKeyId);
@@ -173,132 +147,6 @@ class EventKeyStreamService {
         }
       });
     });
-  }
-
-  /// Checks for any missed notifications and updates respective notification
-  Future<void> updateEventDataAccordingToAcknowledgedData() async {
-    var allRegexResponses = [], allEventUserLocationResponses = [];
-    for (var i = 0; i < allEventNotifications.length; i++) {
-      allRegexResponses = [];
-      allEventUserLocationResponses = [];
-      var eventUserLocation = <EventUserLocation>[];
-      var atkeyMicrosecondId =
-          allEventNotifications[i].key!.split('createevent-')[1].split('@')[0];
-
-      /// For location update
-      var updateEventLocationKeyId = 'updateeventlocation-$atkeyMicrosecondId';
-
-      allEventUserLocationResponses = await atClientManager.atClient
-          .getKeys(regex: updateEventLocationKeyId);
-
-      if (allEventUserLocationResponses.isNotEmpty) {
-        for (var j = 0; j < allEventUserLocationResponses.length; j++) {
-          if (allEventUserLocationResponses[j] != null &&
-              !allEventNotifications[i].key!.contains('cached')) {
-            var eventData =
-                await geteventData(allEventUserLocationResponses[j]);
-
-            if (eventData != null) {
-              eventUserLocation.add(eventData);
-            }
-          }
-        }
-      }
-
-      ///
-
-      var acknowledgedKeyId = 'eventacknowledged-$atkeyMicrosecondId';
-      allRegexResponses =
-          await atClientManager.atClient.getKeys(regex: acknowledgedKeyId);
-
-      if (allRegexResponses.isNotEmpty) {
-        for (var j = 0; j < allRegexResponses.length; j++) {
-          if (allRegexResponses[j] != null &&
-              !allEventNotifications[i].key!.contains('cached')) {
-            var acknowledgedAtKey =
-                EventService().getAtKey(allRegexResponses[j]);
-            var createEventAtKey =
-                EventService().getAtKey(allEventNotifications[i].key!);
-
-            var result = await atClientManager.atClient
-                .get(acknowledgedAtKey)
-                // ignore: return_of_invalid_type_from_catch_error
-                .catchError((e) => print('error in get $e'));
-
-            // ignore: unnecessary_null_comparison
-            if ((result == null) || (result.value == null)) {
-              continue;
-            }
-
-            var acknowledgedEvent =
-                EventNotificationModel.fromJson(jsonDecode(result.value));
-            EventNotificationModel? storedEvent = EventNotificationModel();
-
-            storedEvent = allEventNotifications[i].eventNotificationModel;
-
-            /// Update acknowledgedEvent location with updated latlng
-
-            acknowledgedEvent.group!.members!.forEach((member) {
-              var indexWhere = eventUserLocation
-                  .indexWhere((e) => e.atsign == member.atSign);
-
-              if (acknowledgedAtKey.sharedBy![0] != '@') {
-                acknowledgedAtKey.sharedBy = '@' + acknowledgedAtKey.sharedBy!;
-              }
-
-              if (indexWhere > -1 &&
-                  eventUserLocation[indexWhere].atsign ==
-                      acknowledgedAtKey.sharedBy) {
-                member.tags!['lat'] =
-                    eventUserLocation[indexWhere].latLng.latitude;
-                member.tags!['long'] =
-                    eventUserLocation[indexWhere].latLng.longitude;
-              }
-            });
-
-            ///
-
-            if (!compareEvents(storedEvent!, acknowledgedEvent)) {
-              storedEvent.isUpdate = true;
-
-              storedEvent.group!.members!.forEach((groupMember) {
-                acknowledgedEvent.group!.members!.forEach((element) {
-                  if (groupMember.atSign!.toLowerCase() ==
-                          element.atSign!.toLowerCase() &&
-                      groupMember.atSign!
-                          .contains(acknowledgedAtKey.sharedBy!)) {
-                    groupMember.tags = element.tags;
-                  }
-                });
-              });
-
-              var allAtsignList = <String?>[];
-              storedEvent.group!.members!.forEach((element) {
-                allAtsignList.add(element.atSign);
-              });
-
-              /// To let other puts complete
-              // await Future.delayed(Duration(seconds: 5));
-              var updateResult =
-                  await updateEvent(storedEvent, createEventAtKey);
-
-              createEventAtKey.sharedWith = jsonEncode(allAtsignList);
-
-              await atClientManager.atClient.notifyAll(
-                createEventAtKey,
-                EventNotificationModel.convertEventNotificationToJson(
-                    storedEvent),
-                OperationEnum.update,
-              );
-
-              if (updateResult is bool && updateResult == true) {
-                mapUpdatedEventDataToWidget(storedEvent);
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   /// Adds new [EventKeyLocationModel] data for new received notification
@@ -312,37 +160,7 @@ class EventKeyStreamService {
       }
     }
 
-    String newLocationDataKeyId;
-    String? key;
-    newLocationDataKeyId =
-        eventNotificationModel.key!.split('createevent-')[1].split('@')[0];
-
-    if (receivedkey != null) {
-      key = receivedkey;
-    } else {
-      var keys = <String>[];
-      keys = await atClientManager.atClient.getKeys(
-        regex: 'createevent-',
-      );
-
-      keys.forEach((regex) {
-        if (regex.contains('$newLocationDataKeyId')) {
-          key = regex;
-        }
-      });
-
-      print('key $key');
-
-      if (key == null) {
-        return;
-      }
-    }
-
-    var tempEventKeyLocationModel = EventKeyLocationModel(key: key);
-    // eventNotificationModel.key = key;
-    tempEventKeyLocationModel.atKey = EventService().getAtKey(key!);
-    tempEventKeyLocationModel.atValue =
-        await getAtValue(tempEventKeyLocationModel.atKey!);
+    var tempEventKeyLocationModel = EventKeyLocationModel();
     tempEventKeyLocationModel.eventNotificationModel = eventNotificationModel;
     allEventNotifications.add(tempEventKeyLocationModel);
 
@@ -366,7 +184,10 @@ class EventKeyStreamService {
         .split('@')[0];
 
     for (var i = 0; i < allEventNotifications.length; i++) {
-      if (allEventNotifications[i].key!.contains(neweventDataKeyId)) {
+      if (allEventNotifications[i]
+          .eventNotificationModel!
+          .key!
+          .contains(neweventDataKeyId)) {
         /// if we want to update everything
         // allEventNotifications[i].eventNotificationModel = eventData;
 
@@ -395,8 +216,8 @@ class EventKeyStreamService {
           allEventNotifications[i].eventNotificationModel = eventData;
         }
 
-        allEventNotifications[i].eventNotificationModel!.key =
-            allEventNotifications[i].key;
+        // allEventNotifications[i].eventNotificationModel!.key =
+        //     allEventNotifications[i].key;
 
         // LocationService().updateEventWithNewData(
         //     allHybridNotifications[i].eventNotificationModel);
@@ -410,7 +231,10 @@ class EventKeyStreamService {
 
   bool isEventSharedWithMe(EventNotificationModel eventData) {
     for (var i = 0; i < allEventNotifications.length; i++) {
-      if (allEventNotifications[i].key!.contains(eventData.key!)) {
+      if (allEventNotifications[i]
+          .eventNotificationModel!
+          .key!
+          .contains(eventData.key!)) {
         return true;
       }
     }
@@ -591,7 +415,10 @@ class EventKeyStreamService {
       EventNotificationModel? presentEventData;
 
       for (var i = 0; i < allEventNotifications.length; i++) {
-        if (allEventNotifications[i].key!.contains('createevent-$eventId')) {
+        if (allEventNotifications[i]
+            .eventNotificationModel!
+            .key!
+            .contains('createevent-$eventId')) {
           presentEventData = EventNotificationModel.fromJson(jsonDecode(
               EventNotificationModel.convertEventNotificationToJson(
                   allEventNotifications[i].eventNotificationModel!)));
@@ -671,7 +498,8 @@ class EventKeyStreamService {
 
       late EventNotificationModel presentEventData;
       allEventNotifications.forEach((element) {
-        if (element.key!.contains('createevent-$eventId')) {
+        if (element.eventNotificationModel!.key!
+            .contains('createevent-$eventId')) {
           presentEventData = EventNotificationModel.fromJson(jsonDecode(
               EventNotificationModel.convertEventNotificationToJson(
                   element.eventNotificationModel!)));
@@ -768,7 +596,7 @@ class EventKeyStreamService {
 
         allEventNotifications.forEach((event) {
           if (event.eventNotificationModel!.key == eventData.key) {
-            atKey = EventService().getAtKey(event.key!);
+            atKey = EventService().getAtKey(event.eventNotificationModel!.key!);
           }
         });
         return atKey;
