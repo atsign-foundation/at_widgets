@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:latlong2/latlong.dart';
+
 class LocationDataModel {
   /// [locationSharingFor] accepts id as key and [LocationSharingFor] as data.
   late Map<String, LocationSharingFor> locationSharingFor;
@@ -42,6 +44,14 @@ class LocationDataModel {
     sender = data['sender'];
     receiver = data['receiver'];
     locationSharingFor = {...tempLocationSharingFor};
+  }
+
+  LatLng? get getLatLng =>
+      lat != null && long != null ? LatLng(lat!, long!) : null;
+
+  @override
+  String toString() {
+    return '$locationSharingFor, $getLatLng, $lastUpdatedAt, $sender, $receiver';
   }
 }
 
