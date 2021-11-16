@@ -1,3 +1,7 @@
+## 4.0.0-rc+1
+
+- Adding desktop support by replacing flutter_config with flutter_dotenv
+
 ## 3.0.0
 
 - Cleaned imports to reduce autocomplete pollution for the developer
