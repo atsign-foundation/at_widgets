@@ -28,7 +28,8 @@ void initializeLocationService(GlobalKey<NavigatorState> navKey,
     bool showDialogBox = false,
     String rootDomain = MixedConstants.ROOT_DOMAIN,
     Function? getAtValue,
-    Function(List<KeyLocationModel>)? streamAlternative}) async {
+    Function(List<KeyLocationModel>)? streamAlternative,
+    bool isEventInUse = false}) async {
   /// initialise keys
   MixedConstants.setApiKey(apiKey);
   MixedConstants.setMapKey(mapKey);
@@ -42,7 +43,7 @@ void initializeLocationService(GlobalKey<NavigatorState> navKey,
   }
 
   AtLocationNotificationListener().init(navKey, rootDomain, showDialogBox,
-      newGetAtValueFromMainApp: getAtValue);
+      newGetAtValueFromMainApp: getAtValue, isEventInUse: isEventInUse);
   KeyStreamService().init(AtLocationNotificationListener().atClientInstance,
       streamAlternative: streamAlternative);
 }

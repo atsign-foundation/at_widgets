@@ -331,7 +331,8 @@ class KeyStreamService {
     // Update location sharing
     if ((locationData.isSharing) && (locationData.isAccepted)) {
       if (locationData.atsignCreator == currentAtSign) {
-        SendLocationNotification().addMember(locationData);
+        SendLocationNotification().addMember(SendLocationNotification()
+            .locationNotificationModelToLocationDataModel(locationData));
       }
     } else {
       SendLocationNotification().removeMember(locationData.key);
@@ -422,8 +423,9 @@ class KeyStreamService {
       if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==
           currentAtSign) {
         // ignore: unawaited_futures
-        SendLocationNotification()
-            .addMember(tempHyridNotificationModel.locationNotificationModel);
+        SendLocationNotification().addMember(SendLocationNotification()
+            .locationNotificationModelToLocationDataModel(
+                tempHyridNotificationModel.locationNotificationModel!));
       }
     }
     return tempHyridNotificationModel;
