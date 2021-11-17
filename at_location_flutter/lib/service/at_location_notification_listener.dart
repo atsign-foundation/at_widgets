@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
+import 'package:at_location_flutter/location_modal/location_data_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/screens/notification_dialog/notification_dialog.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
@@ -141,7 +142,7 @@ class AtLocationNotificationListener {
 
     if (atKey.toString().toLowerCase().contains(locationKey)) {
       var msg =
-          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+          LocationDataModel.fromJson(jsonDecode(decryptedMessage));
       MasterLocationService().updateHybridList(msg);
       return;
     }

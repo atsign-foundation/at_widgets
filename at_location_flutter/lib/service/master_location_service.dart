@@ -58,8 +58,10 @@ class MasterLocationService {
           (_locationReceivedData[atsign]!.locationSharingFor[id] != null)) {
         var _locationSharingFor =
             _locationReceivedData[atsign]!.locationSharingFor[id];
-        if ((DateTime.now().isAfter(_locationSharingFor!.from)) &&
-            (DateTime.now().isBefore(_locationSharingFor.to))) {
+        if (((_locationSharingFor!.from == null) ||
+                (_locationSharingFor!.to == null)) ||
+            ((DateTime.now().isAfter(_locationSharingFor!.from!)) &&
+                (DateTime.now().isBefore(_locationSharingFor.to!)))) {
           return _allReceivedUsersList[atsign];
         }
       }
