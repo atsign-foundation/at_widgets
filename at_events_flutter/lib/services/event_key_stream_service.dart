@@ -12,6 +12,8 @@ import 'package:at_events_flutter/services/at_event_notification_listener.dart';
 import 'package:at_events_flutter/services/event_location_share.dart';
 // import 'package:at_events_flutter/services/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
+import 'package:at_location_flutter/location_modal/location_data_model.dart';
+import 'package:at_location_flutter/service/send_location_notification.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 
@@ -103,7 +105,7 @@ class EventKeyStreamService {
     notifyListeners();
 
     EventLocationShare().init();
-
+    calculateLocationSharingAllEvents();
     // ignore: unawaited_futures
     updateEventDataAccordingToAcknowledgedData();
   }
@@ -423,9 +425,16 @@ class EventKeyStreamService {
     if ((eventNotificationModel.atsignCreator == currentAtSign)) {
       if (eventNotificationModel.isSharing!) {
         // ignore: unawaited_futures
-        EventLocationShare().addMember(eventNotificationModel);
+        // EventLocationShare().addMember(eventNotificationModel);
+        calculateLocationSharingForSingleEvent(eventNotificationModel);
       } else {
-        EventLocationShare().removeMember(eventNotificationModel.key);
+        // EventLocationShare().removeMember(eventNotificationModel.key);
+        List<String> atsignsToremove = [];
+        eventNotificationModel.group!.members!.forEach((member) {
+          atsignsToremove.add(member.atSign!);
+        });
+        SendLocationNotification()
+            .removeMember(eventNotificationModel.key!, atsignsToremove);
       }
     } else {
       AtContact? currentGroupMember;
@@ -443,9 +452,16 @@ class EventKeyStreamService {
           currentGroupMember.tags!['isSharing'] == true &&
           currentGroupMember.tags!['isExited'] == false) {
         // ignore: unawaited_futures
-        EventLocationShare().addMember(eventNotificationModel);
+        // EventLocationShare().addMember(eventNotificationModel);
+        calculateLocationSharingForSingleEvent(eventNotificationModel);
       } else {
-        EventLocationShare().removeMember(eventNotificationModel.key);
+        // EventLocationShare().removeMember(eventNotificationModel.key);
+        List<String> atsignsToremove = [];
+        eventNotificationModel.group!.members!.forEach((member) {
+          atsignsToremove.add(member.atSign!);
+        });
+        SendLocationNotification()
+            .removeMember(eventNotificationModel.key!, atsignsToremove);
       }
     }
   }
@@ -856,6 +872,84 @@ class EventKeyStreamService {
 
     EventsMapScreenData().updateEventdataFromList(allEventNotifications);
     atNotificationsSink.add(allEventNotifications);
+  }
+
+  calculateLocationSharingAllEvents() {
+    List<String> atsignToShareLocWith = [];
+    List<LocationDataModel> locationToShareWith = [];
+
+    allEventNotifications.forEach((eventKeyLocationModel) {
+      atsignToShareLocWith = [];
+      if (eventKeyLocationModel
+          .eventNotificationModel!.group!.members!.isNotEmpty) {
+        Set<AtContact>? groupMembers =
+            eventKeyLocationModel.eventNotificationModel!.group!.members!;
+
+        groupMembers.forEach((member) {
+          if (member.atSign! !=
+              AtClientManager.getInstance().atClient.getCurrentAtSign()!) {
+            atsignToShareLocWith.add(member.atSign!);
+          }
+        });
+      }
+      print('event info : ${eventKeyLocationModel.eventNotificationModel}');
+      print('atsignToShareLocWith : ${atsignToShareLocWith}');
+
+      // converting event data to locationDataModel
+      locationToShareWith = [
+        ...locationToShareWith,
+        ...eventNotificationToLocationDataModel(
+            eventKeyLocationModel.eventNotificationModel!,
+            atsignList: atsignToShareLocWith)
+      ];
+    });
+
+    print('locationToShareWith length: ${locationToShareWith.length}');
+    locationToShareWith.forEach((element) {
+      print('loc share details :${element.sender}');
+      print('loc share details :${element.receiver}');
+      print('loc share details :${element.locationSharingFor}');
+    });
+    SendLocationNotification().initEventData(locationToShareWith);
+  }
+
+  calculateLocationSharingForSingleEvent(EventNotificationModel eventData) {
+    List<String> atsignToShareLocWith = [];
+    eventData.group!.members!.forEach((member) {
+      atsignToShareLocWith.add(member.atSign!);
+    });
+
+    SendLocationNotification().initEventData(
+        eventNotificationToLocationDataModel(eventData,
+            atsignList: atsignToShareLocWith));
+  }
+
+  List<LocationDataModel> eventNotificationToLocationDataModel(
+      EventNotificationModel eventData,
+      {List<String>? atsignList}) {
+    LocationDataModel locationDataModel = LocationDataModel(
+      {
+        eventData.key!:
+            LocationSharingFor(null, null, LocationSharingType.Event),
+      },
+      null,
+      null,
+      DateTime.now(),
+      AtClientManager.getInstance().atClient.getCurrentAtSign()!,
+      eventData.atsignCreator!,
+    );
+
+    if (atsignList == null) {
+      return [locationDataModel];
+    }
+
+    List<LocationDataModel> locationToShareWith = [];
+    atsignList.forEach((element) {
+      locationDataModel.receiver = element;
+      locationToShareWith.add(locationDataModel);
+    });
+
+    return locationToShareWith;
   }
 }
 

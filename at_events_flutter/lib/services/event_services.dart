@@ -25,7 +25,7 @@ class EventService {
   late AtClientManager atClientManager;
   List<AtContact>? selectedContacts = [];
   List<String?> selectedContactsAtSigns = [];
-  List<EventNotificationModel>? createdEvents;
+  List<EventNotificationModel> createdEvents = [];
   Function? onEventSaved;
 
   // ignore: close_sinks

@@ -150,18 +150,48 @@ class SendLocationNotification {
         'after adding atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
   }
 
-  void removeMember(String? key) async {
-    LocationNotificationModel? locationNotificationModel;
-    atsignsToShareLocationWith.removeWhere((element) {
-      if (key!.contains(element!.key!)) locationNotificationModel = element;
-      return key.contains(element.key!);
+  void removeMember(String inviteId, List<String> atsignsToRemove) async {
+    // LocationNotificationModel? locationNotificationModel;
+    // atsignsToShareLocationWith.removeWhere((element) {
+    //   if (key!.contains(element!.key!)) locationNotificationModel = element;
+    //   return key.contains(element.key!);
+    // });
+    // if (locationNotificationModel != null) {
+    //   await sendNull(locationNotificationModel!);
+    // }
+
+    // print(
+    // 'after deleting atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
+
+    List<String> updatedAtsigns = [], atsignsToDelete = [];
+    allAtsignsLocationData.forEach((key, value) {
+      atsignsToRemove.forEach((atsignToRemove) {
+        if (compareAtSign(key, atsignToRemove)) {
+          allAtsignsLocationData[key]?.locationSharingFor.remove(inviteId);
+          if (allAtsignsLocationData[key]?.locationSharingFor.isEmpty ??
+              false) {
+            atsignsToDelete.add(key);
+          }
+          updatedAtsigns.add(key);
+        }
+      });
     });
-    if (locationNotificationModel != null) {
-      await sendNull(locationNotificationModel!);
+    await sendLocationAfterDataUpdate(updatedAtsigns);
+    await sendNull(atsignsToDelete);
+  }
+
+  sendLocationAfterDataUpdate(List<String> atsignsUpdated) async {
+    var _currentMyLatLng = await getMyLocation();
+    if (_currentMyLatLng == null) {
+      return;
     }
 
-    print(
-        'after deleting atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
+    await Future.forEach(atsignsUpdated, (String atsign) async {
+      if (allAtsignsLocationData[atsign] != null) {
+        await prepareLocationDataAndSend(
+            atsign, allAtsignsLocationData[atsign]!, _currentMyLatLng);
+      }
+    });
   }
 
   void sendLocation() async {
@@ -247,17 +277,17 @@ class SendLocationNotification {
     }
   }
 
-  Future<bool> sendNull(
-      LocationNotificationModel locationNotificationModel) async {
-    var atkeyMicrosecondId =
-        locationNotificationModel.key!.split('-')[1].split('@')[0];
-    var atKey = newAtKey(-1, 'locationnotify-$atkeyMicrosecondId',
-        locationNotificationModel.receiver);
-    var result = await atClient!.delete(
-      atKey,
-    );
-    print('$atKey delete operation $result');
-    if (result) {}
+  Future<bool> sendNull(List<String> atsigns) async {
+    var result;
+
+    await Future.forEach(atsigns, (String element) async {
+      var atKey = newAtKey(-1, 'new_location_notify-', element);
+      result = await atClient!.delete(
+        atKey,
+      );
+      print('result : ${result}');
+    });
+
     return result;
   }
 

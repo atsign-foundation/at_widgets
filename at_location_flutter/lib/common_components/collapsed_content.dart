@@ -209,9 +209,13 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                   }
                                                   if (result) {
                                                     if (!value) {
+                                                      // TODO: verify receiver
                                                       await SendLocationNotification()
-                                                          .sendNull(widget
-                                                              .userListenerKeyword!);
+                                                          .sendNull([
+                                                        widget
+                                                            .userListenerKeyword!
+                                                            .receiver!
+                                                      ]);
                                                     }
                                                     setState(() {
                                                       isSharing = value;
@@ -305,7 +309,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
             .sendDeleteAck(widget.userListenerKeyword!);
       }
       if (result) {
-        await SendLocationNotification().sendNull(widget.userListenerKeyword!);
+        // TODO: verify receiver
+        await SendLocationNotification()
+            .sendNull([widget.userListenerKeyword!.receiver!]);
         LoadingDialog().hide();
 
         Navigator.pop(context);

@@ -35,7 +35,9 @@ void initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
 
   if (initLocation) {
     initializeLocationService(navKeyFromMainApp,
-        apiKey: MixedConstants.API_KEY!, mapKey: MixedConstants.MAP_KEY!);
+        apiKey: MixedConstants.API_KEY!,
+        mapKey: MixedConstants.MAP_KEY!,
+        isEventInUse: true);
   }
 
   /// To have eta in events

@@ -17,3 +17,4 @@ export 'location_modal/hybrid_model.dart';
 export 'service/distance_calculate.dart';
 export 'event_show_location.dart';
 export 'service/sync_secondary.dart';
+export 'location_modal/location_data_model.dart';
