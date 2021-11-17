@@ -156,7 +156,7 @@ class ContactService {
     }
   }
 
-  Future<dynamic> addAtSign(
+  Future<bool> addAtSign(
     context, {
     String? atSign,
     String? nickName,
@@ -164,7 +164,7 @@ class ContactService {
     if (atSign == null || atSign == '') {
       getAtSignError = TextStrings().emptyAtsign;
 
-      return true;
+      return false;
     } else if (atSign[0] != '@') {
       atSign = '@' + atSign;
     }
@@ -173,7 +173,7 @@ class ContactService {
     if (atSign == atClientManager.atClient.getCurrentAtSign()) {
       getAtSignError = TextStrings().addingLoggedInUser;
 
-      return true;
+      return false;
     }
     try {
       isContactPresent = false;
@@ -206,9 +206,13 @@ class ContactService {
         });
         print(result);
         fetchContacts();
+        return true;
+      } else {
+        return false;
       }
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
