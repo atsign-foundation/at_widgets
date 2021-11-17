@@ -145,8 +145,9 @@ class EventLocationShare {
 
   /// Will be called from addDataToList or mapUpdatedEventDataToWidget
   void removeMember(String? key) async {
-    eventsToShareLocationWith
-        .removeWhere((element) => key!.contains(element.key!));
+    eventsToShareLocationWith.removeWhere((element) {
+      return key!.contains(element.key!);
+    });
 
     print(
         'after deleting atsignsToShareLocationWith length ${eventsToShareLocationWith.length}');

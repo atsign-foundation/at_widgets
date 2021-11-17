@@ -7,6 +7,7 @@ import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/screens/notification_dialog/notification_dialog.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -142,7 +143,8 @@ class AtLocationNotificationListener {
     if (atKey.toString().toLowerCase().contains(locationKey)) {
       var msg =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
-      MasterLocationService().updateHybridList(msg);
+      MasterLocationService().updateHybridList(SendLocationNotification()
+          .locationNotificationModelToLocationDataModel(msg));
       return;
     }
 

@@ -335,17 +335,25 @@ class KeyStreamService {
             .locationNotificationModelToLocationDataModel(locationData));
       }
     } else {
-      SendLocationNotification().removeMember(locationData.key);
+      //TODO: verify receiver
+      SendLocationNotification()
+          .removeMember(locationData.key!, [locationData.receiver!]);
     }
   }
 
   /// Removes a notification from list
   void removeData(String? key) {
-    allLocationNotifications
-        .removeWhere((notification) => key!.contains(notification.atKey!.key!));
+    String atsignToDelete = '';
+    allLocationNotifications.removeWhere((notification) {
+      if (key!.contains(notification.atKey!.key!)) {
+        atsignToDelete = notification.locationNotificationModel!.receiver!;
+      }
+      return key!.contains(notification.atKey!.key!);
+    });
     notifyListeners();
     // Remove location sharing
-    SendLocationNotification().removeMember(key);
+    //TODO: verify receiver
+    SendLocationNotification().removeMember(key!, [atsignToDelete]);
   }
 
   /// Adds new [KeyLocationModel] data for new received notification

@@ -71,8 +71,9 @@ Future<bool?> sendRequestLocationNotification(String atsign) async {
 /// deletes the location notification of the logged in atsign being shared with [locationNotificationModel].receiver
 Future<bool> deleteLocationData(
     LocationNotificationModel locationNotificationModel) async {
-  var result =
-      await SendLocationNotification().sendNull(locationNotificationModel);
+  // TODO: verify receiver
+  var result = await SendLocationNotification()
+      .sendNull([locationNotificationModel.receiver!]);
   return result;
 }
 
@@ -86,4 +87,15 @@ AtKey getAtKey(String regexKey) {
   var atKey = AtKey.fromString(regexKey);
   atKey.metadata!.ttr = -1;
   return atKey;
+}
+
+compareAtSign(String atsign1, String atsign2) {
+  if (atsign1[0] != '@') {
+    atsign1 = '@' + atsign1;
+  }
+  if (atsign2[0] != '@') {
+    atsign2 = '@' + atsign2;
+  }
+
+  return atsign1.toLowerCase() == atsign2.toLowerCase() ? true : false;
 }
