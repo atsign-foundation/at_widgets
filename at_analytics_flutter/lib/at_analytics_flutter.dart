@@ -1,0 +1,1 @@
+library at_analytics_flutter;
