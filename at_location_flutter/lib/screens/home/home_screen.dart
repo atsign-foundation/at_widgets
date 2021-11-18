@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _getMyLocation();
-    KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
+    // KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
   }
 
   void _getMyLocation() async {
@@ -129,6 +129,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         minHeight: 267.toHeight,
                         maxHeight: 530.toHeight,
                         panelBuilder: (scrollController) {
+                          if (KeyStreamService()
+                              .allLocationNotifications
+                              .isNotEmpty) {
+                            return collapsedContent(
+                                false,
+                                scrollController,
+                                getListView(
+                                    KeyStreamService().allLocationNotifications,
+                                    scrollController));
+                          }
                           return collapsedContent(false, scrollController,
                               emptyWidget('No Data Found!!'));
                         },

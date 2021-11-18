@@ -89,7 +89,7 @@ AtKey getAtKey(String regexKey) {
   return atKey;
 }
 
-compareAtSign(String atsign1, String atsign2) {
+bool compareAtSign(String atsign1, String atsign2) {
   if (atsign1[0] != '@') {
     atsign1 = '@' + atsign1;
   }

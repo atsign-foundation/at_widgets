@@ -29,7 +29,6 @@ class SendLocationNotification {
   factory SendLocationNotification() => _instance;
   Timer? timer;
   final String locationKey = 'locationnotify';
-  List<LocationNotificationModel?> atsignsToShareLocationWith = [];
   StreamSubscription<Position>? positionStream;
   bool masterSwitchState = true;
   Function? locationPromptDialog;
@@ -45,10 +44,8 @@ class SendLocationNotification {
   void init(AtClient? newAtClient) {
     if ((timer != null) && (timer!.isActive)) timer!.cancel();
     atClient = newAtClient;
-    atsignsToShareLocationWith = [];
+    allAtsignsLocationData = {};
     isEventInUse = AtLocationNotificationListener().isEventInUse;
-    print(
-        'atsignsToShareLocationWith length - ${atsignsToShareLocationWith.length}');
     if (positionStream != null) positionStream!.cancel();
     findAtSignsToShareLocationWith();
   }
@@ -75,21 +72,26 @@ class SendLocationNotification {
   }
 
   void findAtSignsToShareLocationWith() {
-    atsignsToShareLocationWith = [];
-
     KeyStreamService()
         .allLocationNotifications
         .forEach((KeyLocationModel notification) {
-      LocationDataModel locationDataModel =
-          locationNotificationModelToLocationDataModel(
-              notification.locationNotificationModel!);
+      if (compareAtSign(notification.locationNotificationModel!.atsignCreator!,
+              AtClientManager.getInstance().atClient.getCurrentAtSign()!) &&
+          (notification.locationNotificationModel!.isSharing) &&
+          (notification.locationNotificationModel!.isAccepted) &&
+          (!notification.locationNotificationModel!.isExited)) {
+        LocationDataModel locationDataModel =
+            locationNotificationModelToLocationDataModel(
+                notification.locationNotificationModel!);
 
-      if (allAtsignsLocationData[locationDataModel.receiver] != null) {
-        allAtsignsLocationData[locationDataModel.receiver]!
-            .locationSharingFor
-            .addAll(locationDataModel.locationSharingFor);
-      } else {
-        allAtsignsLocationData[locationDataModel.receiver] = locationDataModel;
+        if (allAtsignsLocationData[locationDataModel.receiver] != null) {
+          allAtsignsLocationData[locationDataModel.receiver]!
+              .locationSharingFor
+              .addAll(locationDataModel.locationSharingFor);
+        } else {
+          allAtsignsLocationData[locationDataModel.receiver] =
+              locationDataModel;
+        }
       }
     });
 
@@ -117,7 +119,25 @@ class SendLocationNotification {
     }
   }
 
+  /// we are assuming that the _newLocationDataModel has a new share id
+  /// if it has a same id already in [allAtsignsLocationData[_newLocationDataModel.receiver]]
+  /// then we won't add it again
   Future<void> addMember(LocationDataModel _newLocationDataModel) async {
+    if (allAtsignsLocationData[_newLocationDataModel.receiver] != null) {
+      /// don't add and send again if already present
+      var _receiverLocationDataModel =
+          allAtsignsLocationData[_newLocationDataModel.receiver]!;
+
+      if (_newLocationDataModel.locationSharingFor.keys.isEmpty) {
+        return;
+      }
+
+      var _id = _newLocationDataModel.locationSharingFor.keys.first;
+      if (_receiverLocationDataModel.locationSharingFor[_id] != null) {
+        return;
+      }
+    }
+
     // add
     appendLocationDataModelData([_newLocationDataModel]);
 
@@ -151,9 +171,6 @@ class SendLocationNotification {
             isError: true);
       }
     }
-
-    print(
-        'after adding atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
   }
 
   void removeMember(String inviteId, List<String> atsignsToRemove) async {
@@ -172,7 +189,9 @@ class SendLocationNotification {
     List<String> updatedAtsigns = [], atsignsToDelete = [];
     allAtsignsLocationData.forEach((key, value) {
       atsignsToRemove.forEach((atsignToRemove) {
-        if (compareAtSign(key, atsignToRemove)) {
+        if ((compareAtSign(key, atsignToRemove)) &&
+            (allAtsignsLocationData[key]?.locationSharingFor[inviteId] !=
+                null)) {
           allAtsignsLocationData[key]?.locationSharingFor.remove(inviteId);
           if (allAtsignsLocationData[key]?.locationSharingFor.isEmpty ??
               false) {
@@ -220,21 +239,21 @@ class SendLocationNotification {
         (permission == LocationPermission.whileInUse))) {
       /// The stream doesnt run until 100m is covered
       /// So, we send data once
-      var _currentMyLatLng = await getMyLocation();
+      // var _currentMyLatLng = await getMyLocation();
 
-      if (_currentMyLatLng != null && masterSwitchState) {
-        for (var field in allAtsignsLocationData.entries) {
-          await prepareLocationDataAndSend(field.key, field.value,
-              LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
-        }
+      // if (_currentMyLatLng != null && masterSwitchState) {
+      //   for (var field in allAtsignsLocationData.entries) {
+      //     await prepareLocationDataAndSend(field.key, field.value,
+      //         LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
+      //   }
 
-        // await Future.forEach(atsignsToShareLocationWith,
-        //     (dynamic notification) async {
-        //   // ignore: await_only_futures
-        //   await prepareLocationDataAndSend(notification,
-        //       LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
-        // });
-      }
+      //   // await Future.forEach(atsignsToShareLocationWith,
+      //   //     (dynamic notification) async {
+      //   //   // ignore: await_only_futures
+      //   //   await prepareLocationDataAndSend(notification,
+      //   //       LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
+      //   // });
+      // }
 
       ///
       positionStream = Geolocator.getPositionStream(distanceFilter: 100)
@@ -242,7 +261,7 @@ class SendLocationNotification {
         if (masterSwitchState) {
           for (var field in allAtsignsLocationData.entries) {
             await prepareLocationDataAndSend(field.key, field.value,
-                LatLng(_currentMyLatLng!.latitude, _currentMyLatLng.longitude));
+                LatLng(myLocation.latitude, myLocation.longitude));
           }
           // await Future.forEach(atsignsToShareLocationWith,
           //     (dynamic notification) async {
@@ -257,7 +276,7 @@ class SendLocationNotification {
 
   Future<void> prepareLocationDataAndSend(String receiver,
       LocationDataModel locationData, LatLng myLocation) async {
-    var isSend = false;
+    var isSend = true;
 
     //// TODO: Send location to only those whose from and to is between DateTime.now()
     // for (var field in locationData.locationSharingFor.entries) {
@@ -283,7 +302,9 @@ class SendLocationNotification {
     // }
     if (isSend) {
       // var atkeyMicrosecondId = notification.key!.split('-')[1].split('@')[0];
-      var atKey = newAtKey(5000, '$locationKey-$receiver', receiver, ttl: null);
+      var atKey = newAtKey(
+          5000, '$locationKey-${receiver.replaceAll('@', '')}', receiver,
+          ttl: null);
 
       locationData.lat = myLocation.latitude;
       locationData.long = myLocation.longitude;
@@ -304,7 +325,7 @@ class SendLocationNotification {
           allAtsignsLocationData[receiver] =
               locationData; // update the map if successfully sent
         }
-        print('send loc data : ${_res}');
+        print('send loc data : ${_res}, ${_res.atClientException}');
 
         // atClient!.put(
         //   atKey,
@@ -323,7 +344,8 @@ class SendLocationNotification {
     var result;
 
     await Future.forEach(atsigns, (String _atsign) async {
-      var atKey = newAtKey(-1, '$locationKey-$_atsign', _atsign);
+      var atKey =
+          newAtKey(-1, '$locationKey-${_atsign.replaceAll('@', '')}', _atsign);
       result = await atClient!.delete(
         atKey,
       );
@@ -352,14 +374,21 @@ class SendLocationNotification {
     });
   }
 
-  AtKey newAtKey(int ttr, String key, String? sharedWith, {int? ttl}) {
+  AtKey newAtKey(int ttr, String key, String sharedWith, {int? ttl}) {
+    if (sharedWith[0] != '@') {
+      sharedWith = '@' + sharedWith;
+    }
+
+    String sharedBy = (atClient!.getCurrentAtSign()![0] != '@')
+        ? ('@' + atClient!.getCurrentAtSign()!)
+        : atClient!.getCurrentAtSign()!;
     var atKey = AtKey()
       ..metadata = Metadata()
       ..metadata!.ttr = ttr
       ..metadata!.ccd = true
       ..key = key
       ..sharedWith = sharedWith
-      ..sharedBy = atClient!.getCurrentAtSign();
+      ..sharedBy = sharedBy;
     if (ttl != null) atKey.metadata!.ttl = ttl;
     return atKey;
   }

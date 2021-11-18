@@ -79,10 +79,10 @@ class KeyStreamService {
     }
 
     allResponse.forEach((key) {
-      if ('@${key.split(':')[1]}'.contains(currentAtSign!)) {
-        var tempHyridNotificationModel = KeyLocationModel(key: key);
-        allLocationNotifications.add(tempHyridNotificationModel);
-      }
+      // if ('@${key.split(':')[1]}'.contains(currentAtSign!)) {
+      var tempHyridNotificationModel = KeyLocationModel(key: key);
+      allLocationNotifications.add(tempHyridNotificationModel);
+      // }
     });
 
     allLocationNotifications.forEach((notification) {
@@ -103,8 +103,8 @@ class KeyStreamService {
     await checkForPendingLocations();
 
     notifyListeners();
-    updateEventAccordingToAcknowledgedData();
-    checkForDeleteRequestAck();
+    // updateEventAccordingToAcknowledgedData();
+    // checkForDeleteRequestAck();
 
     SendLocationNotification().init(atClientInstance);
 
@@ -336,8 +336,10 @@ class KeyStreamService {
       }
     } else {
       //TODO: verify receiver
-      SendLocationNotification()
-          .removeMember(locationData.key!, [locationData.receiver!]);
+      if (locationData.atsignCreator == currentAtSign) {
+        SendLocationNotification()
+            .removeMember(locationData.key!, [locationData.receiver!]);
+      }
     }
   }
 
