@@ -99,3 +99,15 @@ compareAtSign(String atsign1, String atsign2) {
 
   return atsign1.toLowerCase() == atsign2.toLowerCase() ? true : false;
 }
+
+/// input => '@25antwilling:sharelocation-1637156978786327@26juststay' or 'sharelocation-1637156978786327'
+/// output => sharelocation-1637156978786327
+String trimAtsignsFromKey(String key) {
+  if (key.contains(':')) {
+    key = key.split(':')[1];
+  }
+  if (key.contains('@')) {
+    key = key.split('@')[0];
+  }
+  return key;
+}

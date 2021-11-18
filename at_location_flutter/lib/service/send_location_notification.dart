@@ -39,6 +39,9 @@ class SendLocationNotification {
       isLocationDataInitialized = false,
       isEventDataInitialized = false;
 
+  LocationDataModel? getLocationDataModel(String _atsign) =>
+      allAtsignsLocationData[_atsign];
+
   void init(AtClient? newAtClient) {
     if ((timer != null) && (timer!.isActive)) timer!.cancel();
     atClient = newAtClient;
@@ -51,25 +54,24 @@ class SendLocationNotification {
   }
 
   initEventData(List<LocationDataModel> locationDataModel) {
-    locationDataModel.forEach((element) {
-      if (allAtsignsLocationData[element.receiver] != null) {
-        print(
-            'allAtsignsLocationData[element.receiver] : ${allAtsignsLocationData[element.receiver]!.locationSharingFor}');
-        allAtsignsLocationData[element.receiver]!
-            .locationSharingFor
-            .addAll(element.locationSharingFor);
-
-        print(
-            'allAtsignsLocationData[element.receiver] :  after: ${allAtsignsLocationData[element.receiver]!.locationSharingFor}');
-      } else {
-        allAtsignsLocationData[element.receiver] = element;
-      }
-    });
+    appendLocationDataModelData(locationDataModel);
 
     isEventDataInitialized = true;
     if (isLocationDataInitialized) {
       sendLocation();
     }
+  }
+
+  appendLocationDataModelData(List<LocationDataModel> locationDataModel) {
+    locationDataModel.forEach((element) {
+      if (allAtsignsLocationData[element.receiver] != null) {
+        allAtsignsLocationData[element.receiver]!
+            .locationSharingFor
+            .addAll(element.locationSharingFor);
+      } else {
+        allAtsignsLocationData[element.receiver] = element;
+      }
+    });
   }
 
   void findAtSignsToShareLocationWith() {
@@ -78,17 +80,9 @@ class SendLocationNotification {
     KeyStreamService()
         .allLocationNotifications
         .forEach((KeyLocationModel notification) {
-      LocationDataModel locationDataModel = LocationDataModel({
-        notification.key!: LocationSharingFor(
-            notification.locationNotificationModel!.from!,
-            notification.locationNotificationModel!.to!,
-            LocationSharingType.P2P)
-      },
-          0,
-          0,
-          DateTime.now(),
-          AtClientManager.getInstance().atClient.getCurrentAtSign()!,
-          notification.locationNotificationModel!.receiver!);
+      LocationDataModel locationDataModel =
+          locationNotificationModelToLocationDataModel(
+              notification.locationNotificationModel!);
 
       if (allAtsignsLocationData[locationDataModel.receiver] != null) {
         allAtsignsLocationData[locationDataModel.receiver]!
@@ -99,7 +93,11 @@ class SendLocationNotification {
       }
     });
 
-    print('allAtsignsLocationData : ${allAtsignsLocationData}');
+    print('allAtsignsLocationData: ');
+    allAtsignsLocationData.forEach((key, value) {
+      print('$key : ${allAtsignsLocationData[key]}');
+    });
+
     isLocationDataInitialized = true;
     if ((isEventDataInitialized && isEventInUse) || !isEventInUse) {
       sendLocation();
@@ -119,7 +117,17 @@ class SendLocationNotification {
     }
   }
 
-  Future<void> addMember(LocationDataModel locationDataModel) async {
+  Future<void> addMember(LocationDataModel _newLocationDataModel) async {
+    // add
+    appendLocationDataModelData([_newLocationDataModel]);
+
+    var locationDataModel = getLocationDataModel(_newLocationDataModel
+        .receiver); // get updated (aggregated LocationDataModel)
+
+    if (locationDataModel == null) {
+      return;
+    }
+
     var myLocation = await getMyLocation();
     if (myLocation != null) {
       if (masterSwitchState) {
@@ -128,7 +136,7 @@ class SendLocationNotification {
       } else {
         /// method from main app
         if (locationPromptDialog != null) {
-          initEventData([locationDataModel]);
+          // appendLocationDataModelData([locationDataModel]);
           locationPromptDialog!();
 
           /// return as when main switch is turned on, it will send location to all.
@@ -144,8 +152,6 @@ class SendLocationNotification {
       }
     }
 
-    // add
-    initEventData([locationDataModel]);
     print(
         'after adding atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
   }
@@ -171,25 +177,38 @@ class SendLocationNotification {
           if (allAtsignsLocationData[key]?.locationSharingFor.isEmpty ??
               false) {
             atsignsToDelete.add(key);
+          } else {
+            // so that we dont update and delete the same key
+            updatedAtsigns.add(key);
           }
-          updatedAtsigns.add(key);
         }
       });
     });
-    await sendLocationAfterDataUpdate(updatedAtsigns);
-    await sendNull(atsignsToDelete);
+    if (updatedAtsigns.isNotEmpty) {
+      await sendLocationAfterDataUpdate(updatedAtsigns);
+    }
+
+    if (atsignsToDelete.isNotEmpty) {
+      await sendNull(atsignsToDelete);
+    }
   }
 
   sendLocationAfterDataUpdate(List<String> atsignsUpdated) async {
     var _currentMyLatLng = await getMyLocation();
-    if (_currentMyLatLng == null) {
-      return;
-    }
+    // if (_currentMyLatLng == null) {
+    //   return;
+    // }
 
     await Future.forEach(atsignsUpdated, (String atsign) async {
-      if (allAtsignsLocationData[atsign] != null) {
+      if ((allAtsignsLocationData[atsign] != null) &&
+          (_currentMyLatLng != null ||
+              allAtsignsLocationData[atsign]!.getLatLng != null)) {
         await prepareLocationDataAndSend(
-            atsign, allAtsignsLocationData[atsign]!, _currentMyLatLng);
+            atsign,
+            allAtsignsLocationData[atsign]!,
+            _currentMyLatLng ?? allAtsignsLocationData[atsign]!.getLatLng!);
+
+        /// send last latLng if _currentMyLatLng is null
       }
     });
   }
@@ -238,9 +257,24 @@ class SendLocationNotification {
 
   Future<void> prepareLocationDataAndSend(String receiver,
       LocationDataModel locationData, LatLng myLocation) async {
-    var isSend = true;
+    var isSend = false;
 
-    // if (notification.to == null) {
+    //// TODO: Send location to only those whose from and to is between DateTime.now()
+    // for (var field in locationData.locationSharingFor.entries) {
+    //   if ((field.value.from == null) && (field.value.to == null)) {
+    //     isSend = true;
+    //     break;
+    //   }
+
+    //   if (field.value.from != null) {
+    //     isSend = true;
+    //     if (DateTime.now().isBefore(field.value.from!)) {
+    //       isSend = false;
+    //     }
+    //   }
+    // }
+
+    // if (locationData. == null) {
     //   isSend = true;
     // } else if ((DateTime.now().difference(notification.from!) >
     //         Duration(seconds: 0)) &&
@@ -249,10 +283,12 @@ class SendLocationNotification {
     // }
     if (isSend) {
       // var atkeyMicrosecondId = notification.key!.split('-')[1].split('@')[0];
-      var atKey = newAtKey(5000, 'new_location_notify-', receiver, ttl: null);
+      var atKey = newAtKey(5000, '$locationKey-$receiver', receiver, ttl: null);
 
       locationData.lat = myLocation.latitude;
       locationData.long = myLocation.longitude;
+
+      locationData.lastUpdatedAt = DateTime.now();
 
       try {
         print('locationData.toJson() : ${locationData.toJson()}');
@@ -263,6 +299,11 @@ class SendLocationNotification {
                     value: jsonEncode(locationData.toJson()),
                   ),
                 );
+
+        if (_res.notificationStatusEnum == NotificationStatusEnum.delivered) {
+          allAtsignsLocationData[receiver] =
+              locationData; // update the map if successfully sent
+        }
         print('send loc data : ${_res}');
 
         // atClient!.put(
@@ -277,14 +318,18 @@ class SendLocationNotification {
     }
   }
 
+  /// will delete [locationKey] for the atsign and remove from [allAtsignsLocationData]
   Future<bool> sendNull(List<String> atsigns) async {
     var result;
 
-    await Future.forEach(atsigns, (String element) async {
-      var atKey = newAtKey(-1, 'new_location_notify-', element);
+    await Future.forEach(atsigns, (String _atsign) async {
+      var atKey = newAtKey(-1, '$locationKey-$_atsign', _atsign);
       result = await atClient!.delete(
         atKey,
       );
+      if (result) {
+        allAtsignsLocationData.remove(_atsign); // remove from map as well
+      }
       print('result : ${result}');
     });
 
@@ -323,7 +368,7 @@ class SendLocationNotification {
       LocationNotificationModel locationNotificationModel) {
     return LocationDataModel(
       {
-        locationNotificationModel.key!: LocationSharingFor(
+        trimAtsignsFromKey(locationNotificationModel.key!): LocationSharingFor(
             locationNotificationModel.from!,
             locationNotificationModel.to!,
             LocationSharingType.P2P)
