@@ -276,72 +276,77 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   Future<void> _uploadKeyFile() async {
     try {
-      // if (!permissionGrated) {
-      //   await checkPermissions();
-      // }
+      if (!permissionGrated) {
+        await checkPermissions();
+      }
       _isServerCheck = false;
       _isContinue = true;
-      var fileContents, aesKey, atsign;
-      // FilePickerResult result = await FilePicker.platform
-      //     .pickFiles(type: FileType.any, allowMultiple: true);
+      String? fileContents, aesKey, atsign;
+      FilePickerResult? result = await FilePicker.platform
+          .pickFiles(type: FileType.any, allowMultiple: true);
       setState(() {
         loading = true;
       });
-      // result = FilePickerResult();
-      // for (var pickedFile in result.files) {
-      // var path = pickedFile.path;
-      // var path = '/Users/apple/Desktop/@new52plum_key.atKeys';
-      var path = '/Users/apple/Downloads/atkeys/@new52plum_key.atKeys';
-      File selectedFile = File(path);
-      var length = selectedFile.lengthSync();
-      if (length < 10) {
-        _showAlertDialog(_incorrectKeyFile);
-        return;
-      }
+      for (PlatformFile pickedFile in result?.files ?? <PlatformFile>[]) {
+        String? path = pickedFile.path;
+        if (path == null) {
+          throw const FileSystemException(
+              'FilePicker.pickFiles returned a null path');
+        }
+        File selectedFile = File(path);
+        int length = selectedFile.lengthSync();
+        if (length < 10) {
+          await _showAlertDialog(_incorrectKeyFile);
+          return;
+        }
 
-      // if (pickedFile.extension == 'zip') {
-      //   var bytes = selectedFile.readAsBytesSync();
-      //   final archive = ZipDecoder().decodeBytes(bytes);
-      //   for (var file in archive) {
-      //     if (file.name.contains('atKeys')) {
-      //       fileContents = String.fromCharCodes(file.content);
-      //     } else if (aesKey == null &&
-      //         atsign == null &&
-      //         file.name.contains('_private_key.png')) {
-      //       var path = (await path_provider.getTemporaryDirectory()).path;
-      //       String result = await FlutterQrReader.imgScan(path);
-      //       List<String> params = result.replaceAll('"', '').split(':');
-      //       atsign = params[0];
-      //       aesKey = params[1];
-      //       //read scan QRcode and extract atsign,aeskey
-      //     }
-      //   }
-      // } else if (pickedFile.name.contains('atKeys')) {
-      fileContents = File(path).readAsStringSync();
-      // } else if (aesKey == null &&
-      //     atsign == null &&
-      //     pickedFile.name.contains('_private_key.png')) {
-      //   //read scan QRcode and extract atsign,aeskey
-      //   String result = await FlutterQrReader.imgScan(path);
-      //   List<String> params = result.split(':');
-      //   atsign = params[0];
-      //   aesKey = params[1];
-      // } else {
-      //   var result1 = selectedFile.readAsBytesSync();
-      //   fileContents = String.fromCharCodes(result1);
-      //   var result = _validatePickedFileContents(fileContents);
-      //   _logger.finer('result after extracting data is......$result');
-      //   if (!result) {
-      //     _showAlertDialog(_incorrectKeyFile);
-      //     setState(() {
-      //       loading = false;
-      //     });
-      //     return;
-      //   }
-      // }
-      // }
+        if (pickedFile.extension == 'zip') {
+          Uint8List bytes = selectedFile.readAsBytesSync();
+          Archive archive = ZipDecoder().decodeBytes(bytes);
+          for (ArchiveFile file in archive) {
+            if (file.name.contains('atKeys')) {
+              fileContents = String.fromCharCodes(file.content);
+            } else if (aesKey == null &&
+                atsign == null &&
+                file.name.contains('_private_key.png')) {
+              List<int> bytes = file.content as List<int>;
+              String path = (await path_provider.getTemporaryDirectory()).path;
+              File file1 = await File(path + 'test').create();
+              file1.writeAsBytesSync(bytes);
+              String result = await FlutterQrReader.imgScan(file1.path);
+              List<String> params = result.replaceAll('"', '').split(':');
+              atsign = params[0];
+              aesKey = params[1];
+              await File(path + 'test').delete();
+              //read scan QRcode and extract atsign,aeskey
+            }
+          }
+        } else if (pickedFile.name.contains('atKeys')) {
+          fileContents = File(path.toString()).readAsStringSync();
+        } else if (aesKey == null &&
+            atsign == null &&
+            pickedFile.name.contains('_private_key.png')) {
+          //read scan QRcode and extract atsign,aeskey
+          String result = await FlutterQrReader.imgScan(path.toString());
+          List<String> params = result.split(':');
+          atsign = params[0];
+          aesKey = params[1];
+        } else {
+          Uint8List result1 = selectedFile.readAsBytesSync();
+          fileContents = String.fromCharCodes(result1);
+          bool result = _validatePickedFileContents(fileContents);
+          _logger.finer('result after extracting data is......$result');
+          if (!result) {
+            await _showAlertDialog(_incorrectKeyFile);
+            setState(() {
+              loading = false;
+            });
+            return;
+          }
+        }
+      }
       if (aesKey == null && atsign == null && fileContents != null) {
-        var keyData = fileContents.split(',"@');
+        List<String> keyData = fileContents.split(',"@');
         List<String> params = keyData[1]
             .toString()
             .substring(0, keyData[1].length - 2)
@@ -350,7 +355,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         aesKey = params[1];
       }
       if (fileContents == null || (aesKey == null && atsign == null)) {
-        _showAlertDialog(_incorrectKeyFile);
+        await _showAlertDialog(_incorrectKeyFile);
         setState(() {
           loading = false;
         });
@@ -358,7 +363,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
               _pairingAtsign &&
           _pairingAtsign != null) {
-        _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
+        await _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
         setState(() {
           loading = false;
         });
@@ -373,7 +378,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         loading = false;
       });
       _logger.severe('Uploading backup zip file throws $error');
-      _showAlertDialog(_failedFileProcessing);
+      await _showAlertDialog(_failedFileProcessing);
     }
   }
 
@@ -386,7 +391,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = true;
       });
-      // var path = '/Users/apple/Downloads/atkeys/@new52plum_key.atKeys';
 
       var path = await _desktopKeyPicker();
 
