@@ -75,10 +75,10 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.atsign.at_bug_report_flutter
-        pluginClass: AtBugReportFlutterPlugin
+        package: com.atsign.at_analytics_flutter
+        pluginClass: AtAnalyticsFlutterPlugin
       ios:
-        pluginClass: AtBugReportFlutterPlugin
+        pluginClass: AtAnalyticsFlutterPlugin
 
   # To add assets to your application, add an assets section, like this:
   # assets:
