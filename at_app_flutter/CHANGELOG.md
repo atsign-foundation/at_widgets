@@ -1,4 +1,4 @@
-## 4.0.0-rc+2
+## 4.0.0-rc+3
 
 - Added desktop support by replacing flutter_config with flutter_dotenv
 
