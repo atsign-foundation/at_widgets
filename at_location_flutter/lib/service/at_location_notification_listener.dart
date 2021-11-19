@@ -22,7 +22,7 @@ class AtLocationNotificationListener {
   static final _instance = AtLocationNotificationListener._();
 
   factory AtLocationNotificationListener() => _instance;
-  final String locationKey = 'locationnotify';
+  final String locationKey = 'location-notify';
   AtClient? atClientInstance;
   String? currentAtSign;
   late bool showDialogBox;

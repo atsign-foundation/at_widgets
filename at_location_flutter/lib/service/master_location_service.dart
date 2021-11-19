@@ -13,6 +13,7 @@ import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 
+import 'at_location_notification_listener.dart';
 import 'contact_service.dart';
 import 'location_service.dart';
 
@@ -30,7 +31,7 @@ class MasterLocationService {
   Map<String, LocationDataModel> get locationReceivedData =>
       _locationReceivedData;
 
-  final String locationKey = 'locationnotify';
+  final String locationKey = 'location-notify';
 
   StreamController _allReceivedUsersController =
       StreamController<Map<String, HybridModel>>.broadcast();
@@ -52,8 +53,11 @@ class MasterLocationService {
   ///  and DateTime.now() is between from and to of the locationSharingFor value
   ///  then we will return the HybridModel of the atsign in _allReceivedUsersList
 
+//cached:@25antwilling:createevent-1637310583423139@26juststay
   HybridModel? getHybridModel(String atsign, {String? id}) {
     if (id != null) {
+      id = trimAtsignsFromKey(id);
+      print('_locationReceivedData $_locationReceivedData');
       if ((_locationReceivedData[atsign] != null) &&
           (_locationReceivedData[atsign]!.locationSharingFor[id] != null)) {
         var _locationSharingFor =
@@ -90,7 +94,7 @@ class MasterLocationService {
     getAllLocationData();
   }
 
-  /// get all 'locationnotify' data shared with us
+  /// get all 'location-notify' data shared with us
   Future<void> getAllLocationData() async {
     var response = await atClientInstance.getKeys(
       regex: locationKey,
@@ -100,18 +104,26 @@ class MasterLocationService {
     }
 
     await Future.forEach(response, (dynamic key) async {
-      if ('@$key'.contains('cached')) {
+      if (('@$key'.contains('cached')) &&
+          ('@$key'.contains(AtLocationNotificationListener().currentAtSign!))) {
         var atKey = getAtKey(key);
         AtValue? _atValue = await getAtValueFromMainApp(atKey);
-        if (_atValue != null) {
-          // var _locationDataModel =
-          //     LocationDataModel.fromJson(jsonDecode(_atValue.value));
-          var _locationDataModel = LocationDataModel(
-              {}, 22, 22, DateTime.now(), '@new52plum', '@26juststay');
-          _locationReceivedData[_locationDataModel.sender] = _locationDataModel;
+        if ((_atValue != null) && (_atValue.value != null)) {
+          try {
+            var _locationDataModel =
+                LocationDataModel.fromJson(jsonDecode(_atValue.value));
+            // var _locationDataModel = LocationDataModel(
+            //     {}, 22, 22, DateTime.now(), '@new52plum', '@26juststay');
+            _locationReceivedData[_locationDataModel.sender] =
+                _locationDataModel;
+          } catch (e) {
+            print('Error in getAllLocationData $e');
+          }
         }
       }
     });
+
+    print('_locationReceivedData $_locationReceivedData');
 
     //// for demo
     // var _locationDataModel = LocationDataModel(
@@ -147,6 +159,8 @@ class MasterLocationService {
   void updateHybridList(LocationDataModel _newUser) async {
     var contains = _allReceivedUsersList[_newUser.sender] != null;
 
+    _locationReceivedData[_newUser.sender] = _newUser;
+
     if (!contains) {
       print('!contains from main app');
       var _image = await getImageOfAtsignNew(_newUser.sender);
@@ -173,6 +187,8 @@ class MasterLocationService {
   }
 
   void deleteReceivedData(String atsign) {
+    _locationReceivedData.remove(atsign);
+
     _allReceivedUsersList.remove(atsign);
     LocationService().removeUser(atsign);
     allReceivedUsersSink.add(_allReceivedUsersList);

@@ -28,7 +28,7 @@ class SendLocationNotification {
       SendLocationNotification._();
   factory SendLocationNotification() => _instance;
   Timer? timer;
-  final String locationKey = 'locationnotify';
+  final String locationKey = 'location-notify';
   StreamSubscription<Position>? positionStream;
   bool masterSwitchState = true;
   Function? locationPromptDialog;
@@ -51,7 +51,7 @@ class SendLocationNotification {
   }
 
   initEventData(List<LocationDataModel> locationDataModel) {
-    appendLocationDataModelData(locationDataModel);
+    _appendLocationDataModelData(locationDataModel);
 
     isEventDataInitialized = true;
     if (isLocationDataInitialized) {
@@ -59,7 +59,7 @@ class SendLocationNotification {
     }
   }
 
-  appendLocationDataModelData(List<LocationDataModel> locationDataModel) {
+  _appendLocationDataModelData(List<LocationDataModel> locationDataModel) {
     locationDataModel.forEach((element) {
       if (allAtsignsLocationData[element.receiver] != null) {
         allAtsignsLocationData[element.receiver]!
@@ -139,7 +139,7 @@ class SendLocationNotification {
     }
 
     // add
-    appendLocationDataModelData([_newLocationDataModel]);
+    _appendLocationDataModelData([_newLocationDataModel]);
 
     var locationDataModel = getLocationDataModel(_newLocationDataModel
         .receiver); // get updated (aggregated LocationDataModel)
@@ -156,7 +156,7 @@ class SendLocationNotification {
       } else {
         /// method from main app
         if (locationPromptDialog != null) {
-          // appendLocationDataModelData([locationDataModel]);
+          // _appendLocationDataModelData([locationDataModel]);
           locationPromptDialog!();
 
           /// return as when main switch is turned on, it will send location to all.
@@ -185,6 +185,8 @@ class SendLocationNotification {
 
     // print(
     // 'after deleting atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
+
+    inviteId = trimAtsignsFromKey(inviteId);
 
     List<String> updatedAtsigns = [], atsignsToDelete = [];
     allAtsignsLocationData.forEach((key, value) {

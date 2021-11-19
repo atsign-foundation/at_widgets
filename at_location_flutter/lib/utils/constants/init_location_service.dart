@@ -103,6 +103,8 @@ bool compareAtSign(String atsign1, String atsign2) {
 /// input => '@25antwilling:sharelocation-1637156978786327@26juststay' or 'sharelocation-1637156978786327'
 /// output => sharelocation-1637156978786327
 String trimAtsignsFromKey(String key) {
+  key = key.replaceAll('cached:', '');
+
   if (key.contains(':')) {
     key = key.split(':')[1];
   }

@@ -25,7 +25,9 @@ dependencies:
   cupertino_icons: ^1.0.0
   at_onboarding_flutter: ^3.0.4
 
-
+dependency_overrides:
+  at_location_flutter:
+    path: ../../at_location_flutter
 
 dev_dependencies:
   flutter_test:

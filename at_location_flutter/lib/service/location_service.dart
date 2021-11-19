@@ -112,7 +112,7 @@ class LocationService {
 
   void updateMyLatLng(HybridModel _myData) async {
     if (etaFrom != null) {
-      _myData.eta = await (_calculateEta(_myData) as FutureOr<String?>);
+      _myData.eta = await _calculateEta(_myData);
     }
 
     _myData.marker = buildMarker(_myData, singleMarker: true);
@@ -235,7 +235,7 @@ class LocationService {
     }
   }
 
-  Future _calculateEta(HybridModel user) async {
+  Future<String> _calculateEta(HybridModel user) async {
     if (calculateETA!) {
       try {
         var _res;

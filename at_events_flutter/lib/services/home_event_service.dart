@@ -106,6 +106,8 @@ class HomeEventService {
     if (isActionRequired(eventNotificationModel) &&
         !eventNotificationModel.isCancelled!) {
       if (haveResponded) {
+        eventNotificationModel.isUpdate = true;
+        EventsMapScreenData().moveToEventScreen(eventNotificationModel);
         return null;
       }
       return showDialog<void>(
