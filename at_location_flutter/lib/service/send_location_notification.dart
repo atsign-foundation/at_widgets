@@ -44,7 +44,6 @@ class SendLocationNotification {
   void init(AtClient? newAtClient) {
     if ((timer != null) && (timer!.isActive)) timer!.cancel();
     atClient = newAtClient;
-    allAtsignsLocationData = {};
     isEventInUse = AtLocationNotificationListener().isEventInUse;
     if (positionStream != null) positionStream!.cancel();
     findAtSignsToShareLocationWith();
@@ -62,13 +61,16 @@ class SendLocationNotification {
   _appendLocationDataModelData(List<LocationDataModel> locationDataModel) {
     locationDataModel.forEach((element) {
       if (allAtsignsLocationData[element.receiver] != null) {
-        allAtsignsLocationData[element.receiver]!
-            .locationSharingFor
-            .addAll(element.locationSharingFor);
+        allAtsignsLocationData[element.receiver]!.locationSharingFor = {
+          ...allAtsignsLocationData[element.receiver]!.locationSharingFor,
+          ...element.locationSharingFor
+        };
       } else {
         allAtsignsLocationData[element.receiver] = element;
       }
     });
+
+    print('allAtsignsLocationData data :${allAtsignsLocationData}');
   }
 
   void findAtSignsToShareLocationWith() {
@@ -260,8 +262,12 @@ class SendLocationNotification {
       ///
       positionStream = Geolocator.getPositionStream(distanceFilter: 100)
           .listen((myLocation) async {
+        print(
+            'myLocation.latitude : ${myLocation.latitude}, long : ${myLocation.longitude}');
         if (masterSwitchState) {
           for (var field in allAtsignsLocationData.entries) {
+            print(
+                'sending to atsign : ${field.key}, value : ${field.value.locationSharingFor}');
             await prepareLocationDataAndSend(field.key, field.value,
                 LatLng(myLocation.latitude, myLocation.longitude));
           }
