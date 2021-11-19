@@ -3,15 +3,18 @@
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 
+/// Function to initialise contacts Service
 void initializeContactsService(
     {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
   ContactService().initContactsService(rootDomain, rootPort);
 }
 
+/// Function call from app to dispose stream controllers used in the package
 void disposeContactsControllers() {
   ContactService().disposeControllers();
 }
 
+/// Function to fetch the contact details of an atsign
 Future<AtContact> getAtSignDetails(String atSign) async {
   // ignore: omit_local_variable_types
   AtContact? atContact = getCachedContactDetail(atSign);
@@ -36,6 +39,7 @@ AtContact checkForCachedContactDetail(String atSign) {
   return atContact ?? AtContact(atSign: atSign);
 }
 
+/// Function to fetch the contact details of an atsign from cached list
 AtContact? getCachedContactDetail(String atsign) {
   if (atsign == ContactService().atContactImpl.atClient?.getCurrentAtSign() &&
       ContactService().loggedInUserDetails != null) {
