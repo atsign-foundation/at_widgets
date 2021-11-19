@@ -181,19 +181,17 @@ class _SecondScreenState extends State<SecondScreen> {
                       if (snapshot.hasError) {
                         return Text('error');
                       } else {
-                        return Column(
-                            children: snapshot.data!.map((notification) {
-                          return Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Text(
-                              '${snapshot.data!.indexOf(notification) + 1}. ${notification.key}',
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.left,
-                            ),
-                          );
-                        }).toList());
+                        return (snapshot.data?.isNotEmpty ?? false)
+                            ? renderNotifications(snapshot.data!)
+                            : Text('No Data');
                       }
                     } else {
+                      if (KeyStreamService()
+                          .allLocationNotifications
+                          .isNotEmpty) {
+                        return renderNotifications(
+                            KeyStreamService().allLocationNotifications);
+                      }
                       return Text('No Data');
                     }
                   }),
@@ -202,6 +200,20 @@ class _SecondScreenState extends State<SecondScreen> {
         ),
       ),
     );
+  }
+
+  Widget renderNotifications(List<KeyLocationModel> _data) {
+    return Column(
+        children: _data.map((notification) {
+      return Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Text(
+          '${_data.indexOf(notification) + 1}. ${notification.key}',
+          style: TextStyle(fontSize: 16),
+          textAlign: TextAlign.left,
+        ),
+      );
+    }).toList());
   }
 
   Future<bool> checkAtsign() async {
