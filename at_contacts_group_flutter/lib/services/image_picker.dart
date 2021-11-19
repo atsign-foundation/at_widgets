@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
+/// This service is used to pick images for the group
 class ImagePicker {
   ImagePicker._();
   static final ImagePicker _instance = ImagePicker._();
