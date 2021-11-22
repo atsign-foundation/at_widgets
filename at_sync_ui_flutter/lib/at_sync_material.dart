@@ -136,7 +136,7 @@ class AtSyncLinearProgressIndicator extends AtSyncProgressIndicator {
   Widget build(BuildContext context) {
     return LinearProgressIndicator(
       backgroundColor:
-          backgroundColor ?? _kDefaultActiveTickColor.withAlpha(47),
+          backgroundColor ?? (color ?? _kDefaultActiveTickColor).withAlpha(47),
       color: color ?? _kDefaultActiveTickColor,
       value: value,
       minHeight: minHeight ?? 4,
@@ -154,12 +154,18 @@ class AtSyncText extends StatelessWidget {
   /// much actual progress is being made.
   final double? value;
 
+  final Color? indicatorColor;
+
+  final TextStyle? textStyle;
+
   final Widget? child;
 
   const AtSyncText({
     Key? key,
     this.value,
     this.child,
+    this.indicatorColor,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -168,8 +174,12 @@ class AtSyncText extends StatelessWidget {
       children: [
         AtSyncIndicator(
           value: value,
+          color: indicatorColor,
         ),
-        Text(((value ?? 0) * 100).toInt().toString() + '%'),
+        Text(
+          ((value ?? 0) * 100).toInt().toString() + '%',
+          style: textStyle,
+        ),
         Container(
           child: child,
         ),
@@ -336,7 +346,16 @@ class AtSyncSnackBar {
   // Can only be accessed with the constructor.
   late BuildContext _context;
 
-  AtSyncSnackBar({required context}) {
+  Color? indicatorColor;
+  Color? backgroundColor;
+  TextStyle? textStyle;
+
+  AtSyncSnackBar({
+    required context,
+    this.indicatorColor,
+    this.backgroundColor,
+    this.textStyle,
+  }) {
     _context = context;
   }
 
@@ -364,6 +383,7 @@ class AtSyncSnackBar {
     ScaffoldMessenger.of(_context).showSnackBar(
       SnackBar(
         duration: const Duration(days: 365),
+        backgroundColor: backgroundColor,
         content: ValueListenableBuilder<double?>(
           valueListenable: _progress,
           builder: (BuildContext context, double? value, Widget? child) {
@@ -374,10 +394,14 @@ class AtSyncSnackBar {
                   height: 24,
                   child: AtSyncIndicator(
                     value: value,
+                    color: indicatorColor,
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(_message.value),
+                Text(
+                  _message.value,
+                  style: textStyle,
+                ),
               ],
             );
           },

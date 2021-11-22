@@ -1,10 +1,13 @@
 import 'package:at_sync_ui_flutter/at_sync_material.dart' as material;
 import 'package:at_sync_ui_flutter/at_sync_cupertino.dart' as cupertino;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 const double _kNormalPadding = 16;
 const double _kSmallPadding = 8;
 const double _kLargePadding = 32;
+const Color _kPrimaryColor = Color(0xFFf4533d);
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +16,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,6 +39,8 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   bool isLoading = false;
   double progress = 0.0;
+
+  Color _indicatorColor = _kPrimaryColor;
 
   late Animation<double> animation;
   late AnimationController controller;
@@ -73,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage>
             isLoading: isLoading,
             syncIndicatorColor: Colors.white,
             child: IconButton(
-              icon: const Icon(Icons.search),
+              icon: const Icon(Icons.android),
               onPressed: _startDownload,
             ),
           ),
@@ -81,9 +85,13 @@ class _MyHomePageState extends State<MyHomePage>
             isLoading: isLoading,
             syncIndicatorColor: Colors.white,
             child: IconButton(
-              icon: const Icon(Icons.settings),
+              icon: const Icon(Icons.phone_iphone),
               onPressed: _startSnackBar,
             ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.palette),
+            onPressed: _showColorPicker,
           ),
         ],
       ),
@@ -109,17 +117,27 @@ class _MyHomePageState extends State<MyHomePage>
               const SizedBox(height: _kSmallPadding),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  material.AtSyncIndicator(),
-                  cupertino.AtSyncIndicator(),
+                children: [
+                  material.AtSyncIndicator(
+                    color: _indicatorColor,
+                  ),
+                  cupertino.AtSyncIndicator(
+                    color: _indicatorColor,
+                  ),
                 ],
               ),
               const SizedBox(height: _kLargePadding),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  material.AtSyncIndicator(radius: 24),
-                  cupertino.AtSyncIndicator(radius: 24),
+                children: [
+                  material.AtSyncIndicator(
+                    radius: 24,
+                    color: _indicatorColor,
+                  ),
+                  cupertino.AtSyncIndicator(
+                    radius: 24,
+                    color: _indicatorColor,
+                  ),
                 ],
               ),
               const SizedBox(height: _kLargePadding),
@@ -130,8 +148,9 @@ class _MyHomePageState extends State<MyHomePage>
                 children: [
                   material.AtSyncButton(
                     isLoading: isLoading,
+                    syncIndicatorColor: _indicatorColor,
                     child: ElevatedButton(
-                      child: const Text('Press me!'),
+                      child: const Text('Material'),
                       onPressed: () async {
                         setState(() {
                           isLoading = true;
@@ -145,8 +164,11 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                   cupertino.AtSyncButton(
                     isLoading: isLoading,
-                    child: ElevatedButton(
-                      child: const Text('Press me!'),
+                    syncIndicatorColor: _indicatorColor,
+                    child: CupertinoButton(
+                      child: const Text('Cupertino'),
+                      color: Colors.grey,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       onPressed: () async {
                         setState(() {
                           isLoading = true;
@@ -166,8 +188,14 @@ class _MyHomePageState extends State<MyHomePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  material.AtSyncIndicator(value: progress),
-                  cupertino.AtSyncIndicator(progress: progress),
+                  material.AtSyncIndicator(
+                    value: progress,
+                    color: _indicatorColor,
+                  ),
+                  cupertino.AtSyncIndicator(
+                    progress: progress,
+                    color: _indicatorColor,
+                  ),
                 ],
               ),
               const SizedBox(height: _kLargePadding),
@@ -175,11 +203,17 @@ class _MyHomePageState extends State<MyHomePage>
               const SizedBox(height: _kSmallPadding),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  Expanded(child: material.AtSyncLinearProgressIndicator()),
-                  SizedBox(width: _kSmallPadding),
+                children: [
                   Expanded(
-                    child: cupertino.AtSyncLinearProgressIndicator(),
+                    child: material.AtSyncLinearProgressIndicator(
+                      color: _indicatorColor,
+                    ),
+                  ),
+                  const SizedBox(width: _kSmallPadding),
+                  Expanded(
+                    child: cupertino.AtSyncLinearProgressIndicator(
+                      color: _indicatorColor,
+                    ),
                   ),
                 ],
               ),
@@ -188,16 +222,19 @@ class _MyHomePageState extends State<MyHomePage>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
-                      flex: 1,
-                      child: material.AtSyncLinearProgressIndicator(
-                        value: progress,
-                      )),
+                    flex: 1,
+                    child: material.AtSyncLinearProgressIndicator(
+                      value: progress,
+                      color: _indicatorColor,
+                    ),
+                  ),
                   const SizedBox(width: _kSmallPadding),
                   Expanded(
                     flex: 1,
                     child: cupertino.AtSyncLinearProgressIndicator(
                       progress: progress,
                       minHeight: 20,
+                      color: _indicatorColor,
                     ),
                   ),
                 ],
@@ -213,6 +250,7 @@ class _MyHomePageState extends State<MyHomePage>
                     child: material.AtSyncText(
                       value: progress,
                       child: const Text('completed'),
+                      indicatorColor: _indicatorColor,
                     ),
                   ),
                   Expanded(
@@ -220,6 +258,7 @@ class _MyHomePageState extends State<MyHomePage>
                     child: cupertino.AtSyncText(
                       value: progress,
                       child: const Text('completed'),
+                      indicatorColor: _indicatorColor,
                     ),
                   ),
                 ],
@@ -270,5 +309,22 @@ class _MyHomePageState extends State<MyHomePage>
       isLoading = false;
     });
     _atSyncSnackBar?.dismiss();
+  }
+
+  void _showColorPicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BlockPicker(
+          pickerColor: _indicatorColor,
+          onColorChanged: (color) {
+            setState(() {
+              _indicatorColor = color;
+            });
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
   }
 }

@@ -3,8 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
-import 'at_sync_material.dart';
-
 const double _kDefaultIndicatorRadius = 10.0;
 
 const Color _kDefaultActiveTickColor = Color(0xFFf4533d);
@@ -396,10 +394,16 @@ class AtSyncText extends StatelessWidget {
 
   final Widget? child;
 
+  final Color? indicatorColor;
+
+  final TextStyle? textStyle;
+
   const AtSyncText({
     Key? key,
     this.value,
     this.child,
+    this.indicatorColor,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -408,8 +412,12 @@ class AtSyncText extends StatelessWidget {
       children: [
         AtSyncIndicator(
           progress: value,
+          color: indicatorColor,
         ),
-        Text(((value ?? 0) * 100).toInt().toString() + '%'),
+        Text(
+          ((value ?? 0) * 100).toInt().toString() + '%',
+          style: textStyle,
+        ),
         Container(
           child: child,
         )
