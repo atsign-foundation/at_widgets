@@ -208,15 +208,15 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                             isSharing: value);
                                                   }
                                                   if (result) {
-                                                    if (!value) {
-                                                      // TODO: verify receiver
-                                                      await SendLocationNotification()
-                                                          .sendNull([
-                                                        widget
-                                                            .userListenerKeyword!
-                                                            .receiver!
-                                                      ]);
-                                                    }
+                                                    // if (!value) {
+                                                    //   // TODO: verify receiver
+                                                    //   await SendLocationNotification()
+                                                    //       .sendNull([
+                                                    //     widget
+                                                    //         .userListenerKeyword!
+                                                    //         .receiver!
+                                                    //   ]);
+                                                    // }
                                                     setState(() {
                                                       isSharing = value;
                                                     });
@@ -310,8 +310,8 @@ class _CollapsedContentState extends State<CollapsedContent> {
       }
       if (result) {
         // TODO: verify receiver
-        await SendLocationNotification()
-            .sendNull([widget.userListenerKeyword!.receiver!]);
+        // await SendLocationNotification()
+        //     .sendNull([widget.userListenerKeyword!.receiver!]);
         LoadingDialog().hide();
 
         Navigator.pop(context);
