@@ -19,11 +19,21 @@ import 'package:at_contacts_group_flutter/widgets/horizontal_circular_list.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+/// This widget gives a screen view for displaying contacts and group details
 class GroupContactView extends StatefulWidget {
+  /// Boolean flag to set view to show contacts
   final bool showContacts;
+
+  /// Boolean flag to set view to show groups
   final bool showGroups;
+
+  /// Boolean flag to set view to show single selection
   final bool singleSelection;
+
+  /// Boolean flag to set view as selection screen
   final bool asSelectionScreen;
+
+  /// Callback to get the list of selected contacts back to the app
   final ValueChanged<List<GroupContactsModel?>>? selectedList;
 
   /// to show already selected contacts.
@@ -43,11 +53,22 @@ class GroupContactView extends StatefulWidget {
 }
 
 class _GroupContactViewState extends State<GroupContactView> {
+  /// Instance of group service
   late GroupService _groupService;
+
+  /// Text from the search field
   String searchText = '';
+
+  /// Boolean indicator of blocking action in progress
   bool blockingContact = false;
+
+  /// List to hold the last saved contacts of a group
   List<GroupContactsModel?> unmodifiedSelectedGroupContacts = [];
+
+  /// Instance of contact service
   late ContactService _contactService;
+
+  /// Boolean indicator of deleting action in progress
   bool deletingContact = false;
 
   @override

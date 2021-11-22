@@ -1,3 +1,6 @@
+## 3.0.2
+- updated dependencies and bug fixes
+
 ## 3.0.1
 - updated documentation
 - bug fix for outgoing message not displayed immediately

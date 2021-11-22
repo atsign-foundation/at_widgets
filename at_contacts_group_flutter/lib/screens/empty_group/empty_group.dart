@@ -10,12 +10,14 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
+/// This widget gives option to create group when there is no group
 class EmptyGroup extends StatefulWidget {
   @override
   _EmptyGroupState createState() => _EmptyGroupState();
 }
 
 class _EmptyGroupState extends State<EmptyGroup> {
+  /// List of selected contacts
   List<AtContact?>? selectedContactList;
 
   @override

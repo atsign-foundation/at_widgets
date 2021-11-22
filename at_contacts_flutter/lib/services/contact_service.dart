@@ -1,5 +1,3 @@
-/// A service to handle CRUD operation on contacts
-
 import 'dart:async';
 
 // ignore: import_of_legacy_library_into_null_safe
@@ -17,57 +15,98 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_client/src/manager/at_client_manager.dart';
 
+/// A service to handle CRUD operation on contacts
 class ContactService {
+  /// Singleton instance declaration
   ContactService._();
 
   static final ContactService _instance = ContactService._();
 
+  /// Factory pattern to get singleton instance
   factory ContactService() => _instance;
 
+  /// Instance of at_contact dart library
   late AtContactsImpl atContactImpl;
+
+  /// Root domain to access
   late String rootDomain;
+
+  /// Root port to access
   late int rootPort;
+
+  /// Current atsign's contact details
   AtContact? loggedInUserDetails;
+
+  /// Instance of AtClientManager
   late AtClientManager atClientManager;
+
+  /// Current atsign in use
   late String currentAtsign;
 
+  /// Stream controller for contacts' list stream
   StreamController<List<AtContact?>> contactStreamController =
       StreamController<List<AtContact?>>.broadcast();
 
+  /// Sink for the contacts' list stream
   Sink get contactSink => contactStreamController.sink;
 
+  /// Stream of contacts' list
   Stream<List<AtContact?>> get contactStream => contactStreamController.stream;
 
+  /// Stream controller for blocked contacts' list stream
   StreamController<List<AtContact?>> blockedContactStreamController =
       StreamController<List<AtContact?>>.broadcast();
 
+  /// Sink for the blocked contacts' list stream
   Sink get blockedContactSink => blockedContactStreamController.sink;
 
+  /// Stream of blocked contacts' list
   Stream<List<AtContact?>> get blockedContactStream =>
       blockedContactStreamController.stream;
 
+  /// Stream controller for selected contacts' list stream
   StreamController<List<AtContact?>> selectedContactStreamController =
       StreamController<List<AtContact?>>.broadcast();
 
+  /// Sink for the selected contacts' list stream
   Sink get selectedContactSink => selectedContactStreamController.sink;
 
+  /// Stream of selected contacts' list
   Stream<List<AtContact?>> get selectedContactStream =>
       selectedContactStreamController.stream;
 
+  /// dispose function for all the stream controllers declared
   void disposeControllers() {
     contactStreamController.close();
     selectedContactStreamController.close();
     blockedContactStreamController.close();
   }
 
+  /// List of contacts added by atsign
   List<AtContact?> contactList = [],
-      blockContactList = [],
-      selectedContacts = [],
-      cachedContactList = [];
-  bool isContactPresent = false, limitReached = false;
 
+      /// List of blocked contacts added by atsign
+      blockContactList = [],
+
+      /// List of selected contacts added by atsign
+      selectedContacts = [],
+
+      /// Cached list of contacts added by atsign
+      cachedContactList = [];
+
+  /// Boolean flag to indicate a contact's presence
+  bool isContactPresent = false,
+
+      /// Limit indicator for contact selection
+      limitReached = false;
+
+  /// Error thrown in fetching an atsign
   String getAtSignError = '';
+
+  /// Boolean indicator for validating atsign
   bool? checkAtSign;
+
+  /// List of all contacts added by atsign
   List<String> allContactsList = [];
 
   // ignore: always_declare_return_types
@@ -156,6 +195,7 @@ class ContactService {
     }
   }
 
+  /// Function to validate, fetch details and save to current atsign's contact list
   Future<bool> addAtSign(
     context, {
     String? atSign,
@@ -264,6 +304,7 @@ class ContactService {
     }
   }
 
+  /// Function to validate atsign
   Future<bool> checkAtsign(String? atSign) async {
     if (atSign == null) {
       return false;
@@ -276,6 +317,7 @@ class ContactService {
     return checkPresence != null;
   }
 
+  /// Function to get firstname, lastname and profile picture of an atsign
   Future<Map<String, dynamic>> getContactDetails(
       String? atSign, String? nickName) async {
     var contactDetails = <String, dynamic>{};

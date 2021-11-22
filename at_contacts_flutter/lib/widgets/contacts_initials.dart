@@ -9,9 +9,16 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 // ignore: must_be_immutable
 class ContactInitial extends StatelessWidget {
+  /// Size of the circular profile placeholder
   final double size;
+
+  /// Initials of the atsign
   final String initials;
+
+  /// Index in the list of atsigns
   int? index;
+
+  /// Background color for the profile placeholder
   final Color? backgroundColor;
   ContactInitial(
       {Key? key,

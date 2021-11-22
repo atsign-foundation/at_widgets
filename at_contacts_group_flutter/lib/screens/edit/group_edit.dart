@@ -14,6 +14,7 @@ import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
+/// Screen to edit group details
 class GroupEdit extends StatefulWidget {
   final AtGroup group;
   GroupEdit({required this.group});
@@ -23,11 +24,25 @@ class GroupEdit extends StatefulWidget {
 }
 
 class _GroupEditState extends State<GroupEdit> {
+  /// Name of the group
   String? groupName;
+
+  /// Boolean flag to indicate loading status
   late bool isLoading;
+
+  /// Profile picture for the group
   Uint8List? groupPicture;
-  bool isKeyBoardVisible = false, showEmojiPicker = false;
+
+  /// Boolean flag to check for keyboard visibility
+  bool isKeyBoardVisible = false,
+
+      /// Boolean to control emoji picker
+      showEmojiPicker = false;
+
+  /// Text controller for text field to input group name
   TextEditingController? textController;
+
+  /// Focus node for text field
   FocusNode textFieldFocus = FocusNode();
 
   @override
