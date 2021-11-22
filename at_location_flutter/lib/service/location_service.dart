@@ -170,6 +170,8 @@ class LocationService {
           .getHybridModel(_updatedAtsign, id: notificationID);
       if (_user != null) {
         await updateDetails(_user);
+      } else {
+        removeUser(_updatedAtsign);
       }
 
       if (!_atHybridUsersController.isClosed) {
