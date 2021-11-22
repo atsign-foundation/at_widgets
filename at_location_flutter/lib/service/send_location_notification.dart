@@ -9,6 +9,7 @@ import 'package:at_location_flutter/location_modal/location_data_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/my_location.dart';
+import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -48,6 +49,8 @@ class SendLocationNotification {
     if (positionStream != null) positionStream!.cancel();
     findAtSignsToShareLocationWith();
   }
+
+// TODO: write a function to compare new data with saved ones and remove the expired data.
 
   getAllLocationShareKeys() async {
     var allLocationKeyStrings =
@@ -203,7 +206,10 @@ class SendLocationNotification {
     }
   }
 
-  void removeMember(String inviteId, List<String> atsignsToRemove) async {
+  void removeMember(String inviteId, List<String> atsignsToRemove,
+      {bool isSharing = false,
+      required bool isExited,
+      required bool isAccepted}) async {
     // LocationNotificationModel? locationNotificationModel;
     // atsignsToShareLocationWith.removeWhere((element) {
     //   if (key!.contains(element!.key!)) locationNotificationModel = element;
@@ -224,14 +230,24 @@ class SendLocationNotification {
         if ((compareAtSign(key, atsignToRemove)) &&
             (allAtsignsLocationData[key]?.locationSharingFor[inviteId] !=
                 null)) {
-          allAtsignsLocationData[key]?.locationSharingFor.remove(inviteId);
-          if (allAtsignsLocationData[key]?.locationSharingFor.isEmpty ??
-              false) {
-            atsignsToDelete.add(key);
-          } else {
-            // so that we dont update and delete the same key
-            updatedAtsigns.add(key);
-          }
+          allAtsignsLocationData[key]
+              ?.locationSharingFor[inviteId]!
+              .isAccepted = isAccepted;
+          allAtsignsLocationData[key]?.locationSharingFor[inviteId]!.isSharing =
+              isSharing;
+          allAtsignsLocationData[key]?.locationSharingFor[inviteId]!.isExited =
+              isExited;
+
+          updatedAtsigns.add(key);
+
+          // .remove(inviteId);
+          // if (allAtsignsLocationData[key]?.locationSharingFor.isEmpty ??
+          //     false) {
+          //   atsignsToDelete.add(key);
+          // } else {
+          // so that we dont update and delete the same key
+          // updatedAtsigns.add(key);
+          // }
         }
       });
     });
@@ -251,13 +267,25 @@ class SendLocationNotification {
     // }
 
     await Future.forEach(atsignsUpdated, (String atsign) async {
-      if ((allAtsignsLocationData[atsign] != null) &&
-          (_currentMyLatLng != null ||
-              allAtsignsLocationData[atsign]!.getLatLng != null)) {
+      if ((allAtsignsLocationData[atsign] != null)) {
+        bool isLocSharing = false;
+
+        for (var key
+            in allAtsignsLocationData[atsign]!.locationSharingFor.entries) {
+          if (allAtsignsLocationData[atsign]!
+              .locationSharingFor[key]!
+              .isSharing) {
+            isLocSharing = true;
+            break;
+          }
+        }
+
         await prepareLocationDataAndSend(
             atsign,
             allAtsignsLocationData[atsign]!,
-            _currentMyLatLng ?? allAtsignsLocationData[atsign]!.getLatLng!);
+            (isLocSharing
+                ? _currentMyLatLng ?? allAtsignsLocationData[atsign]!.getLatLng
+                : null));
 
         /// send last latLng if _currentMyLatLng is null
       }
@@ -311,7 +339,7 @@ class SendLocationNotification {
   }
 
   Future<void> prepareLocationDataAndSend(String receiver,
-      LocationDataModel locationData, LatLng myLocation) async {
+      LocationDataModel locationData, LatLng? myLocation) async {
     var isSend = true;
 
     //// TODO: Send location to only those whose from and to is between DateTime.now()
@@ -342,26 +370,27 @@ class SendLocationNotification {
           5000, '$locationKey-${receiver.replaceAll('@', '')}', receiver,
           ttl: null);
 
-      locationData.lat = myLocation.latitude;
-      locationData.long = myLocation.longitude;
+      locationData.lat = myLocation?.latitude;
+      locationData.long = myLocation?.longitude;
 
       locationData.lastUpdatedAt = DateTime.now();
 
       try {
         print('locationData.toJson() : ${locationData.toJson()}');
-        var _res =
-            await AtClientManager.getInstance().notificationService.notify(
-                  NotificationParams.forUpdate(
-                    atKey,
-                    value: jsonEncode(locationData.toJson()),
-                  ),
-                );
+        var _res = await NotifyAndPut()
+            .notifyAndPut(atKey, jsonEncode(locationData.toJson()));
+        // await AtClientManager.getInstance().notificationService.notify(
+        //       NotificationParams.forUpdate(
+        //         atKey,
+        //         value: jsonEncode(locationData.toJson()),
+        //       ),
+        //     );
 
-        if (_res.notificationStatusEnum == NotificationStatusEnum.delivered) {
+        if (_res) {
           allAtsignsLocationData[receiver] =
               locationData; // update the map if successfully sent
         }
-        print('send loc data : ${_res}, ${_res.atClientException}');
+        print('send loc data : $_res');
 
         // atClient!.put(
         //   atKey,

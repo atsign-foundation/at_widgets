@@ -309,8 +309,10 @@ class EventKeyStreamService {
         eventNotificationModel.group!.members!.forEach((member) {
           atsignsToremove.add(member.atSign!);
         });
-        SendLocationNotification()
-            .removeMember(eventNotificationModel.key!, atsignsToremove);
+        SendLocationNotification().removeMember(
+            eventNotificationModel.key!, atsignsToremove,
+            isAccepted: !eventNotificationModel.isCancelled!,
+            isExited: eventNotificationModel.isCancelled!);
       }
     } else {
       AtContact? currentGroupMember;
@@ -321,6 +323,10 @@ class EventKeyStreamService {
               eventNotificationModel.group!.members!.elementAt(i);
           break;
         }
+      }
+
+      if (currentGroupMember == null) {
+        return;
       }
 
       if (currentGroupMember != null &&
@@ -341,8 +347,11 @@ class EventKeyStreamService {
             atsignsToremove.add(member.atSign!);
           }
         });
-        SendLocationNotification()
-            .removeMember(eventNotificationModel.key!, atsignsToremove);
+
+        SendLocationNotification().removeMember(
+            eventNotificationModel.key!, atsignsToremove,
+            isAccepted: currentGroupMember.tags!['isAccepted'],
+            isExited: currentGroupMember.tags!['isExited']);
       }
     }
   }

@@ -251,8 +251,10 @@ class KeyStreamService {
     } else {
       //TODO: verify receiver
       if (compareAtSign(locationData.atsignCreator!, currentAtSign!)) {
-        SendLocationNotification()
-            .removeMember(locationData.key!, [locationData.receiver!]);
+        SendLocationNotification().removeMember(
+            locationData.key!, [locationData.receiver!],
+            isExited: locationData.isExited,
+            isAccepted: locationData.isAccepted);
       }
     }
   }
@@ -266,11 +268,14 @@ class KeyStreamService {
       return;
     }
 
+    LocationNotificationModel? locationNotificationModel;
+
     String atsignToDelete = '';
     allLocationNotifications.removeWhere((notification) {
       if (key.contains(
           trimAtsignsFromKey(notification.locationNotificationModel!.key!))) {
         atsignToDelete = notification.locationNotificationModel!.receiver!;
+        locationNotificationModel = notification.locationNotificationModel;
       }
       return key.contains(
           trimAtsignsFromKey(notification.locationNotificationModel!.key!));
@@ -278,7 +283,11 @@ class KeyStreamService {
     notifyListeners();
     // Remove location sharing
     //TODO: verify receiver
-    SendLocationNotification().removeMember(key, [atsignToDelete]);
+    if (locationNotificationModel != null) {
+      SendLocationNotification().removeMember(key, [atsignToDelete],
+          isExited: locationNotificationModel!.isExited,
+          isAccepted: locationNotificationModel!.isAccepted);
+    }
   }
 
   /// Adds new [KeyLocationModel] data for new received notification

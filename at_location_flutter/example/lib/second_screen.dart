@@ -208,7 +208,7 @@ class _SecondScreenState extends State<SecondScreen> {
       return Padding(
         padding: const EdgeInsets.all(14.0),
         child: Text(
-          '${_data.indexOf(notification) + 1}. ${notification.key}',
+          '${_data.indexOf(notification) + 1}. ${notification.locationNotificationModel!.key}',
           style: TextStyle(fontSize: 16),
           textAlign: TextAlign.left,
         ),
