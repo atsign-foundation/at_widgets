@@ -58,8 +58,10 @@ class LocationDataModel {
 class LocationSharingFor {
   DateTime? from, to;
   late LocationSharingType locationSharingType;
+  late bool isAccepted, isExited, isSharing;
 
-  LocationSharingFor(this.from, this.to, this.locationSharingType);
+  LocationSharingFor(this.from, this.to, this.locationSharingType,
+      this.isAccepted, this.isExited, this.isSharing);
 
   LocationSharingFor.fromJson(Map<String, dynamic> data) {
     from = DateTime.parse(data['from']).toLocal();
@@ -68,13 +70,19 @@ class LocationSharingFor {
         data['locationSharingType'] == 'LocationSharingType.Event'
             ? LocationSharingType.Event
             : LocationSharingType.P2P;
+    isAccepted = data['isAccepted'] == 'true' ? true : false;
+    isExited = data['isExited'] == 'true' ? true : false;
+    isSharing = data['isSharing'] == 'true' ? true : false;
   }
 
   Map<String, dynamic> toJson() {
     return {
       'from': from != null ? from!.toUtc().toString() : null,
       'to': to != null ? to!.toUtc().toString() : null,
-      'locationSharingType': locationSharingType.toString()
+      'locationSharingType': locationSharingType.toString(),
+      'isAccepted': isAccepted.toString(),
+      'isExited': isExited.toString(),
+      'isSharing': isSharing.toString(),
     };
   }
 }

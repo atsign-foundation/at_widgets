@@ -49,6 +49,34 @@ class SendLocationNotification {
     findAtSignsToShareLocationWith();
   }
 
+  getAllLocationShareKeys() async {
+    var allLocationKeyStrings =
+        await AtClientManager.getInstance().atClient.getKeys(
+              regex: locationKey,
+            );
+
+    print('allLocationKeyStrings : $allLocationKeyStrings');
+
+    await Future.forEach(allLocationKeyStrings, (dynamic key) async {
+      if (!'@$key'.contains('cached')) {
+        var atKey = getAtKey(key);
+        AtValue? _atValue = await KeyStreamService().getAtValue(atKey);
+        if ((_atValue != null) && (_atValue.value != null)) {
+          try {
+            var _locationDataModel =
+                LocationDataModel.fromJson(jsonDecode(_atValue.value));
+            allAtsignsLocationData[_locationDataModel.receiver] =
+                _locationDataModel;
+          } catch (e) {
+            print('Error in getAllLocationData $e');
+          }
+        }
+      }
+    });
+
+    print('filteredAtsigns : $allAtsignsLocationData');
+  }
+
   initEventData(List<LocationDataModel> locationDataModel) {
     _appendLocationDataModelData(locationDataModel);
 
@@ -408,7 +436,10 @@ class SendLocationNotification {
         trimAtsignsFromKey(locationNotificationModel.key!): LocationSharingFor(
             locationNotificationModel.from!,
             locationNotificationModel.to!,
-            LocationSharingType.P2P)
+            LocationSharingType.P2P,
+            locationNotificationModel.isAccepted,
+            locationNotificationModel.isExited,
+            locationNotificationModel.isSharing)
       },
       null,
       null,

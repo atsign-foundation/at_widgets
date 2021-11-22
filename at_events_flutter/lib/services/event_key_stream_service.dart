@@ -876,12 +876,20 @@ class EventKeyStreamService {
       EventNotificationModel eventData, List<String> atsignList) {
     DateTime? _from;
     DateTime? _to;
+    late LocationSharingFor locationSharingFor;
 
     /// calculate DateTime from and to
     if (compareAtSign(eventData.atsignCreator!,
         AtEventNotificationListener().currentAtSign!)) {
       _from = eventData.event!.startTime;
       _to = eventData.event!.endTime;
+      locationSharingFor = LocationSharingFor(
+          _from,
+          _to,
+          LocationSharingType.Event,
+          !(eventData.isCancelled ?? false),
+          eventData.isCancelled ?? false,
+          eventData.isSharing ?? false);
     } else {
       late AtContact currentGroupMember;
       eventData.group!.members!.forEach((groupMember) {
@@ -898,6 +906,14 @@ class EventKeyStreamService {
       _to = endTimeEnumToTimeOfDay(
           currentGroupMember.tags!['shareTo'].toString(),
           eventData.event!.endTime);
+
+      locationSharingFor = LocationSharingFor(
+          _from,
+          _to,
+          LocationSharingType.Event,
+          currentGroupMember.tags!['isAccepted'],
+          currentGroupMember.tags!['isExited'],
+          currentGroupMember.tags!['isSharing']);
     }
 
     // if (atsignList == null) {
@@ -908,8 +924,7 @@ class EventKeyStreamService {
     atsignList.forEach((element) {
       LocationDataModel locationDataModel = LocationDataModel(
         {
-          trimAtsignsFromKey(eventData.key!):
-              LocationSharingFor(_from, _to, LocationSharingType.Event),
+          trimAtsignsFromKey(eventData.key!): locationSharingFor,
         },
         null,
         null,
