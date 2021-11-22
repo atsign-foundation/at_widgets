@@ -6,6 +6,7 @@ import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
+import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'at_location_notification_listener.dart';
@@ -131,11 +132,11 @@ class SharingLocationService {
         locationNotificationModel.to =
             DateTime.now().add(Duration(minutes: minutes));
       }
-      result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
+      result = await NotifyAndPut().notifyAndPut(
+        atKey,
+        LocationNotificationModel.convertLocationNotificationToJson(
+            locationNotificationModel),
+      );
       print('sendLocationNotification:$result');
 
       if (result) {
@@ -165,11 +166,11 @@ class SharingLocationService {
       locationNotificationModel.isAccepted = isAccepted;
       locationNotificationModel.isExited = !isAccepted;
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
+      var result = await NotifyAndPut().notifyAndPut(
+        atKey,
+        LocationNotificationModel.convertLocationNotificationToJson(
+            locationNotificationModel),
+      );
       print('sendLocationNotificationAcknowledgment:$result');
       if (result) {
         CustomToast().show('Request to update data is submitted',
@@ -214,6 +215,9 @@ class SharingLocationService {
 
       var key = getAtKey(response[0]);
 
+      key.sharedBy = locationNotificationModel.atsignCreator;
+      key.sharedWith = locationNotificationModel.receiver;
+
       locationNotificationModel.isAcknowledgment = true;
       locationNotificationModel.rePrompt =
           rePrompt; // Dont show dialog box again
@@ -237,10 +241,10 @@ class SharingLocationService {
         key.metadata!.expiresAt = locationNotificationModel.to;
       }
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
-            key,
-            notification,
-          );
+      var result = await NotifyAndPut().notifyAndPut(
+        key,
+        notification,
+      );
       if (result) {
         KeyStreamService()
             .mapUpdatedLocationDataToWidget(locationNotificationModel);

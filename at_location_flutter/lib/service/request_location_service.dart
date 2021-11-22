@@ -4,6 +4,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
@@ -122,11 +123,11 @@ class RequestLocationService {
             .atClientInstance!
             .getCurrentAtSign();
 
-      result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
+      result = await NotifyAndPut().notifyAndPut(
+        atKey,
+        LocationNotificationModel.convertLocationNotificationToJson(
+            locationNotificationModel),
+      );
       print('requestLocationNotification:$result');
 
       if (result) {
@@ -176,11 +177,11 @@ class RequestLocationService {
             DateTime.now().add(Duration(minutes: minutes));
       }
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
+      var result = await NotifyAndPut().notifyAndPut(
+        atKey,
+        LocationNotificationModel.convertLocationNotificationToJson(
+            locationNotificationModel),
+      );
       print('requestLocationAcknowledgment $result');
 
       if (result) {
@@ -231,6 +232,10 @@ class RequestLocationService {
 
       var key = getAtKey(response[0]);
 
+      /// in received location [atsignCreator] & [receiver] are interchanged
+      key.sharedBy = locationNotificationModel.receiver;
+      key.sharedWith = locationNotificationModel.atsignCreator;
+
       if ((locationNotificationModel.isAccepted) &&
           (locationNotificationModel.from != null) &&
           (locationNotificationModel.to != null)) {
@@ -252,10 +257,10 @@ class RequestLocationService {
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel);
       var result;
-      result = await AtLocationNotificationListener().atClientInstance!.put(
-            key,
-            notification,
-          );
+      result = await NotifyAndPut().notifyAndPut(
+        key,
+        notification,
+      );
 
       if (result) {
         KeyStreamService()
@@ -284,11 +289,13 @@ class RequestLocationService {
         locationNotificationModel.receiver,
       );
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
+      var result = await NotifyAndPut().notifyAndPut(
+        atKey,
+        LocationNotificationModel.convertLocationNotificationToJson(
+            locationNotificationModel),
+      );
+
+      /// TODO: Remove from sendLocationNotification list
       print('sendDeleteAck $result');
       if (result) {}
       return result;
