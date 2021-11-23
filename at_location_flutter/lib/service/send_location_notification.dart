@@ -34,6 +34,7 @@ class SendLocationNotification {
   bool masterSwitchState = true;
   Function? locationPromptDialog;
   Map<String, LocationDataModel> allAtsignsLocationData = {};
+  List<String> _atsignsToSendLocationwith = [];
   AtClient? atClient;
   bool isEventInUse = false,
       isLocationDataInitialized = false,
@@ -41,6 +42,14 @@ class SendLocationNotification {
 
   LocationDataModel? getLocationDataModel(String _atsign) =>
       allAtsignsLocationData[_atsign];
+
+  reset() {
+    allAtsignsLocationData = {};
+    _atsignsToSendLocationwith = [];
+    isEventInUse = false;
+    isLocationDataInitialized = false;
+    isEventDataInitialized = false;
+  }
 
   void init(AtClient? newAtClient) {
     if ((timer != null) && (timer!.isActive)) timer!.cancel();
@@ -80,8 +89,40 @@ class SendLocationNotification {
     print('filteredAtsigns : $allAtsignsLocationData');
   }
 
+  compareForMissingInvites(List<LocationDataModel> _newLocationDataModel) {
+    for (var _locationDataModel in _newLocationDataModel) {
+      if (allAtsignsLocationData[_locationDataModel.receiver] != null) {
+        var _receiverLocationDataModel =
+            allAtsignsLocationData[_locationDataModel.receiver]!;
+
+        if (_locationDataModel.locationSharingFor.keys.isEmpty) {
+          continue;
+        }
+
+        var _id = _locationDataModel.locationSharingFor.keys.first;
+        if (_receiverLocationDataModel.locationSharingFor[_id] != null) {
+          continue;
+        } else {
+          _receiverLocationDataModel.locationSharingFor = {
+            ..._receiverLocationDataModel.locationSharingFor,
+            ..._locationDataModel.locationSharingFor
+          };
+
+          if (!_atsignsToSendLocationwith
+              .contains(_locationDataModel.receiver)) {
+            _atsignsToSendLocationwith.add(_locationDataModel.receiver);
+          }
+        }
+      } else {
+        allAtsignsLocationData[_locationDataModel.receiver] =
+            _locationDataModel;
+      }
+    }
+  }
+
   initEventData(List<LocationDataModel> locationDataModel) {
-    _appendLocationDataModelData(locationDataModel);
+    // _appendLocationDataModelData(locationDataModel);
+    compareForMissingInvites(locationDataModel);
 
     isEventDataInitialized = true;
     if (isLocationDataInitialized) {
@@ -105,28 +146,16 @@ class SendLocationNotification {
   }
 
   void findAtSignsToShareLocationWith() {
+    List<LocationDataModel> _newlocationDataModel = [];
     KeyStreamService()
         .allLocationNotifications
         .forEach((KeyLocationModel notification) {
-      if (compareAtSign(notification.locationNotificationModel!.atsignCreator!,
-              AtClientManager.getInstance().atClient.getCurrentAtSign()!) &&
-          (notification.locationNotificationModel!.isSharing) &&
-          (notification.locationNotificationModel!.isAccepted) &&
-          (!notification.locationNotificationModel!.isExited)) {
-        LocationDataModel locationDataModel =
-            locationNotificationModelToLocationDataModel(
-                notification.locationNotificationModel!);
-
-        if (allAtsignsLocationData[locationDataModel.receiver] != null) {
-          allAtsignsLocationData[locationDataModel.receiver]!
-              .locationSharingFor
-              .addAll(locationDataModel.locationSharingFor);
-        } else {
-          allAtsignsLocationData[locationDataModel.receiver] =
-              locationDataModel;
-        }
-      }
+      LocationDataModel _locationDataModel =
+          locationNotificationModelToLocationDataModel(
+              notification.locationNotificationModel!);
+      _newlocationDataModel.add(_locationDataModel);
     });
+    compareForMissingInvites(_newlocationDataModel);
 
     print('allAtsignsLocationData: ');
     allAtsignsLocationData.forEach((key, value) {
@@ -165,6 +194,7 @@ class SendLocationNotification {
         return;
       }
 
+      //// TODO: Might be wrong
       var _id = _newLocationDataModel.locationSharingFor.keys.first;
       if (_receiverLocationDataModel.locationSharingFor[_id] != null) {
         return;
@@ -297,6 +327,8 @@ class SendLocationNotification {
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
+      //// TODO: send location to only [_atsignsToSendLocationwith], for first time
+
       /// The stream doesnt run until 100m is covered
       /// So, we send data once
       // var _currentMyLatLng = await getMyLocation();
@@ -318,6 +350,7 @@ class SendLocationNotification {
       ///
       positionStream = Geolocator.getPositionStream(distanceFilter: 100)
           .listen((myLocation) async {
+        //// TODO: send location only when myLocation has changed
         print(
             'myLocation.latitude : ${myLocation.latitude}, long : ${myLocation.longitude}');
         if (masterSwitchState) {

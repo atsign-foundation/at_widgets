@@ -22,19 +22,19 @@ import 'package:flutter/cupertino.dart';
 /// [initLocation] pass this as false if location package is initialised outside, so it is not initialised more than once.
 ///
 /// [streamAlternative] a function which will return updated lists of [EventKeyLocationModel]
-void initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
+Future<void> initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
     {required String mapKey,
     required String apiKey,
     rootDomain = 'root.atsign.wtf',
     rootPort = 64,
     dynamic Function(List<EventKeyLocationModel>)? streamAlternative,
-    bool initLocation = true}) {
+    bool initLocation = true}) async {
   /// initialise keys
   MixedConstants.setApiKey(apiKey);
   MixedConstants.setMapKey(mapKey);
 
   if (initLocation) {
-    initializeLocationService(navKeyFromMainApp,
+    await initializeLocationService(navKeyFromMainApp,
         apiKey: MixedConstants.API_KEY!,
         mapKey: MixedConstants.MAP_KEY!,
         isEventInUse: true);

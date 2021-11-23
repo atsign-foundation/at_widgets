@@ -323,7 +323,8 @@ class KeyStreamService {
 
   Future<dynamic> getAtValue(AtKey key) async {
     try {
-      var atvalue = await atClientInstance!
+      var atvalue = await AtClientManager.getInstance()
+          .atClient
           .get(key)
           // ignore: return_of_invalid_type_from_catch_error
           .catchError((e) => print('error in in key_stream_service get $e'));
