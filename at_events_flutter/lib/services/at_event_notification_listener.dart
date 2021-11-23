@@ -121,7 +121,7 @@ class AtEventNotificationListener {
     if (notificationKey.toString().contains('eventacknowledged')) {
       var msg = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
 
-      EventKeyStreamService().createEventAcknowledge(msg, fromAtSign);
+      // EventKeyStreamService().createEventAcknowledge(msg, fromAtSign);
       return;
     }
 
@@ -130,7 +130,7 @@ class AtEventNotificationListener {
         .contains(MixedConstants.EVENT_MEMBER_LOCATION_KEY)) {
       var msg = EventMemberLocation.fromJson(jsonDecode(decryptedMessage));
 
-      EventKeyStreamService().updateLocationData(msg, fromAtSign);
+      // EventKeyStreamService().updateLocationData(msg, fromAtSign);
       return;
     }
   }

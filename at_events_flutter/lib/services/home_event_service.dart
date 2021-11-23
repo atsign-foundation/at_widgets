@@ -2,6 +2,9 @@ import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
+import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:at_location_flutter/service/send_location_notification.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:flutter/material.dart';
 
 import 'at_event_notification_listener.dart';
@@ -123,5 +126,45 @@ class HomeEventService {
 
     /// Move to map screen
     EventsMapScreenData().moveToEventScreen(eventNotificationModel);
+  }
+
+  EventInfo? getMyEventInfo(String _id) {
+    _id = trimAtsignsFromKey(_id);
+
+    for (var key in SendLocationNotification().allAtsignsLocationData.entries) {
+      if (SendLocationNotification()
+              .allAtsignsLocationData[key.key]!
+              .locationSharingFor[_id] !=
+          null) {
+        var _locationSharingFor = SendLocationNotification()
+            .allAtsignsLocationData[key.key]!
+            .locationSharingFor[_id]!;
+
+        return EventInfo(
+            isSharing: _locationSharingFor.isSharing,
+            isExited: _locationSharingFor.isExited,
+            isAccepted: _locationSharingFor.isAccepted);
+      }
+    }
+  }
+
+  EventInfo? getOtherMemberEventInfo(String _id) {
+    _id = trimAtsignsFromKey(_id);
+
+    for (var key in MasterLocationService().locationReceivedData.entries) {
+      if (MasterLocationService()
+              .locationReceivedData[key.key]!
+              .locationSharingFor[_id] !=
+          null) {
+        var _locationSharingFor = MasterLocationService()
+            .locationReceivedData[key.key]!
+            .locationSharingFor[_id]!;
+
+        return EventInfo(
+            isSharing: _locationSharingFor.isSharing,
+            isExited: _locationSharingFor.isExited,
+            isAccepted: _locationSharingFor.isAccepted);
+      }
+    }
   }
 }

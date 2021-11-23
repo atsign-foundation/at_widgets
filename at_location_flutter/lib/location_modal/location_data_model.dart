@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:latlong2/latlong.dart';
 
+/// TODO: add a bool for retry
 class LocationDataModel {
   /// [locationSharingFor] accepts id as key and [LocationSharingFor] as data.
   late Map<String, LocationSharingFor> locationSharingFor;

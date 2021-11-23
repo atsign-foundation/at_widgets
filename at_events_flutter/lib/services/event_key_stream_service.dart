@@ -232,6 +232,8 @@ class EventKeyStreamService {
     return tempEventKeyLocationModel;
   }
 
+  /// TODO: Check for dataTime changes in updated event,
+  /// if updated then update SendLocation map.
   /// Updates any [EventKeyLocationModel] data for updated data
   void mapUpdatedEventDataToWidget(EventNotificationModel eventData,
       {Map<dynamic, dynamic>? tags,
@@ -279,8 +281,8 @@ class EventKeyStreamService {
         // LocationService().updateEventWithNewData(
         //     allHybridNotifications[i].eventNotificationModel);
 
-        checkLocationSharingForEventData(
-            allEventNotifications[i].eventNotificationModel!);
+        // checkLocationSharingForEventData(
+        //     allEventNotifications[i].eventNotificationModel!);
       }
     }
     notifyListeners();
@@ -315,44 +317,47 @@ class EventKeyStreamService {
             isExited: eventNotificationModel.isCancelled!);
       }
     } else {
-      AtContact? currentGroupMember;
-      for (var i = 0; i < eventNotificationModel.group!.members!.length; i++) {
-        if (eventNotificationModel.group!.members!.elementAt(i).atSign ==
-            currentAtSign) {
-          currentGroupMember =
-              eventNotificationModel.group!.members!.elementAt(i);
-          break;
-        }
-      }
+      // AtContact? currentGroupMember;
+      // for (var i = 0; i < eventNotificationModel.group!.members!.length; i++) {
+      //   if (eventNotificationModel.group!.members!.elementAt(i).atSign ==
+      //       currentAtSign) {
+      //     currentGroupMember =
+      //         eventNotificationModel.group!.members!.elementAt(i);
+      //     break;
+      //   }
+      // }
 
-      if (currentGroupMember == null) {
-        return;
-      }
+      // if (currentGroupMember == null) {
+      //   return;
+      // }
 
-      if (currentGroupMember != null &&
-          currentGroupMember.tags!['isAccepted'] == true &&
-          currentGroupMember.tags!['isSharing'] == true &&
-          currentGroupMember.tags!['isExited'] == false) {
-        // ignore: unawaited_futures
-        // SendLocationNotification().addMember(eventNotificationModel);
-        calculateLocationSharingForSingleEvent(eventNotificationModel);
-      } else {
-        // SendLocationNotification().removeMember(eventNotificationModel.key);
-        List<String> atsignsToremove = [];
+      /// TODO: Check for changes in SendLocation file's map
+      /// for ['isAccepted'], ['isSharing'], ['isExited']
 
-        atsignsToremove.add(eventNotificationModel.atsignCreator!);
+      // if (currentGroupMember != null &&
+      //     currentGroupMember.tags!['isAccepted'] == true &&
+      //     currentGroupMember.tags!['isSharing'] == true &&
+      //     currentGroupMember.tags!['isExited'] == false) {
+      // ignore: unawaited_futures
+      // SendLocationNotification().addMember(eventNotificationModel);
+      calculateLocationSharingForSingleEvent(eventNotificationModel);
+      // } else {
+      //   // SendLocationNotification().removeMember(eventNotificationModel.key);
+      //   List<String> atsignsToremove = [];
 
-        eventNotificationModel.group!.members!.forEach((member) {
-          if ((member.atSign) != currentAtSign) {
-            atsignsToremove.add(member.atSign!);
-          }
-        });
+      //   atsignsToremove.add(eventNotificationModel.atsignCreator!);
 
-        SendLocationNotification().removeMember(
-            eventNotificationModel.key!, atsignsToremove,
-            isAccepted: currentGroupMember.tags!['isAccepted'],
-            isExited: currentGroupMember.tags!['isExited']);
-      }
+      //   eventNotificationModel.group!.members!.forEach((member) {
+      //     if ((member.atSign) != currentAtSign) {
+      //       atsignsToremove.add(member.atSign!);
+      //     }
+      //   });
+
+      //   SendLocationNotification().removeMember(
+      //       eventNotificationModel.key!, atsignsToremove,
+      //       isAccepted: currentGroupMember.tags!['isAccepted'],
+      //       isExited: currentGroupMember.tags!['isExited']);
+      // }
     }
   }
 
@@ -393,267 +398,313 @@ class EventKeyStreamService {
         EventNotificationModel.convertEventNotificationToJson(event)));
 
     try {
-      var atkeyMicrosecondId =
-          eventData.key!.split('createevent-')[1].split('@')[0];
+      // var atkeyMicrosecondId =
+      //     eventData.key!.split('createevent-')[1].split('@')[0];
 
-      var currentAtsign = AtEventNotificationListener()
-          .atClientManager
-          .atClient
-          .getCurrentAtSign()!;
+      // var currentAtsign = AtEventNotificationListener()
+      //     .atClientManager
+      //     .atClient
+      //     .getCurrentAtSign()!;
 
-      eventData.isUpdate = true;
-      if (eventData.atsignCreator!.toLowerCase() ==
-          currentAtsign.toLowerCase()) {
-        eventData.isSharing =
-            // ignore: prefer_if_null_operators
-            isSharing != null ? isSharing : eventData.isSharing;
-        if (isSharing == false) {
-          eventData.lat = null;
-          eventData.long = null;
-        }
+      // eventData.isUpdate = true;
+      // if (eventData.atsignCreator!.toLowerCase() ==
+      //     currentAtsign.toLowerCase()) {
+      //   eventData.isSharing =
+      //       // ignore: prefer_if_null_operators
+      //       isSharing != null ? isSharing : eventData.isSharing;
+      //   // if (isSharing == false) {
+      //   //   eventData.lat = null;
+      //   //   eventData.long = null;
+      //   // }
 
-        if (isCancelled == true) {
-          eventData.isCancelled = true;
-        }
+      //   if (isCancelled == true) {
+      //     eventData.isCancelled = true;
+      //   }
+      // } else {
+      // eventData.group!.members!.forEach((member) {
+      //   if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
+      //   if (currentAtsign[0] != '@') currentAtsign = '@' + currentAtsign;
+      //   if (member.atSign!.toLowerCase() == currentAtsign.toLowerCase()) {
+      //     member.tags!['isAccepted'] =
+      //         // ignore: prefer_if_null_operators
+      //         isAccepted != null ? isAccepted : member.tags!['isAccepted'];
+      //     member.tags!['isSharing'] =
+      //         // ignore: prefer_if_null_operators
+      //         isSharing != null ? isSharing : member.tags!['isSharing'];
+      //     member.tags!['isExited'] =
+      //         // ignore: prefer_if_null_operators
+      //         isExited != null ? isExited : member.tags!['isExited'];
+
+      //     if (isSharing == false || isExited == true) {
+      //       member.tags!['lat'] = null;
+      //       member.tags!['long'] = null;
+      //     }
+
+      //     if (isExited == true) {
+      //       member.tags!['isAccepted'] = false;
+      //       member.tags!['isSharing'] = false;
+      //     }
+      //   }
+      // });
+      // }
+
+      if (isCancelled == true) {
+        await updateEventMemberInfo(eventData.key!,
+            isAccepted: false, isExited: true, isSharing: false);
       } else {
-        eventData.group!.members!.forEach((member) {
-          if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
-          if (currentAtsign[0] != '@') currentAtsign = '@' + currentAtsign;
-          if (member.atSign!.toLowerCase() == currentAtsign.toLowerCase()) {
-            member.tags!['isAccepted'] =
-                // ignore: prefer_if_null_operators
-                isAccepted != null ? isAccepted : member.tags!['isAccepted'];
-            member.tags!['isSharing'] =
-                // ignore: prefer_if_null_operators
-                isSharing != null ? isSharing : member.tags!['isSharing'];
-            member.tags!['isExited'] =
-                // ignore: prefer_if_null_operators
-                isExited != null ? isExited : member.tags!['isExited'];
-
-            if (isSharing == false || isExited == true) {
-              member.tags!['lat'] = null;
-              member.tags!['long'] = null;
-            }
-
-            if (isExited == true) {
-              member.tags!['isAccepted'] = false;
-              member.tags!['isSharing'] = false;
-            }
-          }
-        });
+        await updateEventMemberInfo(eventData.key!,
+            isAccepted: isAccepted, isExited: isExited, isSharing: isSharing);
       }
-
-      var key = formAtKey(keyType, atkeyMicrosecondId, eventData.atsignCreator,
-          currentAtsign, event)!;
-
-      print('key $key');
-
-      var notification =
-          EventNotificationModel.convertEventNotificationToJson(eventData);
-      var result = await atClientManager.atClient.put(
-        key,
-        notification,
-      );
 
       // if key type is createevent, we have to notify all members
-      if (keyType == ATKEY_TYPE_ENUM.CREATEEVENT) {
-        mapUpdatedEventDataToWidget(eventData);
+      // if (keyType == ATKEY_TYPE_ENUM.CREATEEVENT) {
+      //   var key = formAtKey(keyType, atkeyMicrosecondId,
+      //       eventData.atsignCreator, currentAtsign, event)!;
 
-        var allAtsignList = <String?>[];
-        eventData.group!.members!.forEach((element) {
-          allAtsignList.add(element.atSign);
-        });
+      //   print('key $key');
 
-        key.sharedWith = jsonEncode(allAtsignList);
+      //   var notification =
+      //       EventNotificationModel.convertEventNotificationToJson(eventData);
+      //   var result = await atClientManager.atClient.put(
+      //     key,
+      //     notification,
+      //   );
 
-        await atClientManager.atClient.notifyAll(
-          key,
-          notification,
-          OperationEnum.update,
-        );
-      } else {
-        ///  update pending status if receiver, add more if checks like already responded
-        if (result) {
-          updatePendingStatus(eventData);
-          //// TODO: If we want to turn off location sharing immediately then uncomment
-          // mapUpdatedEventDataToWidget(eventData);
-        } else {
-          print('Ack failed');
-        }
-        notifyListeners();
-      }
+      //   mapUpdatedEventDataToWidget(eventData);
 
-      return result;
+      //   var allAtsignList = <String?>[];
+      //   eventData.group!.members!.forEach((element) {
+      //     allAtsignList.add(element.atSign);
+      //   });
+
+      //   key.sharedWith = jsonEncode(allAtsignList);
+
+      //   await atClientManager.atClient.notifyAll(
+      //     key,
+      //     notification,
+      //     OperationEnum.update,
+      //   );
+      // } else {
+      ///  update pending status if receiver, add more if checks like already responded
+      // if (result) {
+      // updatePendingStatus(eventData);
+      //// TODO: If we want to turn off location sharing immediately then uncomment
+      // mapUpdatedEventDataToWidget(eventData);
+      // } else {
+      //   print('Ack failed');
+      // }
+      notifyListeners();
+      // }
+
+      return true;
     } catch (e) {
       print('error in updating event $e');
       return false;
     }
   }
 
-  /// Updates event data with received [locationData] of [fromAtSign]
-  void updateLocationData(
-      EventMemberLocation locationData, String? fromAtSign) async {
-    try {
-      var eventId = locationData.key!.split('-')[1].split('@')[0];
+  updateEventMemberInfo(String _id,
+      {bool? isAccepted, bool? isSharing, bool? isExited}) async {
+    List<String> _atsignsToSendLocationwith = [];
+    _id = trimAtsignsFromKey(_id);
 
-      EventNotificationModel? presentEventData;
-
-      for (var i = 0; i < allEventNotifications.length; i++) {
-        if (allEventNotifications[i].key!.contains('createevent-$eventId')) {
-          presentEventData = EventNotificationModel.fromJson(jsonDecode(
-              EventNotificationModel.convertEventNotificationToJson(
-                  allEventNotifications[i].eventNotificationModel!)));
-          break;
-        }
-      }
-
-      if (presentEventData == null) {
-        return;
-      }
-
-      for (var i = 0; i < presentEventData.group!.members!.length; i++) {
-        var presentGroupMember = presentEventData.group!.members!.elementAt(i);
-        if (presentGroupMember.atSign![0] != '@') {
-          presentGroupMember.atSign = '@' + presentGroupMember.atSign!;
+    SendLocationNotification().allAtsignsLocationData.forEach((key, value) {
+      if (value.locationSharingFor[_id] != null) {
+        if (!_atsignsToSendLocationwith.contains(value.receiver)) {
+          _atsignsToSendLocationwith.add(value.receiver);
         }
 
-        if (fromAtSign![0] != '@') fromAtSign = '@' + fromAtSign;
+        if (isAccepted != null) {
+          SendLocationNotification()
+              .allAtsignsLocationData[key]!
+              .locationSharingFor[_id]!
+              .isAccepted = isAccepted;
+        }
 
-        if (presentGroupMember.atSign!.toLowerCase() ==
-            fromAtSign.toLowerCase()) {
-          presentGroupMember.tags!['lat'] = locationData.lat;
-          presentGroupMember.tags!['long'] = locationData.long;
+        if (isSharing != null) {
+          SendLocationNotification()
+              .allAtsignsLocationData[key]!
+              .locationSharingFor[_id]!
+              .isSharing = isSharing;
+        }
 
-          break;
+        if (isExited != null) {
+          SendLocationNotification()
+              .allAtsignsLocationData[key]!
+              .locationSharingFor[_id]!
+              .isExited = isExited;
         }
       }
+    });
 
-      presentEventData.isUpdate = true;
-
-      var allAtsignList = <String?>[];
-      presentEventData.group!.members!.forEach((element) {
-        allAtsignList.add(element.atSign);
-      });
-
-      var notification = EventNotificationModel.convertEventNotificationToJson(
-          presentEventData);
-
-      var key = EventService().getAtKey(presentEventData.key!);
-
-      var result = await atClientManager.atClient.put(
-        key,
-        notification,
-      );
-
-      key.sharedWith = jsonEncode(allAtsignList);
-
-      await atClientManager.atClient.notifyAll(
-        key,
-        notification,
-        OperationEnum.update,
-      );
-
-      /// Dont sync as notifyAll is called
-
-      if (result is bool && result) {
-        mapUpdatedEventDataToWidget(presentEventData);
-      }
-    } catch (e) {
-      print('error in event acknowledgement: $e');
-    }
+    await SendLocationNotification()
+        .sendLocationAfterDataUpdate(_atsignsToSendLocationwith);
   }
+
+  /// Updates event data with received [locationData] of [fromAtSign]
+  // void updateLocationData(
+  //     EventMemberLocation locationData, String? fromAtSign) async {
+  //   try {
+  //     var eventId = locationData.key!.split('-')[1].split('@')[0];
+
+  //     EventNotificationModel? presentEventData;
+
+  //     for (var i = 0; i < allEventNotifications.length; i++) {
+  //       if (allEventNotifications[i].key!.contains('createevent-$eventId')) {
+  //         presentEventData = EventNotificationModel.fromJson(jsonDecode(
+  //             EventNotificationModel.convertEventNotificationToJson(
+  //                 allEventNotifications[i].eventNotificationModel!)));
+  //         break;
+  //       }
+  //     }
+
+  //     if (presentEventData == null) {
+  //       return;
+  //     }
+
+  //     for (var i = 0; i < presentEventData.group!.members!.length; i++) {
+  //       var presentGroupMember = presentEventData.group!.members!.elementAt(i);
+  //       if (presentGroupMember.atSign![0] != '@') {
+  //         presentGroupMember.atSign = '@' + presentGroupMember.atSign!;
+  //       }
+
+  //       if (fromAtSign![0] != '@') fromAtSign = '@' + fromAtSign;
+
+  //       if (presentGroupMember.atSign!.toLowerCase() ==
+  //           fromAtSign.toLowerCase()) {
+  //         presentGroupMember.tags!['lat'] = locationData.lat;
+  //         presentGroupMember.tags!['long'] = locationData.long;
+
+  //         break;
+  //       }
+  //     }
+
+  //     presentEventData.isUpdate = true;
+
+  //     var allAtsignList = <String?>[];
+  //     presentEventData.group!.members!.forEach((element) {
+  //       allAtsignList.add(element.atSign);
+  //     });
+
+  //     var notification = EventNotificationModel.convertEventNotificationToJson(
+  //         presentEventData);
+
+  //     var key = EventService().getAtKey(presentEventData.key!);
+
+  //     var result = await atClientManager.atClient.put(
+  //       key,
+  //       notification,
+  //     );
+
+  //     key.sharedWith = jsonEncode(allAtsignList);
+
+  //     await atClientManager.atClient.notifyAll(
+  //       key,
+  //       notification,
+  //       OperationEnum.update,
+  //     );
+
+  //     /// Dont sync as notifyAll is called
+
+  //     if (result is bool && result) {
+  //       mapUpdatedEventDataToWidget(presentEventData);
+  //     }
+  //   } catch (e) {
+  //     print('error in event acknowledgement: $e');
+  //   }
+  // }
 
   /// Updates data of members of an event
   // ignore: always_declare_return_types
-  createEventAcknowledge(
-      EventNotificationModel acknowledgedEvent, String? fromAtSign) async {
-    try {
-      var eventId =
-          acknowledgedEvent.key!.split('createevent-')[1].split('@')[0];
+  // createEventAcknowledge(
+  //     EventNotificationModel acknowledgedEvent, String? fromAtSign) async {
+  //   try {
+  //     var eventId =
+  //         acknowledgedEvent.key!.split('createevent-')[1].split('@')[0];
 
-      if ((atClientManager.atClient.getPreferences() != null) &&
-          (atClientManager.atClient.getPreferences()!.namespace != null)) {
-        eventId = eventId.replaceAll(
-            '.${atClientManager.atClient.getPreferences()!.namespace!}', '');
-      }
+  //     if ((atClientManager.atClient.getPreferences() != null) &&
+  //         (atClientManager.atClient.getPreferences()!.namespace != null)) {
+  //       eventId = eventId.replaceAll(
+  //           '.${atClientManager.atClient.getPreferences()!.namespace!}', '');
+  //     }
 
-      late EventNotificationModel presentEventData;
-      allEventNotifications.forEach((element) {
-        if (element.key!.contains('createevent-$eventId')) {
-          presentEventData = EventNotificationModel.fromJson(jsonDecode(
-              EventNotificationModel.convertEventNotificationToJson(
-                  element.eventNotificationModel!)));
-        }
-      });
+  //     late EventNotificationModel presentEventData;
+  //     allEventNotifications.forEach((element) {
+  //       if (element.key!.contains('createevent-$eventId')) {
+  //         presentEventData = EventNotificationModel.fromJson(jsonDecode(
+  //             EventNotificationModel.convertEventNotificationToJson(
+  //                 element.eventNotificationModel!)));
+  //       }
+  //     });
 
-      /// Old approach
-      var response = await atClientManager.atClient.getKeys(
-        regex: 'createevent-$eventId',
-      );
+  //     /// Old approach
+  //     var response = await atClientManager.atClient.getKeys(
+  //       regex: 'createevent-$eventId',
+  //     );
 
-      var key = EventService().getAtKey(response[0]);
+  //     var key = EventService().getAtKey(response[0]);
 
-      /// New approach
+  //     /// New approach
 
-      // var key = EventService().getAtKey(presentEventData.key);
+  //     // var key = EventService().getAtKey(presentEventData.key);
 
-      Map<dynamic, dynamic>? tags;
+  //     Map<dynamic, dynamic>? tags;
 
-      presentEventData.group!.members!.forEach((presentGroupMember) {
-        acknowledgedEvent.group!.members!.forEach((acknowledgedGroupMember) {
-          if (acknowledgedGroupMember.atSign![0] != '@') {
-            acknowledgedGroupMember.atSign =
-                '@' + acknowledgedGroupMember.atSign!;
-          }
+  //     presentEventData.group!.members!.forEach((presentGroupMember) {
+  //       acknowledgedEvent.group!.members!.forEach((acknowledgedGroupMember) {
+  //         if (acknowledgedGroupMember.atSign![0] != '@') {
+  //           acknowledgedGroupMember.atSign =
+  //               '@' + acknowledgedGroupMember.atSign!;
+  //         }
 
-          if (presentGroupMember.atSign![0] != '@') {
-            presentGroupMember.atSign = '@' + presentGroupMember.atSign!;
-          }
+  //         if (presentGroupMember.atSign![0] != '@') {
+  //           presentGroupMember.atSign = '@' + presentGroupMember.atSign!;
+  //         }
 
-          if (fromAtSign![0] != '@') fromAtSign = '@' + fromAtSign!;
+  //         if (fromAtSign![0] != '@') fromAtSign = '@' + fromAtSign!;
 
-          if (acknowledgedGroupMember.atSign!.toLowerCase() ==
-                  presentGroupMember.atSign!.toLowerCase() &&
-              acknowledgedGroupMember.atSign!.toLowerCase() ==
-                  fromAtSign!.toLowerCase()) {
-            presentGroupMember.tags = acknowledgedGroupMember.tags;
-            tags = presentGroupMember.tags;
-          }
-        });
-      });
+  //         if (acknowledgedGroupMember.atSign!.toLowerCase() ==
+  //                 presentGroupMember.atSign!.toLowerCase() &&
+  //             acknowledgedGroupMember.atSign!.toLowerCase() ==
+  //                 fromAtSign!.toLowerCase()) {
+  //           presentGroupMember.tags = acknowledgedGroupMember.tags;
+  //           tags = presentGroupMember.tags;
+  //         }
+  //       });
+  //     });
 
-      presentEventData.isUpdate = true;
-      var allAtsignList = <String?>[];
-      presentEventData.group!.members!.forEach((element) {
-        allAtsignList.add(element.atSign);
-      });
+  //     presentEventData.isUpdate = true;
+  //     var allAtsignList = <String?>[];
+  //     presentEventData.group!.members!.forEach((element) {
+  //       allAtsignList.add(element.atSign);
+  //     });
 
-      var notification = EventNotificationModel.convertEventNotificationToJson(
-          presentEventData);
+  //     var notification = EventNotificationModel.convertEventNotificationToJson(
+  //         presentEventData);
 
-      var result = await atClientManager.atClient.put(
-        key,
-        notification,
-      );
+  //     var result = await atClientManager.atClient.put(
+  //       key,
+  //       notification,
+  //     );
 
-      key.sharedWith = jsonEncode(allAtsignList);
+  //     key.sharedWith = jsonEncode(allAtsignList);
 
-      await atClientManager.atClient.notifyAll(
-        key,
-        notification,
-        OperationEnum.update,
-      );
+  //     await atClientManager.atClient.notifyAll(
+  //       key,
+  //       notification,
+  //       OperationEnum.update,
+  //     );
 
-      /// Dont sync as notifyAll is called
+  //     /// Dont sync as notifyAll is called
 
-      if (result is bool && result) {
-        mapUpdatedEventDataToWidget(presentEventData,
-            tags: tags, tagOfAtsign: fromAtSign);
-      }
-    } catch (e) {
-      print('error in event acknowledgement: $e');
-    }
-  }
+  //     if (result is bool && result) {
+  //       mapUpdatedEventDataToWidget(presentEventData,
+  //           tags: tags, tagOfAtsign: fromAtSign);
+  //     }
+  //   } catch (e) {
+  //     print('error in event acknowledgement: $e');
+  //   }
+  // }
 
   void updatePendingStatus(EventNotificationModel notificationModel) async {
     for (var i = 0; i < allEventNotifications.length; i++) {
@@ -783,39 +834,39 @@ class EventKeyStreamService {
           eventKeyLocationModel.eventNotificationModel!;
 
       /// calculate whether I should share location or not
-      bool shouldShareLocationForThisEvent = false;
+      // bool shouldShareLocationForThisEvent = false;
 
-      if ((eventNotificationModel.atsignCreator ==
-          AtEventNotificationListener().currentAtSign)) {
-        if (eventNotificationModel.isSharing!) {
-          shouldShareLocationForThisEvent = true;
-        }
-      } else {
-        AtContact? currentGroupMember;
-        for (var i = 0;
-            i < eventNotificationModel.group!.members!.length;
-            i++) {
-          if (eventNotificationModel.group!.members!.elementAt(i).atSign ==
-              AtEventNotificationListener().currentAtSign) {
-            currentGroupMember =
-                eventNotificationModel.group!.members!.elementAt(i);
-            break;
-          }
-        }
+      // if ((eventNotificationModel.atsignCreator ==
+      //     AtEventNotificationListener().currentAtSign)) {
+      //   if (eventNotificationModel.isSharing!) {
+      //     shouldShareLocationForThisEvent = true;
+      //   }
+      // } else {
+      //   AtContact? currentGroupMember;
+      //   for (var i = 0;
+      //       i < eventNotificationModel.group!.members!.length;
+      //       i++) {
+      //     if (eventNotificationModel.group!.members!.elementAt(i).atSign ==
+      //         AtEventNotificationListener().currentAtSign) {
+      //       currentGroupMember =
+      //           eventNotificationModel.group!.members!.elementAt(i);
+      //       break;
+      //     }
+      //   }
 
-        if (currentGroupMember != null &&
-            currentGroupMember.tags!['isAccepted'] == true &&
-            currentGroupMember.tags!['isSharing'] == true &&
-            currentGroupMember.tags!['isExited'] == false) {
-          shouldShareLocationForThisEvent = true;
-        }
-      }
+      //   if (currentGroupMember != null &&
+      //       currentGroupMember.tags!['isAccepted'] == true &&
+      //       currentGroupMember.tags!['isSharing'] == true &&
+      //       currentGroupMember.tags!['isExited'] == false) {
+      //     shouldShareLocationForThisEvent = true;
+      //   }
+      // }
 
-      /// TODO: Check for [shouldShareLocationForThisEvent] in event acknowledged data
+      // /// TODO: Check for [shouldShareLocationForThisEvent] in event acknowledged data
 
-      if (!shouldShareLocationForThisEvent) {
-        continue;
-      }
+      // if (!shouldShareLocationForThisEvent) {
+      //   continue;
+      // }
 
       /// calculate atsigns to share loc with
       atsignToShareLocWith = [];
@@ -910,11 +961,13 @@ class EventKeyStreamService {
       });
 
       _from = startTimeEnumToTimeOfDay(
-          currentGroupMember.tags!['shareFrom'].toString(),
-          eventData.event!.startTime)!;
+              currentGroupMember.tags!['shareFrom'].toString(),
+              eventData.event!.startTime) ??
+          eventData.event!.startTime;
       _to = endTimeEnumToTimeOfDay(
-          currentGroupMember.tags!['shareTo'].toString(),
-          eventData.event!.endTime);
+              currentGroupMember.tags!['shareTo'].toString(),
+              eventData.event!.endTime) ??
+          eventData.event!.endTime;
 
       locationSharingFor = LocationSharingFor(
           _from,

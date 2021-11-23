@@ -408,10 +408,24 @@ class SendLocationNotification {
 
       locationData.lastUpdatedAt = DateTime.now();
 
+      //// TODO: Uncomment and test, to send null as latLng
+      // bool _shouldSendNull = false;
+      // locationData.locationSharingFor.forEach((key, value) {
+      //   if ((_shouldSendNull) && (value.isSharing)) {
+      //     _shouldSendNull = true;
+      //   }
+      // });
+
+      // if (!_shouldSendNull) {
+      //   locationData.lat = null;
+      //   locationData.long = null;
+      // }
+
       try {
         print('locationData.toJson() : ${locationData.toJson()}');
-        var _res = await NotifyAndPut()
-            .notifyAndPut(atKey, jsonEncode(locationData.toJson()));
+        var _res = await NotifyAndPut().notifyAndPut(
+            atKey, jsonEncode(locationData.toJson()),
+            saveDataIfUndelivered: true);
         // await AtClientManager.getInstance().notificationService.notify(
         //       NotificationParams.forUpdate(
         //         atKey,

@@ -7,7 +7,8 @@ class NotifyAndPut {
   static final NotifyAndPut _instance = NotifyAndPut._();
   factory NotifyAndPut() => _instance;
 
-  Future<bool> notifyAndPut(AtKey atKey, dynamic value) async {
+  Future<bool> notifyAndPut(AtKey atKey, dynamic value,
+      {bool saveDataIfUndelivered = false}) async {
     try {
       if (!atKey.sharedBy!.contains('@')) {
         atKey.sharedBy = '@' + atKey.sharedBy!;
@@ -28,7 +29,8 @@ class NotifyAndPut {
       print(
           'notifyAndPut result for $atKey - $result ${result.atClientException}');
 
-      if (result.notificationStatusEnum == NotificationStatusEnum.delivered) {
+      if ((saveDataIfUndelivered) ||
+          (result.notificationStatusEnum == NotificationStatusEnum.delivered)) {
         atKey.sharedWith = null;
         await AtClientManager.getInstance().atClient.put(
               atKey,
