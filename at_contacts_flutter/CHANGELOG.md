@@ -1,3 +1,7 @@
+## 3.0.2
+- Updated dependencies and bug fixes
+- Updated documentation
+
 ## 3.0.1
 - Updated dependencies and bug fixes
 

@@ -17,6 +17,7 @@ import 'package:at_contacts_group_flutter/widgets/person_horizontal_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
 import 'package:flutter/material.dart';
 
+/// This widget gives a screen to display list of groups
 class GroupList extends StatefulWidget {
   @override
   _GroupListState createState() => _GroupListState();

@@ -1,3 +1,4 @@
+/// All the strings used in the package
 class TextStrings {
   String unknownAtsign(String? atSign) =>
       '$atSign is not found. Please check and try again.';

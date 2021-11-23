@@ -12,6 +12,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:flutter/material.dart';
 
+/// Service to manage the chat messages for different atsigns
 class ChatService {
   ChatService._();
 
@@ -19,14 +20,24 @@ class ChatService {
 
   factory ChatService() => _instance;
 
+  /// Part of keys to identify the different AtKeys
   final String storageKey = 'chathistory.';
   final String chatKey = 'chat';
   final String chatImageKey = 'chatimg';
 
+  /// Instance of AtClientManager
   late AtClientManager atClientManager;
+
+  /// Root domain to use
   String? rootDomain;
+
+  /// Root port to use
   int? rootPort;
+
+  /// current atsign
   String? currentAtSign;
+
+  /// Atsign chatting with current atsign
   String? chatWithAtSign;
   List<Message> chatHistory = [];
   List<dynamic> chatHistoryMessages = [];

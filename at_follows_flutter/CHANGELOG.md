@@ -1,3 +1,6 @@
+## 3.0.2
+- Upgraded to latest version of at_client
+- Fixes for follows screen bugs
 ## 3.0.1
 - Upgraded to latest version of at_client
 - Fixes for follows screen bugs
