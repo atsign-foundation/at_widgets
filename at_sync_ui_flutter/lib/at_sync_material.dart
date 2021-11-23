@@ -366,14 +366,6 @@ class AtSyncSnackBar {
     if (message != null) _message.value = message;
   }
 
-  /// [close] Closes the progress dialog.
-  void close() {
-    if (_dialogIsOpen) {
-      Navigator.pop(_context);
-      _dialogIsOpen = false;
-    }
-  }
-
   ///[isOpen] Returns whether the dialog box is open.
   bool isOpen() {
     return _dialogIsOpen;
@@ -410,6 +402,7 @@ class AtSyncSnackBar {
     );
   }
 
+  ///[dismiss] Dismiss the snack bar.
   void dismiss() {
     ScaffoldMessenger.of(_context)
         .hideCurrentSnackBar(reason: SnackBarClosedReason.dismiss);

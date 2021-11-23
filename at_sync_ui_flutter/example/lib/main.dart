@@ -56,14 +56,6 @@ class _MyHomePageState extends State<MyHomePage>
         setState(() {
           progress = animation.value;
         });
-        _atSyncDialog?.update(
-          value: animation.value,
-          message: 'Downloading ...',
-        );
-        _atSyncSnackBar?.update(
-          value: animation.value,
-          message: 'Uploading ...',
-        );
       });
   }
 
@@ -78,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage>
             syncIndicatorColor: Colors.white,
             child: IconButton(
               icon: const Icon(Icons.android),
-              onPressed: _startDownload,
+              onPressed: _startLoading,
             ),
           ),
           cupertino.AtSyncButton(
@@ -86,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage>
             syncIndicatorColor: Colors.white,
             child: IconButton(
               icon: const Icon(Icons.phone_iphone),
-              onPressed: _startSnackBar,
+              onPressed: _startLoading,
             ),
           ),
           IconButton(
@@ -151,15 +143,7 @@ class _MyHomePageState extends State<MyHomePage>
                     syncIndicatorColor: _indicatorColor,
                     child: ElevatedButton(
                       child: const Text('Material'),
-                      onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await Future.delayed(const Duration(seconds: 2));
-                        setState(() {
-                          isLoading = false;
-                        });
-                      },
+                      onPressed: _startLoading,
                     ),
                   ),
                   cupertino.AtSyncButton(
@@ -169,15 +153,7 @@ class _MyHomePageState extends State<MyHomePage>
                       child: const Text('Cupertino'),
                       color: Colors.grey,
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await Future.delayed(const Duration(seconds: 2));
-                        setState(() {
-                          isLoading = false;
-                        });
-                      },
+                      onPressed: _startLoading,
                     ),
                   ),
                 ],
@@ -263,6 +239,32 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    child: const Text('Material Dialog'),
+                    onPressed: _startMaterialDialog,
+                  ),
+                  TextButton(
+                    child: const Text('Cupertino Dialog'),
+                    onPressed: _startCupertinoDialog,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    child: const Text('Material SnackBar'),
+                    onPressed: _startMaterialSnackBar,
+                  ),
+                  TextButton(
+                    child: const Text('Cupertino SnackBar'),
+                    onPressed: _startCupertinoSnackBar,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -277,15 +279,7 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
-  material.AtSyncDialog? _atSyncDialog;
-  material.AtSyncSnackBar? _atSyncSnackBar;
-
-  void _startDownload() async {
-    controller.reset();
-    controller.forward();
-
-    _atSyncDialog ??= material.AtSyncDialog(context: context);
-    _atSyncDialog?.show(max: 100, msg: "abc");
+  void _startLoading() async {
     setState(() {
       isLoading = true;
     });
@@ -293,22 +287,46 @@ class _MyHomePageState extends State<MyHomePage>
     setState(() {
       isLoading = false;
     });
-    _atSyncDialog?.close();
   }
 
-  void _startSnackBar() async {
-    controller.reset();
-    controller.forward();
-    _atSyncSnackBar ??= material.AtSyncSnackBar(context: context);
-    _atSyncSnackBar?.show();
-    setState(() {
-      isLoading = true;
-    });
-    await Future.delayed(const Duration(seconds: 5));
-    setState(() {
-      isLoading = false;
-    });
-    _atSyncSnackBar?.dismiss();
+  void _startMaterialDialog() async {
+    final dialog = material.AtSyncDialog(context: context);
+    dialog.show(max: 100, msg: 'Downloading ...');
+    for (int i = 1; i < 100; i += 5) {
+      dialog.update(value: 0.01 * i, message: 'Downloading ...');
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    dialog.close();
+  }
+
+  void _startCupertinoDialog() async {
+    final dialog = material.AtSyncDialog(context: context);
+    dialog.show(max: 100, msg: 'Downloading ...');
+    for (int i = 1; i < 100; i += 5) {
+      dialog.update(value: 0.01 * i, message: 'Downloading ...');
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    dialog.close();
+  }
+
+  void _startMaterialSnackBar() async {
+    final snackBar = material.AtSyncSnackBar(context: context);
+    snackBar.show();
+    for (int i = 1; i < 100; i += 5) {
+      snackBar.update(value: 0.01 * i, message: 'Downloading ...');
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    snackBar.dismiss();
+  }
+
+  void _startCupertinoSnackBar() async {
+    final snackBar = material.AtSyncSnackBar(context: context);
+    snackBar.show();
+    for (int i = 1; i < 100; i += 5) {
+      snackBar.update(value: 0.01 * i, message: 'Downloading ...');
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    snackBar.dismiss();
   }
 
   void _showColorPicker() {
