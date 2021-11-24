@@ -315,7 +315,7 @@ class ConnectionsService {
     // for following list followers list is not required.
     if (!isFollowing) {
       var followersValue =
-          await _sdkService.scanAndGet(AppConstants.containsFollowers);
+          await _sdkService.scanAndGet(AppConstants.followersKey);
       this.followers.create(followersValue);
       if (followersValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
@@ -326,7 +326,7 @@ class ConnectionsService {
       // for followers list following list is required to show the status of follow button.
 
       var followingValue =
-          await _sdkService.scanAndGet(AppConstants.containsFollowing);
+          await _sdkService.scanAndGet(AppConstants.followingKey);
       this.following.create(followingValue);
 
       if (followingValue.metadata != null) {

@@ -23,7 +23,10 @@ class BlockedUserCard extends StatefulWidget {
 }
 
 class _BlockedUserCardState extends State<BlockedUserCard> {
+  /// Instance of the contact service
   late ContactService _contactService;
+
+  /// Boolean indicator of unblock action
   bool unblockUser = false;
   @override
   void initState() {

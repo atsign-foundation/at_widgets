@@ -31,11 +31,13 @@ class PairAtsignWidget extends StatefulWidget {
   final OnboardingStatus? onboardStatus;
   final bool getAtSign;
   final bool hideReferences;
+  final bool hideQrScan;
   PairAtsignWidget(
       {Key? key,
       this.onboardStatus,
       this.getAtSign = false,
-      this.hideReferences = false})
+      this.hideReferences = false,
+      this.hideQrScan = false})
       : super(key: key);
   @override
   _PairAtsignWidgetState createState() => _PairAtsignWidgetState();
@@ -481,6 +483,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           return CustomDialog(
               context: context,
               hideReferences: widget.hideReferences,
+              hideQrScan: widget.hideQrScan,
               isErrorDialog: true,
               showClose: true,
               message: errorMessage,
@@ -692,6 +695,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             context: context,
             isAtsignForm: true,
             hideReferences: widget.hideReferences,
+            hideQrScan: widget.hideQrScan,
             onLimitExceed: (List<String> atsignsList, String message) {
               Navigator.push(
                   context,
@@ -752,6 +756,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                   child: CustomDialog(
                     context: context,
                     hideReferences: widget.hideReferences,
+                    hideQrScan: widget.hideQrScan,
                     onValidate:
                         (String atsign, String secret, bool isScanner) async {
                       _loadingMessage = Strings.loadingAtsignReady;
@@ -832,6 +837,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             child: CustomDialog(
               context: context,
               hideReferences: widget.hideReferences,
+              hideQrScan: widget.hideQrScan,
               onValidate: (String atsign, String secret, bool isScanner) async {
                 _loadingMessage = Strings.loadingAtsignReady;
                 setState(() {});
@@ -877,6 +883,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           return CustomDialog(
             context: context,
             hideReferences: widget.hideReferences,
+            hideQrScan: widget.hideQrScan,
             isErrorDialog: true,
             showClose: true,
             message: errorMessage,

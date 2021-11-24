@@ -36,6 +36,9 @@ class CustomDialog extends StatefulWidget {
   ///will hide webpage references.
   final bool hideReferences;
 
+  ///will hide qr scanning
+  final bool hideQrScan;
+
   ///if set to true will display the close button.
   final bool showClose;
 
@@ -72,6 +75,7 @@ class CustomDialog extends StatefulWidget {
       {this.context,
       this.isErrorDialog = false,
       this.hideReferences = false,
+      this.hideQrScan = false,
       this.message,
       this.title,
       this.isAtsignForm = false,
@@ -486,10 +490,16 @@ class _CustomDialogState extends State<CustomDialog> {
                                         ),
                                       )),
                                   SizedBox(height: 20.toHeight),
-                                  const Text('Have a QR Code?'),
-                                  SizedBox(height: 5.toHeight),
-                                  (Platform.isAndroid || Platform.isIOS)
-                                      ? Container(
+                                  widget.hideQrScan
+                                      ? SizedBox()
+                                      : const Text('Have a QR Code?'),
+                                  widget.hideQrScan
+                                      ? SizedBox()
+                                      : SizedBox(height: 5.toHeight),
+                                  widget.hideQrScan
+                                      ? SizedBox()
+                                      : (Platform.isAndroid || Platform.isIOS)
+                                        ? Container(
                                           width:
                                               MediaQuery.of(context).size.width,
                                           child: ElevatedButton(
@@ -854,7 +864,12 @@ class _CustomDialogState extends State<CustomDialog> {
     // setState(() {
     //   loading = true;
     // });
-    await _controller!.stopCamera();
+    try {
+      //await _controller!.stopCamera();
+      _controller!.stopCamera();
+    } catch (e) {
+      print(e.toString());
+    }
     print('SCANNED: => $data');
     List<String> values = data.split(':');
     await widget.onValidate!(values[0], values[1], true);
@@ -1128,7 +1143,8 @@ class _CustomDialogState extends State<CustomDialog> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
                           String url = 'https://my.atsign.com';
-                          if (await canLaunch(url)) {
+                          if (!widget
+                              .hideReferences) if (await canLaunch(url)) {
                             await launch(url);
                           }
                         }),
@@ -1199,7 +1215,7 @@ class _CustomDialogState extends State<CustomDialog> {
                       : highLightText;
                   String errorMessage = 'Cannot launch $url';
                   if (await canLaunch(url)) {
-                    await launch(url);
+                    if (!widget.hideReferences) await launch(url);
                   } else {
                     await showDialog(
                         barrierDismissible: false,

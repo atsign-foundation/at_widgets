@@ -1,11 +1,16 @@
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:dotenv/dotenv.dart' as dot;
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
+    show RootEnvironment;
+import 'package:flutter/material.dart' show WidgetsFlutterBinding;
+import 'package:flutter_config/flutter_config.dart' show FlutterConfig;
 
 /// AtEnv is a helper class to load in the environment variables from the .env file
 class AtEnv {
   /// Load the environment variables from the .env file.
   /// Directly calls load from the dotenv package.
-  static load() => dot.load();
+  static Future<void> load() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await FlutterConfig.loadEnvVariables();
+  }
 
   /// Returns the root domain from the environment.
   /// Root domain is used to control what root server you want to use for the app.
@@ -32,7 +37,7 @@ class AtEnv {
   /// Returns the value of environment variable [key] loaded from the environment.
   /// Can be used for other environment variables beyond what is included by at_app.
   static String? _getEnvVar(String key) {
-    var value = dot.env[key];
+    var value = FlutterConfig.get(key);
     if (value?.isEmpty ?? false) return null;
     return value;
   }

@@ -59,6 +59,10 @@ class AtEventNotificationListener {
 
   //// TODO: Filter past events
   void _notificationCallback(AtNotification notification) async {
+    if (notification.id == '-1') {
+      return;
+    }
+
     print('notification received in events package ===========> $notification');
     var value = notification.value;
     var notificationKey = notification.key;
@@ -83,14 +87,20 @@ class AtEventNotificationListener {
     var decryptedMessage = await atClientManager.atClient.encryptionService!
         .decrypt(value ?? '', fromAtSign)
         .catchError((e) {
-      print('error in decrypting: $e');
+      print('error in decrypting event: $e');
+      // TODO: only showing error dialog for closed testing group
     });
     print('decrypted message:$decryptedMessage');
+
+    if (decryptedMessage == null || decryptedMessage == '') {
+      return;
+    }
 
     if (notificationKey.toString().contains('createevent')) {
       var eventData =
           EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
-      if (eventData.isUpdate != null && eventData.isUpdate == false) {
+      if ((eventData.isUpdate != null && eventData.isUpdate == false) ||
+          !EventKeyStreamService().isEventSharedWithMe(eventData)) {
         // new event received
         // show dialog
         // add in event list

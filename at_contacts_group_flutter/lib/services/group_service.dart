@@ -9,46 +9,85 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
 
+/// Service to handle CRUD operations on groups
 class GroupService {
+  /// Singleton instance of the service
   GroupService._();
   static final GroupService _instance = GroupService._();
   factory GroupService() => _instance;
+
+  /// current atsign
   late String _atsign;
+
+  /// selected contact list for the group
   List<AtContact?>? selecteContactList;
-  List<GroupContactsModel?> allContacts = [], selectedGroupContacts = [];
+
+  /// List of all the contacts for the atsign
+  List<GroupContactsModel?> allContacts = [],
+
+      /// List of contacts of the selected group
+      selectedGroupContacts = [];
+
+  /// Details of the selected group
   AtGroup? selectedGroup;
+
+  /// Instance of AtClientManager
   late AtClientManager atClientManager;
+
+  /// Instance of AtContactsImpl
   late AtContactsImpl atContactImpl;
+
+  /// Root domain to use
   String? rootDomain;
+
+  /// Root port to use
   int? rootPort;
   int length = 0;
+
+  /// Boolean flag to control loader
   bool? showLoader;
   List<GroupContactsModel> _recentContacts = [];
 
-// group list stream
+  /// Controller for group list stream
   final _atGroupStreamController = StreamController<List<AtGroup>>.broadcast();
+
+  /// Group list stream
   Stream<List<AtGroup>> get atGroupStream => _atGroupStreamController.stream;
+
+  /// Sink for group list stream
   StreamSink<List<AtGroup>> get atGroupSink => _atGroupStreamController.sink;
 
-// group view stream
+  /// Controller for group view stream
   final _groupViewStreamController = StreamController<AtGroup>.broadcast();
+
+  /// Group view stream
   Stream<AtGroup> get groupViewStream => _groupViewStreamController.stream;
+
+  /// Sink for group view stream
   StreamSink<AtGroup> get groupViewSink => _groupViewStreamController.sink;
 
-// all contacts stream
+  /// Controller for all contacts stream
   final StreamController<List<GroupContactsModel?>>
       _allContactsStreamController =
       StreamController<List<GroupContactsModel?>>.broadcast();
+
+  /// all contacts stream
   Stream<List<GroupContactsModel?>> get allContactsStream =>
       _allContactsStreamController.stream;
+
+  /// Sink for all contacts stream
   StreamSink<List<GroupContactsModel?>> get allContactsSink =>
       _allContactsStreamController.sink;
 
-  // selected group contact stream
+  /// Controller for selected group contact stream
   final _selectedContactsStreamController =
       StreamController<List<GroupContactsModel?>>.broadcast();
+
+  /// Selected group contact stream
   Stream<List<GroupContactsModel?>> get selectedContactsStream =>
       _selectedContactsStreamController.stream;
+
+  /// Sink for selected group contact stream
   StreamSink<List<GroupContactsModel?>> get selectedContactsSink =>
       _selectedContactsStreamController.sink;
 
@@ -72,6 +111,7 @@ class GroupService {
 
   List<AtContact?>? get selectedContactList => selecteContactList;
 
+  /// initialise the service with details from app
   void init(String rootDomainFromApp, int rootPortFromApp) async {
     atClientManager = AtClientManager.getInstance();
     _atsign = atClientManager.atClient.getCurrentAtSign()!;
@@ -81,6 +121,7 @@ class GroupService {
     await fetchGroupsAndContacts();
   }
 
+  /// Function to create a group
   Future<dynamic> createGroup(AtGroup atGroup) async {
     try {
       var group = await atContactImpl.createGroup(atGroup);
@@ -144,6 +185,7 @@ class GroupService {
     }
   }
 
+  /// Function to get group details for a group ID
   Future<AtGroup?> getGroupDetail(String groupId) async {
     try {
       var group = await atContactImpl.getGroup(groupId);
@@ -154,6 +196,7 @@ class GroupService {
     }
   }
 
+  /// Function to delete members of a group
   Future<dynamic> deletGroupMembers(
       List<AtContact> contacts, AtGroup group) async {
     try {
@@ -168,6 +211,7 @@ class GroupService {
     }
   }
 
+  /// Function to add members to a group
   Future<dynamic> addGroupMembers(
       List<AtContact?> contacts, AtGroup group) async {
     try {
@@ -182,6 +226,7 @@ class GroupService {
     }
   }
 
+  /// Function to update group details
   Future<dynamic> updateGroup(AtGroup group, {int? expandIndex}) async {
     try {
       var updatedGroup = await atContactImpl.updateGroup(group);
@@ -206,6 +251,7 @@ class GroupService {
         expandIndex: expandIndex, expandGroup: expandGroup ? group : null);
   }
 
+  /// Function to delete a group
   Future<bool?> deleteGroup(AtGroup group) async {
     try {
       var result = await atContactImpl.deleteGroup(group);
@@ -331,6 +377,7 @@ class GroupService {
     }
   }
 
+
   void addRecentContacts(GroupContactsModel groupContact) {
     _recentContacts.removeWhere((element) {
       return element.contact!.atSign!.toLowerCase() ==
@@ -342,6 +389,7 @@ class GroupService {
     }
   }
 
+  /// Function to reset all data related to groups
   void resetData() {
     allContacts = [];
     selectedGroupContacts = [];
@@ -351,6 +399,7 @@ class GroupService {
     showLoaderSink.add(false);
   }
 
+  /// Function to dispose all declared stream controllers
   void dispose() {
     _atGroupStreamController.close();
     _groupViewStreamController.close();

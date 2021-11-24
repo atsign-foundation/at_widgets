@@ -1,3 +1,9 @@
+## 3.0.4
+- Added hide qr scan to hide qr scan in custom dialog
+
+## 3.0.3
+- Resolved Qr scanning issue in ios
+
 ## 3.0.2
 - Added hide references to hide webpage references in custom dialog
 

@@ -1,5 +1,3 @@
-/// Screen exposed to see blocked contacts and unblock them
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
@@ -12,6 +10,7 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
+/// Screen exposed to see blocked contacts and unblock them
 class BlockedScreen extends StatefulWidget {
   @override
   _BlockedScreenState createState() => _BlockedScreenState();
@@ -38,6 +37,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
     super.initState();
   }
 
+  /// boolean flag to indicate if blocking flow is in progress
   bool isBlocking = false;
 
   @override

@@ -3,6 +3,7 @@ import 'dart:convert';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 
+/// Model to contain group details with associated contact
 class GroupContactsModel {
   final AtContact? contact;
   final AtGroup? group;
@@ -67,5 +68,6 @@ class GroupContactsModel {
   int get hashCode => contact.hashCode ^ group.hashCode ^ contactType.hashCode;
 }
 
+/// Enum for contact types
 enum ContactsType { CONTACT, GROUP }
 enum ContactTabs { RECENT, FAVS, ALL }

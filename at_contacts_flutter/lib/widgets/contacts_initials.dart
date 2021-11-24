@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactInitial extends StatelessWidget {
+  /// Size of the circular profile placeholder
   final double size;
   final double? maxSize, minSize;
+
+  /// Initials of the atsign
   final String initials;
+
+  /// Index in the list of atsigns
   int? index;
   Key? key;
 

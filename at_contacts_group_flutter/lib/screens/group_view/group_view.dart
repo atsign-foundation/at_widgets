@@ -6,7 +6,6 @@ import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_group_flutter/screens/edit/group_edit.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
-import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
@@ -17,6 +16,7 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
+/// This widget shows the group details with it's members in a grid view
 class GroupView extends StatefulWidget {
   final AtGroup group;
   GroupView({required this.group});
@@ -61,29 +61,24 @@ class _GroupViewState extends State<GroupView> {
                             return Image.memory(
                               groupPicture,
                               height: 272.toHeight,
-                              width: double.infinity,
                               fit: BoxFit.fill,
                             );
                           } else {
-                            return Image.asset(
-                              AllImages().GROUP_PHOTO,
-                              height: 272.toHeight,
-                              width: double.infinity,
-                              fit: BoxFit.fitWidth,
-                              package: 'at_contacts_group_flutter',
-                            );
+                            return SizedBox(
+                                height: 272.toHeight,
+                                width: double.infinity,
+                                child: Icon(Icons.groups_rounded,
+                                    size: 200, color: AllColors().LIGHT_GREY));
                           }
                         } else {
                           return SizedBox();
                         }
                       } else {
-                        return Image.asset(
-                          AllImages().GROUP_PHOTO,
-                          height: 272.toHeight,
-                          width: double.infinity,
-                          fit: BoxFit.fitWidth,
-                          package: 'at_contacts_group_flutter',
-                        );
+                        return SizedBox(
+                            height: 272.toHeight,
+                            width: double.infinity,
+                            child: Icon(Icons.groups_rounded,
+                                size: 200, color: AllColors().LIGHT_GREY));
                       }
                     },
                   ),
@@ -308,10 +303,17 @@ class _GroupViewState extends State<GroupView> {
                   left: 10.toWidth,
                   child: InkWell(
                     onTap: () => Navigator.pop(context),
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: AllColors().Black,
-                      size: 25.toFont,
+                    child: Container(
+                      padding: EdgeInsets.all(5.toFont),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: AllColors().Black,
+                        size: 25.toFont,
+                      ),
                     ),
                   )),
               Positioned(
@@ -323,10 +325,17 @@ class _GroupViewState extends State<GroupView> {
                     MaterialPageRoute(
                         builder: (context) => GroupEdit(group: widget.group)),
                   ),
-                  child: Icon(
-                    Icons.edit,
-                    color: AllColors().Black,
-                    size: 25.toFont,
+                  child: Container(
+                    padding: EdgeInsets.all(5.toFont),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.edit,
+                      color: AllColors().Black,
+                      size: 25.toFont,
+                    ),
                   ),
                 ),
               )

@@ -214,10 +214,10 @@ class SendLocationNotification {
   }
 
   void deleteAllLocationKey() async {
-    var response = await atClient!.getKeys(
+    var response = await atClient?.getKeys(
       regex: '$locationKey',
     );
-    await Future.forEach(response, (dynamic key) async {
+    await Future.forEach(response ?? [], (dynamic key) async {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);

@@ -14,6 +14,7 @@ import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
+/// Screen to edit group details
 class GroupEdit extends StatefulWidget {
   final AtGroup group;
   GroupEdit({required this.group});
@@ -23,11 +24,25 @@ class GroupEdit extends StatefulWidget {
 }
 
 class _GroupEditState extends State<GroupEdit> {
+  /// Name of the group
   String? groupName;
+
+  /// Boolean flag to indicate loading status
   late bool isLoading;
+
+  /// Profile picture for the group
   Uint8List? groupPicture;
-  bool isKeyBoardVisible = false, showEmojiPicker = false;
+
+  /// Boolean flag to check for keyboard visibility
+  bool isKeyBoardVisible = false,
+
+      /// Boolean to control emoji picker
+      showEmojiPicker = false;
+
+  /// Text controller for text field to input group name
   TextEditingController? textController;
+
+  /// Focus node for text field
   FocusNode textFieldFocus = FocusNode();
 
   @override
@@ -99,6 +114,7 @@ class _GroupEditState extends State<GroupEdit> {
                 var group = widget.group;
                 group.displayName = groupName!;
                 group.groupName = groupName!;
+                group.groupPicture = groupPicture;
                 setState(() {
                   isLoading = true;
                 });
@@ -119,22 +135,19 @@ class _GroupEditState extends State<GroupEdit> {
           },
         ),
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (widget.group.groupPicture != null && groupPicture != null)
+            (groupPicture != null)
                 ? Image.memory(
                     groupPicture!,
-                    width: double.infinity,
                     height: 272.toHeight,
                     fit: BoxFit.fill,
                   )
-                : Image.asset(
-                    AllImages().GROUP_PHOTO,
+                : SizedBox(
                     height: 272.toHeight,
                     width: double.infinity,
-                    fit: BoxFit.fitWidth,
-                    package: 'at_contacts_group_flutter',
-                  ),
+                    child: Icon(Icons.groups_rounded,
+                        size: 200, color: AllColors().LIGHT_GREY)),
+            Divider(height: 1),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: 27.toWidth, vertical: 15.toHeight),
@@ -298,10 +311,11 @@ class _GroupEditState extends State<GroupEdit> {
                   InkWell(
                     onTap: () async {
                       var image = await ImagePicker().pickImage();
-                      setState(() {
-                        widget.group.groupPicture = image;
-                        groupPicture = image;
-                      });
+                      if (image != null) {
+                        setState(() {
+                          groupPicture = image;
+                        });
+                      }
                       Navigator.of(context).pop();
                     },
                     child: Text(
@@ -313,7 +327,6 @@ class _GroupEditState extends State<GroupEdit> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        widget.group.groupPicture = null;
                         groupPicture = null;
                       });
                       Navigator.of(context).pop();

@@ -1,3 +1,8 @@
+## 3.0.0
+
+- Cleaned imports to reduce autocomplete pollution for the developer
+- Replace dotenv with flutter_config
+
 ## 2.0.0
 
 - Remove the AtContext model which is no longer needed with at_client_mobile 3.x.x

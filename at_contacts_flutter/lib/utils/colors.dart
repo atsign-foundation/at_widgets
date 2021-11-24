@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Colors used in the package
 class ColorConstants {
   static const Color scaffoldColor = Colors.white;
   static const Color fontPrimary = Color(0xff131219);

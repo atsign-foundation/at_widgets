@@ -14,6 +14,7 @@ import 'package:at_contacts_flutter/utils/text_styles.dart'
     as contactTextStyles;
 import 'package:flutter/material.dart';
 
+/// A dialog to validate and add a contact
 class AddContactDialog extends StatefulWidget {
   AddContactDialog({
     Key? key,
@@ -24,7 +25,10 @@ class AddContactDialog extends StatefulWidget {
 }
 
 class _AddContactDialogState extends State<AddContactDialog> {
+  /// atsign to add to contacts
   String atsignName = '';
+
+  /// nickname for the contact to add
   String nickName = '';
   TextEditingController atSignController = TextEditingController();
 
@@ -40,6 +44,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
     ContactService().resetData();
   }
 
+  /// Boolean indicator to show loading in progress
   bool isLoading = false;
 
   @override
@@ -138,7 +143,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               setState(() {
                                 isLoading = true;
                               });
-                              await _contactService.addAtSign(
+                              var response = await _contactService.addAtSign(
                                 context,
                                 atSign: atsignName,
                                 nickName: nickName,
@@ -148,7 +153,8 @@ class _AddContactDialogState extends State<AddContactDialog> {
                                 isLoading = false;
                               });
                               if (_contactService.checkAtSign != null &&
-                                  _contactService.checkAtSign!) {
+                                  _contactService.checkAtSign! &&
+                                  response) {
                                 Navigator.pop(context);
                               }
                             },

@@ -1,9 +1,3 @@
-/// The screen which is exposed from the library for displaying, adding, selecting and deleting Contacts,
-/// takes in @param [context] to get the app context
-/// @param [currentAtsing] to get the contacts for the give [atSign]
-/// @param [selectedList] is a callback function to return back the selected list from the screen to the app
-/// @param [asSelectionScreen] toggles between the selection type screen of to display the contacts
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -24,10 +18,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../services/contact_service.dart';
 
+/// The screen which is exposed from the library for displaying, adding, selecting and deleting Contacts.
 class ContactsScreen extends StatefulWidget {
+  /// takes in @param [context] to get the app context
   final BuildContext? context;
 
+  /// a callback function to return back the selected list from the screen to the app
   final ValueChanged<List<AtContact?>>? selectedList;
+
+  /// toggles between the selection type screen to display the contacts
   final bool asSelectionScreen;
   final bool asSingleSelectionScreen;
   final Function? saveGroup, onSendIconPressed;
@@ -46,11 +45,22 @@ class ContactsScreen extends StatefulWidget {
 }
 
 class _ContactsScreenState extends State<ContactsScreen> {
+  /// search text entered in the search bar
   String searchText = '';
+
+  /// reference to singleton instance of contact service
   ContactService? _contactService;
+
+  /// boolean flag to indicate deletion action in progress
   bool deletingContact = false;
+
+  /// boolean flag to indicate blocking action in progress
   bool blockingContact = false;
+
+  /// boolean flag to indicate error condition
   bool errorOcurred = false;
+
+  /// List of selected contacts
   List<AtContact?> selectedList = [];
   @override
   void initState() {
@@ -335,6 +345,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                               ],
                                               child: Container(
                                                 child: CustomListTile(
+                                                  key: UniqueKey(),
                                                   contactService:
                                                       _contactService,
                                                   onTap: () {},

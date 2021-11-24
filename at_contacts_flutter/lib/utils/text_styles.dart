@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
+/// Text styles used in the package
 class CustomTextStyles {
   CustomTextStyles._();
   static final CustomTextStyles _instance = CustomTextStyles._();
