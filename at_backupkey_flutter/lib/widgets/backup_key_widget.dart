@@ -54,8 +54,7 @@ class BackupKeyWidget extends StatelessWidget {
       this.buttonWidth,
       this.buttonHeight,
       this.buttonColor,
-      this.iconSize}) {
-  }
+      this.iconSize}) {}
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +92,7 @@ class BackupKeyWidget extends StatelessWidget {
               color: this.iconColor,
             ),
             onPressed: () {
-              _showDialog(context);
+              showBackupDialog(context);
             },
           );
   }
@@ -131,7 +130,8 @@ class BackupKeyWidget extends StatelessWidget {
         });
   }
 
-  _showDialog(BuildContext context) {
+  showBackupDialog(BuildContext context) {
+    SizeConfig().init(context);
     showDialog(
         context: context,
         builder: (BuildContext ctxt) {
