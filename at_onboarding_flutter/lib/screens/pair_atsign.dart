@@ -192,21 +192,28 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   }
 
   Future<void> checkPermissions() async {
-    // PermissionStatus cameraStatus = await Permission.camera.status;
-    // PermissionStatus storageStatus = await Permission.storage.status;
-    // _logger.info('camera status => $cameraStatus');
-    // _logger.info('storage status is $storageStatus');
-    // if (cameraStatus.isRestricted && storageStatus.isRestricted) {
-    //   await askPermissions(Permission.unknown);
-    // } else if (cameraStatus.isRestricted || cameraStatus.isDenied) {
-    //   await askPermissions(Permission.camera);
-    // } else if (storageStatus.isRestricted || storageStatus.isDenied) {
-    //   await askPermissions(Permission.storage);
-    // } else if (cameraStatus.isGranted && storageStatus.isGranted) {
-    setState(() {
-      permissionGrated = true;
-    });
-    // }
+    if (Platform.isAndroid || Platform.isIOS) {
+      PermissionStatus cameraStatus = await Permission.camera.status;
+      PermissionStatus storageStatus = await Permission.storage.status;
+      _logger.info('camera status => $cameraStatus');
+      _logger.info('storage status is $storageStatus');
+      if (cameraStatus.isRestricted && storageStatus.isRestricted) {
+        await askPermissions(Permission.unknown);
+      } else if (cameraStatus.isRestricted || cameraStatus.isDenied) {
+        await askPermissions(Permission.camera);
+      } else if (storageStatus.isRestricted || storageStatus.isDenied) {
+        await askPermissions(Permission.storage);
+      } else if (cameraStatus.isGranted && storageStatus.isGranted) {
+        setState(() {
+          permissionGrated = true;
+        });
+      }
+    } else {
+      // bypassing for desktop platforms
+      setState(() {
+        permissionGrated = true;
+      });
+    }
   }
 
   Future<void> askPermissions(Permission type) async {

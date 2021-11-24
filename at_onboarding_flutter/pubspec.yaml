@@ -37,16 +37,8 @@ dependencies:
       url: https://github.com/atsign-foundation/at_widgets.git
       path: at_backupkey_flutter
       ref: desktop/development
-  at_client:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client
-      ref: desktop-compatible
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: desktop-compatible
+  at_client: ^3.0.6
+  at_client_mobile: ^3.1.1
   at_commons: ^3.0.0
   at_server_status: ^1.0.3
   at_utils: ^3.0.0
@@ -54,16 +46,6 @@ dependencies:
   
 dependency_overrides:
   cron: ^0.3.0
-  at_client:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client
-      ref: desktop-compatible
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: at_client_mobile
-      ref: desktop-compatible
 
 dev_dependencies:
   flutter_test:

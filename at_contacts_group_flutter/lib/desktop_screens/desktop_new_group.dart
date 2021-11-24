@@ -12,7 +12,7 @@ import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
-import 'package:at_contacts_group_flutter/widgets/dektop_custom_person_tile.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_custom_person_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_image_picker.dart';
 import 'package:flutter/material.dart';
 

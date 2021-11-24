@@ -90,16 +90,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: ColorConstants.fontPrimary,
                     size: 15.toFont,
                   ),
-                  onPressed: isDesktop
-                      ? () {
-                          onLeadingIconPressed!();
-                        }
-                      : () {
-                          Navigator.pop(context);
-                          if (onLeadingIconPressed != null) {
-                            onLeadingIconPressed!();
-                          }
-                        })
+                  onPressed: () {
+                    if (!isDesktop) {
+                      Navigator.pop(context);
+                    }
+                    if (onLeadingIconPressed != null) {
+                      onLeadingIconPressed!();
+                    }
+                  })
               : leadingIcon
           : Container(),
       title: Row(
