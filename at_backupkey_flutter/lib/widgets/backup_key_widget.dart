@@ -54,8 +54,7 @@ class BackupKeyWidget extends StatelessWidget {
       this.buttonWidth,
       this.buttonHeight,
       this.buttonColor,
-      this.iconSize}) {
-  }
+      this.iconSize}) {}
 
   @override
   Widget build(BuildContext context) {
