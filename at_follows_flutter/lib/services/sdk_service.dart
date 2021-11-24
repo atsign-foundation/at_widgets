@@ -133,8 +133,16 @@ class SDKService {
         .getAtKeys(regex: regex)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
+    int index = scanKey.length-1;
+    for(int i=0;i<scanKey.length;i++){
+      if(scanKey[i].key!.endsWith("self.at_follows")
+          && scanKey[i].namespace == "wavi"
+          && scanKey[i].sharedWith == null){
+        index = i;
+      }
+    }
     AtFollowsValue value =
-        scanKey.isNotEmpty ? await this.get(scanKey[scanKey.length-1]) : AtFollowsValue();
+        scanKey.isNotEmpty ? await this.get(scanKey[index]) : AtFollowsValue();
         //scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
     //migrates to newnamespace
     if (scanKey.isNotEmpty &&
