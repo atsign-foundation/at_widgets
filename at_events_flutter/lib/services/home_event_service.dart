@@ -1,3 +1,5 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -17,7 +19,7 @@ class HomeEventService {
   bool isActionRequired(EventNotificationModel event) {
     if (event.isCancelled!) return true;
 
-    var _eventInfo = getMyEventInfo(event.key!);
+    var _eventInfo = getMyEventInfo(event);
 
     if (_eventInfo == null) {
       return true;
@@ -62,7 +64,7 @@ class HomeEventService {
     if (event.isCancelled!) return 'Cancelled';
     var label = 'Action required';
 
-    var _eventInfo = getMyEventInfo(event.key!);
+    var _eventInfo = getMyEventInfo(event);
 
     if (_eventInfo == null) {
       return 'Action required';
@@ -164,8 +166,42 @@ class HomeEventService {
   }
 
   /// will return for event's for which i am member
-  EventInfo? getMyEventInfo(String _id) {
-    _id = trimAtsignsFromKey(_id);
+  EventInfo? getMyEventInfo(EventNotificationModel _event) {
+    String _id = trimAtsignsFromKey(_event.key!);
+    String? _atsign;
+
+    if (!compareAtSign(_event.atsignCreator!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      _atsign = _event.atsignCreator;
+    }
+
+    if (_atsign == null && _event.group!.members!.isNotEmpty) {
+      Set<AtContact>? groupMembers = _event.group!.members!;
+
+      for (var member in groupMembers) {
+        if (!compareAtSign(member.atSign!,
+            AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+          _atsign = member.atSign;
+          break;
+        }
+      }
+    }
+
+    if (SendLocationNotification().allAtsignsLocationData != null) {
+      if (SendLocationNotification()
+              .allAtsignsLocationData[_atsign]!
+              .locationSharingFor[_id] !=
+          null) {
+        var _locationSharingFor = SendLocationNotification()
+            .allAtsignsLocationData[_atsign]!
+            .locationSharingFor[_id]!;
+
+        return EventInfo(
+            isSharing: _locationSharingFor.isSharing,
+            isExited: _locationSharingFor.isExited,
+            isAccepted: _locationSharingFor.isAccepted);
+      }
+    }
 
     for (var key in SendLocationNotification().allAtsignsLocationData.entries) {
       if (SendLocationNotification()

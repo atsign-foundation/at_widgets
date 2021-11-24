@@ -87,6 +87,34 @@ class SendLocationNotification {
     });
 
     print('filteredAtsigns : $allAtsignsLocationData');
+    checkForExpiredInvites();
+  }
+
+  checkForExpiredInvites() {
+    List<String> _idsToDelete = [];
+    List<String> _atsignsToDelete = [];
+
+    allAtsignsLocationData.forEach((key, value) {
+      allAtsignsLocationData[key]!
+          .locationSharingFor
+          .forEach((locKey, locValue) {
+        if (locValue.to != null && DateTime.now().isAfter(locValue.to!)) {
+          _idsToDelete.add(locKey);
+        }
+      });
+
+      _idsToDelete.forEach((element) {
+        allAtsignsLocationData[key]!.locationSharingFor.remove(element);
+      });
+
+      if (allAtsignsLocationData[key]!.locationSharingFor.isEmpty) {
+        _atsignsToDelete.add(key);
+      }
+    });
+
+    _atsignsToDelete.forEach((element) {
+      allAtsignsLocationData.remove(element);
+    });
   }
 
   compareForMissingInvites(List<LocationDataModel> _newLocationDataModel) {
@@ -373,7 +401,15 @@ class SendLocationNotification {
 
   Future<void> prepareLocationDataAndSend(String receiver,
       LocationDataModel locationData, LatLng? myLocation) async {
-    var isSend = true;
+    var isSend = false;
+
+    for (var locData in locationData.locationSharingFor.entries) {
+      if (locData.value.to == null ||
+          DateTime.now().isBefore(locData.value.to!)) {
+        isSend = true;
+        break;
+      }
+    }
 
     //// TODO: Send location to only those whose from and to is between DateTime.now()
     // for (var field in locationData.locationSharingFor.entries) {
@@ -408,18 +444,17 @@ class SendLocationNotification {
 
       locationData.lastUpdatedAt = DateTime.now();
 
-      //// TODO: Uncomment and test, to send null as latLng
-      // bool _shouldSendNull = false;
-      // locationData.locationSharingFor.forEach((key, value) {
-      //   if ((_shouldSendNull) && (value.isSharing)) {
-      //     _shouldSendNull = true;
-      //   }
-      // });
+      bool _isSharingLocation = false;
+      locationData.locationSharingFor.forEach((key, value) {
+        if ((_isSharingLocation) && (value.isSharing)) {
+          _isSharingLocation = true;
+        }
+      });
 
-      // if (!_shouldSendNull) {
-      //   locationData.lat = null;
-      //   locationData.long = null;
-      // }
+      if (!_isSharingLocation) {
+        locationData.lat = null;
+        locationData.long = null;
+      }
 
       try {
         print('locationData.toJson() : ${locationData.toJson()}');

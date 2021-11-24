@@ -62,7 +62,9 @@ class MasterLocationService {
           (_locationReceivedData[atsign]!.locationSharingFor[id] != null)) {
         var _locationSharingFor =
             _locationReceivedData[atsign]!.locationSharingFor[id];
-        if ((_locationSharingFor!.from != null &&
+        if ((_locationSharingFor!.isAccepted) &&
+            (_locationSharingFor.isSharing) &&
+            (_locationSharingFor.from != null &&
                 _locationSharingFor.to != null) &&
             (DateTime.now().isAfter(_locationSharingFor.from!)) &&
             (DateTime.now().isBefore(_locationSharingFor.to!))) {

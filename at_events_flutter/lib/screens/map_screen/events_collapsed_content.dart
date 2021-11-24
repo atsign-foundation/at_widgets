@@ -41,8 +41,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
 
   @override
   Widget build(BuildContext context) {
-    var _myEventInfo =
-        HomeEventService().getMyEventInfo(eventListenerKeyword.key!);
+    var _myEventInfo = HomeEventService().getMyEventInfo(eventListenerKeyword);
     isSharingEvent = _myEventInfo!.isSharing;
     isExited = _myEventInfo.isExited;
 
@@ -393,5 +392,5 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
 //   isExited = _myEventInfo.isExited;
 
 //   /// TODO: remove extra columns
-  
+
 // }

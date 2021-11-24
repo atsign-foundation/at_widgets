@@ -39,8 +39,12 @@ class LocationDataModel {
       tempLocationSharingFor[key] = locationData;
     });
 
-    lat = data['lat'] != null ? double.parse(data['lat']) : null;
-    long = data['long'] != null ? double.parse(data['long']) : null;
+    lat = data['lat'] != null && data['lat'] != 'null'
+        ? double.parse(data['lat'])
+        : null;
+    long = data['long'] != null && data['long'] != 'null'
+        ? double.parse(data['long'])
+        : null;
     lastUpdatedAt = DateTime.parse(data['lastUpdatedAt']).toLocal();
     sender = data['sender'];
     receiver = data['receiver'];
