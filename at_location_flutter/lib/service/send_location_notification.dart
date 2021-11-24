@@ -303,7 +303,7 @@ class SendLocationNotification {
         for (var key
             in allAtsignsLocationData[atsign]!.locationSharingFor.entries) {
           if (allAtsignsLocationData[atsign]!
-              .locationSharingFor[key]!
+              .locationSharingFor[key.key]!
               .isSharing) {
             isLocSharing = true;
             break;

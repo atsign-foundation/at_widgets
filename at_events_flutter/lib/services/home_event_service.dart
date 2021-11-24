@@ -17,60 +17,93 @@ class HomeEventService {
   bool isActionRequired(EventNotificationModel event) {
     if (event.isCancelled!) return true;
 
-    var isRequired = true;
-    var currentAtsign = AtEventNotificationListener()
-        .atClientManager
-        .atClient
-        .getCurrentAtSign();
+    var _eventInfo = getMyEventInfo(event.key!);
 
-    if (event.group!.members!.isEmpty) return true;
+    if (_eventInfo == null) {
+      return true;
+    }
 
-    event.group!.members!.forEach((member) {
-      if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
-      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
+    if (_eventInfo.isExited) {
+      return true;
+    }
 
-      if ((member.tags!['isAccepted'] != null &&
-              member.tags!['isAccepted'] == true) &&
-          member.tags!['isExited'] == false &&
-          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
-        isRequired = false;
-      }
-    });
+    if (!_eventInfo.isAccepted) {
+      return true;
+    } else {
+      return false;
+    }
 
-    if (event.atsignCreator == currentAtsign) isRequired = false;
+    // var isRequired = true;
+    // var currentAtsign = AtEventNotificationListener()
+    //     .atClientManager
+    //     .atClient
+    //     .getCurrentAtSign();
 
-    return isRequired;
+    // if (event.group!.members!.isEmpty) return true;
+
+    // event.group!.members!.forEach((member) {
+    //   if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
+    //   if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
+
+    //   if ((member.tags!['isAccepted'] != null &&
+    //           member.tags!['isAccepted'] == true) &&
+    //       member.tags!['isExited'] == false &&
+    //       member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
+    //     isRequired = false;
+    //   }
+    // });
+
+    // if (event.atsignCreator == currentAtsign) isRequired = false;
+
+    // return isRequired;
   }
 
   String getActionString(EventNotificationModel event, bool haveResponded) {
     if (event.isCancelled!) return 'Cancelled';
     var label = 'Action required';
-    var currentAtsign = AtEventNotificationListener()
-        .atClientManager
-        .atClient
-        .getCurrentAtSign();
 
-    if (event.group!.members!.isEmpty) return '';
+    var _eventInfo = getMyEventInfo(event.key!);
 
-    event.group!.members!.forEach((member) {
-      if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
-      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
+    if (_eventInfo == null) {
+      return 'Action required';
+    }
 
-      if (member.tags!['isExited'] != null &&
-          member.tags!['isExited'] == true &&
-          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
-        label = 'Request declined';
-      } else if (member.tags!['isExited'] != null &&
-          member.tags!['isExited'] == false &&
-          member.tags!['isAccepted'] != null &&
-          member.tags!['isAccepted'] == false &&
-          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase() &&
-          haveResponded) {
-        label = 'Pending request';
-      }
-    });
+    if (_eventInfo.isExited) {
+      return 'Request declined';
+    }
 
-    return label;
+    if (!_eventInfo.isAccepted) {
+      return 'Action required';
+    }
+
+    return 'Action required';
+
+    // var currentAtsign = AtEventNotificationListener()
+    //     .atClientManager
+    //     .atClient
+    //     .getCurrentAtSign();
+
+    // if (event.group!.members!.isEmpty) return '';
+
+    // event.group!.members!.forEach((member) {
+    //   if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
+    //   if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
+
+    //   if (member.tags!['isExited'] != null &&
+    //       member.tags!['isExited'] == true &&
+    //       member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
+    //     label = 'Request declined';
+    //   } else if (member.tags!['isExited'] != null &&
+    //       member.tags!['isExited'] == false &&
+    //       member.tags!['isAccepted'] != null &&
+    //       member.tags!['isAccepted'] == false &&
+    //       member.atSign!.toLowerCase() == currentAtsign!.toLowerCase() &&
+    //       haveResponded) {
+    //     label = 'Pending request';
+    //   }
+    // });
+
+    // return label;
   }
 
   String getSubTitle(EventNotificationModel _event) {
@@ -82,11 +115,13 @@ class HomeEventService {
   }
 
   String? getSemiTitle(EventNotificationModel _event, bool _haveResponded) {
-    return _event.group != null
-        ? (isActionRequired(_event))
+    return
+        // _event.group != null
+        //     ?
+        (isActionRequired(_event))
             ? getActionString(_event, _haveResponded)
-            : null
-        : 'Action required';
+            : null;
+    // : 'Action required';
   }
 
   bool calculateShowRetry(EventKeyLocationModel _eventKeyModel) {
@@ -128,6 +163,7 @@ class HomeEventService {
     EventsMapScreenData().moveToEventScreen(eventNotificationModel);
   }
 
+  /// will return for event's for which i am member
   EventInfo? getMyEventInfo(String _id) {
     _id = trimAtsignsFromKey(_id);
 
@@ -148,6 +184,7 @@ class HomeEventService {
     }
   }
 
+  /// will return for event's for which i am creator
   EventInfo? getOtherMemberEventInfo(String _id) {
     _id = trimAtsignsFromKey(_id);
 

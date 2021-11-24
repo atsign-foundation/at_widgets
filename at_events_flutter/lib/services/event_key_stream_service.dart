@@ -226,8 +226,12 @@ class EventKeyStreamService {
 
     notifyListeners();
 
-    checkLocationSharingForEventData(
-        tempEventKeyLocationModel.eventNotificationModel!);
+    /// Add in SendLocation map only if I am creator,
+    /// for members, will be added on first action on the event
+    if (compareAtSign(eventNotificationModel.atsignCreator!, currentAtSign!)) {
+      await checkLocationSharingForEventData(
+          tempEventKeyLocationModel.eventNotificationModel!);
+    }
 
     return tempEventKeyLocationModel;
   }
@@ -298,13 +302,13 @@ class EventKeyStreamService {
   }
 
   /// Checks current status of [currentAtSign] in an event and updates [SendLocationNotification] location sending list.
-  void checkLocationSharingForEventData(
-      EventNotificationModel eventNotificationModel) {
+  Future<void> checkLocationSharingForEventData(
+      EventNotificationModel eventNotificationModel) async {
     if ((eventNotificationModel.atsignCreator == currentAtSign)) {
       if (eventNotificationModel.isSharing!) {
         // ignore: unawaited_futures
         // SendLocationNotification().addMember(eventNotificationModel);
-        calculateLocationSharingForSingleEvent(eventNotificationModel);
+        await calculateLocationSharingForSingleEvent(eventNotificationModel);
       } else {
         // SendLocationNotification().removeMember(eventNotificationModel.key);
         List<String> atsignsToremove = [];
@@ -340,7 +344,7 @@ class EventKeyStreamService {
       //     currentGroupMember.tags!['isExited'] == false) {
       // ignore: unawaited_futures
       // SendLocationNotification().addMember(eventNotificationModel);
-      calculateLocationSharingForSingleEvent(eventNotificationModel);
+      await calculateLocationSharingForSingleEvent(eventNotificationModel);
       // } else {
       //   // SendLocationNotification().removeMember(eventNotificationModel.key);
       //   List<String> atsignsToremove = [];
@@ -390,9 +394,9 @@ class EventKeyStreamService {
   /// Processes any kind of update in an event and notifies creator/members
   Future<bool> actionOnEvent(
       EventNotificationModel event, ATKEY_TYPE_ENUM keyType,
-      {bool? isAccepted,
-      bool? isSharing,
-      bool? isExited,
+      {required bool isAccepted,
+      required bool isSharing,
+      required bool isExited,
       bool? isCancelled}) async {
     var eventData = EventNotificationModel.fromJson(jsonDecode(
         EventNotificationModel.convertEventNotificationToJson(event)));
@@ -449,10 +453,10 @@ class EventKeyStreamService {
       // }
 
       if (isCancelled == true) {
-        await updateEventMemberInfo(eventData.key!,
+        await updateEventMemberInfo(eventData,
             isAccepted: false, isExited: true, isSharing: false);
       } else {
-        await updateEventMemberInfo(eventData.key!,
+        await updateEventMemberInfo(eventData,
             isAccepted: isAccepted, isExited: isExited, isSharing: isSharing);
       }
 
@@ -503,42 +507,130 @@ class EventKeyStreamService {
     }
   }
 
-  updateEventMemberInfo(String _id,
-      {bool? isAccepted, bool? isSharing, bool? isExited}) async {
-    List<String> _atsignsToSendLocationwith = [];
-    _id = trimAtsignsFromKey(_id);
+  List<String> getAtsignsFromEvent(EventNotificationModel _event) {
+    List<String> _allAtsignsInEvent = [];
 
-    SendLocationNotification().allAtsignsLocationData.forEach((key, value) {
-      if (value.locationSharingFor[_id] != null) {
-        if (!_atsignsToSendLocationwith.contains(value.receiver)) {
-          _atsignsToSendLocationwith.add(value.receiver);
+    if (!compareAtSign(_event.atsignCreator!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      _allAtsignsInEvent.add(_event.atsignCreator!);
+    }
+
+    if (_event.group!.members!.isNotEmpty) {
+      Set<AtContact>? groupMembers = _event.group!.members!;
+
+      groupMembers.forEach((member) {
+        if (!compareAtSign(member.atSign!,
+            AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+          _allAtsignsInEvent.add(member.atSign!);
         }
+      });
+    }
 
-        if (isAccepted != null) {
+    return _allAtsignsInEvent;
+  }
+
+  updateEventMemberInfo(EventNotificationModel _event,
+      {required bool isAccepted,
+      required bool isSharing,
+      required bool isExited}) async {
+    // List<String> _atsignsToSendLocationwith = [];
+    String _id = trimAtsignsFromKey(_event.key!);
+
+    List<String> _allAtsignsInEvent = getAtsignsFromEvent(_event);
+
+    for (var _atsign in _allAtsignsInEvent) {
+      if (SendLocationNotification().allAtsignsLocationData[_atsign] != null) {
+        if (SendLocationNotification()
+                .allAtsignsLocationData[_atsign]!
+                .locationSharingFor[_id] !=
+            null) {
+          // if (!_atsignsToSendLocationwith.contains(SendLocationNotification()
+          //     .allAtsignsLocationData[_atsign]!
+          //     .receiver)) {
+          //   _atsignsToSendLocationwith.add(SendLocationNotification()
+          //       .allAtsignsLocationData[_atsign]!
+          //       .receiver);
+          // }
+
+          if (isAccepted != null) {
+            SendLocationNotification()
+                .allAtsignsLocationData[_atsign]!
+                .locationSharingFor[_id]!
+                .isAccepted = isAccepted;
+          }
+
+          if (isSharing != null) {
+            SendLocationNotification()
+                .allAtsignsLocationData[_atsign]!
+                .locationSharingFor[_id]!
+                .isSharing = isSharing;
+          }
+
+          if (isExited != null) {
+            SendLocationNotification()
+                .allAtsignsLocationData[_atsign]!
+                .locationSharingFor[_id]!
+                .isExited = isExited;
+          }
+        } else {
+          var _fromAndTo = getFromAndToForEvent(_event);
           SendLocationNotification()
-              .allAtsignsLocationData[key]!
-              .locationSharingFor[_id]!
-              .isAccepted = isAccepted;
+                  .allAtsignsLocationData[_atsign]!
+                  .locationSharingFor[_id] =
+              LocationSharingFor(_fromAndTo['from'], _fromAndTo['to'],
+                  LocationSharingType.Event, isAccepted, isExited, isSharing);
         }
-
-        if (isSharing != null) {
-          SendLocationNotification()
-              .allAtsignsLocationData[key]!
-              .locationSharingFor[_id]!
-              .isSharing = isSharing;
-        }
-
-        if (isExited != null) {
-          SendLocationNotification()
-              .allAtsignsLocationData[key]!
-              .locationSharingFor[_id]!
-              .isExited = isExited;
-        }
+      } else {
+        var _fromAndTo = getFromAndToForEvent(_event);
+        SendLocationNotification().allAtsignsLocationData[_atsign] =
+            LocationDataModel({
+          trimAtsignsFromKey(_event.key!): LocationSharingFor(
+              _fromAndTo['from'],
+              _fromAndTo['to'],
+              LocationSharingType.Event,
+              isAccepted,
+              isExited,
+              isSharing),
+        }, null, null, DateTime.now(), currentAtSign!, _atsign);
       }
-    });
+    }
 
     await SendLocationNotification()
-        .sendLocationAfterDataUpdate(_atsignsToSendLocationwith);
+        .sendLocationAfterDataUpdate(_allAtsignsInEvent);
+  }
+
+  Map<String, DateTime> getFromAndToForEvent(EventNotificationModel eventData) {
+    DateTime? _from;
+    DateTime? _to;
+
+    if (compareAtSign(eventData.atsignCreator!,
+        AtEventNotificationListener().currentAtSign!)) {
+      _from = eventData.event!.startTime;
+      _to = eventData.event!.endTime;
+    } else {
+      late AtContact currentGroupMember;
+      eventData.group!.members!.forEach((groupMember) {
+        // sending location to other group members
+        if (compareAtSign(groupMember.atSign!,
+            AtEventNotificationListener().currentAtSign!)) {
+          currentGroupMember = groupMember;
+        }
+      });
+
+      _from = startTimeEnumToTimeOfDay(
+              currentGroupMember.tags!['shareFrom'].toString(),
+              eventData.event!.startTime) ??
+          eventData.event!.startTime;
+      _to = endTimeEnumToTimeOfDay(
+              currentGroupMember.tags!['shareTo'].toString(),
+              eventData.event!.endTime) ??
+          eventData.event!.endTime;
+    }
+
+    return {
+      'from': _from ?? eventData.event!.startTime!,
+      'to': _to ?? eventData.event!.endTime!,
+    };
   }
 
   /// Updates event data with received [locationData] of [fromAtSign]
@@ -918,8 +1010,9 @@ class EventKeyStreamService {
     }
   }
 
-  calculateLocationSharingForSingleEvent(EventNotificationModel eventData) {
-    calculateLocationSharingAllEvents(listOfEvents: [
+  calculateLocationSharingForSingleEvent(
+      EventNotificationModel eventData) async {
+    await calculateLocationSharingAllEvents(listOfEvents: [
       EventKeyLocationModel(eventNotificationModel: eventData)
     ]);
 

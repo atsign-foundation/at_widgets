@@ -304,7 +304,9 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                             var result = await EventKeyStreamService()
                                 .actionOnEvent(widget.eventData!,
                                     ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-                                    isAccepted: false, isExited: true);
+                                    isSharing: false,
+                                    isAccepted: false,
+                                    isExited: true);
 
                             if (result == true) {
                               CustomToast().show(
