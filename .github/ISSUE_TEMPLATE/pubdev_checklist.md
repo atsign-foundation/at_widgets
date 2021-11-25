@@ -23,6 +23,8 @@ Example: [Shelf](https://pub.dev/packages/shelf) (will point to one of our own o
   - Repository (generated)
   - View/report issues (generated)
   - Documentation (generated)
+    - Documentation url <pubspec.yaml>
+    - API reference <generated>
   - License (github repo)
   - Dependencies (generated)
   - More (generated)
@@ -36,3 +38,4 @@ Example: [Shelf](https://pub.dev/packages/shelf) (will point to one of our own o
 - [ ] Bump the version as appropriate in pubspec.yaml for the package
 - [ ] Bump the version as appropriate in pubspec.yaml for the example
 - [ ] Check that the description is accurate in pubspec.yaml for the package
+- [ ] As appropriate, add a documentation link to atsign.dev for the package
