@@ -240,7 +240,7 @@ class EventKeyStreamService {
   /// TODO: Check for dataTime changes in updated event,
   /// if updated then update SendLocation map.
   /// Updates any [EventKeyLocationModel] data for updated data
-  void mapUpdatedEventDataToWidget(EventNotificationModel eventData,
+  Future<void> mapUpdatedEventDataToWidget(EventNotificationModel eventData,
       {Map<dynamic, dynamic>? tags,
       String? tagOfAtsign,
       bool updateLatLng = false,
@@ -283,6 +283,8 @@ class EventKeyStreamService {
         allEventNotifications[i].eventNotificationModel!.key =
             allEventNotifications[i].key;
 
+        notifyListeners();
+
         await updateLocationDataForExistingEvent(eventData);
 
         break;
@@ -294,7 +296,6 @@ class EventKeyStreamService {
         //     allEventNotifications[i].eventNotificationModel!);
       }
     }
-    notifyListeners();
   }
 
   /// TODO: Remove members from event, yet to be added

@@ -350,7 +350,10 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
                     controller: pc,
                     minHeight: 205.toHeight,
                     maxHeight: 431.toHeight,
-                    panel: EventsCollapsedContent(_event!),
+                    panel: EventsCollapsedContent(
+                      _event!,
+                      key: UniqueKey(),
+                    ),
                   )
                 ],
               );
