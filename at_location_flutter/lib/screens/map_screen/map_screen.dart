@@ -48,10 +48,10 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          key: scaffoldKey,
-          body: Stack(
+    return Scaffold(
+        key: scaffoldKey,
+        body: SafeArea(
+          child: Stack(
             children: [
               AtLocationFlutterPlugin(
                 atsignsToTrack,
@@ -105,8 +105,8 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               )
             ],
-          )),
-    );
+          ),
+        ));
   }
 
   // ignore: always_declare_return_types

@@ -24,9 +24,9 @@ class _SelectedLocationState extends State<SelectedLocation> {
   var mapController = MapController();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
           children: <Widget>[
             showLocation(UniqueKey(), null, location: widget.point),
             Positioned(

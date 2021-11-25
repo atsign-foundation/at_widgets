@@ -67,9 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return SafeArea(
-      child: Scaffold(
-          body: Stack(
+    return Scaffold(
+        body: SafeArea(
+      child: Stack(
         children: [
           (myLatLng != null)
               ? showLocation(UniqueKey(), mapController, location: myLatLng)
@@ -147,8 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   })
               : SizedBox(),
         ],
-      )),
-    );
+      ),
+    ));
   }
 
   Widget collapsedContent(

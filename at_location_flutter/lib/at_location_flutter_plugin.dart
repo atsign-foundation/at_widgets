@@ -106,9 +106,9 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   Widget build(BuildContext context) {
     globalContext = context;
 
-    return SafeArea(
-      child: Scaffold(
-          body: Stack(
+    return Scaffold(
+        body: SafeArea(
+      child: Stack(
         children: [
           StreamBuilder(
               stream: LocationService().atHybridUsersStream,
@@ -238,8 +238,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
             child: FloatingIcon(icon: Icons.zoom_out_map, onPressed: zoomOutFn),
           ),
         ],
-      )),
-    );
+      ),
+    ));
   }
 
   void zoomOutFn() {

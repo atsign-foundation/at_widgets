@@ -263,10 +263,10 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        key: scaffoldKey,
-        body: Container(
+    return Scaffold(
+      key: scaffoldKey,
+      body: SafeArea(
+        child: Container(
           alignment: Alignment.center,
           child: ValueListenableBuilder(
             valueListenable: EventsMapScreenData().eventNotifier!,
