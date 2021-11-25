@@ -108,3 +108,13 @@ class LocationNotificationModel {
     return notification;
   }
 }
+
+class LocationInfo {
+  late bool isAccepted, isSharing, isExited;
+
+  LocationInfo({
+    required this.isSharing,
+    required this.isExited,
+    required this.isAccepted,
+  });
+}

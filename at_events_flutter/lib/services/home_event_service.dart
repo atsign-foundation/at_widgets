@@ -187,7 +187,7 @@ class HomeEventService {
       }
     }
 
-    if (SendLocationNotification().allAtsignsLocationData != null) {
+    if (SendLocationNotification().allAtsignsLocationData[_atsign] != null) {
       if (SendLocationNotification()
               .allAtsignsLocationData[_atsign]!
               .locationSharingFor[_id] !=

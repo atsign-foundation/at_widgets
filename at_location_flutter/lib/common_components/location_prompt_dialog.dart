@@ -155,7 +155,8 @@ class _LocationPromptState extends State<LocationPrompt> {
   Future<void> updateShareLocation() async {
     var update = await SharingLocationService()
         .updateWithShareLocationAcknowledge(widget.locationNotificationModel!,
-            rePrompt: widget.locationNotificationModel!.rePrompt);
+            rePrompt: widget.locationNotificationModel!.rePrompt,
+            shouldCheckForTimeChanges: true);
 
     if (update) {
       CustomToast().show(

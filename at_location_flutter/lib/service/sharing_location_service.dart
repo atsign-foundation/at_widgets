@@ -200,7 +200,8 @@ class SharingLocationService {
   Future<bool> updateWithShareLocationAcknowledge(
       LocationNotificationModel originalLocationNotificationModel,
       {bool? isSharing,
-      bool rePrompt = false}) async {
+      bool rePrompt = false,
+      bool shouldCheckForTimeChanges = false}) async {
     try {
       var locationNotificationModel = LocationNotificationModel.fromJson(
           jsonDecode(
@@ -244,17 +245,24 @@ class SharingLocationService {
         key.metadata!.expiresAt = locationNotificationModel.to;
       }
 
-      var result = await NotifyAndPut().notifyAndPut(
-        key,
-        notification,
-      );
-      if (result) {
-        KeyStreamService()
-            .mapUpdatedLocationDataToWidget(locationNotificationModel);
-      }
+      if (shouldCheckForTimeChanges) {
+        var result = await NotifyAndPut().notifyAndPut(
+          key,
+          notification,
+        );
+        if (result) {
+          await KeyStreamService().mapUpdatedLocationDataToWidget(
+              locationNotificationModel,
+              shouldCheckForTimeChanges: shouldCheckForTimeChanges);
+        }
 
-      print('update result - $result');
-      return result;
+        print('update result - $result');
+        return result;
+      } else {
+        await KeyStreamService()
+            .mapUpdatedLocationDataToWidget(locationNotificationModel);
+        return true;
+      }
     } catch (e) {
       print('update share location failed $e');
 

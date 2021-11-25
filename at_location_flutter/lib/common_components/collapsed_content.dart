@@ -7,6 +7,7 @@ import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -70,6 +71,11 @@ class _CollapsedContentState extends State<CollapsedContent> {
           'until ${timeOfDayToString(TimeOfDay.fromDateTime(widget.userListenerKeyword!.to!))} today';
     } else {
       time = '';
+    }
+
+    var _myEventInfo = getMyLocationInfo(widget.userListenerKeyword!);
+    if (_myEventInfo != null) {
+      isSharing = _myEventInfo.isSharing;
     }
 
     return Container(

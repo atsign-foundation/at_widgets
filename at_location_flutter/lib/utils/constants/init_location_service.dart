@@ -4,6 +4,7 @@ import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
+import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
@@ -117,4 +118,52 @@ String trimAtsignsFromKey(String key) {
     key = key.split('@')[0];
   }
   return key;
+}
+
+/// will return details of my booleans for this [LocationNotificationModel]
+LocationInfo? getMyLocationInfo(LocationNotificationModel _event) {
+  String _id = trimAtsignsFromKey(_event.key!);
+
+  if (!compareAtSign(_event.atsignCreator!,
+      AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+    return null;
+  }
+
+  if (SendLocationNotification().allAtsignsLocationData[_event.receiver] !=
+      null) {
+    if (SendLocationNotification()
+            .allAtsignsLocationData[_event.receiver]!
+            .locationSharingFor[_id] !=
+        null) {
+      var _locationSharingFor = SendLocationNotification()
+          .allAtsignsLocationData[_event.receiver]!
+          .locationSharingFor[_id]!;
+
+      return LocationInfo(
+          isSharing: _locationSharingFor.isSharing,
+          isExited: _locationSharingFor.isExited,
+          isAccepted: _locationSharingFor.isAccepted);
+    }
+  }
+}
+
+/// will return details of others booleans for this [LocationNotificationModel]
+LocationInfo? getOtherMemberLocationInfo(String _id) {
+  _id = trimAtsignsFromKey(_id);
+
+  for (var key in MasterLocationService().locationReceivedData.entries) {
+    if (MasterLocationService()
+            .locationReceivedData[key.key]!
+            .locationSharingFor[_id] !=
+        null) {
+      var _locationSharingFor = MasterLocationService()
+          .locationReceivedData[key.key]!
+          .locationSharingFor[_id]!;
+
+      return LocationInfo(
+          isSharing: _locationSharingFor.isSharing,
+          isExited: _locationSharingFor.isExited,
+          isAccepted: _locationSharingFor.isAccepted);
+    }
+  }
 }

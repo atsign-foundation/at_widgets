@@ -5,6 +5,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
+import 'package:at_location_flutter/location_modal/location_data_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
@@ -215,7 +216,8 @@ class KeyStreamService {
 
   /// Updates any [KeyLocationModel] data for updated data
   Future<void> mapUpdatedLocationDataToWidget(
-      LocationNotificationModel locationData) async {
+      LocationNotificationModel locationData,
+      {bool shouldCheckForTimeChanges = false}) async {
     String newLocationDataKeyId;
     if (locationData.key!.contains(MixedConstants.SHARE_LOCATION)) {
       newLocationDataKeyId =
@@ -243,11 +245,44 @@ class KeyStreamService {
     // }
     notifyListeners();
 
+    if (shouldCheckForTimeChanges) {
+      SendLocationNotification()
+          .allAtsignsLocationData[locationData.receiver!]!
+          .locationSharingFor[trimAtsignsFromKey(locationData.key!)]!
+          .from = locationData.from;
+
+      SendLocationNotification()
+          .allAtsignsLocationData[locationData.receiver!]!
+          .locationSharingFor[trimAtsignsFromKey(locationData.key!)]!
+          .to = locationData.to;
+
+      await SendLocationNotification()
+          .sendLocationAfterDataUpdate([locationData.receiver!]);
+
+      return;
+    }
+
     // Update location sharing
     if ((locationData.isSharing) && (locationData.isAccepted)) {
       if (locationData.atsignCreator == currentAtSign) {
-        await SendLocationNotification().addMember(SendLocationNotification()
-            .locationNotificationModelToLocationDataModel(locationData));
+        var _tempLocationDataModel = SendLocationNotification()
+            .locationNotificationModelToLocationDataModel(locationData);
+
+        if (ifLocationDataAlreadyExists(_tempLocationDataModel)) {
+          SendLocationNotification()
+              .allAtsignsLocationData[locationData.receiver!]!
+              .locationSharingFor = {
+            ...SendLocationNotification()
+                .allAtsignsLocationData[locationData.receiver!]!
+                .locationSharingFor,
+            ..._tempLocationDataModel.locationSharingFor,
+          };
+
+          await SendLocationNotification()
+              .sendLocationAfterDataUpdate([locationData.receiver!]);
+        } else {
+          await SendLocationNotification().addMember(_tempLocationDataModel);
+        }
       }
     } else {
       //TODO: verify receiver
@@ -259,6 +294,28 @@ class KeyStreamService {
             isSharing: locationData.isSharing);
       }
     }
+  }
+
+  bool ifLocationDataAlreadyExists(LocationDataModel _newLocationDataModel) {
+    if (SendLocationNotification()
+            .allAtsignsLocationData[_newLocationDataModel.receiver] !=
+        null) {
+      /// don't add and send again if already present
+      var _receiverLocationDataModel = SendLocationNotification()
+          .allAtsignsLocationData[_newLocationDataModel.receiver]!;
+
+      if (_newLocationDataModel.locationSharingFor.keys.isEmpty) {
+        return false;
+      }
+
+      //// TODO: Might be wrong
+      var _id = _newLocationDataModel.locationSharingFor.keys.first;
+      if (_receiverLocationDataModel.locationSharingFor[_id] != null) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /// Removes a notification from list
@@ -287,8 +344,7 @@ class KeyStreamService {
     //TODO: verify receiver
     if (locationNotificationModel != null) {
       SendLocationNotification().removeMember(key, [atsignToDelete],
-          isExited: locationNotificationModel!.isExited,
-          isAccepted: locationNotificationModel!.isAccepted);
+          isExited: true, isAccepted: false, isSharing: false);
     }
   }
 
