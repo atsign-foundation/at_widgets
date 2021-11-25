@@ -44,6 +44,7 @@ class LocationService {
   StreamSink<List<HybridModel?>> get atHybridUsersSink =>
       _atHybridUsersController.sink as StreamSink<List<HybridModel?>>;
 
+  //// the centre LatLng is getting added more than once
   void init(List<String?>? atsignsToTrackFromApp,
       {LatLng? etaFrom,
       bool? calculateETA,

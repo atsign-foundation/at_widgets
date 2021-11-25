@@ -59,6 +59,27 @@ class SendLocationNotification {
     findAtSignsToShareLocationWith();
   }
 
+  bool ifLocationDataAlreadyExists(LocationDataModel _newLocationDataModel) {
+    if (SendLocationNotification()
+            .allAtsignsLocationData[_newLocationDataModel.receiver] !=
+        null) {
+      /// don't add and send again if already present
+      var _receiverLocationDataModel = SendLocationNotification()
+          .allAtsignsLocationData[_newLocationDataModel.receiver]!;
+
+      if (_newLocationDataModel.locationSharingFor.keys.isEmpty) {
+        return false;
+      }
+
+      var _id = _newLocationDataModel.locationSharingFor.keys.first;
+      if (_receiverLocationDataModel.locationSharingFor[_id] != null) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 // TODO: write a function to compare new data with saved ones and remove the expired data.
 
   getAllLocationShareKeys() async {
@@ -316,6 +337,28 @@ class SendLocationNotification {
     if (atsignsToDelete.isNotEmpty) {
       await sendNull(atsignsToDelete);
     }
+  }
+
+  updateExistingLocationDataModel(
+      List<LocationDataModel> _newLocationDataModel) async {
+    List<String> _atsignsUpdated = [];
+    for (var _tempLocationDataModel in _newLocationDataModel) {
+      if (ifLocationDataAlreadyExists(_tempLocationDataModel)) {
+        allAtsignsLocationData[_tempLocationDataModel.receiver]!
+            .locationSharingFor = {
+          ...allAtsignsLocationData[_tempLocationDataModel.receiver]!
+              .locationSharingFor,
+          ..._tempLocationDataModel.locationSharingFor,
+        };
+
+        if (!_atsignsUpdated.contains(_tempLocationDataModel.receiver)) {
+          _atsignsUpdated.add(_tempLocationDataModel.receiver);
+        }
+      }
+    }
+
+    await SendLocationNotification()
+        .sendLocationAfterDataUpdate(_atsignsUpdated);
   }
 
   sendLocationAfterDataUpdate(List<String> atsignsUpdated) async {

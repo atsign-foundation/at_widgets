@@ -268,7 +268,8 @@ class KeyStreamService {
         var _tempLocationDataModel = SendLocationNotification()
             .locationNotificationModelToLocationDataModel(locationData);
 
-        if (ifLocationDataAlreadyExists(_tempLocationDataModel)) {
+        if (SendLocationNotification()
+            .ifLocationDataAlreadyExists(_tempLocationDataModel)) {
           SendLocationNotification()
               .allAtsignsLocationData[locationData.receiver!]!
               .locationSharingFor = {
@@ -294,28 +295,6 @@ class KeyStreamService {
             isSharing: locationData.isSharing);
       }
     }
-  }
-
-  bool ifLocationDataAlreadyExists(LocationDataModel _newLocationDataModel) {
-    if (SendLocationNotification()
-            .allAtsignsLocationData[_newLocationDataModel.receiver] !=
-        null) {
-      /// don't add and send again if already present
-      var _receiverLocationDataModel = SendLocationNotification()
-          .allAtsignsLocationData[_newLocationDataModel.receiver]!;
-
-      if (_newLocationDataModel.locationSharingFor.keys.isEmpty) {
-        return false;
-      }
-
-      //// TODO: Might be wrong
-      var _id = _newLocationDataModel.locationSharingFor.keys.first;
-      if (_receiverLocationDataModel.locationSharingFor[_id] != null) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   /// Removes a notification from list

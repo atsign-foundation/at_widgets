@@ -244,7 +244,7 @@ class EventKeyStreamService {
       {Map<dynamic, dynamic>? tags,
       String? tagOfAtsign,
       bool updateLatLng = false,
-      bool updateOnlyCreator = false}) {
+      bool updateOnlyCreator = false}) async {
     String neweventDataKeyId;
     neweventDataKeyId = eventData.key!
         .split('${MixedConstants.CREATE_EVENT}-')[1]
@@ -283,6 +283,10 @@ class EventKeyStreamService {
         allEventNotifications[i].eventNotificationModel!.key =
             allEventNotifications[i].key;
 
+        await updateLocationDataForExistingEvent(eventData);
+
+        break;
+
         // LocationService().updateEventWithNewData(
         //     allHybridNotifications[i].eventNotificationModel);
 
@@ -291,6 +295,101 @@ class EventKeyStreamService {
       }
     }
     notifyListeners();
+  }
+
+  /// TODO: Remove members from event, yet to be added
+  updateLocationDataForExistingEvent(EventNotificationModel eventData) async {
+    var _allAtsigns = getAtsignsFromEvent(eventData);
+    List<String> _atsignsToSend = [];
+
+    for (var _atsign in _allAtsigns) {
+      if (SendLocationNotification().allAtsignsLocationData[_atsign] != null) {
+        var _locationSharingForMap =
+            SendLocationNotification().allAtsignsLocationData[_atsign];
+        var _fromAndTo = getFromAndToForEvent(eventData);
+
+        var _locFor = _locationSharingForMap!
+            .locationSharingFor[trimAtsignsFromKey(eventData.key!)];
+
+        if (_locFor != null) {
+          if (_locFor.from != _fromAndTo['from']) {
+            SendLocationNotification()
+                .allAtsignsLocationData[_atsign]!
+                .locationSharingFor[trimAtsignsFromKey(eventData.key!)]!
+                .from = _fromAndTo['from'];
+
+            if (!_atsignsToSend.contains(_atsign)) {
+              _atsignsToSend.add(_atsign);
+            }
+          }
+          if (_locFor.to != _fromAndTo['to']) {
+            SendLocationNotification()
+                .allAtsignsLocationData[_atsign]!
+                .locationSharingFor[trimAtsignsFromKey(eventData.key!)]!
+                .to = _fromAndTo['to'];
+
+            if (!_atsignsToSend.contains(_atsign)) {
+              _atsignsToSend.add(_atsign);
+            }
+          }
+
+          continue;
+        }
+      }
+
+      /// add if doesn not exist
+      var _newLocationDataModel =
+          eventNotificationToLocationDataModel(eventData, [_atsign])[0];
+
+      /// if exists, then get booleans from some already existing data
+      for (var _existingAtsign in _allAtsigns) {
+        if ((SendLocationNotification()
+                    .allAtsignsLocationData[_existingAtsign] !=
+                null) &&
+            (SendLocationNotification()
+                    .allAtsignsLocationData[_existingAtsign]!
+                    .locationSharingFor[trimAtsignsFromKey(eventData.key!)] !=
+                null)) {
+          var _locFor = SendLocationNotification()
+              .allAtsignsLocationData[_existingAtsign]!
+              .locationSharingFor[trimAtsignsFromKey(eventData.key!)];
+
+          _newLocationDataModel
+              .locationSharingFor[trimAtsignsFromKey(eventData.key!)]!
+              .isAccepted = _locFor!.isAccepted;
+          _newLocationDataModel
+              .locationSharingFor[trimAtsignsFromKey(eventData.key!)]!
+              .isExited = _locFor.isExited;
+          _newLocationDataModel
+              .locationSharingFor[trimAtsignsFromKey(eventData.key!)]!
+              .isSharing = _locFor.isSharing;
+
+          break;
+        }
+      }
+
+      /// add/append accordingly
+      if (SendLocationNotification().allAtsignsLocationData[_atsign] != null) {
+        /// if atsigns exists append locationSharingFor
+        SendLocationNotification()
+            .allAtsignsLocationData[_atsign]!
+            .locationSharingFor = {
+          ...SendLocationNotification()
+              .allAtsignsLocationData[_atsign]!
+              .locationSharingFor,
+          ..._newLocationDataModel.locationSharingFor,
+        };
+      } else {
+        SendLocationNotification().allAtsignsLocationData[_atsign] =
+            _newLocationDataModel;
+      }
+
+      if (!_atsignsToSend.contains(_atsign)) {
+        _atsignsToSend.add(_atsign);
+      }
+    }
+    await SendLocationNotification()
+        .sendLocationAfterDataUpdate(_atsignsToSend);
   }
 
   bool isEventSharedWithMe(EventNotificationModel eventData) {

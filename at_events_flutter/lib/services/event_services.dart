@@ -124,15 +124,9 @@ class EventService {
   sendEventNotification() async {
     try {
       var eventNotification = eventNotificationModel!;
-      eventNotification.isUpdate = false;
-      eventNotification.isSharing = true;
 
-      eventNotification.key =
-          'createevent-${DateTime.now().microsecondsSinceEpoch}';
       eventNotification.atsignCreator =
           atClientManager.atClient.getCurrentAtSign();
-      var notification = EventNotificationModel.convertEventNotificationToJson(
-          EventService().eventNotificationModel!);
 
       print('shared contact atsigns:$selectedContactsAtSigns');
 
@@ -140,8 +134,15 @@ class EventService {
         ..metadata = Metadata()
         ..metadata!.ttr = -1
         ..metadata!.ccd = true
-        ..key = eventNotification.key
+        ..key = 'createevent-${DateTime.now().microsecondsSinceEpoch}'
         ..sharedBy = eventNotification.atsignCreator;
+
+      eventNotification.isUpdate = false;
+      eventNotification.isSharing = true;
+      eventNotification.key = atKey.key;
+
+      var notification = EventNotificationModel.convertEventNotificationToJson(
+          EventService().eventNotificationModel!);
 
       print('key: ${atKey.key}');
 
