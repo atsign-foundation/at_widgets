@@ -126,6 +126,9 @@ class SharingLocationService {
         ..long = 12
         ..receiver = atsign
         ..from = DateTime.now()
+        ..isAccepted = true
+        ..isExited = false
+        ..isSharing = true
         ..isAcknowledgment = isAcknowledgment;
 
       if ((minutes != null)) {
@@ -140,7 +143,7 @@ class SharingLocationService {
       print('sendLocationNotification:$result');
 
       if (result) {
-        await KeyStreamService().addDataToList(locationNotificationModel);
+        KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
     } catch (e) {

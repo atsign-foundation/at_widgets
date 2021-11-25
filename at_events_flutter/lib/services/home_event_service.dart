@@ -76,9 +76,9 @@ class HomeEventService {
 
     if (!_eventInfo.isAccepted) {
       return 'Action required';
+    } else {
+      return '';
     }
-
-    return 'Action required';
 
     // var currentAtsign = AtEventNotificationListener()
     //     .atClientManager

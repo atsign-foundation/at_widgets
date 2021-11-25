@@ -214,7 +214,8 @@ class KeyStreamService {
   }
 
   /// Updates any [KeyLocationModel] data for updated data
-  void mapUpdatedLocationDataToWidget(LocationNotificationModel locationData) {
+  Future<void> mapUpdatedLocationDataToWidget(
+      LocationNotificationModel locationData) async {
     String newLocationDataKeyId;
     if (locationData.key!.contains(MixedConstants.SHARE_LOCATION)) {
       newLocationDataKeyId =
@@ -245,16 +246,17 @@ class KeyStreamService {
     // Update location sharing
     if ((locationData.isSharing) && (locationData.isAccepted)) {
       if (locationData.atsignCreator == currentAtSign) {
-        SendLocationNotification().addMember(SendLocationNotification()
+        await SendLocationNotification().addMember(SendLocationNotification()
             .locationNotificationModelToLocationDataModel(locationData));
       }
     } else {
       //TODO: verify receiver
       if (compareAtSign(locationData.atsignCreator!, currentAtSign!)) {
-        SendLocationNotification().removeMember(
+        await SendLocationNotification().removeMember(
             locationData.key!, [locationData.receiver!],
             isExited: locationData.isExited,
-            isAccepted: locationData.isAccepted);
+            isAccepted: locationData.isAccepted,
+            isSharing: locationData.isSharing);
       }
     }
   }
@@ -313,7 +315,7 @@ class KeyStreamService {
       if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==
           currentAtSign) {
         // ignore: unawaited_futures
-        SendLocationNotification().addMember(SendLocationNotification()
+        await SendLocationNotification().addMember(SendLocationNotification()
             .locationNotificationModelToLocationDataModel(
                 tempHyridNotificationModel.locationNotificationModel!));
       }

@@ -58,6 +58,7 @@ class _MapScreenState extends State<MapScreen> {
                 calculateETA: true,
                 addCurrentUserMarker: true,
                 focusMapOn: widget.userListenerKeyword!.atsignCreator,
+                notificationID: widget.userListenerKeyword!.key,
                 // etaFrom: LatLng(44, -112),
                 // textForCenter: 'Final',
               ),

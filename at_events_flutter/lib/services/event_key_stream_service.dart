@@ -184,8 +184,9 @@ class EventKeyStreamService {
       {String? receivedkey}) async {
     /// with rSDK we can get previous notification, this will restrict us to add one notification twice
     for (var _eventNotification in allEventNotifications) {
-      if (_eventNotification.eventNotificationModel!.key ==
-          eventNotificationModel.key) {
+      if (_eventNotification.eventNotificationModel != null &&
+          _eventNotification.eventNotificationModel!.key ==
+              eventNotificationModel.key) {
         return;
       }
     }

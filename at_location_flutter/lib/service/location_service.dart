@@ -5,6 +5,7 @@ import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -183,7 +184,8 @@ class LocationService {
   /// called when a user stops sharing his location
   void removeUser(String? atsign) {
     if ((atsignsToTrack != null) && (hybridUsersList.isNotEmpty)) {
-      hybridUsersList.removeWhere((element) => element!.displayName == atsign);
+      hybridUsersList.removeWhere(
+          (element) => compareAtSign(element!.displayName!, atsign!));
       if (!_atHybridUsersController.isClosed) {
         _atHybridUsersController.add(hybridUsersList);
       }
@@ -200,6 +202,11 @@ class LocationService {
         index = hybridUsersList.indexOf(hybridUser);
       }
     });
+    if (user.latLng == null) {
+      print('${user.displayName} user.latLng = null');
+      return;
+    }
+
     if (contains) {
       await addDetails(user, index: index);
     } else {

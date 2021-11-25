@@ -264,7 +264,7 @@ class SendLocationNotification {
     }
   }
 
-  void removeMember(String inviteId, List<String> atsignsToRemove,
+  Future<void> removeMember(String inviteId, List<String> atsignsToRemove,
       {bool isSharing = false,
       required bool isExited,
       required bool isAccepted}) async {
@@ -444,17 +444,18 @@ class SendLocationNotification {
 
       locationData.lastUpdatedAt = DateTime.now();
 
-      bool _isSharingLocation = false;
-      locationData.locationSharingFor.forEach((key, value) {
-        if ((_isSharingLocation) && (value.isSharing)) {
-          _isSharingLocation = true;
-        }
-      });
+      //// TODo: Uncomment if latLng should be null
+      // bool _isSharingLocation = false;
+      // locationData.locationSharingFor.forEach((key, value) {
+      //   if ((_isSharingLocation) && (value.isSharing)) {
+      //     _isSharingLocation = true;
+      //   }
+      // });
 
-      if (!_isSharingLocation) {
-        locationData.lat = null;
-        locationData.long = null;
-      }
+      // if (!_isSharingLocation) {
+      //   locationData.lat = null;
+      //   locationData.long = null;
+      // }
 
       try {
         print('locationData.toJson() : ${locationData.toJson()}');
@@ -545,8 +546,8 @@ class SendLocationNotification {
     return LocationDataModel(
       {
         trimAtsignsFromKey(locationNotificationModel.key!): LocationSharingFor(
-            locationNotificationModel.from!,
-            locationNotificationModel.to!,
+            locationNotificationModel.from,
+            locationNotificationModel.to,
             LocationSharingType.P2P,
             locationNotificationModel.isAccepted,
             locationNotificationModel.isExited,

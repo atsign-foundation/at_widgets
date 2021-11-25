@@ -166,15 +166,15 @@ class AtLocationNotificationListener {
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
-        if (locationData.rePrompt) {
-          await showMyDialog(fromAtSign, locationData);
-        }
+        // if (locationData.rePrompt) {
+        //   await showMyDialog(fromAtSign, locationData);
+        // }
       } else {
         var _result = await KeyStreamService()
             .addDataToList(locationData, receivedkey: notificationKey);
-        if (_result is KeyLocationModel) {
-          await showMyDialog(fromAtSign, locationData);
-        }
+        // if (_result is KeyLocationModel) {
+        //   await showMyDialog(fromAtSign, locationData);
+        // }
       }
       return;
     }

@@ -10,6 +10,10 @@ class NotifyAndPut {
   Future<bool> notifyAndPut(AtKey atKey, dynamic value,
       {bool saveDataIfUndelivered = false}) async {
     try {
+      /// because .notify and .put will append the namespace
+      /// and we dont want atKey.namespace.namespace
+      atKey = removeNamespaceFromKey(atKey);
+
       if (!atKey.sharedBy!.contains('@')) {
         atKey.sharedBy = '@' + atKey.sharedBy!;
       }
@@ -31,6 +35,10 @@ class NotifyAndPut {
 
       if ((saveDataIfUndelivered) ||
           (result.notificationStatusEnum == NotificationStatusEnum.delivered)) {
+        /// because .notify and .put will append the namespace
+        /// and we dont want atKey.namespace.namespace
+        atKey = removeNamespaceFromKey(atKey);
+
         atKey.sharedWith = null;
         await AtClientManager.getInstance().atClient.put(
               atKey,
@@ -43,5 +51,39 @@ class NotifyAndPut {
       print('Error in notifyAndPut $e');
       return false;
     }
+  }
+
+  AtKey removeNamespaceFromKey(AtKey atKey) {
+    print('namespace: ' +
+        (AtClientManager.getInstance().atClient.getPreferences()!.namespace ??
+            ''));
+    if (AtClientManager.getInstance().atClient.getPreferences()!.namespace !=
+        null) {
+      if (atKey.key!.contains('.' +
+          AtClientManager.getInstance()
+              .atClient
+              .getPreferences()!
+              .namespace!)) {
+        atKey.key = atKey.key!.replaceAll(
+            ('.' +
+                AtClientManager.getInstance()
+                    .atClient
+                    .getPreferences()!
+                    .namespace!),
+            '');
+      }
+    }
+
+    return atKey;
+  }
+
+  String removeNamespaceFromString(String _id) {
+    var _namespace =
+        AtClientManager.getInstance().atClient.getPreferences()!.namespace;
+    if ((_namespace != null) && (_id.contains('.' + _namespace))) {
+      _id = _id.replaceAll(('.' + _namespace), '');
+    }
+
+    return _id;
   }
 }

@@ -4,6 +4,7 @@ import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
+import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
@@ -105,6 +106,8 @@ bool compareAtSign(String atsign1, String atsign2) {
 /// input => '@25antwilling:sharelocation-1637156978786327@26juststay' or 'sharelocation-1637156978786327'
 /// output => sharelocation-1637156978786327
 String trimAtsignsFromKey(String key) {
+  key = NotifyAndPut().removeNamespaceFromString(key);
+
   key = key.replaceAll('cached:', '');
 
   if (key.contains(':')) {

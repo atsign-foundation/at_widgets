@@ -232,6 +232,7 @@ class EventService {
   // ignore: always_declare_return_types
   createContactListFromGroupMembers() {
     selectedContacts = [];
+    selectedContactsAtSigns = [];
     for (var contact
         in EventService().eventNotificationModel!.group!.members!) {
       selectedContacts!.add(contact);

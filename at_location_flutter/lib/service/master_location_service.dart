@@ -68,6 +68,10 @@ class MasterLocationService {
                 _locationSharingFor.to != null) &&
             (DateTime.now().isAfter(_locationSharingFor.from!)) &&
             (DateTime.now().isBefore(_locationSharingFor.to!))) {
+          if (_allReceivedUsersList[atsign]!.latLng == null) {
+            print('latLng null for $atsign');
+            return null;
+          }
           return _allReceivedUsersList[atsign];
         }
       }
@@ -161,9 +165,9 @@ class MasterLocationService {
   void updateHybridList(LocationDataModel _newUser) async {
     var contains = _allReceivedUsersList[_newUser.sender] != null;
 
-    _locationReceivedData[_newUser.sender] = _newUser;
-
     if (!contains) {
+      _locationReceivedData[_newUser.sender] = _newUser;
+
       print('!contains from main app');
       var _image = await getImageOfAtsignNew(_newUser.sender);
 
@@ -178,6 +182,15 @@ class MasterLocationService {
       allReceivedUsersSink.add(_allReceivedUsersList);
       LocationService().newList(_newUser.sender);
     } else {
+      /// don't add past data
+      if (_locationReceivedData[_newUser.sender]!
+          .lastUpdatedAt
+          .isBefore(_newUser.lastUpdatedAt)) {
+        _locationReceivedData[_newUser.sender] = _newUser;
+      } else {
+        return;
+      }
+
       print('contains from main app');
 
       _allReceivedUsersList[_newUser.sender]!.latLng = _newUser.getLatLng;
