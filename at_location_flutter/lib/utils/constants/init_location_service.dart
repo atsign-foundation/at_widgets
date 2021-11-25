@@ -90,6 +90,7 @@ void deleteAllLocationData() {
 AtKey getAtKey(String regexKey) {
   var atKey = AtKey.fromString(regexKey);
   atKey.metadata!.ttr = -1;
+  atKey.metadata!.ccd = true;
   return atKey;
 }
 

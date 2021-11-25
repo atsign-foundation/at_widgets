@@ -10,6 +10,7 @@ import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
 import 'at_location_notification_listener.dart';
 import 'key_stream_service.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
 class RequestLocationService {
   static final RequestLocationService _singleton =
@@ -321,10 +322,9 @@ class RequestLocationService {
 
     locationNotificationModel.isAcknowledgment = true;
 
-    var result =
-        await AtLocationNotificationListener().atClientInstance!.delete(
-              key,
-            );
+    var result = await AtClientManager.getInstance().atClient.delete(
+          key,
+        );
     print('$key delete operation $result');
 
     if (result) {

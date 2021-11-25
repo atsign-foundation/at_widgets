@@ -10,6 +10,7 @@ import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'at_location_notification_listener.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
 class SharingLocationService {
   static final SharingLocationService _singleton =
@@ -303,10 +304,9 @@ class SharingLocationService {
 
       locationNotificationModel.isAcknowledgment = true;
 
-      var result =
-          await AtLocationNotificationListener().atClientInstance!.delete(
-                key,
-              );
+      var result = await AtClientManager.getInstance().atClient.delete(
+            key,
+          );
       if (result) {
         KeyStreamService().removeData(key.key);
       }
@@ -326,10 +326,9 @@ class SharingLocationService {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);
-        var result =
-            await AtLocationNotificationListener().atClientInstance!.delete(
-                  atKey,
-                );
+        var result = await AtClientManager.getInstance().atClient.delete(
+              atKey,
+            );
         print('$key is deleted ? $result');
       }
     });
