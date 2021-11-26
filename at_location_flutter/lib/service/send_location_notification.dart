@@ -221,13 +221,14 @@ class SendLocationNotification {
     locationPromptDialog = _locationPrompt;
   }
 
+  /// if state changes then we will send update in next round of location sharing
   void setMasterSwitchState(bool _state) {
     masterSwitchState = _state;
-    if (_state) {
-      findAtSignsToShareLocationWith();
-    } else {
-      deleteAllLocationKey();
-    }
+    // if (_state) {
+    //   findAtSignsToShareLocationWith();
+    // } else {
+    //   deleteAllLocationKey();
+    // }
   }
 
   /// we are assuming that the _newLocationDataModel has a new share id
@@ -262,10 +263,10 @@ class SendLocationNotification {
 
     var myLocation = await getMyLocation();
     if (myLocation != null) {
-      if (masterSwitchState) {
-        await prepareLocationDataAndSend(
-            locationDataModel.receiver, locationDataModel, myLocation);
-      } else {
+      await prepareLocationDataAndSend(
+          locationDataModel.receiver, locationDataModel, myLocation);
+
+      if (!masterSwitchState) {
         /// method from main app
         if (locationPromptDialog != null) {
           // _appendLocationDataModelData([locationDataModel]);
@@ -486,6 +487,11 @@ class SendLocationNotification {
       locationData.long = myLocation?.longitude;
 
       locationData.lastUpdatedAt = DateTime.now();
+
+      if (!masterSwitchState) {
+        locationData.lat = null;
+        locationData.long = null;
+      }
 
       //// TODo: Uncomment if latLng should be null
       // bool _isSharingLocation = false;
