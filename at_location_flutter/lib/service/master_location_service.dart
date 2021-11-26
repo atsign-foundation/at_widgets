@@ -9,6 +9,7 @@ import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_data_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
@@ -199,6 +200,9 @@ class MasterLocationService {
       allReceivedUsersSink.add(_allReceivedUsersList);
       LocationService().newList(_newUser.sender);
     }
+
+    /// also update UI
+    KeyStreamService().notifyListeners();
   }
 
   void deleteReceivedData(String atsign) {

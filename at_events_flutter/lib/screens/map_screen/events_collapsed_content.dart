@@ -25,8 +25,8 @@ class EventsCollapsedContent extends StatefulWidget {
 }
 
 class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
-  bool? isExited = false;
-  bool isSharingEvent = false, isAdmin = false;
+  bool isExited = false;
+  bool isSharingEvent = true, isAdmin = false, isCancelled = false;
   var currentAtSign = AtEventNotificationListener().currentAtSign;
 
   late EventNotificationModel eventListenerKeyword;
@@ -42,8 +42,12 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
   @override
   Widget build(BuildContext context) {
     var _myEventInfo = HomeEventService().getMyEventInfo(eventListenerKeyword);
-    isSharingEvent = _myEventInfo!.isSharing;
-    isExited = _myEventInfo.isExited;
+    isCancelled = HomeEventService().isEventCancelled(eventListenerKeyword);
+
+    if (_myEventInfo != null) {
+      isSharingEvent = _myEventInfo.isSharing;
+      isExited = _myEventInfo.isExited;
+    }
 
     return Container(
       height: 431,
@@ -188,6 +192,16 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                 Switch(
                     value: isSharingEvent!,
                     onChanged: (value) async {
+                      if (isCancelled || isExited) {
+                        CustomToast().show(
+                            isCancelled ? 'Event cancelled' : 'Event exited',
+                            AtEventNotificationListener()
+                                .navKey!
+                                .currentContext,
+                            isError: true);
+                        return;
+                      }
+
                       LoadingDialog().show(
                           text: isAdmin!
                               ? 'Updating data'
@@ -255,9 +269,20 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                         //     }
                         //   }
                         // });
-                        if (!(isExited!)) {
+
+                        if (isCancelled) {
+                          CustomToast().show(
+                              'Event cancelled',
+                              AtEventNotificationListener()
+                                  .navKey!
+                                  .currentContext,
+                              isError: true);
+                          return;
+                        }
+
+                        if (!isExited) {
                           //if member has not exited then only following code will run.
-                          LoadingDialog().show();
+                          LoadingDialog().show(text: 'Exiting');
                           try {
                             var result =
                                 await EventKeyStreamService().actionOnEvent(
@@ -321,9 +346,9 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                 ? Expanded(
                     child: InkWell(
                       onTap: () async {
-                        if (!eventListenerKeyword.isCancelled!) {
+                        if (!isCancelled) {
                           LoadingDialog().show(
-                              text: isAdmin!
+                              text: isAdmin
                                   ? 'Updating data'
                                   : 'Sending request to update data');
                           try {
@@ -365,9 +390,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                         }
                       },
                       child: Text(
-                        eventListenerKeyword.isCancelled!
-                            ? 'Event Cancelled'
-                            : 'Cancel Event',
+                        isCancelled ? 'Event Cancelled' : 'Cancel Event',
                         style: CustomTextStyles().orange16,
                       ),
                     ),

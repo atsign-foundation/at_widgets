@@ -17,7 +17,7 @@ class HomeEventService {
   factory HomeEventService() => _instance;
 
   bool isActionRequired(EventNotificationModel event) {
-    if (event.isCancelled!) return true;
+    if (isEventCancelled(event)) return true;
 
     var _eventInfo = getMyEventInfo(event);
 
@@ -61,7 +61,7 @@ class HomeEventService {
   }
 
   String getActionString(EventNotificationModel event, bool haveResponded) {
-    if (event.isCancelled!) return 'Cancelled';
+    if (isEventCancelled(event)) return 'Cancelled';
     var label = 'Action required';
 
     var _eventInfo = getMyEventInfo(event);
@@ -144,7 +144,7 @@ class HomeEventService {
   onEventModelTap(
       EventNotificationModel eventNotificationModel, bool haveResponded) {
     if (isActionRequired(eventNotificationModel) &&
-        !eventNotificationModel.isCancelled!) {
+        !isEventCancelled(eventNotificationModel)) {
       if (haveResponded) {
         eventNotificationModel.isUpdate = true;
         EventsMapScreenData().moveToEventScreen(eventNotificationModel);
@@ -221,23 +221,41 @@ class HomeEventService {
   }
 
   /// will return for event's for which i am creator
-  EventInfo? getOtherMemberEventInfo(String _id) {
+  EventInfo? getOtherMemberEventInfo(String _id, String _atsign) {
     _id = trimAtsignsFromKey(_id);
 
-    for (var key in MasterLocationService().locationReceivedData.entries) {
-      if (MasterLocationService()
-              .locationReceivedData[key.key]!
-              .locationSharingFor[_id] !=
-          null) {
-        var _locationSharingFor = MasterLocationService()
-            .locationReceivedData[key.key]!
-            .locationSharingFor[_id]!;
+    // for (var key in MasterLocationService().locationReceivedData.entries) {
+    if ((MasterLocationService().locationReceivedData[_atsign] != null) &&
+        (MasterLocationService()
+                .locationReceivedData[_atsign]!
+                .locationSharingFor[_id] !=
+            null)) {
+      var _locationSharingFor = MasterLocationService()
+          .locationReceivedData[_atsign]!
+          .locationSharingFor[_id]!;
 
-        return EventInfo(
-            isSharing: _locationSharingFor.isSharing,
-            isExited: _locationSharingFor.isExited,
-            isAccepted: _locationSharingFor.isAccepted);
-      }
+      return EventInfo(
+          isSharing: _locationSharingFor.isSharing,
+          isExited: _locationSharingFor.isExited,
+          isAccepted: _locationSharingFor.isAccepted);
+    }
+    // }
+  }
+
+  bool isEventCancelled(EventNotificationModel _event) {
+    EventInfo? _creatorInfo;
+    if (compareAtSign(_event.atsignCreator!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      _creatorInfo = getMyEventInfo(_event);
+    } else {
+      _creatorInfo =
+          getOtherMemberEventInfo(_event.key!, _event.atsignCreator!);
+    }
+
+    if (_creatorInfo != null) {
+      return _creatorInfo.isExited;
+    } else {
+      return _event.isCancelled!;
     }
   }
 }
