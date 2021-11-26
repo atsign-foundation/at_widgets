@@ -69,8 +69,12 @@ class LocationSharingFor {
       this.isAccepted, this.isExited, this.isSharing);
 
   LocationSharingFor.fromJson(Map<String, dynamic> data) {
-    from = DateTime.parse(data['from']).toLocal();
-    to = DateTime.parse(data['to']).toLocal();
+    from = (data['from'] != null && data['from'] != 'null')
+        ? DateTime.parse(data['from']).toLocal()
+        : null;
+    to = (data['to'] != null && data['to'] != 'null')
+        ? DateTime.parse(data['to']).toLocal()
+        : null;
     locationSharingType =
         data['locationSharingType'] == 'LocationSharingType.Event'
             ? LocationSharingType.Event

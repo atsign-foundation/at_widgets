@@ -288,11 +288,13 @@ class KeyStreamService {
     } else {
       //TODO: verify receiver
       if (compareAtSign(locationData.atsignCreator!, currentAtSign!)) {
+        //// TODO: ifLocationDataAlreadyExists remove
         await SendLocationNotification().removeMember(
             locationData.key!, [locationData.receiver!],
             isExited: locationData.isExited,
             isAccepted: locationData.isAccepted,
             isSharing: locationData.isSharing);
+        //// TODO: Else add it
       }
     }
   }
@@ -321,7 +323,9 @@ class KeyStreamService {
     notifyListeners();
     // Remove location sharing
     //TODO: verify receiver
-    if (locationNotificationModel != null) {
+    if (locationNotificationModel != null)
+    // && (compareAtSign(locationNotificationModel.atsignCreator!, currentAtSign!))
+    {
       SendLocationNotification().removeMember(key, [atsignToDelete],
           isExited: true, isAccepted: false, isSharing: false);
     }
@@ -357,8 +361,6 @@ class KeyStreamService {
         locationNotificationModel;
     allLocationNotifications.add(tempHyridNotificationModel);
 
-    notifyListeners();
-
     if ((tempHyridNotificationModel.locationNotificationModel!.isSharing)) {
       if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==
           currentAtSign) {
@@ -368,6 +370,9 @@ class KeyStreamService {
                 tempHyridNotificationModel.locationNotificationModel!));
       }
     }
+
+    notifyListeners();
+
     return tempHyridNotificationModel;
   }
 

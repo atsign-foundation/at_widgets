@@ -44,8 +44,13 @@ Future<void> initializeLocationService(GlobalKey<NavigatorState> navKey,
     print('Error in initializeLocationService $e');
   }
 
+  /// first get all location-notify keys, mine and others
   SendLocationNotification().reset();
   await SendLocationNotification().getAllLocationShareKeys();
+  await MasterLocationService().init(
+      AtClientManager.getInstance().atClient.getCurrentAtSign()!,
+      AtClientManager.getInstance().atClient,
+      newGetAtValueFromMainApp: getAtValue);
 
   AtLocationNotificationListener().init(navKey, rootDomain, showDialogBox,
       newGetAtValueFromMainApp: getAtValue, isEventInUse: isEventInUse);
@@ -150,22 +155,23 @@ LocationInfo? getMyLocationInfo(LocationNotificationModel _event) {
 }
 
 /// will return details of others booleans for this [LocationNotificationModel]
-LocationInfo? getOtherMemberLocationInfo(String _id) {
+LocationInfo? getOtherMemberLocationInfo(String _id, String _atsign) {
   _id = trimAtsignsFromKey(_id);
 
-  for (var key in MasterLocationService().locationReceivedData.entries) {
-    if (MasterLocationService()
-            .locationReceivedData[key.key]!
-            .locationSharingFor[_id] !=
-        null) {
-      var _locationSharingFor = MasterLocationService()
-          .locationReceivedData[key.key]!
-          .locationSharingFor[_id]!;
+  // for (var key in MasterLocationService().locationReceivedData.entries) {
+  if ((MasterLocationService().locationReceivedData[_atsign] != null) &&
+      (MasterLocationService()
+              .locationReceivedData[_atsign]!
+              .locationSharingFor[_id] !=
+          null)) {
+    var _locationSharingFor = MasterLocationService()
+        .locationReceivedData[_atsign]!
+        .locationSharingFor[_id]!;
 
-      return LocationInfo(
-          isSharing: _locationSharingFor.isSharing,
-          isExited: _locationSharingFor.isExited,
-          isAccepted: _locationSharingFor.isAccepted);
-    }
+    return LocationInfo(
+        isSharing: _locationSharingFor.isSharing,
+        isExited: _locationSharingFor.isExited,
+        isAccepted: _locationSharingFor.isAccepted);
   }
+  // }
 }

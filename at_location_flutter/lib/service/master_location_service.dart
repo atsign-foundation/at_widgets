@@ -84,8 +84,9 @@ class MasterLocationService {
     }
   }
 
-  void init(String currentAtSignFromApp, AtClient atClientInstanceFromApp,
-      {Function? newGetAtValueFromMainApp}) {
+  Future<void> init(
+      String currentAtSignFromApp, AtClient atClientInstanceFromApp,
+      {Function? newGetAtValueFromMainApp}) async {
     atClientInstance = atClientInstanceFromApp;
     currentAtSign = currentAtSignFromApp;
     _allReceivedUsersList = {};
@@ -98,7 +99,7 @@ class MasterLocationService {
       getAtValueFromMainApp = getAtValue;
     }
 
-    getAllLocationData();
+    await getAllLocationData();
   }
 
   /// get all 'location-notify' data shared with us
@@ -111,8 +112,7 @@ class MasterLocationService {
     }
 
     await Future.forEach(response, (dynamic key) async {
-      if (('@$key'.contains('cached')) &&
-          ('@$key'.contains(AtLocationNotificationListener().currentAtSign!))) {
+      if (('@$key'.contains('cached')) && ('@$key'.contains(currentAtSign!))) {
         var atKey = getAtKey(key);
         AtValue? _atValue = await getAtValueFromMainApp(atKey);
         if ((_atValue != null) && (_atValue.value != null)) {

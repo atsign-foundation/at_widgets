@@ -41,8 +41,6 @@ class AtLocationNotificationListener {
     navKey = navKeyFromMainApp;
     this.showDialogBox = showDialogBox;
     ROOT_DOMAIN = rootDomain;
-    MasterLocationService().init(currentAtSign!, atClientInstance!,
-        newGetAtValueFromMainApp: newGetAtValueFromMainApp);
 
     /// TODO: start monitor from KeyStreamService().getAllNotifications(), so that our list is calculated, and any new/old upcoming notification can be compared
     startMonitor();
@@ -205,6 +203,7 @@ class AtLocationNotificationListener {
           }
         }
       } else {
+        /// if this fails, then all subsequent calls for this locationData will fail
         var _result = await KeyStreamService()
             .addDataToList(locationData, receivedkey: notificationKey);
         if (_result is KeyLocationModel) {

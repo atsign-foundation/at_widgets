@@ -145,7 +145,7 @@ class SharingLocationService {
       print('sendLocationNotification:$result');
 
       if (result) {
-        KeyStreamService().addDataToList(locationNotificationModel);
+        await KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
     } catch (e) {

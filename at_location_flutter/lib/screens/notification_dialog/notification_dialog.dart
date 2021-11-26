@@ -33,6 +33,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
   AtContact? contact;
   Uint8List? image;
   String? locationUserImageToShow;
+  bool loading = false;
 
   @override
   void initState() {
@@ -120,53 +121,65 @@ class _NotificationDialogState extends State<NotificationDialog> {
                     ],
                   ),
                   SizedBox(height: 10.toHeight),
-                  CustomButton(
-                    onPressed: () => () async {
-                      // ignore: unnecessary_statements
-                      ((!widget.locationData!.isRequest)
-                          ? {
-                              print('accept share location'),
-                              SharingLocationService()
-                                  .shareLocationAcknowledgment(
-                                      widget.locationData!, true),
-                              Navigator.of(context).pop(),
-                            }
-                          : {
-                              Navigator.of(context).pop(),
-                              timeSelect(context),
-                            });
-                    }(),
-                    buttonText: 'Yes',
-                    buttonColor: AllColors().Black,
-                    fontColor: AllColors().WHITE,
-                    width: 164.toWidth,
-                    height: 48.toHeight,
-                  ),
+                  loading
+                      ? CircularProgressIndicator()
+                      : CustomButton(
+                          onPressed: () => () async {
+                            // ignore: unnecessary_statements
+                            ((!widget.locationData!.isRequest)
+                                ? {
+                                    //// TODO: put awaits
+                                    print('accept share location'),
+                                    startLoading(),
+                                    await SharingLocationService()
+                                        .shareLocationAcknowledgment(
+                                            widget.locationData!, true),
+                                    stopLoading(),
+                                    Navigator.of(context).pop(),
+                                  }
+                                : {
+                                    startLoading(),
+                                    timeSelect(context),
+                                  });
+                          }(),
+                          buttonText: 'Yes',
+                          buttonColor: AllColors().Black,
+                          fontColor: AllColors().WHITE,
+                          width: 164.toWidth,
+                          height: 48.toHeight,
+                        ),
                   SizedBox(height: 5),
-                  CustomButton(
-                    onPressed: () => () async {
-                      // ignore: unnecessary_statements
-                      ((!widget.locationData!.isRequest)
-                          ? {
-                              print('accept share location'),
-                              SharingLocationService()
-                                  .shareLocationAcknowledgment(
-                                      widget.locationData!, false),
-                              Navigator.of(context).pop(),
-                            }
-                          : {
-                              RequestLocationService()
-                                  .requestLocationAcknowledgment(
-                                      widget.locationData!, false),
-                              Navigator.of(context).pop(),
-                            });
-                    }(),
-                    buttonText: 'No',
-                    buttonColor: AllColors().WHITE,
-                    fontColor: AllColors().Black,
-                    width: 164.toWidth,
-                    height: 48.toHeight,
-                  ),
+                  loading
+                      ? SizedBox()
+                      : CustomButton(
+                          onPressed: () => () async {
+                            // ignore: unnecessary_statements
+                            ((!widget.locationData!.isRequest)
+                                ? {
+                                    print('accept share location'),
+                                    startLoading(),
+                                    await SharingLocationService()
+                                        .shareLocationAcknowledgment(
+                                            widget.locationData!, false),
+                                    stopLoading(),
+                                    Navigator.of(context).pop(),
+                                  }
+                                : {
+                                    startLoading(),
+                                    await RequestLocationService()
+                                        .requestLocationAcknowledgment(
+                                            widget.locationData!, false,
+                                            sendAck: true),
+                                    stopLoading(),
+                                    Navigator.of(context).pop(),
+                                  });
+                          }(),
+                          buttonText: 'No',
+                          buttonColor: AllColors().WHITE,
+                          fontColor: AllColors().Black,
+                          width: 164.toWidth,
+                          height: 48.toHeight,
+                        ),
                 ],
               ),
             ),
@@ -182,20 +195,50 @@ class _NotificationDialogState extends State<NotificationDialog> {
         context,
         TextTileRepeater(
           title: 'How long do you want to share your location for ?',
-          options: ['30 mins', '2 hours', '24 hours', 'Until turned off'],
+          options: [
+            '30 mins', '2 hours', '24 hours',
+            // , 'Until turned off'
+          ],
           onChanged: (value) {
             result = (value == '30 mins'
                 ? 30
                 : (value == '2 hours'
                     ? (2 * 60)
-                    : (value == '24 hours' ? (24 * 60) : null)));
+                    : (value == '24 hours'
+                        ? (24 * 60)
+                        : (value == 'Until turned off' ? (24 * 60) : null))));
           },
         ),
-        350, onSheetCLosed: () {
-      RequestLocationService().requestLocationAcknowledgment(
-          widget.locationData!, true,
-          minutes: result);
+        350, onSheetCLosed: () async {
+      if (result != null) {
+        /// so, that we dont send location when nothing is pressed
+        if (result == (24 * 60)) {
+          result = null;
+        }
+        await RequestLocationService().requestLocationAcknowledgment(
+            widget.locationData!, true,
+            minutes: result, sendAck: true);
+      }
+
+      stopLoading();
+      Navigator.of(context).pop();
       return result;
     });
+  }
+
+  void startLoading() {
+    if (mounted) {
+      setState(() {
+        loading = true;
+      });
+    }
+  }
+
+  void stopLoading() {
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 }

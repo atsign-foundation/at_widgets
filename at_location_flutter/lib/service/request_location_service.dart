@@ -12,6 +12,8 @@ import 'at_location_notification_listener.dart';
 import 'key_stream_service.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 
+import 'send_location_notification.dart';
+
 class RequestLocationService {
   static final RequestLocationService _singleton =
       RequestLocationService._internal();
@@ -114,13 +116,18 @@ class RequestLocationService {
         return null;
       }
 
+      var minutes = 24 * 60; // for a day
+      // var minutes = 20; // for an hour
+
       var atKey = newAtKey(60000,
-          'requestlocation-${DateTime.now().microsecondsSinceEpoch}', atsign);
+          'requestlocation-${DateTime.now().microsecondsSinceEpoch}', atsign,
+          ttl: (minutes * 60000));
 
       var locationNotificationModel = LocationNotificationModel()
         ..atsignCreator = atsign
         ..key = atKey.key
         ..isRequest = true
+        ..isSharing = true
         ..receiver = AtLocationNotificationListener()
             .atClientInstance!
             .getCurrentAtSign();
@@ -146,7 +153,8 @@ class RequestLocationService {
   Future<bool> requestLocationAcknowledgment(
       LocationNotificationModel originalLocationNotificationModel,
       bool isAccepted,
-      {int? minutes,
+      {bool sendAck = false,
+      int? minutes,
       bool? isSharing}) async {
     try {
       var locationNotificationModel = LocationNotificationModel.fromJson(
@@ -179,30 +187,32 @@ class RequestLocationService {
             DateTime.now().add(Duration(minutes: minutes));
       }
 
-      var result = await NotifyAndPut().notifyAndPut(
-        atKey,
-        LocationNotificationModel.convertLocationNotificationToJson(
-            locationNotificationModel),
-      );
-      print('requestLocationAcknowledgment $result');
+      bool? result;
 
-      if (result) {
-        CustomToast().show('Request to update data is submitted',
-            AtLocationNotificationListener().navKey.currentContext,
-            isSuccess: true);
+      if (sendAck) {
+        result = await NotifyAndPut().notifyAndPut(
+          atKey,
+          LocationNotificationModel.convertLocationNotificationToJson(
+              locationNotificationModel),
+        );
+        print('requestLocationAcknowledgment $result');
 
-        KeyStreamService().updatePendingStatus(locationNotificationModel);
-      } else {
+        // if ((isSharing != null) && (result) && (!isSharing)) {
+        //   KeyStreamService().removeData(atKey.key);
+        // }
+
+      }
+
+      if (result == false) {
         CustomToast().show('Something went wrong , please try again.',
             AtLocationNotificationListener().navKey.currentContext!,
             isError: true);
+      } else {
+        await KeyStreamService()
+            .mapUpdatedLocationDataToWidget(locationNotificationModel);
       }
 
-      if ((isSharing != null) && (result) && (!isSharing)) {
-        KeyStreamService().removeData(atKey.key);
-      }
-
-      return result;
+      return result ?? true;
     } catch (e) {
       CustomToast().show('Something went wrong , please try again.',
           AtLocationNotificationListener().navKey.currentContext,
@@ -265,8 +275,26 @@ class RequestLocationService {
       );
 
       if (result) {
-        KeyStreamService()
-            .mapUpdatedLocationDataToWidget(locationNotificationModel);
+        /// only update
+        for (var i = 0;
+            i < KeyStreamService().allLocationNotifications.length;
+            i++) {
+          if (KeyStreamService()
+              .allLocationNotifications[i]
+              .locationNotificationModel!
+              .key!
+              .contains(atkeyMicrosecondId)) {
+            KeyStreamService()
+                .allLocationNotifications[i]
+                .locationNotificationModel = locationNotificationModel;
+            // _locationDataNotPresent = false;
+          }
+        }
+        KeyStreamService().notifyListeners();
+
+        //////
+        // KeyStreamService()
+        //     .mapUpdatedLocationDataToWidget(locationNotificationModel);
       }
 
       print('update result - $result');
@@ -297,9 +325,16 @@ class RequestLocationService {
             locationNotificationModel),
       );
 
-      /// TODO: Remove from sendLocationNotification list
+      /// TODO: Update our location key
       print('sendDeleteAck $result');
-      if (result) {}
+      if (result) {
+        await SendLocationNotification().removeMember(
+            trimAtsignsFromKey(locationNotificationModel.key!),
+            [locationNotificationModel.receiver!],
+            isExited: true,
+            isAccepted: false,
+            isSharing: false);
+      }
       return result;
     } catch (e) {
       print('sendDeleteAck error $e');
