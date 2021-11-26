@@ -157,16 +157,19 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                 ],
               ),
             ),
-            // InkWell(
-            //   onTap: () => bottomSheet(
-            //       AtEventNotificationListener().navKey!.currentContext!,
-            //       Participants(),
-            //       422),
-            //   child: Text(
-            //     'See Participants',
-            //     style: CustomTextStyles().orange14,
-            //   ),
-            // ),
+            InkWell(
+              onTap: () => bottomSheet(
+                  AtEventNotificationListener().navKey!.currentContext!,
+                  Participants(
+                    eventListenerKeyword,
+                    key: UniqueKey(),
+                  ),
+                  422),
+              child: Text(
+                'See Participants',
+                style: CustomTextStyles().orange14,
+              ),
+            ),
             Divider(),
             Flexible(
                 child: RichText(
