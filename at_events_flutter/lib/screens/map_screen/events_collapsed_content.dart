@@ -205,10 +205,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                         return;
                       }
 
-                      LoadingDialog().show(
-                          text: isAdmin!
-                              ? 'Updating data'
-                              : 'Sending request to update data');
+                      LoadingDialog().show(text: 'Updating data');
                       try {
                         // if (isAdmin) {
                         //   LocationService().eventListenerKeyword.isSharing =
@@ -226,17 +223,15 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                           isExited: false,
                         );
                         if (result == true) {
-                          if (!isAdmin) {
-                            CustomToast().show(
-                                'Request to update data is submitted',
-                                AtEventNotificationListener()
-                                    .navKey!
-                                    .currentContext,
-                                isSuccess: true);
-                          }
+                          // CustomToast().show(
+                          //     'Request to update data is submitted',
+                          //     AtEventNotificationListener()
+                          //         .navKey!
+                          //         .currentContext,
+                          //     isSuccess: true);
                         } else {
                           CustomToast().show(
-                              'something went wrong , please try again.',
+                              'Something went wrong , please try again.',
                               AtEventNotificationListener()
                                   .navKey!
                                   .currentContext,
@@ -247,7 +242,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                       } catch (e) {
                         print(e);
                         CustomToast().show(
-                            'something went wrong , please try again.',
+                            'Something went wrong , please try again.',
                             AtEventNotificationListener()
                                 .navKey!
                                 .currentContext,
@@ -298,17 +293,17 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                               isSharing: false,
                             );
                             if (result == true) {
-                              if (!isAdmin) {
-                                CustomToast().show(
-                                    'Request to update data is submitted',
-                                    AtEventNotificationListener()
-                                        .navKey!
-                                        .currentContext,
-                                    isSuccess: true);
-                              }
+                              // if (!isAdmin) {
+                              //   CustomToast().show(
+                              //       'Request to update data is submitted',
+                              //       AtEventNotificationListener()
+                              //           .navKey!
+                              //           .currentContext,
+                              //       isSuccess: true);
+                              // }
                             } else {
                               CustomToast().show(
-                                  'something went wrong , please try again.',
+                                  'Something went wrong , please try again.',
                                   AtEventNotificationListener()
                                       .navKey!
                                       .currentContext,
@@ -320,16 +315,16 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                                     .navKey!
                                     .currentContext!)
                                 .pop();
-                            CustomToast().show(
-                                'Request to update data is submitted',
-                                AtEventNotificationListener()
-                                    .navKey!
-                                    .currentContext,
-                                isSuccess: true);
+                            // CustomToast().show(
+                            //     'Request to update data is submitted',
+                            //     AtEventNotificationListener()
+                            //         .navKey!
+                            //         .currentContext,
+                            //     isSuccess: true);
                           } catch (e) {
                             print(e);
                             CustomToast().show(
-                                'something went wrong , please try again.',
+                                'Something went wrong , please try again.',
                                 AtEventNotificationListener()
                                     .navKey!
                                     .currentContext,
@@ -350,10 +345,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                     child: InkWell(
                       onTap: () async {
                         if (!isCancelled) {
-                          LoadingDialog().show(
-                              text: isAdmin
-                                  ? 'Updating data'
-                                  : 'Sending request to update data');
+                          LoadingDialog().show(text: 'Cancelling');
                           try {
                             // await LocationService().onEventCancel();
                             var result =
@@ -368,7 +360,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                             if (result == true) {
                             } else {
                               CustomToast().show(
-                                  'something went wrong , please try again.',
+                                  'Something went wrong , please try again.',
                                   AtEventNotificationListener()
                                       .navKey!
                                       .currentContext,
@@ -383,7 +375,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                           } catch (e) {
                             print(e);
                             CustomToast().show(
-                                'something went wrong , please try again.',
+                                'Something went wrong , please try again.',
                                 AtEventNotificationListener()
                                     .navKey!
                                     .currentContext,
