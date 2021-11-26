@@ -46,6 +46,7 @@ class SendLocationNotification {
   reset() {
     allAtsignsLocationData = {};
     _atsignsToSendLocationwith = [];
+    masterSwitchState = true;
     isEventInUse = false;
     isLocationDataInitialized = false;
     isEventDataInitialized = false;

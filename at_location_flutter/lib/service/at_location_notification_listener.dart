@@ -198,9 +198,11 @@ class AtLocationNotificationListener {
       var locationData =
           LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
-        KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
-        if (locationData.rePrompt) {
-          await showMyDialog(fromAtSign, locationData);
+        if (!(KeyStreamService().isPastNotification(locationData))) {
+          KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
+          if (locationData.rePrompt) {
+            await showMyDialog(fromAtSign, locationData);
+          }
         }
       } else {
         var _result = await KeyStreamService()

@@ -222,7 +222,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                                         .data![markers.indexOf(marker)]!);
                               }),
                           builder: (context, markers) {
-                            return buildMarkerCluster(markers);
+                            return buildMarkerCluster(markers,
+                                eventData: LocationService().centreMarker);
                           },
                         ),
                       ],

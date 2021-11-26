@@ -73,7 +73,8 @@ class SharingLocationService {
     try {
       var alreadyExists = checkForAlreadyExisting(atsign);
       var result;
-      if (alreadyExists[0]) {
+      if ((alreadyExists[0]) &&
+          (!KeyStreamService().isPastNotification(alreadyExists[1]))) {
         var newLocationNotificationModel = LocationNotificationModel.fromJson(
             jsonDecode(
                 LocationNotificationModel.convertLocationNotificationToJson(

@@ -44,6 +44,7 @@ Future<void> initializeLocationService(GlobalKey<NavigatorState> navKey,
     print('Error in initializeLocationService $e');
   }
 
+  SendLocationNotification().reset();
   await SendLocationNotification().getAllLocationShareKeys();
 
   AtLocationNotificationListener().init(navKey, rootDomain, showDialogBox,

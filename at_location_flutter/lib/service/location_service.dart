@@ -24,7 +24,7 @@ class LocationService {
 
   AtClientImpl? atClientInstance;
 
-  HybridModel? eventData;
+  HybridModel? centreMarker;
   HybridModel? myData;
   LatLng? etaFrom;
   String? textForCenter;
@@ -53,6 +53,7 @@ class LocationService {
       Function? showToast,
       String? notificationID}) async {
     hybridUsersList = [];
+    centreMarker = null;
     _atHybridUsersController = StreamController<List<HybridModel?>>.broadcast();
     atsignsToTrack = atsignsToTrackFromApp;
     this.etaFrom = etaFrom;
@@ -72,6 +73,7 @@ class LocationService {
   }
 
   void dispose() {
+    centreMarker = null;
     _atHybridUsersController.close();
     isMapInitialized = false;
   }
@@ -140,12 +142,15 @@ class LocationService {
   }
 
   void addCentreMarker() {
-    var centreMarker = HybridModel(
+    centreMarker = HybridModel(
         displayName: textForCenter, latLng: etaFrom, eta: '', image: null);
-    centreMarker.marker = buildMarker(centreMarker);
+    centreMarker!.marker = buildMarker(centreMarker!);
+    hybridUsersList.add(centreMarker);
 
-    Future.delayed(
-        const Duration(seconds: 2), () => hybridUsersList.add(centreMarker));
+    if (hybridUsersList.isNotEmpty) {
+      Future.delayed(const Duration(seconds: 2),
+          () => _atHybridUsersController.add(hybridUsersList));
+    }
   }
 
   /// called for the first time pckage is entered from main app

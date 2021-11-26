@@ -327,10 +327,23 @@ class KeyStreamService {
     }
   }
 
+  isPastNotification(LocationNotificationModel _locationNotificationModel) {
+    if ((_locationNotificationModel.to != null) &&
+        (_locationNotificationModel.to!.isBefore(DateTime.now()))) {
+      return true;
+    }
+    return false;
+  }
+
   /// Adds new [KeyLocationModel] data for new received notification
   Future<dynamic> addDataToList(
       LocationNotificationModel locationNotificationModel,
       {String? receivedkey}) async {
+    /// so, that we don't add any expired event
+    if (isPastNotification(locationNotificationModel)) {
+      return;
+    }
+
     /// with rSDK we can get previous notification, this will restrict us to add one notification twice
     for (var _locationNotification in allLocationNotifications) {
       if (_locationNotification.locationNotificationModel!.key ==
@@ -388,6 +401,8 @@ class KeyStreamService {
     if (streamAlternative != null) {
       streamAlternative!(allLocationNotifications);
     }
+
+    filterData();
     atNotificationsSink.add(allLocationNotifications);
   }
 }

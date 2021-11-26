@@ -179,9 +179,22 @@ class EventKeyStreamService {
     });
   }
 
+  isPastNotification(EventNotificationModel eventNotificationModel) {
+    if (eventNotificationModel.event!.endTime!.isBefore(DateTime.now())) {
+      return true;
+    }
+
+    return false;
+  }
+
   /// Adds new [EventKeyLocationModel] data for new received notification
   Future<dynamic> addDataToList(EventNotificationModel eventNotificationModel,
       {String? receivedkey}) async {
+    /// so, that we don't add any expired event
+    if (isPastNotification(eventNotificationModel)) {
+      return;
+    }
+
     /// with rSDK we can get previous notification, this will restrict us to add one notification twice
     for (var _eventNotification in allEventNotifications) {
       if (_eventNotification.eventNotificationModel != null &&
