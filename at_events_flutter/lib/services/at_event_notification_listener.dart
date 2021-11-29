@@ -10,6 +10,7 @@ import 'package:at_events_flutter/screens/notification_dialog/event_notification
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
 // import 'package:at_events_flutter/services/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
+import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:flutter/material.dart';
 
 /// Starts monitor and listens for notifications related to this package.
@@ -18,7 +19,7 @@ class AtEventNotificationListener {
   static final _instance = AtEventNotificationListener._();
   factory AtEventNotificationListener() => _instance;
   late AtClientManager atClientManager;
-  bool monitorStarted = false;
+  // bool monitorStarted = false;
   String? currentAtSign;
   GlobalKey<NavigatorState>? navKey;
   // ignore: non_constant_identifier_names
@@ -37,22 +38,22 @@ class AtEventNotificationListener {
   }
 
   Future<bool> startMonitor() async {
-    if (!monitorStarted) {
-      print(
-          'atClientManager.atClient.getPreferences()!.namespace ${atClientManager.atClient.getPreferences()!.namespace}');
-      AtClientManager.getInstance()
-          .notificationService
-          .subscribe(
-              // regex: atClientManager.atClient.getPreferences()!.namespace
-              // '.*'
-              )
-          .listen((notification) {
-        _notificationCallback(notification);
-      });
+    // if (!monitorStarted) {
+    print(
+        'atClientManager.atClient.getPreferences()!.namespace ${atClientManager.atClient.getPreferences()!.namespace}');
+    AtClientManager.getInstance()
+        .notificationService
+        .subscribe(
+            // regex: atClientManager.atClient.getPreferences()!.namespace
+            // '.*'
+            )
+        .listen((notification) {
+      _notificationCallback(notification);
+    });
 
-      print('Monitor started in events package');
-      monitorStarted = true;
-    }
+    print('Monitor started in events package');
+    // monitorStarted = true;
+    // }
 
     return true;
   }
@@ -87,6 +88,11 @@ class AtEventNotificationListener {
     var decryptedMessage = await atClientManager.atClient.encryptionService!
         .decrypt(value ?? '', fromAtSign)
         .catchError((e) {
+      AtLocationNotificationListener().showToast(
+        'Decryption failed for notification received from $fromAtSign',
+        isError: true,
+      );
+
       print('error in decrypting event: $e');
       // TODO: only showing error dialog for closed testing group
     });
