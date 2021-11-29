@@ -53,6 +53,12 @@ flutter:
         pluginClass: AtContactsGroupFlutterPlugin
       ios:
         pluginClass: AtContactsGroupFlutterPlugin
+      macos:
+        default_package: at_contacts_group_flutter
+      windows:
+        default_package: at_contacts_group_flutter
+      linux:
+        default_package: at_contacts_group_flutter
 
   # To add assets to your plugin package, add an assets section, like this:
   assets:

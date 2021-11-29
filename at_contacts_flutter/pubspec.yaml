@@ -41,6 +41,13 @@ flutter:
         pluginClass: AtContactsFlutterPlugin
       ios:
         pluginClass: AtContactsFlutterPlugin
+      macos:
+        default_package: at_contacts_flutter
+      windows:
+        default_package: at_contacts_flutter
+      linux:
+        default_package: at_contacts_flutter
+
   # To add assets to your plugin package, add an assets section, like this:
   assets:
     - assets/
