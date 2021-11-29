@@ -90,6 +90,7 @@ class AtEventNotificationListener {
         .catchError((e) {
       AtLocationNotificationListener().showToast(
         'Decryption failed for notification received from $fromAtSign',
+        navKey!.currentContext!,
         isError: true,
       );
 

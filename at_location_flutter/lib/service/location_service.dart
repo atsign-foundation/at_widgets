@@ -239,9 +239,9 @@ class LocationService {
         });
         if (_continue) {
           hybridUsersList.add(user);
-          if (showToast != null) {
-            showToast!('${user.displayName} started sharing their location');
-          }
+          // if (showToast != null) {
+          //   showToast!('${user.displayName} started sharing their location');
+          // }
         }
       }
     } catch (e) {

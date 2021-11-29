@@ -1,5 +1,7 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
+import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/show_location.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
@@ -69,11 +71,15 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   late bool showMarker, mapAdjustedOnce;
   BuildContext? globalContext;
 
+  List<String> atsignsCurrentlySharing = [];
+
   @override
   void initState() {
     super.initState();
     showMarker = true;
     mapAdjustedOnce = false;
+    atsignsCurrentlySharing = [];
+
     mapController = MapController();
     LocationService().init(widget.atsignsToTrack,
         etaFrom: widget.etaFrom,
@@ -89,10 +95,10 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   }
 
   void showToast(String msg, {bool isError = false, isSuccess = false}) {
-    if (globalContext != null) {
-      CustomToast()
-          .show(msg, globalContext!, isError: isError, isSuccess: isSuccess);
-    }
+    // if (globalContext != null) {
+    //   CustomToast()
+    //       .show(msg, globalContext!, isError: isError, isSuccess: isSuccess);
+    // }
   }
 
   @override
@@ -100,6 +106,42 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     LocationService().dispose();
     _popupController.streamController?.close();
     super.dispose();
+  }
+
+  calculateAtsignsCurrentlySharing(List<HybridModel?> users) {
+    List<String> _newAtsignsSharing = [], _atsignsStoppedSharing = [];
+    for (var _user in users) {
+      if (_user == null) {
+        continue;
+      }
+      if ((_user.displayName !=
+              AtClientManager.getInstance().atClient.getCurrentAtSign()) &&
+          ((LocationService().centreMarker == null) ||
+              (_user.displayName !=
+                  LocationService().centreMarker?.displayName))) {
+        if (!atsignsCurrentlySharing.contains(_user.displayName)) {
+          atsignsCurrentlySharing.add(_user.displayName!);
+          _newAtsignsSharing.add(_user.displayName!);
+        }
+      }
+    }
+
+    atsignsCurrentlySharing.removeWhere((element) {
+      var _res =
+          users.indexWhere((_user) => _user?.displayName == element) == -1;
+      if ((_res) && (!_atsignsStoppedSharing.contains(element))) {
+        _atsignsStoppedSharing.add(element);
+      }
+      return _res;
+    });
+
+    if (_newAtsignsSharing.isNotEmpty) {
+      CustomToast().show(
+          '${_listToString(_newAtsignsSharing)} started sharing location',
+          globalContext!,
+          isError: false,
+          isSuccess: false);
+    }
   }
 
   @override
@@ -134,6 +176,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                     markers.forEach((element) {
                       print('point - ${element!.point}');
                     });
+
+                    calculateAtsignsCurrentlySharing(users);
 
                     try {
                       if (widget.focusMapOn == null) {
@@ -248,5 +292,18 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     if (LocationService().hybridUsersList.isNotEmpty) {
       mapController!.move(LocationService().hybridUsersList[0]!.latLng, 4);
     }
+  }
+
+  String? _listToString(List _strings) {
+    String? _res;
+    if (_strings.isNotEmpty) {
+      _res = _strings[0];
+    }
+
+    _strings.sublist(1).forEach((element) {
+      _res = '$_res, $element';
+    });
+
+    return _res;
   }
 }

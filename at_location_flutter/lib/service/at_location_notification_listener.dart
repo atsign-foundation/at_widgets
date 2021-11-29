@@ -125,6 +125,7 @@ class AtLocationNotificationListener {
         .catchError((e) {
       showToast(
         'Decryption failed for notification received from $fromAtSign',
+        navKey.currentContext!,
         isError: true,
       );
 
@@ -178,9 +179,7 @@ class AtLocationNotificationListener {
         var _result = await KeyStreamService()
             .addDataToList(locationData, receivedkey: notificationKey);
         if (_result is KeyLocationModel) {
-          showToast(
-            '$fromAtSign did a share location',
-          );
+          showToast('$fromAtSign did a share location', navKey.currentContext!);
         }
       }
       return;
@@ -240,9 +239,10 @@ class AtLocationNotificationListener {
     }
   }
 
-  showToast(String msg, {bool isError = false, bool isSuccess = true}) {
+  showToast(String msg, BuildContext _context,
+      {bool isError = false, bool isSuccess = true}) {
     try {
-      ScaffoldMessenger.of(navKey.currentContext!).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(_context).showSnackBar(SnackBar(
         content: Text(msg),
         backgroundColor: isError ? AllColors().RED : AllColors().GREEN,
         dismissDirection: DismissDirection.horizontal,
