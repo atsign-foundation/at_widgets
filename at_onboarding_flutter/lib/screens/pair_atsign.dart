@@ -73,12 +73,12 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       _getAtsignForm();
     }
     if (widget.onboardStatus != null) {
-      if (widget.onboardStatus == OnboardingStatus.activate) {
+      if (widget.onboardStatus == OnboardingStatus.ACTIVATE) {
         _isQR = true;
         loading = true;
         _getLoginWithAtsignDialog(context);
       }
-      if (widget.onboardStatus == OnboardingStatus.restore) {
+      if (widget.onboardStatus == OnboardingStatus.RESTORE) {
         _isBackup = true;
       }
     }
@@ -117,8 +117,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
       if (authResponse == ResponseStatus.AUTH_SUCCESS) {
-        if (widget.onboardStatus == OnboardingStatus.activate ||
-            widget.onboardStatus == OnboardingStatus.restore) {
+        if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
+            widget.onboardStatus == OnboardingStatus.RESTORE) {
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
               _onboardingService.currentAtsign);
           if (_onboardingService.nextScreen == null) {
@@ -670,12 +670,14 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   bool _validatePickedFileContents(String fileContents) {
     bool result = fileContents
-            .contains(BackupKeyConstants.pkamPrivateKeyFromKeyFile) &&
-        fileContents.contains(BackupKeyConstants.pkamPublicKeyFromKeyFile) &&
+            .contains(BackupKeyConstants.PKAM_PRIVATE_KEY_FROM_KEY_FILE) &&
         fileContents
-            .contains(BackupKeyConstants.encryptionPrivateKeyFromFile) &&
-        fileContents.contains(BackupKeyConstants.encryptionPublicKeyFromFile) &&
-        fileContents.contains(BackupKeyConstants.selfEncryptionKeyFromFile);
+            .contains(BackupKeyConstants.PKAM_PUBLIC_KEY_FROM_KEY_FILE) &&
+        fileContents
+            .contains(BackupKeyConstants.ENCRYPTION_PRIVATE_KEY_FROM_FILE) &&
+        fileContents
+            .contains(BackupKeyConstants.ENCRYPTION_PUBLIC_KEY_FROM_FILE) &&
+        fileContents.contains(BackupKeyConstants.SELF_ENCRYPTION_KEY_FROM_FILE);
     return result;
   }
 
