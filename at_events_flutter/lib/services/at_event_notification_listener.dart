@@ -19,11 +19,15 @@ class AtEventNotificationListener {
   static final _instance = AtEventNotificationListener._();
   factory AtEventNotificationListener() => _instance;
   late AtClientManager atClientManager;
-  // bool monitorStarted = false;
+  bool monitorStarted = false;
   String? currentAtSign;
   GlobalKey<NavigatorState>? navKey;
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
+
+  resetMonitor() {
+    monitorStarted = false;
+  }
 
   void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       {Function? newGetAtValueFromMainApp}) {
@@ -38,22 +42,22 @@ class AtEventNotificationListener {
   }
 
   Future<bool> startMonitor() async {
-    // if (!monitorStarted) {
-    print(
-        'atClientManager.atClient.getPreferences()!.namespace ${atClientManager.atClient.getPreferences()!.namespace}');
-    AtClientManager.getInstance()
-        .notificationService
-        .subscribe(
-            // regex: atClientManager.atClient.getPreferences()!.namespace
-            // '.*'
-            )
-        .listen((notification) {
-      _notificationCallback(notification);
-    });
+    if (!monitorStarted) {
+      print(
+          'atClientManager.atClient.getPreferences()!.namespace ${atClientManager.atClient.getPreferences()!.namespace}');
+      AtClientManager.getInstance()
+          .notificationService
+          .subscribe(
+              // regex: atClientManager.atClient.getPreferences()!.namespace
+              // '.*'
+              )
+          .listen((notification) {
+        _notificationCallback(notification);
+      });
 
-    print('Monitor started in events package');
-    // monitorStarted = true;
-    // }
+      print('Monitor started in events package');
+      monitorStarted = true;
+    }
 
     return true;
   }

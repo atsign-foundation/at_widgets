@@ -29,7 +29,11 @@ class AtLocationNotificationListener {
   String? currentAtSign;
   late bool showDialogBox;
   late GlobalKey<NavigatorState> navKey;
-  bool isEventInUse = false;
+  bool isEventInUse = false, monitorStarted = false;
+
+  resetMonitor() {
+    monitorStarted = false;
+  }
 
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
@@ -49,12 +53,15 @@ class AtLocationNotificationListener {
   }
 
   Future<void> startMonitor() async {
-    AtClientManager.getInstance()
-        .notificationService
-        .subscribe()
-        .listen((monitorNotification) {
-      _notificationCallback(monitorNotification);
-    });
+    if (!monitorStarted) {
+      AtClientManager.getInstance()
+          .notificationService
+          .subscribe()
+          .listen((monitorNotification) {
+        _notificationCallback(monitorNotification);
+      });
+      monitorStarted = true;
+    }
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
