@@ -4,6 +4,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
@@ -15,7 +16,6 @@ import 'package:at_contacts_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_flutter/widgets/horizontal_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import '../services/contact_service.dart';
 
 /// The screen which is exposed from the library for displaying, adding, selecting and deleting Contacts.
@@ -66,20 +66,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
   void initState() {
     _contactService = ContactService();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      // try {
-      //   _contactService.fetchContacts();
-      // } catch (e) {
-      //   print('error in Contacts_screen init : $e');
-      //   if (mounted)
-      //     setState(() {
-      //       errorOcurred = true;
-      //     });
-      // }
       var _result = await _contactService!.fetchContacts();
       print('$_result = true');
 
       if (_result == null) {
-        print('_result = true');
         if (mounted) {
           setState(() {
             errorOcurred = true;
@@ -172,9 +162,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
                           : HorizontalCircularList()
                       : Container(),
                   Expanded(
-                      child: StreamBuilder<List<AtContact?>>(
+                      child: StreamBuilder<List<BaseContact?>>(
                     stream: _contactService!.contactStream,
-                    initialData: _contactService!.contactList,
+                    initialData: _contactService!.baseContactList,
                     builder: (context, snapshot) {
                       if ((snapshot.connectionState ==
                           ConnectionState.waiting)) {
@@ -187,9 +177,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             child: Text(TextStrings().noContacts),
                           );
                         } else {
-                          var _filteredList = <AtContact?>[];
+                          var _filteredList = <BaseContact?>[];
                           snapshot.data!.forEach((c) {
-                            if (c!.atSign!
+                            if (c!.contact!.atSign!
                                 .toUpperCase()
                                 .contains(searchText.toUpperCase())) {
                               _filteredList.add(c);
@@ -215,15 +205,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
                               if (alphabetIndex == 26) {
                                 currentChar = 'Others';
                                 _filteredList.forEach((c) {
-                                  if (int.tryParse(c!.atSign![1]) != null) {
-                                    contactsForAlphabet.add(c);
+                                  if (int.tryParse(c!.contact!.atSign![1]) !=
+                                      null) {
+                                    contactsForAlphabet.add(c.contact!);
                                   }
                                 });
                               } else {
                                 _filteredList.forEach((c) {
-                                  if (c!.atSign![1].toUpperCase() ==
+                                  if (c!.contact!.atSign![1].toUpperCase() ==
                                       currentChar) {
-                                    contactsForAlphabet.add(c);
+                                    contactsForAlphabet.add(c.contact!);
                                   }
                                 });
                               }

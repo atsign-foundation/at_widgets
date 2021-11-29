@@ -232,14 +232,14 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
             }
             return const Center();
           } else if (snapshot.hasError) {
-            if (snapshot.error == OnboardingStatus.ATSIGN_NOT_FOUND) {
+            if (snapshot.error == OnboardingStatus.atSignNotFound) {
               return PairAtsignWidget(
                 getAtSign: true,
                 hideReferences: widget.hideReferences ?? false,
                 hideQrScan: widget.hideQrScan ?? false,
               );
-            } else if (snapshot.error == OnboardingStatus.ACTIVATE ||
-                snapshot.error == OnboardingStatus.RESTORE) {
+            } else if (snapshot.error == OnboardingStatus.activate ||
+                snapshot.error == OnboardingStatus.restore) {
               return PairAtsignWidget(
                 onboardStatus: snapshot.error as OnboardingStatus?,
                 hideReferences: widget.hideReferences ?? false,

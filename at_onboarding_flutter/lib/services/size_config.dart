@@ -55,6 +55,10 @@ class SizeConfig {
   }
 
   double getWidthRatio(double val) {
+    if (screenWidth! >= 1200) {
+      return val;
+    }
+
     double res = (val / refWidth) * 100;
     double temp = res * blockSizeHorizontal;
 
@@ -62,12 +66,20 @@ class SizeConfig {
   }
 
   double getHeightRatio(double val) {
+    if (screenWidth! >= 1200) {
+      return val;
+    }
+
     double res = (val / refHeight) * 100;
     double temp = res * blockSizeVertical;
     return temp;
   }
 
   double getFontRatio(double val) {
+    if (screenWidth! >= 1200) {
+      return val;
+    }
+
     double res = (val / refWidth) * 100;
     double temp = 0.0;
     if (screenWidth! < screenHeight) {

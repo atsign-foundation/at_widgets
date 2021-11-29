@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
@@ -23,6 +24,9 @@ import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:image/image.dart' as img;
+import 'package:zxing2/qrcode.dart';
 
 // ignore: must_be_immutable
 class CustomDialog extends StatefulWidget {
@@ -127,6 +131,11 @@ class _CustomDialogState extends State<CustomDialog> {
       pair = true;
       isfreeAtsign = true;
     }
+    double _dialogWidth = double.maxFinite;
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      _dialogWidth = 400;
+    }
+
     return StatefulBuilder(builder:
         (BuildContext context, void Function(void Function()) stateSet) {
       return Stack(children: <Widget>[
@@ -292,7 +301,7 @@ class _CustomDialogState extends State<CustomDialog> {
                       ? Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
                           child: Container(
-                            width: double.maxFinite,
+                            width: _dialogWidth,
                             // height:
                             //     MediaQuery.of(context).size.height * 0.6,
                             child: ListView(
@@ -489,7 +498,8 @@ class _CustomDialogState extends State<CustomDialog> {
                                       : SizedBox(height: 5.toHeight),
                                   widget.hideQrScan
                                       ? SizedBox()
-                                      : Container(
+                                      : (Platform.isAndroid || Platform.isIOS)
+                                        ? Container(
                                           width:
                                               MediaQuery.of(context).size.width,
                                           child: ElevatedButton(
@@ -506,6 +516,26 @@ class _CustomDialogState extends State<CustomDialog> {
                                             },
                                             child: Text(
                                               'Scan QR code',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15.toFont),
+                                            ),
+                                          ))
+                                      : Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.grey[800])),
+                                            // key: Key(''),
+                                            onPressed: () async {
+                                              _uploadQRFileForDesktop(
+                                                  context, widget.onValidate);
+                                            },
+                                            child: Text(
+                                              'Upload QR code',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 15.toFont),
@@ -1208,5 +1238,83 @@ class _CustomDialogState extends State<CustomDialog> {
         ],
       ),
     );
+  }
+
+  void _uploadQRFileForDesktop(
+      BuildContext context, dynamic processAESKey) async {
+    try {
+      var fileContents, aesKey, atsign;
+      setState(() {
+        loading = true;
+      });
+
+      var path = await _desktopKeyPicker();
+      print(path);
+      if (path == null) {
+        setState(() {
+          loading = false;
+        });
+        return;
+      }
+
+      File selectedFile = File(path);
+
+      var length = selectedFile.lengthSync();
+      if (length < 10) {
+        showErrorDialog(context, 'Incorrect QR file');
+        return;
+      }
+
+      var image = img.decodePng(selectedFile.readAsBytesSync())!;
+
+      LuminanceSource source = RGBLuminanceSource(image.width, image.height,
+          image.getBytes(format: img.Format.abgr).buffer.asInt32List());
+      var bitmap = BinaryBitmap(HybridBinarizer(source));
+
+      var reader = QRCodeReader();
+      var result = reader.decode(bitmap);
+      List<String> params = result.text.replaceAll('"', '').split(':');
+      atsign = params[0];
+      aesKey = params[1];
+
+      if (aesKey == null && atsign == null) {
+        await showErrorDialog(context, 'Incorrect QR file');
+        setState(() {
+          loading = false;
+        });
+        return;
+      }
+      await processAESKey(atsign, aesKey, false);
+      setState(() {
+        loading = false;
+      });
+    } catch (error) {
+      print(error);
+      setState(() {
+        loading = false;
+      });
+      await showErrorDialog(context, 'Failed to process file');
+    }
+  }
+
+  Future<dynamic> _desktopKeyPicker() async {
+    try {
+      // ignore: omit_local_variable_types
+      final XTypeGroup typeGroup = XTypeGroup(
+        label: 'images',
+        extensions: ['png'],
+      );
+      final List<XFile> files =
+          await openFiles(acceptedTypeGroups: [typeGroup]);
+      if (files.isEmpty) {
+        return null;
+      }
+      // ignore: omit_local_variable_types
+      final XFile file = files[0];
+      return file.path;
+    } catch (e) {
+      print('Error in desktopImagePicker $e');
+      return null;
+    }
   }
 }
