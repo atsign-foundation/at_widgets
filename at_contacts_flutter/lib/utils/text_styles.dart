@@ -52,4 +52,37 @@ class CustomTextStyles {
     fontSize: 16.toFont,
     fontWeight: FontWeight.w700,
   );
+
+  // desktop text styles
+  static TextStyle desktopPrimaryRegular24 = TextStyle(
+    color: Colors.black,
+    fontSize: 24,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle primaryNormal20 = TextStyle(
+      color: ColorConstants.fontPrimary,
+      fontSize: 20.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle desktopSecondaryRegular18 = TextStyle(
+      color: ColorConstants.fontSecondary,
+      fontSize: 18,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle blueNormal20 = TextStyle(
+      color: ColorConstants.blueText,
+      fontSize: 20.toFont,
+      letterSpacing: 0.1,
+      fontWeight: FontWeight.normal);
+
+  static TextStyle whiteBold({int size = 16}) => TextStyle(
+        color: Colors.white,
+        fontSize: size.toFont,
+        letterSpacing: 0.1,
+        fontWeight: FontWeight.w700,
+      );
 }

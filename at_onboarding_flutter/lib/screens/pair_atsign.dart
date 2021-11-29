@@ -21,6 +21,7 @@ import 'package:at_onboarding_flutter/widgets/custom_strings.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -72,12 +73,12 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       _getAtsignForm();
     }
     if (widget.onboardStatus != null) {
-      if (widget.onboardStatus == OnboardingStatus.ACTIVATE) {
+      if (widget.onboardStatus == OnboardingStatus.activate) {
         _isQR = true;
         loading = true;
         _getLoginWithAtsignDialog(context);
       }
-      if (widget.onboardStatus == OnboardingStatus.RESTORE) {
+      if (widget.onboardStatus == OnboardingStatus.restore) {
         _isBackup = true;
       }
     }
@@ -116,8 +117,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
       if (authResponse == ResponseStatus.AUTH_SUCCESS) {
-        if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
-            widget.onboardStatus == OnboardingStatus.RESTORE) {
+        if (widget.onboardStatus == OnboardingStatus.activate ||
+            widget.onboardStatus == OnboardingStatus.restore) {
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
               _onboardingService.currentAtsign);
           if (_onboardingService.nextScreen == null) {
@@ -193,17 +194,24 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   }
 
   Future<void> checkPermissions() async {
-    PermissionStatus cameraStatus = await Permission.camera.status;
-    PermissionStatus storageStatus = await Permission.storage.status;
-    _logger.info('camera status => $cameraStatus');
-    _logger.info('storage status is $storageStatus');
-    if (cameraStatus.isRestricted && storageStatus.isRestricted) {
-      await askPermissions(Permission.unknown);
-    } else if (cameraStatus.isRestricted || cameraStatus.isDenied) {
-      await askPermissions(Permission.camera);
-    } else if (storageStatus.isRestricted || storageStatus.isDenied) {
-      await askPermissions(Permission.storage);
-    } else if (cameraStatus.isGranted && storageStatus.isGranted) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      PermissionStatus cameraStatus = await Permission.camera.status;
+      PermissionStatus storageStatus = await Permission.storage.status;
+      _logger.info('camera status => $cameraStatus');
+      _logger.info('storage status is $storageStatus');
+      if (cameraStatus.isRestricted && storageStatus.isRestricted) {
+        await askPermissions(Permission.unknown);
+      } else if (cameraStatus.isRestricted || cameraStatus.isDenied) {
+        await askPermissions(Permission.camera);
+      } else if (storageStatus.isRestricted || storageStatus.isDenied) {
+        await askPermissions(Permission.storage);
+      } else if (cameraStatus.isGranted && storageStatus.isGranted) {
+        setState(() {
+          permissionGrated = true;
+        });
+      }
+    } else {
+      // bypassing for desktop platforms
       setState(() {
         permissionGrated = true;
       });
@@ -383,14 +391,92 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
-  Future<CustomDialog?> _showAlertDialog(
-    dynamic errorMessage, {
-    bool? isPkam,
-    String? title,
-    bool? getClose,
-    Function? onClose,
-  }) async {
-    await showDialog<CustomDialog>(
+  void _uploadKeyFileForDesktop() async {
+    print('_uploadKeyFileForDesktop called');
+    try {
+      _isServerCheck = false;
+      _isContinue = true;
+      var fileContents, aesKey, atsign;
+      setState(() {
+        loading = true;
+      });
+
+      var path = await _desktopKeyPicker();
+
+      if (path == null) {
+        return;
+      }
+
+      File selectedFile = File(path);
+      var length = selectedFile.lengthSync();
+      if (length < 10) {
+        _showAlertDialog(_incorrectKeyFile);
+        return;
+      }
+
+      fileContents = File(path).readAsStringSync();
+
+      if (aesKey == null && atsign == null && fileContents != null) {
+        List<String> keyData = fileContents.split(',"@');
+        List<String> params = keyData[1]
+            .toString()
+            .substring(0, keyData[1].length - 2)
+            .split('":"');
+        atsign = params[0];
+        aesKey = params[1];
+      }
+      if (fileContents == null || (aesKey == null && atsign == null)) {
+        await _showAlertDialog(_incorrectKeyFile);
+        setState(() {
+          loading = false;
+        });
+        return;
+      } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
+              _pairingAtsign &&
+          _pairingAtsign != null) {
+        await _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
+        setState(() {
+          loading = false;
+        });
+        return;
+      }
+      await _processAESKey(atsign, aesKey, fileContents);
+      setState(() {
+        loading = false;
+      });
+    } catch (error) {
+      setState(() {
+        loading = false;
+      });
+      _logger.severe('Uploading backup zip file throws $error');
+      await _showAlertDialog(_failedFileProcessing);
+    }
+  }
+
+  Future<dynamic> _desktopKeyPicker() async {
+    try {
+      // ignore: omit_local_variable_types
+      final XTypeGroup typeGroup = XTypeGroup(
+        label: 'images',
+        extensions: ['atKeys'],
+      );
+      final List<XFile> files =
+          await openFiles(acceptedTypeGroups: [typeGroup]);
+      if (files.isEmpty) {
+        return null;
+      }
+      // ignore: omit_local_variable_types
+      final XFile file = files[0];
+      return file.path;
+    } catch (e) {
+      print('Error in desktopImagePicker $e');
+      return null;
+    }
+  }
+
+  _showAlertDialog(var errorMessage,
+      {bool? isPkam, String? title, bool? getClose, Function? onClose}) {
+    showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
@@ -483,7 +569,11 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                         child: CustomButton(
                           width: 230.toWidth,
                           buttonText: Strings.uploadZipTitle,
-                          onPressed: _uploadKeyFile,
+                          onPressed: (Platform.isMacOS ||
+                                  Platform.isLinux ||
+                                  Platform.isWindows)
+                              ? _uploadKeyFileForDesktop
+                              : _uploadKeyFile,
                         ),
                       ),
                       SizedBox(
@@ -580,14 +670,12 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   bool _validatePickedFileContents(String fileContents) {
     bool result = fileContents
-            .contains(BackupKeyConstants.PKAM_PRIVATE_KEY_FROM_KEY_FILE) &&
+            .contains(BackupKeyConstants.pkamPrivateKeyFromKeyFile) &&
+        fileContents.contains(BackupKeyConstants.pkamPublicKeyFromKeyFile) &&
         fileContents
-            .contains(BackupKeyConstants.PKAM_PUBLIC_KEY_FROM_KEY_FILE) &&
-        fileContents
-            .contains(BackupKeyConstants.ENCRYPTION_PRIVATE_KEY_FROM_FILE) &&
-        fileContents
-            .contains(BackupKeyConstants.ENCRYPTION_PUBLIC_KEY_FROM_FILE) &&
-        fileContents.contains(BackupKeyConstants.SELF_ENCRYPTION_KEY_FROM_FILE);
+            .contains(BackupKeyConstants.encryptionPrivateKeyFromFile) &&
+        fileContents.contains(BackupKeyConstants.encryptionPublicKeyFromFile) &&
+        fileContents.contains(BackupKeyConstants.selfEncryptionKeyFromFile);
     return result;
   }
 

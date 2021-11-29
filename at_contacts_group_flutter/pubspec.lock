@@ -267,6 +267,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_toastr:
+    dependency: "direct main"
+    description:
+      name: flutter_toastr
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -421,6 +428,13 @@ packages:
     version: "3.0.0"
   plugin_platform_interface:
     dependency: transitive
+    description:
+      name: platform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
+  plugin_platform_interface:
+    dependency: "direct overridden"
     description:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
