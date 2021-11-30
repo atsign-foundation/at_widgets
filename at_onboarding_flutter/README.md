@@ -79,6 +79,19 @@ post_install do |installer|
   end
 end
 ```
+
+### macOS:
+Go to your project folder, macOS/Runner/DebugProfile.entitlements
+
+For release you need to open macOS/Runner/Release.entitlements
+
+and add the following key:
+
+```
+<key>com.apple.security.files.downloads.read-write</key>
+<true/>
+```
+
 ### Plugin description
 Supports for single and multiple @signs onboarding. This plugin provides two screens:
 

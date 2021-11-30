@@ -7,6 +7,7 @@ import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 
+/// Service to handle onboarding flow
 class OnboardingService {
   static final OnboardingService _singleton = OnboardingService._internal();
 

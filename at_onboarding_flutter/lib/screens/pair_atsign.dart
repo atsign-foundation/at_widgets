@@ -27,10 +27,20 @@ import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:permission_handler/permission_handler.dart';
 
+/// This widget helps to onboard an atsign in three different ways
+/// 1. Use QR reader if QR code is available
+/// 2. Pair an atsign using backup keys
+/// 3. Generate a new free atsign
 class PairAtsignWidget extends StatefulWidget {
+  /// Status of the atsign entered
   final OnboardingStatus? onboardStatus;
+
+  /// If true, shows the custom dialog to get an atsign
   final bool getAtSign;
+
+  /// If true, hides the references
   final bool hideReferences;
+  // If true, does not show the QR reader option
   final bool hideQrScan;
   PairAtsignWidget(
       {Key? key,

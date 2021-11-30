@@ -4,8 +4,10 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_server_status/at_server_status.dart';
 
+/// Common error dialog to show the error to user
 class AtErrorDialog {
   static AlertDialog getAlertDialog(Object error, BuildContext context) {
+    /// The error message to display
     String errorMessage = _getErrorMessage(error);
     String title = 'Error';
     return AlertDialog(
