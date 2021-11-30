@@ -63,6 +63,17 @@ post_install do |installer|
   end
 end
 ```
+### macOS:
+Go to your project folder, macOS/Runner/DebugProfile.entitlements
+
+For release you need to open macOS/Runner/Release.entitlements
+
+and add the following key:
+
+```
+<key>com.apple.security.files.downloads.read-write</key>
+<true/>
+```
 
 ### Plugin description
 Provides backup keys for an @sign. Can be used as an icon or a button. Priorily an @sign should be authenticated through any of @protocol apps to make use of this widget.
