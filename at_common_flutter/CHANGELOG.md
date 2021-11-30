@@ -1,3 +1,6 @@
+## 2.0.3
+- **FEAT**: Added `isDesktop` check in CustomAppBar
+
 ## 2.0.2
 - borderRadius option added in CustomButton
 
