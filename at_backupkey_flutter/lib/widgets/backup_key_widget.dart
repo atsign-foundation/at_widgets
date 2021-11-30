@@ -189,6 +189,7 @@ class BackupKeyWidget extends StatelessWidget {
         return false;
       }
       String path = await _generateFile(aesEncryptedKeys);
+      print('path: $path');
       if (Platform.isAndroid || Platform.isIOS) {
         await Share.shareFiles([path],
             sharePositionOrigin:
@@ -203,6 +204,7 @@ class BackupKeyWidget extends StatelessWidget {
 
   Future<String> _generateFile(Map<String, String> aesEncryptedKeys) async {
     if (Platform.isAndroid || Platform.isIOS) {
+      print('entering here!!');
       var status = await Permission.storage.status;
       if (status.isDenied || status.isRestricted) {
         await Permission.storage.request();
@@ -218,12 +220,14 @@ class BackupKeyWidget extends StatelessWidget {
       return encryptedKeysFile.path;
     } else {
       String encryptedKeysFile = '$atsign${Strings.backupKeySuffix}';
+      print('saving $encryptedKeysFile');
       var keyString = jsonEncode(aesEncryptedKeys);
       final List<int> codeUnits = keyString.codeUnits;
       final Uint8List data = Uint8List.fromList(codeUnits);
-      await FileSaver.instance.saveFile(
+      String desktopPath = await FileSaver.instance.saveFile(
           encryptedKeysFile, data, Strings.backupKeyExtension,
           mimeType: MimeType.OTHER);
+      print('Backup file saved to: $desktopPath');
       return '';
     }
   }
