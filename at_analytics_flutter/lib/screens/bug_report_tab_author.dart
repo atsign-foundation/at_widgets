@@ -1,6 +1,6 @@
 import 'package:at_analytics_flutter/models/bug_report_model.dart';
 import 'package:at_analytics_flutter/services/bug_report_service.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
+import 'package:at_analytics_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

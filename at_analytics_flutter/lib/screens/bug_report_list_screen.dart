@@ -2,7 +2,7 @@ import 'package:at_analytics_flutter/screens/bug_report_tab_user.dart';
 import 'package:at_analytics_flutter/services/bug_report_service.dart';
 import 'package:at_analytics_flutter/utils/filter_atSign_dialog_utils.dart';
 import 'package:at_analytics_flutter/utils/strings.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
+import 'package:at_analytics_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
 import 'bug_report_tab_author.dart';

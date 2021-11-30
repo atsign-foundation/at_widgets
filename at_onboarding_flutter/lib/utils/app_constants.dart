@@ -51,7 +51,7 @@ extension customMessages on OnboardingStatus {
         return 'Your atsign got reactivated. Please activate with the new QRCode available on ${AppConstants.serverDomain} website.';
       case (OnboardingStatus.ENCRYPTION_PRIVATE_KEY_NOT_FOUND):
       case (OnboardingStatus.ENCRYPTION_PUBLIC_KEY_NOT_FOUND):
-      case (OnboardingStatus.PKAM_PRIVATE_KEY_NOT_FOUND):
+      case (OnboardingStatus.PKAM_PRIVATE_KEY_NOT_FOUND);
       case (OnboardingStatus.PKAM_PUBLIC_KEY_NOT_FOUND):
         return 'Fatal error occurred. Please contact support@atsign.com';
       case (OnboardingStatus.RESTORE):
