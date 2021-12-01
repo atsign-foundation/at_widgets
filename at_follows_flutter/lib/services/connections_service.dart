@@ -182,7 +182,7 @@ class ConnectionsService {
     return result;
   }
 
-  // method to remove followr in list
+  // method to remove follower in list
   Future<bool> removeFollower(String atsign) async {
     var followersList = followers.getKey!.value.split(',');
     bool result = false;

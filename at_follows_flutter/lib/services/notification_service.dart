@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:at_utils/at_logger.dart';
 import 'package:at_client/at_client.dart' as at_client;
 
-//Service to
+//Service to operate notifications
 class NotificationService {
   static final notificationService = NotificationService._internal();
   NotificationService._internal() {
