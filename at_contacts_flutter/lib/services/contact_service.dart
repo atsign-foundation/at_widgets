@@ -60,7 +60,6 @@ class ContactService {
   StreamController<List<BaseContact?>> blockedContactStreamController =
       StreamController<List<BaseContact?>>.broadcast();
 
-
   /// Sink for the blocked contacts' list stream
   Sink get blockedContactSink => blockedContactStreamController.sink;
 

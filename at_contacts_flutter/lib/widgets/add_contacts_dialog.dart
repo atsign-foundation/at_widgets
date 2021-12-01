@@ -75,7 +75,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
           content: ConstrainedBox(
             constraints: BoxConstraints(
                 maxHeight: (_contactService.getAtSignError == '')
-                    ? 320.toHeight
+                    ? 325.toHeight
                     : 370.toHeight * deviceTextFactor),
             child: Column(
               children: [
