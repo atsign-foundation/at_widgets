@@ -4,7 +4,9 @@ description: A Flutter plugin project for onboarding any @‎sign in @‎platfor
   authenticate.
 version: 3.1.0
 homepage: https://atsign.dev
-repository: https://github.com/atsign-foundation/at_widgets
+repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_onboarding_flutter
+issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
+documentation: https://atsign.dev/docs/functional_architecture/libraries/#at_onboarding_flutter
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

@@ -189,7 +189,6 @@ class BackupKeyWidget extends StatelessWidget {
         return false;
       }
       String path = await _generateFile(aesEncryptedKeys);
-      print('path: $path');
       if (Platform.isAndroid || Platform.isIOS) {
         await Share.shareFiles([path],
             sharePositionOrigin:
@@ -204,7 +203,6 @@ class BackupKeyWidget extends StatelessWidget {
 
   Future<String> _generateFile(Map<String, String> aesEncryptedKeys) async {
     if (Platform.isAndroid || Platform.isIOS) {
-      print('entering here!!');
       var status = await Permission.storage.status;
       if (status.isDenied || status.isRestricted) {
         await Permission.storage.request();
