@@ -12,6 +12,7 @@ import 'package:at_follows_flutter/services/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:at_utils/at_logger.dart';
 
+// a widget to show followers
 class Followers extends StatefulWidget {
   final String? searchText;
   final bool isFollowing;

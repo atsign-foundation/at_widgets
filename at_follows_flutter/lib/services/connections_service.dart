@@ -44,6 +44,7 @@ class ConnectionsService {
     }
   }
 
+  // method to get atsign list
   Future<void> getAtsignsList({bool isInit = false}) async {
     if (connectionProvider.followingList!.isEmpty || isInit) {
       await createLists(isFollowing: true);
@@ -164,6 +165,7 @@ class ConnectionsService {
     return result;
   }
 
+  // method to unfollow an atsign
   Future<bool> unfollow(String? atsign) async {
     atsign = formatAtSign(atsign);
     var atKey = this._formKey(isFollowing: true);
@@ -180,6 +182,7 @@ class ConnectionsService {
     return result;
   }
 
+  // method to remove followr in list
   Future<bool> removeFollower(String atsign) async {
     var followersList = followers.getKey!.value.split(',');
     bool result = false;
@@ -364,6 +367,7 @@ class ConnectionsService {
     return atKey;
   }
 
+  // method to get atsign data
   Future<Atsign> _getAtsignData(String? connection,
       {bool isFollowing = true, bool isNew = false}) async {
     AtKey atKey;

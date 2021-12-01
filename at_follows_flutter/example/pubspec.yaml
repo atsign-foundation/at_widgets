@@ -11,9 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^2.0.2
-  flutter_local_notifications: ^5.0.0+4
-  at_onboarding_flutter: ^3.0.0
+  path_provider: ^2.0.7
+  flutter_local_notifications: ^9.1.4
+  at_onboarding_flutter: ^3.0.4
 
 
   at_follows_flutter:

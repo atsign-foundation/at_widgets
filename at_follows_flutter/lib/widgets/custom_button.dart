@@ -4,6 +4,7 @@ import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
+//a class to create custom button
 class CustomButton extends StatefulWidget {
   final isActive;
   final text;

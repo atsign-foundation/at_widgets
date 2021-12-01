@@ -1,3 +1,4 @@
+//A service to handle notifications when an atsign follows another atsign
 import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -5,6 +6,7 @@ import 'dart:io';
 import 'package:at_utils/at_logger.dart';
 import 'package:at_client/at_client.dart' as at_client;
 
+//Service to
 class NotificationService {
   static final notificationService = NotificationService._internal();
   NotificationService._internal() {
@@ -61,12 +63,13 @@ class NotificationService {
         );
   }
 
+  // method to display notification
   showNotification(at_client.AtNotification atNotification) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       'CHANNEL_ID',
       'CHANNEL_NAME',
-      'CHANNEL_DESCRIPTION',
+      //'CHANNEL_DESCRIPTION',
       importance: Importance.max,
       priority: Priority.high,
       showWhen: false,
@@ -84,6 +87,7 @@ class NotificationService {
         payload: jsonEncode(atNotification.toJson()));
   }
 
+  // method to cancel the notification
   cancelNotification() async {
     await _notificationsPlugin.cancelAll();
   }
