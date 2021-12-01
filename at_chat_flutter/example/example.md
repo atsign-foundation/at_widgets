@@ -11,8 +11,8 @@ Example app to demo at_chat_flutter - A Flutter plugin project to provide a chat
 
 <table>
 <tr>
-<td><img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_chat_flutter/example/onboarding_screen.png"  width="200" height="400" /></td>
+<td><img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_chat_flutter/example/onboarding_screen.png"  width="220" height="450" /></td>
 
-<td><img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_chat_flutter/example/chat_screen.png"  width="200" height="400" /></td>
+<td><img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_chat_flutter/example/chat_screen.png"  width="220" height="450" /></td>
 </tr>
 </table>
