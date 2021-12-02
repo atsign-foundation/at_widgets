@@ -4,10 +4,35 @@
 
 # at_common_flutter
 
+## Overview:
+
 A Flutter package to provide custom widgets for other atsign packages.
 
 ## Getting Started
 
+### Installation:
+
+ To use this library in your app, add it to your pubspec.yaml
+
+``` 
+  dependencies:
+    at_common_flutter: ^2.0.3
+```
+#### Add to your project
+
+ ```dart
+ flutter pub get 
+ ```
+ #### Import in your application code
+
+ ```dart
+ import 'package:at_common_flutter/at_common_flutter.dart';
+ ```
+### Clone it from github
+
+ Feel free to fork a copy of the source from the [GitHub Repo](https://github.com/atsign-foundation/at_widgets)
+
+### Usage
 This package provides the following custom widgets:
 
 #### CustomAppBar
@@ -71,3 +96,8 @@ import 'package:at_common_flutter/at_common_flutter.dart' as CommonWidgets;
 
 CommonWidgets.SizeConfig().init(context);
 ```
+
+## Open source usage and contributions
+
+ This is freely licensed open source code, so feel free to use it as is, suggest changes or enhancements or create your
+ own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.
