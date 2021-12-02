@@ -6,6 +6,12 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
+enum OnboardingState {
+  initial,
+  success,
+  error,
+}
+
 void main() {
   runApp(MyApp());
 }
@@ -16,10 +22,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool loading = false;
-  var atClientServiceMap;
-  var atsign;
-  var rootDomain = 'root.atsign.wtf';
+  OnboardingState onboardingState = OnboardingState.initial;
+  Map<String, AtClientService> atClientServiceMap;
+  String atsign;
+  final String rootDomain = 'root.atsign.org';
 
   @override
   void initState() {
@@ -52,30 +58,73 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
-                child: TextButton(
-                  onPressed: () async {
-                    var _atClientPreference = await getAtClientPreference();
-                    Onboarding(
+              if (onboardingState == OnboardingState.initial)
+                Center(
+                  child: TextButton(
+                    onPressed: () async {
+                      var _atClientPreference = await getAtClientPreference();
+                      Onboarding(
                         context: context,
                         domain: rootDomain,
+                        appColor: Color.fromARGB(255, 240, 94, 62),
                         atClientPreference: _atClientPreference,
                         onboard: (map, atsign) {
                           this.atClientServiceMap = map;
                           this.atsign = atsign;
-                          loading = true;
+                          onboardingState = OnboardingState.success;
                           setState(() {});
                         },
-                        onError: (error) {});
-                  },
-                  child: Text('Onboard my @sign'),
+                        onError: (error) {
+                          onboardingState = OnboardingState.error;
+                          setState(() {});
+                        },
+                      );
+                    },
+                    child: Text('Onboard my @sign'),
+                  ),
                 ),
-              ),
-              if (loading)
-                BackupKeyWidget(
-                  atsign: this.atsign,
-                  atClientService: this.atClientServiceMap[atsign],
-                  isIcon: true,
+              if (onboardingState == OnboardingState.error ||
+                  onboardingState == OnboardingState.success)
+                Center(
+                  child: TextButton(
+                    onPressed: () async {
+                      await KeychainUtil.resetAtSignFromKeychain(atsign);
+                      atClientServiceMap.remove(atsign);
+                      atsign = null;
+                      atClientServiceMap = null;
+                      onboardingState = OnboardingState.initial;
+                      setState(() {});
+                    },
+                    child: Text('Reset my @sign'),
+                  ),
+                ),
+              if (onboardingState == OnboardingState.success)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 32),
+                    Text('Default button:'),
+                    BackupKeyWidget(
+                      atsign: this.atsign,
+                      atClientService: this.atClientServiceMap[atsign],
+                    ),
+                    SizedBox(height: 16),
+                    Text('Custom button:'),
+                    ElevatedButton.icon(
+                      icon: Icon(
+                        Icons.file_copy,
+                        color: Colors.white,
+                      ),
+                      label: Text('Backup your key'),
+                      onPressed: () async {
+                        BackupKeyWidget(
+                          atsign: atsign,
+                          atClientService: atClientServiceMap[atsign],
+                        ).showBackupDialog(context);
+                      },
+                    ),
+                  ],
                 )
             ],
           ),

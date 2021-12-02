@@ -82,7 +82,7 @@ Provides backup keys for an @sign. Can be used as an icon or a button. Priorily 
 Provides '.atKeys' file to save it in iCloud/Gdrive.
 
 Plugin as icon
-```
+```dart
 BackupKeyWidget(
     atsign: atsign,
     atClientService: atClientServiceMap[atsign],
@@ -91,11 +91,28 @@ BackupKeyWidget(
 ```
 
 Plugin as button
-```
+```dart
 BackupKeyWidget(
     atsign: atsign,
     atClientService: atClientServiceMap[atsign],
     isButton: true,
     buttonText: 'BackupKeys',
 )
+```
+
+Plugin with custom widget
+```dart
+ElevatedButton.icon(
+    icon: Icon(
+        Icons.file_copy,
+        color: Colors.white,
+    ),
+    label: Text('Backup your key'),
+    onPressed: () async {
+        BackupKeyWidget(
+            atsign: atsign,
+            atClientService: atClientServiceMap[atsign],
+        ).showBackupDialog(context);
+    },
+),
 ```
