@@ -5,6 +5,9 @@ import 'package:at_follows_flutter_example/utils/app_constants.dart';
 import 'package:at_follows_flutter_example/utils/app_strings.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:at_utils/at_logger.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_follows_flutter_example/screens/follows_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,6 +21,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // final _formKey = GlobalKey<FormState>();
   // final _atsignController = TextEditingController();
+  final AtSignLogger _logger = AtSignLogger('Plugin example app');
+  String? atSign;
   AtService atService = AtService.getInstance();
   late NotificationService _notificationService;
   bool _loading = false;
@@ -128,25 +133,24 @@ class _MyAppState extends State<MyApp> {
   _onboard(context) async {
     var atService = AtService.getInstance();
     var preference = await atService.getAtClientPreference();
-//
-//    Onboarding(
-//      domain: AppConstants.rootDomain,
-//      appAPIKey: AppConstants.devAPIKey,
-//      context: context,
-//      onboard: (value, atsign) async {
-//        atService.atClientServiceInstance = value[atsign];
-//        atService.atClientInstance =
-//            atService.atClientServiceInstance!.atClient;
-//        _atsign = await atService.getAtSign();
-//        Future.delayed(Duration(milliseconds: 300), () {
-//          setState(() {});
-//        });
-//      },
-//      onError: (error) {
-//        Center(child: Text('Onboarding throws $error'));
-//      },
-//      nextScreen: null,
-//      atClientPreference: preference,
-//    );
+
+    Onboarding(
+      domain: AppConstants.rootDomain,
+      appAPIKey: AppConstants.devAPIKey,
+      rootEnvironment: RootEnvironment.Production,
+      context: context,
+      onboard: (Map<String?, AtClientService> value, String? atsign) async {
+        atSign = atsign;
+        atService.atsign = atsign!;
+        atService.atClientServiceMap = value;
+        atService.atClientServiceInstance = value[atsign];
+        _logger.finer('Successfully onboarded $atsign');
+      },
+      onError: (error) {
+        Center(child: Text('Onboarding throws $error'));
+      },
+      nextScreen: NextScreen(),
+      atClientPreference: preference,
+    );
   }
 }
