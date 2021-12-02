@@ -1,5 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -20,6 +21,8 @@ class _BlockedScreenState extends State<BlockedScreen> {
   late ContactService _contactService;
   bool errorOcurred = false;
 
+  /// Boolean indicator of unblock action
+  bool unblockingAtsign = false;
   @override
   void initState() {
     _contactService = ContactService();
@@ -93,9 +96,13 @@ class _BlockedScreenState extends State<BlockedScreen> {
                                     ),
                                     itemBuilder: (context, index) {
                                       return BlockedUserCard(
-                                        blockeduser:
-                                            snapshot.data?[index]?.contact,
-                                      );
+                                          blockeduser:
+                                              snapshot.data?[index]?.contact,
+                                          unblockAtsign: () async {
+                                            await unblockAtsign(snapshot
+                                                    .data?[index]?.contact ??
+                                                AtContact());
+                                          });
                                     },
                                   );
                           } else {
@@ -111,5 +118,33 @@ class _BlockedScreenState extends State<BlockedScreen> {
               ),
             ),
     );
+  }
+
+  Future<void> unblockAtsign(AtContact atsign) async {
+    setState(() {
+      unblockingAtsign = true;
+    });
+    // ignore: unawaited_futures
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Center(
+          child: Text(TextStrings().unblockContact),
+        ),
+        content: Container(
+          height: 100.toHeight,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+    await _contactService.blockUnblockContact(
+        contact: atsign, blockAction: false);
+
+    setState(() {
+      unblockingAtsign = false;
+      Navigator.pop(context);
+    });
   }
 }

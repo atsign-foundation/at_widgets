@@ -369,7 +369,6 @@ class _GroupContactViewState extends State<GroupContactView> {
                                                         .withOpacity(0.2),
                                                     height: 1.toHeight,
                                                   ),
-
                                               itemBuilder: (context, index) {
                                                 return Padding(
                                                     padding:

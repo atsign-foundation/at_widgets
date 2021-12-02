@@ -218,12 +218,14 @@ class BackupKeyWidget extends StatelessWidget {
       return encryptedKeysFile.path;
     } else {
       String encryptedKeysFile = '$atsign${Strings.backupKeySuffix}';
+      print('saving $encryptedKeysFile');
       var keyString = jsonEncode(aesEncryptedKeys);
       final List<int> codeUnits = keyString.codeUnits;
       final Uint8List data = Uint8List.fromList(codeUnits);
-      await FileSaver.instance.saveFile(
+      String desktopPath = await FileSaver.instance.saveFile(
           encryptedKeysFile, data, Strings.backupKeyExtension,
           mimeType: MimeType.OTHER);
+      print('Backup file saved to: $desktopPath');
       return '';
     }
   }

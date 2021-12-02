@@ -1,3 +1,7 @@
+## 3.1.0
+- **FEAT**: Added example
+- **FEAT**: Added platform support for macos, windows and linux
+
 ## 3.0.1
 - added a public method to show a backup key dialog
 

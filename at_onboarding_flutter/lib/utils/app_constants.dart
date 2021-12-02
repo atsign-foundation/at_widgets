@@ -47,14 +47,14 @@ class AppConstants {
 extension customMessages on OnboardingStatus {
   String get message {
     switch (this) {
-      case (OnboardingStatus.activate):
+      case (OnboardingStatus.ACTIVATE):
         return 'Your atsign got reactivated. Please activate with the new QRCode available on ${AppConstants.serverDomain} website.';
-      case (OnboardingStatus.encryptionPrivateKeyNotFound):
-      case (OnboardingStatus.encryptionPublicKeyNotFound):
-      case (OnboardingStatus.pkamPrivateKeyNotFound):
-      case (OnboardingStatus.pkamPublicKeyNotFound):
+      case (OnboardingStatus.ENCRYPTION_PRIVATE_KEY_NOT_FOUND):
+      case (OnboardingStatus.ENCRYPTION_PUBLIC_KEY_NOT_FOUND):
+      case (OnboardingStatus.PKAM_PRIVATE_KEY_NOT_FOUND):
+      case (OnboardingStatus.PKAM_PUBLIC_KEY_NOT_FOUND):
         return 'Fatal error occurred. Please contact support@atsign.com';
-      case (OnboardingStatus.restore):
+      case (OnboardingStatus.RESTORE):
         return 'Please restore it with the available backup zip file as the local keys were missing.';
       default:
         return '';

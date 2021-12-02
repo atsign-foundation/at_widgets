@@ -21,7 +21,7 @@ dependencies:
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
     path: ../ 
-  at_onboarding_flutter: ^3.0.4
+  at_onboarding_flutter: ^3.1.0
 
 
   # The following adds the Cupertino Icons font to your application.

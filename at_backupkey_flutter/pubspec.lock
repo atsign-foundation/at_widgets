@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.1"
+    version: "2.8.2"
   at_base2e15:
     dependency: transitive
     description:
@@ -42,42 +42,42 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.6"
   at_client_mobile:
     dependency: "direct main"
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.1.2"
   at_commons:
     dependency: transitive
     description:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   at_lookup:
     dependency: transitive
     description:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.4"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.8"
   at_persistence_spec:
     dependency: transitive
     description:
       name: at_persistence_spec
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.2"
   at_utf7:
     dependency: transitive
     description:
@@ -91,7 +91,14 @@ packages:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
+  biometric_storage:
+    dependency: transitive
+    description:
+      name: biometric_storage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -105,7 +112,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   charcode:
     dependency: transitive
     description:
@@ -154,7 +161,7 @@ packages:
       name: crypton
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.3"
   encrypt:
     dependency: transitive
     description:
@@ -194,9 +201,14 @@ packages:
       name: flutter_keychain
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.1.0"
   flutter_test:
     dependency: "direct dev"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -228,6 +240,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.1+2"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.3"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   logging:
     dependency: transitive
     description:
@@ -241,7 +267,7 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.10"
+    version: "0.12.11"
   meta:
     dependency: transitive
     description:
@@ -339,7 +365,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.2"
+    version: "3.4.0"
   process:
     dependency: transitive
     description:
@@ -400,7 +426,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.2"
+    version: "0.4.7"
   typed_data:
     dependency: transitive
     description:
@@ -421,7 +447,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   win32:
     dependency: transitive
     description:
@@ -444,5 +470,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.13.0 <3.0.0"
+  dart: ">=2.14.0 <3.0.0"
   flutter: ">=2.0.0"
