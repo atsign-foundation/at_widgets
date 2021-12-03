@@ -88,14 +88,14 @@ class _MyAppState extends State<MyApp> {
                 Center(
                   child: TextButton(
                     onPressed: () async {
-                      await KeychainUtil.resetAtSignFromKeychain(atsign);
-                      atClientServiceMap.remove(atsign);
+                      await KeyChainManager.getInstance()
+                          .clearKeychainEntries();
                       atsign = null;
                       atClientServiceMap = null;
                       onboardingState = OnboardingState.initial;
                       setState(() {});
                     },
-                    child: Text('Reset my @sign'),
+                    child: Text('Clear onboarded @sign'),
                   ),
                 ),
               if (onboardingState == OnboardingState.success)

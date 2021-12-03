@@ -12,12 +12,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  share: ^2.0.4
+  share_plus: ^3.0.4
   permission_handler: ^8.1.1
   path_provider: ^2.0.2
   file_saver: ^0.0.10
   at_utils: ^3.0.0
   at_client_mobile: ^3.1.1
+
+  # desktop - dependencies
+  file_selector: ^0.8.2+1
+  file_selector_macos: ^0.0.4+1
+  file_selector_windows: ^0.0.2+1
+  file_selector_linux: ^0.0.2+1
 
 dev_dependencies:
   flutter_test:
