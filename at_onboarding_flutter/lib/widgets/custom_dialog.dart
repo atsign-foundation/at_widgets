@@ -499,48 +499,53 @@ class _CustomDialogState extends State<CustomDialog> {
                                   widget.hideQrScan
                                       ? SizedBox()
                                       : (Platform.isAndroid || Platform.isIOS)
-                                        ? Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: ElevatedButton(
-                                            style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.grey[800])),
-                                            // key: Key(''),
-                                            onPressed: () async {
-                                              await _verifyCameraPermissions();
-                                              setState(() {
-                                                isQrScanner = true;
-                                              });
-                                            },
-                                            child: Text(
-                                              'Scan QR code',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15.toFont),
-                                            ),
-                                          ))
-                                      : Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: ElevatedButton(
-                                            style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.grey[800])),
-                                            // key: Key(''),
-                                            onPressed: () async {
-                                              _uploadQRFileForDesktop(
-                                                  context, widget.onValidate);
-                                            },
-                                            child: Text(
-                                              'Upload QR code',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15.toFont),
-                                            ),
-                                          )),
+                                          ? Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(Colors
+                                                                .grey[800])),
+                                                // key: Key(''),
+                                                onPressed: () async {
+                                                  await _verifyCameraPermissions();
+                                                  setState(() {
+                                                    isQrScanner = true;
+                                                  });
+                                                },
+                                                child: Text(
+                                                  'Scan QR code',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15.toFont),
+                                                ),
+                                              ))
+                                          : Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(Colors
+                                                                .grey[800])),
+                                                // key: Key(''),
+                                                onPressed: () async {
+                                                  _uploadQRFileForDesktop(
+                                                      context,
+                                                      widget.onValidate);
+                                                },
+                                                child: Text(
+                                                  'Upload QR code',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15.toFont),
+                                                ),
+                                              )),
                                 ],
                                 if (isfreeAtsign) ...<Widget>[
                                   SizedBox(height: 15.toHeight),
