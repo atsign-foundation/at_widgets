@@ -29,6 +29,7 @@ dependencies:
   at_common_flutter: ^2.0.2
   at_contacts_flutter: ^3.0.2
   at_contact: ^3.0.1
+ 
   
 dev_dependencies:
   flutter_lints: ^1.0.4
@@ -36,6 +37,8 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
+  at_common_flutter:
+    path: /Users/sachinsingh/Documents/geekyAnts/AtSign/at_widgets/at_common_flutter
   plugin_platform_interface: ^2.0.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
