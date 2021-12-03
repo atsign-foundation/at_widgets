@@ -1,3 +1,6 @@
+## 2.0.4
+- **FEAT**: Added check for mobile, tablet and desktop in SizeConfig
+ 
 ## 2.0.3
 - **FEAT**: Added `isDesktop` check in CustomAppBar
 
