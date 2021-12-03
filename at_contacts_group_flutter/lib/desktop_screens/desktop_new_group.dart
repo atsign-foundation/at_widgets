@@ -6,14 +6,13 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/widgets/common_button.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
-import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
-import 'package:at_contacts_group_flutter/widgets/desktop_custom_person_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_image_picker.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_person_vertical_tile.dart';
 import 'package:flutter/material.dart';
 
 class DesktopNewGroup extends StatefulWidget {
@@ -306,8 +305,8 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                           return DesktopCustomPersonVerticalTile(
                             title: selectedContacts![index]!.atSign,
                             subTitle: selectedContacts![index]!.atSign,
-                            showCancelIcon: true,
-                            onRemovePress: () {
+                            icon: Icons.close,
+                            onCrossPressed: () {
                               setState(() {
                                 selectedContacts!.removeAt(index);
                               });

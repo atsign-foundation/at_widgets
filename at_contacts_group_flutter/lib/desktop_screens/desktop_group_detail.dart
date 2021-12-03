@@ -73,12 +73,10 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                       : Stack(
                           alignment: Alignment.center,
                           children: [
-                            Image.asset(
-                              AllImages().GROUP_PHOTO,
+                            SizedBox(
                               height: 272,
                               width: double.infinity,
-                              fit: BoxFit.fitWidth,
-                              package: 'at_contacts_group_flutter',
+                              child: Icon(Icons.groups_rounded),
                             ),
                             updatingImage
                                 ? Positioned(
