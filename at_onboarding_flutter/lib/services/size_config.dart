@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// This class helps with responsiveness in various screen sizes
 class SizeConfig {
   SizeConfig._();
 

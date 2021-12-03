@@ -4,8 +4,10 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_server_status/at_server_status.dart';
 
+/// Common error dialog to show the error to user
 class AtErrorDialog {
   static AlertDialog getAlertDialog(Object error, BuildContext context) {
+    /// The error message to display
     String errorMessage = _getErrorMessage(error);
     String title = 'Error';
     return AlertDialog(
@@ -74,12 +76,12 @@ class AtErrorDialog {
 
   static String _message(OnboardingStatus status) {
     switch (status) {
-      case (OnboardingStatus.encryptionPrivateKeyNotFound):
-      case (OnboardingStatus.encryptionPublicKeyNotFound):
-      case (OnboardingStatus.pkamPrivateKeyNotFound):
-      case (OnboardingStatus.pkamPublicKeyNotFound):
+      case (OnboardingStatus.ENCRYPTION_PRIVATE_KEY_NOT_FOUND):
+      case (OnboardingStatus.ENCRYPTION_PUBLIC_KEY_NOT_FOUND):
+      case (OnboardingStatus.PKAM_PRIVATE_KEY_NOT_FOUND):
+      case (OnboardingStatus.PKAM_PUBLIC_KEY_NOT_FOUND):
         return 'Fatal error occurred. Please contact support@atsign.com';
-      case (OnboardingStatus.restore):
+      case (OnboardingStatus.RESTORE):
         return 'Please restore it with the available backup zip file as the local keys were missing.';
       default:
         return '';

@@ -377,7 +377,6 @@ class GroupService {
     }
   }
 
-
   void addRecentContacts(GroupContactsModel groupContact) {
     _recentContacts.removeWhere((element) {
       return element.contact!.atSign!.toLowerCase() ==

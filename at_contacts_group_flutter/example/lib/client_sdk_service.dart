@@ -22,13 +22,6 @@ class ClientSdkService {
 
   Future<bool> onboard({String? atsign}) async {
     atClientServiceInstance = AtClientService();
-    Directory? downloadDirectory;
-    if (Platform.isIOS) {
-      downloadDirectory =
-          await path_provider.getApplicationDocumentsDirectory();
-    } else {
-      downloadDirectory = await path_provider.getExternalStorageDirectory();
-    }
 
     final appSupportDirectory =
         await path_provider.getApplicationSupportDirectory();
@@ -40,7 +33,6 @@ class ClientSdkService {
     atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
     atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
-    atClientPreference.downloadPath = downloadDirectory!.path;
     var result = await atClientServiceInstance!
         .onboard(atClientPreference: atClientPreference, atsign: atsign)
         .catchError((e) {

@@ -45,7 +45,11 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                         fit: BoxFit.fill,
                       ),
                     )
-                  : ContactInitial(initials: title ?? ' '),
+                  : ContactInitial(
+                      initials: title ?? ' ',
+                      minSize: 40.0,
+                      maxSize: 40.0,
+                    ),
               icon != null
                   ? Positioned(
                       top: isTopRight ? 0 : null,

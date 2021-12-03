@@ -1,3 +1,6 @@
+## 3.1.0
+- **FEAT**: Added support for macos, windows and linux platforms
+
 ## 3.0.4
 - Added hide qr scan to hide qr scan in custom dialog
 

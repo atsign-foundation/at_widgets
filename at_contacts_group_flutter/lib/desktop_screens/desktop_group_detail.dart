@@ -74,10 +74,10 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                           alignment: Alignment.center,
                           children: [
                             SizedBox(
-                              height: 272,
-                              width: double.infinity,
-                              child: Icon(Icons.groups_rounded),
-                            ),
+                                height: 272.toHeight,
+                                width: double.infinity,
+                                child: Icon(Icons.groups_rounded,
+                                    size: 200, color: AllColors().LIGHT_GREY)),
                             updatingImage
                                 ? Positioned(
                                     child: Text('Updating image...',
