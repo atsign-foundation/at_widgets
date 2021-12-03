@@ -39,17 +39,21 @@ class GroupContactView extends StatefulWidget {
   /// Callback to get the list of selected contacts back to the app
   final ValueChanged<List<GroupContactsModel?>>? selectedList;
 
-  GroupContactView({
-    Key? key,
-    this.showContacts = false,
-    this.showGroups = false,
-    this.singleSelection = false,
-    this.asSelectionScreen = true,
-    this.selectedList,
-    this.isDesktop = false,
-    this.onBackArrowTap,
-    this.onDoneTap,
-  }) : super(key: key);
+  /// to show already selected contacts.
+  final List<GroupContactsModel>? contactSelectedHistory;
+
+  GroupContactView(
+      {Key? key,
+      this.showContacts = false,
+      this.showGroups = false,
+      this.singleSelection = false,
+      this.asSelectionScreen = true,
+      this.selectedList,
+      this.isDesktop = false,
+      this.onBackArrowTap,
+      this.onDoneTap,
+      this.contactSelectedHistory})
+      : super(key: key);
   @override
   _GroupContactViewState createState() => _GroupContactViewState();
 }
@@ -81,6 +85,11 @@ class _GroupContactViewState extends State<GroupContactView> {
     _groupService.fetchGroupsAndContacts(isDesktop: widget.isDesktop);
     unmodifiedSelectedGroupContacts =
         List.from(_groupService.selectedGroupContacts);
+
+    if (widget.contactSelectedHistory != null &&
+        widget.contactSelectedHistory!.isNotEmpty) {
+      _groupService.selectedGroupContacts = [...widget.contactSelectedHistory!];
+    }
 
     super.initState();
   }
