@@ -8,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:file_selector/file_selector.dart';
 
 class BackupKeyWidget extends StatelessWidget {
   final AtSignLogger _logger = AtSignLogger('BackUp Key Widget');
@@ -188,12 +189,19 @@ class BackupKeyWidget extends StatelessWidget {
       if (aesEncryptedKeys.isEmpty) {
         return false;
       }
-      String path = await _generateFile(aesEncryptedKeys);
+      String tempFilePath = await _generateFile(aesEncryptedKeys);
       if (Platform.isAndroid || Platform.isIOS) {
-        await Share.shareFiles([path],
+        await Share.shareFiles([tempFilePath],
             sharePositionOrigin:
                 Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
+      } else {
+        final path =
+            await getSavePath(suggestedName: '$atsign${Strings.backupKeyName}');
+        final file = XFile(tempFilePath);
+        await file.saveTo(path ?? '');
       }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('File saved successfully')));
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
     } on Error catch (err) {
@@ -210,7 +218,6 @@ class BackupKeyWidget extends StatelessWidget {
 
       var directory = await path_provider.getApplicationSupportDirectory();
       String path = directory.path.toString() + '/';
-      print('path: $path');
       final encryptedKeysFile =
           await File('$path' + '$atsign${Strings.backupKeyName}').create();
       var keyString = jsonEncode(aesEncryptedKeys);
@@ -218,7 +225,6 @@ class BackupKeyWidget extends StatelessWidget {
       return encryptedKeysFile.path;
     } else {
       String encryptedKeysFile = '$atsign${Strings.backupKeySuffix}';
-      print('saving $encryptedKeysFile');
       var keyString = jsonEncode(aesEncryptedKeys);
       final List<int> codeUnits = keyString.codeUnits;
       final Uint8List data = Uint8List.fromList(codeUnits);
@@ -226,7 +232,7 @@ class BackupKeyWidget extends StatelessWidget {
           encryptedKeysFile, data, Strings.backupKeyExtension,
           mimeType: MimeType.OTHER);
       print('Backup file saved to: $desktopPath');
-      return '';
+      return desktopPath;
     }
   }
 }
