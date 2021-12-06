@@ -11,15 +11,9 @@ class NextScreen extends StatefulWidget {
 }
 
 class _NextScreen extends State<NextScreen> {
-  // final _formKey = GlobalKey<FormState>();
-  // final _atsignController = TextEditingController();
-  final AtSignLogger _logger = AtSignLogger('Plugin example app');
   String? atSign;
   AtService atService = AtService.getInstance();
   late NotificationService _notificationService;
-  bool _loading = false;
-  // List<String> _atsignsList = [];
-  String? _atsign;
   @override
   void initState() {
     super.initState();
