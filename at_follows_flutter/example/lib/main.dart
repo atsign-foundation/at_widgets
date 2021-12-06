@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_follows_flutter_example/screens/follows_screen.dart';
+import 'package:at_onboarding_flutter/widgets/custom_reset_button.dart';
 
 void main() {
   runApp(MyApp());
@@ -102,6 +103,13 @@ class _MyAppState extends State<MyApp> {
                             },
                             child: Text(AppStrings.onboard)),
                       ),
+                    if (_atsign == null)
+                      Center(
+                          child: CustomResetButton(
+                        buttonText: "Reset",
+                        height: 50,
+                        width: 100,
+                      )),
                   ],
                 ),
                 if (_loading) Center(child: CircularProgressIndicator())
