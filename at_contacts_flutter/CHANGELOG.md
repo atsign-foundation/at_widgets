@@ -1,3 +1,6 @@
+## 3.1.1
+- Updated package dependencies
+
 ## 3.1.0
 - **FEAT**: Added platform support for macos, windows and linux
 
