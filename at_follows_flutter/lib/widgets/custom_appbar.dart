@@ -6,6 +6,7 @@ import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
 
+// a class to create custom app bar
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showTitle;
   final bool showQr;

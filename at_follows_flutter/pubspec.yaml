@@ -1,6 +1,6 @@
 name: at_follows_flutter
-description: A Flutter plugin project that provides a basic social "follows" functionality for any @sign. Provides a list of @signs that follow you (followers) as well as the @signs that you follow (following) with the option to unfollow them.
-version: 3.0.3
+description: A Flutter plugin project that provides a basic social "follows" functionality for @signs. Provides a list of followers and following for @signs with the option to unfollow them.
+version: 3.0.4
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
 
@@ -11,19 +11,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^5.0.0
+  provider: ^6.0.1
   flutter_qr_reader: ^1.0.5
-  permission_handler: ^8.1.1
-  flutter_local_notifications: ^5.0.0+1
-  webview_flutter: ^2.0.8
-  url_launcher: ^6.0.6
+  permission_handler: ^8.3.0
+  flutter_local_notifications: ^9.1.4
+  webview_flutter: ^2.3.1
+  url_launcher: ^6.0.16
   collection: ^1.15.0
-  at_utils: ^3.0.1
-  at_commons: ^3.0.1
+  at_utils: ^3.0.2
+  at_commons: ^3.0.2
   at_client: ^3.0.6
-  at_client_mobile: ^3.1.1
+  at_client_mobile: ^3.1.2
   at_server_status: ^1.0.3
-  at_lookup: ^3.0.4
+  at_lookup: ^3.0.5
 
 #dependency_overrides:
 #  at_client_mobile:

@@ -133,17 +133,17 @@ class SDKService {
         .getAtKeys(regex: regex)
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
             onTimeout: () => _onTimeOut());
-    int index = scanKey.length-1;
-    for(int i=0;i<scanKey.length;i++){
-      if(scanKey[i].key!.endsWith("self.at_follows")
-          && scanKey[i].namespace == "wavi"
-          && scanKey[i].sharedWith == null){
+    int index = scanKey.length - 1;
+    for (int i = 0; i < scanKey.length; i++) {
+      if (scanKey[i].key!.endsWith("self.at_follows") &&
+          scanKey[i].namespace == "wavi" &&
+          scanKey[i].sharedWith == null) {
         index = i;
       }
     }
     AtFollowsValue value =
         scanKey.isNotEmpty ? await this.get(scanKey[index]) : AtFollowsValue();
-        //scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
+    //scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
     //migrates to newnamespace
     if (scanKey.isNotEmpty &&
         _isOldKey(scanKey[0].key) &&
@@ -171,8 +171,7 @@ class SDKService {
   ///Performs sync for current @sign if syncStrategy is [SyncStrategy.ONDEMAND].
   sync() async {
     if (AtClientManager.getInstance().atClient.getPreferences()!.syncStrategy ==
-        SyncStrategy.ONDEMAND)
-      AtClientManager.getInstance().syncService.sync();
+        SyncStrategy.ONDEMAND) AtClientManager.getInstance().syncService.sync();
   }
 
   ///Throws [ResponseTimeOutException].

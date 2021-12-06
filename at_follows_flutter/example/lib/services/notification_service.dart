@@ -61,8 +61,7 @@ class NotificationService {
   showNotification(AtNotification atNotification) async {
     print('inside show notification...');
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-            'your channel id', 'your channel name', 'your channel description',
+        AndroidNotificationDetails('your channel id', 'your channel name',
             importance: Importance.max,
             priority: Priority.high,
             showWhen: false);
