@@ -200,6 +200,8 @@ class BackupKeyWidget extends StatelessWidget {
         final file = XFile(tempFilePath);
         await file.saveTo(path ?? '');
       }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('File saved successfully')));
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
     } on Error catch (err) {
