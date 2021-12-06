@@ -71,6 +71,9 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   late bool showMarker, mapAdjustedOnce;
   BuildContext? globalContext;
 
+  // ignore: prefer_final_fields
+  Key _mapKey = UniqueKey();
+
   List<String> atsignsCurrentlySharing = [];
 
   @override
@@ -181,8 +184,11 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
 
                     try {
                       if (widget.focusMapOn == null) {
-                        if ((markers.isNotEmpty) && (mapController != null)) {
+                        if ((!mapAdjustedOnce) &&
+                            (markers.isNotEmpty) &&
+                            (mapController != null)) {
                           mapController!.move(markers[0]!.point, 10);
+                          mapAdjustedOnce = true;
                         }
                       } else {
                         if ((!mapAdjustedOnce) &&
@@ -199,11 +205,12 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                             /// And not keep the focus on user sharing his location
                             /// then uncomment
                             //
-                            // mapAdjustedOnce = true;
-                          } else {
+                            mapAdjustedOnce = true;
+                          } else if (!mapAdjustedOnce) {
                             /// It moves the focus to logged in user,
                             /// when other user is not sharing location
                             mapController!.move(markers[0]!.point, 10);
+                            mapAdjustedOnce = true;
                           }
                         }
                       }
@@ -212,6 +219,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                     }
 
                     return FlutterMap(
+                      key: _mapKey,
                       mapController: mapController,
                       options: MapOptions(
                         boundsOptions: FitBoundsOptions(

@@ -19,7 +19,8 @@ import 'utils/constants/constants.dart';
 Widget showLocation(Key? key, MapController? mapController,
     {LatLng? location,
     List<LatLng>? locationList,
-    Widget? locationListMarker}) {
+    Widget? locationListMarker,
+    bool moveMap = true}) {
   bool showMarker;
   Marker marker;
   List<Marker>? markerList;
@@ -29,7 +30,7 @@ Widget showLocation(Key? key, MapController? mapController,
   print('widget.location $location');
   if (location != null) {
     marker = buildMarker(HybridModel(latLng: location), singleMarker: true);
-    if (mapController != null) {
+    if ((mapController != null) && (moveMap)) {
       mapController.move(location, 8);
     }
   } else {
