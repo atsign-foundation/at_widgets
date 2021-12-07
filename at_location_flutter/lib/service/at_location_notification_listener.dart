@@ -13,6 +13,7 @@ import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
@@ -72,7 +73,9 @@ class AtLocationNotificationListener {
   }
 
   void _notificationCallback(AtNotification notification) async {
-    if (notification.id == '-1') {
+    if ((notification.id == '-1') ||
+        compareAtSign(notification.from,
+            AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
       return;
     }
 

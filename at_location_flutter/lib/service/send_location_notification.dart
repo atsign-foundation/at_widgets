@@ -386,6 +386,12 @@ class SendLocationNotification {
 
   Future<void> prepareLocationDataAndSend(String receiver,
       LocationDataModel locationData, LatLng? myLocation) async {
+    //// don't send anything to logged in atsign
+    if (compareAtSign(
+        receiver, AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      return;
+    }
+
     var isSend = false;
 
     for (var locData in locationData.locationSharingFor.entries) {

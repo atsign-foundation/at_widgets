@@ -289,14 +289,11 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                   return showLocation(UniqueKey(), mapController);
                 }
               }),
-          LocationService().hybridUsersList.isNotEmpty
-              ? Positioned(
-                  top: 100,
-                  right: 0,
-                  child: FloatingIcon(
-                      icon: Icons.zoom_out_map, onPressed: zoomOutFn),
-                )
-              : const SizedBox(),
+          Positioned(
+            top: 100,
+            right: 0,
+            child: FloatingIcon(icon: Icons.zoom_out_map, onPressed: zoomOutFn),
+          ),
         ],
       ),
     ));

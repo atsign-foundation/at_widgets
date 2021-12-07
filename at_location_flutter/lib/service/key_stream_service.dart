@@ -396,11 +396,12 @@ class KeyStreamService {
 
   /// Returns updated list
   void notifyListeners() {
+    filterData();
+
     if (streamAlternative != null) {
       streamAlternative!(allLocationNotifications);
     }
 
-    filterData();
     atNotificationsSink.add(allLocationNotifications);
   }
 }

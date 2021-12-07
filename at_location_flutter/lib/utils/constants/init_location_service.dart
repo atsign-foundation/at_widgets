@@ -103,6 +103,7 @@ AtKey getAtKey(String regexKey) {
   return atKey;
 }
 
+/// returns true if [atsign1] & [atsign2] are same
 bool compareAtSign(String atsign1, String atsign2) {
   if (atsign1[0] != '@') {
     atsign1 = '@' + atsign1;
