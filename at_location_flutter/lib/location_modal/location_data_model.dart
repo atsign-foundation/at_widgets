@@ -1,14 +1,18 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:latlong2/latlong.dart';
 
-/// TODO: add a bool for retry
 class LocationDataModel {
   /// [locationSharingFor] accepts id as key and [LocationSharingFor] as data.
   late Map<String, LocationSharingFor> locationSharingFor;
   double? lat, long;
   late DateTime lastUpdatedAt;
   late String sender, receiver;
+
+  /// Enhancement: add a bool for retry
+
   LocationDataModel(this.locationSharingFor, this.lat, this.long,
       this.lastUpdatedAt, this.sender, this.receiver);
 

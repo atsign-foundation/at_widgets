@@ -1,10 +1,11 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/home_screen_service.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
-import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
@@ -15,6 +16,7 @@ import 'custom_toast.dart';
 import 'display_tile.dart';
 import 'draggable_symbol.dart';
 import 'loading_widget.dart';
+import 'package:at_utils/at_logger.dart';
 
 // ignore: must_be_immutable
 class CollapsedContent extends StatefulWidget {
@@ -23,12 +25,15 @@ class CollapsedContent extends StatefulWidget {
   AtClient? atClientInstance;
   String? currentAtSign;
   CollapsedContent(this.expanded, this.atClientInstance,
-      {Key? key, this.userListenerKeyword, required this.currentAtSign});
+      {Key? key, this.userListenerKeyword, required this.currentAtSign})
+      : super(key: key);
   @override
   _CollapsedContentState createState() => _CollapsedContentState();
 }
 
 class _CollapsedContentState extends State<CollapsedContent> {
+  final _logger = AtSignLogger('CollapsedContent');
+
   late bool isSharing;
   bool locationAvailable = false;
   @override
@@ -80,9 +85,9 @@ class _CollapsedContentState extends State<CollapsedContent> {
 
     return Container(
         height: widget.expanded ? 431.toHeight : 205.toHeight,
-        padding: EdgeInsets.fromLTRB(15, 3, 15, 0),
+        padding: const EdgeInsets.fromLTRB(15, 3, 15, 0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
           color: Theme.of(context).brightness == Brightness.light
               ? AllColors().WHITE
@@ -92,7 +97,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
               color: AllColors().DARK_GREY,
               blurRadius: 10.0,
               spreadRadius: 1.0,
-              offset: Offset(0.0, 0.0),
+              offset: const Offset(0.0, 0.0),
             )
           ],
         ),
@@ -102,11 +107,11 @@ class _CollapsedContentState extends State<CollapsedContent> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               amICreator
-                  ? DraggableSymbol()
-                  : SizedBox(
+                  ? const DraggableSymbol()
+                  : const SizedBox(
                       height: 10,
                     ),
-              SizedBox(
+              const SizedBox(
                 height: 3,
               ),
               Row(
@@ -143,7 +148,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                 'Sharing my location $time',
                                 style: CustomTextStyles().black12,
                               )
-                            : SizedBox()
+                            : const SizedBox()
                       ],
                     ),
                   ),
@@ -172,7 +177,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Divider(),
+                          const Divider(),
                           amICreator
                               ? Row(
                                   mainAxisAlignment:
@@ -215,7 +220,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                   }
                                                   if (result) {
                                                     // if (!value) {
-                                                    //   // TODO: verify receiver
+                                                    //
                                                     //   await SendLocationNotification()
                                                     //       .sendNull([
                                                     //     widget
@@ -234,7 +239,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                   }
                                                   LoadingDialog().hide();
                                                 } catch (e) {
-                                                  print(e);
+                                                  _logger.severe(e);
                                                   CustomToast().show(
                                                       'Something went wrong , please try again.',
                                                       context,
@@ -244,8 +249,8 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                               })
                                   ],
                                 )
-                              : SizedBox(),
-                          amICreator ? Divider() : SizedBox(),
+                              : const SizedBox(),
+                          amICreator ? const Divider() : const SizedBox(),
                           amICreator
                               ? Expanded(
                                   child: InkWell(
@@ -267,7 +272,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                               isError: true);
                                         }
                                       } catch (e) {
-                                        print(e);
+                                        _logger.severe(e);
                                         CustomToast().show(
                                             'Something went wrong, try again.',
                                             context,
@@ -280,8 +285,8 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                     ),
                                   ),
                                 )
-                              : SizedBox(),
-                          (amICreator) ? Divider() : SizedBox(),
+                              : const SizedBox(),
+                          (amICreator) ? const Divider() : const SizedBox(),
                           (amICreator)
                               ? Expanded(
                                   child: InkWell(
@@ -292,11 +297,11 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                     ),
                                   ),
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                         ],
                       ),
                     )
-                  : SizedBox(
+                  : const SizedBox(
                       height: 2,
                     )
             ]));
@@ -315,7 +320,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
             .sendDeleteAck(widget.userListenerKeyword!);
       }
       if (result) {
-        // TODO: verify receiver
+        //
         // await SendLocationNotification()
         //     .sendNull([widget.userListenerKeyword!.receiver!]);
         LoadingDialog().hide();
@@ -328,7 +333,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
             .show('Something went wrong, try again.', context, isError: true);
       }
     } catch (e) {
-      print(e);
+      _logger.severe(e);
       CustomToast().show('something went wrong , please try again.', context,
           isError: true);
       LoadingDialog().hide();
@@ -337,7 +342,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
 
   Widget participants(Function() onTap) {
     return Padding(
-      padding: EdgeInsets.only(left: 56),
+      padding: const EdgeInsets.only(left: 56),
       child: InkWell(
         onTap: onTap,
         child: Text(

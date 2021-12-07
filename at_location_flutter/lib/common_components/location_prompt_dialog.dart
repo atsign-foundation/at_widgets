@@ -4,7 +4,6 @@ import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
-import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -40,14 +39,16 @@ class LocationPrompt extends StatefulWidget {
   final bool isShareLocationData, isRequestLocationData, onlyText;
   final LocationNotificationModel? locationNotificationModel;
 
-  LocationPrompt(
-      {this.text,
+  const LocationPrompt(
+      {Key? key,
+      this.text,
       this.yesText,
       this.noText,
       this.onlyText = false,
       required this.isShareLocationData,
       required this.isRequestLocationData,
-      this.locationNotificationModel});
+      this.locationNotificationModel})
+      : super(key: key);
 
   @override
   _LocationPromptState createState() => _LocationPromptState();
@@ -64,10 +65,10 @@ class _LocationPromptState extends State<LocationPrompt> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: SizeConfig().screenWidth * 0.8,
       child: AlertDialog(
-        contentPadding: EdgeInsets.fromLTRB(15, 30, 15, 20),
+        contentPadding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
         content: SingleChildScrollView(
           child: Container(
             child: widget.onlyText
@@ -78,7 +79,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                         style: CustomTextStyles().grey16,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       CustomButton(
                         onPressed: () => Navigator.of(context).pop(),
                         buttonText: 'Okay!',
@@ -95,9 +96,9 @@ class _LocationPromptState extends State<LocationPrompt> {
                         style: CustomTextStyles().grey16,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       loading
-                          ? Center(
+                          ? const Center(
                               child: CircularProgressIndicator(),
                             )
                           : CustomButton(
@@ -128,7 +129,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                               width: 164.toWidth,
                               height: 48.toHeight,
                             ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       CustomButton(
                         onPressed: () async {
                           if (widget.isShareLocationData) {

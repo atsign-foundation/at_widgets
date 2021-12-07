@@ -8,16 +8,18 @@ class Tasks extends StatelessWidget {
   final String task;
   final Function onTap;
   final double angle;
-  Tasks(
-      {required this.task,
+  const Tasks(
+      {Key? key,
+      required this.task,
       required this.icon,
       required this.onTap,
-      this.angle = 0.0});
+      this.angle = 0.0})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap as void Function()?,
-      child: Container(
+      child: SizedBox(
         height: 54.toHeight,
         width: 70.toWidth,
         child: Column(

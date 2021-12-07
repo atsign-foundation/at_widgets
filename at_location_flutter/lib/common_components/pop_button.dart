@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class PopButton extends StatelessWidget {
   final String label;
   final TextStyle? textStyle;
-  PopButton({required this.label, this.textStyle});
+  const PopButton({Key? key, required this.label, this.textStyle})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(
