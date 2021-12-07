@@ -23,7 +23,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool showList;
-  HomeScreen({this.showList = true});
+  const HomeScreen({Key? key, this.showList = true}) : super(key: key);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           widget.showList
               ? Positioned(bottom: 264.toHeight, child: header())
-              : SizedBox(),
+              : const SizedBox(),
           widget.showList
               ? StreamBuilder(
                   stream: KeyStreamService().atNotificationsStream,
@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
                   })
-              : SizedBox(),
+              : const SizedBox(),
         ],
       ),
     ));
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
         height: !isExpanded ? 260.toHeight : 530.toHeight,
         padding: EdgeInsets.fromLTRB(15.toWidth, 7.toHeight, 0, 0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
           color: Theme.of(context).scaffoldBackgroundColor,
           boxShadow: [
@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AllColors().DARK_GREY,
               blurRadius: 10.0,
               spreadRadius: 1.0,
-              offset: Offset(0.0, 0.0),
+              offset: const Offset(0.0, 0.0),
             )
           ],
         ),
@@ -201,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            Divider()
+            const Divider()
           ],
         );
       }).toList(),
@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: AllColors().DARK_GREY,
             blurRadius: 10.0,
             spreadRadius: 1.0,
-            offset: Offset(0.0, 0.0),
+            offset: const Offset(0.0, 0.0),
           )
         ],
       ),
@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icons.sync,
                 angle: (-3.14 / 2),
                 onTap: () async {
-                  bottomSheet(context, RequestLocationSheet(),
+                  bottomSheet(context, const RequestLocationSheet(),
                       SizeConfig().screenHeight * 0.5);
                 }),
           ),
@@ -245,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 task: 'Share Location',
                 icon: Icons.person_add,
                 onTap: () {
-                  bottomSheet(context, ShareLocationSheet(),
+                  bottomSheet(context, const ShareLocationSheet(),
                       SizeConfig().screenHeight * 0.6);
                 }),
           )

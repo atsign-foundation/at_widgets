@@ -1,7 +1,6 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
-import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/show_location.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
@@ -13,12 +12,12 @@ import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/m
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_controller.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_snap.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'common_components/floating_icon.dart';
 import 'common_components/marker_cluster.dart';
 import 'common_components/popup.dart';
+import 'package:at_utils/at_logger.dart';
 
 /// A class defined to show markers based on current location of mentioned atsigns.
 // ignore: must_be_immutable
@@ -46,6 +45,7 @@ class AtLocationFlutterPlugin extends StatefulWidget {
 
   AtLocationFlutterPlugin(
     this.atsignsToTrack, {
+    Key? key,
     this.left,
     this.right,
     this.top,
@@ -56,13 +56,15 @@ class AtLocationFlutterPlugin extends StatefulWidget {
     this.etaFrom,
     this.focusMapOn,
     this.notificationID,
-  });
+  }) : super(key: key);
   @override
   _AtLocationFlutterPluginState createState() =>
       _AtLocationFlutterPluginState();
 }
 
 class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
+  final _logger = AtSignLogger('AtLocationFlutterPlugin');
+
   PanelController pc = PanelController();
   PopupController _popupController = PopupController();
   MapController? mapController;
@@ -98,10 +100,10 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   }
 
   void showToast(String msg, {bool isError = false, isSuccess = false}) {
-    // if (globalContext != null) {
-    //   CustomToast()
-    //       .show(msg, globalContext!, isError: isError, isSuccess: isSuccess);
-    // }
+    if (globalContext != null) {
+      CustomToast()
+          .show(msg, globalContext!, isError: isError, isSuccess: isSuccess);
+    }
   }
 
   @override
@@ -160,25 +162,27 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
               builder: (context, AsyncSnapshot<List<HybridModel?>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasError) {
-                    return Center(
+                    return const Center(
                       child: Text(
                         'error',
                         style: TextStyle(fontSize: 400),
                       ),
                     );
                   } else {
-                    print('FlutterMap called');
+                    _logger.finer('FlutterMap called');
+
                     _popupController = PopupController();
                     var users = snapshot.data!;
                     var markers = users.map((user) => user!.marker).toList();
                     points = users.map((user) => user!.latLng).toList();
-                    print('markers length = ${markers.length}');
-                    users.forEach((element) {
-                      print('displayanme - ${element!.displayName}');
-                    });
-                    markers.forEach((element) {
-                      print('point - ${element!.point}');
-                    });
+
+                    _logger.finer('markers length = ${markers.length}');
+                    for (var element in users) {
+                      _logger.finer('displayanme - ${element!.displayName}');
+                    }
+                    for (var element in markers) {
+                      _logger.finer('point - ${element!.point}');
+                    }
 
                     calculateAtsignsCurrentlySharing(users);
 
@@ -215,7 +219,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         }
                       }
                     } catch (e) {
-                      print('$e');
+                      _logger.severe('$e');
                     }
 
                     return FlutterMap(
@@ -251,15 +255,15 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                           disableClusteringAtZoom: 16,
                           size: showMarker
                               ? ((markers.length > 1)
-                                  ? Size(200, 150)
-                                  : Size(5, 5))
-                              : Size(0, 0),
+                                  ? const Size(200, 150)
+                                  : const Size(5, 5))
+                              : const Size(0, 0),
                           anchor: AnchorPos.align(AnchorAlign.center),
-                          fitBoundsOptions: FitBoundsOptions(
+                          fitBoundsOptions: const FitBoundsOptions(
                             padding: EdgeInsets.all(50),
                           ),
                           markers: showMarker ? markers : [],
-                          polygonOptions: PolygonOptions(
+                          polygonOptions: const PolygonOptions(
                               borderColor: Colors.blueAccent,
                               color: Colors.black12,
                               borderStrokeWidth: 3),
@@ -269,7 +273,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                               popupBuilder: (_, marker) {
                                 return _popupController
                                         .streamController!.isClosed
-                                    ? Text('Closed')
+                                    ? const Text('Closed')
                                     : buildPopup(snapshot
                                         .data![markers.indexOf(marker)]!);
                               }),
@@ -285,11 +289,14 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                   return showLocation(UniqueKey(), mapController);
                 }
               }),
-          Positioned(
-            top: 100,
-            right: 0,
-            child: FloatingIcon(icon: Icons.zoom_out_map, onPressed: zoomOutFn),
-          ),
+          LocationService().hybridUsersList.isNotEmpty
+              ? Positioned(
+                  top: 100,
+                  right: 0,
+                  child: FloatingIcon(
+                      icon: Icons.zoom_out_map, onPressed: zoomOutFn),
+                )
+              : const SizedBox(),
         ],
       ),
     ));

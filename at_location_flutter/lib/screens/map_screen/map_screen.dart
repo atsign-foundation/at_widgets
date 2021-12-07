@@ -13,7 +13,8 @@ class MapScreen extends StatefulWidget {
   final LocationNotificationModel? userListenerKeyword;
   String? currentAtSign;
 
-  MapScreen({this.currentAtSign, this.userListenerKeyword});
+  MapScreen({Key? key, this.currentAtSign, this.userListenerKeyword})
+      : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();

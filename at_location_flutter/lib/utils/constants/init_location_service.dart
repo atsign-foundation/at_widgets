@@ -12,6 +12,7 @@ import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:at_utils/at_logger.dart';
 
 /// Function to initialise the package. Should be mandatorily called before accessing package functionalities.
 ///
@@ -32,6 +33,8 @@ Future<void> initializeLocationService(GlobalKey<NavigatorState> navKey,
     Function? getAtValue,
     Function(List<KeyLocationModel>)? streamAlternative,
     bool isEventInUse = false}) async {
+  final _logger = AtSignLogger('initializeLocationService');
+
   /// initialise keys
   MixedConstants.setApiKey(apiKey);
   MixedConstants.setMapKey(mapKey);
@@ -41,7 +44,7 @@ Future<void> initializeLocationService(GlobalKey<NavigatorState> navKey,
     /// PlatformException(PermissionHandler.PermissionManager) => Multiple Permissions exception
     await Geolocator.requestPermission();
   } catch (e) {
-    print('Error in initializeLocationService $e');
+    _logger.severe('Error in requesting location permission: $e');
   }
 
   /// first get all location-notify keys, mine and others
