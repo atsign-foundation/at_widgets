@@ -27,7 +27,6 @@ Widget showLocation(Key? key, MapController? mapController,
 
   /// init
   showMarker = true;
-  print('widget.location $location');
   if (location != null) {
     marker = buildMarker(HybridModel(latLng: location), singleMarker: true);
     if ((mapController != null) && (moveMap)) {
@@ -41,11 +40,11 @@ Widget showLocation(Key? key, MapController? mapController,
 
   if (locationList != null) {
     markerList = [];
-    locationList.forEach((location) {
+    for (var location in locationList) {
       var marker = buildMarker(HybridModel(latLng: location),
           singleMarker: true, marker: locationListMarker);
-      markerList!.add(marker);
-    });
+      markerList.add(marker);
+    }
   }
 
   ///
@@ -79,9 +78,9 @@ Widget showLocation(Key? key, MapController? mapController,
         MarkerClusterLayerOptions(
           maxClusterRadius: 190,
           disableClusteringAtZoom: 16,
-          size: Size(5, 5),
+          size: const Size(5, 5),
           anchor: AnchorPos.align(AnchorAlign.center),
-          fitBoundsOptions: FitBoundsOptions(
+          fitBoundsOptions: const FitBoundsOptions(
             padding: EdgeInsets.all(50),
           ),
           markers:
