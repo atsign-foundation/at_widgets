@@ -3,11 +3,25 @@
 ### Now for a little internet optimism
 [![Pub Package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter)
 
-# at_follows_flutter
+## Getting Started
 
 A flutter plugin project to integrate follows feature for @signs.
 
-### Android
+### Plugin description
+Supports for single @sign follows feature. This plugin provides two screens:
+
+### Follows screen
+Displays all the @signs that are being followed and followers of the given @sign. Unfollow button will remove the particular @sign from following whereas follow button adds the @sign to following list.
+
+### Add @sign to follow
+Scan the QR code of an @sign or type the @sign to follow.
+
+
+## Setup
+
+<details>
+<summary>Android</summary>
+
 Add the following permissions to AndroidManifest.xml
 
 ```
@@ -26,11 +40,13 @@ Also, the Android version support in app/build.gradle
 compileSdkVersion 29
 
 minSdkVersion 24
-targetSdkVersion 29
+targetSdkVersion 30
 ```
+</details>
 
+<details>
+<summary>iOS</summary>
 
-### iOS
 Add the following permission string to info.plist
 
 ```
@@ -74,14 +90,9 @@ post_install do |installer|
   end
 end
 ```
-### Plugin description
-Supports for single @sign follows feature. This plugin provides two screens:
 
-### Follows screen
-Displays all the @signs that are being followed and followers of the given @sign. Unfollow button will remove the particular @sign from following whereas follow button adds the @sign to following list.
+</details>
 
-### Add @sign to follow
-Scan the QR code of an @sign or type the @sign to follow.
 
 ### Sample usage
 The plugin will takes AtClientService instance to show the follows list of an @sign. 
