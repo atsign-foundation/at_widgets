@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -9,13 +11,13 @@ import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/screens/notification_dialog/notification_dialog.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
-import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
 import 'sharing_location_service.dart';
+import 'package:at_utils/at_logger.dart';
 
 /// Starts monitor and listens for notifications related to this package.
 class AtLocationNotificationListener {
@@ -30,6 +32,7 @@ class AtLocationNotificationListener {
   late bool showDialogBox;
   late GlobalKey<NavigatorState> navKey;
   bool isEventInUse = false, monitorStarted = false;
+  final _logger = AtSignLogger('AtLocationNotificationListener');
 
   resetMonitor() {
     monitorStarted = false;
@@ -48,7 +51,6 @@ class AtLocationNotificationListener {
     this.showDialogBox = showDialogBox;
     ROOT_DOMAIN = rootDomain;
 
-    /// TODO: start monitor from KeyStreamService().getAllNotifications(), so that our list is calculated, and any new/old upcoming notification can be compared
     startMonitor();
   }
 
@@ -76,7 +78,7 @@ class AtLocationNotificationListener {
 
     var value = notification.value;
     var notificationKey = notification.key;
-    print(
+    _logger.finer(
         '_notificationCallback notification received in location package ===========> :$notification , notification key: $notificationKey');
     var fromAtSign = notification.from;
     var atKey;
@@ -93,7 +95,7 @@ class AtLocationNotificationListener {
         (!notificationKey.contains(MixedConstants.SHARE_LOCATION)) &&
         (!notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) &&
         (!notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
-      print(
+      _logger.finer(
           'returned from _notificationCallback in location package ===========>');
       return;
     }
@@ -102,7 +104,7 @@ class AtLocationNotificationListener {
 
     if (operation == 'delete') {
       if (atKey.toString().toLowerCase().contains(locationKey)) {
-        print('$notificationKey deleted');
+        _logger.finer('$notificationKey deleted');
         MasterLocationService().deleteReceivedData(fromAtSign);
         return;
       }
@@ -111,7 +113,7 @@ class AtLocationNotificationListener {
           .toString()
           .toLowerCase()
           .contains(MixedConstants.SHARE_LOCATION)) {
-        print('$notificationKey containing sharelocation deleted');
+        _logger.finer('$notificationKey containing sharelocation deleted');
         KeyStreamService().removeData(atKey.toString());
         return;
       }
@@ -120,7 +122,7 @@ class AtLocationNotificationListener {
           .toString()
           .toLowerCase()
           .contains(MixedConstants.REQUEST_LOCATION)) {
-        print('$notificationKey containing requestlocation deleted');
+        _logger.finer('$notificationKey containing requestlocation deleted');
         KeyStreamService().removeData(atKey.toString());
         return;
       }
@@ -135,8 +137,9 @@ class AtLocationNotificationListener {
         navKey.currentContext!,
         isError: true,
       );
-
-      print('error in decrypting: $e');
+      _logger.severe(
+          'fromAtSign: $fromAtSign, ${notification.from}, ${notification.to}');
+      _logger.severe('error in decrypting in location package listener: $e');
     });
 
     if (decryptedMessage == null || decryptedMessage == '') {
@@ -231,7 +234,6 @@ class AtLocationNotificationListener {
 
   Future<void> showMyDialog(
       String? fromAtSign, LocationNotificationModel locationData) async {
-    print('showMyDialog called');
     if (showDialogBox) {
       return showDialog<void>(
         context: navKey.currentContext!,

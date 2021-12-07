@@ -5,7 +5,6 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
-import 'package:at_location_flutter/location_modal/location_data_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
@@ -13,11 +12,14 @@ import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
 import 'contact_service.dart';
 import 'send_location_notification.dart';
+import 'package:at_utils/at_logger.dart';
 
 class KeyStreamService {
   KeyStreamService._();
   static final KeyStreamService _instance = KeyStreamService._();
   factory KeyStreamService() => _instance;
+
+  final _logger = AtSignLogger('KeyStreamService');
 
   AtClient? atClientInstance;
   AtContactsImpl? atContactImpl;
@@ -89,7 +91,7 @@ class KeyStreamService {
                 locationNotificationModel: locationNotificationModel));
           }
         } catch (e) {
-          print('convertJsonToLocationModel error :$e');
+          _logger.severe('convertJsonToLocationModel error :$e');
         }
       }
     });
@@ -227,7 +229,7 @@ class KeyStreamService {
           locationData.key!.split('requestlocation-')[1].split('@')[0];
     }
 
-    //// TODO: If we want to add any such notification that is not in the list, but we get a update
+    //// If we want to add any such notification that is not in the list, but we get a update
     // var _locationDataNotPresent = true;
 
     for (var i = 0; i < allLocationNotifications.length; i++) {
@@ -286,15 +288,14 @@ class KeyStreamService {
         }
       }
     } else {
-      //TODO: verify receiver
       if (compareAtSign(locationData.atsignCreator!, currentAtSign!)) {
-        //// TODO: ifLocationDataAlreadyExists remove
+        //// ifLocationDataAlreadyExists remove
         await SendLocationNotification().removeMember(
             locationData.key!, [locationData.receiver!],
             isExited: locationData.isExited,
             isAccepted: locationData.isAccepted,
             isSharing: locationData.isSharing);
-        //// TODO: Else add it
+        //// Else add it
       }
     }
   }
@@ -322,7 +323,6 @@ class KeyStreamService {
     });
     notifyListeners();
     // Remove location sharing
-    //TODO: verify receiver
     if (locationNotificationModel != null)
     // && (compareAtSign(locationNotificationModel.atsignCreator!, currentAtSign!))
     {
@@ -378,12 +378,10 @@ class KeyStreamService {
 
   Future<dynamic> getAtValue(AtKey key) async {
     try {
-      var atvalue = await AtClientManager.getInstance()
-          .atClient
-          .get(key)
-          // ignore: return_of_invalid_type_from_catch_error
-          .catchError((e) => print('error in in key_stream_service get $e'));
-
+      var atvalue =
+          await AtClientManager.getInstance().atClient.get(key).catchError(
+              // ignore: invalid_return_type_for_catch_error
+              (e) => _logger.severe('error in in key_stream_service get $e'));
       // ignore: unnecessary_null_comparison
       if (atvalue != null) {
         return atvalue;
@@ -391,18 +389,13 @@ class KeyStreamService {
         return null;
       }
     } catch (e) {
-      print('error in key_stream_service getAtValue:$e');
+      _logger.severe('error in key_stream_service getAtValue:$e');
       return null;
     }
   }
 
   /// Returns updated list
   void notifyListeners() {
-    // print('notifyListeners');
-    // allLocationNotifications.forEach((element) {
-    //   print(LocationNotificationModel.convertLocationNotificationToJson(
-    //       element.locationNotificationModel!));
-    // });
     if (streamAlternative != null) {
       streamAlternative!(allLocationNotifications);
     }

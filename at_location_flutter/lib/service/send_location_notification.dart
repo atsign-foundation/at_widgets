@@ -1,10 +1,11 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
-import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_data_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
@@ -14,8 +15,9 @@ import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
-import 'package:at_client/src/service/notification_service.dart';
+// ignore: implementation_imports
 import 'key_stream_service.dart';
+import 'package:at_utils/at_logger.dart';
 
 /// [masterSwitchState] will control whether location is sent to any user
 ///
@@ -40,8 +42,12 @@ class SendLocationNotification {
       isLocationDataInitialized = false,
       isEventDataInitialized = false;
 
+  final _logger = AtSignLogger('SendLocationNotification');
+
   LocationDataModel? getLocationDataModel(String _atsign) =>
       allAtsignsLocationData[_atsign];
+
+  // Enhacement: Write a function to compare new data with saved ones and remove the expired data.
 
   reset() {
     allAtsignsLocationData = {};
@@ -81,15 +87,11 @@ class SendLocationNotification {
     return false;
   }
 
-// TODO: write a function to compare new data with saved ones and remove the expired data.
-
   getAllLocationShareKeys() async {
     var allLocationKeyStrings =
         await AtClientManager.getInstance().atClient.getKeys(
               regex: locationKey,
             );
-
-    print('allLocationKeyStrings : $allLocationKeyStrings');
 
     await Future.forEach(allLocationKeyStrings, (dynamic key) async {
       if (!'@$key'.contains('cached')) {
@@ -102,13 +104,12 @@ class SendLocationNotification {
             allAtsignsLocationData[_locationDataModel.receiver] =
                 _locationDataModel;
           } catch (e) {
-            print('Error in getAllLocationData $e');
+            _logger.severe('Error in getAllLocationData $e');
           }
         }
       }
     });
 
-    print('filteredAtsigns : $allAtsignsLocationData');
     checkForExpiredInvites();
   }
 
@@ -125,18 +126,18 @@ class SendLocationNotification {
         }
       });
 
-      _idsToDelete.forEach((element) {
+      for (var element in _idsToDelete) {
         allAtsignsLocationData[key]!.locationSharingFor.remove(element);
-      });
+      }
 
       if (allAtsignsLocationData[key]!.locationSharingFor.isEmpty) {
         _atsignsToDelete.add(key);
       }
     });
 
-    _atsignsToDelete.forEach((element) {
+    for (var element in _atsignsToDelete) {
       allAtsignsLocationData.remove(element);
-    });
+    }
   }
 
   compareForMissingInvites(List<LocationDataModel> _newLocationDataModel) {
@@ -181,7 +182,7 @@ class SendLocationNotification {
   }
 
   _appendLocationDataModelData(List<LocationDataModel> locationDataModel) {
-    locationDataModel.forEach((element) {
+    for (var element in locationDataModel) {
       if (allAtsignsLocationData[element.receiver] != null) {
         allAtsignsLocationData[element.receiver]!.locationSharingFor = {
           ...allAtsignsLocationData[element.receiver]!.locationSharingFor,
@@ -190,27 +191,18 @@ class SendLocationNotification {
       } else {
         allAtsignsLocationData[element.receiver] = element;
       }
-    });
-
-    print('allAtsignsLocationData data :${allAtsignsLocationData}');
+    }
   }
 
   void findAtSignsToShareLocationWith() {
     List<LocationDataModel> _newlocationDataModel = [];
-    KeyStreamService()
-        .allLocationNotifications
-        .forEach((KeyLocationModel notification) {
+    for (var notification in KeyStreamService().allLocationNotifications) {
       LocationDataModel _locationDataModel =
           locationNotificationModelToLocationDataModel(
               notification.locationNotificationModel!);
       _newlocationDataModel.add(_locationDataModel);
-    });
+    }
     compareForMissingInvites(_newlocationDataModel);
-
-    print('allAtsignsLocationData: ');
-    allAtsignsLocationData.forEach((key, value) {
-      print('$key : ${allAtsignsLocationData[key]}');
-    });
 
     isLocationDataInitialized = true;
     if ((isEventDataInitialized && isEventInUse) || !isEventInUse) {
@@ -225,11 +217,6 @@ class SendLocationNotification {
   /// if state changes then we will send update in next round of location sharing
   void setMasterSwitchState(bool _state) {
     masterSwitchState = _state;
-    // if (_state) {
-    //   findAtSignsToShareLocationWith();
-    // } else {
-    //   deleteAllLocationKey();
-    // }
   }
 
   /// we are assuming that the _newLocationDataModel has a new share id
@@ -245,7 +232,6 @@ class SendLocationNotification {
         return;
       }
 
-      //// TODO: Might be wrong
       var _id = _newLocationDataModel.locationSharingFor.keys.first;
       if (_receiverLocationDataModel.locationSharingFor[_id] != null) {
         return;
@@ -291,23 +277,11 @@ class SendLocationNotification {
       {bool isSharing = false,
       required bool isExited,
       required bool isAccepted}) async {
-    // LocationNotificationModel? locationNotificationModel;
-    // atsignsToShareLocationWith.removeWhere((element) {
-    //   if (key!.contains(element!.key!)) locationNotificationModel = element;
-    //   return key.contains(element.key!);
-    // });
-    // if (locationNotificationModel != null) {
-    //   await sendNull(locationNotificationModel!);
-    // }
-
-    // print(
-    // 'after deleting atsignsToShareLocationWith length ${atsignsToShareLocationWith.length}');
-
     inviteId = trimAtsignsFromKey(inviteId);
 
     List<String> updatedAtsigns = [], atsignsToDelete = [];
     allAtsignsLocationData.forEach((key, value) {
-      atsignsToRemove.forEach((atsignToRemove) {
+      for (var atsignToRemove in atsignsToRemove) {
         if ((compareAtSign(key, atsignToRemove)) &&
             (allAtsignsLocationData[key]?.locationSharingFor[inviteId] !=
                 null)) {
@@ -330,7 +304,7 @@ class SendLocationNotification {
           // updatedAtsigns.add(key);
           // }
         }
-      });
+      }
     });
     if (updatedAtsigns.isNotEmpty) {
       await sendLocationAfterDataUpdate(updatedAtsigns);
@@ -365,9 +339,6 @@ class SendLocationNotification {
 
   sendLocationAfterDataUpdate(List<String> atsignsUpdated) async {
     var _currentMyLatLng = await getMyLocation();
-    // if (_currentMyLatLng == null) {
-    //   return;
-    // }
 
     await Future.forEach(atsignsUpdated, (String atsign) async {
       if ((allAtsignsLocationData[atsign] != null)) {
@@ -400,45 +371,14 @@ class SendLocationNotification {
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
-      //// TODO: send location to only [_atsignsToSendLocationwith], for first time
-
-      /// The stream doesnt run until 100m is covered
-      /// So, we send data once
-      // var _currentMyLatLng = await getMyLocation();
-
-      // if (_currentMyLatLng != null && masterSwitchState) {
-      //   for (var field in allAtsignsLocationData.entries) {
-      //     await prepareLocationDataAndSend(field.key, field.value,
-      //         LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
-      //   }
-
-      //   // await Future.forEach(atsignsToShareLocationWith,
-      //   //     (dynamic notification) async {
-      //   //   // ignore: await_only_futures
-      //   //   await prepareLocationDataAndSend(notification,
-      //   //       LatLng(_currentMyLatLng.latitude, _currentMyLatLng.longitude));
-      //   // });
-      // }
-
-      ///
       positionStream = Geolocator.getPositionStream(distanceFilter: 100)
           .listen((myLocation) async {
-        //// TODO: send location only when myLocation has changed
-        print(
-            'myLocation.latitude : ${myLocation.latitude}, long : ${myLocation.longitude}');
+        //// Enhancement: send location only when myLocation has changed
         if (masterSwitchState) {
           for (var field in allAtsignsLocationData.entries) {
-            print(
-                'sending to atsign : ${field.key}, value : ${field.value.locationSharingFor}');
             await prepareLocationDataAndSend(field.key, field.value,
                 LatLng(myLocation.latitude, myLocation.longitude));
           }
-          // await Future.forEach(atsignsToShareLocationWith,
-          //     (dynamic notification) async {
-          //   // ignore: unawaited_futures
-          //   prepareLocationDataAndSend(notification,
-          //       LatLng(myLocation.latitude, myLocation.longitude));
-          // });
         }
       });
     }
@@ -456,7 +396,7 @@ class SendLocationNotification {
       }
     }
 
-    //// TODO: Send location to only those whose from and to is between DateTime.now()
+    //// Enhancement: Send location to only those whose from and to is between DateTime.now()
     // for (var field in locationData.locationSharingFor.entries) {
     //   if ((field.value.from == null) && (field.value.to == null)) {
     //     isSend = true;
@@ -471,15 +411,7 @@ class SendLocationNotification {
     //   }
     // }
 
-    // if (locationData. == null) {
-    //   isSend = true;
-    // } else if ((DateTime.now().difference(notification.from!) >
-    //         Duration(seconds: 0)) &&
-    //     (notification.to!.difference(DateTime.now()) > Duration(seconds: 0))) {
-    //   isSend = true;
-    // }
     if (isSend) {
-      // var atkeyMicrosecondId = notification.key!.split('-')[1].split('@')[0];
       var atKey = newAtKey(
           5000, '$locationKey-${receiver.replaceAll('@', '')}', receiver,
           ttl: null);
@@ -494,7 +426,7 @@ class SendLocationNotification {
         locationData.long = null;
       }
 
-      //// TODo: Uncomment if latLng should be null
+      //// Enhancement: Uncomment if latLng should be null
       // bool _isSharingLocation = false;
       // locationData.locationSharingFor.forEach((key, value) {
       //   if ((_isSharingLocation) && (value.isSharing)) {
@@ -508,31 +440,17 @@ class SendLocationNotification {
       // }
 
       try {
-        print('locationData.toJson() : ${locationData.toJson()}');
         var _res = await NotifyAndPut().notifyAndPut(
             atKey, jsonEncode(locationData.toJson()),
             saveDataIfUndelivered: true);
-        // await AtClientManager.getInstance().notificationService.notify(
-        //       NotificationParams.forUpdate(
-        //         atKey,
-        //         value: jsonEncode(locationData.toJson()),
-        //       ),
-        //     );
 
         if (_res) {
           allAtsignsLocationData[receiver] =
               locationData; // update the map if successfully sent
         }
-        print('send loc data : $_res');
-
-        // atClient!.put(
-        //   atKey,
-        //   LocationNotificationModel.convertLocationNotificationToJson(
-        //       newLocationNotificationModel),
-        // );
-        // print('prepareLocationDataAndSend in location package ========> $_res');
+        _logger.finer('send loc data : $_res');
       } catch (e) {
-        print('error in sending location: $e');
+        _logger.severe('error in sending location: $e');
       }
     }
   }
@@ -550,7 +468,7 @@ class SendLocationNotification {
       if (result) {
         allAtsignsLocationData.remove(_atsign); // remove from map as well
       }
-      print('result : ${result}');
+      _logger.finer('result : $result');
     });
 
     return result;
@@ -558,7 +476,7 @@ class SendLocationNotification {
 
   void deleteAllLocationKey() async {
     var response = await atClient?.getKeys(
-      regex: '$locationKey',
+      regex: locationKey,
     );
     await Future.forEach(response ?? [], (dynamic key) async {
       if (!'@$key'.contains('cached')) {
@@ -567,7 +485,7 @@ class SendLocationNotification {
         var result = await atClient!.delete(
           atKey,
         );
-        print('$key is deleted ? $result');
+        _logger.finer('$key is deleted ? $result');
       }
     });
   }

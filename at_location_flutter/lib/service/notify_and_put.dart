@@ -1,11 +1,14 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
+// ignore: implementation_imports
 import 'package:at_client/src/service/notification_service.dart';
+import 'package:at_utils/at_logger.dart';
 
 class NotifyAndPut {
   NotifyAndPut._();
   static final NotifyAndPut _instance = NotifyAndPut._();
   factory NotifyAndPut() => _instance;
+  final _logger = AtSignLogger('NotifyAndPut');
 
   Future<bool> notifyAndPut(AtKey atKey, dynamic value,
       {bool saveDataIfUndelivered = false}) async {
@@ -30,7 +33,7 @@ class NotifyAndPut {
                 ),
               );
 
-      print(
+      _logger.finer(
           'notifyAndPut result for $atKey - $result ${result.atClientException}');
 
       if ((saveDataIfUndelivered) ||
@@ -48,15 +51,12 @@ class NotifyAndPut {
       }
       return false;
     } catch (e) {
-      print('Error in notifyAndPut $e');
+      _logger.severe('Error in notifyAndPut $e');
       return false;
     }
   }
 
   AtKey removeNamespaceFromKey(AtKey atKey) {
-    print('namespace: ' +
-        (AtClientManager.getInstance().atClient.getPreferences()!.namespace ??
-            ''));
     if (AtClientManager.getInstance().atClient.getPreferences()!.namespace !=
         null) {
       if (atKey.key!.contains('.' +

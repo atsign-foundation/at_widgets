@@ -14,11 +14,14 @@ import 'package:latlong2/latlong.dart';
 import 'at_location_notification_listener.dart';
 import 'distance_calculate.dart';
 import 'my_location.dart';
+import 'package:at_utils/at_logger.dart';
 
 class LocationService {
   LocationService._();
   static final LocationService _instance = LocationService._();
   factory LocationService() => _instance;
+
+  final _logger = AtSignLogger('LocationService');
 
   List<String?>? atsignsToTrack;
 
@@ -202,14 +205,14 @@ class LocationService {
   Future<void> updateDetails(HybridModel user) async {
     var contains = false;
     int? index;
-    hybridUsersList.forEach((hybridUser) {
+    for (var hybridUser in hybridUsersList) {
       if (hybridUser!.displayName == user.displayName) {
         contains = true;
         index = hybridUsersList.indexOf(hybridUser);
       }
-    });
+    }
     if (user.latLng == null) {
-      print('${user.displayName} user.latLng = null');
+      _logger.finer('${user.displayName} user.latLng = null');
       return;
     }
 
@@ -230,22 +233,19 @@ class LocationService {
         if ((index < hybridUsersList.length)) hybridUsersList[index] = user;
       } else {
         var _continue = true;
-        hybridUsersList.forEach((hybridUser) {
+        for (var hybridUser in hybridUsersList) {
           if (hybridUser!.displayName == user.displayName) {
             hybridUser = user;
             _continue = false;
             return;
           }
-        });
+        }
         if (_continue) {
           hybridUsersList.add(user);
-          // if (showToast != null) {
-          //   showToast!('${user.displayName} started sharing their location');
-          // }
         }
       }
     } catch (e) {
-      print(e);
+      _logger.severe(e);
       if (showToast != null) showToast!('Something went wrong', isError: true);
     }
   }
@@ -253,6 +253,7 @@ class LocationService {
   Future<String> _calculateEta(HybridModel user) async {
     if (calculateETA!) {
       try {
+        // ignore: prefer_typing_uninitialized_variables
         var _res;
         if (etaFrom != null) {
           _res = await DistanceCalculate().calculateETA(etaFrom!, user.latLng!);
@@ -269,7 +270,7 @@ class LocationService {
 
         return _res;
       } catch (e) {
-        print('Error in _calculateEta $e');
+        _logger.severe('Error in _calculateEta $e');
         return '?';
       }
     } else {

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
@@ -11,11 +13,14 @@ import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'at_location_notification_listener.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_utils/at_logger.dart';
 
 class SharingLocationService {
   static final SharingLocationService _singleton =
       SharingLocationService._internal();
   SharingLocationService._internal();
+
+  final _logger = AtSignLogger('SharingLocationService');
 
   factory SharingLocationService() {
     return _singleton;
@@ -142,14 +147,14 @@ class SharingLocationService {
         LocationNotificationModel.convertLocationNotificationToJson(
             locationNotificationModel),
       );
-      print('sendLocationNotification:$result');
+      _logger.finer('sendLocationNotification:$result');
 
       if (result) {
         await KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
     } catch (e) {
-      print('sending share location failed $e');
+      _logger.severe('sending share location failed $e');
       return false;
     }
   }
@@ -176,7 +181,7 @@ class SharingLocationService {
         LocationNotificationModel.convertLocationNotificationToJson(
             locationNotificationModel),
       );
-      print('sendLocationNotificationAcknowledgment:$result');
+      _logger.finer('sendLocationNotificationAcknowledgment:$result');
       if (result) {
         CustomToast().show('Request to update data is submitted',
             AtLocationNotificationListener().navKey.currentContext,
@@ -193,7 +198,7 @@ class SharingLocationService {
           AtLocationNotificationListener().navKey.currentContext,
           isError: true);
 
-      print('sending share awk failed $e');
+      _logger.severe('sending share awk failed $e');
       return false;
     }
   }
@@ -258,7 +263,7 @@ class SharingLocationService {
               shouldCheckForTimeChanges: shouldCheckForTimeChanges);
         }
 
-        print('update result - $result');
+        _logger.finer('update result - $result');
         return result;
       } else {
         await KeyStreamService()
@@ -266,7 +271,7 @@ class SharingLocationService {
         return true;
       }
     } catch (e) {
-      print('update share location failed $e');
+      _logger.severe('update share location failed $e');
 
       return false;
     }
@@ -313,7 +318,7 @@ class SharingLocationService {
       }
       return result;
     } catch (e) {
-      print('error in deleting key $e');
+      _logger.severe('error in deleting key $e');
       return false;
     }
   }
@@ -330,7 +335,7 @@ class SharingLocationService {
         var result = await AtClientManager.getInstance().atClient.delete(
               atKey,
             );
-        print('$key is deleted ? $result');
+        _logger.finer('$key is deleted ? $result');
       }
     });
   }

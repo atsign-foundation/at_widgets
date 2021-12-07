@@ -6,17 +6,12 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
-import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_data_model.dart';
-import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:latlong2/latlong.dart';
-
-import 'at_location_notification_listener.dart';
 import 'contact_service.dart';
 import 'location_service.dart';
+import 'package:at_utils/at_logger.dart';
 
 class MasterLocationService {
   MasterLocationService._();
@@ -24,9 +19,11 @@ class MasterLocationService {
   factory MasterLocationService() => _instance;
   late AtClient atClientInstance;
   late Function getAtValueFromMainApp;
+  final _logger = AtSignLogger('MasterLocationService');
 
   String? currentAtSign;
   Map<String, HybridModel> _allReceivedUsersList = {};
+  // ignore: prefer_final_fields
   Map<String, LocationDataModel> _locationReceivedData = {};
 
   Map<String, LocationDataModel> get locationReceivedData =>
@@ -41,7 +38,7 @@ class MasterLocationService {
   StreamSink<Map<String, HybridModel>> get allReceivedUsersSink =>
       _allReceivedUsersController.sink as StreamSink<Map<String, HybridModel>>;
 
-  //   Steps:
+  ///// Explanation:
   //// locationReceivedData will contain locationDataModel for atsigns
   ///       {'atsign': locationDataModel}
   ///  And for each user (atsign) we will store their HybridModel in _allReceivedUsersList
@@ -54,11 +51,9 @@ class MasterLocationService {
   ///  and DateTime.now() is between from and to of the locationSharingFor value
   ///  then we will return the HybridModel of the atsign in _allReceivedUsersList
 
-//cached:@25antwilling:createevent-1637310583423139@26juststay
   HybridModel? getHybridModel(String atsign, {String? id}) {
     if (id != null) {
       id = trimAtsignsFromKey(id);
-      print('_locationReceivedData $_locationReceivedData');
       if ((_locationReceivedData[atsign] != null) &&
           (_locationReceivedData[atsign]!.locationSharingFor[id] != null)) {
         var _locationSharingFor =
@@ -70,7 +65,6 @@ class MasterLocationService {
             (DateTime.now().isAfter(_locationSharingFor.from!)) &&
             (DateTime.now().isBefore(_locationSharingFor.to!))) {
           if (_allReceivedUsersList[atsign]!.latLng == null) {
-            print('latLng null for $atsign');
             return null;
           }
           return _allReceivedUsersList[atsign];
@@ -119,31 +113,14 @@ class MasterLocationService {
           try {
             var _locationDataModel =
                 LocationDataModel.fromJson(jsonDecode(_atValue.value));
-            // var _locationDataModel = LocationDataModel(
-            //     {}, 22, 22, DateTime.now(), '@new52plum', '@26juststay');
             _locationReceivedData[_locationDataModel.sender] =
                 _locationDataModel;
           } catch (e) {
-            print('Error in getAllLocationData $e');
+            _logger.severe('Error in getAllLocationData $e');
           }
         }
       }
     });
-
-    print('_locationReceivedData $_locationReceivedData');
-
-    //// for demo
-    // var _locationDataModel = LocationDataModel(
-    //   {},
-    //   22,
-    //   22,
-    //   DateTime.now(),
-    //   '@new52plum',
-    //   '@26juststay',
-    // );
-    // _locationReceivedData[_locationDataModel.sender] = _locationDataModel;
-
-    ///demo
 
     createHybridFromLocationDataModel();
   }
@@ -169,7 +146,6 @@ class MasterLocationService {
     if (!contains) {
       _locationReceivedData[_newUser.sender] = _newUser;
 
-      print('!contains from main app');
       var _image = await getImageOfAtsignNew(_newUser.sender);
 
       var _user = HybridModel(
@@ -191,8 +167,6 @@ class MasterLocationService {
       } else {
         return;
       }
-
-      print('contains from main app');
 
       _allReceivedUsersList[_newUser.sender]!.latLng = _newUser.getLatLng;
       _allReceivedUsersList[_newUser.sender]!.eta = '?';
@@ -233,11 +207,11 @@ class MasterLocationService {
   }
 
   Future<dynamic> getAtValue(AtKey key) async {
-    print(atClientInstance.getCurrentAtSign());
     try {
       var atvalue = await atClientInstance.get(key).catchError(
           // ignore: return_of_invalid_type_from_catch_error
-          (e) => print('error in getAtValue in master location service : $e'));
+          (e) => _logger
+              .severe('error in getAtValue in master location service : $e'));
 
       // ignore: unnecessary_null_comparison
       if (atvalue != null) {
@@ -246,7 +220,7 @@ class MasterLocationService {
         return null;
       }
     } catch (e) {
-      print('getAtValue in master location service:$e');
+      _logger.severe('getAtValue in master location service:$e');
       return null;
     }
   }
