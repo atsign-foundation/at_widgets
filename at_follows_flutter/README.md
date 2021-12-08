@@ -3,7 +3,7 @@
 ### Now for a little internet optimism
 [![Pub Package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter)
 
-## Getting Started
+### Introduction
 
 A flutter plugin project to integrate follows feature for @signs.
 
@@ -16,6 +16,13 @@ Displays all the @signs that are being followed and followers of the given @sign
 ### Add @sign to follow
 Scan the QR code of an @sign or type the @sign to follow.
 
+## Getting Started
+
+To get started with at_follows_flutter,please see the [atsign docs](https://atsign.dev/docs/overview/).
+
+> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+
+Check how to use this package in the [at_follows_flutter installation tab](https://pub.dev/packages/at_follows_flutter/install).
 
 ## Setup
 

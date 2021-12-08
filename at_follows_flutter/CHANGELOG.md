@@ -1,5 +1,5 @@
 ## 3.0.5
-- updated documentation
+- Documentation improvements.
 ## 3.0.4
 - updated dependencies and documentation
 ## 3.0.3
