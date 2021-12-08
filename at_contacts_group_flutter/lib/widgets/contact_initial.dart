@@ -1,5 +1,4 @@
 import 'package:at_contacts_flutter/utils/colors.dart';
-import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -13,7 +12,7 @@ class ContactInitial extends StatelessWidget {
 
   /// Index in the list of atsigns
   int? index;
-  Key? key;
+  final Key? key;
 
   ContactInitial(
       {this.size = 40,
