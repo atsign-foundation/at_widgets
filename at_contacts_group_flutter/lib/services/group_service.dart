@@ -46,7 +46,6 @@ class GroupService {
 
   /// Boolean flag to control loader
   bool? showLoader;
-  List<GroupContactsModel> _recentContacts = [];
 
   /// Controller for group list stream
   final _atGroupStreamController = StreamController<List<AtGroup>>.broadcast();
@@ -99,8 +98,6 @@ class GroupService {
   String? get currentAtsign => _atsign;
 
   AtGroup? get currentSelectedGroup => selectedGroup;
-
-  List<GroupContactsModel> get recentContacts => _recentContacts;
 
   int? expandIndex = 0;
 
@@ -374,17 +371,6 @@ class GroupService {
       selectedContactsSink.add(selectedGroupContacts);
     } catch (e) {
       print(e);
-    }
-  }
-
-  void addRecentContacts(GroupContactsModel groupContact) {
-    _recentContacts.removeWhere((element) {
-      return element.contact!.atSign!.toLowerCase() ==
-          groupContact.contact!.atSign!.toLowerCase();
-    });
-    _recentContacts.insert(0, groupContact);
-    if (_recentContacts.length > 10) {
-      _recentContacts.removeRange(10, _recentContacts.length);
     }
   }
 
