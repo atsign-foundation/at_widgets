@@ -1,7 +1,7 @@
 import 'package:at_chat_flutter/at_chat_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
-import 'client_sdk_service.dart';
 import 'constants.dart';
 import 'third_screen.dart';
 
@@ -11,7 +11,8 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  AtClientService? atClientService;
+  // ClientSdkService clientSdkService = ClientSdkService.getInstance();
   String? activeAtSign;
   GlobalKey<ScaffoldState>? scaffoldKey;
   String chatWithAtSign = '';
@@ -208,12 +209,12 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void getAtSignAndInitializeChat() async {
-    var currentAtSign = await clientSdkService.getAtSign();
+    var currentAtSign = await KeychainUtil.getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
     initializeChatService(
-        clientSdkService.atClientServiceInstance!.atClientManager,
+        atClientService!.atClientManager,
         activeAtSign!,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }

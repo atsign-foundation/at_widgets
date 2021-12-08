@@ -1,4 +1,4 @@
-# at_common_flutter_example
+# example
 
 A new Flutter project.
 
