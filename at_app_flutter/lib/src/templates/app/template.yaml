@@ -10,9 +10,10 @@ config:
     include: true
     gitignore: true
   android:
-    gradle_properties:
-      enableR8: true
-    build_gradle:
-      targetSdkVersion: 30
-      minSdkVersion: 24
-      compileSdkVersion: 31
+    gradle.properties:
+      android.enableR8: true
+    app:
+      build.gradle:
+        targetSdkVersion: 30
+        minSdkVersion: 24
+        compileSdkVersion: 31
