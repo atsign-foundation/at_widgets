@@ -1,5 +1,5 @@
 name: at_onboarding_flutter
-description: A Flutter plugin project for onboarding any @‎sign in @‎platform
+description: A Flutter plugin project for onboarding any @sign in @platform
   apps with ease. Provides a QRscanner option and an upload key file option to
   authenticate.
 version: 3.1.1
@@ -45,7 +45,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  lints: ^1.0.1
+  flutter_lints: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

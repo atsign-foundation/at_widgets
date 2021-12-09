@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
                         onError: (Object? error) {
                           _logger.severe('Onboarding throws $error error');
                         },
-                        rootEnvironment: RootEnvironment.Staging,
+                        rootEnvironment: RootEnvironment.staging,
                         // API Key is mandatory for production environment.
                         // appAPIKey: YOUR_API_KEY_HERE
                         nextScreen: const DashBoard(),

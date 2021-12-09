@@ -17,7 +17,7 @@ class AtsignListScreen extends StatefulWidget {
   /// the new atsign selected in the free atsign generator
   final String? newAtsign;
 
-  const AtsignListScreen({required this.atsigns, this.message, this.newAtsign});
+  const AtsignListScreen({required this.atsigns, this.message, this.newAtsign, Key? key}) : super(key: key);
 
   @override
   _AtsignListScreenState createState() => _AtsignListScreenState();

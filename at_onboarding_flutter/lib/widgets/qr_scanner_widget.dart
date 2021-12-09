@@ -5,7 +5,7 @@ import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class QrScannerWidget extends StatefulWidget {
-  QrScannerWidget({Key? key}) : super(key: key);
+  const QrScannerWidget({Key? key}) : super(key: key);
 
   @override
   _QrScannerWidgetState createState() => _QrScannerWidgetState();
@@ -62,7 +62,9 @@ class _QrScannerWidgetState extends State<QrScannerWidget> {
 
     await _controller!.stopCamera();
     String authenticateMessage = await onboardingService.authenticate(data);
-    if (authenticateMessage == ResponseStatus.AUTH_SUCCESS) return true;
+    if (authenticateMessage == ResponseStatus.authSuccess.toString()) {
+      return true;
+    }
 
     // try again
     await _controller!.startCamera((String data, List<Offset> offsets) {

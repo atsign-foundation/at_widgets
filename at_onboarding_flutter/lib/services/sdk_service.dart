@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_client/at_client.dart';
 import 'package:at_commons/at_commons.dart';
 
 class SDKService {
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
   Map<String?, AtClientService>? atClientServiceMap =
-      Map<String?, AtClientService>();
+      <String?, AtClientService>{};
   List<String>? atSignsList;
   String? currentAtsign;
   String? lastOnboardedAtsign;
-  Map<String?, bool>? monitorConnectionMap = Map<String?, bool>();
+  Map<String?, bool>? monitorConnectionMap = <String?, bool>{};
 
   static final SDKService _singleton = SDKService._internal();
   SDKService._internal();
@@ -68,9 +67,9 @@ class SDKService {
       atClientServiceMap!.remove(atsign);
       monitorConnectionMap!.remove(atsign);
     }
-    this.currentAtsign = null;
-    this.lastOnboardedAtsign = null;
-    this.atSignsList;
+    currentAtsign = null;
+    lastOnboardedAtsign = null;
+    atSignsList;
   }
 
   ///Returns `true` if [atsign] is onboarded in the app.

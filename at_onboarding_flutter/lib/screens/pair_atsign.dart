@@ -42,7 +42,7 @@ class PairAtsignWidget extends StatefulWidget {
   final bool hideReferences;
   // If true, does not show the QR reader option
   final bool hideQrScan;
-  PairAtsignWidget(
+  const PairAtsignWidget(
       {Key? key,
       this.onboardStatus,
       this.getAtSign = false,
@@ -126,7 +126,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
-      if (authResponse == ResponseStatus.AUTH_SUCCESS) {
+      if (authResponse == ResponseStatus.authSuccess) {
         if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
             widget.onboardStatus == OnboardingStatus.RESTORE) {
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
@@ -146,7 +146,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           await Navigator.pushReplacement(
             context,
             MaterialPageRoute<PrivateKeyQRCodeGenScreen>(
-                builder: (BuildContext context) => PrivateKeyQRCodeGenScreen()),
+                builder: (BuildContext context) => const PrivateKeyQRCodeGenScreen()),
           );
         }
       }
@@ -154,13 +154,13 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = false;
       });
-      if (e == ResponseStatus.AUTH_FAILED) {
+      if (e == ResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWith cram secret');
         await _showAlertDialog(e, title: 'Auth Failed');
-      } else if (e == ResponseStatus.SERVER_NOT_REACHED && _isContinue) {
+      } else if (e == ResponseStatus.serverNotReached && _isContinue) {
         _isServerCheck = _isContinue;
         await _processSharedSecret(atsign, secret);
-      } else if (e == ResponseStatus.TIME_OUT) {
+      } else if (e == ResponseStatus.timeOut) {
         await _showAlertDialog(e, title: 'Response Time out');
       }
     }
@@ -192,7 +192,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     setState(() {
       loading = false;
     });
-    if (message != ResponseStatus.AUTH_SUCCESS) {
+    if (message != ResponseStatus.authSuccess) {
       scanCompleted = false;
       await _controller.startCamera((String data, List<Offset> offsets) {
         if (!scanCompleted) {
@@ -260,7 +260,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
       dynamic authResponse = await _onboardingService.authenticate(atsign,
           jsonData: contents, decryptKey: aesKey);
-      if (authResponse == ResponseStatus.AUTH_SUCCESS) {
+      if (authResponse == ResponseStatus.authSuccess) {
         if (_onboardingService.nextScreen == null) {
           Navigator.pop(context);
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
@@ -279,13 +279,13 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = false;
       });
-      if (e == ResponseStatus.SERVER_NOT_REACHED && _isContinue) {
+      if (e == ResponseStatus.serverNotReached && _isContinue) {
         _isServerCheck = _isContinue;
         await _processAESKey(atsign, aesKey, contents);
-      } else if (e == ResponseStatus.AUTH_FAILED) {
+      } else if (e == ResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWithAESKey');
         await _showAlertDialog(e, isPkam: true, title: 'Auth Failed');
-      } else if (e == ResponseStatus.TIME_OUT) {
+      } else if (e == ResponseStatus.timeOut) {
         await _showAlertDialog(e, title: 'Response Time out');
       } else {
         print(e);
@@ -401,32 +401,32 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
-  void _uploadKeyFileForDesktop() async {
+  Future<void> _uploadKeyFileForDesktop() async {
     print('_uploadKeyFileForDesktop called');
     try {
       _isServerCheck = false;
       _isContinue = true;
-      var fileContents, aesKey, atsign;
+      String? fileContents, aesKey, atsign;
       setState(() {
         loading = true;
       });
 
-      var path = await _desktopKeyPicker();
+      String? path = await _desktopKeyPicker();
 
       if (path == null) {
         return;
       }
 
       File selectedFile = File(path);
-      var length = selectedFile.lengthSync();
+      int length = selectedFile.lengthSync();
       if (length < 10) {
-        _showAlertDialog(_incorrectKeyFile);
+        await _showAlertDialog(_incorrectKeyFile);
         return;
       }
 
       fileContents = File(path).readAsStringSync();
 
-      if (aesKey == null && atsign == null && fileContents != null) {
+      if (aesKey == null && atsign == null && fileContents.isNotEmpty) {
         List<String> keyData = fileContents.split(',"@');
         List<String> params = keyData[1]
             .toString()
@@ -435,7 +435,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         atsign = params[0];
         aesKey = params[1];
       }
-      if (fileContents == null || (aesKey == null && atsign == null)) {
+      if (fileContents.isEmpty || (aesKey == null && atsign == null)) {
         await _showAlertDialog(_incorrectKeyFile);
         setState(() {
           loading = false;
@@ -463,20 +463,18 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
-  Future<dynamic> _desktopKeyPicker() async {
+  Future<String?> _desktopKeyPicker() async {
     try {
-      // ignore: omit_local_variable_types
-      final XTypeGroup typeGroup = XTypeGroup(
+      XTypeGroup typeGroup = XTypeGroup(
         label: 'images',
-        extensions: ['atKeys'],
+        extensions: <String>['atKeys'],
       );
-      final List<XFile> files =
-          await openFiles(acceptedTypeGroups: [typeGroup]);
+      List<XFile> files =
+          await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
       if (files.isEmpty) {
         return null;
       }
-      // ignore: omit_local_variable_types
-      final XFile file = files[0];
+      XFile file = files[0];
       return file.path;
     } catch (e) {
       print('Error in desktopImagePicker $e');
@@ -484,23 +482,25 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
-  _showAlertDialog(var errorMessage,
-      {bool? isPkam, String? title, bool? getClose, Function? onClose}) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return CustomDialog(
-              context: context,
-              hideReferences: widget.hideReferences,
-              hideQrScan: widget.hideQrScan,
-              isErrorDialog: true,
-              showClose: true,
-              message: errorMessage,
-              title: title,
-              onClose: getClose == true ? onClose : () {});
-        });
-  }
+  Future<void> _showAlertDialog(dynamic errorMessage,
+          {bool? isPkam,
+          String? title,
+          bool? getClose,
+          Function? onClose}) async =>
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return CustomDialog(
+                context: context,
+                hideReferences: widget.hideReferences,
+                hideQrScan: widget.hideQrScan,
+                isErrorDialog: true,
+                showClose: true,
+                message: errorMessage,
+                title: title,
+                onClose: getClose == true ? onClose : () {});
+          });
 
   @override
   Widget build(BuildContext context) {
@@ -532,14 +532,14 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           title: Strings.pairAtsignTitle,
           actionItems: <Widget>[
             widget.hideReferences
-                ? SizedBox()
+                ? const SizedBox()
                 : IconButton(
                     icon: Icon(Icons.help, size: 16.toFont),
                     onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute<Widget>(
-                              builder: (BuildContext context) => WebViewScreen(
+                              builder: (BuildContext context) => const WebViewScreen(
                                     title: Strings.faqTitle,
                                     url: Strings.faqUrl,
                                   )));
@@ -622,7 +622,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                                           Flexible(
                                             flex: 7,
                                             child: Text(
-                                                Strings.recurr_server_check,
+                                                Strings.recurrServerCheck,
                                                 textAlign: TextAlign.start,
                                                 style: CustomTextStyles
                                                     .fontR16primary),
@@ -752,64 +752,88 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         if (isExist) {
           await _showAlertDialog(CustomStrings().pairedAtsign(atsign),
               getClose: true, onClose: _getAtsignForm);
+          setState(() {
+            loading = false;
+            _loadingMessage = null;
+          });
           break;
         }
         _isQR = true;
         if (_isQR) {
+          bool isOtpSent = await loginWithAtsign(atsign, context);
+          print(isOtpSent);
           await showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (_) => WillPopScope(
-                  onWillPop: () async {
-                    int ct = 0;
-                    Navigator.of(context).popUntil((_) => ct++ >= 2);
-                    return true;
-                  },
-                  child: CustomDialog(
-                    context: context,
-                    hideReferences: widget.hideReferences,
-                    hideQrScan: widget.hideQrScan,
-                    onValidate:
-                        (String atsign, String secret, bool isScanner) async {
-                      _loadingMessage = Strings.loadingAtsignReady;
-                      setState(() {});
-                      await _processSharedSecret(atsign, secret,
-                          isScanner: isScanner);
-                    },
-                    isAtsignForm: true,
-                    isQR: true,
-                    atsign: atsign,
-                  )));
+            barrierDismissible: false,
+            context: context,
+            builder: (_) => WillPopScope(
+              onWillPop: () async {
+                int ct = 0;
+                Navigator.of(context).popUntil((_) => ct++ >= 2);
+                return true;
+              },
+              child: CustomDialog(
+                context: context,
+                hideReferences: widget.hideReferences,
+                hideQrScan: widget.hideQrScan,
+                onValidate:
+                    (String atsign, String secret, bool isScanner) async {
+                  _loadingMessage = Strings.loadingAtsignReady;
+                  setState(() {});
+                  await _processSharedSecret(atsign, secret,
+                      isScanner: isScanner);
+                },
+                isAtsignForm: true,
+                isQR: true,
+                atsign: atsign,
+              ),
+            ),
+          );
         }
-
+        setState(() {
+          loading = true;
+          _loadingMessage = Strings.loadingAtsignReady;
+        });
         break;
       case AtSignStatus.activated:
         if (isExist) {
           await _showAlertDialog(CustomStrings().pairedAtsign(atsign),
               getClose: true, onClose: _getAtsignForm);
+          setState(() {
+            loading = false;
+            _loadingMessage = null;
+          });
           break;
         }
         _isBackup = true;
+        setState(() {
+          loading = false;
+          _loadingMessage = null;
+        });
         break;
       case AtSignStatus.unavailable:
       case AtSignStatus.notFound:
         await _showAlertDialog(Strings.atsignNotFound,
             getClose: true, onClose: _getAtsignForm);
+        setState(() {
+          loading = false;
+          _loadingMessage = null;
+        });
         break;
       case AtSignStatus.error:
         await _showAlertDialog(Strings.atsignNull,
             getClose: true, onClose: _getAtsignForm);
+        setState(() {
+          loading = false;
+          _loadingMessage = null;
+        });
         break;
       default:
+        setState(() {
+          loading = false;
+          _loadingMessage = null;
+        });
         break;
     }
-    if (_isQR) {
-      await loginWithAtsign(atsign, context);
-    }
-    setState(() {
-      loading = false;
-      _loadingMessage = null;
-    });
   }
 
   //It will validate the person with atsign, email and the OTP.
@@ -851,7 +875,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               hideReferences: widget.hideReferences,
               hideQrScan: widget.hideQrScan,
               onValidate: (String atsign, String secret, bool isScanner) async {
-                _loadingMessage = Strings.loadingAtsignReady;
+                  _loadingMessage = Strings.loadingAtsignReady;
                 setState(() {});
                 await _processSharedSecret(atsign, secret,
                     isScanner: isScanner);

@@ -8,7 +8,7 @@ class WebViewScreen extends StatefulWidget {
   final String? url;
   final String? title;
 
-  WebViewScreen({this.url, this.title});
+  const WebViewScreen({this.url, this.title, Key? key}) : super(key: key);
   @override
   _WebViewScreenState createState() => _WebViewScreenState();
 }

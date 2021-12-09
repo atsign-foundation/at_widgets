@@ -26,7 +26,7 @@ class AppConstants {
   static const String removeButton = 'Remove';
 
   static String get serverDomain => _rootDomain;
-  static RootEnvironment rootEnvironment = RootEnvironment.Staging;
+  static RootEnvironment rootEnvironment = RootEnvironment.staging;
 
   static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';
@@ -44,7 +44,7 @@ class AppConstants {
   static String? get apiKey => _apiKey;
 }
 
-extension customMessages on OnboardingStatus {
+extension CustomMessages on OnboardingStatus {
   String get message {
     switch (this) {
       case (OnboardingStatus.ACTIVATE):
@@ -66,23 +66,23 @@ enum RootEnvironment {
   /// Staging will provide you all the flexibility of
   /// latest server updates which are used for testing,
   /// but will not be available for production.
-  Staging,
+  staging,
 
   /// Production is used for production environment.
-  Production,
+  production,
 
   /// Testing is used for testing(docker) environment.
-  Testing,
+  testing,
 }
 
-extension value on RootEnvironment {
+extension EnvironmentDomain on RootEnvironment {
   String get domain {
     switch (this) {
-      case RootEnvironment.Staging:
+      case RootEnvironment.staging:
         return 'root.atsign.wtf';
-      case RootEnvironment.Production:
+      case RootEnvironment.production:
         return 'root.atsign.org';
-      case RootEnvironment.Testing:
+      case RootEnvironment.testing:
         return 'vip.ve.atsign.zone';
       default:
         return 'root.atsign.wtf';
@@ -91,11 +91,11 @@ extension value on RootEnvironment {
 
   String? get apikey {
     switch (this) {
-      case RootEnvironment.Staging:
+      case RootEnvironment.staging:
         return AppConstants.deviceapikey;
-      case RootEnvironment.Production:
+      case RootEnvironment.production:
         return AppConstants.apiKey;
-      case RootEnvironment.Testing:
+      case RootEnvironment.testing:
         return AppConstants.deviceapikey;
       default:
         return AppConstants.deviceapikey;
@@ -104,11 +104,11 @@ extension value on RootEnvironment {
 
   String get website {
     switch (this) {
-      case RootEnvironment.Staging:
+      case RootEnvironment.staging:
         return 'https://atsign.wtf';
-      case RootEnvironment.Production:
+      case RootEnvironment.production:
         return 'https://atsign.com';
-      case RootEnvironment.Testing:
+      case RootEnvironment.testing:
         return 'https://atsign.wtf';
       default:
         return 'https://atsign.wtf';
@@ -117,11 +117,11 @@ extension value on RootEnvironment {
 
   String get previewLink {
     switch (this) {
-      case RootEnvironment.Staging:
+      case RootEnvironment.staging:
         return 'https://directory.atsign.wtf/';
-      case RootEnvironment.Production:
+      case RootEnvironment.production:
         return 'https://wavi.ng/';
-      case RootEnvironment.Testing:
+      case RootEnvironment.testing:
         return 'https://directory.atsign.wtf/';
       default:
         return 'https://directory.atsign.wtf/';

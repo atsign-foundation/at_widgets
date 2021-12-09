@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
@@ -10,10 +9,9 @@ import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/custom_appbar.dart';
 import 'package:at_onboarding_flutter/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class PrivateKeyQRCodeGenScreen extends StatefulWidget {
-  PrivateKeyQRCodeGenScreen({Key? key}) : super(key: key);
+  const PrivateKeyQRCodeGenScreen({Key? key}) : super(key: key);
 
   @override
   _PrivateKeyQRCodeGenScreenState createState() =>
@@ -105,7 +103,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                 CustomButton(
                   width: 230.toWidth,
                   isInverted: true,
-                  buttonText: Strings.coninueButtonTitle,
+                  buttonText: Strings.continueButtonTitle,
                   onPressed: () async {
                     if (OnboardingService.getInstance().fistTimeAuthScreen !=
                         null) {

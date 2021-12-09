@@ -91,8 +91,8 @@ class Onboarding {
       this.domain,
       required this.rootEnvironment,
       this.appAPIKey}) {
-    AppConstants.rootEnvironment = this.rootEnvironment;
-    if (AppConstants.rootEnvironment == RootEnvironment.Production &&
+    AppConstants.rootEnvironment = rootEnvironment;
+    if (AppConstants.rootEnvironment == RootEnvironment.production &&
         appAPIKey == null) {
       throw ('App API Key is required for production environment');
     } else {
@@ -108,8 +108,8 @@ class Onboarding {
           atsign: atsign,
           onboard: onboard,
           onError: onError,
-          hideReferences: this.hideReferences,
-          hideQrScan: this.hideQrScan,
+          hideReferences: hideReferences,
+          hideQrScan: hideQrScan,
           nextScreen: nextScreen,
           fistTimeAuthNextScreen: fistTimeAuthNextScreen,
           atClientPreference: atClientPreference,
@@ -165,7 +165,7 @@ class OnboardingWidget extends StatefulWidget {
   /// API authentication key for getting free atsigns
   final String appAPIKey;
 
-  OnboardingWidget(
+  const OnboardingWidget(
       {Key? key,
       this.atsign,
       this.hideReferences,
@@ -178,7 +178,8 @@ class OnboardingWidget extends StatefulWidget {
       this.appColor,
       this.logo,
       this.domain,
-      required this.appAPIKey});
+      required this.appAPIKey})
+      : super(key: key);
   @override
   _OnboardingWidgetState createState() => _OnboardingWidgetState();
 }

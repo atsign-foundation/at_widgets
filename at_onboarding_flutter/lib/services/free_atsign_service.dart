@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:http/io_client.dart';
-import 'package:http/src/response.dart';
+import 'package:http/http.dart';
 
 /// Service to generate free atsigns randomly
 class FreeAtsignService {

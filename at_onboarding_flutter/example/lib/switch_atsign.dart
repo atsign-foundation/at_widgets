@@ -11,7 +11,7 @@ import 'contact_initial.dart';
 class AtSignBottomSheet extends StatefulWidget {
   final List<String> atSignList;
   final Function? showLoader;
-  AtSignBottomSheet(
+  const AtSignBottomSheet(
       {Key key = const Key('atsign'),
       this.atSignList = const [],
       this.showLoader})
@@ -24,7 +24,7 @@ class AtSignBottomSheet extends StatefulWidget {
 class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
   AtService atService = AtService.getInstance();
   bool isLoading = false;
-  var atClientPreferenceLocal;
+  AtClientPreference? atClientPreferenceLocal;
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -39,7 +39,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
             onClosing: () {},
             backgroundColor: Colors.transparent,
             builder: (context) => ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               child: Container(
                 height: 100,
@@ -65,7 +65,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                   atsign: widget.atSignList[index],
                                   // This domain parameter is optional.
                                   domain: AppConstants.rootDomain,
-                                  atClientPreference: atClientPreferenceLocal,
+                                  atClientPreference: atClientPreferenceLocal!,
                                   appColor:
                                       const Color.fromARGB(255, 240, 94, 62),
                                   onboard: (Map<String?, AtClientService> value,
@@ -81,7 +81,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                   onError: (Object? error) {
                                     print('Onboarding throws $error error');
                                   },
-                                  rootEnvironment: RootEnvironment.Staging,
+                                  rootEnvironment: RootEnvironment.staging,
                                   // API Key is mandatory for production environment.
                                   // appAPIKey: YOUR_API_KEY_HERE
                                   nextScreen: const DashBoard(),
@@ -94,8 +94,8 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                 }
                               },
                         child: Padding(
-                          padding:
-                              EdgeInsets.only(left: 10, right: 10, top: 20),
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, top: 20),
                           child: Column(
                             children: [
                               ContactInitial(
@@ -107,7 +107,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         ),
                       ),
                     )),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     GestureDetector(
@@ -120,7 +120,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                           atsign: '',
                           // This domain parameter is optional.
                           domain: AppConstants.rootDomain,
-                          atClientPreference: atClientPreferenceLocal,
+                          atClientPreference: atClientPreferenceLocal!,
                           appColor: const Color.fromARGB(255, 240, 94, 62),
                           onboard: (Map<String?, AtClientService> value,
                               String? atsign) {
@@ -133,7 +133,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                           onError: (Object? error) {
                             print('Onboarding throws $error error');
                           },
-                          rootEnvironment: RootEnvironment.Staging,
+                          rootEnvironment: RootEnvironment.staging,
                           // API Key is mandatory for production environment.
                           // appAPIKey: YOUR_API_KEY_HERE
                           nextScreen: const DashBoard(),
@@ -146,10 +146,10 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         }
                       },
                       child: Container(
-                        margin: EdgeInsets.only(right: 10),
+                        margin: const EdgeInsets.only(right: 10),
                         height: 40,
                         width: 40,
-                        child: Icon(
+                        child: const Icon(
                           Icons.add_circle_outline_outlined,
                           color: Colors.orange,
                         ),
@@ -164,7 +164,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
         isLoading
             ? Center(
                 child: Column(
-                  children: [
+                  children: const [
                     Text(
                       'Switching atsign...',
                       style: TextStyle(
@@ -176,12 +176,12 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                     ),
                     SizedBox(height: 10),
                     CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(0xFFF05E3E))),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Color(0xFFF05E3E))),
                   ],
                 ),
               )
-            : SizedBox(
+            : const SizedBox(
                 height: 100,
               ),
       ],

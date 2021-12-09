@@ -1,5 +1,6 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
-import 'package:at_client/at_client.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_server_status/at_server_status.dart';
@@ -20,7 +21,7 @@ class AtErrorDialog {
           const Icon(Icons.sentiment_dissatisfied)
         ],
       ),
-      content: Text('$errorMessage'),
+      content: Text(errorMessage),
       actions: <Widget>[
         TextButton(
           onPressed: () {
@@ -89,4 +90,4 @@ class AtErrorDialog {
   }
 }
 
-extension customMessages on OnboardingStatus {}
+extension CustomMessages on OnboardingStatus {}
