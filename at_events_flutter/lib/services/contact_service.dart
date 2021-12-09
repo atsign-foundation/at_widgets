@@ -1,7 +1,10 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 
 import 'event_key_stream_service.dart';
+import 'package:at_utils/at_logger.dart';
 
 Future<AtContact> getAtSignDetails(String? atSign) async {
   var atContact = getCachedContactDetail(atSign);
@@ -30,6 +33,8 @@ AtContact? getCachedContactDetail(String? atsign) {
 }
 
 Future<Map<String, dynamic>> getContactDetails(atSign) async {
+  final _logger = AtSignLogger('getContactDetails');
+
   var contactDetails = <String, dynamic>{};
 
   if (EventKeyStreamService().atClientManager == null || atSign == null) {
@@ -58,7 +63,8 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
         .get(key)
         .catchError(
             // ignore: return_of_invalid_type_from_catch_error
-            (e) => print('error in get ${e.errorCode} ${e.errorMessage}'));
+            (e) => _logger
+                .severe('error in get ${e.errorCode} ${e.errorMessage}'));
     var firstname = result.value;
 
     // lastname

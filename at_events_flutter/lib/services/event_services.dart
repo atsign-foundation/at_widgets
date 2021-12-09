@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
@@ -6,19 +8,21 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_events_flutter/common_components/concurrent_event_request_dialog.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
-// import 'package:at_events_flutter/services/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
 import 'event_key_stream_service.dart';
+import 'package:at_utils/at_logger.dart';
 
 class EventService {
   EventService._();
   // ignore: prefer_final_fields
   static EventService _instance = EventService._();
   factory EventService() => _instance;
+  final _logger = AtSignLogger('EventService');
+
   bool isEventUpdate = false;
 
   EventNotificationModel? eventNotificationModel;
@@ -53,9 +57,8 @@ class EventService {
       selectedContactsAtSigns = [];
     }
     isEventUpdate = isUpdate;
-    print('isEventUpdate:$isEventUpdate');
     atClientManager = AtClientManager.getInstance();
-    Future.delayed(Duration(milliseconds: 50), () {
+    Future.delayed(const Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });
   }
@@ -128,8 +131,6 @@ class EventService {
       eventNotification.atsignCreator =
           atClientManager.atClient.getCurrentAtSign();
 
-      print('shared contact atsigns:$selectedContactsAtSigns');
-
       var atKey = AtKey()
         ..metadata = Metadata()
         ..metadata!.ttr = -1
@@ -143,8 +144,6 @@ class EventService {
 
       var notification = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
-
-      print('key: ${atKey.key}');
 
       var putResult = await atClientManager.atClient.put(
         atKey,
@@ -170,7 +169,7 @@ class EventService {
       }
       return putResult;
     } catch (e) {
-      print('error in SendEventNotification $e');
+      _logger.severe('error in SendEventNotification $e');
       return e.toString();
     }
   }
@@ -195,11 +194,13 @@ class EventService {
       EventService().eventNotificationModel!.group!.members = {};
     }
 
+    // ignore: avoid_function_literals_in_foreach_calls
     selectedList.forEach((element) {
       if (element!.contact != null) {
         var newContact = getGroupMemberContact(element.contact!);
         addContactToList(newContact);
       } else if (element.group != null) {
+        // ignore: avoid_function_literals_in_foreach_calls
         element.group!.members!.forEach((groupMember) {
           var newContact = getGroupMemberContact(groupMember);
 
@@ -213,6 +214,7 @@ class EventService {
     var _containsContact = false;
 
     // to prevent one contact from getting added again
+    // ignore: avoid_function_literals_in_foreach_calls
     EventService().selectedContacts!.forEach((_contact) {
       if (_selectedContact.atSign == _contact.atSign) {
         _containsContact = true;

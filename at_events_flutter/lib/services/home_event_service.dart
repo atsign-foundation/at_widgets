@@ -34,35 +34,10 @@ class HomeEventService {
     } else {
       return false;
     }
-
-    // var isRequired = true;
-    // var currentAtsign = AtEventNotificationListener()
-    //     .atClientManager
-    //     .atClient
-    //     .getCurrentAtSign();
-
-    // if (event.group!.members!.isEmpty) return true;
-
-    // event.group!.members!.forEach((member) {
-    //   if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
-    //   if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
-
-    //   if ((member.tags!['isAccepted'] != null &&
-    //           member.tags!['isAccepted'] == true) &&
-    //       member.tags!['isExited'] == false &&
-    //       member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
-    //     isRequired = false;
-    //   }
-    // });
-
-    // if (event.atsignCreator == currentAtsign) isRequired = false;
-
-    // return isRequired;
   }
 
   String getActionString(EventNotificationModel event, bool haveResponded) {
     if (isEventCancelled(event)) return 'Cancelled';
-    var label = 'Action required';
 
     var _eventInfo = getMyEventInfo(event);
 
@@ -79,33 +54,6 @@ class HomeEventService {
     } else {
       return '';
     }
-
-    // var currentAtsign = AtEventNotificationListener()
-    //     .atClientManager
-    //     .atClient
-    //     .getCurrentAtSign();
-
-    // if (event.group!.members!.isEmpty) return '';
-
-    // event.group!.members!.forEach((member) {
-    //   if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
-    //   if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
-
-    //   if (member.tags!['isExited'] != null &&
-    //       member.tags!['isExited'] == true &&
-    //       member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
-    //     label = 'Request declined';
-    //   } else if (member.tags!['isExited'] != null &&
-    //       member.tags!['isExited'] == false &&
-    //       member.tags!['isAccepted'] != null &&
-    //       member.tags!['isAccepted'] == false &&
-    //       member.atSign!.toLowerCase() == currentAtsign!.toLowerCase() &&
-    //       haveResponded) {
-    //     label = 'Pending request';
-    //   }
-    // });
-
-    // return label;
   }
 
   String getSubTitle(EventNotificationModel _event) {
@@ -117,13 +65,9 @@ class HomeEventService {
   }
 
   String? getSemiTitle(EventNotificationModel _event, bool _haveResponded) {
-    return
-        // _event.group != null
-        //     ?
-        (isActionRequired(_event))
-            ? getActionString(_event, _haveResponded)
-            : null;
-    // : 'Action required';
+    return (isActionRequired(_event))
+        ? getActionString(_event, _haveResponded)
+        : null;
   }
 
   bool calculateShowRetry(EventKeyLocationModel _eventKeyModel) {

@@ -15,7 +15,6 @@ import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/distance_calculate.dart';
-import 'package:at_location_flutter/event_show_location.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -314,10 +313,6 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
 
               return Stack(
                 children: [
-                  // eventShowLocation(
-                  //     _locationList,
-                  //     LatLng(
-                  //         _event!.venue!.latitude!, _event.venue!.longitude!)),
                   AtLocationFlutterPlugin(
                     atsignsToTrack,
                     addCurrentUserMarker: true,
