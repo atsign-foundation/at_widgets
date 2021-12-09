@@ -41,13 +41,7 @@ class _MyAppState extends State<MyApp> {
   AtClientService? atClientService;
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
-  bool showOptions = false;
 
-  @override
-  void initState() {
-    runInitialOnboarding();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +51,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: showOptions
-            ? Builder(
+        body:  Builder(
                 builder: (context) => Column(
                   children: [
                     const SizedBox(
@@ -136,15 +129,8 @@ class _MyAppState extends State<MyApp> {
                   ],
                 ),
               )
-            : const Center(child: CircularProgressIndicator()),
       ),
     );
   }
 
-  void runInitialOnboarding() async {
-    await atClientService!.onboard(atClientPreference: atClientPreference!);
-    setState(() {
-      showOptions = true;
-    });
-  }
 }

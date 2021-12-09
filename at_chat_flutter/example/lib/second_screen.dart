@@ -23,6 +23,8 @@ class _SecondScreenState extends State<SecondScreen> {
   String member1 = '';
   String member2 = '';
 
+  /// Get the AtClientManager instance
+  var atClientManager = AtClientManager.getInstance();
   @override
   void initState() {
     getAtSignAndInitializeChat();
@@ -209,13 +211,11 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void getAtSignAndInitializeChat() async {
-    var currentAtSign = await KeychainUtil.getAtSign();
+    var currentAtSign = atClientManager.atClient.getCurrentAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
-    initializeChatService(
-        atClientService!.atClientManager,
-        activeAtSign!,
+    initializeChatService(atClientManager, activeAtSign!,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
