@@ -3,7 +3,7 @@
 ### Now for a little internet optimism
 [![Pub Package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter)
 
-### Introduction
+## Introduction
 
 A flutter plugin project to integrate follows feature for @signs.
 
@@ -101,7 +101,7 @@ end
 </details>
 
 
-### Sample usage
+## Sample usage
 The plugin will takes AtClientService instance to show the follows list of an @sign. 
 
 ```
