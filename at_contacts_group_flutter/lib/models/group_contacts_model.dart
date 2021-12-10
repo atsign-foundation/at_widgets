@@ -70,3 +70,4 @@ class GroupContactsModel {
 
 /// Enum for contact types
 enum ContactsType { CONTACT, GROUP }
+enum ContactTabs { RECENT, FAVS, ALL }

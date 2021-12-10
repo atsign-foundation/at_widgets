@@ -17,10 +17,13 @@ class AtService {
   }
 
   String? _atsign;
-
+  Map<String?, AtClientService> atClientServiceMap =
+      <String?, AtClientService>{};
   AtClientService? atClientServiceInstance;
   AtClientImpl? atClientInstance;
   Function? monitorCallBack;
+
+  set atsign(String atsign) {}
 
   Future<AtClientPreference> getAtClientPreference({String? cramSecret}) async {
     final appDocumentDirectory =

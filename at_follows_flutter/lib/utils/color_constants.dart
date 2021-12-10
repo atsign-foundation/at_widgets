@@ -29,6 +29,7 @@ class ColorConstants {
   static Color? activeTrackColor;
   static Brightness? brightness;
   static Color? backgroundColor;
+  // set app color
   static set appColor(Color? color) {
     buttonHighLightColor = color ?? Color.fromARGB(255, 240, 94, 62);
     activeColor = buttonHighLightColor;
@@ -37,7 +38,7 @@ class ColorConstants {
 
   // static Color _lightBackgroundColor = Colors.grey[400];
   // static Color _darkBackgroundColor = Color.fromARGB(255, 45, 42, 48);
-
+  // To set dark background color
   static set darkTheme(bool value) {
     _isDarkTheme = value;
     primary = _isDarkTheme ? light : Colors.black;

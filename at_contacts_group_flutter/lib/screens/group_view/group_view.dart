@@ -38,12 +38,12 @@ class _GroupViewState extends State<GroupView> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).brightness == Brightness.light
-            ? AllColors().WHITE
-            : AllColors().Black,
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? AllColors().WHITE
+          : AllColors().Black,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Stack(
             children: [
               Column(

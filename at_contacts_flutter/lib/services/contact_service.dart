@@ -8,11 +8,13 @@ import 'package:at_commons/at_commons.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
+import 'package:flutter/material.dart';
 import 'package:at_client/src/manager/at_client_manager.dart';
 
 /// A service to handle CRUD operation on contacts
@@ -44,24 +46,25 @@ class ContactService {
   late String currentAtsign;
 
   /// Stream controller for contacts' list stream
-  StreamController<List<AtContact?>> contactStreamController =
-      StreamController<List<AtContact?>>.broadcast();
+  StreamController<List<BaseContact?>> contactStreamController =
+      StreamController<List<BaseContact?>>.broadcast();
 
   /// Sink for the contacts' list stream
   Sink get contactSink => contactStreamController.sink;
 
   /// Stream of contacts' list
-  Stream<List<AtContact?>> get contactStream => contactStreamController.stream;
+  Stream<List<BaseContact?>> get contactStream =>
+      contactStreamController.stream;
 
   /// Stream controller for blocked contacts' list stream
-  StreamController<List<AtContact?>> blockedContactStreamController =
-      StreamController<List<AtContact?>>.broadcast();
+  StreamController<List<BaseContact?>> blockedContactStreamController =
+      StreamController<List<BaseContact?>>.broadcast();
 
   /// Sink for the blocked contacts' list stream
   Sink get blockedContactSink => blockedContactStreamController.sink;
 
   /// Stream of blocked contacts' list
-  Stream<List<AtContact?>> get blockedContactStream =>
+  Stream<List<BaseContact?>> get blockedContactStream =>
       blockedContactStreamController.stream;
 
   /// Stream controller for selected contacts' list stream
@@ -81,6 +84,8 @@ class ContactService {
     selectedContactStreamController.close();
     blockedContactStreamController.close();
   }
+
+  List<BaseContact> baseContactList = [], baseBlockedList = [];
 
   /// List of contacts added by atsign
   List<AtContact?> contactList = [],
@@ -129,9 +134,9 @@ class ContactService {
   }
 
   // ignore: always_declare_return_types
-  Future<List<AtContact?>> fetchContacts() async {
-    selectedContacts = [];
+  fetchContacts() async {
     try {
+      selectedContacts = [];
       contactList = [];
       allContactsList = [];
       contactList = await atContactImpl.listContacts();
@@ -152,12 +157,54 @@ class ContactService {
             .compareTo(b!.atSign!.toString().substring(1));
         return index!;
       });
-      contactSink.add(contactList);
+
+      compareContactListForUpdatedState();
+      contactSink.add(baseContactList);
       return contactList;
     } catch (e) {
       print('error here => $e');
       return [];
     }
+  }
+
+  void compareContactListForUpdatedState() {
+    contactList.forEach(
+      (c) {
+        var index =
+            baseContactList.indexWhere((e) => e.contact!.atSign == c!.atSign);
+        if (index > -1) {
+          baseContactList[index] = BaseContact(
+            c,
+            isBlocking: baseContactList[index].isBlocking,
+            isMarkingFav: baseContactList[index].isMarkingFav,
+            isDeleting: baseContactList[index].isDeleting,
+          );
+        } else {
+          baseContactList.add(
+            BaseContact(
+              c,
+              isBlocking: false,
+              isMarkingFav: false,
+              isDeleting: false,
+            ),
+          );
+        }
+      },
+    );
+
+    // checking to remove deleted atsigns from baseContactList.
+    var atsignsToRemove = <String>[];
+    baseContactList.forEach((baseContact) {
+      var index = contactList.indexWhere(
+        (e) => e!.atSign == baseContact.contact!.atSign,
+      );
+      if (index == -1) {
+        atsignsToRemove.add(baseContact.contact!.atSign!);
+      }
+    });
+    atsignsToRemove.forEach((e) {
+      baseContactList.removeWhere((element) => element.contact!.atSign == e);
+    });
   }
 
   // ignore: always_declare_return_types
@@ -174,14 +221,68 @@ class ContactService {
   }
 
   // ignore: always_declare_return_types
+  markFavContact(AtContact contact) async {
+    try {
+      contact.favourite = !contact.favourite!;
+      await atContactImpl.update(contact);
+      await fetchBlockContactList();
+      await fetchContacts();
+    } catch (error) {
+      print('error in marking fav: $error');
+    }
+  }
+
+  // ignore: always_declare_return_types
   fetchBlockContactList() async {
     try {
       blockContactList = [];
       blockContactList = await atContactImpl.listBlockedContacts();
-      blockedContactSink.add(blockContactList);
+      compareBlockedContactListForUpdatedState();
+      blockedContactSink.add(baseBlockedList);
+      return blockContactList;
     } catch (error) {
       print('error in fetching contact list:$error');
     }
+  }
+
+  void compareBlockedContactListForUpdatedState() {
+    blockContactList.forEach(
+      (c) {
+        var index =
+            baseBlockedList.indexWhere((e) => e.contact!.atSign == c!.atSign);
+        if (index > -1) {
+          baseBlockedList[index] = BaseContact(
+            c,
+            isBlocking: baseBlockedList[index].isBlocking,
+            isMarkingFav: baseBlockedList[index].isMarkingFav,
+            isDeleting: baseBlockedList[index].isDeleting,
+          );
+        } else {
+          baseBlockedList.add(
+            BaseContact(
+              c,
+              isBlocking: false,
+              isMarkingFav: false,
+              isDeleting: false,
+            ),
+          );
+        }
+      },
+    );
+
+    // checking to remove unblocked atsigns from baseBlockedList.
+    var atsignsToRemove = <String>[];
+    baseBlockedList.forEach((baseContact) {
+      var index = blockContactList.indexWhere(
+        (e) => e!.atSign == baseContact.contact!.atSign,
+      );
+      if (index == -1) {
+        atsignsToRemove.add(baseContact.contact!.atSign!);
+      }
+    });
+    atsignsToRemove.forEach((e) {
+      baseBlockedList.removeWhere((element) => element.contact!.atSign == e);
+    });
   }
 
   // ignore: always_declare_return_types
@@ -368,5 +469,42 @@ class ContactService {
       contactDetails['nickname'] = null;
     }
     return contactDetails;
+  }
+
+  void updateState(STATE_UPDATE stateToUpdate, AtContact contact, bool state) {
+    var indexToUpdate;
+    if (stateToUpdate == STATE_UPDATE.UNBLOCK) {
+      indexToUpdate = baseBlockedList
+          .indexWhere((element) => element.contact!.atSign == contact.atSign);
+    } else {
+      indexToUpdate = baseContactList
+          .indexWhere((element) => element.contact!.atSign == contact.atSign);
+    }
+
+    if (indexToUpdate == -1) {
+      throw Exception('index range error: $indexToUpdate');
+    }
+
+    switch (stateToUpdate) {
+      case STATE_UPDATE.BLOCK:
+        baseContactList[indexToUpdate].isBlocking = state;
+        break;
+      case STATE_UPDATE.UNBLOCK:
+        baseBlockedList[indexToUpdate].isBlocking = state;
+        break;
+      case STATE_UPDATE.DELETE:
+        baseContactList[indexToUpdate].isDeleting = state;
+        break;
+      case STATE_UPDATE.MARK_FAV:
+        baseContactList[indexToUpdate].isMarkingFav = state;
+        break;
+      default:
+    }
+
+    if (stateToUpdate == STATE_UPDATE.UNBLOCK) {
+      blockedContactSink.add(baseBlockedList);
+    } else {
+      contactSink.add(baseContactList);
+    }
   }
 }

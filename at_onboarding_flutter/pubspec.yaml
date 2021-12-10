@@ -2,60 +2,50 @@ name: at_onboarding_flutter
 description: A Flutter plugin project for onboarding any @‎sign in @‎platform
   apps with ease. Provides a QRscanner option and an upload key file option to
   authenticate.
-version: 3.0.4
+version: 3.1.1
 homepage: https://atsign.dev
-repository: https://github.com/atsign-foundation/at_widgets
+repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_onboarding_flutter
+issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
+documentation: https://atsign.dev/docs/functional_architecture/libraries/#at_onboarding_flutter
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.20.0"
 
 dependencies:
-  archive: ^3.1.2
-  at_backupkey_flutter: ^3.0.0
-  at_client: ^3.0.0
-  at_client_mobile: ^3.0.0
-  at_commons: ^3.0.0
-  at_server_status: ^1.0.3
-  at_utils: ^3.0.0
-  file_picker: ^4.0.0
   flutter:
     sdk: flutter
-  flutter_qr_reader: ^1.0.5
-  http: ^0.13.3
-  path_provider: ^2.0.2
-  permission_handler: ^8.1.1
-  pin_code_fields: ^7.2.0
-  url_launcher: ^6.0.6
-  webview_flutter: ^2.0.8
 
+  archive: ^3.1.6
+  file_picker: ^4.2.6
+  flutter_qr_reader: ^1.0.5
+  url_launcher: ^6.0.16
+  permission_handler: ^8.3.0
+  path_provider: ^2.0.7
+  webview_flutter: ^2.3.1
+  http: ^0.13.4
+  pin_code_fields: ^7.3.0
+  zxing2: ^0.1.0
+  image: ^3.0.8
+
+  # desktop - dependencies
+  file_selector: ^0.8.2+1
+  file_selector_macos: ^0.0.4+1
+  file_selector_windows: ^0.0.2+1
+  file_selector_linux: ^0.0.2+1
+
+  at_backupkey_flutter: ^3.1.1
+  at_client: ^3.0.6
+  at_client_mobile: ^3.1.2
+  at_commons: ^3.0.2
+  at_server_status: ^1.0.3
+  at_utils: ^3.0.2
+
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
   lints: ^1.0.1
-#dependency_overrides:
-#  at_utils: ^3.0.0
-#  at_lookup: ^3.0.0
-#  at_client_mobile:
-#    git:
-#      url: https://github.com/atsign-foundation/at_client_sdk.git
-#      path: at_client_mobile
-#      ref: trunk
-#  at_client:
-#    git:
-#      url: https://github.com/atsign-foundation/at_client_sdk.git
-#      path: at_client
-#      ref: trunk
-#  at_commons:
-#    git:
-#      url: https://github.com/atsign-foundation/at_tools.git
-#      path: at_commons
-#      ref: trunk
-#  at_backupkey_flutter:
-#    git:
-#      url: https://github.com/atsign-foundation/at_widgets.git
-#      path: at_backupkey_flutter
-#      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +62,12 @@ flutter:
         pluginClass: AtOnboardingFlutterPlugin
       ios:
         pluginClass: AtOnboardingFlutterPlugin
+      macos:
+        default_package: at_onboarding_flutter
+      windows:
+        default_package: at_onboarding_flutter
+      linux:
+        default_package: at_onboarding_flutter
 
   # To add assets to your plugin package, add an assets section, like this:
   assets:
