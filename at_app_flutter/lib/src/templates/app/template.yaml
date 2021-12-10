@@ -13,4 +13,4 @@ config:
   android:
     gradle.properties:
       android.enableR8: true
-      android.useAndroidX: false
+
