@@ -17,6 +17,7 @@ import 'package:at_contacts_group_flutter/widgets/person_horizontal_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
 import 'package:flutter/material.dart';
 
+/// This widget gives a screen to display list of groups
 class GroupList extends StatefulWidget {
   @override
   _GroupListState createState() => _GroupListState();
@@ -52,47 +53,47 @@ class _GroupListState extends State<GroupList> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).brightness == Brightness.light
-            ? AllColors().WHITE
-            : AllColors().Black,
-        appBar: CustomAppBar(
-          showBackButton: true,
-          showLeadingIcon: true,
-          showTitle: true,
-          titleText: 'Groups',
-          showTrailingIcon: showAddGroupIcon,
-          trailingIcon: Icon(
-            Icons.add,
-            color: AllColors().ORANGE,
-            size: 20.toFont,
-          ),
-          onTrailingIconPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ContactsScreen(
-                context: context,
-                asSelectionScreen: true,
-                selectedList: (selectedList) {
-                  selectedContactList = selectedList;
-                  if (selectedContactList.isNotEmpty) {
-                    GroupService().setSelectedContacts(selectedContactList);
-                  }
-                },
-                saveGroup: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NewGroup(),
-                    ),
-                  );
-                },
-              ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? AllColors().WHITE
+          : AllColors().Black,
+      appBar: CustomAppBar(
+        showBackButton: true,
+        showLeadingIcon: true,
+        showTitle: true,
+        titleText: 'Groups',
+        showTrailingIcon: showAddGroupIcon,
+        trailingIcon: Icon(
+          Icons.add,
+          color: AllColors().ORANGE,
+          size: 20.toFont,
+        ),
+        onTrailingIconPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ContactsScreen(
+              context: context,
+              asSelectionScreen: true,
+              selectedList: (selectedList) {
+                selectedContactList = selectedList;
+                if (selectedContactList.isNotEmpty) {
+                  GroupService().setSelectedContacts(selectedContactList);
+                }
+              },
+              saveGroup: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NewGroup(),
+                  ),
+                );
+              },
             ),
           ),
         ),
-        body: errorOcurred
+      ),
+      body: SafeArea(
+        child: errorOcurred
             ? ErrorScreen()
             : StreamBuilder(
                 stream: GroupService().atGroupStream,

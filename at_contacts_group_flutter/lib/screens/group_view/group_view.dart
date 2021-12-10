@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
+/// This widget shows the group details with it's members in a grid view
 class GroupView extends StatefulWidget {
   final AtGroup group;
   GroupView({required this.group});
@@ -37,12 +38,12 @@ class _GroupViewState extends State<GroupView> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).brightness == Brightness.light
-            ? AllColors().WHITE
-            : AllColors().Black,
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? AllColors().WHITE
+          : AllColors().Black,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Stack(
             children: [
               Column(

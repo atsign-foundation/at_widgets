@@ -26,6 +26,15 @@ class SizeConfig {
 
   double textFactor = 1.0;
 
+  bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 700;
+
+  bool isTablet(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 700 &&
+      MediaQuery.of(context).size.width < 1200;
+  bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 1200;
+
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
@@ -64,6 +73,9 @@ class SizeConfig {
   }
 
   double getWidthRatio(double val) {
+    if (screenWidth >= 1200) {
+      return val;
+    }
     double res = (val / refWidth) * 100;
     double temp = res * blockSizeHorizontal;
     // print("width$temp");
@@ -72,12 +84,18 @@ class SizeConfig {
   }
 
   double getHeightRatio(double val) {
+    if (screenWidth >= 1200) {
+      return val;
+    }
     double res = (val / refHeight) * 100;
     double temp = res * blockSizeVertical;
     return temp;
   }
 
   double getFontRatio(double val) {
+    if (screenWidth >= 1200) {
+      return val;
+    }
     double res = (val / refWidth) * 100;
     double temp = 0.0;
     if (screenWidth < screenHeight) {

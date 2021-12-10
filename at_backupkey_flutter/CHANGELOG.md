@@ -1,3 +1,13 @@
+## 3.1.1
+- **FIX**: Added file location picker for desktop platforms to save backup keys
+
+## 3.1.0
+- **FEAT**: Added example
+- **FEAT**: Added platform support for macos, windows and linux
+
+## 3.0.1
+- added a public method to show a backup key dialog
+
 ## 3.0.0
 - Resilient SDK changes uptake for monitor, notification and sync improvements
 

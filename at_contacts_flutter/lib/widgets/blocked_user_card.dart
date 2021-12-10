@@ -16,15 +16,18 @@ import 'package:flutter/material.dart';
 
 class BlockedUserCard extends StatefulWidget {
   final AtContact? blockeduser;
+  final Function? unblockAtsign;
 
-  const BlockedUserCard({Key? key, this.blockeduser}) : super(key: key);
+  const BlockedUserCard({Key? key, this.blockeduser, this.unblockAtsign})
+      : super(key: key);
   @override
   _BlockedUserCardState createState() => _BlockedUserCardState();
 }
 
 class _BlockedUserCardState extends State<BlockedUserCard> {
+  /// Instance of the contact service
   late ContactService _contactService;
-  bool unblockUser = false;
+
   @override
   void initState() {
     super.initState();
@@ -66,33 +69,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
         ),
       ),
       trailing: GestureDetector(
-        onTap: () async {
-          setState(() {
-            unblockUser = true;
-          });
-          // ignore: unawaited_futures
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Center(
-                child: Text(TextStrings().unblockContact),
-              ),
-              content: Container(
-                height: 100.toHeight,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            ),
-          );
-          await _contactService.blockUnblockContact(
-              contact: widget.blockeduser!, blockAction: false);
-
-          setState(() {
-            unblockUser = false;
-            Navigator.pop(context);
-          });
-        },
+        onTap: widget.unblockAtsign as void Function(),
         child: Container(
           child: Text(
             TextStrings().unblock,

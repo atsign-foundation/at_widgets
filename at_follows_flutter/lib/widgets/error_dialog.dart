@@ -2,6 +2,7 @@ import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 
+//a class to display errors
 class CustomErrorDialog extends StatelessWidget {
   final error;
   CustomErrorDialog({required this.error});

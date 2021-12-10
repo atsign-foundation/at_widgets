@@ -6,9 +6,15 @@ import 'package:at_onboarding_flutter/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 
+/// This screen shows the list of atsigns already available for the given email
 class AtsignListScreen extends StatefulWidget {
+  /// list of atsigns for the email
   final List<String> atsigns;
+
+  /// message to display along with the atsign list
   final String? message;
+
+  /// the new atsign selected in the free atsign generator
   final String? newAtsign;
 
   const AtsignListScreen({required this.atsigns, this.message, this.newAtsign});

@@ -44,6 +44,7 @@ class ConnectionsService {
     }
   }
 
+  // method to get atsign list
   Future<void> getAtsignsList({bool isInit = false}) async {
     if (connectionProvider.followingList!.isEmpty || isInit) {
       await createLists(isFollowing: true);
@@ -164,6 +165,7 @@ class ConnectionsService {
     return result;
   }
 
+  // method to unfollow an atsign
   Future<bool> unfollow(String? atsign) async {
     atsign = formatAtSign(atsign);
     var atKey = this._formKey(isFollowing: true);
@@ -180,6 +182,7 @@ class ConnectionsService {
     return result;
   }
 
+  // method to remove follower in list
   Future<bool> removeFollower(String atsign) async {
     var followersList = followers.getKey!.value.split(',');
     bool result = false;
@@ -315,7 +318,7 @@ class ConnectionsService {
     // for following list followers list is not required.
     if (!isFollowing) {
       var followersValue =
-          await _sdkService.scanAndGet(AppConstants.containsFollowers);
+          await _sdkService.scanAndGet(AppConstants.followersKey);
       this.followers.create(followersValue);
       if (followersValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
@@ -326,7 +329,7 @@ class ConnectionsService {
       // for followers list following list is required to show the status of follow button.
 
       var followingValue =
-          await _sdkService.scanAndGet(AppConstants.containsFollowing);
+          await _sdkService.scanAndGet(AppConstants.followingKey);
       this.following.create(followingValue);
 
       if (followingValue.metadata != null) {
@@ -364,6 +367,7 @@ class ConnectionsService {
     return atKey;
   }
 
+  // method to get atsign data
   Future<Atsign> _getAtsignData(String? connection,
       {bool isFollowing = true, bool isNew = false}) async {
     AtKey atKey;

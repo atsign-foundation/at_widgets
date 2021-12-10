@@ -10,9 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
+  /// Asset image path
   final String? image;
+
+  /// Size of the avatar
   final double size;
+
+  /// Boolean indicator if the image is not in assets
   final bool nonAsset;
+
+  /// Image data
   final Uint8List? byteImage;
 
   const CustomCircleAvatar({

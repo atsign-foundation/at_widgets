@@ -1,3 +1,9 @@
+## 2.0.4
+- **FEAT**: Added check for mobile, tablet and desktop in SizeConfig
+ 
+## 2.0.3
+- **FEAT**: Added `isDesktop` check in CustomAppBar
+
 ## 2.0.2
 - borderRadius option added in CustomButton
 

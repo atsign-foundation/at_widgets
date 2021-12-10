@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:at_backupkey_flutter/services/backupkey_service.dart';
 import 'package:at_backupkey_flutter/utils/strings.dart';
@@ -7,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:file_saver/file_saver.dart';
+import 'package:file_selector/file_selector.dart';
 
 class BackupKeyWidget extends StatelessWidget {
   final AtSignLogger _logger = AtSignLogger('BackUp Key Widget');
@@ -54,8 +57,7 @@ class BackupKeyWidget extends StatelessWidget {
       this.buttonWidth,
       this.buttonHeight,
       this.buttonColor,
-      this.iconSize}) {
-  }
+      this.iconSize}) {}
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +95,7 @@ class BackupKeyWidget extends StatelessWidget {
               color: this.iconColor,
             ),
             onPressed: () {
-              _showDialog(context);
+              showBackupDialog(context);
             },
           );
   }
@@ -131,7 +133,8 @@ class BackupKeyWidget extends StatelessWidget {
         });
   }
 
-  _showDialog(BuildContext context) {
+  showBackupDialog(BuildContext context) {
+    SizeConfig().init(context);
     showDialog(
         context: context,
         builder: (BuildContext ctxt) {
@@ -186,10 +189,19 @@ class BackupKeyWidget extends StatelessWidget {
       if (aesEncryptedKeys.isEmpty) {
         return false;
       }
-      String path = await _generateFile(aesEncryptedKeys);
-      await Share.shareFiles([path],
-          sharePositionOrigin:
-              Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
+      String tempFilePath = await _generateFile(aesEncryptedKeys);
+      if (Platform.isAndroid || Platform.isIOS) {
+        await Share.shareFiles([tempFilePath],
+            sharePositionOrigin:
+                Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
+      } else {
+        final path =
+            await getSavePath(suggestedName: '$atsign${Strings.backupKeyName}');
+        final file = XFile(tempFilePath);
+        await file.saveTo(path ?? '');
+      }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('File saved successfully')));
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
     } on Error catch (err) {
@@ -198,16 +210,29 @@ class BackupKeyWidget extends StatelessWidget {
   }
 
   Future<String> _generateFile(Map<String, String> aesEncryptedKeys) async {
-    var status = await Permission.storage.status;
-    if (status.isDenied || status.isRestricted) {
-      await Permission.storage.request();
+    if (Platform.isAndroid || Platform.isIOS) {
+      var status = await Permission.storage.status;
+      if (status.isDenied || status.isRestricted) {
+        await Permission.storage.request();
+      }
+
+      var directory = await path_provider.getApplicationSupportDirectory();
+      String path = directory.path.toString() + '/';
+      final encryptedKeysFile =
+          await File('$path' + '$atsign${Strings.backupKeyName}').create();
+      var keyString = jsonEncode(aesEncryptedKeys);
+      encryptedKeysFile.writeAsStringSync(keyString);
+      return encryptedKeysFile.path;
+    } else {
+      String encryptedKeysFile = '$atsign${Strings.backupKeySuffix}';
+      var keyString = jsonEncode(aesEncryptedKeys);
+      final List<int> codeUnits = keyString.codeUnits;
+      final Uint8List data = Uint8List.fromList(codeUnits);
+      String desktopPath = await FileSaver.instance.saveFile(
+          encryptedKeysFile, data, Strings.backupKeyExtension,
+          mimeType: MimeType.OTHER);
+      print('Backup file saved to: $desktopPath');
+      return desktopPath;
     }
-    var directory = await path_provider.getApplicationSupportDirectory();
-    String path = directory.path.toString() + '/';
-    final encryptedKeysFile =
-        await File('$path' + '$atsign${Strings.backupKeyName}').create();
-    var keyString = jsonEncode(aesEncryptedKeys);
-    encryptedKeysFile.writeAsStringSync(keyString);
-    return encryptedKeysFile.path;
   }
 }

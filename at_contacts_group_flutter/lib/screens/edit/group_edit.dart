@@ -14,6 +14,7 @@ import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
+/// Screen to edit group details
 class GroupEdit extends StatefulWidget {
   final AtGroup group;
   GroupEdit({required this.group});
@@ -23,11 +24,25 @@ class GroupEdit extends StatefulWidget {
 }
 
 class _GroupEditState extends State<GroupEdit> {
+  /// Name of the group
   String? groupName;
+
+  /// Boolean flag to indicate loading status
   late bool isLoading;
+
+  /// Profile picture for the group
   Uint8List? groupPicture;
-  bool isKeyBoardVisible = false, showEmojiPicker = false;
+
+  /// Boolean flag to check for keyboard visibility
+  bool isKeyBoardVisible = false,
+
+      /// Boolean to control emoji picker
+      showEmojiPicker = false;
+
+  /// Text controller for text field to input group name
   TextEditingController? textController;
+
+  /// Focus node for text field
   FocusNode textFieldFocus = FocusNode();
 
   @override
@@ -52,74 +67,74 @@ class _GroupEditState extends State<GroupEdit> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: CustomAppBar(
-          showLeadingIcon: true,
-          leadingIcon: Center(
-            child: Container(
-              padding: EdgeInsets.only(left: 10),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? AllColors().Black
-                          : AllColors().Black,
-                      fontSize: 14.toFont),
-                ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: CustomAppBar(
+        showLeadingIcon: true,
+        leadingIcon: Center(
+          child: Container(
+            padding: EdgeInsets.only(left: 10),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? AllColors().Black
+                        : AllColors().Black,
+                    fontSize: 14.toFont),
               ),
             ),
           ),
-          showTrailingIcon: true,
-          showTitle: false,
-          titleText: '',
-          trailingIcon: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: isLoading
-                ? Center(
-                    child: SizedBox(
-                      width: 20.toHeight,
-                      height: 20.toHeight,
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : Text('Done',
-                    style: TextStyle(
-                        color: AllColors().ORANGE, fontSize: 15.toFont)),
-          ),
-          onTrailingIconPressed: () async {
-            groupName = textController!.text;
-            if (groupName != null) {
-              if (groupName!.trim().isNotEmpty) {
-                var group = widget.group;
-                group.displayName = groupName!;
-                group.groupName = groupName!;
-                group.groupPicture = groupPicture;
-                setState(() {
-                  isLoading = true;
-                });
+        ),
+        showTrailingIcon: true,
+        showTitle: false,
+        titleText: '',
+        trailingIcon: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: isLoading
+              ? Center(
+                  child: SizedBox(
+                    width: 20.toHeight,
+                    height: 20.toHeight,
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : Text('Done',
+                  style: TextStyle(
+                      color: AllColors().ORANGE, fontSize: 15.toFont)),
+        ),
+        onTrailingIconPressed: () async {
+          groupName = textController!.text;
+          if (groupName != null) {
+            if (groupName!.trim().isNotEmpty) {
+              var group = widget.group;
+              group.displayName = groupName!;
+              group.groupName = groupName!;
+              group.groupPicture = groupPicture;
+              setState(() {
+                isLoading = true;
+              });
 
-                await GroupService().updateGroupData(group, context);
-              } else {
-                CustomToast().show(TextConstants().INVALID_NAME, context);
-              }
+              await GroupService().updateGroupData(group, context);
             } else {
               CustomToast().show(TextConstants().INVALID_NAME, context);
             }
+          } else {
+            CustomToast().show(TextConstants().INVALID_NAME, context);
+          }
 
-            if (mounted) {
-              setState(() {
-                isLoading = false;
-              });
-            }
-          },
-        ),
-        body: Column(
+          if (mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        },
+      ),
+      body: SafeArea(
+        child: Column(
           children: [
             (groupPicture != null)
                 ? Image.memory(

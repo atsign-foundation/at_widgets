@@ -57,9 +57,16 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  /// List of messages
   List<Widget> messageList = [];
+
+  /// Input message in the chat
   String? message;
+
+  /// Scroll controller for the chat list view
   ScrollController? _scrollController;
+
+  /// Instance of chat service
   late ChatService _chatService;
 
   @override

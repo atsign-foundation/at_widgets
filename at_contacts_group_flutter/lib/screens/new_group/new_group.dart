@@ -17,18 +17,33 @@ import 'package:at_commons/src/exception/at_exceptions.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
+/// This widget provides screen to create a new group
 class NewGroup extends StatefulWidget {
   @override
   _NewGroupState createState() => _NewGroupState();
 }
 
 class _NewGroupState extends State<NewGroup> {
+  /// List of contacts selected for the group
   List<AtContact?>? selectedContacts;
+
+  /// Name of the group
   String groupName = '';
+
+  /// Image in bytes selected for the group
   Uint8List? selectedImageByteData;
-  bool isKeyBoardVisible = false, showEmojiPicker = false;
+
+  /// Boolean flag to indicate keyboard visibility
+  bool isKeyBoardVisible = false,
+
+      /// Boolean flag to indicate emoji keyboard visibility
+      showEmojiPicker = false;
+
+  /// Text controller for text field to enter group name
   TextEditingController textController = TextEditingController();
   UniqueKey key = UniqueKey();
+
+  /// Focus node for the text field
   FocusNode textFieldFocus = FocusNode();
 
   @override
