@@ -4,6 +4,7 @@ dependencies:
   at_utils: ^3.0.0
   path_provider: ^2.0.5
   flutter_dotenv: ^5.0.2
+  at_app_flutter:
 
 config:
   env:
@@ -12,8 +13,4 @@ config:
   android:
     gradle.properties:
       android.enableR8: true
-    app:
-      build.gradle:
-        targetSdkVersion: 30
-        minSdkVersion: 24
-        compileSdkVersion: 31
+      android.useAndroidX: false

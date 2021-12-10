@@ -2,14 +2,16 @@ import 'dart:async';
 
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show Onboarding;
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart' show Onboarding;
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart'
-    show getApplicationSupportDirectory;
+import 'package:path_provider/path_provider.dart' show getApplicationSupportDirectory;
+
+import 'home_screen.dart';
 
 Future<void> main() async {
+  // * AtEnv is an abtraction of the flutter_dotenv package used to
+  // * load the environment variables set by at_app
   await AtEnv.load();
   runApp(const MyApp());
 }
@@ -17,13 +19,15 @@ Future<void> main() async {
 Future<AtClientPreference> loadAtClientPreference() async {
   var dir = await getApplicationSupportDirectory();
   return AtClientPreference()
-        ..rootDomain = AtEnv.rootDomain
-        ..namespace = AtEnv.appNamespace
-        ..hiveStoragePath = dir.path
-        ..commitLogPath = dir.path
-        ..isLocalStoreRequired = true
-      // TODO set the rest of your AtClientPreference here
-      ;
+    ..rootDomain = AtEnv.rootDomain
+    ..namespace = AtEnv.appNamespace
+    ..hiveStoragePath = dir.path
+    ..commitLogPath = dir.path
+    ..isLocalStoreRequired = true;
+  // TODO
+  // * By default, this configuration is suitable for most applications
+  // * In advanced cases you may need to modify [AtClientPreference]
+  // * Read more here: https://pub.dev/documentation/at_client/latest/at_client/AtClientPreference-class.html
 }
 
 class MyApp extends StatefulWidget {
@@ -35,7 +39,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
-  AtClientPreference? atClientPreference;
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
@@ -51,13 +54,12 @@ class _MyAppState extends State<MyApp> {
           builder: (context) => Center(
             child: ElevatedButton(
               onPressed: () async {
-                var preference = await futurePreference;
-                setState(() {
-                  atClientPreference = preference;
-                });
+                // * The Onboarding widget
+                // * This widget contains the required logic for onboarding an @sign into the app
+                // * Read more here: https://pub.dev/packages/at_onboarding_flutter
                 Onboarding(
                   context: context,
-                  atClientPreference: atClientPreference!,
+                  atClientPreference: await futurePreference,
                   domain: AtEnv.rootDomain,
                   rootEnvironment: AtEnv.rootEnvironment,
                   appAPIKey: AtEnv.appApiKey,
@@ -73,35 +75,6 @@ class _MyAppState extends State<MyApp> {
               child: const Text('Onboard an @sign'),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-//* The next screen after onboarding (second screen)
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    /// Get the AtClientManager instance
-    var atClientManager = AtClientManager.getInstance();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text(
-                'Successfully onboarded and navigated to FirstAppScreen'),
-
-            /// Use the AtClientManager instance to get the current atsign
-            Text(
-                'Current @sign: ${atClientManager.atClient.getCurrentAtSign()}'),
-          ],
         ),
       ),
     );
