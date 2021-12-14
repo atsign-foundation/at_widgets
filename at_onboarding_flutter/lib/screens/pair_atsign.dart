@@ -21,7 +21,6 @@ import 'package:at_onboarding_flutter/widgets/custom_strings.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -403,87 +402,88 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   void _uploadKeyFileForDesktop() async {
     print('_uploadKeyFileForDesktop called');
-    try {
-      _isServerCheck = false;
-      _isContinue = true;
-      var fileContents, aesKey, atsign;
-      setState(() {
-        loading = true;
-      });
+    // try {
+    //   _isServerCheck = false;
+    //   _isContinue = true;
+    //   var fileContents, aesKey, atsign;
+    //   setState(() {
+    //     loading = true;
+    //   });
 
-      var path = await _desktopKeyPicker();
+    //   var path = await _desktopKeyPicker();
 
-      if (path == null) {
-        return;
-      }
+    //   if (path == null) {
+    //     return;
+    //   }
 
-      File selectedFile = File(path);
-      var length = selectedFile.lengthSync();
-      if (length < 10) {
-        _showAlertDialog(_incorrectKeyFile);
-        return;
-      }
+    //   File selectedFile = File(path);
+    //   var length = selectedFile.lengthSync();
+    //   if (length < 10) {
+    //     _showAlertDialog(_incorrectKeyFile);
+    //     return;
+    //   }
 
-      fileContents = File(path).readAsStringSync();
+    //   fileContents = File(path).readAsStringSync();
 
-      if (aesKey == null && atsign == null && fileContents != null) {
-        List<String> keyData = fileContents.split(',"@');
-        List<String> params = keyData[1]
-            .toString()
-            .substring(0, keyData[1].length - 2)
-            .split('":"');
-        atsign = params[0];
-        aesKey = params[1];
-      }
-      if (fileContents == null || (aesKey == null && atsign == null)) {
-        await _showAlertDialog(_incorrectKeyFile);
-        setState(() {
-          loading = false;
-        });
-        return;
-      } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
-              _pairingAtsign &&
-          _pairingAtsign != null) {
-        await _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
-        setState(() {
-          loading = false;
-        });
-        return;
-      }
-      await _processAESKey(atsign, aesKey, fileContents);
-      setState(() {
-        loading = false;
-      });
-    } catch (error) {
-      setState(() {
-        loading = false;
-      });
-      _logger.severe('Uploading backup zip file throws $error');
-      await _showAlertDialog(_failedFileProcessing);
-    }
+    //   if (aesKey == null && atsign == null && fileContents != null) {
+    //     List<String> keyData = fileContents.split(',"@');
+    //     List<String> params = keyData[1]
+    //         .toString()
+    //         .substring(0, keyData[1].length - 2)
+    //         .split('":"');
+    //     atsign = params[0];
+    //     aesKey = params[1];
+    //   }
+    //   if (fileContents == null || (aesKey == null && atsign == null)) {
+    //     await _showAlertDialog(_incorrectKeyFile);
+    //     setState(() {
+    //       loading = false;
+    //     });
+    //     return;
+    //   } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
+    //           _pairingAtsign &&
+    //       _pairingAtsign != null) {
+    //     await _showAlertDialog(CustomStrings().atsignMismatch(_pairingAtsign));
+    //     setState(() {
+    //       loading = false;
+    //     });
+    //     return;
+    //   }
+    //   await _processAESKey(atsign, aesKey, fileContents);
+    //   setState(() {
+    //     loading = false;
+    //   });
+    // } catch (error) {
+    //   setState(() {
+    //     loading = false;
+    //   });
+    //   _logger.severe('Uploading backup zip file throws $error');
+    //   await _showAlertDialog(_failedFileProcessing);
+    // }
   }
 
   Future<dynamic> _desktopKeyPicker() async {
-    try {
-      // ignore: omit_local_variable_types
-      final XTypeGroup typeGroup = XTypeGroup(
-        label: 'images',
-        extensions: ['atKeys'],
-      );
-      final List<XFile> files =
-          await openFiles(acceptedTypeGroups: [typeGroup]);
-      if (files.isEmpty) {
-        return null;
-      }
-      // ignore: omit_local_variable_types
-      final XFile file = files[0];
-      return file.path;
-    } catch (e) {
-      print('Error in desktopImagePicker $e');
-      return null;
-    }
+    // try {
+    //   // ignore: omit_local_variable_types
+    //   final XTypeGroup typeGroup = XTypeGroup(
+    //     label: 'images',
+    //     extensions: ['atKeys'],
+    //   );
+    //   final List<XFile> files =
+    //       await openFiles(acceptedTypeGroups: [typeGroup]);
+    //   if (files.isEmpty) {
+    //     return null;
+    //   }
+    //   // ignore: omit_local_variable_types
+    //   final XFile file = files[0];
+    //   return file.path;
+    // } catch (e) {
+    //   print('Error in desktopImagePicker $e');
+    //   return null;
+    // }
   }
 
+  // ignore: always_specify_types
   _showAlertDialog(var errorMessage,
       {bool? isPkam, String? title, bool? getClose, Function? onClose}) {
     showDialog(

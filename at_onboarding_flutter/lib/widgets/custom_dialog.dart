@@ -24,9 +24,9 @@ import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:file_selector/file_selector.dart';
-import 'package:image/image.dart' as img;
-import 'package:zxing2/qrcode.dart';
+// import 'package:file_selector/file_selector.dart';
+// import 'package:image/image.dart' as img;
+// import 'package:zxing2/qrcode.dart';
 
 // ignore: must_be_immutable
 class CustomDialog extends StatefulWidget {
@@ -1247,79 +1247,79 @@ class _CustomDialogState extends State<CustomDialog> {
 
   void _uploadQRFileForDesktop(
       BuildContext context, dynamic processAESKey) async {
-    try {
-      var fileContents, aesKey, atsign;
-      setState(() {
-        loading = true;
-      });
+    // try {
+    //   var fileContents, aesKey, atsign;
+    //   setState(() {
+    //     loading = true;
+    //   });
 
-      var path = await _desktopKeyPicker();
-      print(path);
-      if (path == null) {
-        setState(() {
-          loading = false;
-        });
-        return;
-      }
+    //   var path = await _desktopKeyPicker();
+    //   print(path);
+    //   if (path == null) {
+    //     setState(() {
+    //       loading = false;
+    //     });
+    //     return;
+    //   }
 
-      File selectedFile = File(path);
+    //   File selectedFile = File(path);
 
-      var length = selectedFile.lengthSync();
-      if (length < 10) {
-        showErrorDialog(context, 'Incorrect QR file');
-        return;
-      }
+    //   var length = selectedFile.lengthSync();
+    //   if (length < 10) {
+    //     showErrorDialog(context, 'Incorrect QR file');
+    //     return;
+    //   }
 
-      var image = img.decodePng(selectedFile.readAsBytesSync())!;
+    //   var image = img.decodePng(selectedFile.readAsBytesSync())!;
 
-      LuminanceSource source = RGBLuminanceSource(image.width, image.height,
-          image.getBytes(format: img.Format.abgr).buffer.asInt32List());
-      var bitmap = BinaryBitmap(HybridBinarizer(source));
+    //   LuminanceSource source = RGBLuminanceSource(image.width, image.height,
+    //       image.getBytes(format: img.Format.abgr).buffer.asInt32List());
+    //   var bitmap = BinaryBitmap(HybridBinarizer(source));
 
-      var reader = QRCodeReader();
-      var result = reader.decode(bitmap);
-      List<String> params = result.text.replaceAll('"', '').split(':');
-      atsign = params[0];
-      aesKey = params[1];
+    //   var reader = QRCodeReader();
+    //   var result = reader.decode(bitmap);
+    //   List<String> params = result.text.replaceAll('"', '').split(':');
+    //   atsign = params[0];
+    //   aesKey = params[1];
 
-      if (aesKey == null && atsign == null) {
-        await showErrorDialog(context, 'Incorrect QR file');
-        setState(() {
-          loading = false;
-        });
-        return;
-      }
-      await processAESKey(atsign, aesKey, false);
-      setState(() {
-        loading = false;
-      });
-    } catch (error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-      await showErrorDialog(context, 'Failed to process file');
-    }
+    //   if (aesKey == null && atsign == null) {
+    //     await showErrorDialog(context, 'Incorrect QR file');
+    //     setState(() {
+    //       loading = false;
+    //     });
+    //     return;
+    //   }
+    //   await processAESKey(atsign, aesKey, false);
+    //   setState(() {
+    //     loading = false;
+    //   });
+    // } catch (error) {
+    //   print(error);
+    //   setState(() {
+    //     loading = false;
+    //   });
+    //   await showErrorDialog(context, 'Failed to process file');
+    // }
   }
 
   Future<dynamic> _desktopKeyPicker() async {
-    try {
-      // ignore: omit_local_variable_types
-      final XTypeGroup typeGroup = XTypeGroup(
-        label: 'images',
-        extensions: ['png'],
-      );
-      final List<XFile> files =
-          await openFiles(acceptedTypeGroups: [typeGroup]);
-      if (files.isEmpty) {
-        return null;
-      }
-      // ignore: omit_local_variable_types
-      final XFile file = files[0];
-      return file.path;
-    } catch (e) {
-      print('Error in desktopImagePicker $e');
-      return null;
-    }
+    // try {
+    //   // ignore: omit_local_variable_types
+    //   final XTypeGroup typeGroup = XTypeGroup(
+    //     label: 'images',
+    //     extensions: ['png'],
+    //   );
+    //   final List<XFile> files =
+    //       await openFiles(acceptedTypeGroups: [typeGroup]);
+    //   if (files.isEmpty) {
+    //     return null;
+    //   }
+    //   // ignore: omit_local_variable_types
+    //   final XFile file = files[0];
+    //   return file.path;
+    // } catch (e) {
+    //   print('Error in desktopImagePicker $e');
+    //   return null;
+    // }
   }
 }
