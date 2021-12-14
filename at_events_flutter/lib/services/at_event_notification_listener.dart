@@ -91,11 +91,14 @@ class AtEventNotificationListener {
     var decryptedMessage = await atClientManager.atClient.encryptionService!
         .decrypt(value ?? '', fromAtSign)
         .catchError((e) {
-      AtLocationNotificationListener().showToast(
-        'Decryption failed for notification received from $fromAtSign',
-        navKey!.currentContext!,
-        isError: true,
-      );
+      /// only show failure for createevent keys
+      if (notificationKey.contains('createevent')) {
+        AtLocationNotificationListener().showToast(
+          'Decryption failed for Event notification received from $fromAtSign',
+          navKey!.currentContext!,
+          isError: true,
+        );
+      }
 
       _logger.severe('error in decrypting in events package listener: $e');
     });
