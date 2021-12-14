@@ -146,7 +146,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           await Navigator.pushReplacement(
             context,
             MaterialPageRoute<PrivateKeyQRCodeGenScreen>(
-                builder: (BuildContext context) => const PrivateKeyQRCodeGenScreen()),
+                builder: (BuildContext context) =>
+                    const PrivateKeyQRCodeGenScreen()),
           );
         }
       }
@@ -539,7 +540,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                       Navigator.push(
                           context,
                           MaterialPageRoute<Widget>(
-                              builder: (BuildContext context) => const WebViewScreen(
+                              builder: (BuildContext context) =>
+                                  const WebViewScreen(
                                     title: Strings.faqTitle,
                                     url: Strings.faqUrl,
                                   )));
@@ -749,6 +751,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     _atsignStatus = atsignStatus ?? AtSignStatus.error;
     switch (_atsignStatus) {
       case AtSignStatus.teapot:
+        setState(() {
+          loading = true;
+          _loadingMessage = Strings.loadingAtsignReady;
+        });
         if (isExist) {
           await _showAlertDialog(CustomStrings().pairedAtsign(atsign),
               getClose: true, onClose: _getAtsignForm);
@@ -760,8 +766,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         }
         _isQR = true;
         if (_isQR) {
-          bool isOtpSent = await loginWithAtsign(atsign, context);
-          print(isOtpSent);
+          await loginWithAtsign(atsign, context);
           await showDialog(
             barrierDismissible: false,
             context: context,
@@ -875,7 +880,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
               hideReferences: widget.hideReferences,
               hideQrScan: widget.hideQrScan,
               onValidate: (String atsign, String secret, bool isScanner) async {
-                  _loadingMessage = Strings.loadingAtsignReady;
+                _loadingMessage = Strings.loadingAtsignReady;
                 setState(() {});
                 await _processSharedSecret(atsign, secret,
                     isScanner: isScanner);
