@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
                             atClientPreference:
                                 clientSdkService.atClientPreference,
                             domain: MixedConstants.ROOT_DOMAIN,
-                            appAPIKey: MixedConstants.devAPIKey,
+                            // appAPIKey: MixedConstants.devAPIKey,
                             appColor: Color.fromARGB(255, 240, 94, 62),
                             onboard: (Map<String?, AtClientService> value,
                                 String? atsign) async {
