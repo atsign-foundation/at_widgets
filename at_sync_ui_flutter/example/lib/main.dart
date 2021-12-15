@@ -169,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage>
                     color: _indicatorColor,
                   ),
                   cupertino.AtSyncIndicator(
-                    progress: progress,
+                    value: progress,
                     color: _indicatorColor,
                   ),
                 ],
@@ -290,8 +290,11 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void _startMaterialDialog() async {
-    final dialog = material.AtSyncDialog(context: context);
-    dialog.show(max: 100, msg: 'Downloading ...');
+    final dialog = material.AtSyncDialog(
+      context: context,
+      indicatorColor: _indicatorColor,
+    );
+    dialog.show(message: 'Downloading ...');
     for (int i = 1; i < 100; i += 5) {
       dialog.update(value: 0.01 * i, message: 'Downloading ...');
       await Future.delayed(const Duration(milliseconds: 100));
@@ -300,8 +303,11 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void _startCupertinoDialog() async {
-    final dialog = material.AtSyncDialog(context: context);
-    dialog.show(max: 100, msg: 'Downloading ...');
+    final dialog = cupertino.AtSyncDialog(
+      context: context,
+      indicatorColor: _indicatorColor,
+    );
+    dialog.show(message: 'Downloading ...');
     for (int i = 1; i < 100; i += 5) {
       dialog.update(value: 0.01 * i, message: 'Downloading ...');
       await Future.delayed(const Duration(milliseconds: 100));
@@ -310,8 +316,11 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void _startMaterialSnackBar() async {
-    final snackBar = material.AtSyncSnackBar(context: context);
-    snackBar.show();
+    final snackBar = material.AtSyncSnackBar(
+      context: context,
+      indicatorColor: _indicatorColor,
+    );
+    snackBar.show(message: 'Downloading ...');
     for (int i = 1; i < 100; i += 5) {
       snackBar.update(value: 0.01 * i, message: 'Downloading ...');
       await Future.delayed(const Duration(milliseconds: 100));
@@ -320,7 +329,10 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void _startCupertinoSnackBar() async {
-    final snackBar = material.AtSyncSnackBar(context: context);
+    final snackBar = cupertino.AtSyncSnackBar(
+      context: context,
+      indicatorColor: _indicatorColor,
+    );
     snackBar.show();
     for (int i = 1; i < 100; i += 5) {
       snackBar.update(value: 0.01 * i, message: 'Downloading ...');

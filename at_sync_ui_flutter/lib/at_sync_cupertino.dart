@@ -3,6 +3,9 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
+import 'at_sync_material.dart' as material;
+import 'at_sync_progress_indicator.dart';
+
 const double _kDefaultIndicatorRadius = 10.0;
 
 const Color _kDefaultActiveTickColor = Color(0xFFf4533d);
@@ -12,24 +15,8 @@ class AtSyncIndicator extends StatefulWidget {
     Key? key,
     this.radius = _kDefaultIndicatorRadius,
     this.color,
-    this.progress,
+    this.value,
   }) : super(key: key);
-
-  /// Creates a non-animated iOS-style activity indicator that displays
-  /// a partial count of ticks based on the value of [progress].
-  ///
-  /// When provided, the value of [progress] must be between 0.0 (zero ticks
-  /// will be shown) and 1.0 (all ticks will be shown) inclusive. Defaults
-  /// to 1.0.
-  const AtSyncIndicator.partiallyRevealed({
-    Key? key,
-    this.radius = _kDefaultIndicatorRadius,
-    this.progress = 1.0,
-    this.color,
-  })  : assert(radius != null),
-        assert(radius > 0.0),
-        assert(progress != null),
-        super(key: key);
 
   /// Radius of the spinner widget.
   ///
@@ -42,7 +29,7 @@ class AtSyncIndicator extends StatefulWidget {
   /// the user continues to drag down.
   ///
   /// Defaults to 1.0. Must be between 0.0 and 1.0 inclusive, and cannot be null.
-  final double? progress;
+  final double? value;
 
   final Color? color;
 
@@ -62,7 +49,7 @@ class _AtSyncIndicatorState extends State<AtSyncIndicator>
       vsync: this,
     );
 
-    if (widget.progress == null) {
+    if (widget.value == null) {
       _controller.repeat();
     }
   }
@@ -70,8 +57,8 @@ class _AtSyncIndicatorState extends State<AtSyncIndicator>
   @override
   void didUpdateWidget(AtSyncIndicator oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.progress != oldWidget.progress) {
-      if (widget.progress == null) {
+    if (widget.value != oldWidget.value) {
+      if (widget.value == null) {
         _controller.repeat();
       } else {
         _controller.stop();
@@ -95,7 +82,7 @@ class _AtSyncIndicatorState extends State<AtSyncIndicator>
           position: _controller,
           activeColor: widget.color ?? _kDefaultActiveTickColor,
           radius: widget.radius,
-          progress: widget.progress,
+          progress: widget.value,
         ),
       ),
     );
@@ -411,7 +398,7 @@ class AtSyncText extends StatelessWidget {
     return Row(
       children: [
         AtSyncIndicator(
-          progress: value,
+          value: value,
           color: indicatorColor,
         ),
         Text(
@@ -424,4 +411,36 @@ class AtSyncText extends StatelessWidget {
       ],
     );
   }
+}
+
+class AtSyncDialog extends material.AtSyncDialog {
+  AtSyncDialog({
+    required BuildContext context,
+    Color? indicatorColor,
+    Color? backgroundColor,
+    TextStyle? messageStyle,
+    TextStyle? valueStyle,
+  }) : super(
+          context: context,
+          syncStyle: AtSyncStyle.cupertino,
+          indicatorColor: indicatorColor,
+          backgroundColor: backgroundColor,
+          messageStyle: messageStyle,
+          valueStyle: valueStyle,
+        );
+}
+
+class AtSyncSnackBar extends material.AtSyncSnackBar {
+  AtSyncSnackBar({
+    required BuildContext context,
+    Color? indicatorColor,
+    Color? backgroundColor,
+    TextStyle? textStyle,
+  }) : super(
+          context: context,
+          syncStyle: AtSyncStyle.cupertino,
+          indicatorColor: indicatorColor,
+          backgroundColor: backgroundColor,
+          textStyle: textStyle,
+        );
 }

@@ -1,5 +1,10 @@
 import 'package:flutter/widgets.dart';
 
+enum AtSyncStyle {
+  material,
+  cupertino,
+}
+
 /// A base class for material design progress indicators.
 ///
 /// This widget cannot be instantiated directly. For a linear progress

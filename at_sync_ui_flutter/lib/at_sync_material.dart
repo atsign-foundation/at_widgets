@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'at_sync_cupertino.dart' as cupertino;
 
 import 'at_sync_progress_indicator.dart';
 
@@ -188,33 +189,38 @@ class AtSyncText extends StatelessWidget {
   }
 }
 
-enum ValuePosition { center, right }
-
-enum ProgressType { normal, valuable }
-
 class AtSyncDialog {
+  final AtSyncStyle syncStyle;
+
   /// [_progress] Listens to the value of progress.
-  //  Not directly accessible.
   final ValueNotifier<double?> _progress = ValueNotifier<double?>(null);
 
   /// [_message] Listens to the msg value.
-  // Value assignment is done later.
   final ValueNotifier<String> _message = ValueNotifier<String>('');
 
   /// [_dialogIsOpen] Shows whether the dialog is open.
-  //  Not directly accessible.
   bool _dialogIsOpen = false;
 
   /// [_context] Required to show the alert.
-  // Can only be accessed with the constructor.
   late BuildContext _context;
 
-  AtSyncDialog({required context}) {
+  Color? indicatorColor;
+  Color? backgroundColor;
+  TextStyle? messageStyle;
+  TextStyle? valueStyle;
+
+  AtSyncDialog({
+    required BuildContext context,
+    this.syncStyle = AtSyncStyle.material,
+    this.indicatorColor,
+    this.backgroundColor,
+    this.messageStyle,
+    this.valueStyle,
+  }) {
     _context = context;
   }
 
   /// [update] Pass the new value to this method to update the status.
-  //  Msg not required.
   void update({required double? value, String? message}) {
     _progress.value = value;
     if (message != null) _message.value = message;
@@ -233,54 +239,37 @@ class AtSyncDialog {
     return _dialogIsOpen;
   }
 
-  /// [max] Assign the maximum value of the upload. @required
-  //  Dialog closes automatically when its progress status equals the max value.
-
-  /// [msg] Show a message @required
-  /// [valuePosition] Location of progress value @not required
-  // Center or right.  (Default: right)
-
-  /// [progressType] Assign the progress bar type.
-  // Normal or valuable.  (Default: normal)
-
-  /// [barrierDismissible] Determines whether the dialog closes when the back button or screen is clicked.
-  // True or False (Default: false)
-
-  /// [msgMaxLines] Use when text value doesn't fit
-  // Int (Default: 1)
-
+  /// [barrierDismissible] Determines whether the dialog closes when the back button or screen is clicked. Default: false
   show({
-    required int max,
-    required String msg,
-    Color backgroundColor = Colors.white,
-    Color msgColor: Colors.black87,
-    FontWeight msqFontWeight: FontWeight.bold,
-    FontWeight valueFontWeight: FontWeight.normal,
-    double valueFontSize: 15.0,
-    double msgFontSize: 17.0,
+    String message = '',
     bool barrierDismissible = false,
   }) {
     _dialogIsOpen = true;
-    _message.value = msg;
+    _message.value = message;
     return showDialog(
       barrierDismissible: barrierDismissible,
-      // barrierColor: barrierColor,
       context: _context,
       builder: (context) => WillPopScope(
         child: AlertDialog(
           content: ValueListenableBuilder<double?>(
             valueListenable: _progress,
             builder: (BuildContext context, double? value, Widget? child) {
-              if (value == max) close();
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     children: [
-                      AtSyncIndicator(
-                        radius: 16,
-                        value: value,
-                      ),
+                      syncStyle == AtSyncStyle.material
+                          ? AtSyncIndicator(
+                              radius: 16,
+                              value: value,
+                              color: indicatorColor,
+                            )
+                          : cupertino.AtSyncIndicator(
+                              radius: 16,
+                              value: value,
+                              color: indicatorColor,
+                            ),
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(
@@ -290,13 +279,11 @@ class AtSyncDialog {
                           ),
                           child: Text(
                             _message.value,
-                            // maxLines: msgMaxLines,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: msgFontSize,
-                              color: msgColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: messageStyle ??
+                                const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                         ),
                       ),
@@ -307,11 +294,7 @@ class AtSyncDialog {
                     child: Align(
                       child: Text(
                         '${((_progress.value ?? 0) * 100).toInt()}%',
-                        style: TextStyle(
-                          fontSize: valueFontSize,
-                          // color: valueColor,
-                          fontWeight: valueFontWeight,
-                        ),
+                        style: valueStyle ?? const TextStyle(),
                       ),
                       alignment: Alignment.bottomRight,
                     ),
@@ -330,20 +313,18 @@ class AtSyncDialog {
 }
 
 class AtSyncSnackBar {
+  final AtSyncStyle syncStyle;
+
   /// [_progress] Listens to the value of progress.
-  //  Not directly accessible.
   final ValueNotifier<double?> _progress = ValueNotifier<double?>(null);
 
   /// [_message] Listens to the msg value.
-  // Value assignment is done later.
   final ValueNotifier<String> _message = ValueNotifier<String>('');
 
   /// [_dialogIsOpen] Shows whether the dialog is open.
-  //  Not directly accessible.
   bool _dialogIsOpen = false;
 
   /// [_context] Required to show the alert.
-  // Can only be accessed with the constructor.
   late BuildContext _context;
 
   Color? indicatorColor;
@@ -352,6 +333,7 @@ class AtSyncSnackBar {
 
   AtSyncSnackBar({
     required context,
+    this.syncStyle = AtSyncStyle.material,
     this.indicatorColor,
     this.backgroundColor,
     this.textStyle,
@@ -360,7 +342,6 @@ class AtSyncSnackBar {
   }
 
   /// [update] Pass the new value to this method to update the status.
-  //  Msg not required.
   void update({required double? value, String? message}) {
     _progress.value = value;
     if (message != null) _message.value = message;
@@ -371,7 +352,10 @@ class AtSyncSnackBar {
     return _dialogIsOpen;
   }
 
-  void show() {
+  void show({
+    String message = '',
+  }) {
+    _message.value = message;
     ScaffoldMessenger.of(_context).showSnackBar(
       SnackBar(
         duration: const Duration(days: 365),
@@ -384,10 +368,15 @@ class AtSyncSnackBar {
                 SizedBox(
                   width: 24,
                   height: 24,
-                  child: AtSyncIndicator(
-                    value: value,
-                    color: indicatorColor,
-                  ),
+                  child: syncStyle == AtSyncStyle.material
+                      ? AtSyncIndicator(
+                          value: value,
+                          color: indicatorColor,
+                        )
+                      : cupertino.AtSyncIndicator(
+                          value: value,
+                          color: indicatorColor,
+                        ),
                 ),
                 const SizedBox(width: 8),
                 Text(
