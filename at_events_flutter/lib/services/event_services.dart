@@ -161,7 +161,7 @@ class EventService {
 
       /// Dont need to sync as notifyAll is called
 
-      await EventKeyStreamService().addDataToList(eventNotificationModel!);
+      EventKeyStreamService().addDataToList(eventNotificationModel!);
 
       eventNotificationModel = eventNotification;
       if (onEventSaved != null) {
@@ -269,23 +269,29 @@ class EventService {
 
   bool? showConcurrentEventDialog(List<EventNotificationModel>? createdEvents,
       EventNotificationModel? newEvent, BuildContext context) {
-    // ignore: prefer_is_empty
-    if (!isEventUpdate && createdEvents != null && createdEvents.length > 0) {
-      var isOverlapData =
-          isEventTimeSlotOverlap(createdEvents, eventNotificationModel);
-      if (isOverlapData[0]) {
-        showDialog<void>(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return ConcurrentEventRequest(concurrentEvent: isOverlapData[1]);
-            });
+    try {
+      // ignore: prefer_is_empty
+      if (!isEventUpdate && createdEvents != null && createdEvents.length > 0) {
+        var isOverlapData =
+            isEventTimeSlotOverlap(createdEvents, eventNotificationModel);
+        if (isOverlapData[0]) {
+          showDialog<void>(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return ConcurrentEventRequest(
+                    concurrentEvent: isOverlapData[1]);
+              });
 
-        return isOverlapData[0];
+          return isOverlapData[0];
+        } else {
+          return isOverlapData[0];
+        }
       } else {
-        return isOverlapData[0];
+        return false;
       }
-    } else {
+    } catch (e) {
+      _logger.severe('Error in showConcurrentEventDialog $e');
       return false;
     }
   }

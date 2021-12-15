@@ -109,6 +109,14 @@ class _ParticipantsState extends State<Participants> {
         HomeEventService().getOtherMemberEventInfo(_event.key!, _atsign);
 
     if (_eventInfo == null) {
+      /// for event creator
+      if (compareAtSign(_atsign, _event.atsignCreator!)) {
+        return Text(
+          'Location not received',
+          style: CustomTextStyles().orange14,
+        );
+      }
+
       return Text(
         'Action Required',
         style: CustomTextStyles().orange14,
