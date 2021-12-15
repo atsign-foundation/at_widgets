@@ -17,7 +17,9 @@ import 'participants.dart';
 
 class EventsCollapsedContent extends StatefulWidget {
   late EventNotificationModel eventListenerKeyword;
-  EventsCollapsedContent(this.eventListenerKeyword, {Key? key})
+  late bool static; // true when no clicks should work
+  EventsCollapsedContent(this.eventListenerKeyword,
+      {Key? key, this.static = false})
       : super(key: key);
 
   @override
@@ -88,7 +90,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      isAdmin
+                      !widget.static && isAdmin
                           ? InkWell(
                               onTap: () {
                                 bottomSheet(
@@ -184,76 +186,80 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                 ],
               ),
             )),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Share Location',
-                  style: CustomTextStyles().darkGrey16,
-                ),
-                Switch(
-                    value: isSharingEvent!,
-                    onChanged: (value) async {
-                      if (isCancelled || isExited) {
-                        CustomToast().show(
-                            isCancelled ? 'Event cancelled' : 'Event exited',
-                            AtEventNotificationListener()
-                                .navKey!
-                                .currentContext,
-                            isError: true);
-                        return;
-                      }
+            widget.static ? const SizedBox() : Divider(),
+            widget.static
+                ? const SizedBox()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Share Location',
+                        style: CustomTextStyles().darkGrey16,
+                      ),
+                      Switch(
+                          value: isSharingEvent!,
+                          onChanged: (value) async {
+                            if (isCancelled || isExited) {
+                              CustomToast().show(
+                                  isCancelled
+                                      ? 'Event cancelled'
+                                      : 'Event exited',
+                                  AtEventNotificationListener()
+                                      .navKey!
+                                      .currentContext,
+                                  isError: true);
+                              return;
+                            }
 
-                      LoadingDialog().show(text: 'Updating data');
-                      try {
-                        // if (isAdmin) {
-                        //   LocationService().eventListenerKeyword.isSharing =
-                        //       value;
-                        // }
+                            LoadingDialog().show(text: 'Updating data');
+                            try {
+                              // if (isAdmin) {
+                              //   LocationService().eventListenerKeyword.isSharing =
+                              //       value;
+                              // }
 
-                        var result =
-                            await EventKeyStreamService().actionOnEvent(
-                          eventListenerKeyword,
-                          isAdmin
-                              ? ATKEY_TYPE_ENUM.CREATEEVENT
-                              : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-                          isSharing: value,
-                          isAccepted: true,
-                          isExited: false,
-                        );
-                        if (result == true) {
-                          // CustomToast().show(
-                          //     'Request to update data is submitted',
-                          //     AtEventNotificationListener()
-                          //         .navKey!
-                          //         .currentContext,
-                          //     isSuccess: true);
-                        } else {
-                          CustomToast().show(
-                              'Something went wrong , please try again.',
-                              AtEventNotificationListener()
-                                  .navKey!
-                                  .currentContext,
-                              isError: true);
-                        }
-                        setState(() {});
-                        LoadingDialog().hide();
-                      } catch (e) {
-                        print(e);
-                        CustomToast().show(
-                            'Something went wrong , please try again.',
-                            AtEventNotificationListener()
-                                .navKey!
-                                .currentContext,
-                            isError: true);
-                        LoadingDialog().hide();
-                      }
-                    })
-              ],
-            ),
-            Divider(),
-            isAdmin
+                              var result =
+                                  await EventKeyStreamService().actionOnEvent(
+                                eventListenerKeyword,
+                                isAdmin
+                                    ? ATKEY_TYPE_ENUM.CREATEEVENT
+                                    : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
+                                isSharing: value,
+                                isAccepted: true,
+                                isExited: false,
+                              );
+                              if (result == true) {
+                                // CustomToast().show(
+                                //     'Request to update data is submitted',
+                                //     AtEventNotificationListener()
+                                //         .navKey!
+                                //         .currentContext,
+                                //     isSuccess: true);
+                              } else {
+                                CustomToast().show(
+                                    'Something went wrong , please try again.',
+                                    AtEventNotificationListener()
+                                        .navKey!
+                                        .currentContext,
+                                    isError: true);
+                              }
+                              setState(() {});
+                              LoadingDialog().hide();
+                            } catch (e) {
+                              print(e);
+                              CustomToast().show(
+                                  'Something went wrong , please try again.',
+                                  AtEventNotificationListener()
+                                      .navKey!
+                                      .currentContext,
+                                  isError: true);
+                              LoadingDialog().hide();
+                            }
+                          })
+                    ],
+                  ),
+            widget.static ? const SizedBox() : Divider(),
+            (widget.static || isAdmin)
                 ? SizedBox()
                 : Expanded(
                     child: InkWell(
@@ -339,8 +345,8 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                       ),
                     ),
                   ),
-            isAdmin ? SizedBox() : Divider(),
-            isAdmin
+            (widget.static || isAdmin) ? SizedBox() : Divider(),
+            (!widget.static && isAdmin)
                 ? Expanded(
                     child: InkWell(
                       onTap: () async {

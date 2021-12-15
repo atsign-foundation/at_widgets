@@ -24,10 +24,15 @@ class Participants extends StatefulWidget {
 class _ParticipantsState extends State<Participants> {
   List<String> _allAtsigns = [];
   late EventNotificationModel _event;
+  bool isPastEvent = false;
 
   @override
   void initState() {
     _event = widget.eventListenerKeyword;
+
+    if (_event.event!.endTime!.isBefore(DateTime.now())) {
+      isPastEvent = true;
+    }
     _allAtsigns = EventKeyStreamService().getAtsignsFromEvent(_event);
     _allAtsigns.add(AtClientManager.getInstance().atClient.getCurrentAtSign()!);
 
@@ -71,7 +76,9 @@ class _ParticipantsState extends State<Participants> {
                   title: _allAtsigns[index],
                   atsignCreator: _allAtsigns[index],
                   subTitle: null,
-                  action: getStatus(_allAtsigns[index]),
+                  action: isPastEvent
+                      ? const SizedBox()
+                      : getStatus(_allAtsigns[index]),
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
@@ -143,7 +150,7 @@ class _ParticipantsState extends State<Participants> {
 
     if (_hybridModel.isNotEmpty) {
       return Text(
-        _hybridModel.first?.eta ?? '',
+        _hybridModel.first?.eta ?? '?',
         style: CustomTextStyles().darkGrey14,
       );
     }
