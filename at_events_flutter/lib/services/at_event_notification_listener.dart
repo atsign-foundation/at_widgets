@@ -96,7 +96,7 @@ class AtEventNotificationListener {
       if ((e is KeyNotFoundException) &&
           notificationKey.contains('createevent')) {
         AtLocationNotificationListener().showToast(
-          'Decryption failed for Event notification received from $fromAtSign',
+          'Decryption failed for Event notification received from $fromAtSign with $e',
           navKey!.currentContext!,
           isError: true,
         );

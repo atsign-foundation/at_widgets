@@ -142,7 +142,7 @@ class AtLocationNotificationListener {
           (notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) ||
           (notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
         showToast(
-          'Decryption failed for ${getKeyType(notificationKey)} notification received from $fromAtSign',
+          'Decryption failed for ${getKeyType(notificationKey)} notification received from $fromAtSign with $e',
           navKey.currentContext!,
           isError: true,
         );
