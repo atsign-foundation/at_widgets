@@ -147,6 +147,7 @@ class RequestLocationService {
       }
       return result;
     } catch (e) {
+      _logger.finer('error in requestLocationNotification: $e');
       return false;
     }
   }
