@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
@@ -1248,11 +1247,13 @@ class _CustomDialogState extends State<CustomDialog> {
   void _uploadQRFileForDesktop(
       BuildContext context, dynamic processAESKey) async {
     try {
+      // ignore: always_specify_types
       var fileContents, aesKey, atsign;
       setState(() {
         loading = true;
       });
 
+      // ignore: always_specify_types
       var path = await _desktopKeyPicker();
       print(path);
       if (path == null) {
@@ -1264,20 +1265,20 @@ class _CustomDialogState extends State<CustomDialog> {
 
       File selectedFile = File(path);
 
-      var length = selectedFile.lengthSync();
+      int length = selectedFile.lengthSync();
       if (length < 10) {
         showErrorDialog(context, 'Incorrect QR file');
         return;
       }
 
-      var image = img.decodePng(selectedFile.readAsBytesSync())!;
+      img.Image image = img.decodePng(selectedFile.readAsBytesSync())!;
 
       LuminanceSource source = RGBLuminanceSource(image.width, image.height,
           image.getBytes(format: img.Format.abgr).buffer.asInt32List());
-      var bitmap = BinaryBitmap(HybridBinarizer(source));
+      BinaryBitmap bitmap = BinaryBitmap(HybridBinarizer(source));
 
-      var reader = QRCodeReader();
-      var result = reader.decode(bitmap);
+      QRCodeReader reader = QRCodeReader();
+      Result result = reader.decode(bitmap);
       List<String> params = result.text.replaceAll('"', '').split(':');
       atsign = params[0];
       aesKey = params[1];
@@ -1304,18 +1305,17 @@ class _CustomDialogState extends State<CustomDialog> {
 
   Future<dynamic> _desktopKeyPicker() async {
     try {
-      // ignore: omit_local_variable_types
-      final XTypeGroup typeGroup = XTypeGroup(
+      XTypeGroup typeGroup = XTypeGroup(
         label: 'images',
+        // ignore: always_specify_types
         extensions: ['png'],
       );
-      final List<XFile> files =
-          await openFiles(acceptedTypeGroups: [typeGroup]);
+      // ignore: always_specify_types
+      List<XFile> files = await openFiles(acceptedTypeGroups: [typeGroup]);
       if (files.isEmpty) {
         return null;
       }
-      // ignore: omit_local_variable_types
-      final XFile file = files[0];
+      XFile file = files[0];
       return file.path;
     } catch (e) {
       print('Error in desktopImagePicker $e');

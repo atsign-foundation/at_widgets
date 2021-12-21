@@ -213,7 +213,7 @@ class OnboardingService {
 
   Future<void> _sync(String? atSign) async {
     // ignore: deprecated_member_use
-    if (_atClientPreference.syncStrategy == SyncStrategy.ONDEMAND) {
+    if (_atClientPreference.syncStrategy == SyncStrategy.onDemand) {
       _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
     }
   }
