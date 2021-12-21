@@ -90,11 +90,22 @@ class EventService {
 
   Future<dynamic> editEvent() async {
     try {
-      var atKey = getAtKey(eventNotificationModel!.key!);
+      var key = eventNotificationModel!.key!;
+      var keyKeyword = key.split('-')[0];
+      var atkeyMicrosecondId = key.split('-')[1].split('@')[0];
+      var response = await AtClientManager.getInstance().atClient.getKeys(
+            regex: '$keyKeyword-$atkeyMicrosecondId',
+          );
+      if (response.isEmpty) {
+        return 'notification key not found';
+      }
+
+      var atKey = getAtKey(response[0]);
       var allAtsignList = <String?>[];
-      EventService().eventNotificationModel!.group!.members!.forEach((element) {
+      for (var element
+          in EventService().eventNotificationModel!.group!.members!) {
         allAtsignList.add(element.atSign);
-      });
+      }
 
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
