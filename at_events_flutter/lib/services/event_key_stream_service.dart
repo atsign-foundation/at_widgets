@@ -842,6 +842,54 @@ class EventKeyStreamService {
       EventNotificationModel originalEvent, EventNotificationModel ackEvent) {
     return originalEvent;
   }
+
+  /// Removes a notification from list
+  void removeData(String? key) {
+    /// received key Example:
+    ///  key: sharelocation-1637059616606602@26juststay
+    ///
+    if (key == null) {
+      return;
+    }
+
+    EventNotificationModel? _eventNotificationModel;
+
+    List<String> atsignsToRemove = [];
+    allEventNotifications.removeWhere((notification) {
+      if (key.contains(
+          trimAtsignsFromKey(notification.eventNotificationModel!.key!))) {
+        atsignsToRemove =
+            getAtsignsFromEvent(notification.eventNotificationModel!);
+        _eventNotificationModel = notification.eventNotificationModel;
+      }
+      return key.contains(
+          trimAtsignsFromKey(notification.eventNotificationModel!.key!));
+    });
+    notifyListeners();
+    // Remove location sharing
+    if (_eventNotificationModel != null)
+    // && (compareAtSign(locationNotificationModel.atsignCreator!, currentAtSign!))
+    {
+      SendLocationNotification().removeMember(key, atsignsToRemove,
+          isExited: true, isAccepted: false, isSharing: false);
+    }
+  }
+
+  deleteData(EventNotificationModel _eventNotificationModel) async {
+    var key = _eventNotificationModel.key!;
+    var keyKeyword = key.split('-')[0];
+    var atkeyMicrosecondId = key.split('-')[1].split('@')[0];
+    var response = await AtClientManager.getInstance().atClient.getKeys(
+          regex: '$keyKeyword-$atkeyMicrosecondId',
+        );
+    if (response.isEmpty) {
+      return;
+    }
+
+    var atkey = getAtKey(response[0]);
+    await AtClientManager.getInstance().atClient.delete(atkey);
+    removeData(key);
+  }
 }
 
 class EventUserLocation {
