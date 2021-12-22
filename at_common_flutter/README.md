@@ -2,6 +2,9 @@
 
 ### Now for some internet optimism.
 
+[![pub package](https://img.shields.io/pub/v/at_common_flutter)](https://pub.dev/packages/at_common_flutter) [![pub points](https://badges.bar/at_common_flutter/pub%20points)](https://pub.dev/packages/at_common_flutter/score) [![build status](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml/badge.svg?branch=trunk)](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+
+
 # at_common_flutter
 
 ## Overview:
@@ -10,13 +13,17 @@ A Flutter package to provide custom widgets for other atsign packages.
 
 ## Getting Started
 
+Initially to get a basic overview of the SDK, you must read the [atsign docs](https://atsign.dev/docs/overview/).
+
+> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+
 ### Installation:
 
  To use this library in your app, add it to your pubspec.yaml
 
 ``` 
   dependencies:
-    at_common_flutter: ^2.0.3
+    at_common_flutter: ^2.0.4
 ```
 #### Add to your project
 
@@ -96,6 +103,9 @@ import 'package:at_common_flutter/at_common_flutter.dart' as CommonWidgets;
 
 CommonWidgets.SizeConfig().init(context);
 ```
+## Example
+
+We have a good example with explanation in the [at_common_flutter](https://pub.dev/packages/at_common_flutter/example) package.
 
 ## Open source usage and contributions
 

@@ -1,15 +1,23 @@
 <img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
 
-### Now for some internet optimism.
+## Now for some internet optimism.
+
+[![pub package](https://img.shields.io/pub/v/at_chat_flutter)](https://pub.dev/packages/at_chat_flutter) [![pub points](https://badges.bar/at_chat_flutter/pub%20points)](https://pub.dev/packages/at_chat_flutter/score) [![build status](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml/badge.svg?branch=trunk)](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+
 
 # at_chat_flutter
 
-## Overview:
+## Introduction
 
 A flutter plugin to provide chat feature between two atsigns.
 This plugin provides a chat screen - ChatScreen that can be accessed as a bottom sheet or as a navigated screen.
 
 ## Get Started:
+
+Initially to get a basic overview of the SDK, you must read the [atsign docs](https://atsign.dev/docs/overview/).
+
+> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+
 
 ### Installation:
 
@@ -17,7 +25,7 @@ This plugin provides a chat screen - ChatScreen that can be accessed as a bottom
 
 ``` 
   dependencies:
-    at_chat_flutter: ^3.0.2
+    at_chat_flutter: ^3.0.3
 ```
 #### Add to your project
 
@@ -81,6 +89,11 @@ class _ThirdScreenState extends State<ThirdScreen> {
   }
 }
 ```
+
+## Example
+
+We have a good example with explanation in the [at_chat_flutter](https://pub.dev/packages/at_chat_flutter/example) package.
+
 ## Open source usage and contributions
 
  This is freely licensed open source code, so feel free to use it as is, suggest changes or enhancements or create your

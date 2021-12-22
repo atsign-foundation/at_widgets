@@ -1,8 +1,6 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+# at_theme_flutter_example_app
 
-# at_common_flutter_example_app
-
-In this example app we demo at_common_flutter - A Flutter package to provide common widgets used by other @‎platform Flutter packages.
+In this example app we demo at_theme_flutter - A Flutter plugin project to provide theme selection in @‎platform apps with ease.
 
 ### Generate a new at_app
 
@@ -22,6 +20,7 @@ In this example app we demo at_common_flutter - A Flutter package to provide com
   ```bash
   flutter run
   ```
+
 
 ### Start Coding
 
@@ -62,7 +61,3 @@ In this example app we demo at_common_flutter - A Flutter package to provide com
     /// ... ///
   }
   ```
-
-## Example app screen
-
-<img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_common_flutter/example/example_app.png"  width="200" height="400" />
