@@ -1,4 +1,5 @@
 ## 3.0.5
+- Fix for at client dependency issue. Removed reference to deprecated SyncStrategy
 - updated dependencies
 ## 3.0.4
 - updated dependencies and documentation
