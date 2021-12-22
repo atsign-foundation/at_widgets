@@ -1,3 +1,7 @@
+## 3.1.2
+- Fixed at client dependency issue
+- Updated package dependencies
+
 ## 3.1.1
 - **REFACTOR**: Use of SizeConfig from at_common_flutter
 - Updated package dependencies
