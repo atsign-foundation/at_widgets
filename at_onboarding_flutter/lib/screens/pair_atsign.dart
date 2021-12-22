@@ -413,7 +413,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       });
 
       String? path = await _desktopKeyPicker();
-
       if (path == null) {
         return;
       }
@@ -482,7 +481,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       return null;
     }
   }
-
   Future<void> _showAlertDialog(dynamic errorMessage,
           {bool? isPkam,
           String? title,

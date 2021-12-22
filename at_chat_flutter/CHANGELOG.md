@@ -1,3 +1,5 @@
+## 3.0.3
+- updated dependencies
 ## 3.0.2
 - updated dependencies and bug fixes
 

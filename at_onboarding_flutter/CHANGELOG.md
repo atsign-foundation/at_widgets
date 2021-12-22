@@ -1,3 +1,6 @@
+## 3.1.2
+- Fixed at_client dependency issue
+- Fixed lint errors
 ## 3.1.1
 - Update a dependency to the latest release.
 

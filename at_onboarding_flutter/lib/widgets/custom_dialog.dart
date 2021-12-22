@@ -1251,7 +1251,6 @@ class _CustomDialogState extends State<CustomDialog> {
       setState(() {
         loading = true;
       });
-
       String? path = await _desktopKeyPicker();
       print(path);
       if (path == null) {
@@ -1313,7 +1312,6 @@ class _CustomDialogState extends State<CustomDialog> {
       if (files.isEmpty) {
         return null;
       }
-      // ignore: omit_local_variable_types
       XFile file = files[0];
       return file.path;
     } catch (e) {
