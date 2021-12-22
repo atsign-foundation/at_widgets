@@ -1,3 +1,7 @@
+## 3.1.2
+- Fixed at_client dependency issue
+- Updated at_contact dependency
+
 ## 3.1.1
 - Updated package dependencies
 
