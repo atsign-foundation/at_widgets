@@ -12,6 +12,7 @@ import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
+import 'confirmation_dialog.dart';
 import 'custom_toast.dart';
 import 'display_tile.dart';
 import 'draggable_symbol.dart';
@@ -309,6 +310,12 @@ class _CollapsedContentState extends State<CollapsedContent> {
 
   // ignore: always_declare_return_types
   removePerson() async {
+    await confirmationDialog(
+        'Do you want to remove ${widget.userListenerKeyword!.receiver}?',
+        onYesPressed: _onRemovePersonYesPressed);
+  }
+
+  _onRemovePersonYesPressed() async {
     LoadingDialog().show();
     try {
       late var result;
