@@ -43,7 +43,7 @@ class _ParticipantsState extends State<Participants> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: LocationService().atHybridUsersStream,
-      builder: (context, AsyncSnapshot<List<HybridModel?>> snapshot) {
+      builder: (context, AsyncSnapshot<Map<String, HybridModel>> snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           return builder();
         } else {
@@ -144,13 +144,13 @@ class _ParticipantsState extends State<Participants> {
       );
     }
 
-    var _hybridModel = LocationService()
-        .hybridUsersList
-        .where((element) => compareAtSign(element!.displayName!, _atsign));
+    // var _hybridModel = LocationService()
+    //     .hybridUsersList
+    //     .where((element) => compareAtSign(element!.displayName!, _atsign));
 
-    if (_hybridModel.isNotEmpty) {
+    if (LocationService().hybridUsersList[_atsign] != null) {
       return Text(
-        _hybridModel.first?.eta ?? '?',
+        LocationService().hybridUsersList[_atsign]!.eta ?? '?',
         style: CustomTextStyles().darkGrey14,
       );
     }

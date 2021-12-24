@@ -68,7 +68,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   PanelController pc = PanelController();
   PopupController _popupController = PopupController();
   MapController? mapController;
-  List<LatLng?>? points;
+  // List<LatLng?>? points = [];
   bool isEventAdmin = false;
   late bool showMarker, mapAdjustedOnce;
   BuildContext? globalContext;
@@ -113,12 +113,12 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     super.dispose();
   }
 
-  calculateAtsignsCurrentlySharing(List<HybridModel?> users) {
+  calculateAtsignsCurrentlySharing(Map<String, HybridModel> users) {
     List<String> _newAtsignsSharing = [], _atsignsStoppedSharing = [];
-    for (var _user in users) {
-      if (_user == null) {
-        continue;
-      }
+    for (var _user in users.values) {
+      // if (_user == null) {
+      //   continue;
+      // }
       if ((_user.displayName !=
               AtClientManager.getInstance().atClient.getCurrentAtSign()) &&
           ((LocationService().centreMarker == null) ||
@@ -132,12 +132,12 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     }
 
     atsignsCurrentlySharing.removeWhere((element) {
-      var _res =
-          users.indexWhere((_user) => _user?.displayName == element) == -1;
-      if ((_res) && (!_atsignsStoppedSharing.contains(element))) {
-        _atsignsStoppedSharing.add(element);
-      }
-      return _res;
+      // var _res =
+      //     users.indexWhere((_user) => _user?.displayName == element) == -1;
+      // if ((_res) && (!_atsignsStoppedSharing.contains(element))) {
+      //   _atsignsStoppedSharing.add(element);
+      // }
+      return users[element] == null;
     });
 
     if (_newAtsignsSharing.isNotEmpty) {
@@ -159,7 +159,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         children: [
           StreamBuilder(
               stream: LocationService().atHybridUsersStream,
-              builder: (context, AsyncSnapshot<List<HybridModel?>> snapshot) {
+              builder:
+                  (context, AsyncSnapshot<Map<String, HybridModel>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasError) {
                     return const Center(
@@ -173,16 +174,22 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
 
                     _popupController = PopupController();
                     var users = snapshot.data!;
-                    var markers = users.map((user) => user!.marker).toList();
-                    points = users.map((user) => user!.latLng).toList();
+                    List<Marker?> markers = [];
+                    for (var _user in users.entries) {
+                      markers.add(_user.value.marker);
+                      // points!.add(_user.)
+                    }
+
+                    // var markers = users.map((user) => user!.marker).toList();
+                    // points = users.map((user) => user!.latLng).toList();
 
                     _logger.finer('markers length = ${markers.length}');
-                    for (var element in users) {
-                      _logger.finer('displayanme - ${element!.displayName}');
+                    for (var element in users.entries) {
+                      _logger
+                          .finer('displayanme - ${element.value.displayName}');
+                      _logger.finer('point - ${element.value.marker!.point}');
                     }
-                    for (var element in markers) {
-                      _logger.finer('point - ${element!.point}');
-                    }
+                    // for (var element in markers) {}
 
                     calculateAtsignsCurrentlySharing(users);
 
@@ -198,12 +205,13 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         if ((!mapAdjustedOnce) &&
                             (markers.isNotEmpty) &&
                             (mapController != null)) {
-                          var indexOfUser = users.indexWhere((element) =>
-                              element!.displayName == widget.focusMapOn);
+                          // var indexOfUser = users.indexWhere((element) =>
+                          //     element!.displayName == widget.focusMapOn);
 
-                          if (indexOfUser > -1) {
+                          if ((widget.focusMapOn != null) &&
+                              (users[widget.focusMapOn!] != null)) {
                             mapController!
-                                .move(markers[indexOfUser]!.point, 10);
+                                .move(users[widget.focusMapOn!]!.latLng, 10);
 
                             /// If we want the map to only update once
                             /// And not keep the focus on user sharing his location
@@ -235,7 +243,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         )),
                         // ignore: unnecessary_null_comparison
                         center: ((users != null) && (users.isNotEmpty))
-                            ? users[0]!.latLng
+                            ? users.entries.first.value.latLng
                             : LatLng(45, 45),
                         zoom: markers.isNotEmpty ? 8 : 2,
                         plugins: [MarkerClusterPlugin(UniqueKey())],
@@ -302,7 +310,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
   void zoomOutFn() {
     _popupController.hidePopup();
     if (LocationService().hybridUsersList.isNotEmpty) {
-      mapController!.move(LocationService().hybridUsersList[0]!.latLng, 4);
+      mapController!.move(
+          LocationService().hybridUsersList.entries.first.value.latLng, 4);
     }
   }
 

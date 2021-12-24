@@ -46,14 +46,20 @@ class _CollapsedContentState extends State<CollapsedContent> {
       setState(() {
         locationAvailable = false;
       });
-      for (var i = 0; i < e.length; i++) {
-        if (e[i]!.displayName == widget.userListenerKeyword!.atsignCreator) {
-          setState(() {
-            locationAvailable = true;
-          });
-          break;
-        }
+      if (e[widget.userListenerKeyword!.atsignCreator] != null) {
+        setState(() {
+          locationAvailable = true;
+        });
       }
+
+      // for (var _user in e.values) {
+      //   if (e[i]!.displayName == widget.userListenerKeyword!.atsignCreator) {
+      //     setState(() {
+      //       locationAvailable = true;
+      //     });
+      //     break;
+      //   }
+      // }
     });
   }
 
