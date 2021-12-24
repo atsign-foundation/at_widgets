@@ -137,11 +137,9 @@ class LocationService {
       hybridUsersList[_index] = myData;
     }
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (!_atHybridUsersController.isClosed) {
-        _atHybridUsersController.add(hybridUsersList);
-      }
-    });
+    if (!_atHybridUsersController.isClosed) {
+      _atHybridUsersController.add(hybridUsersList);
+    }
   }
 
   void addCentreMarker() {
@@ -151,8 +149,9 @@ class LocationService {
     hybridUsersList.add(centreMarker);
 
     if (hybridUsersList.isNotEmpty) {
-      Future.delayed(const Duration(seconds: 2),
-          () => _atHybridUsersController.add(hybridUsersList));
+      if (!_atHybridUsersController.isClosed) {
+        _atHybridUsersController.add(hybridUsersList);
+      }
     }
   }
 
@@ -167,8 +166,9 @@ class LocationService {
     });
 
     if (hybridUsersList.isNotEmpty) {
-      Future.delayed(const Duration(seconds: 2),
-          () => _atHybridUsersController.add(hybridUsersList));
+      if (!_atHybridUsersController.isClosed) {
+        _atHybridUsersController.add(hybridUsersList);
+      }
     }
   }
 
