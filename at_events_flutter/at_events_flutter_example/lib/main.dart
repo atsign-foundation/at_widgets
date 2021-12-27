@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:at_events_flutter_example/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
@@ -67,7 +68,7 @@ class _MyAppState extends State<MyApp> {
                   onError: (error) {
                     _logger.severe('Onboarding throws $error error');
                   },
-                  nextScreen: const HomeScreen(),
+                  nextScreen: const SecondScreen(),
                 );
               },
               child: const Text('Onboard an @sign'),
@@ -79,31 +80,6 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//* The next screen after onboarding (second screen)
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    /// Get the AtClientManager instance
-    var atClientManager = AtClientManager.getInstance();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text(
-                'Successfully onboarded and navigated to FirstAppScreen'),
-
-            /// Use the AtClientManager instance to get the current atsign
-            Text(
-                'Current @sign: ${atClientManager.atClient.getCurrentAtSign()}'),
-          ],
-        ),
-      ),
-    );
-  }
+class NavService {
+  static GlobalKey<NavigatorState> navKey = GlobalKey();
 }

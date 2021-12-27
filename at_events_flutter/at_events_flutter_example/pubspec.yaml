@@ -43,6 +43,10 @@ dependencies:
     # the parent directory to use the current plugin's version.
     path: ../
   at_onboarding_flutter: ^3.1.2
+  
+dependency_overrides:
+  at_location_flutter:
+    path: ../../at_location_flutter
 
 dev_dependencies:
   flutter_test:
