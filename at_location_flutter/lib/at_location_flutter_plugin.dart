@@ -43,6 +43,9 @@ class AtLocationFlutterPlugin extends StatefulWidget {
   /// needed to track details of a specific notification (event/p2p).
   String? notificationID;
 
+  /// needed if we want to check for location data after a particular time
+  DateTime? refreshAt;
+
   AtLocationFlutterPlugin(
     this.atsignsToTrack, {
     Key? key,
@@ -56,6 +59,7 @@ class AtLocationFlutterPlugin extends StatefulWidget {
     this.etaFrom,
     this.focusMapOn,
     this.notificationID,
+    this.refreshAt,
   }) : super(key: key);
   @override
   _AtLocationFlutterPluginState createState() =>
@@ -92,7 +96,8 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         addCurrentUserMarker: widget.addCurrentUserMarker,
         textForCenter: widget.textForCenter,
         showToast: showToast,
-        notificationID: widget.notificationID);
+        notificationID: widget.notificationID,
+        refreshAt: widget.refreshAt);
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       LocationService().mapInitialized();
       LocationService().notifyListeners();

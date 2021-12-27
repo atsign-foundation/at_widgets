@@ -34,6 +34,9 @@ class LocationService {
   bool? calculateETA, addCurrentUserMarker, isMapInitialized = false;
   Function? showToast;
   StreamSubscription<Position>? myLocationStream;
+  DateTime? refreshAt;
+  Future<dynamic>? refreshTimer;
+  String? uniqueID; // used to differentiate between different calls
 
   String?
       notificationID; // needed to track details of a specific notification (event/p2p)
@@ -48,13 +51,16 @@ class LocationService {
       _atHybridUsersController.sink as StreamSink<List<HybridModel?>>;
 
   //// the centre LatLng is getting added more than once
-  void init(List<String?>? atsignsToTrackFromApp,
-      {LatLng? etaFrom,
-      bool? calculateETA,
-      bool? addCurrentUserMarker,
-      String? textForCenter,
-      Function? showToast,
-      String? notificationID}) async {
+  void init(
+    List<String?>? atsignsToTrackFromApp, {
+    LatLng? etaFrom,
+    bool? calculateETA,
+    bool? addCurrentUserMarker,
+    String? textForCenter,
+    Function? showToast,
+    String? notificationID,
+    DateTime? refreshAt,
+  }) async {
     hybridUsersList = [];
     centreMarker = null;
     _atHybridUsersController = StreamController<List<HybridModel?>>.broadcast();
@@ -65,6 +71,7 @@ class LocationService {
     this.textForCenter = textForCenter;
     this.showToast = showToast;
     this.notificationID = notificationID;
+    this.refreshAt = refreshAt;
 
     // ignore: unawaited_futures
     if (myLocationStream != null) myLocationStream!.cancel();
@@ -73,16 +80,34 @@ class LocationService {
     await addMyDetailsToHybridUsersList();
 
     updateHybridList();
+
+    uniqueID = DateTime.now().millisecondsSinceEpoch.toString();
+    refreshUpdateHybridList(uniqueID);
   }
 
   void dispose() {
     centreMarker = null;
     _atHybridUsersController.close();
     isMapInitialized = false;
+    refreshTimer = null;
+    uniqueID = null;
   }
 
   void mapInitialized() {
     isMapInitialized = true;
+  }
+
+  /// will call updateHybridList after [refreshAt] time
+  refreshUpdateHybridList(String? _uniqueID) async {
+    if ((refreshAt != null) && (refreshAt!.isAfter(DateTime.now()))) {
+      refreshTimer =
+          await Future.delayed(refreshAt!.difference(DateTime.now()));
+
+      if (_uniqueID == uniqueID) {
+        /// if disposed, [uniqueID] will be null
+        updateHybridList();
+      }
+    }
   }
 
   Future addMyDetailsToHybridUsersList() async {

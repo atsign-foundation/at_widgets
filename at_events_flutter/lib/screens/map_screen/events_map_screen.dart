@@ -321,6 +321,7 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
                         _event.venue!.latitude!, _event.venue!.longitude!),
                     textForCenter: _event.venue!.label,
                     notificationID: _event.key,
+                    refreshAt: _event.event!.startTime,
                   ),
                   Positioned(
                     top: 0,
