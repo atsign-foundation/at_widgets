@@ -313,6 +313,21 @@ class SharingLocationService {
       var result = await AtClientManager.getInstance().atClient.delete(
             key,
           );
+
+      /// remove notification
+      key.sharedWith = locationNotificationModel.receiver;
+      if (!key.sharedWith!.contains('@')) {
+        key.sharedWith = '@' + key.sharedWith!;
+      }
+      var resultForNotification =
+          await AtClientManager.getInstance().atClient.delete(
+                key,
+              );
+      _logger.finer(
+          'deleteKey share location resultForNotification $resultForNotification');
+
+      ///
+
       if (result) {
         KeyStreamService().removeData(key.key);
       }

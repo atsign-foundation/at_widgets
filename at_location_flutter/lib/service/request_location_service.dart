@@ -377,6 +377,20 @@ class RequestLocationService {
     var result = await AtClientManager.getInstance().atClient.delete(
           key,
         );
+
+    /// remove notification
+    key.sharedWith = locationNotificationModel.atsignCreator;
+    if (!key.sharedWith!.contains('@')) {
+      key.sharedWith = '@' + key.sharedWith!;
+    }
+    var resultForNotification =
+        await AtClientManager.getInstance().atClient.delete(
+              key,
+            );
+    _logger.finer(
+        'deleteKey request location resultForNotification $resultForNotification');
+
+    ///
     _logger.finer('$key delete operation $result');
 
     if (result) {
