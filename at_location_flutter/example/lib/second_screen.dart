@@ -6,9 +6,9 @@ import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/screens/home/home_screen.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
-import 'package:at_location_flutter_example/client_sdk_service.dart';
-import 'package:at_location_flutter_example/main.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/at_lookup.dart';
+import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -18,26 +18,20 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  AtClientService? atClientService;
+  GlobalKey<ScaffoldState>? scaffoldKey;
   String? activeAtSign, receiver;
   Stream<List<KeyLocationModel>?>? newStream;
   MapController mapController = MapController();
-
+  /// Get the AtClientManager instance
+  var atClientManager = AtClientManager.getInstance();
   @override
   void initState() {
     try {
       super.initState();
-      activeAtSign = clientSdkService
-          .atClientServiceInstance!.atClientManager.atClient
-          .getCurrentAtSign();
-      initializeLocationService(
-        NavService.navKey,
-        mapKey: '',
-        apiKey: '',
-        showDialogBox: true,
-      );
-
-      newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;
+    getAtSignAndInitializeLocation();
+    scaffoldKey = GlobalKey<ScaffoldState>();
+    
     } catch (e) {
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         showDialog(
@@ -60,6 +54,7 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Second Screen'),
       ),
@@ -243,5 +238,16 @@ class _SecondScreenState extends State<SecondScreen> {
         ),
       ],
     );
+  }
+
+  getAtSignAndInitializeLocation()
+  {
+       initializeLocationService(
+        NavService.navKey,
+        mapKey: '',
+        apiKey: '',
+        showDialogBox: true,
+      );
+      newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;
   }
 }
