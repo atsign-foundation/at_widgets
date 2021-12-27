@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_data_model.dart';
@@ -135,11 +136,18 @@ class AtLocationNotificationListener {
         .decrypt(value ?? '', fromAtSign)
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) {
-      showToast(
-        'Decryption failed for notification received from $fromAtSign',
-        navKey.currentContext!,
-        isError: true,
-      );
+      /// only show failure for sharelocation/requestlocation keys
+      if ((e is KeyNotFoundException) &&
+              (notificationKey.contains(MixedConstants.SHARE_LOCATION)) ||
+          (notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) ||
+          (notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
+        showToast(
+          'Decryption failed for ${getKeyType(notificationKey)} notification received from $fromAtSign with $e',
+          navKey.currentContext!,
+          isError: true,
+        );
+      }
+
       _logger.severe(
           'fromAtSign: $fromAtSign, ${notification.from}, ${notification.to}');
       _logger.severe('error in decrypting in location package listener: $e');
@@ -263,5 +271,21 @@ class AtLocationNotificationListener {
       CustomToast().show(msg, navKey.currentContext!,
           isError: isError, isSuccess: isSuccess);
     }
+  }
+
+  String getKeyType(String keyRegex) {
+    if (keyRegex.contains(MixedConstants.SHARE_LOCATION)) {
+      return 'Share location';
+    }
+
+    if (keyRegex.contains(MixedConstants.REQUEST_LOCATION_ACK)) {
+      return 'Request location acknowledgment';
+    }
+
+    if (keyRegex.contains(MixedConstants.REQUEST_LOCATION)) {
+      return 'Request location';
+    }
+
+    return '';
   }
 }

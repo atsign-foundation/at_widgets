@@ -90,11 +90,22 @@ class EventService {
 
   Future<dynamic> editEvent() async {
     try {
-      var atKey = getAtKey(eventNotificationModel!.key!);
+      var key = eventNotificationModel!.key!;
+      var keyKeyword = key.split('-')[0];
+      var atkeyMicrosecondId = key.split('-')[1].split('@')[0];
+      var response = await AtClientManager.getInstance().atClient.getKeys(
+            regex: '$keyKeyword-$atkeyMicrosecondId',
+          );
+      if (response.isEmpty) {
+        return 'notification key not found';
+      }
+
+      var atKey = getAtKey(response[0]);
       var allAtsignList = <String?>[];
-      EventService().eventNotificationModel!.group!.members!.forEach((element) {
+      for (var element
+          in EventService().eventNotificationModel!.group!.members!) {
         allAtsignList.add(element.atSign);
-      });
+      }
 
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
@@ -161,7 +172,7 @@ class EventService {
 
       /// Dont need to sync as notifyAll is called
 
-      await EventKeyStreamService().addDataToList(eventNotificationModel!);
+      EventKeyStreamService().addDataToList(eventNotificationModel!);
 
       eventNotificationModel = eventNotification;
       if (onEventSaved != null) {
@@ -269,23 +280,29 @@ class EventService {
 
   bool? showConcurrentEventDialog(List<EventNotificationModel>? createdEvents,
       EventNotificationModel? newEvent, BuildContext context) {
-    // ignore: prefer_is_empty
-    if (!isEventUpdate && createdEvents != null && createdEvents.length > 0) {
-      var isOverlapData =
-          isEventTimeSlotOverlap(createdEvents, eventNotificationModel);
-      if (isOverlapData[0]) {
-        showDialog<void>(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return ConcurrentEventRequest(concurrentEvent: isOverlapData[1]);
-            });
+    try {
+      // ignore: prefer_is_empty
+      if (!isEventUpdate && createdEvents != null && createdEvents.length > 0) {
+        var isOverlapData =
+            isEventTimeSlotOverlap(createdEvents, eventNotificationModel);
+        if (isOverlapData[0]) {
+          showDialog<void>(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return ConcurrentEventRequest(
+                    concurrentEvent: isOverlapData[1]);
+              });
 
-        return isOverlapData[0];
+          return isOverlapData[0];
+        } else {
+          return isOverlapData[0];
+        }
       } else {
-        return isOverlapData[0];
+        return false;
       }
-    } else {
+    } catch (e) {
+      _logger.severe('Error in showConcurrentEventDialog $e');
       return false;
     }
   }

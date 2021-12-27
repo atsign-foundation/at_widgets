@@ -12,12 +12,14 @@ import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-
+import 'package:at_location_flutter/common_components/confirmation_dialog.dart';
 import 'participants.dart';
 
 class EventsCollapsedContent extends StatefulWidget {
   late EventNotificationModel eventListenerKeyword;
-  EventsCollapsedContent(this.eventListenerKeyword, {Key? key})
+  late bool static; // true when no clicks should work
+  EventsCollapsedContent(this.eventListenerKeyword,
+      {Key? key, this.static = false})
       : super(key: key);
 
   @override
@@ -88,7 +90,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      isAdmin
+                      !widget.static && isAdmin
                           ? InkWell(
                               onTap: () {
                                 bottomSheet(
@@ -184,90 +186,84 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                 ],
               ),
             )),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Share Location',
-                  style: CustomTextStyles().darkGrey16,
-                ),
-                Switch(
-                    value: isSharingEvent!,
-                    onChanged: (value) async {
-                      if (isCancelled || isExited) {
-                        CustomToast().show(
-                            isCancelled ? 'Event cancelled' : 'Event exited',
-                            AtEventNotificationListener()
-                                .navKey!
-                                .currentContext,
-                            isError: true);
-                        return;
-                      }
+            widget.static ? const SizedBox() : Divider(),
+            widget.static
+                ? const SizedBox()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Share Location',
+                        style: CustomTextStyles().darkGrey16,
+                      ),
+                      Switch(
+                          value: isSharingEvent!,
+                          onChanged: (value) async {
+                            if (isCancelled || isExited) {
+                              CustomToast().show(
+                                  isCancelled
+                                      ? 'Event cancelled'
+                                      : 'Event exited',
+                                  AtEventNotificationListener()
+                                      .navKey!
+                                      .currentContext,
+                                  isError: true);
+                              return;
+                            }
 
-                      LoadingDialog().show(text: 'Updating data');
-                      try {
-                        // if (isAdmin) {
-                        //   LocationService().eventListenerKeyword.isSharing =
-                        //       value;
-                        // }
+                            LoadingDialog().show(text: 'Updating data');
+                            try {
+                              // if (isAdmin) {
+                              //   LocationService().eventListenerKeyword.isSharing =
+                              //       value;
+                              // }
 
-                        var result =
-                            await EventKeyStreamService().actionOnEvent(
-                          eventListenerKeyword,
-                          isAdmin
-                              ? ATKEY_TYPE_ENUM.CREATEEVENT
-                              : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-                          isSharing: value,
-                          isAccepted: true,
-                          isExited: false,
-                        );
-                        if (result == true) {
-                          // CustomToast().show(
-                          //     'Request to update data is submitted',
-                          //     AtEventNotificationListener()
-                          //         .navKey!
-                          //         .currentContext,
-                          //     isSuccess: true);
-                        } else {
-                          CustomToast().show(
-                              'Something went wrong , please try again.',
-                              AtEventNotificationListener()
-                                  .navKey!
-                                  .currentContext,
-                              isError: true);
-                        }
-                        setState(() {});
-                        LoadingDialog().hide();
-                      } catch (e) {
-                        print(e);
-                        CustomToast().show(
-                            'Something went wrong , please try again.',
-                            AtEventNotificationListener()
-                                .navKey!
-                                .currentContext,
-                            isError: true);
-                        LoadingDialog().hide();
-                      }
-                    })
-              ],
-            ),
-            Divider(),
-            isAdmin
+                              var result =
+                                  await EventKeyStreamService().actionOnEvent(
+                                eventListenerKeyword,
+                                isAdmin
+                                    ? ATKEY_TYPE_ENUM.CREATEEVENT
+                                    : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
+                                isSharing: value,
+                                isAccepted: true,
+                                isExited: false,
+                              );
+                              if (result == true) {
+                                // CustomToast().show(
+                                //     'Request to update data is submitted',
+                                //     AtEventNotificationListener()
+                                //         .navKey!
+                                //         .currentContext,
+                                //     isSuccess: true);
+                              } else {
+                                CustomToast().show(
+                                    'Something went wrong , please try again.',
+                                    AtEventNotificationListener()
+                                        .navKey!
+                                        .currentContext,
+                                    isError: true);
+                              }
+                              setState(() {});
+                              LoadingDialog().hide();
+                            } catch (e) {
+                              print(e);
+                              CustomToast().show(
+                                  'Something went wrong , please try again.',
+                                  AtEventNotificationListener()
+                                      .navKey!
+                                      .currentContext,
+                                  isError: true);
+                              LoadingDialog().hide();
+                            }
+                          })
+                    ],
+                  ),
+            widget.static ? const SizedBox() : Divider(),
+            (widget.static || isAdmin)
                 ? SizedBox()
                 : Expanded(
                     child: InkWell(
                       onTap: () async {
-                        // var isExited = true;
-                        // eventListenerKeyword.group!.members!
-                        //     .forEach((groupMember) {
-                        //   if (groupMember.atSign == currentAtSign) {
-                        //     if (groupMember.tags!['isExited'] == false) {
-                        //       isExited = false;
-                        //     }
-                        //   }
-                        // });
-
                         if (isCancelled) {
                           CustomToast().show(
                               'Event cancelled',
@@ -279,58 +275,9 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                         }
 
                         if (!isExited) {
-                          //if member has not exited then only following code will run.
-                          LoadingDialog().show(text: 'Exiting');
-                          try {
-                            var result =
-                                await EventKeyStreamService().actionOnEvent(
-                              eventListenerKeyword,
-                              isAdmin!
-                                  ? ATKEY_TYPE_ENUM.CREATEEVENT
-                                  : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-                              isExited: true,
-                              isAccepted: false,
-                              isSharing: false,
-                            );
-                            if (result == true) {
-                              // if (!isAdmin) {
-                              //   CustomToast().show(
-                              //       'Request to update data is submitted',
-                              //       AtEventNotificationListener()
-                              //           .navKey!
-                              //           .currentContext,
-                              //       isSuccess: true);
-                              // }
-                            } else {
-                              CustomToast().show(
-                                  'Something went wrong , please try again.',
-                                  AtEventNotificationListener()
-                                      .navKey!
-                                      .currentContext,
-                                  isError: true);
-                            }
-                            setState(() {});
-                            LoadingDialog().hide();
-                            Navigator.of(AtEventNotificationListener()
-                                    .navKey!
-                                    .currentContext!)
-                                .pop();
-                            // CustomToast().show(
-                            //     'Request to update data is submitted',
-                            //     AtEventNotificationListener()
-                            //         .navKey!
-                            //         .currentContext,
-                            //     isSuccess: true);
-                          } catch (e) {
-                            print(e);
-                            CustomToast().show(
-                                'Something went wrong , please try again.',
-                                AtEventNotificationListener()
-                                    .navKey!
-                                    .currentContext,
-                                isError: true);
-                            LoadingDialog().hide();
-                          }
+                          await confirmationDialog(
+                              'Do you want to exit ${widget.eventListenerKeyword.title}?',
+                              onYesPressed: _exitEvent);
                         }
                       },
                       child: Text(
@@ -339,49 +286,15 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                       ),
                     ),
                   ),
-            isAdmin ? SizedBox() : Divider(),
-            isAdmin
+            (widget.static || isAdmin) ? SizedBox() : Divider(),
+            (!widget.static && isAdmin)
                 ? Expanded(
                     child: InkWell(
                       onTap: () async {
                         if (!isCancelled) {
-                          LoadingDialog().show(text: 'Cancelling');
-                          try {
-                            // await LocationService().onEventCancel();
-                            var result =
-                                await EventKeyStreamService().actionOnEvent(
-                              eventListenerKeyword,
-                              ATKEY_TYPE_ENUM.CREATEEVENT,
-                              isCancelled: true,
-                              isAccepted: false,
-                              isExited: true,
-                              isSharing: false,
-                            );
-                            if (result == true) {
-                            } else {
-                              CustomToast().show(
-                                  'Something went wrong , please try again.',
-                                  AtEventNotificationListener()
-                                      .navKey!
-                                      .currentContext,
-                                  isError: true);
-                            }
-                            setState(() {});
-                            LoadingDialog().hide();
-                            Navigator.of(AtEventNotificationListener()
-                                    .navKey!
-                                    .currentContext!)
-                                .pop();
-                          } catch (e) {
-                            print(e);
-                            CustomToast().show(
-                                'Something went wrong , please try again.',
-                                AtEventNotificationListener()
-                                    .navKey!
-                                    .currentContext,
-                                isError: true);
-                            LoadingDialog().hide();
-                          }
+                          await confirmationDialog(
+                              'Do you want to cancel ${widget.eventListenerKeyword.title}?',
+                              onYesPressed: _cancelEvent);
                         }
                       },
                       child: Text(
@@ -395,6 +308,66 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
             // ),
           ]),
     );
+  }
+
+  _cancelEvent() async {
+    LoadingDialog().show(text: 'Cancelling');
+    try {
+      var result = await EventKeyStreamService().actionOnEvent(
+        eventListenerKeyword,
+        ATKEY_TYPE_ENUM.CREATEEVENT,
+        isCancelled: true,
+        isAccepted: false,
+        isExited: true,
+        isSharing: false,
+      );
+      if (result == true) {
+      } else {
+        CustomToast().show('Something went wrong , please try again.',
+            AtEventNotificationListener().navKey!.currentContext,
+            isError: true);
+      }
+      setState(() {});
+      LoadingDialog().hide();
+      Navigator.of(AtEventNotificationListener().navKey!.currentContext!).pop();
+    } catch (e) {
+      print(e);
+      CustomToast().show('Something went wrong , please try again.',
+          AtEventNotificationListener().navKey!.currentContext,
+          isError: true);
+      LoadingDialog().hide();
+    }
+  }
+
+  _exitEvent() async {
+    //if member has not exited then only following code will run.
+    LoadingDialog().show(text: 'Exiting');
+    try {
+      var result = await EventKeyStreamService().actionOnEvent(
+        eventListenerKeyword,
+        isAdmin!
+            ? ATKEY_TYPE_ENUM.CREATEEVENT
+            : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
+        isExited: true,
+        isAccepted: false,
+        isSharing: false,
+      );
+      if (result == true) {
+      } else {
+        CustomToast().show('Something went wrong , please try again.',
+            AtEventNotificationListener().navKey!.currentContext,
+            isError: true);
+      }
+      setState(() {});
+      LoadingDialog().hide();
+      Navigator.of(AtEventNotificationListener().navKey!.currentContext!).pop();
+    } catch (e) {
+      print(e);
+      CustomToast().show('Something went wrong , please try again.',
+          AtEventNotificationListener().navKey!.currentContext,
+          isError: true);
+      LoadingDialog().hide();
+    }
   }
 }
 

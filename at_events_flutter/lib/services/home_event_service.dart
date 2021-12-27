@@ -19,6 +19,12 @@ class HomeEventService {
   bool isActionRequired(EventNotificationModel event) {
     if (isEventCancelled(event)) return true;
 
+    /// for creator it can only be cancelled state
+    if (compareAtSign(event.atsignCreator!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      return false;
+    }
+
     var _eventInfo = getMyEventInfo(event);
 
     if (_eventInfo == null) {
@@ -38,6 +44,12 @@ class HomeEventService {
 
   String getActionString(EventNotificationModel event, bool haveResponded) {
     if (isEventCancelled(event)) return 'Cancelled';
+
+    /// for creator it can only be cancelled state
+    if (compareAtSign(event.atsignCreator!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      return '';
+    }
 
     var _eventInfo = getMyEventInfo(event);
 

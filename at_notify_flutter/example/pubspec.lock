@@ -28,13 +28,13 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.1"
+    version: "2.8.1"
   at_backupkey_flutter:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../../at_backupkey_flutter"
-      relative: true
-    source: path
+      name: at_backupkey_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "3.0.0"
   at_base2e15:
     dependency: transitive
@@ -44,76 +44,75 @@ packages:
     source: hosted
     version: "1.0.0"
   at_client:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: at_client
-      ref: trunk
-      resolved-ref: "686a87b719fce6606e88f651b8ccf57908c79966"
-      url: "https://github.com/atsign-foundation/at_client_sdk.git"
-    source: git
-    version: "3.0.0"
+      name: at_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.6"
   at_client_mobile:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: at_client_mobile
-      ref: trunk
-      resolved-ref: "686a87b719fce6606e88f651b8ccf57908c79966"
-      url: "https://github.com/atsign-foundation/at_client_sdk.git"
-    source: git
-    version: "3.0.0"
+      name: at_client_mobile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.3"
+  at_common_flutter:
+    dependency: transitive
+    description:
+      name: at_common_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.4"
   at_commons:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: at_commons
-      ref: trunk
-      resolved-ref: "34b1b2f1ae444ee5ab580eaff449d2d4fe21e2fb"
-      url: "https://github.com/atsign-foundation/at_tools.git"
-    source: git
-    version: "3.0.0"
+      name: at_commons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.2"
   at_lookup:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: at_lookup
-      ref: trunk
-      resolved-ref: "2bbe01bcd7ecfceafef733d8d59c024afc6be758"
-      url: "https://github.com/atsign-foundation/at_libraries.git"
-    source: git
-    version: "3.0.0"
+      name: at_lookup
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.5"
   at_notify_flutter:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.0"
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      path: "../../at_onboarding_flutter"
-      relative: true
-    source: path
-    version: "3.0.0"
+      name: at_onboarding_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.4"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.6"
+    version: "3.0.10"
   at_persistence_spec:
     dependency: transitive
     description:
       name: at_persistence_spec
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.3"
   at_server_status:
     dependency: transitive
     description:
       name: at_server_status
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   at_utf7:
     dependency: transitive
     description:
@@ -122,14 +121,12 @@ packages:
     source: hosted
     version: "1.0.0"
   at_utils:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: at_utils
-      ref: trunk
-      resolved-ref: "34b1b2f1ae444ee5ab580eaff449d2d4fe21e2fb"
-      url: "https://github.com/atsign-foundation/at_tools.git"
-    source: git
-    version: "3.0.0"
+      name: at_utils
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -150,7 +147,7 @@ packages:
       name: charcode
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.3.1"
   clock:
     dependency: transitive
     description:
@@ -320,6 +317,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   logging:
     dependency: transitive
     description:
@@ -340,7 +344,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.7.0"
   mime:
     dependency: transitive
     description:
@@ -499,7 +503,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.2"
   timezone:
     dependency: transitive
     description:

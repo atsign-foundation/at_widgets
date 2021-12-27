@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
@@ -62,6 +63,26 @@ class RequestLocationService {
     }
 
     return false;
+  }
+
+  Future<void> sendRequestLocationToGroup(
+      List<AtContact> selectedContacts) async {
+    await Future.forEach(selectedContacts, (AtContact selectedContact) async {
+      var _state = await sendRequestLocationEvent(
+        selectedContact.atSign!,
+      );
+      if (_state == true) {
+        CustomToast().show(
+            'Location Request sent to ${selectedContact.atSign!}',
+            AtLocationNotificationListener().navKey.currentContext!,
+            isSuccess: true);
+      } else if (_state == false) {
+        CustomToast().show(
+            'Something went wrong for ${selectedContact.atSign!}',
+            AtLocationNotificationListener().navKey.currentContext!,
+            isError: true);
+      }
+    });
   }
 
   /// Sends a 'requestlocation' key to [atsign].
@@ -147,6 +168,7 @@ class RequestLocationService {
       }
       return result;
     } catch (e) {
+      _logger.finer('error in requestLocationNotification: $e');
       return false;
     }
   }

@@ -220,6 +220,11 @@ class KeyStreamService {
   Future<void> mapUpdatedLocationDataToWidget(
       LocationNotificationModel locationData,
       {bool shouldCheckForTimeChanges = false}) async {
+    /// so, that we don't add any expired event
+    if (isPastNotification(locationData)) {
+      return;
+    }
+
     String newLocationDataKeyId;
     if (locationData.key!.contains(MixedConstants.SHARE_LOCATION)) {
       newLocationDataKeyId =
@@ -229,8 +234,8 @@ class KeyStreamService {
           locationData.key!.split('requestlocation-')[1].split('@')[0];
     }
 
-    //// If we want to add any such notification that is not in the list, but we get a update
-    // var _locationDataNotPresent = true;
+    //// If we want to add any such notification that is not in the list, but we get an update
+    var _locationDataNotPresent = true;
 
     for (var i = 0; i < allLocationNotifications.length; i++) {
       if (allLocationNotifications[i]
@@ -238,13 +243,13 @@ class KeyStreamService {
           .key!
           .contains(newLocationDataKeyId)) {
         allLocationNotifications[i].locationNotificationModel = locationData;
-        // _locationDataNotPresent = false;
+        _locationDataNotPresent = false;
       }
     }
 
-    // if (_locationDataNotPresent) {
-    //   addDataToList(locationData);
-    // }
+    if (_locationDataNotPresent) {
+      addDataToList(locationData);
+    }
     notifyListeners();
 
     if (shouldCheckForTimeChanges) {
@@ -392,6 +397,27 @@ class KeyStreamService {
       _logger.severe('error in key_stream_service getAtValue:$e');
       return null;
     }
+  }
+
+  deleteData(LocationNotificationModel locationNotificationModel) async {
+    if (isPastNotification(locationNotificationModel)) {
+      notifyListeners();
+      return;
+    }
+
+    var key = locationNotificationModel.key!;
+    var keyKeyword = key.split('-')[0];
+    var atkeyMicrosecondId = key.split('-')[1].split('@')[0];
+    var response = await AtClientManager.getInstance().atClient.getKeys(
+          regex: '$keyKeyword-$atkeyMicrosecondId',
+        );
+    if (response.isEmpty) {
+      return;
+    }
+
+    var atkey = getAtKey(response[0]);
+    await AtClientManager.getInstance().atClient.delete(atkey);
+    removeData(key);
   }
 
   /// Returns updated list
