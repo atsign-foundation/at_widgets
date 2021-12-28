@@ -24,7 +24,9 @@ import 'package:at_utils/at_logger.dart';
 ///
 /// [showDialogBox] if false dialog box wont be shown.
 ///
-/// [streamAlternative] a function which will return updated lists of [KeyLocationModel]
+/// [streamAlternative] a function which will return updated lists of [KeyLocationModel].
+///
+/// [isEventInUse] to signify if the events package is used.
 Future<void> initializeLocationService(GlobalKey<NavigatorState> navKey,
     {required String mapKey,
     required String apiKey,
