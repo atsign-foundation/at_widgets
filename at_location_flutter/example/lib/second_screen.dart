@@ -8,11 +8,13 @@ import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/at_lookup.dart';
-import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
+  const SecondScreen({Key? key}) : super(key: key);
+
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
@@ -23,15 +25,15 @@ class _SecondScreenState extends State<SecondScreen> {
   String? activeAtSign, receiver;
   Stream<List<KeyLocationModel>?>? newStream;
   MapController mapController = MapController();
+
   /// Get the AtClientManager instance
   var atClientManager = AtClientManager.getInstance();
   @override
   void initState() {
     try {
       super.initState();
-    getAtSignAndInitializeLocation();
-    scaffoldKey = GlobalKey<ScaffoldState>();
-    
+      getAtSignAndInitializeLocation();
+      scaffoldKey = GlobalKey<ScaffoldState>();
     } catch (e) {
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         showDialog(
@@ -56,31 +58,31 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text('Second Screen'),
+        title: const Text('Second Screen'),
       ),
       body: Center(
         child: ListView(
           // mainAxisSize: MainAxisSize.min,
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           children: [
             Container(
-              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
                 'Welcome $activeAtSign!',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
             ElevatedButton(
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => HomeScreen(),
+                  builder: (BuildContext context) => const HomeScreen(),
                 ));
               },
-              child: Text('Show maps'),
+              child: const Text('Show maps'),
             ),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Type an @sign',
@@ -105,7 +107,7 @@ class _SecondScreenState extends State<SecondScreen> {
                     }
                     await sendShareLocationNotification(receiver!, 30);
                   },
-                  child: Text('Send Location '),
+                  child: const Text('Send Location '),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -116,11 +118,11 @@ class _SecondScreenState extends State<SecondScreen> {
                     }
                     await sendRequestLocationNotification(receiver!);
                   },
-                  child: Text('Request Location'),
+                  child: const Text('Request Location'),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             ElevatedButton(
@@ -140,7 +142,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   ),
                 ));
               },
-              child: Text('Track Location '),
+              child: const Text('Track Location '),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -152,18 +154,18 @@ class _SecondScreenState extends State<SecondScreen> {
                   ]),
                 ));
               },
-              child: Text('Show multiple points '),
+              child: const Text('Show multiple points '),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Center(
+            const Center(
               child: Text(
                 'Notifications:',
                 style: TextStyle(fontSize: 20),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
@@ -174,11 +176,11 @@ class _SecondScreenState extends State<SecondScreen> {
                       AsyncSnapshot<List<KeyLocationModel>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
                       if (snapshot.hasError) {
-                        return Text('error');
+                        return const Text('error');
                       } else {
                         return (snapshot.data?.isNotEmpty ?? false)
                             ? renderNotifications(snapshot.data!)
-                            : Text('No Data');
+                            : const Text('No Data');
                       }
                     } else {
                       if (KeyStreamService()
@@ -187,7 +189,7 @@ class _SecondScreenState extends State<SecondScreen> {
                         return renderNotifications(
                             KeyStreamService().allLocationNotifications);
                       }
-                      return Text('No Data');
+                      return const Text('No Data');
                     }
                   }),
             )
@@ -204,7 +206,7 @@ class _SecondScreenState extends State<SecondScreen> {
         padding: const EdgeInsets.all(14.0),
         child: Text(
           '${_data.indexOf(notification) + 1}. ${notification.locationNotificationModel!.key}',
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
           textAlign: TextAlign.left,
         ),
       );
@@ -224,14 +226,14 @@ class _SecondScreenState extends State<SecondScreen> {
 
   Widget alertDialogContent() {
     return AlertDialog(
-      title: Text('you are not authenticated.'),
+      title: const Text('you are not authenticated.'),
       actions: [
         TextButton(
           onPressed: () async {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
-          child: Text(
+          child: const Text(
             'Ok',
             style: TextStyle(color: Colors.black),
           ),
@@ -240,14 +242,14 @@ class _SecondScreenState extends State<SecondScreen> {
     );
   }
 
-  getAtSignAndInitializeLocation()
-  {
-       initializeLocationService(
-        NavService.navKey,
-        mapKey: '',
-        apiKey: '',
-        showDialogBox: true,
-      );
-      newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;
+  getAtSignAndInitializeLocation() {
+    activeAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
+    initializeLocationService(
+      NavService.navKey,
+      mapKey: '',
+      apiKey: '',
+      showDialogBox: true,
+    );
+    newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;
   }
 }

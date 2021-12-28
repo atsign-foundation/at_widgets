@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:example/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
@@ -10,6 +8,8 @@ import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:flutter_keychain/flutter_keychain.dart';
+
+import 'second_screen.dart';
 
 Future<void> main() async {
   await AtEnv.load();
@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
       // * The onboarding screen (first screen)
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('Plugin example app'),
+            title: const Text('at_location_flutter example app'),
           ),
           body: Builder(
             builder: (context) => Column(
@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
                           await Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SecondScreen()));
+                                  builder: (context) => const SecondScreen()));
                         },
                         onError: (error) async {
                           _logger.severe('Onboarding throws $error error');

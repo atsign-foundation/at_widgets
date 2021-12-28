@@ -1,4 +1,4 @@
-# example
+# at_location_flutter_example
 
 A new Flutter project.
 
