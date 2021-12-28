@@ -1,4 +1,4 @@
-# at_theme_flutter_example_app
+# at_theme_flutter_example
 
 In this example app we demo at_theme_flutter - A Flutter plugin project to provide theme selection in @‎platform apps with ease.
 

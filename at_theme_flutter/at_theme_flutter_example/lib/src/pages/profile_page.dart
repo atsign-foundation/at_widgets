@@ -1,6 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
-import 'package:at_theme_flutter/services/theme_service.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_theme_flutter/utils/init_theme_flutter.dart';
 import 'package:at_theme_flutter_example/src/utils/color_constants.dart';
@@ -26,7 +25,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
-  var atClientManager = AtClientManager.getInstance();
 
   @override
   void initState() {
@@ -47,6 +45,9 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     final appTheme = AppTheme.of(context);
+
+    /// Get the AtClientManager instance
+    var atClientManager = AtClientManager.getInstance();
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
