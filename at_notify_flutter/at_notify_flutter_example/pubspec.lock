@@ -42,7 +42,7 @@ packages:
       name: at_backupkey_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.1"
+    version: "3.1.2"
   at_base2e15:
     dependency: transitive
     description:
@@ -56,14 +56,14 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.6"
+    version: "3.0.7"
   at_client_mobile:
     dependency: transitive
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.2"
+    version: "3.1.3"
   at_commons:
     dependency: transitive
     description:
@@ -84,14 +84,14 @@ packages:
       name: at_onboarding_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.1"
+    version: "3.1.2"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.10"
+    version: "3.0.11"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -238,7 +238,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.7"
+    version: "4.3.0"
   file_saver:
     dependency: transitive
     description:
@@ -351,7 +351,7 @@ packages:
       name: hive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   http:
     dependency: transitive
     description:
@@ -442,7 +442,7 @@ packages:
       name: path_provider_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.9"
+    version: "2.0.11"
   path_provider_ios:
     dependency: transitive
     description:
@@ -456,7 +456,7 @@ packages:
       name: path_provider_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.2"
+    version: "2.1.4"
   path_provider_macos:
     dependency: transitive
     description:
@@ -713,7 +713,7 @@ packages:
       name: webview_flutter_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.0"
+    version: "2.8.2"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
@@ -734,7 +734,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.3"
   xdg_directories:
     dependency: transitive
     description:
