@@ -299,3 +299,13 @@ Map<String, dynamic> get monthsList => {
       '11': {'month': 'nov', 'days': 30, 'count': 11},
       '12': {'month': 'dec', 'days': 31, 'count': 12},
     };
+
+class EventInfo {
+  late bool isAccepted, isSharing, isExited;
+
+  EventInfo({
+    required this.isSharing,
+    required this.isExited,
+    required this.isAccepted,
+  });
+}

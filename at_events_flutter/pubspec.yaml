@@ -27,7 +27,9 @@ dependencies:
   at_location_flutter: ^3.0.1
   at_common_flutter: ^2.0.2
 
-
+dependency_overrides:
+  at_location_flutter:
+    path: ../at_location_flutter
 
 
 dev_dependencies:

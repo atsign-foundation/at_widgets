@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
@@ -6,14 +8,19 @@ import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
+import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'at_location_notification_listener.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_utils/at_logger.dart';
 
 class SharingLocationService {
   static final SharingLocationService _singleton =
       SharingLocationService._internal();
   SharingLocationService._internal();
+
+  final _logger = AtSignLogger('SharingLocationService');
 
   factory SharingLocationService() {
     return _singleton;
@@ -71,7 +78,8 @@ class SharingLocationService {
     try {
       var alreadyExists = checkForAlreadyExisting(atsign);
       var result;
-      if (alreadyExists[0]) {
+      if ((alreadyExists[0]) &&
+          (!KeyStreamService().isPastNotification(alreadyExists[1]))) {
         var newLocationNotificationModel = LocationNotificationModel.fromJson(
             jsonDecode(
                 LocationNotificationModel.convertLocationNotificationToJson(
@@ -125,25 +133,28 @@ class SharingLocationService {
         ..long = 12
         ..receiver = atsign
         ..from = DateTime.now()
+        ..isAccepted = true
+        ..isExited = false
+        ..isSharing = true
         ..isAcknowledgment = isAcknowledgment;
 
       if ((minutes != null)) {
         locationNotificationModel.to =
             DateTime.now().add(Duration(minutes: minutes));
       }
-      result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
-      print('sendLocationNotification:$result');
+      result = await NotifyAndPut().notifyAndPut(
+        atKey,
+        LocationNotificationModel.convertLocationNotificationToJson(
+            locationNotificationModel),
+      );
+      _logger.finer('sendLocationNotification:$result');
 
       if (result) {
         await KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
     } catch (e) {
-      print('sending share location failed $e');
+      _logger.severe('sending share location failed $e');
       return false;
     }
   }
@@ -165,12 +176,12 @@ class SharingLocationService {
       locationNotificationModel.isAccepted = isAccepted;
       locationNotificationModel.isExited = !isAccepted;
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
-      print('sendLocationNotificationAcknowledgment:$result');
+      var result = await NotifyAndPut().notifyAndPut(
+        atKey,
+        LocationNotificationModel.convertLocationNotificationToJson(
+            locationNotificationModel),
+      );
+      _logger.finer('sendLocationNotificationAcknowledgment:$result');
       if (result) {
         CustomToast().show('Request to update data is submitted',
             AtLocationNotificationListener().navKey.currentContext,
@@ -187,7 +198,7 @@ class SharingLocationService {
           AtLocationNotificationListener().navKey.currentContext,
           isError: true);
 
-      print('sending share awk failed $e');
+      _logger.severe('sending share awk failed $e');
       return false;
     }
   }
@@ -196,7 +207,8 @@ class SharingLocationService {
   Future<bool> updateWithShareLocationAcknowledge(
       LocationNotificationModel originalLocationNotificationModel,
       {bool? isSharing,
-      bool rePrompt = false}) async {
+      bool rePrompt = false,
+      bool shouldCheckForTimeChanges = false}) async {
     try {
       var locationNotificationModel = LocationNotificationModel.fromJson(
           jsonDecode(
@@ -213,6 +225,9 @@ class SharingLocationService {
               );
 
       var key = getAtKey(response[0]);
+
+      key.sharedBy = locationNotificationModel.atsignCreator;
+      key.sharedWith = locationNotificationModel.receiver;
 
       locationNotificationModel.isAcknowledgment = true;
       locationNotificationModel.rePrompt =
@@ -237,19 +252,26 @@ class SharingLocationService {
         key.metadata!.expiresAt = locationNotificationModel.to;
       }
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
-            key,
-            notification,
-          );
-      if (result) {
-        KeyStreamService()
-            .mapUpdatedLocationDataToWidget(locationNotificationModel);
-      }
+      if (shouldCheckForTimeChanges) {
+        var result = await NotifyAndPut().notifyAndPut(
+          key,
+          notification,
+        );
+        if (result) {
+          await KeyStreamService().mapUpdatedLocationDataToWidget(
+              locationNotificationModel,
+              shouldCheckForTimeChanges: shouldCheckForTimeChanges);
+        }
 
-      print('update result - $result');
-      return result;
+        _logger.finer('update result - $result');
+        return result;
+      } else {
+        await KeyStreamService()
+            .mapUpdatedLocationDataToWidget(locationNotificationModel);
+        return true;
+      }
     } catch (e) {
-      print('update share location failed $e');
+      _logger.severe('update share location failed $e');
 
       return false;
     }
@@ -288,16 +310,15 @@ class SharingLocationService {
 
       locationNotificationModel.isAcknowledgment = true;
 
-      var result =
-          await AtLocationNotificationListener().atClientInstance!.delete(
-                key,
-              );
+      var result = await AtClientManager.getInstance().atClient.delete(
+            key,
+          );
       if (result) {
         KeyStreamService().removeData(key.key);
       }
       return result;
     } catch (e) {
-      print('error in deleting key $e');
+      _logger.severe('error in deleting key $e');
       return false;
     }
   }
@@ -311,11 +332,10 @@ class SharingLocationService {
       if (!'@$key'.contains('cached')) {
         // the keys i have created
         var atKey = getAtKey(key);
-        var result =
-            await AtLocationNotificationListener().atClientInstance!.delete(
-                  atKey,
-                );
-        print('$key is deleted ? $result');
+        var result = await AtClientManager.getInstance().atClient.delete(
+              atKey,
+            );
+        _logger.finer('$key is deleted ? $result');
       }
     });
   }

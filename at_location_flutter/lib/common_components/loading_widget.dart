@@ -19,8 +19,7 @@ class LoadingDialog {
           .currentState!
           .push(CustomPopupRoutes(
               pageBuilder: (_, __, ___) {
-                print('building loader');
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               },
@@ -30,7 +29,6 @@ class LoadingDialog {
   }
 
   void hide() {
-    print('hide called');
     if (_showing) {
       AtLocationNotificationListener().navKey.currentState!.pop();
       _showing = false;

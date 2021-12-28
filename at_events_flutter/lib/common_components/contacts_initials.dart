@@ -11,7 +11,7 @@ import '../utils/colors.dart';
 class ContactInitial extends StatelessWidget {
   final double size;
   final String? initials;
-  int? index;
+  int? index, startIndex;
   final Color? backgroundColor;
   ContactInitial(
       {Key? key,
@@ -23,6 +23,12 @@ class ContactInitial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (initials![0] == '@') {
+      startIndex = 1;
+    } else {
+      startIndex = 0;
+    }
+
     if (initials!.length < 3) {
       index = initials!.length;
     } else {
@@ -38,12 +44,14 @@ class ContactInitial extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          initials!.substring((index == 1) ? 0 : 1, index).toUpperCase(),
+          initials!.substring(startIndex!, index).toUpperCase(),
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.toFont,
             fontWeight: FontWeight.w700,
           ),
+          overflow: TextOverflow.clip,
+          maxLines: 1,
         ),
       ),
     );

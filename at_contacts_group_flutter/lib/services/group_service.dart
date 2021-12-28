@@ -99,6 +99,8 @@ class GroupService {
 
   AtGroup? get currentSelectedGroup => selectedGroup;
 
+  int? expandIndex = 0;
+
   // ignore: always_declare_return_types
   setSelectedContacts(List<AtContact?>? list) {
     selecteContactList = list;
@@ -121,7 +123,7 @@ class GroupService {
     try {
       var group = await atContactImpl.createGroup(atGroup);
       if (group is AtGroup) {
-        await updateGroupStreams(group);
+        await updateGroupStreams(group, expandGroup: true);
         return group;
       }
     } catch (e) {
@@ -131,7 +133,11 @@ class GroupService {
   }
 
   // ignore: always_declare_return_types
-  getAllGroupsDetails() async {
+  getAllGroupsDetails({
+    int? expandIndex,
+    AtGroup? expandGroup,
+    bool addToGroupSink = true,
+  }) async {
     try {
       var groupIds = await atContactImpl.listGroupIds();
       var groupList = <AtGroup>[];
@@ -146,7 +152,21 @@ class GroupService {
         allContacts.add(
             GroupContactsModel(group: group, contactType: ContactsType.GROUP));
       });
-      atGroupSink.add(groupList);
+
+      if (expandIndex != null) {
+        this.expandIndex = expandIndex;
+      } else {
+        if (expandGroup != null) {
+          this.expandIndex = groupList
+              .indexWhere((element) => element.groupId == expandGroup.groupId);
+        } else {
+          this.expandIndex = 0;
+        }
+      }
+
+      if (addToGroupSink) {
+        atGroupSink.add(groupList);
+      }
     } catch (e) {
       print('error in getting group list: $e');
     }
@@ -179,7 +199,7 @@ class GroupService {
     try {
       var result = await atContactImpl.deleteMembers(Set.from(contacts), group);
       if (result is bool) {
-        await updateGroupStreams(group);
+        await updateGroupStreams(group, expandGroup: true);
         return result;
       }
     } catch (e) {
@@ -194,7 +214,7 @@ class GroupService {
     try {
       var result = await atContactImpl.addMembers(Set.from(contacts), group);
       if (result is bool) {
-        await updateGroupStreams(group);
+        await updateGroupStreams(group, expandGroup: true);
         return result;
       }
     } catch (e) {
@@ -204,11 +224,11 @@ class GroupService {
   }
 
   /// Function to update group details
-  Future<dynamic> updateGroup(AtGroup group) async {
+  Future<dynamic> updateGroup(AtGroup group, {int? expandIndex}) async {
     try {
       var updatedGroup = await atContactImpl.updateGroup(group);
       if (updatedGroup is AtGroup) {
-        updateGroupStreams(updatedGroup);
+        updateGroupStreams(updatedGroup, expandIndex: expandIndex);
         return updatedGroup;
       } else {
         return 'something went wrong';
@@ -220,10 +240,12 @@ class GroupService {
   }
 
   // ignore: always_declare_return_types
-  updateGroupStreams(AtGroup group) async {
+  updateGroupStreams(AtGroup group,
+      {int? expandIndex, bool expandGroup = false}) async {
     var groupDetail = await (getGroupDetail(group.groupId!));
     if (groupDetail is AtGroup) groupViewSink.add(groupDetail);
-    await getAllGroupsDetails();
+    await getAllGroupsDetails(
+        expandIndex: expandIndex, expandGroup: expandGroup ? group : null);
   }
 
   /// Function to delete a group
@@ -238,15 +260,20 @@ class GroupService {
     }
   }
 
-  Future<dynamic> updateGroupData(AtGroup group, BuildContext context) async {
+  Future<dynamic> updateGroupData(AtGroup group, BuildContext context,
+      {bool isDesktop = false, int? expandIndex}) async {
     try {
-      var result = await updateGroup(group);
-      if (result is AtGroup) {
-        Navigator.of(context).pop();
-      } else if (result == null) {
-        CustomToast().show(TextConstants().SERVICE_ERROR, context);
+      var result = await updateGroup(group, expandIndex: expandIndex);
+      if (isDesktop) {
+        return result;
       } else {
-        CustomToast().show(result.toString(), context);
+        if (result is AtGroup) {
+          Navigator.of(context).pop();
+        } else if (result == null) {
+          CustomToast().show(TextConstants().SERVICE_ERROR, context);
+        } else {
+          CustomToast().show(result.toString(), context);
+        }
       }
     } catch (e) {
       return e;
@@ -255,7 +282,7 @@ class GroupService {
 
   // fetches contacts using the contacts library and groups from itself
   // ignore: always_declare_return_types
-  fetchGroupsAndContacts() async {
+  fetchGroupsAndContacts({bool isDesktop = false}) async {
     try {
       allContacts = [];
       var contactList = await fetchContacts();
@@ -264,7 +291,7 @@ class GroupService {
         allContacts.add(GroupContactsModel(
             contact: contact, contactType: ContactsType.CONTACT));
       });
-      await getAllGroupsDetails();
+      await getAllGroupsDetails(addToGroupSink: !isDesktop);
       // print('ALL CONTACTS====>${allContacts[8]}');
       _allContactsStreamController.add(allContacts);
     } catch (e) {

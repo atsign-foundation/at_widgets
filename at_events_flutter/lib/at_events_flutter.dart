@@ -9,4 +9,3 @@ export 'services/event_services.dart';
 export 'services/home_event_service.dart';
 export 'services/event_key_stream_service.dart';
 export 'utils/init_events_service.dart';
-export 'services/event_location_share.dart';

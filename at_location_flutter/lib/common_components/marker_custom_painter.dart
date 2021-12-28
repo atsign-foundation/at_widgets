@@ -48,7 +48,7 @@ class RPSCustomPainter extends CustomPainter {
     path.close();
 
     var paint = Paint()..style = PaintingStyle.fill;
-    paint.color = Color(0xfffc7a30).withOpacity(1.0);
+    paint.color = const Color(0xfffc7a30).withOpacity(1.0);
     canvas.drawPath(path, paint);
   }
 

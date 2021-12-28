@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 class ShareLocationSheet extends StatefulWidget {
   final Function? onTap;
-  ShareLocationSheet({this.onTap});
+  const ShareLocationSheet({Key? key, this.onTap}) : super(key: key);
   @override
   _ShareLocationSheetState createState() => _ShareLocationSheetState();
 }
@@ -31,7 +31,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
   Widget build(BuildContext context) {
     return Container(
       height: SizeConfig().screenHeight * 0.5,
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(25),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,11 +43,11 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               PopButton(label: 'Cancel')
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           Text('Share with', style: CustomTextStyles().greyLabel14),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           CustomInputField(
             width: 330.toWidth,
             height: 50,
@@ -62,24 +62,24 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
             icon: Icons.contacts_rounded,
             onTap: widget.onTap,
           ),
-          SizedBox(height: 25),
+          const SizedBox(height: 25),
           Text(
             'Duration',
             style: CustomTextStyles().greyLabel14,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             color: AllColors().INPUT_GREY_BACKGROUND,
             width: 330.toWidth,
-            padding: EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10),
             child: DropdownButton(
               isExpanded: true,
-              icon: Icon(Icons.keyboard_arrow_down),
-              underline: SizedBox(),
+              icon: const Icon(Icons.keyboard_arrow_down),
+              underline: const SizedBox(),
               elevation: 0,
               dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
               value: selectedOption,
-              hint: Text('Occurs on'),
+              hint: const Text('Occurs on'),
               items: ['30 mins', '2 hours', '24 hours', 'Until turned off']
                   .map((String option) {
                 return DropdownMenuItem<String>(
@@ -95,10 +95,10 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               },
             ),
           ),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
           Center(
             child: isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : CustomButton(
                     buttonText: 'Share',
                     onPressed: onShareTap,

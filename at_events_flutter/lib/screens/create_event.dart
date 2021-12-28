@@ -49,12 +49,13 @@ class _CreateEventState extends State<CreateEvent> {
         // ignore: prefer_if_null_operators
         widget.eventData != null ? widget.eventData : null);
     if (widget.createdEvents != null) {
-      EventService().createdEvents = widget.createdEvents;
+      EventService().createdEvents = widget.createdEvents ?? [];
     } else {
-      EventService().createdEvents = EventKeyStreamService()
-          .allEventNotifications
-          .map((e) => e.eventNotificationModel!)
-          .toList();
+      EventKeyStreamService().allEventNotifications.forEach((element) {
+        if (element.eventNotificationModel != null) {
+          EventService().createdEvents.add(element.eventNotificationModel!);
+        }
+      });
     }
 
     if (widget.onEventSaved != null) {

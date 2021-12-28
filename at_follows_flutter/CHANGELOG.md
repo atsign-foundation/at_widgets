@@ -1,3 +1,5 @@
+## 3.0.4
+- updated dependencies and documentation
 ## 3.0.3
 - upgraded to latest dependencies 
 - Fixes for follows screen bugs

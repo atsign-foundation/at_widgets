@@ -5,6 +5,7 @@ import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -13,23 +14,32 @@ import 'package:latlong2/latlong.dart';
 import 'at_location_notification_listener.dart';
 import 'distance_calculate.dart';
 import 'my_location.dart';
+import 'package:at_utils/at_logger.dart';
 
 class LocationService {
   LocationService._();
   static final LocationService _instance = LocationService._();
   factory LocationService() => _instance;
 
+  final _logger = AtSignLogger('LocationService');
+
   List<String?>? atsignsToTrack;
 
   AtClientImpl? atClientInstance;
 
-  HybridModel? eventData;
+  HybridModel? centreMarker;
   HybridModel? myData;
   LatLng? etaFrom;
   String? textForCenter;
   bool? calculateETA, addCurrentUserMarker, isMapInitialized = false;
   Function? showToast;
   StreamSubscription<Position>? myLocationStream;
+  DateTime? refreshAt;
+  Future<dynamic>? refreshTimer;
+  String? uniqueID; // used to differentiate between different calls
+
+  String?
+      notificationID; // needed to track details of a specific notification (event/p2p)
 
   List<HybridModel?> hybridUsersList = [];
 
@@ -40,13 +50,19 @@ class LocationService {
   StreamSink<List<HybridModel?>> get atHybridUsersSink =>
       _atHybridUsersController.sink as StreamSink<List<HybridModel?>>;
 
-  void init(List<String?>? atsignsToTrackFromApp,
-      {LatLng? etaFrom,
-      bool? calculateETA,
-      bool? addCurrentUserMarker,
-      String? textForCenter,
-      Function? showToast}) async {
+  //// the centre LatLng is getting added more than once
+  void init(
+    List<String?>? atsignsToTrackFromApp, {
+    LatLng? etaFrom,
+    bool? calculateETA,
+    bool? addCurrentUserMarker,
+    String? textForCenter,
+    Function? showToast,
+    String? notificationID,
+    DateTime? refreshAt,
+  }) async {
     hybridUsersList = [];
+    centreMarker = null;
     _atHybridUsersController = StreamController<List<HybridModel?>>.broadcast();
     atsignsToTrack = atsignsToTrackFromApp;
     this.etaFrom = etaFrom;
@@ -54,6 +70,8 @@ class LocationService {
     this.addCurrentUserMarker = addCurrentUserMarker;
     this.textForCenter = textForCenter;
     this.showToast = showToast;
+    this.notificationID = notificationID;
+    this.refreshAt = refreshAt;
 
     // ignore: unawaited_futures
     if (myLocationStream != null) myLocationStream!.cancel();
@@ -62,15 +80,34 @@ class LocationService {
     await addMyDetailsToHybridUsersList();
 
     updateHybridList();
+
+    uniqueID = DateTime.now().millisecondsSinceEpoch.toString();
+    refreshUpdateHybridList(uniqueID);
   }
 
   void dispose() {
+    centreMarker = null;
     _atHybridUsersController.close();
     isMapInitialized = false;
+    refreshTimer = null;
+    uniqueID = null;
   }
 
   void mapInitialized() {
     isMapInitialized = true;
+  }
+
+  /// will call updateHybridList after [refreshAt] time
+  refreshUpdateHybridList(String? _uniqueID) async {
+    if ((refreshAt != null) && (refreshAt!.isAfter(DateTime.now()))) {
+      refreshTimer =
+          await Future.delayed(refreshAt!.difference(DateTime.now()));
+
+      if (_uniqueID == uniqueID) {
+        /// if disposed, [uniqueID] will be null
+        updateHybridList();
+      }
+    }
   }
 
   Future addMyDetailsToHybridUsersList() async {
@@ -107,7 +144,7 @@ class LocationService {
 
   void updateMyLatLng(HybridModel _myData) async {
     if (etaFrom != null) {
-      _myData.eta = await (_calculateEta(_myData) as FutureOr<String?>);
+      _myData.eta = await _calculateEta(_myData);
     }
 
     _myData.marker = buildMarker(_myData, singleMarker: true);
@@ -125,44 +162,52 @@ class LocationService {
       hybridUsersList[_index] = myData;
     }
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (!_atHybridUsersController.isClosed) {
-        _atHybridUsersController.add(hybridUsersList);
-      }
-    });
+    if (!_atHybridUsersController.isClosed) {
+      _atHybridUsersController.add(hybridUsersList);
+    }
   }
 
   void addCentreMarker() {
-    var centreMarker = HybridModel(
+    centreMarker = HybridModel(
         displayName: textForCenter, latLng: etaFrom, eta: '', image: null);
-    centreMarker.marker = buildMarker(centreMarker);
+    centreMarker!.marker = buildMarker(centreMarker!);
+    hybridUsersList.add(centreMarker);
 
-    Future.delayed(
-        const Duration(seconds: 2), () => hybridUsersList.add(centreMarker));
+    if (hybridUsersList.isNotEmpty) {
+      if (!_atHybridUsersController.isClosed) {
+        _atHybridUsersController.add(hybridUsersList);
+      }
+    }
   }
 
   /// called for the first time pckage is entered from main app
   void updateHybridList() async {
-    await Future.forEach(MasterLocationService().allReceivedUsersList!,
-        (dynamic user) async {
-      if (atsignsToTrack!.contains(user.displayName)) await updateDetails(user);
+    await Future.forEach(atsignsToTrack ?? [], (dynamic _atsign) async {
+      var _user =
+          MasterLocationService().getHybridModel(_atsign, id: notificationID);
+      if (_user != null) {
+        await updateDetails(_user);
+      }
     });
 
     if (hybridUsersList.isNotEmpty) {
-      Future.delayed(const Duration(seconds: 2),
-          () => _atHybridUsersController.add(hybridUsersList));
+      if (!_atHybridUsersController.isClosed) {
+        _atHybridUsersController.add(hybridUsersList);
+      }
     }
   }
 
   /// called when any new/updated data is received in the main app
-  void newList() async {
-    if (atsignsToTrack != null) {
-      await Future.forEach(MasterLocationService().allReceivedUsersList!,
-          (dynamic user) async {
-        if (atsignsToTrack!.contains(user.displayName)) {
-          await updateDetails(user);
-        }
-      });
+  void newList(String _updatedAtsign) async {
+    if ((atsignsToTrack != null) &&
+        ((atsignsToTrack ?? []).contains(_updatedAtsign))) {
+      var _user = MasterLocationService()
+          .getHybridModel(_updatedAtsign, id: notificationID);
+      if (_user != null) {
+        await updateDetails(_user);
+      } else {
+        removeUser(_updatedAtsign);
+      }
 
       if (!_atHybridUsersController.isClosed) {
         _atHybridUsersController.add(hybridUsersList);
@@ -173,7 +218,8 @@ class LocationService {
   /// called when a user stops sharing his location
   void removeUser(String? atsign) {
     if ((atsignsToTrack != null) && (hybridUsersList.isNotEmpty)) {
-      hybridUsersList.removeWhere((element) => element!.displayName == atsign);
+      hybridUsersList.removeWhere(
+          (element) => compareAtSign(element!.displayName!, atsign!));
       if (!_atHybridUsersController.isClosed) {
         _atHybridUsersController.add(hybridUsersList);
       }
@@ -184,12 +230,17 @@ class LocationService {
   Future<void> updateDetails(HybridModel user) async {
     var contains = false;
     int? index;
-    hybridUsersList.forEach((hybridUser) {
+    for (var hybridUser in hybridUsersList) {
       if (hybridUser!.displayName == user.displayName) {
         contains = true;
         index = hybridUsersList.indexOf(hybridUser);
       }
-    });
+    }
+    if (user.latLng == null) {
+      _logger.finer('${user.displayName} user.latLng = null');
+      return;
+    }
+
     if (contains) {
       await addDetails(user, index: index);
     } else {
@@ -207,29 +258,27 @@ class LocationService {
         if ((index < hybridUsersList.length)) hybridUsersList[index] = user;
       } else {
         var _continue = true;
-        hybridUsersList.forEach((hybridUser) {
+        for (var hybridUser in hybridUsersList) {
           if (hybridUser!.displayName == user.displayName) {
             hybridUser = user;
             _continue = false;
             return;
           }
-        });
+        }
         if (_continue) {
           hybridUsersList.add(user);
-          if (showToast != null) {
-            showToast!('${user.displayName} started sharing their location');
-          }
         }
       }
     } catch (e) {
-      print(e);
+      _logger.severe(e);
       if (showToast != null) showToast!('Something went wrong', isError: true);
     }
   }
 
-  Future _calculateEta(HybridModel user) async {
+  Future<String> _calculateEta(HybridModel user) async {
     if (calculateETA!) {
       try {
+        // ignore: prefer_typing_uninitialized_variables
         var _res;
         if (etaFrom != null) {
           _res = await DistanceCalculate().calculateETA(etaFrom!, user.latLng!);
@@ -246,7 +295,7 @@ class LocationService {
 
         return _res;
       } catch (e) {
-        print('Error in _calculateEta $e');
+        _logger.severe('Error in _calculateEta $e');
         return '?';
       }
     } else {

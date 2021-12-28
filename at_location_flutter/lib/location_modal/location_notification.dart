@@ -30,6 +30,7 @@ class LocationNotificationModel {
   DateTime? from, to;
   AtContact? atContact;
   LocationNotificationModel({
+    this.key,
     this.lat,
     this.long,
     this.atsignCreator,
@@ -106,4 +107,14 @@ class LocationNotificationModel {
     });
     return notification;
   }
+}
+
+class LocationInfo {
+  late bool isAccepted, isSharing, isExited;
+
+  LocationInfo({
+    required this.isSharing,
+    required this.isExited,
+    required this.isAccepted,
+  });
 }

@@ -1,19 +1,28 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 
 import 'package:at_commons/at_commons.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
+import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 
 import 'at_location_notification_listener.dart';
 import 'key_stream_service.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
+
+import 'send_location_notification.dart';
+import 'package:at_utils/at_logger.dart';
 
 class RequestLocationService {
   static final RequestLocationService _singleton =
       RequestLocationService._internal();
   RequestLocationService._internal();
+  final _logger = AtSignLogger('RequestLocationService');
 
   factory RequestLocationService() {
     return _singleton;
@@ -56,13 +65,34 @@ class RequestLocationService {
     return false;
   }
 
+  Future<void> sendRequestLocationToGroup(
+      List<AtContact> selectedContacts) async {
+    await Future.forEach(selectedContacts, (AtContact selectedContact) async {
+      var _state = await sendRequestLocationEvent(
+        selectedContact.atSign!,
+      );
+      if (_state == true) {
+        CustomToast().show(
+            'Location Request sent to ${selectedContact.atSign!}',
+            AtLocationNotificationListener().navKey.currentContext!,
+            isSuccess: true);
+      } else if (_state == false) {
+        CustomToast().show(
+            'Something went wrong for ${selectedContact.atSign!}',
+            AtLocationNotificationListener().navKey.currentContext!,
+            isError: true);
+      }
+    });
+  }
+
   /// Sends a 'requestlocation' key to [atsign].
   Future<bool?> sendRequestLocationEvent(String? atsign) async {
     try {
       var alreadyExists = checkForAlreadyExisting(atsign);
       var result;
 
-      if (alreadyExists[0]) {
+      if ((alreadyExists[0]) &&
+          (!KeyStreamService().isPastNotification(alreadyExists[1]))) {
         var newLocationNotificationModel = LocationNotificationModel.fromJson(
             jsonDecode(
                 LocationNotificationModel.convertLocationNotificationToJson(
@@ -111,29 +141,34 @@ class RequestLocationService {
         return null;
       }
 
+      var minutes = 24 * 60; // for a day
+
       var atKey = newAtKey(60000,
-          'requestlocation-${DateTime.now().microsecondsSinceEpoch}', atsign);
+          'requestlocation-${DateTime.now().microsecondsSinceEpoch}', atsign,
+          ttl: (minutes * 60000));
 
       var locationNotificationModel = LocationNotificationModel()
         ..atsignCreator = atsign
         ..key = atKey.key
         ..isRequest = true
+        ..isSharing = true
         ..receiver = AtLocationNotificationListener()
             .atClientInstance!
             .getCurrentAtSign();
 
-      result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
-      print('requestLocationNotification:$result');
+      result = await NotifyAndPut().notifyAndPut(
+        atKey,
+        LocationNotificationModel.convertLocationNotificationToJson(
+            locationNotificationModel),
+      );
+      _logger.finer('requestLocationNotification:$result');
 
       if (result) {
         await KeyStreamService().addDataToList(locationNotificationModel);
       }
       return result;
     } catch (e) {
+      _logger.finer('error in requestLocationNotification: $e');
       return false;
     }
   }
@@ -143,7 +178,8 @@ class RequestLocationService {
   Future<bool> requestLocationAcknowledgment(
       LocationNotificationModel originalLocationNotificationModel,
       bool isAccepted,
-      {int? minutes,
+      {bool sendAck = false,
+      int? minutes,
       bool? isSharing}) async {
     try {
       var locationNotificationModel = LocationNotificationModel.fromJson(
@@ -176,35 +212,32 @@ class RequestLocationService {
             DateTime.now().add(Duration(minutes: minutes));
       }
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
-      print('requestLocationAcknowledgment $result');
+      bool? result;
 
-      if (result) {
-        CustomToast().show('Request to update data is submitted',
-            AtLocationNotificationListener().navKey.currentContext,
-            isSuccess: true);
+      if (sendAck) {
+        result = await NotifyAndPut().notifyAndPut(
+          atKey,
+          LocationNotificationModel.convertLocationNotificationToJson(
+              locationNotificationModel),
+        );
+        _logger.finer('requestLocationAcknowledgment $result');
+      }
 
-        KeyStreamService().updatePendingStatus(locationNotificationModel);
-      } else {
+      if (result == false) {
         CustomToast().show('Something went wrong , please try again.',
             AtLocationNotificationListener().navKey.currentContext!,
             isError: true);
+      } else {
+        await KeyStreamService()
+            .mapUpdatedLocationDataToWidget(locationNotificationModel);
       }
 
-      if ((isSharing != null) && (result) && (!isSharing)) {
-        KeyStreamService().removeData(atKey.key);
-      }
-
-      return result;
+      return result ?? true;
     } catch (e) {
       CustomToast().show('Something went wrong , please try again.',
           AtLocationNotificationListener().navKey.currentContext,
           isError: true);
-      print('Error in requestLocationAcknowledgment $e');
+      _logger.severe('Error in requestLocationAcknowledgment $e');
       return false;
     }
   }
@@ -231,6 +264,10 @@ class RequestLocationService {
 
       var key = getAtKey(response[0]);
 
+      /// in received location [atsignCreator] & [receiver] are interchanged
+      key.sharedBy = locationNotificationModel.receiver;
+      key.sharedWith = locationNotificationModel.atsignCreator;
+
       if ((locationNotificationModel.isAccepted) &&
           (locationNotificationModel.from != null) &&
           (locationNotificationModel.to != null)) {
@@ -252,17 +289,31 @@ class RequestLocationService {
           LocationNotificationModel.convertLocationNotificationToJson(
               locationNotificationModel);
       var result;
-      result = await AtLocationNotificationListener().atClientInstance!.put(
-            key,
-            notification,
-          );
+      result = await NotifyAndPut().notifyAndPut(
+        key,
+        notification,
+      );
 
       if (result) {
-        KeyStreamService()
-            .mapUpdatedLocationDataToWidget(locationNotificationModel);
+        /// only update
+        for (var i = 0;
+            i < KeyStreamService().allLocationNotifications.length;
+            i++) {
+          if (KeyStreamService()
+              .allLocationNotifications[i]
+              .locationNotificationModel!
+              .key!
+              .contains(atkeyMicrosecondId)) {
+            KeyStreamService()
+                .allLocationNotifications[i]
+                .locationNotificationModel = locationNotificationModel;
+            // _locationDataNotPresent = false;
+          }
+        }
+        KeyStreamService().notifyListeners();
       }
 
-      print('update result - $result');
+      _logger.finer('update result - $result');
 
       return result;
     } catch (e) {
@@ -284,16 +335,25 @@ class RequestLocationService {
         locationNotificationModel.receiver,
       );
 
-      var result = await AtLocationNotificationListener().atClientInstance!.put(
-            atKey,
-            LocationNotificationModel.convertLocationNotificationToJson(
-                locationNotificationModel),
-          );
-      print('sendDeleteAck $result');
-      if (result) {}
+      var result = await NotifyAndPut().notifyAndPut(
+        atKey,
+        LocationNotificationModel.convertLocationNotificationToJson(
+            locationNotificationModel),
+      );
+
+      /// Update our location key
+      _logger.finer('sendDeleteAck $result');
+      if (result) {
+        await SendLocationNotification().removeMember(
+            trimAtsignsFromKey(locationNotificationModel.key!),
+            [locationNotificationModel.receiver!],
+            isExited: true,
+            isAccepted: false,
+            isSharing: false);
+      }
       return result;
     } catch (e) {
-      print('sendDeleteAck error $e');
+      _logger.severe('sendDeleteAck error $e');
       return false;
     }
   }
@@ -314,11 +374,10 @@ class RequestLocationService {
 
     locationNotificationModel.isAcknowledgment = true;
 
-    var result =
-        await AtLocationNotificationListener().atClientInstance!.delete(
-              key,
-            );
-    print('$key delete operation $result');
+    var result = await AtClientManager.getInstance().atClient.delete(
+          key,
+        );
+    _logger.finer('$key delete operation $result');
 
     if (result) {
       KeyStreamService().removeData(key.key);

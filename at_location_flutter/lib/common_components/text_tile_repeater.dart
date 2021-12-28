@@ -8,7 +8,8 @@ class TextTileRepeater extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final List<String>? options;
 
-  TextTileRepeater({this.title, this.options, this.onChanged});
+  const TextTileRepeater({Key? key, this.title, this.options, this.onChanged})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +21,11 @@ class TextTileRepeater extends StatelessWidget {
         children: <Widget>[
           title != null
               ? Text(title!, style: CustomTextStyles().grey16)
-              : SizedBox(),
+              : const SizedBox(),
           Expanded(
             child: ListView.separated(
               separatorBuilder: (context, index) {
-                return Divider();
+                return const Divider();
               },
               itemCount: options!.length,
               itemBuilder: (context, index) {

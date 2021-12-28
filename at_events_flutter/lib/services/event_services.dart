@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
@@ -6,26 +8,28 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_events_flutter/common_components/concurrent_event_request_dialog.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
-// import 'package:at_events_flutter/services/sync_secondary.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
 import 'event_key_stream_service.dart';
+import 'package:at_utils/at_logger.dart';
 
 class EventService {
   EventService._();
   // ignore: prefer_final_fields
   static EventService _instance = EventService._();
   factory EventService() => _instance;
+  final _logger = AtSignLogger('EventService');
+
   bool isEventUpdate = false;
 
   EventNotificationModel? eventNotificationModel;
   late AtClientManager atClientManager;
   List<AtContact>? selectedContacts = [];
   List<String?> selectedContactsAtSigns = [];
-  List<EventNotificationModel>? createdEvents;
+  List<EventNotificationModel> createdEvents = [];
   Function? onEventSaved;
 
   // ignore: close_sinks
@@ -50,11 +54,11 @@ class EventService {
       eventNotificationModel!.event = Event();
       eventNotificationModel!.group = AtGroup('');
       selectedContacts = [];
+      selectedContactsAtSigns = [];
     }
     isEventUpdate = isUpdate;
-    print('isEventUpdate:$isEventUpdate');
     atClientManager = AtClientManager.getInstance();
-    Future.delayed(Duration(milliseconds: 50), () {
+    Future.delayed(const Duration(milliseconds: 50), () {
       eventSink.add(eventNotificationModel);
     });
   }
@@ -86,11 +90,22 @@ class EventService {
 
   Future<dynamic> editEvent() async {
     try {
-      var atKey = getAtKey(eventNotificationModel!.key!);
+      var key = eventNotificationModel!.key!;
+      var keyKeyword = key.split('-')[0];
+      var atkeyMicrosecondId = key.split('-')[1].split('@')[0];
+      var response = await AtClientManager.getInstance().atClient.getKeys(
+            regex: '$keyKeyword-$atkeyMicrosecondId',
+          );
+      if (response.isEmpty) {
+        return 'notification key not found';
+      }
+
+      var atKey = getAtKey(response[0]);
       var allAtsignList = <String?>[];
-      EventService().eventNotificationModel!.group!.members!.forEach((element) {
+      for (var element
+          in EventService().eventNotificationModel!.group!.members!) {
         allAtsignList.add(element.atSign);
-      });
+      }
 
       var eventData = EventNotificationModel.convertEventNotificationToJson(
           EventService().eventNotificationModel!);
@@ -123,26 +138,23 @@ class EventService {
   sendEventNotification() async {
     try {
       var eventNotification = eventNotificationModel!;
-      eventNotification.isUpdate = false;
-      eventNotification.isSharing = true;
 
-      eventNotification.key =
-          'createevent-${DateTime.now().microsecondsSinceEpoch}';
       eventNotification.atsignCreator =
           atClientManager.atClient.getCurrentAtSign();
-      var notification = EventNotificationModel.convertEventNotificationToJson(
-          EventService().eventNotificationModel!);
-
-      print('shared contact atsigns:$selectedContactsAtSigns');
 
       var atKey = AtKey()
         ..metadata = Metadata()
         ..metadata!.ttr = -1
         ..metadata!.ccd = true
-        ..key = eventNotification.key
+        ..key = 'createevent-${DateTime.now().microsecondsSinceEpoch}'
         ..sharedBy = eventNotification.atsignCreator;
 
-      print('key: ${atKey.key}');
+      eventNotification.isUpdate = false;
+      eventNotification.isSharing = true;
+      eventNotification.key = atKey.key;
+
+      var notification = EventNotificationModel.convertEventNotificationToJson(
+          EventService().eventNotificationModel!);
 
       var putResult = await atClientManager.atClient.put(
         atKey,
@@ -160,7 +172,7 @@ class EventService {
 
       /// Dont need to sync as notifyAll is called
 
-      await EventKeyStreamService().addDataToList(eventNotificationModel!);
+      EventKeyStreamService().addDataToList(eventNotificationModel!);
 
       eventNotificationModel = eventNotification;
       if (onEventSaved != null) {
@@ -168,7 +180,7 @@ class EventService {
       }
       return putResult;
     } catch (e) {
-      print('error in SendEventNotification $e');
+      _logger.severe('error in SendEventNotification $e');
       return e.toString();
     }
   }
@@ -193,11 +205,13 @@ class EventService {
       EventService().eventNotificationModel!.group!.members = {};
     }
 
+    // ignore: avoid_function_literals_in_foreach_calls
     selectedList.forEach((element) {
       if (element!.contact != null) {
         var newContact = getGroupMemberContact(element.contact!);
         addContactToList(newContact);
       } else if (element.group != null) {
+        // ignore: avoid_function_literals_in_foreach_calls
         element.group!.members!.forEach((groupMember) {
           var newContact = getGroupMemberContact(groupMember);
 
@@ -211,6 +225,7 @@ class EventService {
     var _containsContact = false;
 
     // to prevent one contact from getting added again
+    // ignore: avoid_function_literals_in_foreach_calls
     EventService().selectedContacts!.forEach((_contact) {
       if (_selectedContact.atSign == _contact.atSign) {
         _containsContact = true;
@@ -231,6 +246,7 @@ class EventService {
   // ignore: always_declare_return_types
   createContactListFromGroupMembers() {
     selectedContacts = [];
+    selectedContactsAtSigns = [];
     for (var contact
         in EventService().eventNotificationModel!.group!.members!) {
       selectedContacts!.add(contact);
@@ -264,23 +280,29 @@ class EventService {
 
   bool? showConcurrentEventDialog(List<EventNotificationModel>? createdEvents,
       EventNotificationModel? newEvent, BuildContext context) {
-    // ignore: prefer_is_empty
-    if (!isEventUpdate && createdEvents != null && createdEvents.length > 0) {
-      var isOverlapData =
-          isEventTimeSlotOverlap(createdEvents, eventNotificationModel);
-      if (isOverlapData[0]) {
-        showDialog<void>(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return ConcurrentEventRequest(concurrentEvent: isOverlapData[1]);
-            });
+    try {
+      // ignore: prefer_is_empty
+      if (!isEventUpdate && createdEvents != null && createdEvents.length > 0) {
+        var isOverlapData =
+            isEventTimeSlotOverlap(createdEvents, eventNotificationModel);
+        if (isOverlapData[0]) {
+          showDialog<void>(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return ConcurrentEventRequest(
+                    concurrentEvent: isOverlapData[1]);
+              });
 
-        return isOverlapData[0];
+          return isOverlapData[0];
+        } else {
+          return isOverlapData[0];
+        }
       } else {
-        return isOverlapData[0];
+        return false;
       }
-    } else {
+    } catch (e) {
+      _logger.severe('Error in showConcurrentEventDialog $e');
       return false;
     }
   }
