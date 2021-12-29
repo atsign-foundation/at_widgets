@@ -77,10 +77,10 @@ class _SecondScreenState extends State<SecondScreen> {
               bottomSheet(CreateEvent(atClientManager),
                   MediaQuery.of(context).size.height * 0.9);
             },
-            child: Container(
+            child: const SizedBox(
               height: 40,
-              child: const Text('Create event',
-                  style: TextStyle(color: Colors.black)),
+              child:
+                  Text('Create event', style: TextStyle(color: Colors.black)),
             ),
           ),
           const SizedBox(
@@ -164,14 +164,14 @@ class _SecondScreenState extends State<SecondScreen> {
 
   Widget alertDialogContent() {
     return AlertDialog(
-      title: Text('you are not authenticated'),
+      title: const Text('you are not authenticated'),
       actions: [
         TextButton(
           onPressed: () async {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
-          child: Text('Ok', style: TextStyle(color: Colors.black)),
+          child: const Text('Ok', style: TextStyle(color: Colors.black)),
         ),
       ],
     );
