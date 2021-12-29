@@ -1,9 +1,8 @@
 import 'package:at_events_flutter/at_events_flutter.dart';
-import 'package:at_events_flutter/utils/constants.dart';
-import 'package:at_events_flutter_example/main.dart';
-import 'package:at_events_flutter_example/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+
+import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -13,7 +12,6 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  // ClientSdkService clientSdkService = ClientSdkService.getInstance();
   String? activeAtSign;
   GlobalKey<ScaffoldState>? scaffoldKey;
   bool? isAuthenticated;
@@ -29,12 +27,10 @@ class _SecondScreenState extends State<SecondScreen> {
 
     try {
       activeAtSign = atClientManager.atClient.getCurrentAtSign();
-      atClientManager.setCurrentAtSign(activeAtSign!, atClientPreference.namespace, atClientPreference);
       initializeEventService();
       isAuthenticated = true;
     } catch (e) {
       isAuthenticated = false;
-      print('not authenticated');
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         showDialog(
           context: context,
@@ -54,27 +50,26 @@ class _SecondScreenState extends State<SecondScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text('Second Screen')),
+      appBar: AppBar(title: const Text('Second Screen')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           Container(
-            padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+            padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
             child: Center(
               child: Text(
                 'Welcome $activeAtSign!',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           TextButton(
@@ -84,11 +79,11 @@ class _SecondScreenState extends State<SecondScreen> {
             },
             child: Container(
               height: 40,
-              child:
-                  Text('Create event', style: TextStyle(color: Colors.black)),
+              child: const Text('Create event',
+                  style: TextStyle(color: Colors.black)),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           Expanded(
@@ -125,7 +120,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) {
-                  return Divider(
+                  return const Divider(
                     color: Colors.grey,
                   );
                 },
@@ -140,7 +135,7 @@ class _SecondScreenState extends State<SecondScreen> {
     initialiseEventService(NavService.navKey,
         mapKey: '',
         apiKey: '',
-        rootDomain: MixedConstants.ROOT_DOMAIN,
+        rootDomain: 'root.atsign.org',
         streamAlternative: updateEvents);
   }
 
@@ -151,15 +146,15 @@ class _SecondScreenState extends State<SecondScreen> {
     await showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
-        shape: StadiumBorder(),
+        shape: const StadiumBorder(),
         builder: (BuildContext context) {
           return Container(
             height: height,
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(12.0),
-                topRight: const Radius.circular(12.0),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12.0),
+                topRight: Radius.circular(12.0),
               ),
             ),
             child: T,
