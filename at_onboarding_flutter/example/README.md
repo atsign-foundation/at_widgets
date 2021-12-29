@@ -1,6 +1,6 @@
-# at_onboarding_flutter_example
+# example
 
-Demonstrates how to use the at_onboarding_flutter plugin.
+A new Flutter project.
 
 ## Getting Started
 

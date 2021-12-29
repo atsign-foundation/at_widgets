@@ -1,17 +1,17 @@
-import 'package:at_onboarding_flutter_example/utils/app_constants.dart';
-import 'package:at_onboarding_flutter_example/dashboard.dart';
-import 'package:at_onboarding_flutter_example/services/at_service.dart';
+import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_utils/at_logger.dart' show AtSignLogger;
 
 import 'package:flutter/material.dart';
 
 import 'contact_initial.dart';
+import 'main.dart';
 
 class AtSignBottomSheet extends StatefulWidget {
   final List<String> atSignList;
   final Function? showLoader;
-  AtSignBottomSheet(
+  const AtSignBottomSheet(
       {Key key = const Key('atsign'),
       this.atSignList = const [],
       this.showLoader})
@@ -22,15 +22,15 @@ class AtSignBottomSheet extends StatefulWidget {
 }
 
 class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
-  AtService atService = AtService.getInstance();
+//  var atClientManager = AtClientManager.getInstance();
   bool isLoading = false;
   var atClientPreferenceLocal;
+  final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    atService
-        .getAtClientPreference()
-        .then((value) => atClientPreferenceLocal = value);
+    loadAtClientPreference().then((value) => atClientPreferenceLocal = value);
     return Stack(
       children: [
         Positioned(
@@ -39,7 +39,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
             onClosing: () {},
             backgroundColor: Colors.transparent,
             builder: (context) => ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               child: Container(
                 height: 100,
@@ -64,27 +64,22 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                   context: context,
                                   atsign: widget.atSignList[index],
                                   // This domain parameter is optional.
-                                  domain: AppConstants.rootDomain,
+                                  domain: AtEnv.rootDomain,
                                   atClientPreference: atClientPreferenceLocal,
                                   appColor:
                                       const Color.fromARGB(255, 240, 94, 62),
-                                  onboard: (Map<String?, AtClientService> value,
-                                      String? atsign) {
-                                    AtService.getInstance().atClientServiceMap =
-                                        value;
-                                    if (atsign != null) {
-                                      AtService.getInstance()
-                                          .makeAtsignPrimary(atsign);
-                                    }
-                                    print('Successfully onboarded $atsign');
+                                  onboard: (value, atsign) {
+                                    _logger.finer(
+                                        'Successfully onboarded $atsign');
                                   },
                                   onError: (Object? error) {
-                                    print('Onboarding throws $error error');
+                                    _logger.severe(
+                                        'Onboarding throws $error error');
                                   },
                                   rootEnvironment: RootEnvironment.Staging,
                                   // API Key is mandatory for production environment.
                                   // appAPIKey: YOUR_API_KEY_HERE
-                                  nextScreen: const DashBoard(),
+                                  nextScreen: const HomeScreen(),
                                 );
 
                                 if (mounted) {
@@ -94,8 +89,8 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                 }
                               },
                         child: Padding(
-                          padding:
-                              EdgeInsets.only(left: 10, right: 10, top: 20),
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, top: 20),
                           child: Column(
                             children: [
                               ContactInitial(
@@ -107,7 +102,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         ),
                       ),
                     )),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     GestureDetector(
@@ -119,24 +114,19 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                           context: context,
                           atsign: '',
                           // This domain parameter is optional.
-                          domain: AppConstants.rootDomain,
+                          domain: AtEnv.rootDomain,
                           atClientPreference: atClientPreferenceLocal,
                           appColor: const Color.fromARGB(255, 240, 94, 62),
-                          onboard: (Map<String?, AtClientService> value,
-                              String? atsign) {
-                            AtService.getInstance().atClientServiceMap = value;
-                            if (atsign != null) {
-                              AtService.getInstance().makeAtsignPrimary(atsign);
-                            }
-                            print('Successfully onboarded $atsign');
+                          onboard: (value, atsign) {
+                            _logger.finer('Successfully onboarded $atsign');
                           },
                           onError: (Object? error) {
-                            print('Onboarding throws $error error');
+                            _logger.severe('Onboarding throws $error error');
                           },
                           rootEnvironment: RootEnvironment.Staging,
                           // API Key is mandatory for production environment.
                           // appAPIKey: YOUR_API_KEY_HERE
-                          nextScreen: const DashBoard(),
+                          nextScreen: const HomeScreen(),
                         );
 
                         if (mounted) {
@@ -149,7 +139,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         margin: EdgeInsets.only(right: 10),
                         height: 40,
                         width: 40,
-                        child: Icon(
+                        child: const Icon(
                           Icons.add_circle_outline_outlined,
                           color: Colors.orange,
                         ),
@@ -181,7 +171,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                   ],
                 ),
               )
-            : SizedBox(
+            : const SizedBox(
                 height: 100,
               ),
       ],
