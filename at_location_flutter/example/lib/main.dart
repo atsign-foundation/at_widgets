@@ -118,9 +118,15 @@ class _MyAppState extends State<MyApp> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.black12),
                         ),
-                        onPressed: () {
-                          FlutterKeychain.remove(key: '@atsign');
-                          print('after delete');
+                        onPressed: () async {
+                          var _atsignsList = await KeychainUtil.getAtsignList();
+                          for (String atsign in (_atsignsList ?? [])) {
+                            await KeychainUtil.resetAtSignFromKeychain(atsign);
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Cleared all paired atsigns')));
                         },
                         child: const Text('Clear paired atsigns',
                             style: TextStyle(color: Colors.black)))),

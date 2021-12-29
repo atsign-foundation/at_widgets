@@ -122,6 +122,9 @@ class _MyAppState extends State<MyApp> {
                       for (String atsign in (_atsignsList ?? [])) {
                         await KeychainUtil.resetAtSignFromKeychain(atsign);
                       }
+
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Cleared all paired atsigns')));
                     },
                     child: const Text('Clear paired atsigns',
                         style: TextStyle(color: Colors.black)),
