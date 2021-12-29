@@ -441,15 +441,15 @@ class EventService {
     return atKey;
   }
 
-  Future<bool> checkAtsign(String receiver) async {
+  Future<bool> checkAtsign(String receiver,
+      {String root = 'root.atsign.org'}) async {
     // ignore: unnecessary_null_comparison
     if (receiver == null) {
       return false;
     } else if (!receiver.contains('@')) {
       receiver = '@' + receiver;
     }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        receiver, MixedConstants.ROOT_DOMAIN, 64);
+    var checkPresence = await AtLookupImpl.findSecondary(receiver, root, 64);
     return checkPresence != null;
   }
 }

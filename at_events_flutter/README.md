@@ -1,14 +1,16 @@
-<img src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
 ### Now for some internet optimism.
 
-[![pub package](https://img.shields.io/pub/v/at_events_flutter)](https://pub.dev/packages/at_events_flutter) [![pub points](https://badges.bar/at_events_flutter/pub%20points)](https://pub.dev/packages/at_events_flutter/score) [![build status](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml/badge.svg?branch=trunk)](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+[![pub package](https://img.shields.io/pub/v/at_events_flutter)](https://pub.dev/packages/at_events_flutter) [![pub points](https://badges.bar/at_events_flutter/pub%20points)](https://pub.dev/packages/at_events_flutter/score)
+ <!-- [![build status](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml/badge.svg?branch=trunk)](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml)  -->
+[![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 # at_events_flutter
 
 ## Introduction
 
-A flutter plugin project to manage events.
+A flutter plugin project to manage events between atsigns.
 
 ## Get Started:
 
@@ -40,49 +42,44 @@ Initially to get a basic overview of the SDK, you must read the [atsign docs](ht
  Feel free to fork a copy of the source from the [GitHub Repo](https://github.com/atsign-foundation/at_widgets)
 
 ### Initialising:
-It is expected that the app will first create an AtClientService instance and authenticate an atsign.
+It is expected that the app will first authenticate an atsign using the Onboarding widget.
 
-The event service needs to be initialised with the `atClient` from the `AtClientService` and the root server.
+The event service needs to be initialised with a required GlobalKey<NavigatorState> parameter for
+navigation purpose, the rest being optional parameters.
 
 ```
-initialiseEventService(
-  clientSdkService.atClientServiceInstance.atClient,
-  NavService.navKey,
-  rootDomain: MixedConstants.ROOT_DOMAIN,
-  mapKey: 'xxxx',
-  apiKey: 'xxxx');
+  initialiseEventService(
+    navKey,
+    mapKey: 'xxxx',
+    apiKey: 'xxxx',
+    rootDomain: 'root.atsign.org',
+    streamAlternative: (__){},
+    initLocation: true,
+  );
 ```
+
+at_events_flutter depends on at_location_flutter for the following features:
+ - Sending/receiving location, make sure to initialise at_location_flutter inside/outside the at_events_flutter package, if location sharing is needed.
+ - To render the map, pass [mapKey] to [initializeLocationService], if map is needed.
+ - To calculate the ETA, pass [apiKey] to [initializeLocationService], if ETA is needed.
 
 ### Usage
-To create a new event:
+To create a new event, using the default screen:
 ```
-await showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    shape: StadiumBorder(),
-    builder: (BuildContext context) {
-      return Container(
-        height: height,
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(12.0),
-            topRight: const Radius.circular(12.0),
-          ),
-        ),
-        child: CreateEvent(),
-      );
-    });
+  CreateEvent(
+    AtClientManager.getInstance(),
+  ),
 ```
 
-Navigating to the events list is done simply by using:
+To use event creation/edit functions, use the [EventService()] singleton, 
+make sure to call [EventService().init()] before using these functions:
+- createEvent() - Can create and edit based on [isEventUpdate] passed to [init()]
+- editEvent() - Will update the already created event
+- sendEventNotification() - Will create a new event
+
+Navigating to the map screen for an event:
 ```
-Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EventList(),
-      ),
-    );
+EventsMapScreenData().moveToEventScreen(eventNotificationModel);
 ```
 
 ### Steps to get mapKey

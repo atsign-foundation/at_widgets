@@ -22,6 +22,10 @@ import 'package:flutter/cupertino.dart';
 /// [initLocation] pass this as false if location package is initialised outside, so it is not initialised more than once.
 ///
 /// [streamAlternative] a function which will return updated lists of [EventKeyLocationModel]
+///
+/// [initLocation] if true, then location service will be initialised by the events package
+/// if it is already initialsed outside this package, then pass [false],
+/// make sure to not initialise the location package more than once.
 Future<void> initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
     {required String mapKey,
     required String apiKey,
