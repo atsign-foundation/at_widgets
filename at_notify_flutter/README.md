@@ -2,7 +2,8 @@
 
 ### Now for some internet optimism.
 
-[![pub package](https://img.shields.io/pub/v/at_notify_flutter)](https://pub.dev/packages/at_notify_flutter) [![pub points](https://badges.bar/at_notify_flutter/pub%20points)](https://pub.dev/packages/at_notify_flutter/score) [![build status](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml/badge.svg?branch=trunk)](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+[![pub package](https://img.shields.io/pub/v/at_notify_flutter)](https://pub.dev/packages/at_notify_flutter) [![pub points](https://badges.bar/at_notify_flutter/pub%20points)](https://pub.dev/packages/at_notify_flutter/score)
+[![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 # at_notify_flutter
 
@@ -40,27 +41,39 @@ Initially to get a basic overview of the SDK, you must read the [atsign docs](ht
  Feel free to fork a copy of the source from the [GitHub Repo](https://github.com/atsign-foundation/at_widgets)
 
 ### Initialising
-The notify service needs to be initialised. It is expected that the app will first create an AtClientService instance using the preferences and then use it to initialise the notify service.
+It is expected that the app will first authenticate an atsign using the Onboarding widget.
+
+The notify service needs to be initialised with a required atClientManager, 
+currentAtSign & atClientPreference.
 
 ```
 initializeNotifyService(
-      clientSdkService.atClientServiceInstance!.atClientManager,
-      activeAtSign!,
-      clientSdkService.atClientPreference,
-      rootDomain: MixedConstants.ROOT_DOMAIN,
+      atClientManager,
+      activeAtSign,
+      atClientPreference,
     );
 ```
 
 ### Usage
 
-Call notify
+To notify an atsign with a message:
 ```
-notify(
-   context,
-   'activeAtSign',
-   'toAtSign',
-   'message',
-);
+notifyText(
+      context,
+      currentAtsign,
+      receiver,
+      message,
+    )
+```
+
+To see a list of past notifications:
+```
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+        builder: (context) =>
+            NotifyScreen(notifyService: NotifyService())),
+  );
 ```
 
 ## Example

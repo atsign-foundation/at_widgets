@@ -70,6 +70,13 @@ class _SecondScreenState extends State<SecondScreen> {
                   height: 16.0,
                 ),
                 TextButton(
+                  onPressed: _sendMessage,
+                  child: Text(
+                    'Notify Text',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                TextButton(
                   onPressed: () async {
                     Navigator.push(
                       context,
@@ -80,13 +87,6 @@ class _SecondScreenState extends State<SecondScreen> {
                   },
                   child: Text(
                     'Get past notifications',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                TextButton(
-                  onPressed: _sendMessage,
-                  child: Text(
-                    'Notify Text',
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
