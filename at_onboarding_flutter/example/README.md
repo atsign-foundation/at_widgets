@@ -1,7 +1,7 @@
 
 <img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
-## at_ onboardiing_flutter example
+## at_ onboarding_flutter example
 The at_onboarding_flutter package is designed to make it easy to onboard one or multiple @sign in a flutter app and also comes with the following features:
 - Supports Generate free @sign.
 - Supports multiple @sign onboarding.
