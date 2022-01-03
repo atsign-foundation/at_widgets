@@ -168,10 +168,9 @@ class SDKService {
     return status.status();
   }
 
-  ///Performs sync for current @sign if syncStrategy is [SyncStrategy.ONDEMAND].
+  ///Performs sync for current @sign
   sync() async {
-    if (AtClientManager.getInstance().atClient.getPreferences()!.syncStrategy ==
-        SyncStrategy.ONDEMAND) AtClientManager.getInstance().syncService.sync();
+    AtClientManager.getInstance().syncService.sync();
   }
 
   ///Throws [ResponseTimeOutException].

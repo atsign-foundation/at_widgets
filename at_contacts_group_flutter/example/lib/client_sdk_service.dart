@@ -30,7 +30,6 @@ class ClientSdkService {
 
     atClientPreference.isLocalStoreRequired = true;
     atClientPreference.commitLogPath = path;
-    atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
     atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
     var result = await atClientServiceInstance!

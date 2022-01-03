@@ -1,3 +1,5 @@
+## 3.1.2
+- **FIX**: Removed deprecated sync strategy reference
 ## 3.1.1
 - **FIX**: Added file location picker for desktop platforms to save backup keys
 
