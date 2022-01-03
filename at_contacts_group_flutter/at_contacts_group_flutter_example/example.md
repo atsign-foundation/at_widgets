@@ -61,4 +61,9 @@ In this example app we demo at_contacts_group_flutter - A Flutter plugin project
     /// ... ///
   }
   ```
-## Screens
+
+### Sample Usage
+
+Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) => GroupList(),
+    ));

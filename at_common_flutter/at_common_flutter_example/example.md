@@ -23,6 +23,5 @@ In this example app we demo at_common_flutter - A Flutter package to provide com
   flutter run
   ```
 
-## Example app screen
 
-<img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_common_flutter/example/example_app.png"  width="200" height="400" />
+

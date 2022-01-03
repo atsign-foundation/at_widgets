@@ -61,3 +61,15 @@ In this example app we demo at_theme_flutter - A Flutter plugin project to provi
     /// ... ///
   }
   ```
+
+### Sample Usage
+
+To get saved theme
+```dart
+AppTheme? appTheme = await getThemeData();
+```
+
+To use custom theme
+```dart
+var appTheme = AppTheme.from();
+var result = await setAppTheme(appTheme);

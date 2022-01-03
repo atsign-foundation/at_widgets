@@ -62,16 +62,42 @@ In this example app we demo at_chat_flutter - A Flutter plugin project to provid
     /// ... ///
   }
   ```
+  
+### Sample Usage
 
-## Example app screen
+As a bottom sheet
+```
+FlatButton(
+    onPressed: () {
+        scaffoldKey.currentState
+        .showBottomSheet((context) => ChatScreen());
+    },
+    child: Container(
+        height: 40,
+        child: Text('Open chat in bottom sheet'),
+    ),
+),
+```
 
-<table>
-<tr>
-<td><img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_chat_flutter/example/onboarding_screen.png"  width="210" height="440" /></td>
+As a screen
+```
+class ThirdScreen extends StatefulWidget {
+  @override
+  _ThirdScreenState createState() => _ThirdScreenState();
+}
 
-<td><img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_chat_flutter/example/chat_screen.png"  width="210" height="440" /></td>
-<td><img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_chat_flutter/example/chat_options.png"  width="210" height="440" /></td>
-<td><img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_chat_flutter/example/chat_bottomsheet.png"  width="210" height="440" /></td>
-<td><img src="https://github.com/atsign-foundation/at_widgets/blob/feat/documentation/at_chat_flutter/example/chat_screen_private.png"  width="210" height="440" /></td>
-</tr>
-</table>
+class _ThirdScreenState extends State<ThirdScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Chat Screen')),
+      body: ChatScreen(
+        height: MediaQuery.of(context).size.height,
+        incomingMessageColor: Colors.blue[100],
+        outgoingMessageColor: Colors.green[100],
+        isScreen: true,
+      ),
+    );
+  }
+}
+```
