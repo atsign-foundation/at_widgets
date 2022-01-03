@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/common_components/bottom_sheet.dart';
@@ -15,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:at_location_flutter/common_components/confirmation_dialog.dart';
 import 'participants.dart';
 
+// ignore: must_be_immutable
 class EventsCollapsedContent extends StatefulWidget {
   late EventNotificationModel eventListenerKeyword;
   late bool static; // true when no clicks should work
@@ -53,9 +56,9 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
 
     return Container(
       height: 431,
-      padding: EdgeInsets.fromLTRB(15, 3, 15, 0),
+      padding: const EdgeInsets.fromLTRB(15, 3, 15, 0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
         color: AllColors().WHITE,
         boxShadow: [
@@ -63,7 +66,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
             color: AllColors().DARK_GREY,
             blurRadius: 10.0,
             spreadRadius: 1.0,
-            offset: Offset(0.0, 0.0),
+            offset: const Offset(0.0, 0.0),
           )
         ],
       ),
@@ -72,8 +75,8 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            DraggableSymbol(),
-            SizedBox(height: 3),
+            const DraggableSymbol(),
+            const SizedBox(height: 3),
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +119,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                                 ],
                               ),
                             )
-                          : SizedBox()
+                          : const SizedBox()
                     ],
                   ),
                   Text(
@@ -125,7 +128,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   Text(
@@ -134,7 +137,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   Text(
@@ -143,7 +146,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Divider(),
+                  const Divider(),
                   DisplayTile(
                     title:
                         '${eventListenerKeyword.atsignCreator} and ${eventListenerKeyword.group!.members!.length} more',
@@ -172,7 +175,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                 style: CustomTextStyles().orange14,
               ),
             ),
-            Divider(),
+            const Divider(),
             Flexible(
                 child: RichText(
               text: TextSpan(
@@ -186,7 +189,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                 ],
               ),
             )),
-            widget.static ? const SizedBox() : Divider(),
+            widget.static ? const SizedBox() : const Divider(),
             widget.static
                 ? const SizedBox()
                 : Row(
@@ -197,7 +200,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                         style: CustomTextStyles().darkGrey16,
                       ),
                       Switch(
-                          value: isSharingEvent!,
+                          value: isSharingEvent,
                           onChanged: (value) async {
                             if (isCancelled || isExited) {
                               CustomToast().show(
@@ -246,7 +249,6 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                               setState(() {});
                               LoadingDialog().hide();
                             } catch (e) {
-                              print(e);
                               CustomToast().show(
                                   'Something went wrong , please try again.',
                                   AtEventNotificationListener()
@@ -258,9 +260,9 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                           })
                     ],
                   ),
-            widget.static ? const SizedBox() : Divider(),
+            widget.static ? const SizedBox() : const Divider(),
             (widget.static || isAdmin)
-                ? SizedBox()
+                ? const SizedBox()
                 : Expanded(
                     child: InkWell(
                       onTap: () async {
@@ -281,12 +283,12 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                         }
                       },
                       child: Text(
-                        isExited! ? 'Exited' : 'Exit Event',
+                        isExited ? 'Exited' : 'Exit Event',
                         style: CustomTextStyles().orange16,
                       ),
                     ),
                   ),
-            (widget.static || isAdmin) ? SizedBox() : Divider(),
+            (widget.static || isAdmin) ? const SizedBox() : const Divider(),
             (!widget.static && isAdmin)
                 ? Expanded(
                     child: InkWell(
@@ -303,7 +305,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                       ),
                     ),
                   )
-                : SizedBox()
+                : const SizedBox()
             //   ],
             // ),
           ]),
@@ -331,7 +333,6 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       LoadingDialog().hide();
       Navigator.of(AtEventNotificationListener().navKey!.currentContext!).pop();
     } catch (e) {
-      print(e);
       CustomToast().show('Something went wrong , please try again.',
           AtEventNotificationListener().navKey!.currentContext,
           isError: true);
@@ -345,7 +346,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
     try {
       var result = await EventKeyStreamService().actionOnEvent(
         eventListenerKeyword,
-        isAdmin!
+        isAdmin
             ? ATKEY_TYPE_ENUM.CREATEEVENT
             : ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
         isExited: true,
@@ -362,7 +363,6 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       LoadingDialog().hide();
       Navigator.of(AtEventNotificationListener().navKey!.currentContext!).pop();
     } catch (e) {
-      print(e);
       CustomToast().show('Something went wrong , please try again.',
           AtEventNotificationListener().navKey!.currentContext,
           isError: true);
@@ -370,18 +370,3 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
     }
   }
 }
-
-// Widget eventsCollapsedContent(EventNotificationModel eventListenerKeyword) {
-//   bool? isExited = false;
-//   bool? isSharingEvent = false, isAdmin = false;
-//   var currentAtSign = AtEventNotificationListener().currentAtSign;
-//   isAdmin = eventListenerKeyword.atsignCreator == currentAtSign;
-
-//   var _myEventInfo =
-//       HomeEventService().getMyEventInfo(eventListenerKeyword.key!);
-//   isSharingEvent = _myEventInfo!.isSharing;
-//   isExited = _myEventInfo.isExited;
-
-//   /// TODO: remove extra columns
-
-// }

@@ -29,9 +29,9 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
       },
       child: Container(
         height: (isExpanded) ? 300.toHeight : 55,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color(0xffF7F7FF),
+          color: const Color(0xffF7F7FF),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Stack(
@@ -55,7 +55,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                     child: Container(
                       height: 28.toHeight,
                       width: 28.toHeight,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
                       child: (widget.selectedList![index].tags != null &&
                               widget.selectedList![index].tags!['image'] !=
                                   null)
@@ -84,11 +84,11 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Container(
+                            SizedBox(
                               width: 160.toWidth,
                               child: Row(
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: 60.toWidth,
                                     child: Text(
                                       '${widget.selectedList![0].atSign}',
@@ -97,6 +97,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
+                                  // ignore: avoid_unnecessary_containers
                                   Container(
                                     // width: 100.toWidth,
                                     child: Text(
@@ -130,7 +131,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
             Positioned(
               top: 10.toHeight,
               right: 0,
-              child: Container(
+              child: SizedBox(
                 width: 20.toWidth,
                 child: Icon(
                   (isExpanded)
@@ -143,7 +144,7 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
             (isExpanded)
                 ? Positioned(
                     top: 50.toHeight,
-                    child: Container(
+                    child: SizedBox(
                       height: 200.toHeight,
                       width: SizeConfig().screenWidth - 60.toWidth,
                       child: ListView.builder(

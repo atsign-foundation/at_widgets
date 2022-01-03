@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
 // ignore: import_of_legacy_library_into_null_safe

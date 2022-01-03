@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
@@ -7,7 +9,7 @@ import 'package:at_contacts_group_flutter/screens/group_contact_view/group_conta
 import 'package:at_events_flutter/common_components/bottom_sheet.dart';
 import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/common_components/error_screen.dart';
-import 'package:at_events_flutter/common_components/overlapping-contacts.dart';
+import 'package:at_events_flutter/common_components/overlapping_contacts.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/one_day_event.dart';
 import 'package:at_events_flutter/common_components/custom_heading.dart';
@@ -24,12 +26,15 @@ class CreateEvent extends StatefulWidget {
   final EventNotificationModel? eventData;
   final ValueChanged<EventNotificationModel>? onEventSaved;
   final List<EventNotificationModel>? createdEvents;
+  // ignore: prefer_typing_uninitialized_variables
   final isUpdate;
-  CreateEvent(this.atClientManager,
-      {this.isUpdate = false,
+  const CreateEvent(this.atClientManager,
+      {Key? key,
+      this.isUpdate = false,
       this.eventData,
       this.onEventSaved,
-      this.createdEvents});
+      this.createdEvents})
+      : super(key: key);
   @override
   _CreateEventState createState() => _CreateEventState();
 }
@@ -68,9 +73,9 @@ class _CreateEventState extends State<CreateEvent> {
     SizeConfig().init(context);
     return Container(
       height: SizeConfig().screenHeight,
-      padding: EdgeInsets.fromLTRB(25, 25, 25, 10),
+      padding: const EdgeInsets.fromLTRB(25, 25, 25, 10),
       child: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: SizeConfig().screenHeight * 0.85,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -88,14 +93,15 @@ class _CreateEventState extends State<CreateEvent> {
                               snapshot.data as EventNotificationModel?;
 
                           if (eventData != null && snapshot.hasData) {
+                            // ignore: avoid_unnecessary_containers
                             return Container(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  CustomHeading(
+                                  const CustomHeading(
                                       heading: 'Create an event',
                                       action: 'Cancel'),
-                                  SizedBox(height: 25),
+                                  const SizedBox(height: 25),
                                   Text('Send To',
                                       style: CustomTextStyles().greyLabel14),
                                   SizedBox(height: 6.toHeight),
@@ -131,7 +137,7 @@ class _CreateEventState extends State<CreateEvent> {
                                       );
                                     },
                                   ),
-                                  SizedBox(height: 25),
+                                  const SizedBox(height: 25),
                                   (EventService().selectedContacts != null &&
                                           // ignore: prefer_is_empty
                                           EventService()
@@ -141,15 +147,15 @@ class _CreateEventState extends State<CreateEvent> {
                                       ? (OverlappingContacts(
                                           selectedList:
                                               EventService().selectedContacts))
-                                      : SizedBox(),
+                                      : const SizedBox(),
                                   (EventService().selectedContacts != null &&
                                           // ignore: prefer_is_empty
                                           EventService()
                                                   .selectedContacts!
                                                   .length >
                                               0)
-                                      ? SizedBox(height: 25)
-                                      : SizedBox(),
+                                      ? const SizedBox(height: 25)
+                                      : const SizedBox(),
                                   Text(
                                     'Title',
                                     style: CustomTextStyles().greyLabel14,
@@ -170,7 +176,7 @@ class _CreateEventState extends State<CreateEvent> {
                                           .title = val;
                                     },
                                   ),
-                                  SizedBox(height: 25),
+                                  const SizedBox(height: 25),
                                   Text('Add Venue',
                                       style: CustomTextStyles().greyLabel14),
                                   SizedBox(height: 6.toHeight),
@@ -184,10 +190,10 @@ class _CreateEventState extends State<CreateEvent> {
                                         : '',
                                     onTap: () => bottomSheet(
                                         context,
-                                        SelectLocation(),
+                                        const SelectLocation(),
                                         SizeConfig().screenHeight * 0.9),
                                   ),
-                                  SizedBox(height: 25),
+                                  const SizedBox(height: 25),
                                   Row(
                                     children: <Widget>[
                                       Expanded(
@@ -195,7 +201,7 @@ class _CreateEventState extends State<CreateEvent> {
                                           onTap: () {
                                             bottomSheet(
                                                 context,
-                                                OneDayEvent(),
+                                                const OneDayEvent(),
                                                 SizeConfig().screenHeight *
                                                     0.9);
                                           },
@@ -218,7 +224,9 @@ class _CreateEventState extends State<CreateEvent> {
                                             ? true
                                             : false,
                                         onChanged: (value) {
-                                          bottomSheet(context, OneDayEvent(),
+                                          bottomSheet(
+                                              context,
+                                              const OneDayEvent(),
                                               SizeConfig().screenHeight * 0.9);
                                         },
                                       )
@@ -265,8 +273,8 @@ class _CreateEventState extends State<CreateEvent> {
                                               style: CustomTextStyles()
                                                   .greyLabel12,
                                             )
-                                          : SizedBox()
-                                      : SizedBox(),
+                                          : const SizedBox()
+                                      : const SizedBox(),
                                   SizedBox(height: 20.toHeight),
                                   (EventService()
                                                   .eventNotificationModel!
@@ -278,6 +286,7 @@ class _CreateEventState extends State<CreateEvent> {
                                                   .event!
                                                   .isRecurring ==
                                               true)
+                                      // ignore: avoid_unnecessary_containers
                                       ? Container(
                                           child: Column(
                                             crossAxisAlignment:
@@ -301,7 +310,7 @@ class _CreateEventState extends State<CreateEvent> {
                                                               null)
                                                       ? Text(
                                                           'Repeats every ${eventData.event!.repeatDuration} week on ${getWeekString(eventData.event!.occursOn)}')
-                                                      : SizedBox(),
+                                                      : const SizedBox(),
                                               EventService()
                                                               .eventNotificationModel!
                                                               .event!
@@ -314,11 +323,11 @@ class _CreateEventState extends State<CreateEvent> {
                                                           EndsOn.AFTER
                                                   ? Text(
                                                       'Ends after ${eventData.event!.endEventAfterOccurance} occurrence')
-                                                  : SizedBox(),
+                                                  : const SizedBox(),
                                             ],
                                           ),
                                         )
-                                      : SizedBox(),
+                                      : const SizedBox(),
                                 ],
                               ),
                             );
@@ -337,7 +346,7 @@ class _CreateEventState extends State<CreateEvent> {
                               ),
                             );
                           } else {
-                            return SizedBox();
+                            return const SizedBox();
                           }
                         }),
                   ],
@@ -345,7 +354,7 @@ class _CreateEventState extends State<CreateEvent> {
               )),
               Center(
                 child: isLoading
-                    ? CircularProgressIndicator()
+                    ? const CircularProgressIndicator()
                     : CustomButton(
                         buttonText:
                             widget.isUpdate ? 'Save' : 'Create & Invite',

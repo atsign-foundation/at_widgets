@@ -1,6 +1,6 @@
-import 'dart:convert';
+// ignore_for_file: avoid_print
 
-import 'package:at_client_mobile/at_client_mobile.dart';
+import 'dart:convert';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -46,7 +46,7 @@ Future<void> initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
 
   /// To have eta in events
   AtLocationFlutterPlugin(
-    [],
+    const [],
     calculateETA: true,
   );
 

@@ -62,8 +62,8 @@ class _ParticipantsState extends State<Participants> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            DraggableSymbol(),
-            CustomHeading(heading: 'Participants', action: 'Close'),
+            const DraggableSymbol(),
+            const CustomHeading(heading: 'Participants', action: 'Close'),
             SizedBox(
               height: 10.toHeight,
             ),

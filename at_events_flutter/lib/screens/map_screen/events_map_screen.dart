@@ -1,21 +1,16 @@
+// ignore_for_file: prefer_const_constructors, invalid_use_of_visible_for_testing_member, avoid_function_literals_in_foreach_calls
+
 import 'dart:async';
-import 'dart:typed_data';
 // import 'package:at_chat_flutter/at_chat_flutter.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/common_components/floating_icon.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
-import 'package:at_events_flutter/utils/colors.dart';
-import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/common_components/build_marker.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
-import 'package:at_location_flutter/service/distance_calculate.dart';
-import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
@@ -54,7 +49,6 @@ class EventsMapScreenData {
     // _hybridModelList.forEach((element) {
     //   markers.add(element);
     // });
-    // ignore: invalid_use_of_visible_for_testing_member
     // ignore: invalid_use_of_protected_member
     eventNotifier!.notifyListeners();
   }
@@ -89,7 +83,6 @@ class EventsMapScreenData {
   Future<void> _updateEventdataFromList(
       List<EventKeyLocationModel> _list) async {
     count++;
-    print('count++ $count');
     if (eventNotifier != null) {
       for (var i = 0; i < _list.length; i++) {
         if (_list[i].eventNotificationModel!.key == eventNotifier!.value!.key) {
@@ -107,12 +100,10 @@ class EventsMapScreenData {
           // });
 
           eventNotifier!.value = _list[i].eventNotificationModel;
-          // ignore: invalid_use_of_visible_for_testing_member
           // ignore: invalid_use_of_protected_member
           eventNotifier!.notifyListeners();
 
           count--;
-          print('count-- $count');
           break;
         }
       }
@@ -129,70 +120,6 @@ class EventsMapScreenData {
     return _eventHybridModel;
   }
 
-  // Future<List<HybridModel>> _calculateHybridModelList(
-  //     EventNotificationModel _event) async {
-  //   var _tempMarkersList = <HybridModel>[];
-
-  //   /// Event creator
-  //   if (_event.lat != null && _event.long != null) {
-  //     var user = HybridModel(
-  //         displayName: _event.atsignCreator,
-  //         latLng: LatLng(_event.lat!, _event.long!),
-  //         eta: '?',
-  //         image: null);
-  //     user.eta = await _calculateEta(
-  //         user, LatLng(_event.venue!.latitude!, _event.venue!.longitude!));
-  //     user.image = await (_imageOfAtsign(_event.atsignCreator!));
-  //     user.marker = buildMarker(user);
-  //     _tempMarkersList.add(user);
-  //   }
-
-  //   /// Event members
-  //   await Future.forEach(_event.group!.members!, (AtContact element) async {
-  //     // print(
-  //     //     '${element.atSign}, ${element.tags['lat']}, ${element.tags['long']}');
-
-  //     var _user = MasterLocationService()
-  //         .getHybridModel(element.atSign!, id: _event.key);
-
-  //     if (_user != null) {
-  //       // var _user = _hybridModel;
-  //       _user.eta = await _calculateEta(
-  //           _user, LatLng(_event.venue!.latitude!, _event.venue!.longitude!));
-
-  //       _user.image = await (_imageOfAtsign(element.atSign!));
-  //       _user.marker = buildMarker(_user);
-
-  //       _tempMarkersList.add(_user);
-  //     }
-  //   });
-
-  //   return _tempMarkersList;
-  // }
-
-  Future<String> _calculateEta(HybridModel user, LatLng etaFrom) async {
-    try {
-      var _res = await DistanceCalculate().calculateETA(etaFrom, user.latLng!);
-      return _res;
-    } catch (e) {
-      print('Error in _calculateEta $e');
-      return '?';
-    }
-  }
-
-  Future<dynamic> _imageOfAtsign(String _atsign) async {
-    var contact = await getAtSignDetails(_atsign);
-    // ignore: unnecessary_null_comparison
-    if (contact != null) {
-      if (contact.tags != null && contact.tags!['image'] != null) {
-        List<int> intList = contact.tags!['image'].cast<int>();
-        return Uint8List.fromList(intList);
-      }
-    }
-
-    return null;
-  }
-
   // ignore: always_declare_return_types
   _initChat(EventNotificationModel _event) async {
     await _getAtSignAndInitializeChat();
@@ -200,11 +127,7 @@ class EventsMapScreenData {
   }
 
   // ignore: always_declare_return_types
-  _getAtSignAndInitializeChat() async {
-    // initializeChatService(AtEventNotificationListener().atClientManager,
-    //     AtEventNotificationListener().currentAtSign!,
-    //     rootDomain: MixedConstants.ROOT_DOMAIN);
-  }
+  _getAtSignAndInitializeChat() async {}
 
   // ignore: always_declare_return_types
   _setAtsignToChatWith(EventNotificationModel _event) {
@@ -230,7 +153,6 @@ class EventsMapScreenData {
           '.${AtEventNotificationListener().atClientManager.atClient.getPreferences()!.namespace!}',
           '');
     }
-    print('atkeyMicrosecondId $atkeyMicrosecondId');
     // setChatWithAtSign('',
     //     isGroup: true, groupId: atkeyMicrosecondId, groupMembers: groupMembers);
   }
@@ -271,30 +193,6 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
             valueListenable: EventsMapScreenData().eventNotifier!,
             builder: (BuildContext context, EventNotificationModel? _event,
                 Widget? child) {
-              print('ValueListenableBuilder called');
-              // var _locationList = EventsMapScreenData().markers;
-              // var _membersSharingLocation = [];
-              // _locationList.forEach((e) => {
-              //       if ((e.displayName !=
-              //               AtEventNotificationListener().currentAtSign) &&
-              //           (e.displayName != _event!.venue!.label))
-              //         {_membersSharingLocation.add(e.displayName)}
-              //     });
-
-              // // print('_locationList $_locationList');
-
-              // if ((!snackbarShownOnce) &&
-              //     (_membersSharingLocation.isNotEmpty)) {
-              //   Future.delayed(Duration(seconds: 1), () {
-              //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              //       content: Text(_membersSharingLocation.length > 1
-              //           ? '${_listToString(_membersSharingLocation)} are sharing their locations'
-              //           : '${_listToString(_membersSharingLocation)} is sharing their location'),
-              //     ));
-              //     snackbarShownOnce = true;
-              //   });
-              // }
-
               List<String?> atsignsToTrack = [];
 
               if (_event!.atsignCreator !=
@@ -332,22 +230,12 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
-                  // Positioned(
-                  //   top: 0,
-                  //   right: 0,
-                  //   child: FloatingIcon(
-                  //       bgColor: AllColors().Black,
-                  //       icon: Icons.message_outlined,
-                  //       iconColor: Theme.of(context).scaffoldBackgroundColor,
-                  //       onPressed: () => scaffoldKey.currentState!
-                  //           .showBottomSheet((context) => ChatScreen())),
-                  // ),
                   SlidingUpPanel(
                     controller: pc,
                     minHeight: 205.toHeight,
                     maxHeight: 431.toHeight,
                     panel: EventsCollapsedContent(
-                      _event!,
+                      _event,
                       key: UniqueKey(),
                     ),
                   )
@@ -358,18 +246,5 @@ class _EventsMapScreenState extends State<_EventsMapScreen> {
         ),
       ),
     );
-  }
-
-  String? _listToString(List _strings) {
-    String? _res;
-    if (_strings.isNotEmpty) {
-      _res = _strings[0];
-    }
-
-    _strings.sublist(1).forEach((element) {
-      _res = '$_res, $element';
-    });
-
-    return _res;
   }
 }

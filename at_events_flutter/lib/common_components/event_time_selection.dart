@@ -13,12 +13,14 @@ class EventTimeSelection extends StatefulWidget {
   final ValueChanged<dynamic>? onSelectionChanged;
   final bool isStartTime;
 
-  EventTimeSelection(
-      {this.title,
+  const EventTimeSelection(
+      {Key? key,
+      this.title,
       required this.eventNotificationModel,
       this.onSelectionChanged,
       required this.options,
-      this.isStartTime = false});
+      this.isStartTime = false})
+      : super(key: key);
   @override
   _EventTimeSelectionState createState() => _EventTimeSelectionState();
 }
@@ -27,7 +29,7 @@ class _EventTimeSelectionState extends State<EventTimeSelection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
           InviteCard(
@@ -39,19 +41,19 @@ class _EventTimeSelectionState extends State<EventTimeSelection> {
                 '+${widget.eventNotificationModel!.group!.members!.length}',
             isStartTime: widget.isStartTime,
           ),
-          SizedBox(height: 10),
-          Divider(),
+          const SizedBox(height: 10),
+          const Divider(),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 widget.title != null
                     ? Text(widget.title!, style: CustomTextStyles().grey16)
-                    : SizedBox(),
+                    : const SizedBox(),
                 Expanded(
                   child: ListView.separated(
                     separatorBuilder: (context, index) {
-                      return Divider();
+                      return const Divider();
                     },
                     itemCount: widget.options.length,
                     itemBuilder: (context, index) {

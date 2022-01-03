@@ -6,7 +6,7 @@ void bottomSheet(BuildContext context, T, double height,
   var future = showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: StadiumBorder(),
+      shape: const StadiumBorder(),
       builder: (BuildContext context) {
         return Container(
           height: height,
@@ -14,9 +14,9 @@ void bottomSheet(BuildContext context, T, double height,
             color: Theme.of(context).brightness == Brightness.light
                 ? AllColors().WHITE
                 : AllColors().Black,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(12.0),
-              topRight: const Radius.circular(12.0),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12.0),
+              topRight: Radius.circular(12.0),
             ),
           ),
           child: T,

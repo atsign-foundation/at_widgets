@@ -7,14 +7,18 @@ class LocationTile extends StatelessWidget {
   final String? title, subTitle;
   final IconData? icon;
 
-  LocationTile({this.title = '', this.subTitle = '', this.icon});
+  const LocationTile({Key? key, this.title = '', this.subTitle = '', this.icon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // ignore: avoid_unnecessary_containers
     return Container(
       child: Row(
         children: <Widget>[
-          icon != null ? Icon(icon, color: AllColors().ORANGE) : SizedBox(),
+          icon != null
+              ? Icon(icon, color: AllColors().ORANGE)
+              : const SizedBox(),
           SizedBox(width: 15.toWidth),
           Expanded(
             child: Column(
