@@ -40,7 +40,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Request Location', style: CustomTextStyles().black18),
-              PopButton(label: 'Cancel')
+              const PopButton(label: 'Cancel')
             ],
           ),
           const SizedBox(

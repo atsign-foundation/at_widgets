@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null, avoid_unnecessary_containers, avoid_renaming_method_parameters
+
 import 'dart:math';
 import 'dart:ui' as ui;
 

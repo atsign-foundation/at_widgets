@@ -1,3 +1,5 @@
+// ignore_for_file: overridden_fields, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, avoid_function_literals_in_foreach_calls, prefer_function_declarations_over_variables, avoid_unnecessary_containers
+
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';

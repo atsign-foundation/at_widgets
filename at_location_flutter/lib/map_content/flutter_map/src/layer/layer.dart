@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null
+
 import 'package:flutter/foundation.dart';
 
 /// Common type between all LayerOptions.

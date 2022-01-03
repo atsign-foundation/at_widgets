@@ -31,7 +31,7 @@ Future<void> initializeLocationService(GlobalKey<NavigatorState> navKey,
     {required String mapKey,
     required String apiKey,
     bool showDialogBox = false,
-    String rootDomain = MixedConstants.ROOT_DOMAIN,
+    String rootDomain = 'root.atsign.org',
     Function? getAtValue,
     Function(List<KeyLocationModel>)? streamAlternative,
     bool isEventInUse = false}) async {

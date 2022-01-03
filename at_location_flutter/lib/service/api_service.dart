@@ -11,7 +11,6 @@ class ApiService {
           .get(Uri.parse(url), headers: header)
           .then((http.Response response) {
         final statusCode = response.statusCode;
-        print(statusCode);
         if (statusCode == 200) {
           return {
             'status': true,
@@ -51,7 +50,6 @@ class ApiService {
               body: json.encode(body), headers: headers, encoding: encoding)
           .then((http.Response response) {
         final statusCode = response.statusCode;
-        print(statusCode);
         if (statusCode == 200) {
           return {
             'status': true,
@@ -99,10 +97,10 @@ class ConnectivityService {
   Future<bool> checkConnectivity() async {
     Socket? socket;
     bool connectivity;
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     try {
-      socket =
-          await Socket.connect('google.com', 80, timeout: Duration(seconds: 4));
+      socket = await Socket.connect('google.com', 80,
+          timeout: const Duration(seconds: 4));
       connectivity = true;
     } catch (e) {
       checkInternetConnection();
@@ -111,10 +109,10 @@ class ConnectivityService {
       try {
         await socket?.close();
       } catch (e) {
+        // ignore: avoid_print
         print(e);
       }
     }
-    print('conn $connectivity');
     return connectivity;
   }
 

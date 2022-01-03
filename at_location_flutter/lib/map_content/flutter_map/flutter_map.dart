@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state, prefer_void_to_null, provide_deprecation_message
+
 library flutter_map;
 
 import 'dart:async';

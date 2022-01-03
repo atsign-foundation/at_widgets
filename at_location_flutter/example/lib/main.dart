@@ -7,8 +7,6 @@ import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
-import 'package:flutter_keychain/flutter_keychain.dart';
-
 import 'second_screen.dart';
 
 Future<void> main() async {

@@ -40,7 +40,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Share Location', style: CustomTextStyles().black18),
-              PopButton(label: 'Cancel')
+              const PopButton(label: 'Cancel')
             ],
           ),
           const SizedBox(

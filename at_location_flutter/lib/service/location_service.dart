@@ -6,7 +6,6 @@ import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';

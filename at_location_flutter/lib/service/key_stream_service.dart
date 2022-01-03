@@ -165,7 +165,7 @@ class KeyStreamService {
   /// Checks for missed 'Remove Person' requests for request location notifications
   void checkForDeleteRequestAck() async {
     // Letting other events complete
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 5));
 
     var dltRequestLocationResponse = await atClientInstance!.getKeys(
       regex: 'deleterequestacklocation',

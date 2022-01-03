@@ -5,7 +5,6 @@ import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/screens/home/home_screen.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
-import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
@@ -219,8 +218,8 @@ class _SecondScreenState extends State<SecondScreen> {
     } else if (!receiver!.contains('@')) {
       receiver = '@' + receiver!;
     }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        receiver!, MixedConstants.ROOT_DOMAIN, 64);
+    var checkPresence =
+        await AtLookupImpl.findSecondary(receiver!, 'root.atsign.org', 64);
     return checkPresence != null;
   }
 
