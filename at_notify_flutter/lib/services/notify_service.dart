@@ -1,5 +1,7 @@
 /// A service to handle save and retrieve operation on notify
 
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -74,7 +76,7 @@ class NotifyService {
   /// Initialized Notification Settings
   initializePlatformSpecifics() async {
     var initializationSettingsAndroid =
-        AndroidInitializationSettings('ic_launcher');
+        const AndroidInitializationSettings('ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -86,7 +88,7 @@ class NotifyService {
           body: body!,
           payload: payload!,
         );
-        print('receivedNotification: ${receivedNotification?.toString()}');
+        print('receivedNotification: ${receivedNotification.toString()}');
         //     didReceivedLocalNotificationSubject.add(receivedNotification);
       },
     );
@@ -126,7 +128,7 @@ class NotifyService {
     notificationKey = notificationKey.replaceFirst(fromAtsign, '').trim();
     print('notificationKey = $notificationKey');
 
-    if (atNotification.id == -1) {
+    if (atNotification.id == '-1') {
       return;
     }
 
@@ -172,11 +174,11 @@ class NotifyService {
       await Future.forEach(_jsonData, (_data) async {
         var decryptedMessage = await atClient.encryptionService!
             .decrypt((_data! as Map<String, dynamic>)["value"],
-                (_data! as Map<String, dynamic>)['from'])
+                (_data as Map<String, dynamic>)['from'])
             .catchError((e) {
           print('error in decrypting notify $e');
         });
-        print('decryptedMessage ${decryptedMessage}');
+        print('decryptedMessage $decryptedMessage');
 
         var _newNotifyObj = Notify.fromJson(decryptedMessage);
         notifies.insert(0, _newNotifyObj);
@@ -216,21 +218,12 @@ class NotifyService {
     return true;
   }
 
-  void _onSuccessCallback(notificationResult) {
-    print(notificationResult);
-  }
-
-  void _onErrorCallback(notificationResult) {
-    print(notificationResult.atClientException.toString());
-  }
-
   /// Show Local Notification in Device
   Future<void> showNotification(String decryptedMessage, String atSign) async {
-    List<dynamic>? valuesJson = [];
     Notify notify = Notify.fromJson((decryptedMessage));
     print('showNotification => ${notify.message} ${notify.atSign}');
 
-    var androidChannelSpecifics = AndroidNotificationDetails(
+    var androidChannelSpecifics = const AndroidNotificationDetails(
       'notify_id',
       'notify',
       "notify_description",
@@ -240,13 +233,13 @@ class NotifyService {
       timeoutAfter: 50000,
       styleInformation: DefaultStyleInformation(true, true),
     );
-    var iosChannelSpecifics = IOSNotificationDetails();
+    var iosChannelSpecifics = const IOSNotificationDetails();
 
     var platformChannelSpecifics = NotificationDetails(
         android: androidChannelSpecifics, iOS: iosChannelSpecifics);
     await _notificationsPlugin.show(
       0,
-      '${atSign}',
+      atSign,
       '${notify.message}',
       platformChannelSpecifics,
       payload: notify.message,

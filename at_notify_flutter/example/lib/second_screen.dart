@@ -40,38 +40,38 @@ class _SecondScreenState extends State<SecondScreen> {
       body: Builder(
         builder: (context) => Center(
           child: Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   'Welcome $activeAtSign',
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
                 TextField(
                   controller: atSignController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(), hintText: '@atSign'),
                   onChanged: (text) {},
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8.0,
                 ),
                 TextField(
                   controller: messageController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(), hintText: 'Enter Message'),
                   onChanged: (text) {},
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
                 TextButton(
                   onPressed: _sendMessage,
-                  child: Text(
+                  child: const Text(
                     'Notify Text',
                     style: TextStyle(fontSize: 16),
                   ),
@@ -85,7 +85,7 @@ class _SecondScreenState extends State<SecondScreen> {
                               NotifyScreen(notifyService: NotifyService())),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     'Get past notifications',
                     style: TextStyle(fontSize: 16),
                   ),
@@ -100,13 +100,11 @@ class _SecondScreenState extends State<SecondScreen> {
 
   _sendMessage() async {
     if (atSignController.text.isEmpty) {
-      print('atSignController isEmpty');
       showSnackBar('Enter atsign');
       return;
     }
 
     if (messageController.text.isEmpty) {
-      print('message isEmpty');
       showSnackBar('Enter message');
       return;
     }
@@ -143,7 +141,7 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void getAtSignAndInitializeNotify() async {
-    var currentAtSign = await atClientManager.atClient.getCurrentAtSign();
+    var currentAtSign = atClientManager.atClient.getCurrentAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
@@ -161,7 +159,7 @@ class _SecondScreenState extends State<SecondScreen> {
       dismissDirection: DismissDirection.horizontal,
       content: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 14,
           letterSpacing: 0.1,
