@@ -1,3 +1,7 @@
+## 3.0.2
+- Fixed at client dependency issue
+- Updated dependencies
+
 ## 3.0.1
 - Bug fixes
 

@@ -406,11 +406,12 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     try {
       _isServerCheck = false;
       _isContinue = true;
+      // ignore: always_specify_types
       var fileContents, aesKey, atsign;
       setState(() {
         loading = true;
       });
-
+      // ignore: always_specify_types
       var path = await _desktopKeyPicker();
 
       if (path == null) {
@@ -418,7 +419,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
 
       File selectedFile = File(path);
-      var length = selectedFile.lengthSync();
+      int length = selectedFile.lengthSync();
       if (length < 10) {
         _showAlertDialog(_incorrectKeyFile);
         return;
@@ -465,18 +466,18 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   Future<dynamic> _desktopKeyPicker() async {
     try {
-      // ignore: omit_local_variable_types
-      final XTypeGroup typeGroup = XTypeGroup(
+      XTypeGroup typeGroup = XTypeGroup(
         label: 'images',
+        // ignore: always_specify_types
         extensions: ['atKeys'],
       );
-      final List<XFile> files =
+      List<XFile> files =
+          // ignore: always_specify_types
           await openFiles(acceptedTypeGroups: [typeGroup]);
       if (files.isEmpty) {
         return null;
       }
-      // ignore: omit_local_variable_types
-      final XFile file = files[0];
+      XFile file = files[0];
       return file.path;
     } catch (e) {
       print('Error in desktopImagePicker $e');
@@ -484,6 +485,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     }
   }
 
+  // ignore: always_declare_return_types, always_specify_types
   _showAlertDialog(var errorMessage,
       {bool? isPkam, String? title, bool? getClose, Function? onClose}) {
     showDialog(

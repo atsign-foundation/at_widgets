@@ -40,7 +40,6 @@ class _MyAppState extends State<MyApp> {
       ..isLocalStoreRequired = true
       ..commitLogPath = path
       ..namespace = 'backupkeys'
-      ..syncStrategy = SyncStrategy.ONDEMAND
       ..rootDomain = rootDomain
       ..hiveStoragePath = path;
     return _atClientPreference;

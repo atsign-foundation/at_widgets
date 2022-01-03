@@ -34,7 +34,6 @@ class AtService {
       ..commitLogPath = path
       ..cramSecret = cramSecret
       ..namespace = AppConstants.appNamespace
-      ..syncStrategy = SyncStrategy.ONDEMAND
       ..rootDomain = 'root.atsign.wtf'
       ..hiveStoragePath = path;
     return _atClientPreference;

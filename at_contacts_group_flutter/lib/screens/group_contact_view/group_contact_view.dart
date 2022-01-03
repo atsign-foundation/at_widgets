@@ -498,6 +498,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                                         ],
                                                         child: Container(
                                                           child: CustomListTile(
+                                                            key: UniqueKey(),
                                                             onTap: () {},
                                                             asSelectionTile: widget
                                                                 .asSelectionScreen,
@@ -532,6 +533,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                                         ),
                                                       )
                                                     : CustomListTile(
+                                                        key: UniqueKey(),
                                                         onTap: () {},
                                                         // asSelectionTile: widget
                                                         //     .asSelectionScreen,
