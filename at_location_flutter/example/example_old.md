@@ -11,6 +11,16 @@ We use the [Onboarding()] widget in our [main.dart] and navigate to our [second_
 
 If you want to remove any already paired atsign, use the `Clear paired atsigns` button, it will remove all the paired atsigns for this example package.
 
+As the [at_location_flutter] package has to be initialised, so we initialise it in the [init()] of `second_screen.dart` by calling
+```dart
+    initializeLocationService(
+      NavService.navKey,
+      mapKey: '',
+      apiKey: '',
+      showDialogBox: true,
+    );
+```
+
 The [second_screen.dart] consists of the following functions:
  - Show maps - Will navigate to the default home screen. If you want to use this functionality then navigate to the [HomeScreen()].
  - Send Location - Sends location for 30 minutes to the typed in atsign. If you want to use this functionality then call [sendShareLocationNotification()], with the receiver atsign as the first parameter and time (in minutes) as the second.
