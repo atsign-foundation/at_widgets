@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       // * The onboarding screen (first screen)
+      navigatorKey: NavService.navKey,
       home: Scaffold(
           appBar: AppBar(
             title: const Text('at_location_flutter example app'),
