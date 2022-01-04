@@ -96,6 +96,12 @@ Navigating to the map screen for an event:
 EventsMapScreenData().moveToEventScreen(eventNotificationModel);
 ```
 
+Different datatypes used in the package:
+```
+ - EventNotificationModel: Contains the details of an event and is sent to atsigns while creating an event.
+ - EventKeyLocationModel - The package uses this to keep a track of all the event notifications.
+```
+
 ### Steps to get mapKey
 
   - Go to https://cloud.maptiler.com/maps/streets/
