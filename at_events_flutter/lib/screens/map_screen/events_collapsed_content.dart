@@ -20,9 +20,9 @@ import 'participants.dart';
 // ignore: must_be_immutable
 class EventsCollapsedContent extends StatefulWidget {
   late EventNotificationModel eventListenerKeyword;
-  late bool static; // true when no clicks should work
+  late bool isStatic; // true when no clicks should work
   EventsCollapsedContent(this.eventListenerKeyword,
-      {Key? key, this.static = false})
+      {Key? key, this.isStatic = false})
       : super(key: key);
 
   @override
@@ -93,7 +93,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      !widget.static && isAdmin
+                      !widget.isStatic && isAdmin
                           ? InkWell(
                               onTap: () {
                                 bottomSheet(
@@ -189,8 +189,8 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                 ],
               ),
             )),
-            widget.static ? const SizedBox() : const Divider(),
-            widget.static
+            widget.isStatic ? const SizedBox() : const Divider(),
+            widget.isStatic
                 ? const SizedBox()
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -260,8 +260,8 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                           })
                     ],
                   ),
-            widget.static ? const SizedBox() : const Divider(),
-            (widget.static || isAdmin)
+            widget.isStatic ? const SizedBox() : const Divider(),
+            (widget.isStatic || isAdmin)
                 ? const SizedBox()
                 : Expanded(
                     child: InkWell(
@@ -288,8 +288,8 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                       ),
                     ),
                   ),
-            (widget.static || isAdmin) ? const SizedBox() : const Divider(),
-            (!widget.static && isAdmin)
+            (widget.isStatic || isAdmin) ? const SizedBox() : const Divider(),
+            (!widget.isStatic && isAdmin)
                 ? Expanded(
                     child: InkWell(
                       onTap: () async {
