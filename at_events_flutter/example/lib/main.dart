@@ -56,16 +56,6 @@ class _MyAppState extends State<MyApp> {
                 const SizedBox(
                   height: 25,
                 ),
-                Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: const Center(
-                      child: Text(
-                          'A client service should create an atClient instance and call onboard method before navigating to QR scanner screen',
-                          textAlign: TextAlign.center),
-                    )),
-                const SizedBox(
-                  height: 25,
-                ),
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
