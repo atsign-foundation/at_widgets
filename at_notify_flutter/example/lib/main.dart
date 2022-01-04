@@ -47,21 +47,11 @@ class _MyAppState extends State<MyApp> {
       // * The onboarding screen (first screen)
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('at_location_flutter example app'),
+            title: const Text('at_notify_flutter example app'),
           ),
           body: Builder(
             builder: (context) => Column(
               children: [
-                const SizedBox(
-                  height: 25,
-                ),
-                Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: const Center(
-                      child: Text(
-                          'A client service should create an atClient instance and call onboard method before navigating to QR scanner screen',
-                          textAlign: TextAlign.center),
-                    )),
                 const SizedBox(
                   height: 25,
                 ),

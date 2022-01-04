@@ -8,6 +8,8 @@ import 'package:at_notify_flutter/utils/notify_utils.dart';
 import 'constants.dart';
 import 'package:at_lookup/at_lookup.dart';
 
+import 'main.dart';
+
 //* The next screen after onboarding (second screen)
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -20,7 +22,7 @@ class _SecondScreenState extends State<SecondScreen> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String? activeAtSign;
   var atClientManager = AtClientManager.getInstance();
-  late AtClientPreference atClientPreference;
+  AtClientPreference atClientPreference = AtClientPreference();
   TextEditingController atSignController = TextEditingController(text: '');
   TextEditingController messageController = TextEditingController(text: '');
 
@@ -145,6 +147,9 @@ class _SecondScreenState extends State<SecondScreen> {
     setState(() {
       activeAtSign = currentAtSign;
     });
+
+    atClientPreference = await loadAtClientPreference();
+
     initializeNotifyService(
       atClientManager,
       activeAtSign!,

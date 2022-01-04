@@ -151,7 +151,13 @@ class NotifyService {
   Future<void> getNotifies({String? atsign, int days = 1}) async {
     try {
       var currentDate = DateTime.now().subtract(Duration(days: days));
-      var _fromDate = '${currentDate.year}-${currentDate.month}';
+      var _fromDate = '${currentDate.year}';
+
+      if (currentDate.month < 10) {
+        _fromDate = '$_fromDate-0${currentDate.month}';
+      } else {
+        _fromDate = '$_fromDate-${currentDate.month}';
+      }
 
       if (currentDate.day < 10) {
         _fromDate = '$_fromDate-0${currentDate.day}';
