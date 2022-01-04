@@ -5,7 +5,8 @@ class PopButton extends StatelessWidget {
   final String label;
   final TextStyle? textStyle;
   final Function? onTap;
-  PopButton({required this.label, this.textStyle, this.onTap});
+  const PopButton({Key? key, required this.label, this.textStyle, this.onTap})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(

@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class MixedConstants {
   static const String WEBSITE_URL = 'https://atsign.com/';
 

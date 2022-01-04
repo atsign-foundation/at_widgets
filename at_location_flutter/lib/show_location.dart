@@ -19,17 +19,17 @@ import 'utils/constants/constants.dart';
 Widget showLocation(Key? key, MapController? mapController,
     {LatLng? location,
     List<LatLng>? locationList,
-    Widget? locationListMarker}) {
+    Widget? locationListMarker,
+    bool moveMap = true}) {
   bool showMarker;
   Marker marker;
   List<Marker>? markerList;
 
   /// init
   showMarker = true;
-  print('widget.location $location');
   if (location != null) {
     marker = buildMarker(HybridModel(latLng: location), singleMarker: true);
-    if (mapController != null) {
+    if ((mapController != null) && (moveMap)) {
       mapController.move(location, 8);
     }
   } else {
@@ -40,18 +40,18 @@ Widget showLocation(Key? key, MapController? mapController,
 
   if (locationList != null) {
     markerList = [];
-    locationList.forEach((location) {
+    for (var location in locationList) {
       var marker = buildMarker(HybridModel(latLng: location),
           singleMarker: true, marker: locationListMarker);
-      markerList!.add(marker);
-    });
+      markerList.add(marker);
+    }
   }
 
   ///
 
-  return SafeArea(
-    child: Scaffold(
-        body: FlutterMap(
+  return Scaffold(
+      body: SafeArea(
+    child: FlutterMap(
       key: key,
       mapController: mapController ?? MapController(),
       options: MapOptions(
@@ -78,9 +78,9 @@ Widget showLocation(Key? key, MapController? mapController,
         MarkerClusterLayerOptions(
           maxClusterRadius: 190,
           disableClusteringAtZoom: 16,
-          size: Size(5, 5),
+          size: const Size(5, 5),
           anchor: AnchorPos.align(AnchorAlign.center),
-          fitBoundsOptions: FitBoundsOptions(
+          fitBoundsOptions: const FitBoundsOptions(
             padding: EdgeInsets.all(50),
           ),
           markers:
@@ -91,6 +91,6 @@ Widget showLocation(Key? key, MapController? mapController,
           },
         ),
       ],
-    )),
-  );
+    ),
+  ));
 }

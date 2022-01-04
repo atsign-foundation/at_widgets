@@ -1,6 +1,7 @@
-import 'dart:convert';
+// ignore_for_file: avoid_print
 
-import 'package:at_client_mobile/at_client_mobile.dart';
+import 'dart:convert';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -22,25 +23,33 @@ import 'package:flutter/cupertino.dart';
 /// [initLocation] pass this as false if location package is initialised outside, so it is not initialised more than once.
 ///
 /// [streamAlternative] a function which will return updated lists of [EventKeyLocationModel]
-void initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
+///
+/// [initLocation] if true, then location service will be initialised by the events package
+/// if it is already initialsed outside this package, then pass [false],
+/// make sure to not initialise the location package more than once.
+Future<void> initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
     {required String mapKey,
     required String apiKey,
     rootDomain = 'root.atsign.wtf',
     rootPort = 64,
     dynamic Function(List<EventKeyLocationModel>)? streamAlternative,
-    bool initLocation = true}) {
+    bool initLocation = true}) async {
   /// initialise keys
   MixedConstants.setApiKey(apiKey);
   MixedConstants.setMapKey(mapKey);
 
+  SizeConfig().init(navKeyFromMainApp.currentState!.context);
+
   if (initLocation) {
-    initializeLocationService(navKeyFromMainApp,
-        apiKey: MixedConstants.API_KEY!, mapKey: MixedConstants.MAP_KEY!);
+    await initializeLocationService(navKeyFromMainApp,
+        apiKey: MixedConstants.API_KEY!,
+        mapKey: MixedConstants.MAP_KEY!,
+        isEventInUse: true);
   }
 
   /// To have eta in events
   AtLocationFlutterPlugin(
-    [],
+    const [],
     calculateETA: true,
   );
 

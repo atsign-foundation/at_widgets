@@ -13,13 +13,15 @@ import 'package:at_common_flutter/services/size_config.dart';
 class InviteCard extends StatefulWidget {
   final String? event, invitedPeopleCount, timeAndDate, atSign, memberCount;
   final bool isStartTime;
-  InviteCard(
-      {this.event,
+  const InviteCard(
+      {Key? key,
+      this.event,
       this.invitedPeopleCount,
       this.timeAndDate,
       this.atSign,
       this.memberCount,
-      this.isStartTime = false});
+      this.isStartTime = false})
+      : super(key: key);
 
   @override
   _InviteCardState createState() => _InviteCardState();
@@ -46,6 +48,7 @@ class _InviteCardState extends State<InviteCard> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: avoid_unnecessary_containers
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -77,7 +80,7 @@ class _InviteCardState extends State<InviteCard> {
                         )),
                       ),
                     )
-                  : SizedBox()
+                  : const SizedBox()
             ],
           ),
           SizedBox(width: 10.toWidth),
@@ -88,17 +91,17 @@ class _InviteCardState extends State<InviteCard> {
               children: [
                 widget.event != null
                     ? Text(widget.event!, style: CustomTextStyles().black18)
-                    : SizedBox(),
+                    : const SizedBox(),
                 SizedBox(height: 5.toHeight),
                 widget.invitedPeopleCount != null
                     ? Text(widget.invitedPeopleCount!,
                         style: CustomTextStyles().grey14)
-                    : SizedBox(),
+                    : const SizedBox(),
                 SizedBox(height: 10.toHeight),
                 widget.timeAndDate != null
                     ? Text(widget.timeAndDate!,
                         style: CustomTextStyles().black14)
-                    : SizedBox(),
+                    : const SizedBox(),
               ],
             ),
           ),

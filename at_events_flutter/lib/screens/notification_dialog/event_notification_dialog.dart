@@ -1,4 +1,6 @@
 // ignore: must_be_immutable
+// ignore_for_file: avoid_function_literals_in_foreach_calls, avoid_unnecessary_containers
+
 import 'dart:typed_data';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
@@ -27,12 +29,14 @@ class EventNotificationDialog extends StatefulWidget {
 
   int? minutes;
   EventNotificationDialog(
-      {required this.eventData,
+      {Key? key,
+      required this.eventData,
       this.event,
       this.invitedPeopleCount,
       this.timeAndDate,
       this.userName,
-      this.showMembersCount = false});
+      this.showMembersCount = false})
+      : super(key: key);
 
   @override
   _EventNotificationDialogState createState() =>
@@ -98,10 +102,9 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
 
   @override
   Widget build(BuildContext context) {
-    print('EventNotificationDialog called');
     return Container(
       child: AlertDialog(
-        contentPadding: EdgeInsets.fromLTRB(10, 20, 5, 10),
+        contentPadding: const EdgeInsets.fromLTRB(10, 20, 5, 10),
         content: Container(
           child: SingleChildScrollView(
             child: Container(
@@ -112,7 +115,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                       '${widget.eventData!.atsignCreator} wants to share an event with you. Are you sure you want to join and share your location with the group?',
                       style: CustomTextStyles().grey16,
                       textAlign: TextAlign.center),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Stack(
                     children: [
                       image != null
@@ -151,7 +154,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                 )),
                               ),
                             )
-                          : SizedBox()
+                          : const SizedBox()
                     ],
                   ),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
@@ -161,7 +164,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                           style: CustomTextStyles().black18,
                           textAlign: TextAlign.center,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: widget.eventData != null ? 5.toHeight : 0),
                   widget.eventData != null
                       ? Text(
@@ -169,15 +172,15 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                               ? '${widget.eventData!.group!.members!.length} person invited'
                               : '${widget.eventData!.group!.members!.length} people invited',
                           style: CustomTextStyles().grey14)
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
                   widget.eventData != null
                       ? Text(
                           '${timeOfDayToString(widget.eventData!.event!.startTime!)} on ${dateToString(widget.eventData!.event!.date!)}',
                           style: CustomTextStyles().black14)
-                      : SizedBox(),
-                  isOverlap! ? SizedBox(height: 10.toHeight) : SizedBox(),
-                  isOverlap! ? Divider(height: 2) : SizedBox(),
+                      : const SizedBox(),
+                  isOverlap! ? SizedBox(height: 10.toHeight) : const SizedBox(),
+                  isOverlap! ? const Divider(height: 2) : const SizedBox(),
                   SizedBox(height: 10.toHeight),
                   isOverlap!
                       ? Text(
@@ -185,22 +188,22 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                           textAlign: TextAlign.center,
                           style: CustomTextStyles().grey16,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: 10.toHeight),
                   isOverlap!
                       ? Text(concurrentEvent!.title!,
                           style: CustomTextStyles().black18)
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: 5.toHeight),
                   SizedBox(height: 10.toHeight),
                   isOverlap!
                       ? Text(
                           '${timeOfDayToString(concurrentEvent!.event!.startTime!)} on ${dateToString(concurrentEvent!.event!.date!)}',
                           style: CustomTextStyles().black14)
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: 10.toHeight),
                   loading!
-                      ? CircularProgressIndicator()
+                      ? const CircularProgressIndicator()
                       : CustomButton(
                           onTap: () => () async {
                             bottomSheet(
@@ -297,14 +300,16 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                         ),
                   SizedBox(height: 10.toHeight),
                   loading!
-                      ? SizedBox()
+                      ? const SizedBox()
                       : InkWell(
                           onTap: () async {
                             startLoading();
                             var result = await EventKeyStreamService()
                                 .actionOnEvent(widget.eventData!,
                                     ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT,
-                                    isAccepted: false, isExited: true);
+                                    isSharing: false,
+                                    isAccepted: false,
+                                    isExited: true);
 
                             if (result == true) {
                               CustomToast().show(

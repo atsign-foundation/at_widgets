@@ -8,12 +8,14 @@ class FloatingIcon extends StatelessWidget {
   final bool isTopLeft;
   final Function? onPressed;
 
-  FloatingIcon(
-      {this.bgColor,
+  const FloatingIcon(
+      {Key? key,
+      this.bgColor,
       this.iconColor,
       this.icon,
       this.isTopLeft = false,
-      this.onPressed});
+      this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,12 @@ class FloatingIcon extends StatelessWidget {
       width: 50.toHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
-          bottomLeft: !isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
-          bottomRight: isTopLeft ? Radius.circular(10.0) : Radius.circular(0),
+          bottomLeft: !isTopLeft
+              ? const Radius.circular(10.0)
+              : const Radius.circular(0),
+          bottomRight: isTopLeft
+              ? const Radius.circular(10.0)
+              : const Radius.circular(0),
         ),
         color: bgColor ?? AllColors().Black,
         boxShadow: [
@@ -31,7 +37,7 @@ class FloatingIcon extends StatelessWidget {
             color: iconColor ?? AllColors().GREY,
             blurRadius: 2.0,
             spreadRadius: 2.0,
-            offset: Offset(0.0, 0.0),
+            offset: const Offset(0.0, 0.0),
           )
         ],
       ),

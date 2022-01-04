@@ -27,7 +27,7 @@ Widget buildPopup(HybridModel user, {LatLng? center}) {
         height: 82,
         alignment: Alignment.topCenter,
         child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
           child: Container(
             color: Colors.white,
             height: 76,
@@ -40,7 +40,7 @@ Widget buildPopup(HybridModel user, {LatLng? center}) {
                 ((LocationService().calculateETA ?? true) && (showEtaSection))
                     ? Expanded(
                         child: Container(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           color: Colors.blue[100],
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,7 +63,7 @@ Widget buildPopup(HybridModel user, {LatLng? center}) {
                           ),
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 Flexible(
                   child: Padding(
                     padding:
@@ -85,7 +85,7 @@ Widget buildPopup(HybridModel user, {LatLng? center}) {
                         ),
                         Text(
                           user.displayName ?? '...',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black,
                           ),

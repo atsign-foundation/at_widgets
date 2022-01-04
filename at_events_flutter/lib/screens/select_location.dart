@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
 class SelectLocation extends StatefulWidget {
+  const SelectLocation({Key? key}) : super(key: key);
+
   @override
   _SelectLocationState createState() => _SelectLocationState();
 }
@@ -148,14 +150,14 @@ class _SelectLocationState extends State<SelectLocation> {
                                 overflow: TextOverflow.ellipsis,
                                 style: CustomTextStyles().red12),
                           )
-                        : SizedBox()
+                        : const SizedBox()
                   ],
                 ),
               )
             ],
           ),
           SizedBox(height: 5.toHeight),
-          Divider(),
+          const Divider(),
           SizedBox(height: 18.toHeight),
           InkWell(
             onTap: () async {
@@ -176,29 +178,29 @@ class _SelectLocationState extends State<SelectLocation> {
             ),
           ),
           SizedBox(height: 20.toHeight),
-          Divider(),
+          const Divider(),
           SizedBox(height: 20.toHeight),
           isLoader
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : SizedBox(),
+              : const SizedBox(),
           StreamBuilder(
             stream: SearchLocationService().atLocationStream,
             builder: (BuildContext context,
                 AsyncSnapshot<List<LocationModal>> snapshot) {
               return snapshot.connectionState == ConnectionState.waiting
-                  ? SizedBox()
+                  ? const SizedBox()
                   : snapshot.hasData
                       // ignore: prefer_is_empty
                       ? snapshot.data!.length == 0
-                          ? Text('No such location found')
+                          ? const Text('No such location found')
                           : Expanded(
                               child: ListView.separated(
                                 itemCount: snapshot.data!.length,
                                 separatorBuilder: (context, index) {
                                   return Column(
-                                    children: [
+                                    children: const [
                                       SizedBox(height: 20),
                                       Divider(),
                                     ],
@@ -227,8 +229,8 @@ class _SelectLocationState extends State<SelectLocation> {
                               ),
                             )
                       : snapshot.hasError
-                          ? Text('Something Went wrong')
-                          : SizedBox();
+                          ? const Text('Something Went wrong')
+                          : const SizedBox();
             },
           ),
         ],

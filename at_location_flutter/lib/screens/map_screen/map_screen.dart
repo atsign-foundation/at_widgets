@@ -13,7 +13,8 @@ class MapScreen extends StatefulWidget {
   final LocationNotificationModel? userListenerKeyword;
   String? currentAtSign;
 
-  MapScreen({this.currentAtSign, this.userListenerKeyword});
+  MapScreen({Key? key, this.currentAtSign, this.userListenerKeyword})
+      : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -48,16 +49,17 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          key: scaffoldKey,
-          body: Stack(
+    return Scaffold(
+        key: scaffoldKey,
+        body: SafeArea(
+          child: Stack(
             children: [
               AtLocationFlutterPlugin(
                 atsignsToTrack,
                 calculateETA: true,
                 addCurrentUserMarker: true,
                 focusMapOn: widget.userListenerKeyword!.atsignCreator,
+                notificationID: widget.userListenerKeyword!.key,
                 // etaFrom: LatLng(44, -112),
                 // textForCenter: 'Final',
               ),
@@ -104,8 +106,8 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               )
             ],
-          )),
-    );
+          ),
+        ));
   }
 
   // ignore: always_declare_return_types

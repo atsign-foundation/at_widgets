@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null, prefer_const_constructors, avoid_print, prefer_const_constructors_in_immutables
+
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -978,8 +980,6 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
 
   void _tileReady(Coords<double>? coords, dynamic error, Tile? tile) {
     if (null != error) {
-      print(error);
-
       tile!.loadError = true;
 
       if (options.errorTileCallback != null) {

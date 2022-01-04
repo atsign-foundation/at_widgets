@@ -1,3 +1,5 @@
+// ignore_for_file: must_call_super
+
 import 'package:at_notify_flutter/models/notify_model.dart';
 import 'package:at_notify_flutter/services/notify_service.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
@@ -54,7 +56,7 @@ class _NotifyScreenState extends State<NotifyScreen>
               Text(
                 'No of Days: $_selectedDate',
                 style: TextStyle(
-                  color: Color(0xFF000000),
+                  color: const Color(0xFF000000),
                   fontSize: 16.toFont,
                 ),
               ),
@@ -79,13 +81,13 @@ class _NotifyScreenState extends State<NotifyScreen>
                     days: _selectedDate,
                   );
                 },
-                child: Text(
+                child: const Text(
                   'Get notifications',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 22.0),
+              const Padding(
+                padding: EdgeInsets.only(left: 22.0),
                 child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -93,15 +95,15 @@ class _NotifyScreenState extends State<NotifyScreen>
                       style: TextStyle(fontSize: 18),
                     )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               (snapshot.connectionState == ConnectionState.waiting)
-                  ? Center(
+                  ? const Center(
                       child: CircularProgressIndicator(),
                     )
                   : (snapshot.data == null || snapshot.data!.isEmpty)
-                      ? Center(
+                      ? const Center(
                           child: Text('No notifications found'),
                         )
                       : Expanded(
@@ -120,8 +122,8 @@ class _NotifyScreenState extends State<NotifyScreen>
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      snapshot.data?[index]?.message ?? 'Error',
-                                      style: TextStyle(
+                                      snapshot.data?[index].message ?? 'Error',
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                       ),
@@ -131,7 +133,7 @@ class _NotifyScreenState extends State<NotifyScreen>
                               );
                             },
                             separatorBuilder: (context, index) {
-                              return Divider();
+                              return const Divider();
                             },
                           ),
                         )

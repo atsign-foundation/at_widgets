@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class CustomHeading extends StatelessWidget {
   final String? heading, action;
-  CustomHeading({this.heading, this.action});
+  // ignore: use_key_in_widget_constructors
+  const CustomHeading({this.heading, this.action});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +16,10 @@ class CustomHeading extends StatelessWidget {
                 style: Theme.of(context).brightness == Brightness.light
                     ? CustomTextStyles().black18
                     : CustomTextStyles().white18)
-            : SizedBox(),
+            : const SizedBox(),
         action != null
             ? Text(action!, style: CustomTextStyles().orange18)
-            : SizedBox()
+            : const SizedBox()
       ],
     );
   }

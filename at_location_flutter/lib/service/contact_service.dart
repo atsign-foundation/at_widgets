@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 
