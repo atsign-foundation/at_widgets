@@ -3,6 +3,8 @@
    <application
         android:label="at_events_flutter_example"
         android:icon="@mipmap/ic_launcher">
+        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

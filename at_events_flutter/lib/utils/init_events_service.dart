@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -36,6 +37,8 @@ Future<void> initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
   /// initialise keys
   MixedConstants.setApiKey(apiKey);
   MixedConstants.setMapKey(mapKey);
+
+  SizeConfig().init(navKeyFromMainApp.currentState!.context);
 
   if (initLocation) {
     await initializeLocationService(navKeyFromMainApp,
