@@ -16,6 +16,9 @@ void main() {
   runApp(MyApp());
 }
 
+final StreamController<ThemeMode> updateThemeMode =
+    StreamController<ThemeMode>.broadcast();
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -47,88 +50,125 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Builder(
-          builder: (context) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (onboardingState == OnboardingState.initial)
-                Center(
-                  child: TextButton(
-                    onPressed: () async {
-                      var _atClientPreference = await getAtClientPreference();
-                      Onboarding(
-                        context: context,
-                        domain: rootDomain,
-                        appColor: Color.fromARGB(255, 240, 94, 62),
-                        atClientPreference: _atClientPreference,
-                        onboard: (map, atsign) {
-                          this.atClientServiceMap = map;
-                          this.atsign = atsign;
-                          onboardingState = OnboardingState.success;
-                          setState(() {});
-                        },
-                        onError: (error) {
-                          onboardingState = OnboardingState.error;
-                          setState(() {});
-                        },
-                      );
-                    },
-                    child: Text('Onboard my @sign'),
-                  ),
-                ),
-              if (onboardingState == OnboardingState.error ||
-                  onboardingState == OnboardingState.success)
-                Center(
-                  child: TextButton(
-                    onPressed: () async {
-                      await KeyChainManager.getInstance()
-                          .clearKeychainEntries();
-                      atsign = null;
-                      atClientServiceMap = null;
-                      onboardingState = OnboardingState.initial;
-                      setState(() {});
-                    },
-                    child: Text('Clear onboarded @sign'),
-                  ),
-                ),
-              if (onboardingState == OnboardingState.success)
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 32),
-                    Text('Default button:'),
-                    BackupKeyWidget(
-                      atsign: this.atsign,
-                      atClientService: this.atClientServiceMap[atsign],
-                    ),
-                    SizedBox(height: 16),
-                    Text('Custom button:'),
-                    ElevatedButton.icon(
-                      icon: Icon(
-                        Icons.file_copy,
-                        color: Colors.white,
-                      ),
-                      label: Text('Backup your key'),
-                      onPressed: () async {
-                        BackupKeyWidget(
-                          atsign: atsign,
-                          atClientService: atClientServiceMap[atsign],
-                        ).showBackupDialog(context);
-                      },
-                    ),
-                  ],
-                )
-            ],
+    return StreamBuilder<ThemeMode>(
+      stream: updateThemeMode.stream,
+      initialData: ThemeMode.light,
+      builder: (context, snapshot) {
+        final themeMode = snapshot.data;
+        return MaterialApp(
+          theme: ThemeData(
+            brightness: Brightness.light,
+            primaryColor: Color(0xFFf4533d),
+            accentColor: Colors.black,
+            backgroundColor: Colors.white,
+            scaffoldBackgroundColor: Colors.white,
           ),
-        ),
-      ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            primaryColor: Colors.blue,
+            accentColor: Colors.white,
+            backgroundColor: Colors.grey[850],
+            scaffoldBackgroundColor: Colors.grey[850],
+          ),
+          themeMode: themeMode,
+          home: Scaffold(
+            appBar: AppBar(
+              title: const Text('Plugin example app'),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    updateThemeMode.sink.add(themeMode == ThemeMode.light
+                        ? ThemeMode.dark
+                        : ThemeMode.light);
+                  },
+                  icon: Icon(
+                    Theme.of(context).brightness == Brightness.light
+                        ? Icons.dark_mode_outlined
+                        : Icons.light_mode_outlined,
+                  ),
+                ),
+              ],
+            ),
+            body: Builder(
+              builder: (context) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (onboardingState == OnboardingState.initial)
+                    Center(
+                      child: TextButton(
+                        onPressed: () async {
+                          var _atClientPreference =
+                              await getAtClientPreference();
+                          Onboarding(
+                            context: context,
+                            domain: rootDomain,
+                            appColor: Color.fromARGB(255, 240, 94, 62),
+                            atClientPreference: _atClientPreference,
+                            onboard: (map, atsign) {
+                              this.atClientServiceMap = map;
+                              this.atsign = atsign;
+                              onboardingState = OnboardingState.success;
+                              setState(() {});
+                            },
+                            onError: (error) {
+                              onboardingState = OnboardingState.error;
+                              setState(() {});
+                            },
+                          );
+                        },
+                        child: Text('Onboard my @sign'),
+                      ),
+                    ),
+                  if (onboardingState == OnboardingState.error ||
+                      onboardingState == OnboardingState.success)
+                    Center(
+                      child: TextButton(
+                        onPressed: () async {
+                          await KeyChainManager.getInstance()
+                              .clearKeychainEntries();
+                          atsign = null;
+                          atClientServiceMap = null;
+                          onboardingState = OnboardingState.initial;
+                          setState(() {});
+                        },
+                        child: Text('Clear onboarded @sign'),
+                      ),
+                    ),
+                  if (onboardingState == OnboardingState.success)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 32),
+                        Text('Default button:'),
+                        BackupKeyWidget(
+                          atsign: this.atsign,
+                          atClientService: this.atClientServiceMap[atsign],
+                        ),
+                        SizedBox(height: 16),
+                        Text('Custom button:'),
+                        ElevatedButton.icon(
+                          icon: Icon(
+                            Icons.file_copy,
+                            color: Colors.white,
+                          ),
+                          label: Text('Backup your key'),
+                          onPressed: () async {
+                            BackupKeyWidget(
+                              atsign: atsign,
+                              atClientService: atClientServiceMap[atsign],
+                            ).showBackupDialog(context);
+                          },
+                        ),
+                      ],
+                    )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
