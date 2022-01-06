@@ -88,9 +88,9 @@ packages:
   at_location_flutter:
     dependency: "direct main"
     description:
-      name: at_location_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../at_location_flutter"
+      relative: true
+    source: path
     version: "3.1.0"
   at_lookup:
     dependency: "direct main"
