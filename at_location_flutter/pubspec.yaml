@@ -15,11 +15,11 @@ dependencies:
   latlong2: ^0.8.1
   positioned_tap_detector_2: ^1.0.4
   transparent_image: ^2.0.0
-  async: ^2.8.2
+  async: ^2.8.1
   flutter_image: ^4.1.0
   cached_network_image: ^3.2.0
   path_provider: ^2.0.8
-  vector_math: ^2.1.1
+  vector_math: ^2.1.0
   proj4dart: ^2.0.0
   meta: ^1.7.0
   geolocator: ^7.7.1
