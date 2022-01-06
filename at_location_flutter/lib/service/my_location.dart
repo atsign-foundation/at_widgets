@@ -43,3 +43,58 @@ Future<LatLng?> getMyLocation() async {
     return null;
   }
 }
+
+Future<bool> isLocationServiceEnabled() async {
+  final _logger = AtSignLogger('isLocationServiceEnabled');
+
+  try {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      return false;
+    }
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.deniedForever) {
+      return false;
+    }
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.deniedForever) {
+        return false;
+      }
+
+      if (permission == LocationPermission.denied) {
+        return false;
+      }
+    }
+
+    return true;
+  } catch (e) {
+    if (e is PermissionRequestInProgressException) {
+      _logger.severe('PermissionRequestInProgressException error $e');
+    } else {
+      _logger.severe('$e');
+    }
+    return false;
+  }
+}
+
+/// Returns current [LatLng] of the device without checking for permissions.
+/// Use this function when it is known that location permission is enabled.
+Future<LatLng?> getCurrentPosition() async {
+  final _logger = AtSignLogger('getCurrentPosition');
+
+  try {
+    var position = await Geolocator.getCurrentPosition();
+    return LatLng(position.latitude, position.longitude);
+  } catch (e) {
+    _logger.severe('$e');
+    return null;
+  }
+}
