@@ -20,11 +20,9 @@ class SelectLocation extends StatefulWidget {
 
 class _SelectLocationState extends State<SelectLocation> {
   String inputText = '';
-  bool isLoader = false, loadingForPermission = true;
-  bool nearMe = false; // checkbox state.
+  bool isLoader = false;
+  bool? nearMe;
   LatLng? currentLocation;
-  bool _isLocationServiceEnabled = false; // location permission state.
-
   @override
   void initState() {
     calculateLocation();
@@ -37,15 +35,13 @@ class _SelectLocationState extends State<SelectLocation> {
   /// nearMe == false && currentLocation == null =>dont search nearme
   // ignore: always_declare_return_types
   calculateLocation() async {
-    _isLocationServiceEnabled = await isLocationServiceEnabled();
-    if (_isLocationServiceEnabled == true) {
+    currentLocation = await getMyLocation();
+    if (currentLocation != null) {
       nearMe = true;
     } else {
       nearMe = false;
     }
-    setState(() {
-      loadingForPermission = false;
-    });
+    setState(() {});
   }
 
   @override
@@ -67,14 +63,13 @@ class _SelectLocationState extends State<SelectLocation> {
                     setState(() {
                       isLoader = true;
                     });
-                    if (!nearMe) {
+                    if ((nearMe == null) || (!nearMe!)) {
                       // ignore: await_only_futures
                       SearchLocationService().getAddressLatLng(str, null);
                     } else {
-                      currentLocation = await getCurrentPosition();
                       // ignore: await_only_futures
                       SearchLocationService()
-                          .getAddressLatLng(str, currentLocation);
+                          .getAddressLatLng(str, currentLocation!);
                     }
 
                     setState(() {
@@ -89,14 +84,13 @@ class _SelectLocationState extends State<SelectLocation> {
                     setState(() {
                       isLoader = true;
                     });
-                    if (!nearMe) {
+                    if ((nearMe == null) || (!nearMe!)) {
                       // ignore: await_only_futures
                       SearchLocationService().getAddressLatLng(inputText, null);
                     } else {
-                      currentLocation = await getCurrentPosition();
                       // ignore: await_only_futures
                       SearchLocationService()
-                          .getAddressLatLng(inputText, currentLocation);
+                          .getAddressLatLng(inputText, currentLocation!);
                     }
                     setState(() {
                       isLoader = false;
@@ -116,79 +110,62 @@ class _SelectLocationState extends State<SelectLocation> {
             ],
           ),
           SizedBox(height: 5.toHeight),
-          loadingForPermission
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text('Getting location permission',
-                      style: CustomTextStyles().red12),
-                )
-              : Row(
-                  children: <Widget>[
-                    Checkbox(
-                      value: nearMe,
-                      tristate: true,
-                      onChanged: (value) async {
-                        if (loadingForPermission) return;
+          Row(
+            children: <Widget>[
+              Checkbox(
+                value: nearMe,
+                tristate: true,
+                onChanged: (value) async {
+                  if (nearMe == null) return;
 
-                        setState(() {
-                          loadingForPermission = true;
-                        });
+                  if (!nearMe!) {
+                    currentLocation = await getMyLocation();
+                  }
 
-                        if (!nearMe) {
-                          _isLocationServiceEnabled =
-                              await isLocationServiceEnabled();
-                        }
+                  if (currentLocation == null) {
+                    CustomToast().show('Unable to access location', context,
+                        isError: true);
+                    setState(() {
+                      nearMe = false;
+                    });
+                    return;
+                  }
 
-                        if (!_isLocationServiceEnabled) {
-                          CustomToast().show(
-                              'Unable to access location', context,
-                              isError: true);
-                          setState(() {
-                            nearMe = false;
-                            loadingForPermission = false;
-                          });
-                          return;
-                        }
-
-                        setState(() {
-                          nearMe = !nearMe;
-                          loadingForPermission = false;
-                        });
-                      },
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Near me',
-                              style: CustomTextStyles().greyLabel14),
-                          (!_isLocationServiceEnabled)
-                              ? Flexible(
-                                  child: Text(
-                                      '(Cannot access location permission)',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: CustomTextStyles().red12),
-                                )
-                              : const SizedBox()
-                        ],
-                      ),
-                    )
+                  setState(() {
+                    nearMe = !nearMe!;
+                  });
+                },
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Near me', style: CustomTextStyles().greyLabel14),
+                    ((nearMe == null) ||
+                            ((nearMe == false) && (currentLocation == null)))
+                        ? Flexible(
+                            child: Text('(Cannot access location permission)',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: CustomTextStyles().red12),
+                          )
+                        : const SizedBox()
                   ],
                 ),
+              )
+            ],
+          ),
           SizedBox(height: 5.toHeight),
           const Divider(),
           SizedBox(height: 18.toHeight),
           InkWell(
             onTap: () async {
-              if (!_isLocationServiceEnabled) {
+              if (currentLocation == null) {
                 CustomToast()
                     .show('Unable to access location', context, isError: true);
                 return;
               }
-              currentLocation = await getCurrentPosition();
-
               onLocationSelect(context, currentLocation!);
             },
             child: Column(
