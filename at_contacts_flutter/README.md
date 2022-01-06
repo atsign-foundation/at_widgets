@@ -8,13 +8,13 @@
 
 ### Introduction
 
-at_contacts_flutter library persists contacts across different @platform applications. A Flutter plugin project to provide ease of managing contacts for an @‎sign using @‎platform.
+at_contacts_flutter library persists contacts across different @platform applications. This is a Flutter plugin project that provides an ease of managing contacts for an @‎sign built on the @‎platform.
 
 ## Get Started
 
-Initially to get a basic overview of the @protocol packages, You must read the [atsign docs](https://atsign.dev/docs/overview/).
+To get a basic overview of the @protocol packages, Please visit the [atsign docs](https://atsign.dev/docs/overview/).
 
-> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+> A basic setup is required to use this package. Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
 
 
 This plugin provides two screens:
