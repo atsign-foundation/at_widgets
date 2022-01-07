@@ -865,6 +865,13 @@ class EventKeyStreamService {
       return key.contains(
           trimAtsignsFromKey(notification.eventNotificationModel!.key!));
     });
+
+    /// remove from past notifications
+    allPastEventNotifications.removeWhere((notification) {
+      return key.contains(
+          trimAtsignsFromKey(notification.eventNotificationModel!.key!));
+    });
+
     notifyListeners();
     // Remove location sharing
     if (_eventNotificationModel != null)
