@@ -105,7 +105,9 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                                         .atClientManager,
                                     isUpdate: true,
                                     eventData: eventListenerKeyword,
-                                    onEventSaved: (event) {},
+                                    onEventSaved: (event) {
+                                      setState(() {});
+                                    },
                                   ),
                                   SizeConfig().screenHeight * 0.9,
                                 );
