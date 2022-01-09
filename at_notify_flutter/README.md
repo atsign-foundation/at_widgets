@@ -24,7 +24,7 @@ Initially to get a basic overview of the SDK, you must read the [atsign docs](ht
 
 ```dart
   dependencies:
-    at_notify_flutter: ^1.0.1
+    at_notify_flutter: ^1.0.2
 ```
 #### Add to your project
 

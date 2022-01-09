@@ -16,7 +16,7 @@ description: A Flutter plugin project to send notification to any @â€Žsign in @â
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1
+version: 1.0.2
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets
 

@@ -1,3 +1,7 @@
+## 3.1.0
+- Changed event sharing logic
+- Replaced put calls with a combination of put & notify
+
 ## 3.0.2
 - Fixed at client dependency issue. Removed reference to SyncStrategy which is deprecated
 - Updated dependencies
