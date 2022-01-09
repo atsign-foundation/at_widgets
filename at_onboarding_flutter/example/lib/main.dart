@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter_example/dashboard.dart';
 import 'package:at_onboarding_flutter_example/services/at_service.dart';
@@ -12,6 +14,8 @@ import 'package:at_utils/at_logger.dart';
 void main() {
   runApp(const MyApp());
 }
+
+final StreamController<ThemeMode> updateThemeMode = StreamController<ThemeMode>.broadcast();
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -33,10 +37,44 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return StreamBuilder<ThemeMode>(
+        stream: updateThemeMode.stream,
+        initialData: ThemeMode.light,
+        builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
+      ThemeMode themeMode = snapshot.data ?? ThemeMode.light;
+      return MaterialApp(
+        theme: ThemeData(
+          brightness: Brightness.light,
+          primaryColor: const Color(0xFFf4533d),
+          accentColor: Colors.black,
+          backgroundColor: Colors.white,
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          primaryColor: Colors.blue,
+          accentColor: Colors.white,
+          backgroundColor: Colors.grey[850],
+          scaffoldBackgroundColor: Colors.grey[850],
+        ),
+        themeMode: themeMode,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {
+                updateThemeMode.sink.add(themeMode == ThemeMode.light
+                    ? ThemeMode.dark
+                    : ThemeMode.light);
+              },
+              icon: Icon(
+                Theme.of(context).brightness == Brightness.light
+                    ? Icons.dark_mode_outlined
+                    : Icons.light_mode_outlined,
+              ),
+            )
+          ],
         ),
         body: Builder(
           builder: (BuildContext context) => Center(
@@ -75,7 +113,7 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
-      ),
+      ),);}
     );
   }
 }
