@@ -1,12 +1,6 @@
-class MixedConstants {
-  // for local server
-  // static const String ROOT_DOMAIN = 'vip.ve.atsign.zone';
-  // for staging server
-  static const String ROOT_DOMAIN = 'root.atsign.wtf';
-  // for production server
-  // static const String ROOT_DOMAIN = 'root.atsign.org';
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
-  // static const bool isDedicated = false;
+class MixedConstants {
   static const String CREATE_EVENT = 'createevent';
 
   static const String EVENT_MEMBER_LOCATION_KEY = 'updateeventlocation';

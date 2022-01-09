@@ -251,8 +251,8 @@ class _CustomDialogState extends State<CustomDialog> {
                                                         : !otp
                                                             ? 'Enter your email'
                                                             : 'Enter Verification Code',
-                                                style: CustomTextStyles
-                                                    .fontR16primary,
+                                                // style: CustomTextStyles
+                                                //     .fontR16primary,
                                               ),
                                             ),
                                             widget.hideReferences
@@ -464,10 +464,16 @@ class _CustomDialogState extends State<CustomDialog> {
                                   SizedBox(
                                       width: MediaQuery.of(context).size.width,
                                       child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.grey[800])),
+                                        style: Theme.of(context).brightness ==
+                                                Brightness.light
+                                            ? ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.grey[800]))
+                                            : ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.white)),
                                         // key: Key(''),
                                         onPressed: () async {
                                           loading = true;
@@ -485,7 +491,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                         child: Text(
                                           'Generate Free @sign',
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.light
+                                                  ? Colors.white
+                                                  : Colors.black,
                                               fontSize: 15.toFont),
                                         ),
                                       )),
@@ -504,11 +514,19 @@ class _CustomDialogState extends State<CustomDialog> {
                                                   .size
                                                   .width,
                                               child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all(Colors
-                                                                .grey[800])),
+                                                style: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.light
+                                                    ? ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .grey[800]))
+                                                    : ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .white)),
                                                 // key: Key(''),
                                                 onPressed: () async {
                                                   await _verifyCameraPermissions();
@@ -519,7 +537,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 child: Text(
                                                   'Scan QR code',
                                                   style: TextStyle(
-                                                      color: Colors.white,
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.light
+                                                          ? Colors.white
+                                                          : Colors.black,
                                                       fontSize: 15.toFont),
                                                 ),
                                               ))

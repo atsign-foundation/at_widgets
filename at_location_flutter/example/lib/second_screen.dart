@@ -5,39 +5,34 @@ import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/screens/home/home_screen.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
-import 'package:at_location_flutter/utils/constants/constants.dart';
-import 'package:at_location_flutter_example/client_sdk_service.dart';
-import 'package:at_location_flutter_example/main.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
+  const SecondScreen({Key? key}) : super(key: key);
+
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  AtClientService? atClientService;
+  GlobalKey<ScaffoldState>? scaffoldKey;
   String? activeAtSign, receiver;
   Stream<List<KeyLocationModel>?>? newStream;
   MapController mapController = MapController();
 
+  /// Get the AtClientManager instance
+  var atClientManager = AtClientManager.getInstance();
   @override
   void initState() {
     try {
       super.initState();
-      activeAtSign = clientSdkService
-          .atClientServiceInstance!.atClientManager.atClient
-          .getCurrentAtSign();
-      initializeLocationService(
-        NavService.navKey,
-        mapKey: '',
-        apiKey: '',
-        showDialogBox: true,
-      );
-
-      newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;
+      getAtSignAndInitializeLocation();
+      scaffoldKey = GlobalKey<ScaffoldState>();
     } catch (e) {
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         showDialog(
@@ -60,32 +55,33 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
-        title: Text('Second Screen'),
+        title: const Text('Second Screen'),
       ),
       body: Center(
         child: ListView(
           // mainAxisSize: MainAxisSize.min,
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           children: [
             Container(
-              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
                 'Welcome $activeAtSign!',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
             ElevatedButton(
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => HomeScreen(),
+                  builder: (BuildContext context) => const HomeScreen(),
                 ));
               },
-              child: Text('Show maps'),
+              child: const Text('Show maps'),
             ),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Type an @sign',
@@ -110,7 +106,7 @@ class _SecondScreenState extends State<SecondScreen> {
                     }
                     await sendShareLocationNotification(receiver!, 30);
                   },
-                  child: Text('Send Location '),
+                  child: const Text('Send Location '),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -121,11 +117,11 @@ class _SecondScreenState extends State<SecondScreen> {
                     }
                     await sendRequestLocationNotification(receiver!);
                   },
-                  child: Text('Request Location'),
+                  child: const Text('Request Location'),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             ElevatedButton(
@@ -145,7 +141,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   ),
                 ));
               },
-              child: Text('Track Location '),
+              child: const Text('Track Location '),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -157,18 +153,18 @@ class _SecondScreenState extends State<SecondScreen> {
                   ]),
                 ));
               },
-              child: Text('Show multiple points '),
+              child: const Text('Show multiple points '),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Center(
+            const Center(
               child: Text(
                 'Notifications:',
                 style: TextStyle(fontSize: 20),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
@@ -179,22 +175,20 @@ class _SecondScreenState extends State<SecondScreen> {
                       AsyncSnapshot<List<KeyLocationModel>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
                       if (snapshot.hasError) {
-                        return Text('error');
+                        return const Text('error');
                       } else {
-                        return Column(
-                            children: snapshot.data!.map((notification) {
-                          return Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Text(
-                              '${snapshot.data!.indexOf(notification) + 1}. ${notification.key}',
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.left,
-                            ),
-                          );
-                        }).toList());
+                        return (snapshot.data?.isNotEmpty ?? false)
+                            ? renderNotifications(snapshot.data!)
+                            : const Text('No Data');
                       }
                     } else {
-                      return Text('No Data');
+                      if (KeyStreamService()
+                          .allLocationNotifications
+                          .isNotEmpty) {
+                        return renderNotifications(
+                            KeyStreamService().allLocationNotifications);
+                      }
+                      return const Text('No Data');
                     }
                   }),
             )
@@ -204,32 +198,57 @@ class _SecondScreenState extends State<SecondScreen> {
     );
   }
 
+  Widget renderNotifications(List<KeyLocationModel> _data) {
+    return Column(
+        children: _data.map((notification) {
+      return Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Text(
+          '${_data.indexOf(notification) + 1}. ${notification.locationNotificationModel!.key}',
+          style: const TextStyle(fontSize: 16),
+          textAlign: TextAlign.left,
+        ),
+      );
+    }).toList());
+  }
+
   Future<bool> checkAtsign() async {
     if (receiver == null) {
       return false;
     } else if (!receiver!.contains('@')) {
       receiver = '@' + receiver!;
     }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        receiver!, MixedConstants.ROOT_DOMAIN, 64);
+    var checkPresence =
+        await AtLookupImpl.findSecondary(receiver!, 'root.atsign.org', 64);
     return checkPresence != null;
   }
 
   Widget alertDialogContent() {
     return AlertDialog(
-      title: Text('you are not authenticated.'),
+      title: const Text('you are not authenticated.'),
       actions: [
         TextButton(
           onPressed: () async {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
-          child: Text(
+          child: const Text(
             'Ok',
             style: TextStyle(color: Colors.black),
           ),
         ),
       ],
     );
+  }
+
+  getAtSignAndInitializeLocation() {
+    activeAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
+    initializeLocationService(
+      NavService.navKey,
+      mapKey: '',
+      apiKey: '',
+      showDialogBox: true,
+    );
+    newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;
   }
 }

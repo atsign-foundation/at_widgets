@@ -24,8 +24,10 @@ class AllText {
   // ignore: non_constant_identifier_names
   String EVENT_NOTIFY = 'eventnotify';
 
+  // ignore: non_constant_identifier_names
   String LOC_START_TIME_TITLE =
       'When do you want to start sharing your location?';
+  // ignore: non_constant_identifier_names
   String LOC_END_TIME_TITLE =
       'When do you want your location to be turned off ?';
 }

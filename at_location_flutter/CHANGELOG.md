@@ -1,3 +1,7 @@
+## 3.1.0
+- Changed location sharing logic
+- Replaced put calls with a combination of put & notify
+
 ## 3.0.2
 - Fixed at client dependency issue
 - Updated dependencies

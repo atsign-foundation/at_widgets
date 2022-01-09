@@ -1,130 +1,104 @@
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:at_onboarding_flutter/screens/onboarding_widget.dart';
+import 'dart:async';
+
+import 'package:at_notify_flutter_example/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
+    show Onboarding;
+import 'package:at_utils/at_logger.dart' show AtSignLogger;
+import 'package:path_provider/path_provider.dart'
+    show getApplicationSupportDirectory;
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 
-import 'client_sdk_service.dart';
-import 'notify_example_screen.dart';
-import 'constants.dart';
+Future<void> main() async {
+  await AtEnv.load();
+  runApp(const MyApp());
+}
 
-void main() {
-  runApp(MyApp());
+Future<AtClientPreference> loadAtClientPreference() async {
+  var dir = await getApplicationSupportDirectory();
+  return AtClientPreference()
+        ..rootDomain = AtEnv.rootDomain
+        ..namespace = AtEnv.appNamespace
+        ..hiveStoragePath = dir.path
+        ..commitLogPath = dir.path
+        ..isLocalStoreRequired = true
+      // TODO set the rest of your AtClientPreference here
+      ;
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  var _showAlreadyAuthenticatedButton = false;
-  @override
-  void initState() {
-    onboard();
-    super.initState();
-  }
+  // * load the AtClientPreference in the background
+  Future<AtClientPreference> futurePreference = loadAtClientPreference();
+  AtClientPreference? atClientPreference;
+  AtClientService? atClientService;
 
-  onboard() async {
-    await clientSdkService.onboard();
-    setState(() {
-      _showAlreadyAuthenticatedButton = true;
-    });
-  }
+  final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.light(),
-      debugShowCheckedModeBanner: false,
+      // * The onboarding screen (first screen)
       home: Scaffold(
-          bottomSheet: _bottomSheet(),
           appBar: AppBar(
-            title: const Text('At Notify Plugin Example'),
+            title: const Text('at_notify_flutter example app'),
           ),
           body: Builder(
             builder: (context) => Column(
               children: [
-                Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Center(
-                      child: Text(
-                          'A client service should create an atClient instance and call onboard method before navigating to QR scanner screen',
-                          textAlign: TextAlign.center),
-                    )),
-                Center(
-                    child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black12),
-                        ),
-                        onPressed: () async {
-                          Onboarding(
-                            rootEnvironment: RootEnvironment.Production,
-                            context: context,
-                            atClientPreference:
-                                clientSdkService.atClientPreference,
-                            domain: MixedConstants.ROOT_DOMAIN,
-                            appAPIKey: MixedConstants.devAPIKey,
-                            appColor: Color.fromARGB(255, 240, 94, 62),
-                            onboard: (Map<String?, AtClientService> value,
-                                String? atsign) async {
-                              clientSdkService.atClientServiceInstance =
-                                  value[atsign];
-                              await Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          NotifyExampleScreen()));
-                            },
-                            onError: (error) async {
-                              await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      content: Text('Something went wrong'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('ok'))
-                                      ],
-                                    );
-                                  });
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Show QR scanner screen',
-                          style: TextStyle(color: Colors.black),
-                        ))),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 Center(
-                    child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black12),
-                        ),
-                        onPressed: _showAlreadyAuthenticatedButton
-                            ? () async {
-                                await Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            NotifyExampleScreen()));
-                              }
-                            : null,
-                        child: Text(
-                          'Already authenticated',
-                          style: TextStyle(
-                              color: _showAlreadyAuthenticatedButton
-                                  ? Colors.black
-                                  : Colors.black54),
-                        ))),
-                SizedBox(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      var preference = await futurePreference;
+                      setState(() {
+                        atClientPreference = preference;
+                      });
+                      Onboarding(
+                        context: context,
+                        atClientPreference: atClientPreference!,
+                        domain: AtEnv.rootDomain,
+                        rootEnvironment: AtEnv.rootEnvironment,
+                        appAPIKey: '477b-876u-bcez-c42z-6a3d',
+                        onboard: (Map<String?, AtClientService> value,
+                            String? atsign) async {
+                          atClientService = value[atsign];
+                          await Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SecondScreen()));
+                        },
+                        onError: (error) async {
+                          _logger.severe('Onboarding throws $error error');
+                          await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: const Text('Something went wrong'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('ok'))
+                                  ],
+                                );
+                              });
+                        },
+                      );
+                    },
+                    child: const Text('Start onboarding'),
+                  ),
+                ),
+                const SizedBox(
                   height: 25,
                 ),
                 Center(
@@ -134,37 +108,20 @@ class _MyAppState extends State<MyApp> {
                               MaterialStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () async {
-                          await clientSdkService.deleteKey();
+                          var _atsignsList = await KeychainUtil.getAtsignList();
+                          for (String atsign in (_atsignsList ?? [])) {
+                            await KeychainUtil.resetAtSignFromKeychain(atsign);
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Cleared all paired atsigns')));
                         },
-                        child: Text(
-                          'Clear paired atsigns',
-                          style: TextStyle(color: Colors.black),
-                        ))),
+                        child: const Text('Clear paired atsigns',
+                            style: TextStyle(color: Colors.black)))),
               ],
             ),
           )),
     );
-  }
-
-  Widget _bottomSheet() {
-    if (_showAlreadyAuthenticatedButton) {
-      return SizedBox();
-    } else {
-      return Container(
-        height: 40,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(color: Colors.black87, boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            offset: Offset(0.0, 1.0),
-            blurRadius: 3.0,
-          ),
-        ]),
-        child: Text(
-          'Checking authentication state...',
-          style: TextStyle(color: Colors.white),
-        ),
-      );
-    }
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -299,3 +301,13 @@ Map<String, dynamic> get monthsList => {
       '11': {'month': 'nov', 'days': 30, 'count': 11},
       '12': {'month': 'dec', 'days': 31, 'count': 12},
     };
+
+class EventInfo {
+  late bool isAccepted, isSharing, isExited;
+
+  EventInfo({
+    required this.isSharing,
+    required this.isExited,
+    required this.isAccepted,
+  });
+}

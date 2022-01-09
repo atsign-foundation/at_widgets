@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null, prefer_const_constructors, avoid_unnecessary_containers, avoid_renaming_method_parameters
+
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';

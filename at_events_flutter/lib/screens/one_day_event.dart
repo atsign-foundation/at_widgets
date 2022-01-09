@@ -1,3 +1,5 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'dart:convert';
 
 import 'package:at_common_flutter/services/size_config.dart';
@@ -12,6 +14,8 @@ import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class OneDayEvent extends StatefulWidget {
+  const OneDayEvent({Key? key}) : super(key: key);
+
   @override
   _OneDayEventState createState() => _OneDayEventState();
 }
@@ -30,7 +34,7 @@ class _OneDayEventState extends State<OneDayEvent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(25),
       child: SingleChildScrollView(
         child: Container(
           height: SizeConfig().screenHeight * 0.85,
@@ -41,8 +45,9 @@ class _OneDayEventState extends State<OneDayEvent> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CustomHeading(heading: 'One Day Event', action: 'Cancel'),
-                    SizedBox(height: 25),
+                    const CustomHeading(
+                        heading: 'One Day Event', action: 'Cancel'),
+                    const SizedBox(height: 25),
                     Text('Select Date', style: CustomTextStyles().greyLabel14),
                     SizedBox(height: 6.toHeight),
                     Row(
@@ -118,7 +123,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Text('Select Time', style: CustomTextStyles().greyLabel14),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -204,7 +209,6 @@ class _OneDayEventState extends State<OneDayEvent> {
                   onPressed: () {
                     var formValid = EventService()
                         .checForOneDayEventFormValidation(eventData);
-                    print(formValid);
                     if (formValid is String) {
                       CustomToast().show(formValid, context, isError: true);
                       return;

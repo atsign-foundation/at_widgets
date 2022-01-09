@@ -63,21 +63,18 @@ class _ContactListTileState extends State<ContactListTile> {
           ),
         ),
         trailing: (widget.plainView)
-            ? Container(
-                height: 0,
-                width: 0,
-              )
+            ? const SizedBox()
             : (widget.isSelected)
                 ? GestureDetector(
                     onTap: () {
                       widget.onRemove();
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.close,
                       color: Color(0xffA8A8A8),
                     ),
                   )
-                : Icon(
+                : const Icon(
                     Icons.add,
                     color: Colors.black,
                   ),
@@ -86,7 +83,7 @@ class _ContactListTileState extends State<ContactListTile> {
             Container(
               height: 40.toWidth,
               width: 40.toWidth,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.black,
                 shape: BoxShape.circle,
               ),
