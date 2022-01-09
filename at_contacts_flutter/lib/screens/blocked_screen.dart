@@ -1,4 +1,3 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
@@ -8,7 +7,7 @@ import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/widgets/blocked_user_card.dart';
 import 'package:at_contacts_flutter/widgets/error_screen.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:at_common_flutter/services/size_config.dart';
 
 /// Screen exposed to see blocked contacts and unblock them
@@ -30,7 +29,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
     _contactService = ContactService();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       var _result = await _contactService.fetchBlockContactList();
-      if (_result == null) {
+      if (_result.isEmpty) {
         if (mounted) {
           setState(() {
             errorOcurred = true;
@@ -57,7 +56,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
         titleText: TextStrings().blockedContacts,
       ),
       body: errorOcurred
-          ? ErrorScreen()
+          ? const ErrorScreen()
           : RefreshIndicator(
               color: Colors.transparent,
               strokeWidth: 0,
@@ -108,7 +107,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                                     },
                                   );
                           } else {
-                            return Center(
+                            return const Center(
                               child: CircularProgressIndicator(),
                             );
                           }
@@ -133,9 +132,9 @@ class _BlockedScreenState extends State<BlockedScreen> {
         title: Center(
           child: Text(TextStrings().unblockContact),
         ),
-        content: Container(
+        content: SizedBox(
           height: 100.toHeight,
-          child: Center(
+          child: const Center(
             child: CircularProgressIndicator(),
           ),
         ),

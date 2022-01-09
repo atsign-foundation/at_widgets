@@ -30,7 +30,8 @@ dependencies:
   at_app_flutter: 4.0.0
   at_client: ^3.0.8
   at_contact: ^3.0.3
-  at_contacts_flutter: ^3.1.2
+  at_contacts_flutter:
+    path: ./../../at_contacts_flutter
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter

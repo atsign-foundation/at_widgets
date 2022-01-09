@@ -122,7 +122,7 @@ ElevatedButton(
   onPressed: () {
     // any logic
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (BuildContext context) => BlockedScreen(),
+      builder: (BuildContext context) => const BlockedScreen(),
     ));
   },
   child: const Text('Show blocked contacts'),

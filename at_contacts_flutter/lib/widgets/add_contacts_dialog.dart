@@ -1,13 +1,10 @@
 /// A popup to ask the [AtSign] which is to be added
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 // ignore: library_prefixes
 import 'package:at_contacts_flutter/utils/text_strings.dart' as contactStrings;
 
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart'
 // ignore: library_prefixes
@@ -16,7 +13,7 @@ import 'package:flutter/material.dart';
 
 /// A dialog to validate and add a contact
 class AddContactDialog extends StatefulWidget {
-  AddContactDialog({
+  const AddContactDialog({
     Key? key,
   }) : super(key: key);
 
@@ -51,7 +48,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
   Widget build(BuildContext context) {
     var _contactService = ContactService();
     var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-    return Container(
+    return SizedBox(
       height: 140.toHeight * deviceTextFactor,
       width: 100.toWidth,
       child: SingleChildScrollView(
@@ -108,7 +105,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                           Expanded(
                             child: Text(
                               _contactService.getAtSignError,
-                              style: TextStyle(color: Colors.red),
+                              style: const TextStyle(color: Colors.red),
                             ),
                           )
                         ],
@@ -122,7 +119,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                     nickName = value;
                   },
                   // validator: Validators.validateAdduser,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Enter Nick Name',
                   ),
                   style: TextStyle(fontSize: 15.toFont),
@@ -134,7 +131,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     (isLoading)
-                        ? CircularProgressIndicator()
+                        ? const CircularProgressIndicator()
                         : CustomButton(
                             height: 50.toHeight * deviceTextFactor,
                             buttonText:
