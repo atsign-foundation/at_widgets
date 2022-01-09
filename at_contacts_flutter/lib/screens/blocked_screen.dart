@@ -13,6 +13,8 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 /// Screen exposed to see blocked contacts and unblock them
 class BlockedScreen extends StatefulWidget {
+  const BlockedScreen({Key? key}) : super(key: key);
+
   @override
   _BlockedScreenState createState() => _BlockedScreenState();
 }
