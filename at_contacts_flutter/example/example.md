@@ -80,6 +80,8 @@ Future<String?> getCurrentAtSign() async => atClientInstance.getCurrentAtSign();
 
 - Now, Let's write a function to add an atSign to our contacts.
 
+- To use adding a contact, we should add [`at_contact`](https://pub.dev/packages/at_contact) package to our project.ß
+
 ```dart
 AtContactsImpl _atContact = AtContactsImpl(atClientInstance, atClientInstance.getCurrentAtSign()!);
 
