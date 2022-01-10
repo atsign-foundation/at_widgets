@@ -2,10 +2,7 @@
 <img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
 ### Now for a little internet optimism
-[![Pub Package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter) 
-
-
- [![pub points](https://badges.bar/at_follows_flutter/pub%20points)](https://pub.dev/packages/at_follows_flutter/score) [![build status](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml/badge.svg?branch=trunk)](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+[![Pub Package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter) [![pub points](https://badges.bar/at_follows_flutter/pub%20points)](https://pub.dev/packages/at_follows_flutter/score)  [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 # at_follows_flutter 
 
@@ -226,21 +223,25 @@ For more information, please see the API documentation listed on pub.dev.
 If we have any pages for these docs on atsign.dev site, it would be 
 good to add links.(optional)
 -->
+### Learn More
+To learn more about this package or the @platform, visit [atsign.dev](https://atsign.dev/)
+
+Get Started with the @platform by [setting up a project](https://atsign.dev/docs/get-started/create-a-project/).
 
 <!---
 You should include language like below if you would like others to contribute
 to your package.
 -->
-## Open source usage and contributions
-This is  open source code, so feel free to use it as is, suggest changes or 
-enhancements or create your own version. See [CONTRIBUTING.md](CONTRIBUTING.md) 
-for detailed guidance on how to setup tools, tests and make a pull request.
+
 
 <!---
 Have we correctly acknowledged the work of others (and their Trademarks etc.)
 where appropriate (per the conditions of their LICENSE?
 -->
-## Acknowledgement/attribution
+
+<!--- ## Acknowledgement/attribution
+
+-->
 
 <!---
 Who created this?  
@@ -248,14 +249,17 @@ Do they have complete GitHub profiles?
 How can they be contacted?  
 Who is going to respond to pull requests?  
 -->
+
+<!---
 ## Maintainers
 
+-->
 
 <!--- Add SEO researched keywords here for the package 
 -->
 *Tags*
 
-Making follows and unfollows button in Flutter, 
+Making follows and unfollows button in Flutter using @platform, 
 How to create a follow and unfollow feature in Flutter, 
 Follow, 
 Follows, 
