@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null, avoid_unnecessary_containers
+
 import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart';

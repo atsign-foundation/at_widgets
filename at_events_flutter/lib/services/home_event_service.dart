@@ -1,7 +1,12 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_contact/at_contact.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
+import 'package:at_location_flutter/service/master_location_service.dart';
+import 'package:at_location_flutter/service/send_location_notification.dart';
+import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:flutter/material.dart';
 
 import 'at_event_notification_listener.dart';
@@ -12,62 +17,55 @@ class HomeEventService {
   factory HomeEventService() => _instance;
 
   bool isActionRequired(EventNotificationModel event) {
-    if (event.isCancelled!) return true;
+    if (isEventCancelled(event)) return true;
 
-    var isRequired = true;
-    var currentAtsign = AtEventNotificationListener()
-        .atClientManager
-        .atClient
-        .getCurrentAtSign();
+    /// for creator it can only be cancelled state
+    if (compareAtSign(event.atsignCreator!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      return false;
+    }
 
-    if (event.group!.members!.isEmpty) return true;
+    var _eventInfo = getMyEventInfo(event);
 
-    event.group!.members!.forEach((member) {
-      if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
-      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
+    if (_eventInfo == null) {
+      return true;
+    }
 
-      if ((member.tags!['isAccepted'] != null &&
-              member.tags!['isAccepted'] == true) &&
-          member.tags!['isExited'] == false &&
-          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
-        isRequired = false;
-      }
-    });
+    if (_eventInfo.isExited) {
+      return true;
+    }
 
-    if (event.atsignCreator == currentAtsign) isRequired = false;
-
-    return isRequired;
+    if (!_eventInfo.isAccepted) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   String getActionString(EventNotificationModel event, bool haveResponded) {
-    if (event.isCancelled!) return 'Cancelled';
-    var label = 'Action required';
-    var currentAtsign = AtEventNotificationListener()
-        .atClientManager
-        .atClient
-        .getCurrentAtSign();
+    if (isEventCancelled(event)) return 'Cancelled';
 
-    if (event.group!.members!.isEmpty) return '';
+    /// for creator it can only be cancelled state
+    if (compareAtSign(event.atsignCreator!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      return '';
+    }
 
-    event.group!.members!.forEach((member) {
-      if (member.atSign![0] != '@') member.atSign = '@' + member.atSign!;
-      if (currentAtsign![0] != '@') currentAtsign = '@' + currentAtsign!;
+    var _eventInfo = getMyEventInfo(event);
 
-      if (member.tags!['isExited'] != null &&
-          member.tags!['isExited'] == true &&
-          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase()) {
-        label = 'Request declined';
-      } else if (member.tags!['isExited'] != null &&
-          member.tags!['isExited'] == false &&
-          member.tags!['isAccepted'] != null &&
-          member.tags!['isAccepted'] == false &&
-          member.atSign!.toLowerCase() == currentAtsign!.toLowerCase() &&
-          haveResponded) {
-        label = 'Pending request';
-      }
-    });
+    if (_eventInfo == null) {
+      return 'Action required';
+    }
 
-    return label;
+    if (_eventInfo.isExited) {
+      return 'Request declined';
+    }
+
+    if (!_eventInfo.isAccepted) {
+      return 'Action required';
+    } else {
+      return '';
+    }
   }
 
   String getSubTitle(EventNotificationModel _event) {
@@ -79,11 +77,9 @@ class HomeEventService {
   }
 
   String? getSemiTitle(EventNotificationModel _event, bool _haveResponded) {
-    return _event.group != null
-        ? (isActionRequired(_event))
-            ? getActionString(_event, _haveResponded)
-            : null
-        : 'Action required';
+    return (isActionRequired(_event))
+        ? getActionString(_event, _haveResponded)
+        : null;
   }
 
   bool calculateShowRetry(EventKeyLocationModel _eventKeyModel) {
@@ -104,8 +100,10 @@ class HomeEventService {
   onEventModelTap(
       EventNotificationModel eventNotificationModel, bool haveResponded) {
     if (isActionRequired(eventNotificationModel) &&
-        !eventNotificationModel.isCancelled!) {
+        !isEventCancelled(eventNotificationModel)) {
       if (haveResponded) {
+        eventNotificationModel.isUpdate = true;
+        EventsMapScreenData().moveToEventScreen(eventNotificationModel);
         return null;
       }
       return showDialog<void>(
@@ -121,5 +119,99 @@ class HomeEventService {
 
     /// Move to map screen
     EventsMapScreenData().moveToEventScreen(eventNotificationModel);
+  }
+
+  /// will return for event's for which i am member
+  EventInfo? getMyEventInfo(EventNotificationModel _event) {
+    String _id = trimAtsignsFromKey(_event.key!);
+    String? _atsign;
+
+    if (!compareAtSign(_event.atsignCreator!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      _atsign = _event.atsignCreator;
+    }
+
+    if (_atsign == null && _event.group!.members!.isNotEmpty) {
+      Set<AtContact>? groupMembers = _event.group!.members!;
+
+      for (var member in groupMembers) {
+        if (!compareAtSign(member.atSign!,
+            AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+          _atsign = member.atSign;
+          break;
+        }
+      }
+    }
+
+    if (SendLocationNotification().allAtsignsLocationData[_atsign] != null) {
+      if (SendLocationNotification()
+              .allAtsignsLocationData[_atsign]!
+              .locationSharingFor[_id] !=
+          null) {
+        var _locationSharingFor = SendLocationNotification()
+            .allAtsignsLocationData[_atsign]!
+            .locationSharingFor[_id]!;
+
+        return EventInfo(
+            isSharing: _locationSharingFor.isSharing,
+            isExited: _locationSharingFor.isExited,
+            isAccepted: _locationSharingFor.isAccepted);
+      }
+    }
+
+    for (var key in SendLocationNotification().allAtsignsLocationData.entries) {
+      if (SendLocationNotification()
+              .allAtsignsLocationData[key.key]!
+              .locationSharingFor[_id] !=
+          null) {
+        var _locationSharingFor = SendLocationNotification()
+            .allAtsignsLocationData[key.key]!
+            .locationSharingFor[_id]!;
+
+        return EventInfo(
+            isSharing: _locationSharingFor.isSharing,
+            isExited: _locationSharingFor.isExited,
+            isAccepted: _locationSharingFor.isAccepted);
+      }
+    }
+  }
+
+  /// will return for event's for which i am creator
+  EventInfo? getOtherMemberEventInfo(String _id, String _atsign) {
+    _id = trimAtsignsFromKey(_id);
+
+    // for (var key in MasterLocationService().locationReceivedData.entries) {
+    if ((MasterLocationService().locationReceivedData[_atsign] != null) &&
+        (MasterLocationService()
+                .locationReceivedData[_atsign]!
+                .locationSharingFor[_id] !=
+            null)) {
+      var _locationSharingFor = MasterLocationService()
+          .locationReceivedData[_atsign]!
+          .locationSharingFor[_id]!;
+
+      return EventInfo(
+          isSharing: _locationSharingFor.isSharing,
+          isExited: _locationSharingFor.isExited,
+          isAccepted: _locationSharingFor.isAccepted);
+    }
+    // }
+  }
+
+  bool isEventCancelled(EventNotificationModel _event) {
+    EventInfo? _creatorInfo;
+    if (compareAtSign(_event.atsignCreator!,
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+      _creatorInfo = getMyEventInfo(_event);
+    } else {
+      _creatorInfo =
+          getOtherMemberEventInfo(_event.key!, _event.atsignCreator!);
+    }
+
+    if (_creatorInfo != null) {
+      return _creatorInfo.isExited;
+    } else {
+      return _event.isCancelled!;
+    }
   }
 }

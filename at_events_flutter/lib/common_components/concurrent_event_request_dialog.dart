@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_services.dart';
@@ -13,7 +15,8 @@ class ConcurrentEventRequest extends StatefulWidget {
       currentEvent,
       currentEventTimeAndDate;
   final EventNotificationModel? concurrentEvent;
-  ConcurrentEventRequest(
+  // ignore: use_key_in_widget_constructors
+  const ConcurrentEventRequest(
       {this.reqEvent,
       this.reqInvitedPeopleCount,
       this.reqTimeAndDate,
@@ -37,7 +40,7 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
   Widget build(BuildContext context) {
     return Container(
       child: AlertDialog(
-        contentPadding: EdgeInsets.fromLTRB(10, 20, 5, 10),
+        contentPadding: const EdgeInsets.fromLTRB(10, 20, 5, 10),
         content: Container(
           child: SingleChildScrollView(
             child: Container(
@@ -49,19 +52,19 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                     textAlign: TextAlign.center,
                     style: CustomTextStyles().grey16,
                   ),
-                  Divider(
+                  const Divider(
                     height: 2,
                   ),
                   SizedBox(height: 15.toHeight),
                   widget.concurrentEvent != null
                       ? Text(widget.concurrentEvent!.title!,
                           style: CustomTextStyles().black16)
-                      : SizedBox(),
+                      : const SizedBox(),
                   widget.concurrentEvent != null
                       ? Text(
                           '${timeOfDayToString(widget.concurrentEvent!.event!.startTime!)} on ${dateToString(widget.concurrentEvent!.event!.date!)}',
                           style: CustomTextStyles().black14)
-                      : SizedBox(),
+                      : const SizedBox(),
                   SizedBox(height: 20.toHeight),
                   !isLoader
                       ? CustomButton(
@@ -89,8 +92,8 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                                   ? AllColors().WHITE
                                   : AllColors().Black,
                         )
-                      : CircularProgressIndicator(),
-                  SizedBox(height: 10),
+                      : const CircularProgressIndicator(),
+                  const SizedBox(height: 10),
                   InkWell(
                     onTap: () {
                       Navigator.of(context).pop();

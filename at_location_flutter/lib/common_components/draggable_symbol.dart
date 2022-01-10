@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class DraggableSymbol extends StatelessWidget {
+  const DraggableSymbol({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(

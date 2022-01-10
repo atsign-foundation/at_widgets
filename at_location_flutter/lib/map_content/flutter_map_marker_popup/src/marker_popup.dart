@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables, no_logic_in_create_state
+
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';

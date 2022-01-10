@@ -13,8 +13,9 @@ class DisplayTile extends StatefulWidget {
   final Widget? action;
   final bool showName, showRetry;
   final Function? onRetryTapped;
-  DisplayTile(
-      {required this.title,
+  const DisplayTile(
+      {Key? key,
+      required this.title,
       required this.atsignCreator,
       required this.subTitle,
       this.semiTitle,
@@ -23,7 +24,8 @@ class DisplayTile extends StatefulWidget {
       this.showName = false,
       this.action,
       this.showRetry = false,
-      this.onRetryTapped});
+      this.onRetryTapped})
+      : super(key: key);
 
   @override
   _DisplayTileState createState() => _DisplayTileState();
@@ -60,7 +62,7 @@ class _DisplayTileState extends State<DisplayTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 15, 10.5),
+      padding: const EdgeInsets.fromLTRB(0, 0, 15, 10.5),
       child: Row(
         children: [
           Stack(
@@ -78,7 +80,7 @@ class _DisplayTileState extends State<DisplayTile> {
                     )
                   : widget.atsignCreator != null
                       ? ContactInitial(initials: widget.atsignCreator)
-                      : SizedBox(),
+                      : const SizedBox(),
               widget.number != null
                   ? Positioned(
                       right: 0,
@@ -96,12 +98,12 @@ class _DisplayTileState extends State<DisplayTile> {
                         ),
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
               child: Column(
                 mainAxisAlignment: (widget.subTitle == null)
                     ? MainAxisAlignment.center
@@ -114,7 +116,7 @@ class _DisplayTileState extends State<DisplayTile> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   widget.semiTitle != null
@@ -128,8 +130,8 @@ class _DisplayTileState extends State<DisplayTile> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
-                      : SizedBox(),
-                  SizedBox(
+                      : const SizedBox(),
+                  const SizedBox(
                     height: 3,
                   ),
                   (widget.subTitle != null)
@@ -139,14 +141,14 @@ class _DisplayTileState extends State<DisplayTile> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   widget.invitedBy != null
                       ? Padding(
                           padding: const EdgeInsets.only(top: 10.0),
                           child: Text(widget.invitedBy!,
                               style: CustomTextStyles().grey14),
                         )
-                      : SizedBox()
+                      : const SizedBox()
                 ],
               ),
             ),
@@ -164,8 +166,8 @@ class _DisplayTileState extends State<DisplayTile> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 )
-              : SizedBox(),
-          widget.action ?? SizedBox(),
+              : const SizedBox(),
+          widget.action ?? const SizedBox(),
         ],
       ),
     );

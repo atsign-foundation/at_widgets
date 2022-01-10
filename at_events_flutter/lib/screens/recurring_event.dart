@@ -12,6 +12,8 @@ import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class RecurringEvent extends StatefulWidget {
+  const RecurringEvent({Key? key}) : super(key: key);
+
   @override
   _RecurringEventState createState() => _RecurringEventState();
 }
@@ -46,13 +48,13 @@ class _RecurringEventState extends State<RecurringEvent> {
   Widget build(BuildContext context) {
     return Container(
       height: SizeConfig().screenHeight * 0.8,
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(25),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            CustomHeading(heading: 'Recurring event', action: 'Cancel'),
-            SizedBox(height: 25),
+            const CustomHeading(heading: 'Recurring event', action: 'Cancel'),
+            const SizedBox(height: 25),
             Text('Repeat every', style: CustomTextStyles().greyLabel14),
             SizedBox(height: 6.toHeight),
             Row(
@@ -73,17 +75,16 @@ class _RecurringEventState extends State<RecurringEvent> {
                     } else {
                       eventData!.event!.repeatDuration = null;
                     }
-                    print('repeat cycle:${eventData!.event!.repeatDuration}');
                   },
                 ),
                 Container(
                   color: AllColors().INPUT_GREY_BACKGROUND,
                   width: 155.toWidth,
-                  padding: EdgeInsets.only(left: 10, right: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                   child: DropdownButton(
                     isExpanded: true,
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    underline: SizedBox(),
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    underline: const SizedBox(),
                     elevation: 0,
                     dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
                     value: (eventData!.event!.repeatCycle != null)
@@ -93,7 +94,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                                 ? 'Month'
                                 : null
                         : null,
-                    hint: Text('Select Category'),
+                    hint: const Text('Select Category'),
                     items: repeatOccurance.map((String option) {
                       return DropdownMenuItem<String>(
                         value: option,
@@ -126,17 +127,17 @@ class _RecurringEventState extends State<RecurringEvent> {
                 ? Container(
                     color: AllColors().INPUT_GREY_BACKGROUND,
                     width: 350.toWidth,
-                    padding: EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
                     child: DropdownButton(
                       isExpanded: true,
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      underline: SizedBox(),
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      underline: const SizedBox(),
                       elevation: 0,
                       dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
                       value: eventData!.event!.occursOn != null
                           ? getWeekString(eventData!.event!.occursOn)
                           : null,
-                      hint: Text('Occurs on'),
+                      hint: const Text('Occurs on'),
                       items: occursOnOptions.map((String option) {
                         return DropdownMenuItem<String>(
                           value: option,
@@ -149,8 +150,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                         if (weekday != null) {
                           eventData!.event!.occursOn = weekday;
                         }
-
-                        print(eventData!.event!.occursOn);
 
                         setState(() {});
                       },
@@ -352,7 +351,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                 }
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Center(
               child: CustomButton(
                 onPressed: () {

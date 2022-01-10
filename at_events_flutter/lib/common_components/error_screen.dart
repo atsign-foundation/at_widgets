@@ -5,7 +5,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 
 class ErrorScreen extends StatelessWidget {
   final Function? onPressed;
-  ErrorScreen({this.onPressed});
+  const ErrorScreen({Key? key, this.onPressed}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -13,8 +13,8 @@ class ErrorScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Something went wrong.'),
-          SizedBox(height: 10),
+          const Text('Something went wrong.'),
+          const SizedBox(height: 10),
           CustomButton(
             buttonText: 'Retry',
             width: 120.toWidth,

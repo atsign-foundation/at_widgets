@@ -15,7 +15,8 @@ import 'package:latlong2/latlong.dart';
 class SelectedLocation extends StatefulWidget {
   final LatLng point;
   final String displayName;
-  SelectedLocation(this.displayName, this.point, {Key? key}) : super(key: key);
+  const SelectedLocation(this.displayName, this.point, {Key? key})
+      : super(key: key);
   @override
   _SelectedLocationState createState() => _SelectedLocationState();
 }
@@ -24,9 +25,9 @@ class _SelectedLocationState extends State<SelectedLocation> {
   var mapController = MapController();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
           children: <Widget>[
             showLocation(UniqueKey(), null, location: widget.point),
             Positioned(
@@ -48,7 +49,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.grey,
                       offset: Offset(0.0, 1.0), //(x,y)

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:math' as math;
 
 import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart';

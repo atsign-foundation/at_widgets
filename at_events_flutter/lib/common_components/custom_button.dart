@@ -9,7 +9,8 @@ class CustomButton extends StatelessWidget {
   final Color bgColor;
   final Border? border;
 
-  CustomButton({
+  // ignore: use_key_in_widget_constructors
+  const CustomButton({
     required this.child,
     this.height = 50,
     required this.onTap,
@@ -28,10 +29,10 @@ class CustomButton extends StatelessWidget {
         alignment: Alignment.center,
         width: width!.toWidth,
         height: height!.toHeight,
-        padding: padding ?? EdgeInsets.all(0),
+        padding: padding ?? const EdgeInsets.all(0),
         decoration: BoxDecoration(
             color: bgColor,
-            border: border ?? Border(),
+            border: border ?? const Border(),
             borderRadius: BorderRadius.circular(radius ?? 30)),
         child: child,
       ),

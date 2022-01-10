@@ -1,41 +1,125 @@
-<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
 ### Now for some internet optimism.
 
+[![pub package](https://img.shields.io/pub/v/at_location_flutter)](https://pub.dev/packages/at_location_flutter) [![pub points](https://badges.bar/at_location_flutter/pub%20points)](https://pub.dev/packages/at_location_flutter/score) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+
 # at_location_flutter
 
-A flutter plugin project to share location between two atsigns.
+## Introduction
 
-### Sample usage
-It is expected that the app will first create an AtClientService instance and authenticate an atsign.
+A flutter package to share and receive location between two atsigns.
 
-The location service needs to be initialised with the `atClient` from the `AtClientService`, current atsign and a global navigator key.
+## Get Started:
+
+Initially to get a basic overview of the SDK, you must read the [atsign docs](https://atsign.dev/docs/overview/).
+
+> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+
+
+### Installation:
+
+ To use this library in your app, add it to your pubspec.yaml
+
+```dart 
+  dependencies:
+    at_location_flutter: ^3.0.2
+```
+
+#### Add to your project
+
+ ```dart
+ flutter pub get 
+ ```
+
+ #### Import in your application code
+
+ ```dart
+ import 'package:at_location_flutter/at_location_flutter.dart';
+ ```
+
+### Clone it from github
+
+ Feel free to fork a copy of the source from the [GitHub Repo](https://github.com/atsign-foundation/at_widgets)
+
+### Initialising:
+It is expected that the app will first authenticate an atsign using the Onboarding widget.
+
+The location service needs to be initialised with a required GlobalKey<NavigatorState> parameter for
+navigation purpose (make sure the key is passed to the parent [MaterialApp]), the rest being optional parameters.
+
+```dart
+await initializeLocationService(
+      navKey,
+      mapKey: 'xxxx',
+      apiKey: 'xxxx',
+      showDialogBox: true,
+      streamAlternative: (__){},
+      isEventInUse: true, 
+    );
+```
+
+As this package needs location permission, so add these for:
+
+IOS: (ios/Runner/Info.plist)
 
 ```
-initializeLocationService(
-          clientSdkService.atClientServiceInstance.atClient,
-          activeAtSign,
-          NavService.navKey,
-          mapKey: 'xxxx',
-          apiKey: 'xxxx',
-          showDialogBox: true);
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Explain the description here.</string>
 ```
 
-Navigating to the maps view is done simply by using:
+Android: (android/app/src/main/AndroidManifest.xml)
+
 ```
-Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => HomeScreen(),
-    ));
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+```
+
+### Usage
+
+To share location with an atsign for 30 minutes:
+```
+sendShareLocationNotification(receiver, 30);
 ```
 
 To request location from an atsign:
 ```
-await sendRequestLocationNotification(receiver);
+sendRequestLocationNotification(receiver);
 ```
 
-To share location from an atsign and duration of share in minutes:
+To view location of atsigns:
 ```
-await sendShareLocationNotification(receiver, 30);
+AtLocationFlutterPlugin(
+  ['atsign1', 'atsign2', ...]
+)
+```
+
+To use the default map view:
+```
+Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MapScreen(
+                currentAtSign: AtLocationNotificationListener().currentAtSign,
+                userListenerKeyword: locationNotificationModel,
+              )),
+    );
+```
+
+To use the default home screen view:
+```
+Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => HomeScreen(),
+    ));
+```
+
+Different datatypes used in the package:
+```
+ - LocationNotificationModel: Contains the details of a share/request location and is sent to atsigns while sharing / requesting.
+ - LocationDataModel: Gets transferred in the background, contains the actual geo-coordinates and other details.
+ - KeyLocationModel - The package uses this to keep a track of all the share/request notifications.
 ```
 
 ### Steps to get mapKey
@@ -51,3 +135,12 @@ await sendShareLocationNotification(receiver, 30);
 
   - Go to https://developer.here.com/tutorials/getting-here-credentials/ and follow the steps
 
+
+## Example
+
+We have a good example with explanation in the [at_location_flutter](https://pub.dev/packages/at_location_flutter/example) package.
+
+## Open source usage and contributions
+
+ This is freely licensed open source code, so feel free to use it as is, suggest changes or enhancements or create your
+ own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.
