@@ -92,6 +92,22 @@ class _BugReportScreenState extends State<BugReportScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
+                    sendErrorReport(
+                        'custom error', context, MixedConstants.authorAtsign,
+                        () {
+                      print('success in sending report');
+                    });
+                  },
+                  child: Text(
+                    'Send custom error.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
                     print('activeAtSign = $activeAtSign');
                     await Navigator.push(
                       context,

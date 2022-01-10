@@ -25,19 +25,18 @@ class ClientSdkService {
     Directory? downloadDirectory;
     if (Platform.isIOS) {
       downloadDirectory =
-      await path_provider.getApplicationDocumentsDirectory();
+          await path_provider.getApplicationDocumentsDirectory();
     } else {
       downloadDirectory = await path_provider.getExternalStorageDirectory();
     }
 
     final appSupportDirectory =
-    await path_provider.getApplicationSupportDirectory();
+        await path_provider.getApplicationSupportDirectory();
     var path = appSupportDirectory.path;
     atClientPreference = AtClientPreference();
 
     atClientPreference.isLocalStoreRequired = true;
     atClientPreference.commitLogPath = path;
-    atClientPreference.syncStrategy = SyncStrategy.IMMEDIATE;
     atClientPreference.rootDomain = MixedConstants.ROOT_DOMAIN;
     atClientPreference.hiveStoragePath = path;
     atClientPreference.downloadPath = downloadDirectory!.path;

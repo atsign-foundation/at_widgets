@@ -9,7 +9,7 @@ class BugReportDialog extends StatefulWidget {
   final String? errorDetail;
   final String? atSign;
   final String? authorAtSign;
-  final Function()? isSuccessCallback;
+  final Function? isSuccessCallback;
 
   const BugReportDialog({
     Key? key,
@@ -35,8 +35,6 @@ class _BugReportDialogState extends State<BugReportDialog> {
     _bugReportService.setAuthorAtSign(widget.authorAtSign);
     super.initState();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {

@@ -121,7 +121,8 @@ class BugReportService {
       bugReports = [];
       var allKeys = await atClientManager.atClient.getAtKeys(
           regex: bugReportKey.toLowerCase(), sharedBy: currentAtSign);
-      Future.forEach(allKeys, (AtKey atKey) async {
+
+      await Future.forEach(allKeys, (AtKey atKey) async {
         if (currentAtSign!
             .toLowerCase()
             .contains(atKey.sharedBy!.toLowerCase())) {
@@ -145,7 +146,7 @@ class BugReportService {
         allBugReports = [];
         var allKeys = await atClientManager.atClient.getAtKeys(
             regex: bugReportKey.toLowerCase(), sharedBy: filterAtsign);
-        Future.forEach(allKeys, (AtKey atKey) async {
+        await Future.forEach(allKeys, (AtKey atKey) async {
           if (filterAtsign!
               .toLowerCase()
               .contains(atKey.sharedBy!.toLowerCase())) {
@@ -161,7 +162,7 @@ class BugReportService {
         allBugReports = [];
         var allKeys = await atClientManager.atClient
             .getAtKeys(regex: bugReportKey.toLowerCase());
-        Future.forEach(allKeys, (AtKey atKey) async {
+        await Future.forEach(allKeys, (AtKey atKey) async {
           var successValue =
               await AtClientManager.getInstance().atClient.get(atKey);
           BugReport bugReport = BugReport.fromJson(successValue.value);
@@ -212,6 +213,8 @@ class BugReportService {
         ..sharedBy = currentAtSign
         ..sharedWith = authorAtSign
         ..metadata = Metadata()
+        // key will be available for 12 days
+        ..metadata!.ttl = 518400000
         ..metadata!.ttr = -1;
 
       var res = await atClient.put(key, bugReport.toJson());
