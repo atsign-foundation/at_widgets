@@ -1,3 +1,6 @@
+## 3.1.3
+- Fixed [sending OTP inconsistency](https://github.com/atsign-foundation/at_widgets/issues/236) bug.
+
 ## 3.1.2
 - Fixed at_client dependency issue
 - Fixed lint errors
