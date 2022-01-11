@@ -1,11 +1,9 @@
-// ignore: import_of_legacy_library_into_null_safe
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 
 /// Function to initialise contacts Service
 void initializeContactsService(
-    {rootDomain = 'root.atsign.wtf', rootPort = 64}) {
+    {rootDomain = 'root.atsign.org', rootPort = 64}) {
   ContactService().initContactsService(rootDomain, rootPort);
 }
 
@@ -48,7 +46,7 @@ AtContact? getCachedContactDetail(String atsign) {
   if (ContactService().cachedContactList.isNotEmpty) {
     var index = ContactService()
         .cachedContactList
-        .indexWhere((element) => element!.atSign == atsign);
+        .indexWhere((element) => element.atSign == atsign);
     if (index > -1) return ContactService().cachedContactList[index];
   }
   return null;

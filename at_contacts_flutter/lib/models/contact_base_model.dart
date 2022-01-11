@@ -14,4 +14,4 @@ class BaseContact {
   });
 }
 
-enum STATE_UPDATE { BLOCK, MARK_FAV, DELETE, UNBLOCK }
+enum STATE_UPDATE { block, markFav, delete, unblock }
