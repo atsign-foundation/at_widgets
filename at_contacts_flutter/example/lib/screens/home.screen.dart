@@ -37,53 +37,53 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-Future<void> addContactDialog(BuildContext context) async {
-  await Dialogs.customDialog(
-    context,
-    'Add contact?',
-    'Enter the @sign to add as a contact',
-    () async {
-      await clientSdkService.addContact(pickedAtSign!, _atContact);
-      Navigator.pop(context);
-    },
-    childContent: TextField(
-      onChanged: (value) {
-        setState(() {
-          pickedAtSign = value;
-        });
+  Future<void> addContactDialog(BuildContext context) async {
+    await Dialogs.customDialog(
+      context,
+      'Add contact?',
+      'Enter the @sign to add as a contact',
+      () async {
+        await clientSdkService.addContact(pickedAtSign!, _atContact);
+        Navigator.pop(context);
       },
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: '@sign',
+      childContent: TextField(
+        onChanged: (value) {
+          setState(() {
+            pickedAtSign = value;
+          });
+        },
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: '@sign',
+        ),
       ),
-    ),
-    buttonText: 'Add',
-  );
-}
+      buttonText: 'Add',
+    );
+  }
 
-Future<void> deleteContactDialog(BuildContext context) async {
-  await Dialogs.customDialog(
-    context,
-    'Delete contact?',
-    'Enter the @sign to delete as a contact',
-    () async {
-      await clientSdkService.deleteContact(pickedAtSign!, _atContact);
-      Navigator.pop(context);
-    },
-    childContent: TextField(
-      onChanged: (value) {
-        setState(() {
-          pickedAtSign = value;
-        });
+  Future<void> deleteContactDialog(BuildContext context) async {
+    await Dialogs.customDialog(
+      context,
+      'Delete contact?',
+      'Enter the @sign to delete as a contact',
+      () async {
+        await clientSdkService.deleteContact(pickedAtSign!, _atContact);
+        Navigator.pop(context);
       },
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: '@sign',
+      childContent: TextField(
+        onChanged: (value) {
+          setState(() {
+            pickedAtSign = value;
+          });
+        },
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: '@sign',
+        ),
       ),
-    ),
-    buttonText: 'Delete',
-  );
-}
+      buttonText: 'Delete',
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,32 +101,32 @@ Future<void> deleteContactDialog(BuildContext context) async {
                 style: const TextStyle(fontSize: 20),
               ),
             ),
-ElevatedButton(
-  onPressed: () async => addContactDialog(context),
-  child: const Text('Add contact'),
-),
-ElevatedButton(
-  onPressed: () async => deleteContactDialog(context),
-  child: const Text('Delete contact'),
-),
-ElevatedButton(
-  onPressed: () {
-    // any logic
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (BuildContext context) => const ContactsScreen(),
-    ));
-  },
-  child: const Text('Show contacts'),
-),
-ElevatedButton(
-  onPressed: () {
-    // any logic
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (BuildContext context) => const BlockedScreen(),
-    ));
-  },
-  child: const Text('Show blocked contacts'),
-),
+            ElevatedButton(
+              onPressed: () async => addContactDialog(context),
+              child: const Text('Add contact'),
+            ),
+            ElevatedButton(
+              onPressed: () async => deleteContactDialog(context),
+              child: const Text('Delete contact'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // any logic
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const ContactsScreen(),
+                ));
+              },
+              child: const Text('Show contacts'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // any logic
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const BlockedScreen(),
+                ));
+              },
+              child: const Text('Show blocked contacts'),
+            ),
           ],
         ),
       ),

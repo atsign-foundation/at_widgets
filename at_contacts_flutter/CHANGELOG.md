@@ -1,3 +1,8 @@
+## 3.1.3
+- Added Package documentation.
+- Added a new example.
+- Added example documentation.
+
 ## 3.1.2
 - Fixed at_client dependency issue
 - Updated at_contact dependency
