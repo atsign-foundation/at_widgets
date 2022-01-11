@@ -91,7 +91,7 @@ class Onboarding {
       this.domain,
       required this.rootEnvironment,
       this.appAPIKey}) {
-    AppConstants.rootEnvironment = this.rootEnvironment;
+    AppConstants.rootEnvironment = rootEnvironment;
     if (AppConstants.rootEnvironment == RootEnvironment.Production &&
         appAPIKey == null) {
       throw ('App API Key is required for production environment');
