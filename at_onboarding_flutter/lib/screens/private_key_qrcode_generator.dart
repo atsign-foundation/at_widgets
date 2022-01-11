@@ -105,7 +105,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
                 CustomButton(
                   width: 230.toWidth,
                   isInverted: true,
-                  buttonText: Strings.coninueButtonTitle,
+                  buttonText: Strings.continueButtonTitle,
                   onPressed: () async {
                     if (OnboardingService.getInstance().fistTimeAuthScreen !=
                         null) {

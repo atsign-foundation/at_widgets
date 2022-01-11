@@ -15,7 +15,6 @@ import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client/at_client.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:flutter/services.dart';
@@ -70,7 +69,7 @@ class CustomDialog extends StatefulWidget {
   ///function call on close button press.
   final Function? onClose;
 
-  CustomDialog(
+  const CustomDialog(
       {this.context,
       this.isErrorDialog = false,
       this.hideReferences = false,
@@ -84,7 +83,9 @@ class CustomDialog extends StatefulWidget {
       this.onSubmit,
       this.onValidate,
       this.onLimitExceed,
-      this.onClose});
+      this.onClose,
+      Key? key})
+      : super(key: key);
 
   @override
   _CustomDialogState createState() => _CustomDialogState();
@@ -172,7 +173,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                               fontSize: 16.toFont),
                                         ),
                                         SizedBox(height: 20.toHeight),
-                                        Container(
+                                        SizedBox(
                                           width: 300.toWidth,
                                           height: 350.toHeight,
                                           child: QrReaderView(
@@ -196,7 +197,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                           ),
                                         ),
                                         SizedBox(height: 20.toHeight),
-                                        Container(
+                                        SizedBox(
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
@@ -255,7 +256,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                               ),
                                             ),
                                             widget.hideReferences
-                                                ? SizedBox()
+                                                ? const SizedBox()
                                                 : IconButton(
                                                     icon: Icon(
                                                       Icons.help,
@@ -299,7 +300,7 @@ class _CustomDialogState extends State<CustomDialog> {
                   content: widget.isAtsignForm && !isQrScanner
                       ? Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0.toFont),
-                          child: Container(
+                          child: SizedBox(
                             width: _dialogWidth,
                             // height:
                             //     MediaQuery.of(context).size.height * 0.6,
@@ -460,7 +461,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                   SizedBox(height: 20.toHeight),
                                   const Text('Need an @sign?'),
                                   SizedBox(height: 5.toHeight),
-                                  Container(
+                                  SizedBox(
                                       width: MediaQuery.of(context).size.width,
                                       child: ElevatedButton(
                                         style: Theme.of(context).brightness ==
@@ -500,15 +501,15 @@ class _CustomDialogState extends State<CustomDialog> {
                                       )),
                                   SizedBox(height: 20.toHeight),
                                   widget.hideQrScan
-                                      ? SizedBox()
+                                      ? const SizedBox()
                                       : const Text('Have a QR Code?'),
                                   widget.hideQrScan
-                                      ? SizedBox()
+                                      ? const SizedBox()
                                       : SizedBox(height: 5.toHeight),
                                   widget.hideQrScan
-                                      ? SizedBox()
+                                      ? const SizedBox()
                                       : (Platform.isAndroid || Platform.isIOS)
-                                          ? Container(
+                                          ? SizedBox(
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -544,7 +545,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                       fontSize: 15.toFont),
                                                 ),
                                               ))
-                                          : Container(
+                                          : SizedBox(
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -556,7 +557,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                                 .grey[800])),
                                                 // key: Key(''),
                                                 onPressed: () async {
-                                                  _uploadQRFileForDesktop(
+                                                  await _uploadQRFileForDesktop(
                                                       context,
                                                       widget.onValidate);
                                                 },
@@ -572,7 +573,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                   SizedBox(height: 15.toHeight),
                                   !otp
                                       ? !pair
-                                          ? Container(
+                                          ? SizedBox(
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -613,7 +614,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     ]),
                                               ))
                                           : Column(children: <Widget>[
-                                              Container(
+                                              SizedBox(
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
@@ -694,7 +695,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                       )))
                                             ])
                                       : Column(children: <Widget>[
-                                          Container(
+                                          SizedBox(
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -815,7 +816,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                         ]),
                                   if (!pair) ...<Widget>[
                                     SizedBox(height: 15.toHeight),
-                                    Container(
+                                    SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width,
                                         child: ElevatedButton(
@@ -892,7 +893,7 @@ class _CustomDialogState extends State<CustomDialog> {
     // });
     try {
       //await _controller!.stopCamera();
-      _controller!.stopCamera();
+      await _controller!.stopCamera();
     } catch (e) {
       print(e.toString());
     }
@@ -1169,8 +1170,7 @@ class _CustomDialogState extends State<CustomDialog> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
                           String url = 'https://my.atsign.com';
-                          if (!widget
-                              .hideReferences) if (await canLaunch(url)) {
+                          if (!widget.hideReferences && await canLaunch(url)) {
                             await launch(url);
                           }
                         }),
@@ -1208,12 +1208,12 @@ class _CustomDialogState extends State<CustomDialog> {
     if (isErrorDialog) {
       message = _getErrorMessage(widget.message);
     }
-    if (!message.contains(highLightText)) {
+    if (!message!.contains(highLightText!)) {
       return Text(message, style: CustomTextStyles.fontR16primary);
     }
     int startIndex = message.indexOf(highLightText);
     String text1 = message.substring(0, startIndex),
-        text3 = message.substring(startIndex + highLightText!.length);
+        text3 = message.substring(startIndex + highLightText.length);
 
     return RichText(
       text: TextSpan(
@@ -1266,17 +1266,14 @@ class _CustomDialogState extends State<CustomDialog> {
     );
   }
 
-  void _uploadQRFileForDesktop(
+  Future<void> _uploadQRFileForDesktop(
       BuildContext context, dynamic processAESKey) async {
     try {
-      // ignore: always_specify_types
-      var fileContents, aesKey, atsign;
+      String? aesKey, atsign;
       setState(() {
         loading = true;
       });
-
-      // ignore: always_specify_types
-      var path = await _desktopKeyPicker();
+      String? path = await _desktopKeyPicker();
       print(path);
       if (path == null) {
         setState(() {
@@ -1289,7 +1286,7 @@ class _CustomDialogState extends State<CustomDialog> {
 
       int length = selectedFile.lengthSync();
       if (length < 10) {
-        showErrorDialog(context, 'Incorrect QR file');
+        await showErrorDialog(context, 'Incorrect QR file');
         return;
       }
 
@@ -1305,7 +1302,7 @@ class _CustomDialogState extends State<CustomDialog> {
       atsign = params[0];
       aesKey = params[1];
 
-      if (aesKey == null && atsign == null) {
+      if (aesKey.isEmpty && atsign.isEmpty) {
         await showErrorDialog(context, 'Incorrect QR file');
         setState(() {
           loading = false;
@@ -1325,15 +1322,15 @@ class _CustomDialogState extends State<CustomDialog> {
     }
   }
 
-  Future<dynamic> _desktopKeyPicker() async {
+  Future<String?> _desktopKeyPicker() async {
     try {
+      // ignore: omit_local_variable_types
       XTypeGroup typeGroup = XTypeGroup(
         label: 'images',
-        // ignore: always_specify_types
-        extensions: ['png'],
+        extensions: <String>['png'],
       );
-      // ignore: always_specify_types
-      List<XFile> files = await openFiles(acceptedTypeGroups: [typeGroup]);
+      List<XFile> files =
+          await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
       if (files.isEmpty) {
         return null;
       }
