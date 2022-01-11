@@ -1,5 +1,4 @@
 import 'package:at_contacts_flutter/utils/colors.dart';
-import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -12,18 +11,19 @@ class ContactInitial extends StatelessWidget {
   final String initials;
 
   /// Index in the list of atsigns
-  int? index;
-  Key? key;
+  final int? index;
 
-  ContactInitial(
-      {this.size = 40,
-      this.key,
+  const ContactInitial(
+      {Key? key,
+      this.size = 40,
       required this.initials,
       this.index,
       this.maxSize,
-      this.minSize});
+      this.minSize})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
+    int index = this.index ?? 0;
     var encodedInitials = initials.runes;
     if (encodedInitials.length < 3) {
       index = encodedInitials.length;

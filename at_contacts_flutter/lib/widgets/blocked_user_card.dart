@@ -3,14 +3,13 @@
 /// and displays it's name, atsign, profile picture and option to unblock the user
 
 import 'dart:typed_data';
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -25,13 +24,10 @@ class BlockedUserCard extends StatefulWidget {
 }
 
 class _BlockedUserCardState extends State<BlockedUserCard> {
-  /// Instance of the contact service
-  late ContactService _contactService;
 
   @override
   void initState() {
     super.initState();
-    _contactService = ContactService();
   }
 
   @override
@@ -52,7 +48,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
     }
     return ListTile(
       leading: contactImage,
-      title: Container(
+      title: SizedBox(
         width: 300.toWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,11 +66,9 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
       ),
       trailing: GestureDetector(
         onTap: widget.unblockAtsign as void Function(),
-        child: Container(
-          child: Text(
-            TextStrings().unblock,
-            style: CustomTextStyles.blueRegular14,
-          ),
+        child: Text(
+          TextStrings().unblock,
+          style: CustomTextStyles.blueRegular14,
         ),
       ),
     );

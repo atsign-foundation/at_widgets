@@ -6,8 +6,6 @@
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
 import 'dart:typed_data';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -15,8 +13,6 @@ import 'package:at_contacts_flutter/utils/images.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomListTile extends StatefulWidget {
@@ -123,14 +119,14 @@ class _CustomListTileState extends State<CustomListTile> {
             leading: Container(
                 height: 40.toHeight,
                 width: 40.toHeight,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.circle,
                 ),
                 child: contactImage),
             trailing: IconButton(
               onPressed: widget.asSelectionTile
-                  ? selectRemoveContact()
+                  ? selectRemoveContact
                   : () {
                       if (widget.onTrailingPressed != null) {
                         widget.onTrailingPressed!(widget.contact!.atSign);
@@ -138,8 +134,8 @@ class _CustomListTileState extends State<CustomListTile> {
                     },
               icon: (widget.asSelectionTile)
                   ? (isSelected)
-                      ? Icon(Icons.close)
-                      : Icon(Icons.add)
+                      ? const Icon(Icons.close)
+                      : const Icon(Icons.add)
                   : Image.asset(
                       ImageConstants.sendIcon,
                       width: 21.toWidth,
@@ -151,6 +147,5 @@ class _CustomListTileState extends State<CustomListTile> {
         });
   }
 
-  // ignore: always_declare_return_types
-  selectRemoveContact() {}
+  void selectRemoveContact() {}
 }

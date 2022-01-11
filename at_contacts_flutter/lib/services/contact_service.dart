@@ -1,21 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_commons/at_commons.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_lookup/at_lookup.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
-import 'package:flutter/material.dart';
-import 'package:at_client/src/manager/at_client_manager.dart';
+import 'package:at_client/at_client.dart';
 
 /// A service to handle CRUD operation on contacts
 class ContactService {
@@ -88,7 +81,7 @@ class ContactService {
   List<BaseContact> baseContactList = [], baseBlockedList = [];
 
   /// List of contacts added by atsign
-  List<AtContact?> contactList = [],
+  List<AtContact> contactList = [],
 
       /// List of blocked contacts added by atsign
       blockContactList = [],
@@ -114,8 +107,8 @@ class ContactService {
   /// List of all contacts added by atsign
   List<String> allContactsList = [];
 
-  // ignore: always_declare_return_types
-  initContactsService(String rootDomainFromApp, int rootPortFromApp) async {
+  Future<void> initContactsService(
+      String rootDomainFromApp, int rootPortFromApp) async {
     loggedInUserDetails = null;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
@@ -127,35 +120,32 @@ class ContactService {
     await fetchBlockContactList();
   }
 
-  // ignore: always_declare_return_types
-  resetData() {
+  void resetData() {
     getAtSignError = '';
     checkAtSign = false;
   }
 
-  // ignore: always_declare_return_types
-  fetchContacts() async {
+  Future<List<AtContact>> fetchContacts() async {
     try {
       selectedContacts = [];
       contactList = [];
       allContactsList = [];
       contactList = await atContactImpl.listContacts();
-      var tempContactList = <AtContact?>[...contactList];
+      var tempContactList = <AtContact>[...contactList];
       var range = contactList.length;
       for (var i = 0; i < range; i++) {
-        allContactsList.add(contactList[i]!.atSign!);
-        if (contactList[i]!.blocked!) {
+        allContactsList.add(contactList[i].atSign!);
+        if (contactList[i].blocked!) {
           tempContactList.remove(contactList[i]);
         }
       }
       contactList = tempContactList;
       contactList.sort((a, b) {
-        // ignore: omit_local_variable_types
-        int? index = a?.atSign
+        int? index = a.atSign
             .toString()
             .substring(1)
-            .compareTo(b!.atSign!.toString().substring(1));
-        return index!;
+            .compareTo(b.atSign!.toString().substring(1));
+        return index;
       });
 
       compareContactListForUpdatedState();
@@ -168,10 +158,9 @@ class ContactService {
   }
 
   void compareContactListForUpdatedState() {
-    contactList.forEach(
-      (c) {
+    for (var c in contactList) {
         var index =
-            baseContactList.indexWhere((e) => e.contact!.atSign == c!.atSign);
+            baseContactList.indexWhere((e) => e.contact!.atSign == c.atSign);
         if (index > -1) {
           baseContactList[index] = BaseContact(
             c,
@@ -189,26 +178,24 @@ class ContactService {
             ),
           );
         }
-      },
-    );
+      }
 
     // checking to remove deleted atsigns from baseContactList.
     var atsignsToRemove = <String>[];
-    baseContactList.forEach((baseContact) {
+    for (var baseContact in baseContactList) {
       var index = contactList.indexWhere(
-        (e) => e!.atSign == baseContact.contact!.atSign,
+        (e) => e.atSign == baseContact.contact!.atSign,
       );
       if (index == -1) {
         atsignsToRemove.add(baseContact.contact!.atSign!);
       }
-    });
-    atsignsToRemove.forEach((e) {
+    }
+    for (var e in atsignsToRemove) {
       baseContactList.removeWhere((element) => element.contact!.atSign == e);
-    });
+    }
   }
 
-  // ignore: always_declare_return_types
-  blockUnblockContact(
+  Future<void> blockUnblockContact(
       {required AtContact contact, required bool blockAction}) async {
     try {
       contact.blocked = blockAction;
@@ -220,8 +207,7 @@ class ContactService {
     }
   }
 
-  // ignore: always_declare_return_types
-  markFavContact(AtContact contact) async {
+  Future<void> markFavContact(AtContact contact) async {
     try {
       contact.favourite = !contact.favourite!;
       await atContactImpl.update(contact);
@@ -232,8 +218,8 @@ class ContactService {
     }
   }
 
-  // ignore: always_declare_return_types
-  fetchBlockContactList() async {
+
+  Future<List<AtContact>> fetchBlockContactList() async {
     try {
       blockContactList = [];
       blockContactList = await atContactImpl.listBlockedContacts();
@@ -242,14 +228,14 @@ class ContactService {
       return blockContactList;
     } catch (error) {
       print('error in fetching contact list:$error');
+      return [];
     }
   }
 
   void compareBlockedContactListForUpdatedState() {
-    blockContactList.forEach(
-      (c) {
+    for (var c in blockContactList) {
         var index =
-            baseBlockedList.indexWhere((e) => e.contact!.atSign == c!.atSign);
+            baseBlockedList.indexWhere((e) => e.contact!.atSign == c.atSign);
         if (index > -1) {
           baseBlockedList[index] = BaseContact(
             c,
@@ -267,32 +253,32 @@ class ContactService {
             ),
           );
         }
-      },
-    );
+      }
 
     // checking to remove unblocked atsigns from baseBlockedList.
     var atsignsToRemove = <String>[];
-    baseBlockedList.forEach((baseContact) {
+    for (var baseContact in baseBlockedList) {
       var index = blockContactList.indexWhere(
-        (e) => e!.atSign == baseContact.contact!.atSign,
+        (e) => e.atSign == baseContact.contact!.atSign,
       );
       if (index == -1) {
         atsignsToRemove.add(baseContact.contact!.atSign!);
       }
-    });
-    atsignsToRemove.forEach((e) {
+    }
+    for (var e in atsignsToRemove) {
       baseBlockedList.removeWhere((element) => element.contact!.atSign == e);
-    });
+    }
   }
 
-  // ignore: always_declare_return_types
-  deleteAtSign({required String atSign}) async {
+  Future<bool> deleteAtSign({required String atSign}) async {
     try {
       var result = await atContactImpl.delete(atSign);
       print('delete result => $result');
       fetchContacts();
+      return result;
     } catch (error) {
       print('error in delete atsign:$error');
+      return false;
     }
   }
 
@@ -327,13 +313,13 @@ class ContactService {
       if (!checkAtSign!) {
         getAtSignError = TextStrings().unknownAtsign(atSign);
       } else {
-        contactList.forEach((element) async {
-          if (element!.atSign == atSign) {
+        for (var element in contactList) {
+          if (element.atSign == atSign) {
             getAtSignError = TextStrings().atsignExists(atSign);
             isContactPresent = true;
-            return;
+            break;
           }
-        });
+        }
       }
       if (!isContactPresent && checkAtSign!) {
         var details = await getContactDetails(atSign, nickName);
@@ -357,13 +343,12 @@ class ContactService {
     }
   }
 
-  // ignore: always_declare_return_types
-  removeSelectedAtSign(AtContact? contact) {
+
+  void removeSelectedAtSign(AtContact? contact) {
     try {
-      // ignore: omit_local_variable_types
       for (AtContact? atContact in selectedContacts) {
         if (contact == atContact || atContact!.atSign == contact!.atSign) {
-          var index = selectedContacts.indexOf(contact);
+          var index = selectedContacts.indexOf(contact!);
           print('index is $index');
           selectedContacts.removeAt(index);
           break;
@@ -380,12 +365,11 @@ class ContactService {
     }
   }
 
-  // ignore: always_declare_return_types
-  selectAtSign(AtContact? contact) {
+  void selectAtSign(AtContact? contact) {
     try {
       if (selectedContacts.length <= 25 &&
           !selectedContacts.contains(contact)) {
-        selectedContacts.add(contact);
+        selectedContacts.add(contact!);
       } else {
         limitReached = true;
       }
@@ -395,8 +379,8 @@ class ContactService {
     }
   }
 
-  // ignore: always_declare_return_types
-  clearAtSigns() {
+
+  void clearAtSigns() {
     try {
       selectedContacts = [];
       selectedContactSink.add(selectedContacts);
@@ -414,7 +398,6 @@ class ContactService {
     }
     var checkPresence =
         await AtLookupImpl.findSecondary(atSign, rootDomain, rootPort);
-    // ignore: unnecessary_null_comparison
     return checkPresence != null;
   }
 
@@ -423,7 +406,7 @@ class ContactService {
       String? atSign, String? nickName) async {
     var contactDetails = <String, dynamic>{};
 
-    if (atClientManager.atClient == null || atSign == null) {
+    if (atClientManager.atClient.getCurrentAtSign() == null || atSign == null) {
       return contactDetails;
     } else if (!atSign.contains('@')) {
       atSign = '@' + atSign;
@@ -472,8 +455,8 @@ class ContactService {
   }
 
   void updateState(STATE_UPDATE stateToUpdate, AtContact contact, bool state) {
-    var indexToUpdate;
-    if (stateToUpdate == STATE_UPDATE.UNBLOCK) {
+    int indexToUpdate;
+    if (stateToUpdate == STATE_UPDATE.unblock) {
       indexToUpdate = baseBlockedList
           .indexWhere((element) => element.contact!.atSign == contact.atSign);
     } else {
@@ -486,22 +469,22 @@ class ContactService {
     }
 
     switch (stateToUpdate) {
-      case STATE_UPDATE.BLOCK:
+      case STATE_UPDATE.block:
         baseContactList[indexToUpdate].isBlocking = state;
         break;
-      case STATE_UPDATE.UNBLOCK:
+      case STATE_UPDATE.unblock:
         baseBlockedList[indexToUpdate].isBlocking = state;
         break;
-      case STATE_UPDATE.DELETE:
+      case STATE_UPDATE.delete:
         baseContactList[indexToUpdate].isDeleting = state;
         break;
-      case STATE_UPDATE.MARK_FAV:
+      case STATE_UPDATE.markFav:
         baseContactList[indexToUpdate].isMarkingFav = state;
         break;
       default:
     }
 
-    if (stateToUpdate == STATE_UPDATE.UNBLOCK) {
+    if (stateToUpdate == STATE_UPDATE.unblock) {
       blockedContactSink.add(baseBlockedList);
     } else {
       contactSink.add(baseContactList);

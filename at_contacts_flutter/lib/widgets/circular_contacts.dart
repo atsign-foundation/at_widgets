@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
@@ -8,7 +7,7 @@ import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 ///
 
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CircularContacts extends StatelessWidget {
@@ -34,7 +33,7 @@ class CircularContacts extends StatelessWidget {
           Stack(
             alignment: AlignmentDirectional.topCenter,
             children: [
-              Container(
+              SizedBox(
                 height: 50.toHeight,
                 width: 50.toHeight,
                 child:
@@ -56,7 +55,7 @@ class CircularContacts extends StatelessWidget {
                   child: Container(
                     height: 12.toHeight,
                     width: 12.toHeight,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Colors.black, shape: BoxShape.circle),
                     child: Icon(
                       Icons.close,
@@ -69,7 +68,7 @@ class CircularContacts extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10.toHeight),
-          Container(
+          SizedBox(
             width: 80.toWidth,
             child: Text(
               contact!.tags != null && contact!.tags!['name'] != null
@@ -81,7 +80,7 @@ class CircularContacts extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.toHeight),
-          Container(
+          SizedBox(
             width: 60.toWidth,
             child: Text(
               contact!.atSign!,

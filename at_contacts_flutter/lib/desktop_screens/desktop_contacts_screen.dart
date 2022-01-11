@@ -16,7 +16,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 class DesktopContactsScreen extends StatefulWidget {
   final bool isBlockedScreen;
   final Function onBackArrowTap;
-  DesktopContactsScreen(
+  const DesktopContactsScreen(
     Key key,
     this.onBackArrowTap, {
     this.isBlockedScreen = false,
@@ -36,10 +36,10 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
   void initState() {
     _contactService = ContactService();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      var _result, _result2;
+      List<AtContact> _result, _result2;
       if (widget.isBlockedScreen) {
         _result2 = await _contactService!.fetchBlockContactList();
-        if (_result2 == null) {
+        if (_result2.isEmpty) {
           if (mounted) {
             setState(() {
               errorOcurred = true;
@@ -48,7 +48,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
         }
       } else {
         _result = await _contactService!.fetchContacts();
-        if (_result == null) {
+        if (_result.isEmpty) {
           if (mounted) {
             setState(() {
               errorOcurred = true;
@@ -71,23 +71,24 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           children: [
             Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 InkWell(
                   onTap: () {
                     widget.onBackArrowTap();
                   },
-                  child: Icon(Icons.arrow_back, size: 25, color: Colors.black),
+                  child: const Icon(Icons.arrow_back,
+                      size: 25, color: Colors.black),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 30,
                 ),
                 Text(
                   widget.isBlockedScreen ? 'Blocked Contacts' : 'All Contacts',
                   style: CustomTextStyles.desktopPrimaryRegular24,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 30,
                 ),
                 Expanded(
@@ -98,15 +99,16 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                         hintText: widget.isBlockedScreen
                             ? 'Search Blocked Contacts'
                             : 'Search Contact',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontSize: 16,
                           color: ColorConstants.greyText,
                         ),
                         filled: true,
                         fillColor: ColorConstants.scaffoldColor,
-                        contentPadding: EdgeInsets.symmetric(vertical: 15),
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 15),
+                        prefixIcon: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Icon(
                             Icons.search,
                             color: ColorConstants.greyText,
@@ -114,7 +116,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                           ),
                         ),
                       ),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         color: ColorConstants.fontPrimary,
                       ),
@@ -129,16 +131,17 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                   width: widget.isBlockedScreen ? 0 : 30,
                 ),
                 widget.isBlockedScreen
-                    ? SizedBox()
+                    ? const SizedBox()
                     : CommonButton(
                         'Add Contact',
                         () {
                           showDialog(
                             context: context,
-                            builder: (context) => AddContactDialog(),
+                            builder: (context) => const AddContactDialog(),
                           );
                         },
-                        leading: Icon(Icons.add, size: 25, color: Colors.white),
+                        leading: const Icon(Icons.add,
+                            size: 25, color: Colors.white),
                         color: ColorConstants.orangeColor,
                         border: 3,
                         height: 45,
@@ -148,7 +151,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                       )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Expanded(
@@ -159,7 +162,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return SizedBox();
+                          return const SizedBox();
                         } else if (snapshot.connectionState ==
                                 ConnectionState.active &&
                             !snapshot.hasError) {
@@ -172,34 +175,34 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                               if (baseContact.contact!.atSign!
                                   .contains(searchText)) {
                                 _filteredList.add(baseContact);
-                                return contacts_tile(baseContact);
+                                return contactsTile(baseContact);
                               } else {
                                 _filteredList.remove(baseContact);
 
                                 if (_filteredList.isEmpty &&
                                     searchText.trim().isNotEmpty &&
                                     index == itemCount - 1) {
-                                  return Center(
+                                  return const Center(
                                     child: Text('No Contacts found'),
                                   );
                                 }
 
-                                return SizedBox();
+                                return const SizedBox();
                               }
                             },
                             separatorBuilder: (context, index) {
                               var baseContact = snapshot.data![index]!;
                               if (baseContact.contact!.atSign!
                                   .contains(searchText)) {
-                                return Divider(
+                                return const Divider(
                                   thickness: 0.2,
                                 );
                               }
-                              return SizedBox();
+                              return const SizedBox();
                             },
                           );
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       })
                   : StreamBuilder<List<BaseContact?>>(
@@ -208,7 +211,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return SizedBox();
+                          return const SizedBox();
                         } else if (snapshot.connectionState ==
                                 ConnectionState.active &&
                             !snapshot.hasError) {
@@ -221,34 +224,34 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                               if (contact.contact!.atSign!
                                   .contains(searchText)) {
                                 _filteredList.add(contact);
-                                return contacts_tile(contact);
+                                return contactsTile(contact);
                               } else {
                                 _filteredList.remove(contact);
 
                                 if (_filteredList.isEmpty &&
                                     searchText.trim().isNotEmpty &&
                                     index == itemCount - 1) {
-                                  return Center(
+                                  return const Center(
                                     child: Text('No Contacts found'),
                                   );
                                 }
 
-                                return SizedBox();
+                                return const SizedBox();
                               }
                             },
                             separatorBuilder: (context, index) {
                               var contact = snapshot.data![index]!;
                               if (contact.contact!.atSign!
                                   .contains(searchText)) {
-                                return Divider(
+                                return const Divider(
                                   thickness: 0.2,
                                 );
                               }
-                              return SizedBox();
+                              return const SizedBox();
                             },
                           );
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       }),
             ),
@@ -258,9 +261,9 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
     );
   }
 
-  Widget contacts_tile(BaseContact contact) {
+  Widget contactsTile(BaseContact contact) {
     String? name;
-    var image;
+    Uint8List? image;
     if (contact.contact!.tags != null) {
       if (contact.contact!.tags!['name'] != null) {
         name = contact.contact!.tags!['name'];
@@ -285,7 +288,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                   maxSize: 50,
                   minSize: 50,
                 ),
-          SizedBox(
+          const SizedBox(
             width: 15,
           ),
           SizedBox(
@@ -295,18 +298,18 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
               style: CustomTextStyles.primaryNormal20,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 70,
           ),
           Text(contact.contact!.atSign ?? '',
               style: CustomTextStyles.desktopSecondaryRegular18),
-          Spacer(),
+          const Spacer(),
           ContactListTile(
             contact,
             isBlockedScreen: widget.isBlockedScreen,
             key: UniqueKey(),
           ),
-          SizedBox(
+          const SizedBox(
             width: 50,
           ),
         ],
@@ -316,14 +319,15 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
 }
 
 class ContactListTile extends StatefulWidget {
-  BaseContact? baseContact;
-  bool isBlockedScreen;
-  UniqueKey? key;
-  ContactListTile(
+  final BaseContact? baseContact;
+  final bool isBlockedScreen;
+  final UniqueKey? uniqueKey;
+  const ContactListTile(
     this.baseContact, {
-    this.key,
+    Key? key,
+    this.uniqueKey,
     this.isBlockedScreen = false,
-  });
+  }) : super(key: key);
 
   @override
   _ContactListTileState createState() => _ContactListTileState();
@@ -349,62 +353,62 @@ class _ContactListTileState extends State<ContactListTile> {
       children: [
         InkWell(
           onTap: () async {
-            _contactService!.updateState(STATE_UPDATE.MARK_FAV, contact, true);
+            _contactService!.updateState(STATE_UPDATE.markFav, contact, true);
             await _contactService?.markFavContact(contact);
-            _contactService!.updateState(STATE_UPDATE.MARK_FAV, contact, false);
+            _contactService!.updateState(STATE_UPDATE.markFav, contact, false);
           },
           child: widget.baseContact!.isMarkingFav!
-              ? SizedBox(
+              ? const SizedBox(
                   width: 25, height: 25, child: CircularProgressIndicator())
               : Container(
                   child: contact.favourite!
-                      ? Icon(
+                      ? const Icon(
                           Icons.star,
                           color: ColorConstants.orangeColor,
                         )
-                      : Icon(Icons.star_border),
+                      : const Icon(Icons.star_border),
                 ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 50,
         ),
         widget.baseContact!.isBlocking!
-            ? SizedBox(
+            ? const SizedBox(
                 width: 25, height: 25, child: CircularProgressIndicator())
             : InkWell(
                 onTap: () async {
                   _contactService!
-                      .updateState(STATE_UPDATE.BLOCK, contact, true);
+                      .updateState(STATE_UPDATE.block, contact, true);
                   await _contactService!
                       .blockUnblockContact(contact: contact, blockAction: true);
                   _contactService!
-                      .updateState(STATE_UPDATE.BLOCK, contact, false);
+                      .updateState(STATE_UPDATE.block, contact, false);
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.block,
                   color: ColorConstants.orangeColor,
                 ),
               ),
-        SizedBox(
+        const SizedBox(
           width: 50,
         ),
         widget.baseContact!.isDeleting!
-            ? SizedBox(
+            ? const SizedBox(
                 width: 25, height: 25, child: CircularProgressIndicator())
             : InkWell(
                 onTap: () async {
                   _contactService!
-                      .updateState(STATE_UPDATE.DELETE, contact, true);
+                      .updateState(STATE_UPDATE.delete, contact, true);
                   await _contactService!
                       .deleteAtSign(atSign: contact.atSign ?? '');
                   _contactService!
-                      .updateState(STATE_UPDATE.DELETE, contact, false);
+                      .updateState(STATE_UPDATE.delete, contact, false);
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.delete,
                 ),
               ),
-        SizedBox(
+        const SizedBox(
           width: 50,
         ),
         Image.asset(ImageConstants.sendIcon,
@@ -417,14 +421,15 @@ class _ContactListTileState extends State<ContactListTile> {
 
   Widget _forBlockScreen() {
     return widget.baseContact!.isBlocking!
-        ? SizedBox(width: 25, height: 25, child: CircularProgressIndicator())
+        ? const SizedBox(
+            width: 25, height: 25, child: CircularProgressIndicator())
         : InkWell(
             onTap: () async {
-              _contactService!.updateState(STATE_UPDATE.UNBLOCK, contact, true);
+              _contactService!.updateState(STATE_UPDATE.unblock, contact, true);
               await _contactService!
                   .blockUnblockContact(contact: contact, blockAction: false);
               _contactService!
-                  .updateState(STATE_UPDATE.UNBLOCK, contact, false);
+                  .updateState(STATE_UPDATE.unblock, contact, false);
             },
             child: Text(
               'Unblock',

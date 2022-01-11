@@ -1,9 +1,8 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/widgets/circular_contacts.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:at_common_flutter/services/size_config.dart';
 
 class HorizontalCircularList extends StatelessWidget {
@@ -19,7 +18,7 @@ class HorizontalCircularList extends StatelessWidget {
         stream: _contactService.selectedContactStream,
         builder: (context, snapshot) {
           var selectedContacts = snapshot.data!;
-          return Container(
+          return SizedBox(
             height: (selectedContacts.isEmpty) ? 0 : 150.toHeight,
             child: ListView.builder(
               itemCount: selectedContacts.length,
