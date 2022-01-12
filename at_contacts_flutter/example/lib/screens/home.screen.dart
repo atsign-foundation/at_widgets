@@ -43,8 +43,9 @@ class _HomePageState extends State<HomePage> {
       'Add contact?',
       'Enter the @sign to add as a contact',
       () async {
-        await clientSdkService.addContact(pickedAtSign!, _atContact);
-        Navigator.pop(context);
+        bool isContactAdded =
+            await clientSdkService.addContact(pickedAtSign!, _atContact);
+        if (isContactAdded) Navigator.pop(context);
       },
       childContent: TextField(
         onChanged: (value) {

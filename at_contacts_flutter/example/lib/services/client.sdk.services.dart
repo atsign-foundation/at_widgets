@@ -46,7 +46,7 @@ class ClientSdkService {
     return result;
   }
 
-  Future<void> addContact(String atSign, AtContactsImpl atContact) async {
+  Future<bool> addContact(String atSign, AtContactsImpl atContact) async {
     AtContact contact = AtContact()
       ..atSign = atSign
       ..createdOn = DateTime.now()
@@ -55,11 +55,12 @@ class ClientSdkService {
     debugPrint(isContactAdded
         ? 'Contact added successfully'
         : 'Failed to add contact');
+        return isContactAdded;
   }
 
   Future<void> deleteContact(String atSign, AtContactsImpl atContact) async {
-    bool isContactAdded = await atContact.delete(atSign);
-    debugPrint(isContactAdded
+    bool isContactDeleted = await atContact.delete(atSign);
+    debugPrint(isContactDeleted
         ? 'Contact deleted successfully'
         : 'Failed to delete contact');
   }

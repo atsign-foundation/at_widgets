@@ -6,7 +6,6 @@ class Dialogs {
       {required String? buttonText, Widget? childContent}) async {
     await showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (BuildContext context) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
