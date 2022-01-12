@@ -121,7 +121,9 @@ class _GroupContactViewState extends State<GroupContactView> {
         isDesktop: widget.isDesktop,
         showTitle: true,
         titleText: 'Contacts',
-        onLeadingIconPressed: widget.onBackArrowTap,
+        onLeadingIconPressed: () {
+          widget.onBackArrowTap!(_groupService.selectedGroupContacts);
+        },
         showBackButton: true,
         showLeadingIcon: true,
         // showTrailingIcon: widget.asSelectionScreen == null ||

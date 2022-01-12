@@ -16,9 +16,10 @@ import 'package:at_common_flutter/services/size_config.dart';
 class DesktopContactsScreen extends StatefulWidget {
   final bool isBlockedScreen;
   final Function onBackArrowTap;
-  const DesktopContactsScreen(
-    Key key,
+  Key? key;
+  DesktopContactsScreen(
     this.onBackArrowTap, {
+    this.key,
     this.isBlockedScreen = false,
   }) : super(key: key);
 
@@ -279,6 +280,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
         children: [
           image != null
               ? CustomCircleAvatar(
+                  key: Key(contact.contact!.atSign ?? ''),
                   byteImage: image,
                   nonAsset: true,
                   size: 50,
@@ -307,7 +309,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           ContactListTile(
             contact,
             isBlockedScreen: widget.isBlockedScreen,
-            key: UniqueKey(),
+            // key: UniqueKey(),
           ),
           const SizedBox(
             width: 50,
@@ -319,13 +321,12 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
 }
 
 class ContactListTile extends StatefulWidget {
-  final BaseContact? baseContact;
-  final bool isBlockedScreen;
-  final UniqueKey? uniqueKey;
-  const ContactListTile(
+  BaseContact? baseContact;
+  bool isBlockedScreen;
+  Key? key;
+  ContactListTile(
     this.baseContact, {
-    Key? key,
-    this.uniqueKey,
+    this.key,
     this.isBlockedScreen = false,
   }) : super(key: key);
 

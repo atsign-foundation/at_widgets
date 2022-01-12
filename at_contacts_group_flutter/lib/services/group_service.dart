@@ -20,7 +20,7 @@ class GroupService {
   late String _atsign;
 
   /// selected contact list for the group
-  List<AtContact?>? selecteContactList;
+  List<AtContact?> selecteContactList = [];
 
   /// List of all the contacts for the atsign
   List<GroupContactsModel?> allContacts = [],
@@ -103,7 +103,7 @@ class GroupService {
 
   // ignore: always_declare_return_types
   setSelectedContacts(List<AtContact?>? list) {
-    selecteContactList = list;
+    selecteContactList = list ?? [];
   }
 
   List<AtContact?>? get selectedContactList => selecteContactList;
