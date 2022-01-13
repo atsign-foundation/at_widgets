@@ -51,3 +51,27 @@ AtContact? getCachedContactDetail(String atsign) {
   }
   return null;
 }
+
+/// Adds [atsign] in contact list.
+/// If [nickName] is not null , it wll be set as nick name of the [atsign].
+Future<bool> addContact(String atsign, {String? nickName}) async {
+  return await ContactService().addAtSign(atSign: atsign, nickName: nickName);
+}
+
+/// deletes the given [atsign]
+Future<bool> deleteContact(String atsign) async {
+  return await ContactService().deleteAtSign(atSign: atsign);
+}
+
+/// blocks/unblocks [atContact] based on boolean [blockAction]
+/// if [blockAction] is [true] , [atContact] will be blocked.
+Future<bool> blockUnblockAtContact(
+    AtContact atContact, bool blockAction) async {
+  return await ContactService()
+      .blockUnblockContact(contact: atContact, blockAction: blockAction);
+}
+
+/// marks [atContact] as favourite.
+Future<bool> markFavContact(AtContact atContact) async {
+  return await ContactService().markFavContact(atContact);
+}

@@ -1,5 +1,4 @@
 import 'package:at_client/at_client.dart';
-import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:eg/services/client.sdk.services.dart';
 import 'package:eg/widgets/prompt.widget.dart';
@@ -14,13 +13,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AtClient atClientInstance = AtClientManager.getInstance().atClient;
-  late AtContactsImpl _atContact;
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
   String? activeAtSign, pickedAtSign;
   @override
   void initState() {
-    _atContact =
-        AtContactsImpl(atClientInstance, atClientInstance.getCurrentAtSign()!);
     Future.microtask(() async {
       var currentAtSign =
           await clientSdkService.getAtSignAndInitializeContacts();
@@ -37,14 +33,26 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  String formatAtsign(String atsign) {
+    if (atsign[0] == '@') {
+      return atsign;
+    } else {
+      return '@' + atsign;
+    }
+  }
+
   Future<void> addContactDialog(BuildContext context) async {
     await Dialogs.customDialog(
       context,
       'Add contact?',
       'Enter the @sign to add as a contact',
       () async {
-        await clientSdkService.addContact(pickedAtSign!, _atContact);
-        Navigator.pop(context);
+        if (pickedAtSign != null && pickedAtSign!.trim().isNotEmpty) {
+          pickedAtSign = formatAtsign(pickedAtSign!);
+          bool isContactAdded = await addContact(pickedAtSign!);
+          if (isContactAdded) Navigator.pop(context);
+        }
+        pickedAtSign = '';
       },
       childContent: TextField(
         onChanged: (value) {
@@ -67,7 +75,12 @@ class _HomePageState extends State<HomePage> {
       'Delete contact?',
       'Enter the @sign to delete as a contact',
       () async {
-        await clientSdkService.deleteContact(pickedAtSign!, _atContact);
+        if (pickedAtSign != null && pickedAtSign!.trim().isNotEmpty) {
+          pickedAtSign = formatAtsign(pickedAtSign!);
+          await deleteContact(pickedAtSign!);
+        }
+
+        pickedAtSign = '';
         Navigator.pop(context);
       },
       childContent: TextField(

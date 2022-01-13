@@ -1,6 +1,5 @@
 import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -13,7 +12,7 @@ class ClientSdkService {
     return _singleton;
   }
   AtClientService? atClientServiceInstance;
-  AtClientManager? atClientManager;
+  AtClientManager atClientManager = AtClientManager.getInstance();
 
   late AtClientPreference atClientPreference;
 
@@ -46,26 +45,8 @@ class ClientSdkService {
     return result;
   }
 
-  Future<void> addContact(String atSign, AtContactsImpl atContact) async {
-    AtContact contact = AtContact()
-      ..atSign = atSign
-      ..createdOn = DateTime.now()
-      ..type = ContactType.Individual;
-    bool isContactAdded = await atContact.add(contact);
-    debugPrint(isContactAdded
-        ? 'Contact added successfully'
-        : 'Failed to add contact');
-  }
-
-  Future<void> deleteContact(String atSign, AtContactsImpl atContact) async {
-    bool isContactAdded = await atContact.delete(atSign);
-    debugPrint(isContactAdded
-        ? 'Contact deleted successfully'
-        : 'Failed to delete contact');
-  }
-
   ///Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
-    return atClientServiceInstance!.atClientManager.atClient.getCurrentAtSign();
+    return atClientManager.atClient.getCurrentAtSign();
   }
 }

@@ -125,7 +125,7 @@ class ContactService {
     checkAtSign = false;
   }
 
-  Future<List<AtContact>> fetchContacts() async {
+  Future<List<AtContact>?> fetchContacts() async {
     try {
       selectedContacts = [];
       contactList = [];
@@ -152,33 +152,33 @@ class ContactService {
       contactSink.add(baseContactList);
       return contactList;
     } catch (e) {
-      print('error here => $e');
-      return [];
+      print('error in fetchContacts => $e');
+      return null;
     }
   }
 
   void compareContactListForUpdatedState() {
     for (var c in contactList) {
-        var index =
-            baseContactList.indexWhere((e) => e.contact!.atSign == c.atSign);
-        if (index > -1) {
-          baseContactList[index] = BaseContact(
+      var index =
+          baseContactList.indexWhere((e) => e.contact!.atSign == c.atSign);
+      if (index > -1) {
+        baseContactList[index] = BaseContact(
+          c,
+          isBlocking: baseContactList[index].isBlocking,
+          isMarkingFav: baseContactList[index].isMarkingFav,
+          isDeleting: baseContactList[index].isDeleting,
+        );
+      } else {
+        baseContactList.add(
+          BaseContact(
             c,
-            isBlocking: baseContactList[index].isBlocking,
-            isMarkingFav: baseContactList[index].isMarkingFav,
-            isDeleting: baseContactList[index].isDeleting,
-          );
-        } else {
-          baseContactList.add(
-            BaseContact(
-              c,
-              isBlocking: false,
-              isMarkingFav: false,
-              isDeleting: false,
-            ),
-          );
-        }
+            isBlocking: false,
+            isMarkingFav: false,
+            isDeleting: false,
+          ),
+        );
       }
+    }
 
     // checking to remove deleted atsigns from baseContactList.
     var atsignsToRemove = <String>[];
@@ -195,31 +195,42 @@ class ContactService {
     }
   }
 
-  Future<void> blockUnblockContact(
+  Future<bool> blockUnblockContact(
       {required AtContact contact, required bool blockAction}) async {
     try {
       contact.blocked = blockAction;
-      await atContactImpl.update(contact);
-      await fetchBlockContactList();
-      await fetchContacts();
+      var res = await atContactImpl.update(contact);
+      if (res) {
+        await fetchBlockContactList();
+        await fetchContacts();
+        return res;
+      } else {
+        return false;
+      }
     } catch (error) {
       print('error in unblock: $error');
+      return false;
     }
   }
 
-  Future<void> markFavContact(AtContact contact) async {
+  Future<bool> markFavContact(AtContact contact) async {
     try {
       contact.favourite = !contact.favourite!;
-      await atContactImpl.update(contact);
-      await fetchBlockContactList();
-      await fetchContacts();
+      var res = await atContactImpl.update(contact);
+      if (res) {
+        await fetchBlockContactList();
+        await fetchContacts();
+        return res;
+      } else {
+        return false;
+      }
     } catch (error) {
       print('error in marking fav: $error');
+      return false;
     }
   }
 
-
-  Future<List<AtContact>> fetchBlockContactList() async {
+  Future<List<AtContact>?> fetchBlockContactList() async {
     try {
       blockContactList = [];
       blockContactList = await atContactImpl.listBlockedContacts();
@@ -228,32 +239,32 @@ class ContactService {
       return blockContactList;
     } catch (error) {
       print('error in fetching contact list:$error');
-      return [];
+      return null;
     }
   }
 
   void compareBlockedContactListForUpdatedState() {
     for (var c in blockContactList) {
-        var index =
-            baseBlockedList.indexWhere((e) => e.contact!.atSign == c.atSign);
-        if (index > -1) {
-          baseBlockedList[index] = BaseContact(
+      var index =
+          baseBlockedList.indexWhere((e) => e.contact!.atSign == c.atSign);
+      if (index > -1) {
+        baseBlockedList[index] = BaseContact(
+          c,
+          isBlocking: baseBlockedList[index].isBlocking,
+          isMarkingFav: baseBlockedList[index].isMarkingFav,
+          isDeleting: baseBlockedList[index].isDeleting,
+        );
+      } else {
+        baseBlockedList.add(
+          BaseContact(
             c,
-            isBlocking: baseBlockedList[index].isBlocking,
-            isMarkingFav: baseBlockedList[index].isMarkingFav,
-            isDeleting: baseBlockedList[index].isDeleting,
-          );
-        } else {
-          baseBlockedList.add(
-            BaseContact(
-              c,
-              isBlocking: false,
-              isMarkingFav: false,
-              isDeleting: false,
-            ),
-          );
-        }
+            isBlocking: false,
+            isMarkingFav: false,
+            isDeleting: false,
+          ),
+        );
       }
+    }
 
     // checking to remove unblocked atsigns from baseBlockedList.
     var atsignsToRemove = <String>[];
@@ -283,8 +294,7 @@ class ContactService {
   }
 
   /// Function to validate, fetch details and save to current atsign's contact list
-  Future<bool> addAtSign(
-    context, {
+  Future<bool> addAtSign({
     String? atSign,
     String? nickName,
   }) async {
@@ -343,7 +353,6 @@ class ContactService {
     }
   }
 
-
   void removeSelectedAtSign(AtContact? contact) {
     try {
       for (AtContact? atContact in selectedContacts) {
@@ -378,7 +387,6 @@ class ContactService {
       print(error);
     }
   }
-
 
   void clearAtSigns() {
     try {
