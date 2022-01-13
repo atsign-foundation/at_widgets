@@ -1,6 +1,5 @@
 import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -44,25 +43,6 @@ class ClientSdkService {
       return false;
     });
     return result;
-  }
-
-  Future<bool> addContact(String atSign, AtContactsImpl atContact) async {
-    AtContact contact = AtContact()
-      ..atSign = atSign
-      ..createdOn = DateTime.now()
-      ..type = ContactType.Individual;
-    bool isContactAdded = await atContact.add(contact);
-    debugPrint(isContactAdded
-        ? 'Contact added successfully'
-        : 'Failed to add contact');
-    return isContactAdded;
-  }
-
-  Future<void> deleteContact(String atSign, AtContactsImpl atContact) async {
-    bool isContactDeleted = await atContact.delete(atSign);
-    debugPrint(isContactDeleted
-        ? 'Contact deleted successfully'
-        : 'Failed to delete contact');
   }
 
   ///Fetches atsign from device keychain.

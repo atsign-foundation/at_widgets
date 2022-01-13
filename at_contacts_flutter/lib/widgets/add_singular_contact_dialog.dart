@@ -81,8 +81,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
                   buttonText: TextStrings().yes,
                   onPressed: () async {
                     isLoading = true;
-                    await ContactService()
-                        .addAtSign(context, atSign: widget.atSignName);
+                    await ContactService().addAtSign(atSign: widget.atSignName);
                     setState(() {
                       isLoading = false;
                       Navigator.pop(context);

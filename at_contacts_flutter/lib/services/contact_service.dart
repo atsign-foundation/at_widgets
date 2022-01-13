@@ -195,26 +195,38 @@ class ContactService {
     }
   }
 
-  Future<void> blockUnblockContact(
+  Future<bool> blockUnblockContact(
       {required AtContact contact, required bool blockAction}) async {
     try {
       contact.blocked = blockAction;
-      await atContactImpl.update(contact);
-      await fetchBlockContactList();
-      await fetchContacts();
+      var res = await atContactImpl.update(contact);
+      if (res) {
+        await fetchBlockContactList();
+        await fetchContacts();
+        return res;
+      } else {
+        return false;
+      }
     } catch (error) {
       print('error in unblock: $error');
+      return false;
     }
   }
 
-  Future<void> markFavContact(AtContact contact) async {
+  Future<bool> markFavContact(AtContact contact) async {
     try {
       contact.favourite = !contact.favourite!;
-      await atContactImpl.update(contact);
-      await fetchBlockContactList();
-      await fetchContacts();
+      var res = await atContactImpl.update(contact);
+      if (res) {
+        await fetchBlockContactList();
+        await fetchContacts();
+        return res;
+      } else {
+        return false;
+      }
     } catch (error) {
       print('error in marking fav: $error');
+      return false;
     }
   }
 
@@ -282,8 +294,7 @@ class ContactService {
   }
 
   /// Function to validate, fetch details and save to current atsign's contact list
-  Future<bool> addAtSign(
-    context, {
+  Future<bool> addAtSign({
     String? atSign,
     String? nickName,
   }) async {

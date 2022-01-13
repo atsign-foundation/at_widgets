@@ -1,5 +1,4 @@
 import 'package:at_client/at_client.dart';
-import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:eg/services/client.sdk.services.dart';
 import 'package:eg/widgets/prompt.widget.dart';
@@ -14,13 +13,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AtClient atClientInstance = AtClientManager.getInstance().atClient;
-  late AtContactsImpl _atContact;
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
   String? activeAtSign, pickedAtSign;
   @override
   void initState() {
-    _atContact =
-        AtContactsImpl(atClientInstance, atClientInstance.getCurrentAtSign()!);
     Future.microtask(() async {
       var currentAtSign =
           await clientSdkService.getAtSignAndInitializeContacts();
@@ -53,8 +49,7 @@ class _HomePageState extends State<HomePage> {
       () async {
         if (pickedAtSign != null && pickedAtSign!.trim().isNotEmpty) {
           pickedAtSign = formatAtsign(pickedAtSign!);
-          bool isContactAdded =
-              await clientSdkService.addContact(pickedAtSign!, _atContact);
+          bool isContactAdded = await addContact(pickedAtSign!);
           if (isContactAdded) Navigator.pop(context);
         }
         pickedAtSign = '';
@@ -82,7 +77,7 @@ class _HomePageState extends State<HomePage> {
       () async {
         if (pickedAtSign != null && pickedAtSign!.trim().isNotEmpty) {
           pickedAtSign = formatAtsign(pickedAtSign!);
-          await clientSdkService.deleteContact(pickedAtSign!, _atContact);
+          await deleteContact(pickedAtSign!);
         }
 
         pickedAtSign = '';
