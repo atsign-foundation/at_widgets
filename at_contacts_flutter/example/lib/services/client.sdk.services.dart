@@ -13,7 +13,7 @@ class ClientSdkService {
     return _singleton;
   }
   AtClientService? atClientServiceInstance;
-  AtClientManager? atClientManager;
+  AtClientManager atClientManager = AtClientManager.getInstance();
 
   late AtClientPreference atClientPreference;
 
@@ -55,7 +55,7 @@ class ClientSdkService {
     debugPrint(isContactAdded
         ? 'Contact added successfully'
         : 'Failed to add contact');
-        return isContactAdded;
+    return isContactAdded;
   }
 
   Future<void> deleteContact(String atSign, AtContactsImpl atContact) async {
@@ -67,6 +67,6 @@ class ClientSdkService {
 
   ///Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
-    return atClientServiceInstance!.atClientManager.atClient.getCurrentAtSign();
+    return atClientManager.atClient.getCurrentAtSign();
   }
 }

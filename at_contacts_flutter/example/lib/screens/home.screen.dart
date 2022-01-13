@@ -37,15 +37,27 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  String formatAtsign(String atsign) {
+    if (atsign[0] == '@') {
+      return atsign;
+    } else {
+      return '@' + atsign;
+    }
+  }
+
   Future<void> addContactDialog(BuildContext context) async {
     await Dialogs.customDialog(
       context,
       'Add contact?',
       'Enter the @sign to add as a contact',
       () async {
-        bool isContactAdded =
-            await clientSdkService.addContact(pickedAtSign!, _atContact);
-        if (isContactAdded) Navigator.pop(context);
+        if (pickedAtSign != null && pickedAtSign!.trim().isNotEmpty) {
+          pickedAtSign = formatAtsign(pickedAtSign!);
+          bool isContactAdded =
+              await clientSdkService.addContact(pickedAtSign!, _atContact);
+          if (isContactAdded) Navigator.pop(context);
+        }
+        pickedAtSign = '';
       },
       childContent: TextField(
         onChanged: (value) {
@@ -68,7 +80,12 @@ class _HomePageState extends State<HomePage> {
       'Delete contact?',
       'Enter the @sign to delete as a contact',
       () async {
-        await clientSdkService.deleteContact(pickedAtSign!, _atContact);
+        if (pickedAtSign != null && pickedAtSign!.trim().isNotEmpty) {
+          pickedAtSign = formatAtsign(pickedAtSign!);
+          await clientSdkService.deleteContact(pickedAtSign!, _atContact);
+        }
+
+        pickedAtSign = '';
         Navigator.pop(context);
       },
       childContent: TextField(

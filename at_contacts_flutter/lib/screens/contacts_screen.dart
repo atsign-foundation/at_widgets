@@ -65,7 +65,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
     _contactService = ContactService();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       var _result = await _contactService!.fetchContacts();
-      if (_result.isEmpty) {
+      if (_result == null) {
         if (mounted) {
           setState(() {
             errorOcurred = true;
