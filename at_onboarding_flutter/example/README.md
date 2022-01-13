@@ -1,16 +1,11 @@
-# at_onboarding_flutter_example
 
-Demonstrates how to use the at_onboarding_flutter plugin.
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
-## Getting Started
+## at_ onboarding_flutter example
+The at_onboarding_flutter package is designed to make it easy to onboard one or multiple @sign in a flutter app and also comes with the following features:
+- Supports Generate free @sign.
+- Supports multiple @sign onboarding.
+- Flexibility of either pair @sign with QRCode or Atkey file.
+- Dark mode
+- Reset/Sign out button.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
