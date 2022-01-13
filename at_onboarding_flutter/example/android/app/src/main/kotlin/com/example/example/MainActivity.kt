@@ -1,4 +1,4 @@
-package com.atsign.at_onboarding_flutter_example
+package com.example.example
 
 import io.flutter.embedding.android.FlutterActivity
 
