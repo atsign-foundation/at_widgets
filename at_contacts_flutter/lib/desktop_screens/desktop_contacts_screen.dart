@@ -309,7 +309,6 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           ContactListTile(
             contact,
             isBlockedScreen: widget.isBlockedScreen,
-            // key: UniqueKey(),
           ),
           const SizedBox(
             width: 50,
