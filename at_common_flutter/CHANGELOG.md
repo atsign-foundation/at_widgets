@@ -5,29 +5,29 @@
 - **FEAT**: Added `isDesktop` check in CustomAppBar
 
 ## 2.0.2
-- borderRadius option added in CustomButton
+- **FEAT**: borderRadius option added in CustomButton
 
 ## 2.0.1
-- Updated description, repository link
-- More options in CustomInputField
+- **UPDATE**: Updated description, repository link
+- **FEAT**: More options in CustomInputField
 
 ## 2.0.0
-- Null safety support
+- **UPDATE**: Null safety support
 
 ## 1.0.1
-- Updated documentation
+- **DOCS**: Updated documentation
 
 ## 1.0.0
-- Updated authentication in example app
+- **CHORE**: Updated authentication in example app
 
 ## 0.0.4
-- Updated example app
+- **CHORE**: Updated example app
 
 ## 0.0.3
-- Updated with example app
+- **CHORE**: Updated with example app
 
 ## 0.0.2
-- BREAKING CHANGES - This release consists of parameter change in custom button and custom input field
+- **BREAKING CHANGES**: This release consists of parameter change in custom button and custom input field
 
 ## 0.0.1
 - The initial release consists of custom appBar, custom button and custom input field
