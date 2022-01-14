@@ -19,7 +19,7 @@ and you can learn more about how it works by reading this
 There are two options to get started using this package.
 
 ### 1. Clone it from GitHub
-Feel free to fork a copy the source from the [GitHub repo](https://github.com/atsign-foundation/at_widgets). The example code contained there, demonstrates the usage of the various UI widgets.
+Feel free to fork a copy of the source from the [GitHub repo](https://github.com/atsign-foundation/at_widgets). The example code contained there, demonstrates the usage of the various UI widgets.
 
 ```sh
 $ git clone https://github.com/atsign-foundation/at_widgets

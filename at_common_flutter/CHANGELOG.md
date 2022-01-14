@@ -1,3 +1,7 @@
+## 2.0.5
+- **DOCS**: Updated Readme.md and example.md
+- **CHORE**: Updated example to demonstrate inheriting theme from calling app
+
 ## 2.0.4
 - **FEAT**: Added check for mobile, tablet and desktop in SizeConfig
  
