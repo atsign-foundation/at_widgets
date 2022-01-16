@@ -25,7 +25,7 @@ class BugReportService {
       .format(DateTime.parse(DateTime.now().toString()));
 
   String? authorAtSign;
-
+  
   late AtClientManager atClientManager;
   late AtClient atClient;
 
