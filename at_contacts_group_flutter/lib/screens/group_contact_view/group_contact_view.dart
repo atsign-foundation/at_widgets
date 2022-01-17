@@ -111,7 +111,9 @@ class _GroupContactViewState extends State<GroupContactView> {
                         : Navigator.pop(context);
                   },
                   selectedList: (s) {
-                    widget.selectedList!(s);
+                    if (widget.selectedList != null) {
+                      widget.selectedList!(s);
+                    }
                   },
                   isDesktop: widget.isDesktop,
                 )
