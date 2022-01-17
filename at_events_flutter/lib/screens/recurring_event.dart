@@ -9,6 +9,7 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 
 class RecurringEvent extends StatefulWidget {
@@ -53,9 +54,9 @@ class _RecurringEventState extends State<RecurringEvent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const CustomHeading(heading: 'Recurring event', action: 'Cancel'),
+            CustomHeading(heading: AllText().RECURRING_EVENT, action: AllText().CANCEL),
             const SizedBox(height: 25),
-            Text('Repeat every', style: CustomTextStyles().greyLabel14),
+            Text(AllText().REPEAT_EVERY, style: CustomTextStyles().greyLabel14),
             SizedBox(height: 6.toHeight),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,7 +64,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                 CustomInputField(
                   width: 155.toWidth,
                   height: 50.toHeight,
-                  hintText: 'repeat cycle',
+                  hintText: AllText().REPEAT_CYCLE,
                   icon: Icons.keyboard_arrow_down,
                   initialValue: eventData!.event!.repeatDuration != null
                       ? eventData!.event!.repeatDuration.toString()
@@ -89,12 +90,12 @@ class _RecurringEventState extends State<RecurringEvent> {
                     dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
                     value: (eventData!.event!.repeatCycle != null)
                         ? eventData!.event!.repeatCycle == RepeatCycle.WEEK
-                            ? 'Week'
+                            ? AllText().WEEK
                             : eventData!.event!.repeatCycle == RepeatCycle.MONTH
-                                ? 'Month'
+                                ? AllText().MONTH
                                 : null
                         : null,
-                    hint: const Text('Select Category'),
+                    hint: Text(AllText().SELECT_CATEGORY),
                     items: repeatOccurance.map((String option) {
                       return DropdownMenuItem<String>(
                         value: option,
@@ -121,7 +122,7 @@ class _RecurringEventState extends State<RecurringEvent> {
               ],
             ),
             SizedBox(height: 25.toHeight),
-            Text('Occurs on', style: CustomTextStyles().greyLabel14),
+            Text(AllText().OCCURS_ON, style: CustomTextStyles().greyLabel14),
             SizedBox(height: 6.toHeight),
             isRepeatEveryWeek
                 ? Container(
@@ -137,7 +138,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                       value: eventData!.event!.occursOn != null
                           ? getWeekString(eventData!.event!.occursOn)
                           : null,
-                      hint: const Text('Occurs on'),
+                      hint: Text(AllText().OCCURS_ON),
                       items: occursOnOptions.map((String option) {
                         return DropdownMenuItem<String>(
                           value: option,
@@ -159,7 +160,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                     width: 350.toWidth,
                     height: 50.toHeight,
                     isReadOnly: true,
-                    hintText: 'Occurs on',
+                    hintText: AllText().OCCURS_ON,
                     icon: Icons.access_time,
                     initialValue: eventData!.event!.date != null
                         ? dateToString(eventData!.event!.date!)
@@ -182,7 +183,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                     value: (val) {},
                   ),
             SizedBox(height: 25.toHeight),
-            Text('Select a time', style: CustomTextStyles().greyLabel14),
+            Text(AllText().SELECT_TIME, style: CustomTextStyles().greyLabel14),
             SizedBox(height: 6.toHeight),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,7 +192,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                   width: 155.toWidth,
                   height: 50.toHeight,
                   isReadOnly: true,
-                  hintText: 'Start',
+                  hintText: AllText().START,
                   icon: Icons.access_time,
                   initialValue: eventData!.event!.startTime != null
                       ? timeOfDayToString(eventData!.event!.startTime!)
@@ -225,7 +226,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                   width: 155.toWidth,
                   height: 50.toHeight,
                   isReadOnly: true,
-                  hintText: 'Stop',
+                  hintText: AllText().STOP,
                   icon: Icons.access_time,
                   initialValue: eventData!.event!.endTime != null
                       ? timeOfDayToString(eventData!.event!.endTime!)
@@ -239,7 +240,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                         initialEntryMode: TimePickerEntryMode.input);
 
                     if (eventData!.event!.endDate == null) {
-                      CustomToast().show('Select start time first', context,
+                      CustomToast().show(AllText().SELECT_START_TIME_FIRST, context,
                           isError: true);
                       return;
                     }
@@ -258,12 +259,12 @@ class _RecurringEventState extends State<RecurringEvent> {
               ],
             ),
             SizedBox(height: 25.toHeight),
-            Text('Ends On', style: CustomTextStyles().greyLabel14),
+            Text(AllText().ENDS_ON, style: CustomTextStyles().greyLabel14),
             SizedBox(height: 25.toHeight),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('Never', style: CustomTextStyles().greyLabel12),
+                Text(AllText().NEVER, style: CustomTextStyles().greyLabel12),
                 Radio(
                   groupValue: eventData!.event!.endsOn,
                   toggleable: true,
@@ -279,7 +280,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('On', style: CustomTextStyles().greyLabel12),
+                Text(AllText().ON, style: CustomTextStyles().greyLabel12),
                 Radio(
                   groupValue: eventData!.event!.endsOn,
                   toggleable: true,
@@ -297,7 +298,7 @@ class _RecurringEventState extends State<RecurringEvent> {
               width: 350.toWidth,
               height: 50.toHeight,
               isReadOnly: true,
-              hintText: 'Select Date',
+              hintText: AllText().SELECT_DATE,
               icon: Icons.date_range,
               initialValue: (eventData!.event!.endEventOnDate != null)
                   ? dateToString(eventData!.event!.endEventOnDate!)
@@ -322,7 +323,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('After', style: CustomTextStyles().greyLabel12),
+                Text(AllText().AFTER, style: CustomTextStyles().greyLabel12),
                 Radio(
                   groupValue: eventData!.event!.endsOn,
                   toggleable: true,
@@ -339,7 +340,7 @@ class _RecurringEventState extends State<RecurringEvent> {
             CustomInputField(
               width: 350.toWidth,
               height: 50.toHeight,
-              hintText: 'Start',
+              hintText: AllText().START,
               // icon: Icons.keyboard_arrow_down,
               initialValue: eventData!.event!.endEventAfterOccurance != null
                   ? eventData!.event!.endEventAfterOccurance.toString()
@@ -366,7 +367,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                   EventService().update(eventData: eventData);
                   Navigator.of(context).pop();
                 },
-                buttonText: 'Done',
+                buttonText: AllText().DONE,
                 width: 164.toWidth,
                 height: 48.toHeight,
                 buttonColor: Theme.of(context).brightness == Brightness.light

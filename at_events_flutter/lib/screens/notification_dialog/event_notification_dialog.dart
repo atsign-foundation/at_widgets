@@ -112,7 +112,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                      '${widget.eventData!.atsignCreator} wants to share an event with you. Are you sure you want to join and share your location with the group?',
+                      '${widget.eventData!.atsignCreator}'+ AllText().SHARE_EVENT_DES,
                       style: CustomTextStyles().grey16,
                       textAlign: TextAlign.center),
                   const SizedBox(height: 30),
@@ -169,8 +169,8 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                   widget.eventData != null
                       ? Text(
                           (widget.eventData!.group!.members!.length == 1)
-                              ? '${widget.eventData!.group!.members!.length} person invited'
-                              : '${widget.eventData!.group!.members!.length} people invited',
+                              ? '${widget.eventData!.group!.members!.length}'+ AllText().PER_INVITED
+                              : '${widget.eventData!.group!.members!.length}'+ AllText().PEP_INVITED,
                           style: CustomTextStyles().grey14)
                       : const SizedBox(),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
@@ -184,7 +184,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                   SizedBox(height: 10.toHeight),
                   isOverlap!
                       ? Text(
-                          'You already have an event scheduled during this hour. Are you sure you want to accept another?',
+                          AllText().EVENT_RUNNING_DES,
                           textAlign: TextAlign.center,
                           style: CustomTextStyles().grey16,
                         )
@@ -265,14 +265,14 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
 
                                               if (result == true) {
                                                 CustomToast().show(
-                                                    'Request to update data is submitted',
+                                                    AllText().REQ_TO_UPDATE_DATA_SUB,
                                                     AtEventNotificationListener()
                                                         .navKey!
                                                         .currentContext,
                                                     isSuccess: true);
                                               } else {
                                                 CustomToast().show(
-                                                    'Something went wrong , please try again.',
+                                                    AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                                     AtEventNotificationListener()
                                                         .navKey!
                                                         .currentContext,
@@ -292,7 +292,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                           bgColor: AllColors().Black,
                           width: 164,
                           height: 48.toHeight,
-                          child: Text('Yes',
+                          child: Text(AllText().YES,
                               style: TextStyle(
                                   color:
                                       Theme.of(context).scaffoldBackgroundColor,
@@ -313,14 +313,14 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
 
                             if (result == true) {
                               CustomToast().show(
-                                  'Request to update data is submitted',
+                                 AllText().REQ_TO_UPDATE_DATA_SUB,
                                   AtEventNotificationListener()
                                       .navKey!
                                       .currentContext,
                                   isSuccess: true);
                             } else {
                               CustomToast().show(
-                                  'Something went wrong , please try again.',
+                                  AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                   AtEventNotificationListener()
                                       .navKey!
                                       .currentContext,
@@ -333,7 +333,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                             stopLoading();
                           },
                           child: Text(
-                            'No',
+                            AllText().NO,
                             style: CustomTextStyles().black14,
                           ),
                         ),

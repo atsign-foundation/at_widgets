@@ -2,6 +2,7 @@ import 'package:at_events_flutter/common_components/text_tile.dart';
 import 'package:at_events_flutter/models/enums_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 
 import 'invite_card.dart';
@@ -35,7 +36,7 @@ class _EventTimeSelectionState extends State<EventTimeSelection> {
           InviteCard(
             event: widget.eventNotificationModel!.title,
             timeAndDate:
-                '${timeOfDayToString(widget.eventNotificationModel!.event!.startTime!)} on ${dateToString(widget.eventNotificationModel!.event!.date!)}',
+                '${timeOfDayToString(widget.eventNotificationModel!.event!.startTime!)}' +AllText().ON+ '${dateToString(widget.eventNotificationModel!.event!.date!)}',
             atSign: widget.eventNotificationModel!.atsignCreator,
             memberCount:
                 '+${widget.eventNotificationModel!.group!.members!.length}',

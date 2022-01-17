@@ -7,6 +7,7 @@ import 'package:at_events_flutter/common_components/draggable_symbol.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
@@ -63,7 +64,7 @@ class _ParticipantsState extends State<Participants> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const DraggableSymbol(),
-            const CustomHeading(heading: 'Participants', action: 'Close'),
+             CustomHeading(heading: AllText().PARTICIPANTS, action: AllText().CLOSE),
             SizedBox(
               height: 10.toHeight,
             ),
@@ -119,27 +120,27 @@ class _ParticipantsState extends State<Participants> {
       /// for event creator
       if (compareAtSign(_atsign, _event.atsignCreator!)) {
         return Text(
-          'Location not received',
+          AllText().LOC_NOT_RECIEVED,
           style: CustomTextStyles().orange14,
         );
       }
 
       return Text(
-        'Action Required',
+        AllText().ACTION_REQUIRED,
         style: CustomTextStyles().orange14,
       );
     }
 
     if (_eventInfo.isExited) {
       return Text(
-        'Exited',
+        AllText().EXITED,
         style: CustomTextStyles().orange14,
       );
     }
 
     if (!_eventInfo.isSharing) {
       return Text(
-        'Location not received',
+        AllText().LOC_NOT_RECIEVED,
         style: CustomTextStyles().orange14,
       );
     }
