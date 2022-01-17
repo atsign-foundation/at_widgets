@@ -286,14 +286,14 @@ class GroupService {
     try {
       allContacts = [];
       var contactList = await fetchContacts();
-      // print('CONT====>$contactList');
-      contactList.forEach((AtContact? contact) {
-        allContacts.add(GroupContactsModel(
-            contact: contact, contactType: ContactsType.CONTACT));
-      });
-      await getAllGroupsDetails(addToGroupSink: !isDesktop);
-      // print('ALL CONTACTS====>${allContacts[8]}');
-      _allContactsStreamController.add(allContacts);
+      if (contactList != null) {
+        contactList.forEach((AtContact? contact) {
+          allContacts.add(GroupContactsModel(
+              contact: contact, contactType: ContactsType.CONTACT));
+        });
+        await getAllGroupsDetails(addToGroupSink: !isDesktop);
+        _allContactsStreamController.add(allContacts);
+      }
     } catch (e) {
       print(e);
     }
