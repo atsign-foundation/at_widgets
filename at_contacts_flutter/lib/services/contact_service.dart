@@ -78,6 +78,7 @@ class ContactService {
     blockedContactStreamController.close();
   }
 
+  /// used by desktop contact screen to manage contacts and the operations performed on them.
   List<BaseContact> baseContactList = [], baseBlockedList = [];
 
   /// List of contacts added by atsign
@@ -125,6 +126,8 @@ class ContactService {
     checkAtSign = false;
   }
 
+  /// gives list of [AtContact].
+  /// returns null if some error occurred.
   Future<List<AtContact>?> fetchContacts() async {
     try {
       selectedContacts = [];
@@ -157,6 +160,8 @@ class ContactService {
     }
   }
 
+  /// compares [contactList] with [baseContactList] and assigns [isBlocking], [isMarkingFav] and [isDeleting]
+  /// for existing atsigns in [baseContactList].
   void compareContactListForUpdatedState() {
     for (var c in contactList) {
       var index =
@@ -195,6 +200,8 @@ class ContactService {
     }
   }
 
+  /// blocks/unblocks [contact] based on boolean [blockAction]
+  /// if [blockAction] is [true] , [atContact] will be blocked.
   Future<bool> blockUnblockContact(
       {required AtContact contact, required bool blockAction}) async {
     try {
@@ -213,6 +220,7 @@ class ContactService {
     }
   }
 
+  /// add/remove [contact] from faviorite list.
   Future<bool> markFavContact(AtContact contact) async {
     try {
       contact.favourite = !contact.favourite!;
@@ -243,6 +251,8 @@ class ContactService {
     }
   }
 
+  /// compares [blockContactList] with [baseBlockedList] and assigns [isBlocking], [isMarkingFav] and [isDeleting]
+  /// for existing atsigns in [baseBlockedList].
   void compareBlockedContactListForUpdatedState() {
     for (var c in blockContactList) {
       var index =
@@ -462,6 +472,7 @@ class ContactService {
     return contactDetails;
   }
 
+  /// updates status of contacts for [baseContactList] and [baseBlockedList]
   void updateState(STATE_UPDATE stateToUpdate, AtContact contact, bool state) {
     int indexToUpdate;
     if (stateToUpdate == STATE_UPDATE.unblock) {

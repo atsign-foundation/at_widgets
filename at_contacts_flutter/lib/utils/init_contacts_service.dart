@@ -65,7 +65,7 @@ Future<bool> deleteContact(String atsign) async {
 
 /// blocks/unblocks [atContact] based on boolean [blockAction]
 /// if [blockAction] is [true] , [atContact] will be blocked.
-Future<bool> blockUnblockAtContact(
+Future<bool> blockOrUnblockAtContact(
     AtContact atContact, bool blockAction) async {
   return await ContactService()
       .blockUnblockContact(contact: atContact, blockAction: blockAction);
@@ -74,4 +74,9 @@ Future<bool> blockUnblockAtContact(
 /// marks [atContact] as favourite.
 Future<bool> markFavContact(AtContact atContact) async {
   return await ContactService().markFavContact(atContact);
+}
+
+/// gives list of [AtContact]
+Future<List<AtContact>?> fetchContactList() async {
+  return await ContactService().fetchContacts();
 }
