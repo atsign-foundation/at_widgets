@@ -34,7 +34,8 @@ class GroupContactView extends StatefulWidget {
   final bool asSelectionScreen;
 
   final bool isDesktop;
-  Function? onBackArrowTap, onDoneTap;
+  Function(List<GroupContactsModel?>?)? onBackArrowTap;
+  Function? onDoneTap;
 
   /// Callback to get the list of selected contacts back to the app
   final ValueChanged<List<GroupContactsModel?>>? selectedList;

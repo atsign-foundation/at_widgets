@@ -82,7 +82,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                           NavService.groupPckgRightHalfNavKey.currentContext!)
                       .pushNamed(DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW,
                           arguments: {
-                        'onBackArrowTap': () {
+                        'onBackArrowTap': (selectedGroupContacts) {
                           Navigator.of(NavService
                                   .groupPckgRightHalfNavKey.currentContext!)
                               .pop();
