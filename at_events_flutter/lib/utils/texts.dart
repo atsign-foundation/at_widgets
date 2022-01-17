@@ -143,4 +143,11 @@ class AllText {
   String REQ_DECLINED = 'Request declined';
   String CANCELLED = 'Cancelled';
   String RETRY = 'Retry';
+
+  // Invite Card
+  String DECIDE_LATER = 'Decide Later';
+
+  // Overlapping Contacts
+  String OTHER = 'other';
+  String OTHERS = 'others';
 }
