@@ -65,39 +65,50 @@ In this example app we demo at_analytics_flutter - A Flutter plugin project to p
   
 ### Sample Usage
 
-<!-- As a bottom sheet
-```
-FlatButton(
-    onPressed: () {
-        scaffoldKey.currentState
-        .showBottomSheet((context) => ChatScreen());
-    },
-    child: Container(
-        height: 40,
-        child: Text('Open chat in bottom sheet'),
-    ),
-),
+Initialize Bug Report Service
+
+```dart
+initializeBugReportService(atClientService!.atClientManager,
+        MixedConstants.authorAtsign, activeAtSign!, atClientPreference!,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
 ```
 
-As a screen
-```
-class ThirdScreen extends StatefulWidget {
-  @override
-  _ThirdScreenState createState() => _ThirdScreenState();
-}
+Bug Report Dialog
 
-class _ThirdScreenState extends State<ThirdScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Chat Screen')),
-      body: ChatScreen(
-        height: MediaQuery.of(context).size.height,
-        incomingMessageColor: Colors.blue[100],
-        outgoingMessageColor: Colors.green[100],
-        isScreen: true,
-      ),
-    );
-  }
-}
-``` -->
+```dart
+     showBugReportDialog(
+                      context,
+                      activeAtSign,
+                      MixedConstants.authorAtsign,
+                      bugReport,
+                      isSuccessCallback: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.green,
+                            content: Text(
+                              'Share Successfully',
+                            ),
+                          ),
+                        );
+                      },
+                    );
+```
+
+To Send Error Report
+
+```dart
+sendErrorReport(
+                        'custom error', context, MixedConstants.authorAtsign,
+                        () {
+                      print('success in sending report');
+                    });
+``` 
+
+To Display list of bug reports
+
+```dart
+ListBugReportScreen(
+                          atSign: activeAtSign,
+                          authorAtSign: MixedConstants.authorAtsign,
+                        ),
+```
