@@ -113,6 +113,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                   selectedList: (s) {
                     widget.selectedList!(s);
                   },
+                  isDesktop: widget.isDesktop,
                 )
               : Container(
                   height: 0,

@@ -10,6 +10,7 @@ import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
 
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -18,8 +19,9 @@ import 'package:at_common_flutter/services/size_config.dart';
 class ContactSelectionBottomSheet extends StatefulWidget {
   final Function? onPressed;
   final ValueChanged<List<GroupContactsModel?>>? selectedList;
+  final bool isDesktop;
   const ContactSelectionBottomSheet(
-      {Key? key, this.onPressed, this.selectedList})
+      {Key? key, this.onPressed, this.selectedList, this.isDesktop = false})
       : super(key: key);
 
   @override
@@ -80,7 +82,9 @@ class _ContactSelectionBottomSheetState
                     buttonColor: processing
                         ? ColorConstants.dullText
                         : (Theme.of(context).brightness == Brightness.light
-                            ? Colors.black
+                            ? widget.isDesktop
+                                ? AllColors().Orange
+                                : Colors.black
                             : Colors.white),
                     fontColor: Theme.of(context).brightness == Brightness.light
                         ? Colors.white
