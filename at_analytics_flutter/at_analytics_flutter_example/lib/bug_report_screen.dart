@@ -1,8 +1,7 @@
 import 'dart:math';
 
-import 'package:at_analytics_flutter/screens/bug_report_list_screen.dart';
-import 'package:at_analytics_flutter/utils/bug_report_dialog_utils.dart';
-import 'package:at_analytics_flutter/utils/init_bug_report_service.dart';
+
+import 'package:at_analytics_flutter/at_analytics_flutter.dart';
 import 'package:at_analytics_flutter_example/constants.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:flutter/material.dart';
