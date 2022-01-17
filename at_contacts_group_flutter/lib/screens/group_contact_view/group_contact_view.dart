@@ -126,7 +126,9 @@ class _GroupContactViewState extends State<GroupContactView> {
         showTitle: true,
         titleText: 'Contacts',
         onLeadingIconPressed: () {
-          widget.onBackArrowTap!(_groupService.selectedGroupContacts);
+          if (widget.onBackArrowTap != null) {
+            widget.onBackArrowTap!(_groupService.selectedGroupContacts);
+          }
         },
         showBackButton: true,
         showLeadingIcon: true,
