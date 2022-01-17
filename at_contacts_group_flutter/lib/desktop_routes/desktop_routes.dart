@@ -61,19 +61,13 @@ class DesktopGroupSetupRoutes {
               showContacts: true,
               isDesktop: true,
               selectedList: (selectedContactList) {
-                // setState(() {
-                //   _selectedList = _list;
-                // });
                 GroupService().setSelectedContacts(
                     selectedContactList.map((e) => e?.contact).toList());
               },
-              onBackArrowTap: () {
+              onBackArrowTap: (selectedGroupContacts) {
                 initialRouteOnArrowBackTap();
               },
               onDoneTap: () {
-                // setState(() {
-                //   _currentScreen = CurrentScreen.SelectedItems;
-                // });
                 initialRouteOnDoneTap();
               });
         } else {

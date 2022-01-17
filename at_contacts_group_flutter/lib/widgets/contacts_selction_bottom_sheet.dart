@@ -69,9 +69,10 @@ class _ContactSelectionBottomSheetState
                             setState(() {
                               processing = true;
                             });
-                            await widget.onPressed!();
+
                             widget.selectedList!(
                                 _groupService.selectedGroupContacts);
+                            await widget.onPressed!();
 
                             if (mounted) {
                               setState(() {

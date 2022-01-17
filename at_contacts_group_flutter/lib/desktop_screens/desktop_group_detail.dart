@@ -326,7 +326,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                   .groupPckgRightHalfNavKey.currentContext!,
                               DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW,
                               arguments: {
-                                'onBackArrowTap': () {
+                                'onBackArrowTap': (selectedContacts) {
                                   Navigator.of(NavService
                                           .groupPckgRightHalfNavKey
                                           .currentContext!)
