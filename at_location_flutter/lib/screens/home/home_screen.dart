@@ -14,6 +14,7 @@ import 'package:at_location_flutter/service/my_location.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/show_location.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -103,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             maxHeight: 530.toHeight,
                             panelBuilder: (scrollController) =>
                                 collapsedContent(false, scrollController,
-                                    emptyWidget('Something went wrong!!')));
+                                    emptyWidget(AllText().SOMETHING_WENT_WRONG)));
                       } else {
                         return SlidingUpPanel(
                           controller: pc,
@@ -118,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       snapshot.data!, scrollController));
                             } else {
                               return collapsedContent(false, scrollController,
-                                  emptyWidget('No Data Found!!'));
+                                  emptyWidget(AllText().NO_DATA_FOUND));
                             }
                           },
                         );
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     scrollController));
                           }
                           return collapsedContent(false, scrollController,
-                              emptyWidget('No Data Found!!'));
+                              emptyWidget(AllText().NO_DATA_FOUND));
                         },
                       );
                     }
@@ -232,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: Tasks(
-                task: 'Request Location',
+                task: AllText().REQUEST_LOCATION,
                 icon: Icons.sync,
                 angle: (-3.14 / 2),
                 onTap: () async {
@@ -242,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Expanded(
             child: Tasks(
-                task: 'Share Location',
+                task: AllText().SHARE_LOCATION,
                 icon: Icons.person_add,
                 onTap: () {
                   bottomSheet(context, const ShareLocationSheet(),

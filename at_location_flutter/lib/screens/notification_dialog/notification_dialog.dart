@@ -10,6 +10,7 @@ import 'package:at_location_flutter/service/contact_service.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -78,8 +79,8 @@ class _NotificationDialogState extends State<NotificationDialog> {
           children: <Widget>[
             Text(
                 ((!widget.locationData!.isRequest)
-                    ? '${widget.userName} wants to share their location with you. Are you sure you want to accept their location?'
-                    : '${widget.userName} wants you to share your location. Are you sure you want to share?'),
+                    ? '${widget.userName}'+ AllText().ACCEPT_SHARE_LOCATION
+                    : '${widget.userName}'+ AllText().SHARE_YOUR_LOCATION ),
                 style: CustomTextStyles().grey16,
                 textAlign: TextAlign.center),
             const SizedBox(height: 30),
@@ -141,7 +142,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                               timeSelect(context),
                             });
                     }(),
-                    buttonText: 'Yes',
+                    buttonText: AllText().YES,
                     buttonColor: AllColors().Black,
                     fontColor: AllColors().WHITE,
                     width: 164.toWidth,
@@ -172,7 +173,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                               Navigator.of(context).pop(),
                             });
                     }(),
-                    buttonText: 'No',
+                    buttonText: AllText().NO,
                     buttonColor: AllColors().WHITE,
                     fontColor: AllColors().Black,
                     width: 164.toWidth,
@@ -189,19 +190,19 @@ class _NotificationDialogState extends State<NotificationDialog> {
     bottomSheet(
         context,
         TextTileRepeater(
-          title: 'How long do you want to share your location for ?',
-          options: const [
-            '30 mins', '2 hours', '24 hours',
+          title: AllText().HOW_LONG_DO_YOU_WANT_SHARE_YOUR_LOCATION,
+          options:  [
+            AllText().k30mins, AllText().k2hours, AllText().k24hours,
             // , 'Until turned off'
           ],
           onChanged: (value) {
-            result = (value == '30 mins'
+            result = (value == AllText().k30mins
                 ? 30
-                : (value == '2 hours'
+                : (value == AllText().k2hours
                     ? (2 * 60)
-                    : (value == '24 hours'
+                    : (value == AllText().k24hours
                         ? (24 * 60)
-                        : (value == 'Until turned off' ? (24 * 60) : null))));
+                        : (value == AllText().untilTurnedOff ? (24 * 60) : null))));
           },
         ),
         350, onSheetCLosed: () async {
