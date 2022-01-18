@@ -12,7 +12,9 @@ import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:collection/collection.dart';
 
 class DesktopGroupInitialScreen extends StatefulWidget {
-  DesktopGroupInitialScreen({Key? key}) : super(key: key);
+  final bool showBackButton;
+  DesktopGroupInitialScreen({Key? key, this.showBackButton = true})
+      : super(key: key);
 
   @override
   State<DesktopGroupInitialScreen> createState() =>
@@ -29,6 +31,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
   void initState() {
     try {
       super.initState();
+      GroupService().groupPreferece.showBackButton = widget.showBackButton;
       GroupService().getAllGroupsDetails();
     } catch (e) {
       print('Error in init of Group_list $e');

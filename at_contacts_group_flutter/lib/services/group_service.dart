@@ -108,6 +108,9 @@ class GroupService {
 
   List<AtContact?>? get selectedContactList => selecteContactList;
 
+  // keeps track of how group screens will be shown for desktop.
+  GroupPreference groupPreferece = GroupPreference();
+
   /// initialise the service with details from app
   void init(String rootDomainFromApp, int rootPortFromApp) async {
     atClientManager = AtClientManager.getInstance();

@@ -16,12 +16,11 @@ import 'package:at_common_flutter/services/size_config.dart';
 class DesktopContactsScreen extends StatefulWidget {
   final bool isBlockedScreen;
   final Function onBackArrowTap;
+  final bool showBackButton;
   Key? key;
-  DesktopContactsScreen(
-    this.onBackArrowTap, {
-    this.key,
-    this.isBlockedScreen = false,
-  }) : super(key: key);
+  DesktopContactsScreen(this.onBackArrowTap,
+      {this.key, this.isBlockedScreen = false, this.showBackButton = true})
+      : super(key: key);
 
   @override
   _DesktopContactsScreenState createState() => _DesktopContactsScreenState();
@@ -75,13 +74,15 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                 const SizedBox(
                   width: 10,
                 ),
-                InkWell(
-                  onTap: () {
-                    widget.onBackArrowTap();
-                  },
-                  child: const Icon(Icons.arrow_back,
-                      size: 25, color: Colors.black),
-                ),
+                widget.showBackButton
+                    ? InkWell(
+                        onTap: () {
+                          widget.onBackArrowTap();
+                        },
+                        child: const Icon(Icons.arrow_back,
+                            size: 25, color: Colors.black),
+                      )
+                    : const SizedBox(),
                 const SizedBox(
                   width: 30,
                 ),
