@@ -18,8 +18,10 @@ import 'dart:math' as math;
 class DesktopGroupList extends StatefulWidget {
   final List<AtGroup> groups;
   final int expandIndex;
+  final bool showBackButton;
   Key? key;
-  DesktopGroupList(this.groups, {this.key, this.expandIndex = 0})
+  DesktopGroupList(this.groups,
+      {this.key, this.expandIndex = 0, this.showBackButton = true})
       : super(key: key);
   @override
   _DesktopGroupListState createState() => _DesktopGroupListState();
@@ -29,10 +31,12 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
   int _selectedIndex = 0;
   String searchText = '';
   var _filteredList = <AtGroup>[];
+  bool showBackIcon = true;
 
   @override
   void initState() {
     _selectedIndex = widget.expandIndex;
+    showBackIcon = GroupService().groupPreferece.showBackButton;
     super.initState();
   }
 
@@ -56,6 +60,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
           DesktopHeader(
             title: 'Groups',
             isTitleCentered: false,
+            showBackIcon: showBackIcon,
             onBackTap: () {
               DesktopGroupSetupRoutes.exitGroupPackage();
             },
