@@ -1,8 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
+import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/navigation_service.dart';
+import 'package:at_contacts_group_flutter/utils/text_constants.dart';
+import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
+import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_custom_input_field.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_header.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_person_horizontal_tile.dart';
@@ -12,8 +18,10 @@ import 'dart:math' as math;
 class DesktopGroupList extends StatefulWidget {
   final List<AtGroup> groups;
   final int expandIndex;
+  final bool showBackButton;
   Key? key;
-  DesktopGroupList(this.groups, {this.key, this.expandIndex = 0})
+  DesktopGroupList(this.groups,
+      {this.key, this.expandIndex = 0, this.showBackButton = true})
       : super(key: key);
   @override
   _DesktopGroupListState createState() => _DesktopGroupListState();
@@ -23,10 +31,12 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
   int _selectedIndex = 0;
   String searchText = '';
   var _filteredList = <AtGroup>[];
+  bool showBackIcon = true;
 
   @override
   void initState() {
     _selectedIndex = widget.expandIndex;
+    showBackIcon = GroupService().groupPreferece.showBackButton;
     super.initState();
   }
 
@@ -50,6 +60,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
           DesktopHeader(
             title: 'Groups',
             isTitleCentered: false,
+            showBackIcon: showBackIcon,
             onBackTap: () {
               DesktopGroupSetupRoutes.exitGroupPackage();
             },
@@ -76,7 +87,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                           NavService.groupPckgRightHalfNavKey.currentContext!)
                       .pushNamed(DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW,
                           arguments: {
-                        'onBackArrowTap': () {
+                        'onBackArrowTap': (selectedGroupContacts) {
                           Navigator.of(NavService
                                   .groupPckgRightHalfNavKey.currentContext!)
                               .pop();
@@ -151,10 +162,12 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                                 top: 15.0, bottom: 15, left: 15, right: 15),
                             child: DesktopCustomPersonHorizontalTile(
                               title: _filteredList[index].groupName,
+                              image: _filteredList[index].groupPicture,
                               subTitle: _filteredList[index]
                                   .members!
                                   .length
                                   .toString(),
+                              isDesktop: true,
                             ),
                           ),
                         ),
@@ -163,12 +176,14 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(right: 15.0),
-                                child: Transform.rotate(
-                                  angle: 180 * math.pi / 340,
-                                  child: Icon(Icons.keyboard_arrow_up),
-                                ),
-                              ),
+                                  padding: const EdgeInsets.only(right: 15.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      showMyDialog(
+                                          context, _filteredList[index]);
+                                    },
+                                    child: Icon(Icons.delete),
+                                  )),
                             ],
                           ),
                         )
@@ -183,153 +198,32 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
       ),
     );
   }
-}
 
-// class _DesktopGroupListState extends State<DesktopGroupList> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Color(0xFFF7F7FF),
-//       child: StreamBuilder(
-//         stream: GroupService().atGroupStream,
-//         builder: (BuildContext context, AsyncSnapshot<List<AtGroup>> snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return Center(child: CircularProgressIndicator());
-//           } else {
-//             if (snapshot.hasError) {
-//               return ErrorScreen(onPressed: () {
-//                 GroupService().getAllGroupsDetails();
-//               });
-//             } else {
-//               if (snapshot.hasData) {
-//                 if (snapshot.data!.isEmpty) {
-//                   return Text('Empty');
-//                 } else {
-//                   return Column(
-//                     children: <Widget>[
-//                       SizedBox(
-//                         height: 10,
-//                       ),
-//                       DesktopHeader(
-//                         title: 'Groups',
-//                         isTitleCentered: true,
-//                         actions: [
-//                           DesktopCustomInputField(
-//                             backgroundColor: Colors.white,
-//                             hintText: 'Search...',
-//                             icon: Icons.search,
-//                             height: 45,
-//                             iconColor: ColorConstants.greyText,
-//                           ),
-//                           SizedBox(width: 15),
-//                           TextButton(
-//                             onPressed: () {
-//                               // widget.onAdd();
-//                               Navigator.of(NavService
-//                                       .groupPckgRightHalfNavKey.currentContext!)
-//                                   .pushNamed(
-//                                       DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW,
-//                                       arguments: {
-//                                     'onBackArrowTap': () {
-//                                       Navigator.of(NavService
-//                                               .groupPckgRightHalfNavKey
-//                                               .currentContext!)
-//                                           .pop();
-//                                     },
-//                                     'onDoneTap': () {
-//                                       Navigator.of(NavService
-//                                               .groupPckgRightHalfNavKey
-//                                               .currentContext!)
-//                                           .pushNamed(
-//                                               DesktopRoutes.DESKTOP_NEW_GROUP,
-//                                               arguments: {
-//                                             'onPop': () {
-//                                               Navigator.of(NavService
-//                                                       .groupPckgRightHalfNavKey
-//                                                       .currentContext!)
-//                                                   .pop();
-//                                             },
-//                                           });
-//                                     },
-//                                   });
-//                             },
-//                             style: ButtonStyle(backgroundColor:
-//                                 MaterialStateProperty.resolveWith<Color>(
-//                               (Set<MaterialState> states) {
-//                                 return ColorConstants.orangeColor;
-//                               },
-//                             ), fixedSize:
-//                                 MaterialStateProperty.resolveWith<Size>(
-//                               (Set<MaterialState> states) {
-//                                 return Size(100, 40);
-//                               },
-//                             )),
-//                             child: Text(
-//                               'Add',
-//                               style: TextStyle(
-//                                 color: Colors.white,
-//                               ),
-//                             ),
-//                           ),
-//                           SizedBox(width: 10)
-//                         ],
-//                       ),
-//                       SizedBox(height: 10),
-//                       Expanded(
-//                         child: ListView.builder(
-//                           itemCount: snapshot.data!.length,
-//                           itemBuilder: (context, index) {
-//                             return Row(
-//                               children: [
-//                                 Padding(
-//                                   padding: const EdgeInsets.only(
-//                                     top: 8.0,
-//                                     right: 15,
-//                                     left: 20,
-//                                   ),
-//                                   child: Padding(
-//                                     padding: const EdgeInsets.only(
-//                                         top: 15.0,
-//                                         bottom: 15,
-//                                         left: 15,
-//                                         right: 15),
-//                                     child: DesktopCustomPersonHorizontalTile(
-//                                       title: snapshot.data![0].groupName,
-//                                       subTitle: snapshot.data![0].members.length
-//                                           .toString(),
-//                                     ),
-//                                   ),
-//                                 ),
-//                                 Expanded(
-//                                   child: Row(
-//                                     mainAxisAlignment: MainAxisAlignment.end,
-//                                     children: [
-//                                       Padding(
-//                                         padding:
-//                                             const EdgeInsets.only(right: 15.0),
-//                                         child: Transform.rotate(
-//                                           angle: 180 * math.pi / 340,
-//                                           child: Icon(Icons.keyboard_arrow_up),
-//                                         ),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 )
-//                               ],
-//                             );
-//                           },
-//                         ),
-//                       )
-//                     ],
-//                   );
-//                 }
-//               } else {
-//                 return Text('Empty');
-//               }
-//             }
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
+  Future<void> showMyDialog(BuildContext context, AtGroup group) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        Uint8List? groupPicture;
+        if (group.groupPicture != null) {
+          List<int> intList = group.groupPicture.cast<int>();
+          groupPicture = Uint8List.fromList(intList);
+        }
+        return ConfirmationDialog(
+          title: '${group.displayName}',
+          heading: 'Are you sure you want to delete this group?',
+          onYesPressed: () async {
+            var result = await GroupService().deleteGroup(group);
+
+            if (result is bool) {
+              result ? Navigator.of(context).pop() : null;
+            } else {
+              CustomToast().show(TextConstants().SERVICE_ERROR, context);
+            }
+          },
+          image: groupPicture,
+        );
+      },
+    );
+  }
+}

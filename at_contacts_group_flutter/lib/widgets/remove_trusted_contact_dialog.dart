@@ -80,7 +80,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                                 widget.contact?.tags!['name'] != null
                             ? widget.contact?.tags!['name']
                             : widget.contact?.atSign,
-                        size: 30,
+                        size: 50.toWidth,
                         maxSize: (80.0 - 30.0),
                         minSize: 50,
                       )

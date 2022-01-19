@@ -84,7 +84,6 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
             processing = false;
           });
 
-          /// empty list
           GroupService().setSelectedContacts([]);
 
           await Navigator.of(
@@ -93,7 +92,6 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                   arguments: {
                 'group': result,
               });
-
           await Navigator.of(NavService.groupPckgLeftHalfNavKey.currentContext!)
               .pushReplacementNamed(
             DesktopRoutes.DESKTOP_GROUP_LIST,
@@ -101,8 +99,6 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
               'group': result,
             },
           );
-
-          print('navigated');
         } else if (result != null) {
           if (result.runtimeType == AlreadyExistsException) {
             ScaffoldMessenger.of(context).showSnackBar(

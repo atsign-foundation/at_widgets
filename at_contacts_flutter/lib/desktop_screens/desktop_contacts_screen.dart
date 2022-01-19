@@ -16,11 +16,11 @@ import 'package:at_common_flutter/services/size_config.dart';
 class DesktopContactsScreen extends StatefulWidget {
   final bool isBlockedScreen;
   final Function onBackArrowTap;
-  const DesktopContactsScreen(
-    Key key,
-    this.onBackArrowTap, {
-    this.isBlockedScreen = false,
-  }) : super(key: key);
+  final bool showBackButton;
+  Key? key;
+  DesktopContactsScreen(this.onBackArrowTap,
+      {this.key, this.isBlockedScreen = false, this.showBackButton = true})
+      : super(key: key);
 
   @override
   _DesktopContactsScreenState createState() => _DesktopContactsScreenState();
@@ -74,13 +74,15 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                 const SizedBox(
                   width: 10,
                 ),
-                InkWell(
-                  onTap: () {
-                    widget.onBackArrowTap();
-                  },
-                  child: const Icon(Icons.arrow_back,
-                      size: 25, color: Colors.black),
-                ),
+                widget.showBackButton
+                    ? InkWell(
+                        onTap: () {
+                          widget.onBackArrowTap();
+                        },
+                        child: const Icon(Icons.arrow_back,
+                            size: 25, color: Colors.black),
+                      )
+                    : const SizedBox(),
                 const SizedBox(
                   width: 30,
                 ),
@@ -279,6 +281,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
         children: [
           image != null
               ? CustomCircleAvatar(
+                  key: Key(contact.contact!.atSign ?? ''),
                   byteImage: image,
                   nonAsset: true,
                   size: 50,
@@ -307,7 +310,6 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           ContactListTile(
             contact,
             isBlockedScreen: widget.isBlockedScreen,
-            key: UniqueKey(),
           ),
           const SizedBox(
             width: 50,
@@ -319,13 +321,12 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
 }
 
 class ContactListTile extends StatefulWidget {
-  final BaseContact? baseContact;
-  final bool isBlockedScreen;
-  final UniqueKey? uniqueKey;
-  const ContactListTile(
+  BaseContact? baseContact;
+  bool isBlockedScreen;
+  Key? key;
+  ContactListTile(
     this.baseContact, {
-    Key? key,
-    this.uniqueKey,
+    this.key,
     this.isBlockedScreen = false,
   }) : super(key: key);
 

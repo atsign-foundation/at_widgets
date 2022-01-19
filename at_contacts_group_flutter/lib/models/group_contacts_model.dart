@@ -68,6 +68,11 @@ class GroupContactsModel {
   int get hashCode => contact.hashCode ^ group.hashCode ^ contactType.hashCode;
 }
 
+// used by desktop screens to determine group preference.
+class GroupPreference {
+  bool showBackButton = true;
+}
+
 /// Enum for contact types
 enum ContactsType { CONTACT, GROUP }
 enum ContactTabs { RECENT, FAVS, ALL }

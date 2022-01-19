@@ -1,3 +1,8 @@
+## 4.0.0
+- Updated package dependencies
+- GroupContactView parameter updated
+- UI rendering optimised for desktop screens
+
 ## 3.1.2
 - Fixed at client dependency issue
 - Updated package dependencies

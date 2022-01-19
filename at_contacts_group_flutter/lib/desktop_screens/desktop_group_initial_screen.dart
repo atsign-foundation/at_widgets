@@ -12,7 +12,9 @@ import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:collection/collection.dart';
 
 class DesktopGroupInitialScreen extends StatefulWidget {
-  DesktopGroupInitialScreen({Key? key}) : super(key: key);
+  final bool showBackButton;
+  DesktopGroupInitialScreen({Key? key, this.showBackButton = true})
+      : super(key: key);
 
   @override
   State<DesktopGroupInitialScreen> createState() =>
@@ -29,16 +31,11 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
   void initState() {
     try {
       super.initState();
+      GroupService().groupPreferece.showBackButton = widget.showBackButton;
       GroupService().getAllGroupsDetails();
     } catch (e) {
       print('Error in init of Group_list $e');
     }
-  }
-
-  void deleteAll(List<AtGroup> grp) {
-    // grp.forEach((element) {
-    //   GroupService().deleteGroup(element);
-    // });
   }
 
   @override
@@ -59,8 +56,6 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
               });
             } else {
               if (snapshot.hasData) {
-                print(
-                    'previousData != snapshot.data ${areListsEqual(previousData, snapshot.data)} ');
                 if ((previousData == null) ||
                     (!areListsEqual(previousData, snapshot.data))) {
                   shouldUpdate = true;
@@ -131,7 +126,6 @@ class NestedNavigators extends StatefulWidget {
 class _NestedNavigatorsState extends State<NestedNavigators> {
   @override
   void initState() {
-    print('widget.shouldUpdate ${widget.shouldUpdate}');
     if (widget.shouldUpdate) {
       NavService.resetKeys();
     }
@@ -145,7 +139,6 @@ class _NestedNavigatorsState extends State<NestedNavigators> {
       child: Row(
         children: [
           Expanded(
-            key: UniqueKey(),
             child: Navigator(
               key: NavService.groupPckgLeftHalfNavKey,
               initialRoute: DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL,
@@ -161,7 +154,6 @@ class _NestedNavigatorsState extends State<NestedNavigators> {
             ),
           ),
           Expanded(
-            key: UniqueKey(),
             child: Navigator(
               key: NavService.groupPckgRightHalfNavKey,
               initialRoute: DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL,
