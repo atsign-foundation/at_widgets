@@ -1,3 +1,7 @@
+## 3.1.4
+- **DOCS**: Updated documentation
+- **CHORE**: Updated dependencies
+
 ## 3.1.3
 - **FIX**: Fixed [sending OTP inconsistency](https://github.com/atsign-foundation/at_widgets/issues/236) bug.
 
