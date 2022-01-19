@@ -137,8 +137,7 @@ class AtLocationNotificationListener {
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) {
       /// only show failure for sharelocation/requestlocation keys
-      if ((e is KeyNotFoundException) &&
-              (notificationKey.contains(MixedConstants.SHARE_LOCATION)) ||
+      if ((notificationKey.contains(MixedConstants.SHARE_LOCATION)) ||
           (notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) ||
           (notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
         showToast(

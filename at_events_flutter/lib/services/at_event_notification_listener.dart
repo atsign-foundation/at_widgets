@@ -93,8 +93,7 @@ class AtEventNotificationListener {
         .decrypt(value ?? '', fromAtSign)
         .catchError((e) {
       /// only show failure for createevent keys
-      if ((e is KeyNotFoundException) &&
-          notificationKey.contains('createevent')) {
+      if (notificationKey.contains('createevent')) {
         AtLocationNotificationListener().showToast(
           'Decryption failed for Event notification received from $fromAtSign with $e',
           navKey!.currentContext!,
