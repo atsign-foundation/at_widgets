@@ -147,7 +147,6 @@ class GroupService {
 
       for (var i = 0; i < groupIds.length; i++) {
         var groupDetail = await (getGroupDetail(groupIds[i]!));
-        // ignore: unnecessary_null_comparison
         if (groupDetail != null) groupList.add(groupDetail);
       }
 
@@ -172,6 +171,7 @@ class GroupService {
       }
     } catch (e) {
       print('error in getting group list: $e');
+      atGroupSink.add([]);
     }
   }
 
