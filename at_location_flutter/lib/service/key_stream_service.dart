@@ -87,8 +87,11 @@ class KeyStreamService {
           if ((value.value != null) && (value.value != 'null')) {
             var locationNotificationModel =
                 LocationNotificationModel.fromJson(jsonDecode(value.value));
-            allLocationNotifications.add(KeyLocationModel(
-                locationNotificationModel: locationNotificationModel));
+            allLocationNotifications.insert(
+                0,
+                KeyLocationModel(
+                    locationNotificationModel:
+                        locationNotificationModel)); // last item to come in would be at the top of the list
           }
         } catch (e) {
           _logger.severe('convertJsonToLocationModel error :$e');
@@ -364,7 +367,8 @@ class KeyStreamService {
     var tempHyridNotificationModel = KeyLocationModel();
     tempHyridNotificationModel.locationNotificationModel =
         locationNotificationModel;
-    allLocationNotifications.add(tempHyridNotificationModel);
+    allLocationNotifications.insert(0,
+        tempHyridNotificationModel); // last item to come in would be at the top of the list
 
     if ((tempHyridNotificationModel.locationNotificationModel!.isSharing)) {
       if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==

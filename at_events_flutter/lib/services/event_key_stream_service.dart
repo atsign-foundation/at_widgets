@@ -83,7 +83,8 @@ class EventKeyStreamService {
 
     for (var key in response) {
       var eventKeyLocationModel = EventKeyLocationModel(key: key);
-      allEventNotifications.add(eventKeyLocationModel);
+      allEventNotifications.insert(0,
+          eventKeyLocationModel); // last item to come in would be at the top of the list
     }
 
     for (var notification in allEventNotifications) {
@@ -232,7 +233,8 @@ class EventKeyStreamService {
     tempEventKeyLocationModel.atValue =
         await getAtValue(tempEventKeyLocationModel.atKey!);
     tempEventKeyLocationModel.eventNotificationModel = eventNotificationModel;
-    allEventNotifications.add(tempEventKeyLocationModel);
+    allEventNotifications.insert(0,
+        tempEventKeyLocationModel); // last item to come in would be at the top of the list
 
     notifyListeners();
 
