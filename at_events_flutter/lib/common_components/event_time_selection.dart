@@ -36,7 +36,7 @@ class _EventTimeSelectionState extends State<EventTimeSelection> {
           InviteCard(
             event: widget.eventNotificationModel!.title,
             timeAndDate:
-                '${timeOfDayToString(widget.eventNotificationModel!.event!.startTime!)}' +AllText().ON+ '${dateToString(widget.eventNotificationModel!.event!.date!)}',
+                '${timeOfDayToString(widget.eventNotificationModel!.event!.startTime!)} ' +AllText().ON+ ' ${dateToString(widget.eventNotificationModel!.event!.date!)}',
             atSign: widget.eventNotificationModel!.atsignCreator,
             memberCount:
                 '+${widget.eventNotificationModel!.group!.members!.length}',

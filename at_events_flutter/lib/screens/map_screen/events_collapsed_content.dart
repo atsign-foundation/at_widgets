@@ -149,16 +149,20 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                   ),
                   const Divider(),
                   DisplayTile(
-                    title:
-                        '${eventListenerKeyword.atsignCreator}' +AllText().AND+ '${eventListenerKeyword.group!.members!.length}' + AllText().MORE,
+                    title: '${eventListenerKeyword.atsignCreator} ' +
+                        AllText().AND +
+                        ' ${eventListenerKeyword.group!.members!.length} ' +
+                        AllText().MORE,
                     atsignCreator: eventListenerKeyword.atsignCreator,
                     semiTitle: (eventListenerKeyword.group!.members!.length ==
                             1)
-                        ? '${eventListenerKeyword.group!.members!.length}'+ AllText().PERSON
-                        : '${eventListenerKeyword.group!.members!.length}'+ AllText().PEOPLE,
+                        ? '${eventListenerKeyword.group!.members!.length} ' +
+                            AllText().PERSON
+                        : '${eventListenerKeyword.group!.members!.length} ' +
+                            AllText().PEOPLE,
                     number: eventListenerKeyword.group!.members!.length,
                     subTitle:
-                        AllText().SHARE_MY_LOCATION_FROM+ '${timeOfDayToString(eventListenerKeyword.event!.startTime!)}'+ AllText().ON+ '${dateToString(eventListenerKeyword.event!.date!)}',
+                        '${AllText().SHARE_MY_LOCATION_FROM} ${timeOfDayToString(eventListenerKeyword.event!.startTime!)} ${AllText().ON} ${dateToString(eventListenerKeyword.event!.date!)}',
                   ),
                 ],
               ),
@@ -279,7 +283,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
 
                         if (!isExited) {
                           await confirmationDialog(
-                              AllText().DO_YOU_WANT_TO_EXIT +'${widget.eventListenerKeyword.title}?',
+                              '${AllText().DO_YOU_WANT_TO_EXIT} ${widget.eventListenerKeyword.title}?',
                               onYesPressed: _exitEvent);
                         }
                       },
@@ -296,12 +300,14 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                       onTap: () async {
                         if (!isCancelled) {
                           await confirmationDialog(
-                              AllText().DO_YOU_WANT_TO_CANCEL +'${widget.eventListenerKeyword.title}?',
+                              '${AllText().DO_YOU_WANT_TO_CANCEL} ${widget.eventListenerKeyword.title}?',
                               onYesPressed: _cancelEvent);
                         }
                       },
                       child: Text(
-                        isCancelled ? AllText().EVENT_CANCELLED : AllText().CANCEL_EVENT,
+                        isCancelled
+                            ? AllText().EVENT_CANCELLED
+                            : AllText().CANCEL_EVENT,
                         style: CustomTextStyles().orange16,
                       ),
                     ),

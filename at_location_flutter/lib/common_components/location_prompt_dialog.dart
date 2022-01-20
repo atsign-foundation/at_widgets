@@ -125,7 +125,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                                         .currentContext!)
                                     .pop();
                               },
-                              buttonText: widget.yesText ?? AllText().YES+'!',
+                              buttonText: widget.yesText ?? AllText().YES + '!',
                               fontColor: Colors.white,
                               width: 164.toWidth,
                               height: 48.toHeight,
@@ -134,13 +134,15 @@ class _LocationPromptState extends State<LocationPrompt> {
                       CustomButton(
                         onPressed: () async {
                           if (widget.isShareLocationData) {
-                            CustomToast().show(AllText().UPDATE_CANCELLED, context);
+                            CustomToast()
+                                .show(AllText().UPDATE_CANCELLED, context);
                           } else if (widget.isRequestLocationData) {
-                            CustomToast().show(AllText().PROMPT_CANCELLED, context);
+                            CustomToast()
+                                .show(AllText().PROMPT_CANCELLED, context);
                           }
                           Navigator.of(context).pop();
                         },
-                        buttonText: widget.noText ?? AllText().NO+'!',
+                        buttonText: widget.noText ?? AllText().NO + '!',
                         buttonColor: Colors.white,
                         fontColor: Colors.black,
                         width: 164.toWidth,
@@ -162,12 +164,12 @@ class _LocationPromptState extends State<LocationPrompt> {
 
     if (update) {
       CustomToast().show(
-          AllText().SHARE_LOC_REQ_SENT_TO+'${widget.locationNotificationModel!.receiver}',
+          '${AllText().SHARE_LOC_REQ_SENT_TO} ${widget.locationNotificationModel!.receiver}',
           context,
           isSuccess: true);
     } else {
       CustomToast().show(
-          AllText().SOMETHING_WENT_WRONG_FOR+'${widget.locationNotificationModel!.receiver}',
+          '${AllText().SOMETHING_WENT_WRONG_FOR} ${widget.locationNotificationModel!.receiver}',
           context,
           isError: true);
     }
@@ -180,12 +182,12 @@ class _LocationPromptState extends State<LocationPrompt> {
 
     if (update) {
       CustomToast().show(
-          AllText().PROMPTED_AGAIN_TO+'${widget.locationNotificationModel!.atsignCreator}',
+          '${AllText().PROMPTED_AGAIN_TO} ${widget.locationNotificationModel!.atsignCreator}',
           context,
           isSuccess: true);
     } else {
       CustomToast().show(
-          AllText().SOMETHING_WENT_WRONG_FOR+'${widget.locationNotificationModel!.atsignCreator}',
+          '${AllText().SOMETHING_WENT_WRONG_FOR} ${widget.locationNotificationModel!.atsignCreator}',
           context,
           isError: true);
     }

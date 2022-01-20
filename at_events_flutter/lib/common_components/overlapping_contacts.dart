@@ -105,8 +105,8 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                                       widget.selectedList!.length - 1 == 0
                                           ? ''
                                           : widget.selectedList!.length - 1 == 1
-                                              ? AllText().AND +'${widget.selectedList!.length - 1}' +AllText().OTHER
-                                              : AllText().AND +'${widget.selectedList!.length - 1}' +AllText().OTHERS,
+                                              ? '${AllText().AND}  ${widget.selectedList!.length - 1} ${AllText().OTHER}'
+                                              : '${AllText().AND} ${widget.selectedList!.length - 1} ${AllText().OTHERS}',
                                       // style:
                                       // CustomTextStyles.secondaryRegular14,
                                       overflow: TextOverflow.ellipsis,
