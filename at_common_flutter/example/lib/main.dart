@@ -4,7 +4,8 @@ import 'package:at_common_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
-final StreamController<ThemeMode> updateThemeMode = StreamController<ThemeMode>.broadcast();
+final StreamController<ThemeMode> updateThemeMode =
+    StreamController<ThemeMode>.broadcast();
 
 void main() {
   runApp(MyApp());
@@ -21,14 +22,14 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           theme: ThemeData(
             brightness: Brightness.light,
-            primaryColor: Color(0xFF6200EE),
+            primaryColor: Color(0xFFf04924),
             accentColor: Color(0xFF03DAC6),
             backgroundColor: Colors.white,
           ),
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             fontFamily: 'RobotoSlab',
-            primaryColor: Color(0xFF3700B3),
+            primaryColor: Color(0xFFF05E3E),
             accentColor: Color(0xFF018786),
             backgroundColor: Colors.black,
           ),

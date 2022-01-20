@@ -1,73 +1,35 @@
-<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
-### Now for some internet optimism.
+[![pub package](https://img.shields.io/pub/v/at_common_flutter)](https://pub.dev/packages/at_common_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
-# at_common_flutter
+## Overview
+The at_common_flutter package provides custom widgets for development of other packages and apps built on @‎platform.
 
-A Flutter package to provide custom widgets for other atsign packages.
+The @‎platform's decentralized, edge computing model has the following features: 
+- Cryptographic control of data access through personal data stores
+- No application backend needed
+- End to end encryption where only the data owner has the keys
+- Private and surveillance free connectivity
 
-## Getting Started
+We call giving people control of access to their data “flipping the internet”
+and you can learn more about how it works by reading this
+[overview](https://atsign.dev/docs/overview/).
 
-This package provides the following custom widgets:
+## Get started
+There are two options to get started using this package.
 
-#### CustomAppBar
-```
-    return Scaffold(
-      appBar: CustomAppBar(
-        showBackButton: false,
-        showTitle: true,
-        titleText: widget.title,
-        onTrailingIconPressed: () {
-          print('Trailing icon of appbar pressed');
-        },
-        showTrailingIcon: true,
-        trailingIcon: Center(
-          child: Icon(
-            Icons.add,
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-          ),
-        ),
-      ),
-    );
+### 1. Clone it from GitHub
+Feel free to fork a copy of the source from the [GitHub repo](https://github.com/atsign-foundation/at_widgets). The example code contained there, demonstrates the usage of the various UI widgets.
+
+```sh
+$ git clone https://github.com/atsign-foundation/at_widgets
 ```
 
-#### CustomButton
-```
-CustomButton(
-    height: 50.0,
-    width: 200.0,
-    buttonText: 'Add',
-    onPressed: () {
-    print('Custom button pressed');
-    },
-    buttonColor: Theme.of(context).brightness == Brightness.light
-        ? Colors.black
-        : Colors.white,
-    fontColor: Theme.of(context).brightness == Brightness.light
-        ? Colors.white
-        : Colors.black,
-),
-```
+### 2. Manually add the package to a project
 
-#### CustomInputField
-```
-CustomInputField(
-    icon: Icons.emoji_emotions_outlined,
-    width: 200.0,
-    initialValue: "initial value",
-    value: (String val) {
-    print('Current value of input field: $val');
-    },
-),
-```
+Instructions on how to manually add this package to you project can be found on pub.dev [here](https://pub.dev/packages/at_common_flutter/install).
 
-#### SizeConfig service
-This service is used to adjust height of widget based upon the screen size.
-This service needs to be initialised before usage.
-```
-import 'package:at_common_flutter/at_common_flutter.dart' as CommonWidgets;
-
-CommonWidgets.SizeConfig().init(context);
-```
+## Open source usage and contributions
+This is open source code, so feel free to use it as is, suggest changes or 
+enhancements or create your own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) 
+for detailed guidance on how to setup tools, tests and make a pull request.
