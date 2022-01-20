@@ -139,7 +139,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           amICreator
                               ? AllText().PER_NOT_SHARING_LOC
                               : locationAvailable
-                                  ? (AllText().SHARING_LOCATION +'$time')
+                                  ? (AllText().SHARING_LOCATION +' $time')
                                   : (AllText().LOC_SHARING_TURNED_OFF),
                           style: ((amICreator) || locationAvailable)
                               ? CustomTextStyles().grey12
@@ -147,7 +147,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                         ),
                         amICreator
                             ? Text(
-                                AllText().SHARING_MY_LOC +'$time',
+                                AllText().SHARING_MY_LOC +' $time',
                                 style: CustomTextStyles().black12,
                               )
                             : const SizedBox()
