@@ -16,6 +16,7 @@ import 'package:at_events_flutter/common_components/custom_heading.dart';
 import 'package:at_events_flutter/screens/select_location.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
@@ -98,18 +99,18 @@ class _CreateEventState extends State<CreateEvent> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  const CustomHeading(
-                                      heading: 'Create an event',
-                                      action: 'Cancel'),
+                                   CustomHeading(
+                                      heading: AllText().CREATE_EVENT,
+                                      action: AllText().CANCEL),
                                   const SizedBox(height: 25),
-                                  Text('Send To',
+                                  Text(AllText().SEND,
                                       style: CustomTextStyles().greyLabel14),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
                                     width: SizeConfig().screenWidth * 0.95,
                                     height: 50.toHeight,
                                     isReadOnly: true,
-                                    hintText: 'Select @sign from contacts',
+                                    hintText: AllText().SELECT_AT_SIGN_FROM_CONTACT,
                                     icon: Icons.contacts_rounded,
                                     onTap: () {
                                       Navigator.push(
@@ -157,14 +158,14 @@ class _CreateEventState extends State<CreateEvent> {
                                       ? const SizedBox(height: 25)
                                       : const SizedBox(),
                                   Text(
-                                    'Title',
+                                    AllText().TITLE,
                                     style: CustomTextStyles().greyLabel14,
                                   ),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
                                     width: SizeConfig().screenWidth * 0.95,
                                     height: 50.toHeight,
-                                    hintText: 'Title of the event',
+                                    hintText: AllText().TITLE_OF_THE_EVENT,
                                     initialValue: eventData.title != null
                                         ? EventService()
                                             .eventNotificationModel!
@@ -177,14 +178,14 @@ class _CreateEventState extends State<CreateEvent> {
                                     },
                                   ),
                                   const SizedBox(height: 25),
-                                  Text('Add Venue',
+                                  Text(AllText().ADD_VENUE,
                                       style: CustomTextStyles().greyLabel14),
                                   SizedBox(height: 6.toHeight),
                                   CustomInputField(
                                     width: SizeConfig().screenWidth * 0.95,
                                     height: 50.toHeight,
                                     isReadOnly: true,
-                                    hintText: 'Start typing or select from map',
+                                    hintText: AllText().START_TYPING_OR_SEL_FRM_MAP,
                                     initialValue: eventData.venue!.label != null
                                         ? eventData.venue!.label!
                                         : '',
@@ -205,7 +206,7 @@ class _CreateEventState extends State<CreateEvent> {
                                                 SizeConfig().screenHeight *
                                                     0.9);
                                           },
-                                          child: Text('Select Times',
+                                          child: Text(AllText().SELECT_TIMES,
                                               style: CustomTextStyles()
                                                   .greyLabel14),
                                         ),
@@ -257,15 +258,15 @@ class _CreateEventState extends State<CreateEvent> {
                                                               .event!.date!) ==
                                                           dateToString(
                                                               DateTime.now()))
-                                                      ? 'Event today (${timeOfDayToString(eventData.event!.startTime!)})'
-                                                      : 'Event on ${(dateToString(eventData.event!.date!) != dateToString(DateTime.now()) ? dateToString(eventData.event!.date!) : dateToString(DateTime.now()))} (${timeOfDayToString(eventData.event!.startTime!)})') +
+                                                      ? AllText().EVENT_TODAY+' (${timeOfDayToString(eventData.event!.startTime!)})'
+                                                      : AllText().EVENT_ON+' ${(dateToString(eventData.event!.date!) != dateToString(DateTime.now()) ? dateToString(eventData.event!.date!) : dateToString(DateTime.now()))} (${timeOfDayToString(eventData.event!.startTime!)})') +
                                                   ((dateToString(eventData
                                                               .event!
                                                               .endDate!) ==
                                                           dateToString(eventData
                                                               .event!.date!))
-                                                      ? ' to'
-                                                      : ' to ${dateToString(eventData.event!.endDate!)}') +
+                                                      ? AllText().TO
+                                                      : AllText().TO+' ${dateToString(eventData.event!.endDate!)}') +
                                                   (' (${timeOfDayToString(eventData.event!.endTime!)})'),
 
                                               ///
@@ -300,7 +301,7 @@ class _CreateEventState extends State<CreateEvent> {
                                                               .repeatDuration !=
                                                           null)
                                                   ? Text(
-                                                      'Repeats every ${eventData.event!.repeatDuration} month on ${eventData.event!.date!.day} day')
+                                                      AllText().REPEATS_EVERY+' ${eventData.event!.repeatDuration} ' +AllText().WEEK_ON+ ' ${eventData.event!.date!.day} '+ AllText().DAY)
                                                   : (eventData.event!
                                                                   .repeatCycle ==
                                                               RepeatCycle
@@ -309,7 +310,7 @@ class _CreateEventState extends State<CreateEvent> {
                                                                   .occursOn !=
                                                               null)
                                                       ? Text(
-                                                          'Repeats every ${eventData.event!.repeatDuration} week on ${getWeekString(eventData.event!.occursOn)}')
+                                                         AllText().REPEATS_EVERY+' ${eventData.event!.repeatDuration} ' +AllText().WEEK_ON+ ' ${getWeekString(eventData.event!.occursOn)} ')
                                                       : const SizedBox(),
                                               EventService()
                                                               .eventNotificationModel!
@@ -322,7 +323,7 @@ class _CreateEventState extends State<CreateEvent> {
                                                               .endsOn ==
                                                           EndsOn.AFTER
                                                   ? Text(
-                                                      'Ends after ${eventData.event!.endEventAfterOccurance} occurrence')
+                                                      AllText().ENDS_AFTER +' ${eventData.event!.endEventAfterOccurance} '+ AllText().OCCURENCE)
                                                   : const SizedBox(),
                                             ],
                                           ),
@@ -357,7 +358,7 @@ class _CreateEventState extends State<CreateEvent> {
                     ? const CircularProgressIndicator()
                     : CustomButton(
                         buttonText:
-                            widget.isUpdate ? 'Save' : 'Create & Invite',
+                            widget.isUpdate ? AllText().SAVE : AllText().CREATE_AND_INVITE,
                         onPressed: onCreateEvent,
                         width: 160.toWidth,
                         height: 50.toHeight,
@@ -407,7 +408,7 @@ class _CreateEventState extends State<CreateEvent> {
 
     if (result is bool && result == true) {
       CustomToast().show(
-          EventService().isEventUpdate ? 'Event updated' : 'Event added',
+          EventService().isEventUpdate ? AllText().EVENT_UPDATED : AllText().EVENT_ADDED,
           context,
           isSuccess: true);
       setState(() {
@@ -415,7 +416,7 @@ class _CreateEventState extends State<CreateEvent> {
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show('Something went wrong ${result.toString()}', context,
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG +' ${result.toString()}', context,
           isError: true);
       setState(() {
         isLoading = false;

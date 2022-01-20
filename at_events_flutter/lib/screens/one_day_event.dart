@@ -11,6 +11,7 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 
 class OneDayEvent extends StatefulWidget {
@@ -45,10 +46,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const CustomHeading(
-                        heading: 'One Day Event', action: 'Cancel'),
+                    CustomHeading(
+                        heading: AllText().ONE_DAY_EVENT, action: AllText().CANCEL),
                     const SizedBox(height: 25),
-                    Text('Select Date', style: CustomTextStyles().greyLabel14),
+                    Text(AllText().SELECT_DATE, style: CustomTextStyles().greyLabel14),
                     SizedBox(height: 6.toHeight),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,7 +58,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                           width: 155.toWidth,
                           height: 50.toHeight,
                           isReadOnly: true,
-                          hintText: 'Select Start Date',
+                          hintText: AllText().SELECT_START_DATE,
                           icon: Icons.date_range,
                           initialValue: (eventData.event!.date != null)
                               ? dateToString(eventData.event!.date!)
@@ -92,7 +93,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                           width: 155.toWidth,
                           height: 50.toHeight,
                           isReadOnly: true,
-                          hintText: 'Select End Date',
+                          hintText: AllText().SELECT_END_DATE,
                           icon: Icons.date_range,
                           initialValue: (eventData.event!.endDate != null)
                               ? dateToString(eventData.event!.endDate!)
@@ -124,7 +125,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                       ],
                     ),
                     const SizedBox(height: 25),
-                    Text('Select Time', style: CustomTextStyles().greyLabel14),
+                    Text(AllText().SELECT_TIME, style: CustomTextStyles().greyLabel14),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -132,7 +133,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                           width: 155.toWidth,
                           height: 50.toHeight,
                           isReadOnly: true,
-                          hintText: 'Start',
+                          hintText: AllText().START,
                           icon: Icons.access_time,
                           initialValue: eventData.event!.startTime != null
                               ? timeOfDayToString(eventData.event!.startTime!)
@@ -166,7 +167,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                         CustomInputField(
                             width: 155.toWidth,
                             height: 50.toHeight,
-                            hintText: 'Stop',
+                            hintText: AllText().STOP,
                             isReadOnly: true,
                             icon: Icons.access_time,
                             initialValue: eventData.event!.endTime != null
@@ -183,7 +184,7 @@ class _OneDayEventState extends State<OneDayEvent> {
 
                               if (eventData.event!.endDate == null) {
                                 CustomToast().show(
-                                    'Select start time first', context,
+                                   AllText().SELECT_START_TIME_FIRST, context,
                                     isError: true);
                                 return;
                               }
@@ -218,7 +219,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                     EventService().update(eventData: eventData);
                     Navigator.of(context).pop();
                   },
-                  buttonText: 'Done',
+                  buttonText: AllText().DONE,
                   buttonColor: Theme.of(context).brightness == Brightness.light
                       ? AllColors().Black
                       : AllColors().WHITE,

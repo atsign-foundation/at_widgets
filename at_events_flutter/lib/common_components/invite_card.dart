@@ -7,6 +7,7 @@ import 'package:at_events_flutter/common_components/custom_circle_avatar.dart';
 import 'package:at_events_flutter/common_components/pop_button.dart';
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -106,7 +107,7 @@ class _InviteCardState extends State<InviteCard> {
             ),
           ),
           PopButton(
-            label: 'Decide Later',
+            label: AllText().DECIDE_LATER,
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pop();

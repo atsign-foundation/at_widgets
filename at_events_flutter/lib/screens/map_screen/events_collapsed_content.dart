@@ -13,6 +13,7 @@ import 'package:at_events_flutter/services/at_event_notification_listener.dart';
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter/common_components/confirmation_dialog.dart';
 import 'participants.dart';
@@ -113,7 +114,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text('Edit',
+                                  Text(AllText().EDIT,
                                       style: CustomTextStyles().orange16),
                                   Icon(Icons.edit, color: AllColors().ORANGE)
                                 ],
@@ -148,16 +149,20 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                   ),
                   const Divider(),
                   DisplayTile(
-                    title:
-                        '${eventListenerKeyword.atsignCreator} and ${eventListenerKeyword.group!.members!.length} more',
+                    title: '${eventListenerKeyword.atsignCreator} ' +
+                        AllText().AND +
+                        ' ${eventListenerKeyword.group!.members!.length} ' +
+                        AllText().MORE,
                     atsignCreator: eventListenerKeyword.atsignCreator,
                     semiTitle: (eventListenerKeyword.group!.members!.length ==
                             1)
-                        ? '${eventListenerKeyword.group!.members!.length} person'
-                        : '${eventListenerKeyword.group!.members!.length} people',
+                        ? '${eventListenerKeyword.group!.members!.length} ' +
+                            AllText().PERSON
+                        : '${eventListenerKeyword.group!.members!.length} ' +
+                            AllText().PEOPLE,
                     number: eventListenerKeyword.group!.members!.length,
                     subTitle:
-                        'Share my location from ${timeOfDayToString(eventListenerKeyword.event!.startTime!)} on ${dateToString(eventListenerKeyword.event!.date!)}',
+                        '${AllText().SHARE_MY_LOCATION_FROM} ${timeOfDayToString(eventListenerKeyword.event!.startTime!)} ${AllText().ON} ${dateToString(eventListenerKeyword.event!.date!)}',
                   ),
                 ],
               ),
@@ -171,7 +176,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                   ),
                   422),
               child: Text(
-                'See Participants',
+                AllText().SEE_PARTICIPANTS,
                 style: CustomTextStyles().orange14,
               ),
             ),
@@ -179,7 +184,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
             Flexible(
                 child: RichText(
               text: TextSpan(
-                text: 'Address: ',
+                text: AllText().ADDRESS,
                 style: CustomTextStyles().darkGrey16,
                 children: [
                   TextSpan(
@@ -196,7 +201,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Share Location',
+                        AllText().SHARE_LOCATION,
                         style: CustomTextStyles().darkGrey16,
                       ),
                       Switch(
@@ -205,8 +210,8 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                             if (isCancelled || isExited) {
                               CustomToast().show(
                                   isCancelled
-                                      ? 'Event cancelled'
-                                      : 'Event exited',
+                                      ? AllText().EVENT_CANCELLED
+                                      : AllText().EVENT_EXITED,
                                   AtEventNotificationListener()
                                       .navKey!
                                       .currentContext,
@@ -214,7 +219,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                               return;
                             }
 
-                            LoadingDialog().show(text: 'Updating data');
+                            LoadingDialog().show(text: AllText().UPDATING_DATA);
                             try {
                               // if (isAdmin) {
                               //   LocationService().eventListenerKeyword.isSharing =
@@ -240,7 +245,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                                 //     isSuccess: true);
                               } else {
                                 CustomToast().show(
-                                    'Something went wrong , please try again.',
+                                    AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                     AtEventNotificationListener()
                                         .navKey!
                                         .currentContext,
@@ -250,7 +255,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                               LoadingDialog().hide();
                             } catch (e) {
                               CustomToast().show(
-                                  'Something went wrong , please try again.',
+                                  AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                   AtEventNotificationListener()
                                       .navKey!
                                       .currentContext,
@@ -268,7 +273,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                       onTap: () async {
                         if (isCancelled) {
                           CustomToast().show(
-                              'Event cancelled',
+                              AllText().EVENT_CANCELLED,
                               AtEventNotificationListener()
                                   .navKey!
                                   .currentContext,
@@ -278,12 +283,12 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
 
                         if (!isExited) {
                           await confirmationDialog(
-                              'Do you want to exit ${widget.eventListenerKeyword.title}?',
+                              '${AllText().DO_YOU_WANT_TO_EXIT} ${widget.eventListenerKeyword.title}?',
                               onYesPressed: _exitEvent);
                         }
                       },
                       child: Text(
-                        isExited ? 'Exited' : 'Exit Event',
+                        isExited ? AllText().EXITED : AllText().EXIT_EVENT,
                         style: CustomTextStyles().orange16,
                       ),
                     ),
@@ -295,12 +300,14 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                       onTap: () async {
                         if (!isCancelled) {
                           await confirmationDialog(
-                              'Do you want to cancel ${widget.eventListenerKeyword.title}?',
+                              '${AllText().DO_YOU_WANT_TO_CANCEL} ${widget.eventListenerKeyword.title}?',
                               onYesPressed: _cancelEvent);
                         }
                       },
                       child: Text(
-                        isCancelled ? 'Event Cancelled' : 'Cancel Event',
+                        isCancelled
+                            ? AllText().EVENT_CANCELLED
+                            : AllText().CANCEL_EVENT,
                         style: CustomTextStyles().orange16,
                       ),
                     ),
@@ -313,7 +320,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
   }
 
   _cancelEvent() async {
-    LoadingDialog().show(text: 'Cancelling');
+    LoadingDialog().show(text: AllText().CANCELLING);
     try {
       var result = await EventKeyStreamService().actionOnEvent(
         eventListenerKeyword,
@@ -325,7 +332,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       );
       if (result == true) {
       } else {
-        CustomToast().show('Something went wrong , please try again.',
+        CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
             AtEventNotificationListener().navKey!.currentContext,
             isError: true);
       }
@@ -333,7 +340,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       LoadingDialog().hide();
       Navigator.of(AtEventNotificationListener().navKey!.currentContext!).pop();
     } catch (e) {
-      CustomToast().show('Something went wrong , please try again.',
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
           AtEventNotificationListener().navKey!.currentContext,
           isError: true);
       LoadingDialog().hide();
@@ -342,7 +349,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
 
   _exitEvent() async {
     //if member has not exited then only following code will run.
-    LoadingDialog().show(text: 'Exiting');
+    LoadingDialog().show(text: AllText().EXITING);
     try {
       var result = await EventKeyStreamService().actionOnEvent(
         eventListenerKeyword,
@@ -355,7 +362,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       );
       if (result == true) {
       } else {
-        CustomToast().show('Something went wrong , please try again.',
+        CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
             AtEventNotificationListener().navKey!.currentContext,
             isError: true);
       }
@@ -363,7 +370,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       LoadingDialog().hide();
       Navigator.of(AtEventNotificationListener().navKey!.currentContext!).pop();
     } catch (e) {
-      CustomToast().show('Something went wrong , please try again.',
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
           AtEventNotificationListener().navKey!.currentContext,
           isError: true);
       LoadingDialog().hide();
