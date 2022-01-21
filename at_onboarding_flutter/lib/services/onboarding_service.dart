@@ -71,12 +71,12 @@ class OnboardingService {
     return service;
   }
 
-  ///Fetches atsign from device keychain.
+  /// Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
     return _keyChainManager.getAtSign();
   }
 
-  ///Returns `true` if authentication is successful for the existing atsign in device.
+  /// Returns `true` if authentication is successful for the existing atsign in device.
   Future<bool> onboard() async {
     AtClientService atClientServiceInstance =
         _getClientServiceForAtsign(_atsign)!;
@@ -88,8 +88,8 @@ class OnboardingService {
     return result;
   }
 
-  ///Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].
-  ///Throws Excpetion if atsign is null.
+  /// Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].
+  /// Throws Excpetion if atsign is null.
   Future<dynamic> authenticate(String? atsign,
       {String? cramSecret,
       String? jsonData,
@@ -137,28 +137,30 @@ class OnboardingService {
     return c.future;
   }
 
-  ///Fetches privatekey for [atsign] from device keychain.
+  /// Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
     return KeychainUtil.getPkamPrivateKey(atsign);
   }
 
-  ///Fetches publickey for [atsign] from device keychain.
+  /// Fetches publickey for [atsign] from device keychain.
   Future<String?> getPublicKey(String atsign) async {
     return KeychainUtil.getPkamPublicKey(atsign);
   }
 
+  /// Fetches AESkey for [atsign] from device keychain.
   Future<String?> getAESKey(String atsign) async {
     return KeychainUtil.getAESKey(atsign);
   }
 
+  /// Fetches encryption keys for [atsign] from device keychain.
   Future<Map<String, String?>> getEncryptedKeys(String atsign) async {
     Map<String, String?> result = await KeychainUtil.getEncryptedKeys(atsign);
     result[atsign] = await getAESKey(atsign);
     return result;
   }
 
-  ///Returns null if [atsign] is null else the formatted [atsign].
-  ///[atsign] must be non-null.
+  /// Returns null if [atsign] is null else the formatted [atsign].
+  /// [atsign] must be non-null.
   String? formatAtSign(String? atsign) {
     if (atsign == null || atsign == '') {
       return null;
@@ -185,6 +187,7 @@ class OnboardingService {
     return isExist;
   }
 
+  /// returns the list of all onboarded atsigns
   Future<List<String>> getAtsignList() async {
     List<String>? atSignsList =
         await _keyChainManager.getAtSignListFromKeychain();
@@ -199,6 +202,7 @@ class OnboardingService {
     return status.serverStatus;
   }
 
+  /// Returns the status of an atsign
   Future<AtSignStatus?> checkAtsignStatus({String? atsign}) async {
     atsign = atsign ?? _atsign;
     if (atsign == null) {
@@ -211,6 +215,7 @@ class OnboardingService {
     return status.status();
   }
 
+  /// sync call to get data from secondary
   Future<void> _sync(String? atSign) async {
     _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
   }

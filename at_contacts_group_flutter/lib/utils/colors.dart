@@ -39,4 +39,5 @@ class AllColors {
   Color FADED_TEXT = Color(0xFF6D6D79);
   // ignore: non_constant_identifier_names
   Color LIGHT_GREY_LABEL = Color(0xFFB3B6BE);
+  Color Orange = Color(0xffF05E3F);
 }

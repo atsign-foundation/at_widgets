@@ -1,6 +1,5 @@
 /// A search field to filter out the contacts
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,8 @@ import 'package:flutter/material.dart';
 class ContactSearchField extends StatelessWidget {
   final Function(String) onChanged;
   final String hintText;
-  ContactSearchField(this.hintText, this.onChanged);
+  const ContactSearchField(this.hintText, this.onChanged, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -5,6 +5,7 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -48,7 +49,7 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'You already have an event scheduled during this hour. Are you sure you want to accept another?',
+                    AllText().EVENT_RUNNING_DES,
                     textAlign: TextAlign.center,
                     style: CustomTextStyles().grey16,
                   ),
@@ -80,7 +81,7 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                               });
                             }
                           },
-                          buttonText: 'Yes! Create another',
+                          buttonText: AllText().YES_CREATE_ANOTHER,
                           width: 278,
                           height: 48.toHeight,
                           buttonColor:
@@ -99,7 +100,7 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      'No! Cancel this',
+                      AllText().NO_CANCEL_THIS,
                       style: CustomTextStyles().black14,
                     ),
                   ),

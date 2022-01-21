@@ -1,3 +1,13 @@
+## 4.0.0
+- Exposed contact services
+- Updated return type of contact services
+- Added documentation for contact service functions
+
+## 3.1.3
+- Added Package documentation.
+- Added a new example.
+- Added example documentation.
+
 ## 3.1.2
 - Fixed at_client dependency issue
 - Updated at_contact dependency

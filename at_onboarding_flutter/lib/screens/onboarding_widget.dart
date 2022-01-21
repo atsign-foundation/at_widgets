@@ -91,7 +91,7 @@ class Onboarding {
       this.domain,
       required this.rootEnvironment,
       this.appAPIKey}) {
-    AppConstants.rootEnvironment = this.rootEnvironment;
+    AppConstants.rootEnvironment = rootEnvironment;
     if (AppConstants.rootEnvironment == RootEnvironment.Production &&
         appAPIKey == null) {
       throw ('App API Key is required for production environment');
@@ -99,27 +99,25 @@ class Onboarding {
       _show();
     }
   }
-  void _show() {
-    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) async {
-      await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => OnboardingWidget(
-          atsign: atsign,
-          onboard: onboard,
-          onError: onError,
-          hideReferences: this.hideReferences,
-          hideQrScan: this.hideQrScan,
-          nextScreen: nextScreen,
-          fistTimeAuthNextScreen: fistTimeAuthNextScreen,
-          atClientPreference: atClientPreference,
-          appColor: appColor,
-          logo: logo,
-          domain: domain ?? AppConstants.rootEnvironment.domain,
-          appAPIKey: appAPIKey ?? AppConstants.rootEnvironment.apikey!,
-        ),
-      );
-    });
+  void _show() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => OnboardingWidget(
+        atsign: atsign,
+        onboard: onboard,
+        onError: onError,
+        hideReferences: this.hideReferences,
+        hideQrScan: this.hideQrScan,
+        nextScreen: nextScreen,
+        fistTimeAuthNextScreen: fistTimeAuthNextScreen,
+        atClientPreference: atClientPreference,
+        appColor: appColor,
+        logo: logo,
+        domain: domain ?? AppConstants.rootEnvironment.domain,
+        appAPIKey: appAPIKey ?? AppConstants.rootEnvironment.apikey!,
+      ),
+    );
 
     _logger.info('Onboarding...!');
   }

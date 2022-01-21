@@ -26,7 +26,7 @@ class FreeAtsignService {
     initialized = true;
   }
 
-  //To login with an @sign
+  /// To login with an @sign
   Future<dynamic> loginWithAtsign(String atsign) async {
     // if init was not called earlier, call here to initialize the http
     if (!initialized) {
@@ -41,7 +41,7 @@ class FreeAtsignService {
     return response;
   }
 
-  //validating atsign with verification code
+  /// validating atsign with verification code
   Future<dynamic> verificationWithAtsign(
       String atsign, String verificationCode) async {
     // if init was not called earlier, call here to initialize the http
@@ -59,7 +59,7 @@ class FreeAtsignService {
     return response;
   }
 
-//To get free @sign from the server
+  /// To get free @sign from the server
   Future<dynamic> getFreeAtsigns() async {
     // if init was not called earlier, call here to initialize the http
     if (!initialized) {
@@ -79,8 +79,8 @@ class FreeAtsignService {
     return response;
   }
 
-//To register the person with the provided atsign and email
-//It will send an OTP to the registered email
+  /// To register the person with the provided atsign and email
+  /// It will send an OTP to the registered email
   Future<dynamic> registerPerson(String atsign, String email,
       {String? oldEmail}) async {
     if (!initialized) {
@@ -102,8 +102,8 @@ class FreeAtsignService {
     return response;
   }
 
-//It will validate the person with atsign, email and the OTP.
-//If the validation is successful, it will return a cram secret for the user to login
+  /// It will validate the person with atsign, email and the OTP.
+  /// If the validation is successful, it will return a cram secret for the user to login
   Future<dynamic> validatePerson(String atsign, String email, String? otp,
       {bool confirmation = false}) async {
     if (!initialized) {
@@ -122,7 +122,7 @@ class FreeAtsignService {
     return response;
   }
 
-  // common POST request call
+  /// common POST request call
   Future<dynamic> postRequest(String path, Map<String, String?> data) async {
     Uri url = Uri.https(AppConstants.apiEndPoint, path);
 

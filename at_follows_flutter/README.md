@@ -1,28 +1,38 @@
-<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
-### Now for a little internet optimism
-[![Pub Package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter)
+## Now for some internet optimism.
+
+[![pub package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter) [![pub points](https://badges.bar/at_follows_flutter/pub%20points)](https://pub.dev/packages/at_follows_flutter/score) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 # at_follows_flutter
 
-A flutter plugin project to integrate follows feature for @signs.
+### Introduction
+A Flutter plugin project that provides a basic social "follows" functionality for @‎signs. Provides a list of followers and following for @‎signs with the option to unfollow them.
+
+## Get Started
+
+Initially to get a basic overview of the @protocol packages, You must read the [atsign docs](https://atsign.dev/docs/overview/).
+
+> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+
 
 ### Android
 Add the following permissions to AndroidManifest.xml
 
-```
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature android:name="android.hardware.camera.flash" />
+```xml
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-feature android:name="android.hardware.camera" />
+<uses-feature android:name="android.hardware.camera.autofocus" />
+<uses-feature android:name="android.hardware.camera.flash" />
 ```
 
 Also, the Android version support in app/build.gradle
-```
+
+```gradle
 compileSdkVersion 29
 
 minSdkVersion 24
@@ -33,9 +43,9 @@ targetSdkVersion 29
 ### iOS
 Add the following permission string to info.plist
 
-```
-  <key>NSCameraUsageDescription</key>
-  <string>The camera is used to scan QR code to pair your device with your @sign</string>
+```xml
+<key>NSCameraUsageDescription</key>
+<string>The camera is used to scan QR code to pair your device with your @sign</string>
 ```
 Also, update the Podfile with the following lines of code:
 

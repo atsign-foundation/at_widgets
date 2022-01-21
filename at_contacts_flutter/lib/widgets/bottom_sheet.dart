@@ -4,14 +4,13 @@
 /// @param [selectedList] is a [ValueChanged] function which return the selected contacts
 /// to be used outside of package.
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:at_common_flutter/services/size_config.dart';
 
 class CustomBottomSheet extends StatelessWidget {
@@ -32,7 +31,7 @@ class CustomBottomSheet extends StatelessWidget {
           : Container(
               padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
               height: 70.toHeight,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xffF7F7FF),
                 boxShadow: [BoxShadow(color: Colors.grey)],
               ),

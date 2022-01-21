@@ -20,7 +20,7 @@ class GroupService {
   late String _atsign;
 
   /// selected contact list for the group
-  List<AtContact?>? selecteContactList;
+  List<AtContact?> selecteContactList = [];
 
   /// List of all the contacts for the atsign
   List<GroupContactsModel?> allContacts = [],
@@ -103,10 +103,13 @@ class GroupService {
 
   // ignore: always_declare_return_types
   setSelectedContacts(List<AtContact?>? list) {
-    selecteContactList = list;
+    selecteContactList = list ?? [];
   }
 
   List<AtContact?>? get selectedContactList => selecteContactList;
+
+  // keeps track of how group screens will be shown for desktop.
+  GroupPreference groupPreferece = GroupPreference();
 
   /// initialise the service with details from app
   void init(String rootDomainFromApp, int rootPortFromApp) async {
@@ -286,14 +289,14 @@ class GroupService {
     try {
       allContacts = [];
       var contactList = await fetchContacts();
-      // print('CONT====>$contactList');
-      contactList.forEach((AtContact? contact) {
-        allContacts.add(GroupContactsModel(
-            contact: contact, contactType: ContactsType.CONTACT));
-      });
-      await getAllGroupsDetails(addToGroupSink: !isDesktop);
-      // print('ALL CONTACTS====>${allContacts[8]}');
-      _allContactsStreamController.add(allContacts);
+      if (contactList != null) {
+        contactList.forEach((AtContact? contact) {
+          allContacts.add(GroupContactsModel(
+              contact: contact, contactType: ContactsType.CONTACT));
+        });
+        await getAllGroupsDetails(addToGroupSink: !isDesktop);
+        _allContactsStreamController.add(allContacts);
+      }
     } catch (e) {
       print(e);
     }

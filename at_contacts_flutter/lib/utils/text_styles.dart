@@ -1,6 +1,6 @@
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:at_common_flutter/services/size_config.dart';
 
 /// Text styles used in the package
@@ -54,7 +54,7 @@ class CustomTextStyles {
   );
 
   // desktop text styles
-  static TextStyle desktopPrimaryRegular24 = TextStyle(
+  static TextStyle desktopPrimaryRegular24 = const TextStyle(
     color: Colors.black,
     fontSize: 24,
     letterSpacing: 0.1,
@@ -67,7 +67,7 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
 
-  static TextStyle desktopSecondaryRegular18 = TextStyle(
+  static TextStyle desktopSecondaryRegular18 = const TextStyle(
       color: ColorConstants.fontSecondary,
       fontSize: 18,
       letterSpacing: 0.1,

@@ -30,7 +30,7 @@ class Strings {
       'Please save your key in a secure location (we recommend Google Drive or iCloud Drive). You will need it to sign back in AND use other @platform apps.';
   static const String saveButtonTitle = 'SAVE';
   static const String declaration = 'Yes I\'ve saved my backupkey file';
-  static const String coninueButtonTitle = 'CONTINUE';
+  static const String continueButtonTitle = 'CONTINUE';
   static const String emailNote =
       'Note: We do not share your personal information or use it for financial gain.';
 

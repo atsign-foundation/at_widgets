@@ -9,6 +9,7 @@ import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
+import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -136,17 +137,17 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                 : '${widget.userListenerKeyword!.atsignCreator}'),
                         Text(
                           amICreator
-                              ? 'This person is not currently sharing their location with you'
+                              ? AllText().PER_NOT_SHARING_LOC
                               : locationAvailable
-                                  ? ('Sharing their location $time')
-                                  : ("This user's location sharing is turned off"),
+                                  ? (AllText().SHARING_LOCATION +' $time')
+                                  : (AllText().LOC_SHARING_TURNED_OFF),
                           style: ((amICreator) || locationAvailable)
                               ? CustomTextStyles().grey12
                               : CustomTextStyles().red12,
                         ),
                         amICreator
                             ? Text(
-                                'Sharing my location $time',
+                                AllText().SHARING_MY_LOC +' $time',
                                 style: CustomTextStyles().black12,
                               )
                             : const SizedBox()
@@ -185,7 +186,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Share my Location',
+                                      AllText().SHARE_MY_LOC,
                                       style: CustomTextStyles().darkGrey16,
                                     ),
                                     Switch(
@@ -234,7 +235,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                     });
                                                   } else {
                                                     CustomToast().show(
-                                                        'Something went wrong, try again.',
+                                                        AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                                         context,
                                                         isError: true);
                                                   }
@@ -242,7 +243,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                 } catch (e) {
                                                   _logger.severe(e);
                                                   CustomToast().show(
-                                                      'Something went wrong , please try again.',
+                                                      AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                                       context,
                                                       isError: true);
                                                   LoadingDialog().hide();
@@ -264,24 +265,24 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                     .receiver);
                                         if (result == true) {
                                           CustomToast().show(
-                                              'Request Location sent', context,
+                                              AllText().REQUEST_LOCATION_SENT, context,
                                               isSuccess: true);
                                         } else if (result == false) {
                                           CustomToast().show(
-                                              'Something went wrong, try again.',
+                                              AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                               context,
                                               isError: true);
                                         }
                                       } catch (e) {
                                         _logger.severe(e);
                                         CustomToast().show(
-                                            'Something went wrong, try again.',
+                                            AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                             context,
                                             isError: true);
                                       }
                                     },
                                     child: Text(
-                                      'Request Location',
+                                      AllText().REQUEST_LOCATION,
                                       style: CustomTextStyles().darkGrey16,
                                     ),
                                   ),
@@ -293,7 +294,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                   child: InkWell(
                                     onTap: () async => await removePerson(),
                                     child: Text(
-                                      'Remove Person',
+                                      AllText().REMOVE_PERSON,
                                       style: CustomTextStyles().orange16,
                                     ),
                                   ),
@@ -311,7 +312,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
   // ignore: always_declare_return_types
   removePerson() async {
     await confirmationDialog(
-        'Do you want to remove ${widget.userListenerKeyword!.receiver}?',
+        AllText().DO_YOU_WANT_TO_REMOVE+' ${widget.userListenerKeyword!.receiver}?',
         onYesPressed: _onRemovePersonYesPressed);
   }
 
@@ -337,11 +338,11 @@ class _CollapsedContentState extends State<CollapsedContent> {
         LoadingDialog().hide();
 
         CustomToast()
-            .show('Something went wrong, try again.', context, isError: true);
+            .show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context, isError: true);
       }
     } catch (e) {
       _logger.severe(e);
-      CustomToast().show('something went wrong , please try again.', context,
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context,
           isError: true);
       LoadingDialog().hide();
     }
@@ -353,7 +354,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
       child: InkWell(
         onTap: onTap,
         child: Text(
-          'See Participants',
+          AllText().SEE_PARTICIPANTS,
           style: CustomTextStyles().orange14,
         ),
       ),

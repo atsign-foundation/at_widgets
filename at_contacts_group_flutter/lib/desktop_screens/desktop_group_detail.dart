@@ -28,6 +28,7 @@ class DesktopGroupDetail extends StatefulWidget {
 class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
   bool isEditingName = false, updatingName = false, updatingImage = false;
   TextEditingController? textController;
+  Uint8List? groupImage;
 
   @override
   void initState() {
@@ -37,6 +38,11 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
         selection: TextSelection.collapsed(offset: -1),
       ),
     );
+    if (widget.group.groupPicture != null) {
+      groupImage = Uint8List.fromList(
+        widget.group.groupPicture.cast<int>(),
+      );
+    }
     super.initState();
   }
 
@@ -50,14 +56,12 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
             children: [
               Column(
                 children: [
-                  widget.group.groupPicture != null
+                  groupImage != null
                       ? Stack(
                           alignment: Alignment.center,
                           children: [
                             Image.memory(
-                              Uint8List.fromList(
-                                widget.group.groupPicture.cast<int>(),
-                              ),
+                              groupImage!,
                               height: 272.toHeight,
                               width: double.infinity,
                               fit: BoxFit.contain,
@@ -112,7 +116,6 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                           );
                         },
                         child: DesktopCustomPersonVerticalTile(
-                          title: 'Title',
                           subTitle:
                               widget.group.members!.elementAt(index).atSign,
                           isAssetImage: true,
@@ -323,17 +326,16 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                   .groupPckgRightHalfNavKey.currentContext!,
                               DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW,
                               arguments: {
-                                'onBackArrowTap': () {
+                                'onBackArrowTap': (selectedContacts) {
                                   Navigator.of(NavService
                                           .groupPckgRightHalfNavKey
                                           .currentContext!)
                                       .pop();
                                 },
                                 'onDoneTap': () async {
-                                  var result = await GroupService()
-                                      .addGroupMembers(
-                                          GroupService().selecteContactList!,
-                                          widget.group);
+                                  await GroupService().addGroupMembers(
+                                      GroupService().selecteContactList,
+                                      widget.group);
 
                                   Navigator.of(NavService
                                           .groupPckgRightHalfNavKey

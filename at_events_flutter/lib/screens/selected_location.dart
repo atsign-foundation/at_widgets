@@ -6,6 +6,7 @@ import 'package:at_events_flutter/common_components/floating_icon.dart';
 import 'package:at_events_flutter/services/event_services.dart';
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +84,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
                               ),
                               InkWell(
                                   onTap: () => Navigator.pop(context),
-                                  child: Text('Cancel',
+                                  child: Text(AllText().CANCEL,
                                       style: CustomTextStyles().orange16))
                             ],
                           ),
@@ -93,11 +94,11 @@ class _SelectedLocationState extends State<SelectedLocation> {
                                 style: CustomTextStyles().greyLabel14),
                           ),
                           SizedBox(height: 20.toHeight),
-                          Text('Label', style: CustomTextStyles().greyLabel14),
+                          Text(AllText().LABEL, style: CustomTextStyles().greyLabel14),
                           SizedBox(height: 5.toHeight),
                           CustomInputField(
                             width: 321.toWidth,
-                            hintText: 'Save this address as',
+                            hintText: AllText().SAVE_THIS_ADDRESS_AS,
                             initialValue: EventService()
                                     .eventNotificationModel!
                                     .venue!
@@ -117,7 +118,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
                       child: Container(
                         padding: EdgeInsets.only(bottom: 20.toHeight),
                         child: CustomButton(
-                          buttonText: 'Save',
+                          buttonText: AllText().SAVE,
                           onPressed: () {
                             if ((EventService()
                                         .eventNotificationModel!
@@ -146,7 +147,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
                               Navigator.of(context).pop();
                             } else {
                               CustomToast().show(
-                                  'Cannot leave LABEL empty', context,
+                                  AllText().CANNOT_LEAVE_LABEL_EMPTY, context,
                                   isError: true);
                             }
                           },
