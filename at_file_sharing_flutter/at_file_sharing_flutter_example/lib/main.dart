@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:at_file_sharing_flutter/screens/file_share.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
@@ -89,21 +90,11 @@ class HomeScreen extends StatelessWidget {
     var atClientManager = AtClientManager.getInstance();
 
     return Scaffold(
+      backgroundColor: Colors.blue[200],
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text(
-                'Successfully onboarded and navigated to FirstAppScreen'),
-
-            /// Use the AtClientManager instance to get the current atsign
-            Text(
-                'Current @sign: ${atClientManager.atClient.getCurrentAtSign()}'),
-          ],
-        ),
-      ),
+      body: FileShare(),
     );
   }
 }
