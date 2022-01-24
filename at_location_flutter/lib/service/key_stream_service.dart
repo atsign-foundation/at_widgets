@@ -266,7 +266,7 @@ class KeyStreamService {
           .locationSharingFor[trimAtsignsFromKey(locationData.key!)]!
           .to = locationData.to;
 
-      await SendLocationNotification()
+      SendLocationNotification()
           .sendLocationAfterDataUpdate([locationData.receiver!]);
 
       return;
@@ -289,16 +289,16 @@ class KeyStreamService {
             ..._tempLocationDataModel.locationSharingFor,
           };
 
-          await SendLocationNotification()
+          SendLocationNotification()
               .sendLocationAfterDataUpdate([locationData.receiver!]);
         } else {
-          await SendLocationNotification().addMember(_tempLocationDataModel);
+          SendLocationNotification().addMember(_tempLocationDataModel);
         }
       }
     } else {
       if (compareAtSign(locationData.atsignCreator!, currentAtSign!)) {
         //// ifLocationDataAlreadyExists remove
-        await SendLocationNotification().removeMember(
+        SendLocationNotification().removeMember(
             locationData.key!, [locationData.receiver!],
             isExited: locationData.isExited,
             isAccepted: locationData.isAccepted,
@@ -374,7 +374,7 @@ class KeyStreamService {
       if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==
           currentAtSign) {
         // ignore: unawaited_futures
-        await SendLocationNotification().addMember(SendLocationNotification()
+        SendLocationNotification().addMember(SendLocationNotification()
             .locationNotificationModelToLocationDataModel(
                 tempHyridNotificationModel.locationNotificationModel!));
       }
