@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_member_location.dart';

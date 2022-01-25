@@ -8,7 +8,6 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/enums_model.dart';
-import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_member_location.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
@@ -436,6 +435,7 @@ class EventKeyStreamService {
         key,
         notification,
       );
+      // ignore: unnecessary_type_check
       if (result is bool) {
         if (result) {}
         _logger.finer('event acknowledged:$result');

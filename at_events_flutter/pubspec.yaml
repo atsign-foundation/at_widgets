@@ -14,7 +14,7 @@ dependencies:
   latlong2: ^0.8.1
   fluttertoast: ^8.0.8
   sliding_up_panel: ^2.0.0+1
-  geolocator: ^7.7.1
+  geolocator: ^8.0.5
   
   at_commons: ^3.0.2
   at_client_mobile: ^3.1.4

@@ -14,7 +14,6 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/one_day_event.dart';
 import 'package:at_events_flutter/common_components/custom_heading.dart';
 import 'package:at_events_flutter/screens/select_location.dart';
-import 'package:at_events_flutter/services/event_services.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +98,7 @@ class _CreateEventState extends State<CreateEvent> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                   CustomHeading(
+                                  CustomHeading(
                                       heading: AllText().CREATE_EVENT,
                                       action: AllText().CANCEL),
                                   const SizedBox(height: 25),
@@ -110,7 +109,8 @@ class _CreateEventState extends State<CreateEvent> {
                                     width: SizeConfig().screenWidth * 0.95,
                                     height: 50.toHeight,
                                     isReadOnly: true,
-                                    hintText: AllText().SELECT_AT_SIGN_FROM_CONTACT,
+                                    hintText:
+                                        AllText().SELECT_AT_SIGN_FROM_CONTACT,
                                     icon: Icons.contacts_rounded,
                                     onTap: () {
                                       Navigator.push(
@@ -185,7 +185,8 @@ class _CreateEventState extends State<CreateEvent> {
                                     width: SizeConfig().screenWidth * 0.95,
                                     height: 50.toHeight,
                                     isReadOnly: true,
-                                    hintText: AllText().START_TYPING_OR_SEL_FRM_MAP,
+                                    hintText:
+                                        AllText().START_TYPING_OR_SEL_FRM_MAP,
                                     initialValue: eventData.venue!.label != null
                                         ? eventData.venue!.label!
                                         : '',
@@ -258,15 +259,18 @@ class _CreateEventState extends State<CreateEvent> {
                                                               .event!.date!) ==
                                                           dateToString(
                                                               DateTime.now()))
-                                                      ? AllText().EVENT_TODAY+' (${timeOfDayToString(eventData.event!.startTime!)})'
-                                                      : AllText().EVENT_ON+' ${(dateToString(eventData.event!.date!) != dateToString(DateTime.now()) ? dateToString(eventData.event!.date!) : dateToString(DateTime.now()))} (${timeOfDayToString(eventData.event!.startTime!)})') +
+                                                      ? AllText().EVENT_TODAY +
+                                                          ' (${timeOfDayToString(eventData.event!.startTime!)})'
+                                                      : AllText().EVENT_ON +
+                                                          ' ${(dateToString(eventData.event!.date!) != dateToString(DateTime.now()) ? dateToString(eventData.event!.date!) : dateToString(DateTime.now()))} (${timeOfDayToString(eventData.event!.startTime!)})') +
                                                   ((dateToString(eventData
                                                               .event!
                                                               .endDate!) ==
                                                           dateToString(eventData
                                                               .event!.date!))
                                                       ? AllText().TO
-                                                      : AllText().TO+' ${dateToString(eventData.event!.endDate!)}') +
+                                                      : AllText().TO +
+                                                          ' ${dateToString(eventData.event!.endDate!)}') +
                                                   (' (${timeOfDayToString(eventData.event!.endTime!)})'),
 
                                               ///
@@ -300,8 +304,12 @@ class _CreateEventState extends State<CreateEvent> {
                                                       eventData.event!
                                                               .repeatDuration !=
                                                           null)
-                                                  ? Text(
-                                                      AllText().REPEATS_EVERY+' ${eventData.event!.repeatDuration} ' +AllText().WEEK_ON+ ' ${eventData.event!.date!.day} '+ AllText().DAY)
+                                                  ? Text(AllText()
+                                                          .REPEATS_EVERY +
+                                                      ' ${eventData.event!.repeatDuration} ' +
+                                                      AllText().WEEK_ON +
+                                                      ' ${eventData.event!.date!.day} ' +
+                                                      AllText().DAY)
                                                   : (eventData.event!
                                                                   .repeatCycle ==
                                                               RepeatCycle
@@ -309,8 +317,11 @@ class _CreateEventState extends State<CreateEvent> {
                                                           eventData.event!
                                                                   .occursOn !=
                                                               null)
-                                                      ? Text(
-                                                         AllText().REPEATS_EVERY+' ${eventData.event!.repeatDuration} ' +AllText().WEEK_ON+ ' ${getWeekString(eventData.event!.occursOn)} ')
+                                                      ? Text(AllText()
+                                                              .REPEATS_EVERY +
+                                                          ' ${eventData.event!.repeatDuration} ' +
+                                                          AllText().WEEK_ON +
+                                                          ' ${getWeekString(eventData.event!.occursOn)} ')
                                                       : const SizedBox(),
                                               EventService()
                                                               .eventNotificationModel!
@@ -322,8 +333,9 @@ class _CreateEventState extends State<CreateEvent> {
                                                               .event!
                                                               .endsOn ==
                                                           EndsOn.AFTER
-                                                  ? Text(
-                                                      AllText().ENDS_AFTER +' ${eventData.event!.endEventAfterOccurance} '+ AllText().OCCURENCE)
+                                                  ? Text(AllText().ENDS_AFTER +
+                                                      ' ${eventData.event!.endEventAfterOccurance} ' +
+                                                      AllText().OCCURENCE)
                                                   : const SizedBox(),
                                             ],
                                           ),
@@ -357,8 +369,9 @@ class _CreateEventState extends State<CreateEvent> {
                 child: isLoading
                     ? const CircularProgressIndicator()
                     : CustomButton(
-                        buttonText:
-                            widget.isUpdate ? AllText().SAVE : AllText().CREATE_AND_INVITE,
+                        buttonText: widget.isUpdate
+                            ? AllText().SAVE
+                            : AllText().CREATE_AND_INVITE,
                         onPressed: onCreateEvent,
                         width: 160.toWidth,
                         height: 50.toHeight,
@@ -408,7 +421,9 @@ class _CreateEventState extends State<CreateEvent> {
 
     if (result is bool && result == true) {
       CustomToast().show(
-          EventService().isEventUpdate ? AllText().EVENT_UPDATED : AllText().EVENT_ADDED,
+          EventService().isEventUpdate
+              ? AllText().EVENT_UPDATED
+              : AllText().EVENT_ADDED,
           context,
           isSuccess: true);
       setState(() {
@@ -416,7 +431,8 @@ class _CreateEventState extends State<CreateEvent> {
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show(AllText().SOMETHING_WENT_WRONG +' ${result.toString()}', context,
+      CustomToast().show(
+          AllText().SOMETHING_WENT_WRONG + ' ${result.toString()}', context,
           isError: true);
       setState(() {
         isLoading = false;
