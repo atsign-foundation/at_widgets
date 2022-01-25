@@ -2,7 +2,7 @@
 
 ### Now for some internet optimism.
 
-[![pub package](https://img.shields.io/pub/v/at_location_flutter)](https://pub.dev/packages/at_location_flutter) [![pub points](https://badges.bar/at_location_flutter/pub%20points)](https://pub.dev/packages/at_location_flutter/score) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+[![pub package](https://img.shields.io/pub/v/at_location_flutter)](https://pub.dev/packages/at_location_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 # at_location_flutter
 

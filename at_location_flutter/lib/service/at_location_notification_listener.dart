@@ -35,6 +35,7 @@ class AtLocationNotificationListener {
   bool isEventInUse = false, monitorStarted = false;
   final _logger = AtSignLogger('AtLocationNotificationListener');
 
+  /// called when switching atsign
   resetMonitor() {
     monitorStarted = false;
   }

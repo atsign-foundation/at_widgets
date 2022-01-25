@@ -41,6 +41,7 @@ class HomeEventService {
     }
   }
 
+  /// returns current status of the [event]
   String getActionString(EventNotificationModel event, bool haveResponded) {
     if (isEventCancelled(event)) return 'Cancelled';
 
@@ -67,6 +68,7 @@ class HomeEventService {
     }
   }
 
+  /// returns event timing details
   String getSubTitle(EventNotificationModel _event) {
     return _event.event != null
         ? _event.event!.date != null

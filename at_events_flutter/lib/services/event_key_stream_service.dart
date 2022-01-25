@@ -177,6 +177,7 @@ class EventKeyStreamService {
     });
   }
 
+  /// returns [true] if [eventNotificationModel] is a past event
   isPastNotification(EventNotificationModel eventNotificationModel) {
     if (eventNotificationModel.event!.endTime!.isBefore(DateTime.now())) {
       return true;
@@ -300,6 +301,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// updates [eventData] in [SendLocationNotification().allAtsignsLocationData]
   updateLocationDataForExistingEvent(EventNotificationModel eventData) async {
     var _allAtsigns = getAtsignsFromEvent(eventData);
     List<String> _atsignsToSend = [];
@@ -394,6 +396,7 @@ class EventKeyStreamService {
         .sendLocationAfterDataUpdate(_atsignsToSend);
   }
 
+  /// if [eventData] is already present in [allEventNotifications].
   bool isEventSharedWithMe(EventNotificationModel eventData) {
     for (var i = 0; i < allEventNotifications.length; i++) {
       if (allEventNotifications[i].key!.contains(eventData.key!)) {
@@ -425,33 +428,6 @@ class EventKeyStreamService {
     }
   }
 
-  Future<dynamic> updateEvent(
-      EventNotificationModel eventData, AtKey key) async {
-    try {
-      var notification =
-          EventNotificationModel.convertEventNotificationToJson(eventData);
-
-      var result = await atClientManager.atClient.put(
-        key,
-        notification,
-      );
-      // ignore: unnecessary_type_check
-      if (result is bool) {
-        if (result) {}
-        _logger.finer('event acknowledged:$result');
-        return result;
-        // ignore: unnecessary_null_comparison
-      } else if (result != null) {
-        return result.toString();
-      } else {
-        return result;
-      }
-    } catch (e) {
-      _logger.severe('error in updating notification:$e');
-      return false;
-    }
-  }
-
   /// Processes any kind of update in an event and notifies creator/members
   Future<bool> actionOnEvent(
       EventNotificationModel event, ATKEY_TYPE_ENUM keyType,
@@ -480,6 +456,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// return all atsigns in an event except the logged in user.
   List<String> getAtsignsFromEvent(EventNotificationModel _event) {
     List<String> _allAtsignsInEvent = [];
 
@@ -503,6 +480,7 @@ class EventKeyStreamService {
     return _allAtsignsInEvent;
   }
 
+  /// updates [SendLocationNotification().allAtsignsLocationData] for the [_event].
   updateEventMemberInfo(EventNotificationModel _event,
       {required bool isAccepted,
       required bool isSharing,
@@ -558,6 +536,7 @@ class EventKeyStreamService {
         .sendLocationAfterDataUpdate(_allAtsignsInEvent);
   }
 
+  /// return from and to for [eventData]
   Map<String, DateTime> getFromAndToForEvent(EventNotificationModel eventData) {
     DateTime? _from;
     DateTime? _to;
@@ -593,6 +572,7 @@ class EventKeyStreamService {
     };
   }
 
+  /// updates [haveResponded] property for [notificationModel].
   void updatePendingStatus(EventNotificationModel notificationModel) async {
     for (var i = 0; i < allEventNotifications.length; i++) {
       if (allEventNotifications[i]
@@ -632,25 +612,7 @@ class EventKeyStreamService {
     }
   }
 
-  Future<dynamic> geteventData(String regex) async {
-    var acknowledgedAtKey = EventService().getAtKey(regex);
-
-    var result = await atClientManager.atClient
-        .get(acknowledgedAtKey)
-        // ignore: return_of_invalid_type_from_catch_error
-        .catchError((e) => print('error in get $e'));
-
-    // ignore: unnecessary_null_comparison
-    if ((result == null) || (result.value == null)) {
-      return;
-    }
-
-    var eventData = EventMemberLocation.fromJson(jsonDecode(result.value));
-    var obj = EventUserLocation(eventData.fromAtSign, eventData.getLatLng);
-
-    return obj;
-  }
-
+  /// checks if [eventOne] & [eventTwo] have same tags for group members.
   bool compareEvents(
       EventNotificationModel eventOne, EventNotificationModel eventTwo) {
     var isDataSame = true;
@@ -677,6 +639,7 @@ class EventKeyStreamService {
     return isDataSame;
   }
 
+  /// returns AtValue of [key] if present.
   Future<dynamic> getAtValue(AtKey key) async {
     try {
       var atvalue = await atClientManager.atClient.get(key).catchError(
@@ -695,6 +658,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// updates listeners
   void notifyListeners() {
     if (streamAlternative != null) {
       streamAlternative!(allEventNotifications);
@@ -762,6 +726,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// will calculate [LocationDataModel] for [eventData]
   calculateLocationSharingForSingleEvent(
       EventNotificationModel eventData) async {
     await calculateLocationSharingAllEvents(listOfEvents: [
@@ -769,6 +734,7 @@ class EventKeyStreamService {
     ]);
   }
 
+  /// converts [eventData] to [LocationDataModel] for all [atsignList]
   List<LocationDataModel> eventNotificationToLocationDataModel(
       EventNotificationModel eventData, List<String> atsignList) {
     DateTime? _from;
@@ -884,6 +850,7 @@ class EventKeyStreamService {
     }
   }
 
+  /// deletes [_eventNotificationModel] if found
   deleteData(EventNotificationModel _eventNotificationModel) async {
     var key = _eventNotificationModel.key!;
     var keyKeyword = key.split('-')[0];
@@ -899,11 +866,4 @@ class EventKeyStreamService {
     await AtClientManager.getInstance().atClient.delete(atkey);
     removeData(key);
   }
-}
-
-class EventUserLocation {
-  String? atsign;
-  LatLng latLng;
-
-  EventUserLocation(this.atsign, this.latLng);
 }

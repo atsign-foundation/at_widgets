@@ -30,6 +30,7 @@ class AtEventNotificationListener {
 
   final _logger = AtSignLogger('AtEventNotificationListener');
 
+  /// called when switching atsign
   resetMonitor() {
     monitorStarted = false;
   }
@@ -46,6 +47,7 @@ class AtEventNotificationListener {
     startMonitor();
   }
 
+  /// starts monitor to receive incoming notifications.
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
       AtClientManager.getInstance()
@@ -60,6 +62,7 @@ class AtEventNotificationListener {
     return true;
   }
 
+  /// filters out the received notification.
   void _notificationCallback(AtNotification notification) async {
     if ((notification.id == '-1') ||
         compareAtSign(notification.from,
