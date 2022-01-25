@@ -20,7 +20,7 @@ class InvitationService {
   final String invitationAckKey = 'invite-ack';
 
   GlobalKey<NavigatorState>? navkey = GlobalKey();
-  late AtClientImpl? atClientInstance;
+  late AtClient? atClientInstance;
   String? rootDomain;
   int? rootPort;
   String currentAtSign = '';
@@ -29,7 +29,7 @@ class InvitationService {
   GlobalKey<NavigatorState> get navigatorKey => navkey ?? GlobalKey();
   void initInvitationService(
       GlobalKey<NavigatorState>? navkeyFromApp,
-      AtClientImpl? atClientInstanceFromApp,
+      AtClient? atClientInstanceFromApp,
       String? currentAtSignFromApp,
       String? webPageFromApp,
       String rootDomainFromApp,
@@ -54,7 +54,7 @@ class InvitationService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    return await atClientInstance?.getPrivateKey(atsign) ?? '';
+    return await KeychainUtil.getPrivateKey(atsign) ?? '';
   }
 
   void _notificationCallback(dynamic notification) async {

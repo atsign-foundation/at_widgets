@@ -6,7 +6,7 @@ import 'package:at_invitation_flutter/widgets/share_dialog.dart';
 
 void initializeInvitationService(
     {@required GlobalKey<NavigatorState>? navkey,
-    @required AtClientImpl? atClientInstance,
+    @required AtClient? atClientInstance,
     @required String? currentAtSign,
     @required String? webPage,
     rootDomain = 'root.atsign.wtf',
