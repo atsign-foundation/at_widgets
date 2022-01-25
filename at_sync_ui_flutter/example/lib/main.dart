@@ -3,6 +3,7 @@ import 'package:at_sync_ui_flutter/at_sync_cupertino.dart' as cupertino;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 
 const double _kNormalPadding = 16;
 const double _kSmallPadding = 8;
@@ -15,11 +16,20 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+  static final navKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
+    AtSyncUI.instance.setAppNavigatorKey(navKey);
+    AtSyncUI.instance.configTheme(
+      primaryColor: Colors.red,
+      backgroundColor: Colors.yellow,
+      labelColor: Colors.green,
+      style: AtSyncUIStyle.cupertino,
+    );
     return MaterialApp(
       title: 'AtSync Widget',
+      navigatorKey: navKey,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -265,6 +275,19 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    child: const Text('Loading Dialog'),
+                    onPressed: _showLoadingDialog,
+                  ),
+                  TextButton(
+                    child: const Text('Loading SnackBar '),
+                    onPressed: _showLoadingSnackBar,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -356,5 +379,17 @@ class _MyHomePageState extends State<MyHomePage>
         );
       },
     );
+  }
+
+  void _showLoadingDialog() async {
+    AtSyncUI.instance.showDialog(message: "Downloading");
+    await Future.delayed(const Duration(seconds: 3));
+    AtSyncUI.instance.hideDialog();
+  }
+
+  void _showLoadingSnackBar() async {
+    AtSyncUI.instance.showSnackBar(message: "Downloading");
+    await Future.delayed(const Duration(seconds: 3));
+    AtSyncUI.instance.hideSnackBar();
   }
 }
