@@ -55,6 +55,7 @@ class AtLocationNotificationListener {
     startMonitor();
   }
 
+  /// starts monitor to receive incoming notifications.
   Future<void> startMonitor() async {
     if (!monitorStarted) {
       AtClientManager.getInstance()
@@ -72,6 +73,7 @@ class AtLocationNotificationListener {
     return await KeychainUtil.getPrivateKey(atsign);
   }
 
+  /// filters out the received notification.
   void _notificationCallback(AtNotification notification) async {
     if ((notification.id == '-1') ||
         compareAtSign(notification.from,
