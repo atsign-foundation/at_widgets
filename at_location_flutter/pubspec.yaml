@@ -22,7 +22,7 @@ dependencies:
   vector_math: ^2.1.0
   proj4dart: ^2.0.0
   meta: ^1.7.0
-  geolocator: ^7.7.1
+  geolocator: ^8.0.5
   sliding_up_panel: ^2.0.0+1
   http: ^0.13.4
   fluttertoast: ^8.0.8

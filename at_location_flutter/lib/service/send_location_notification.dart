@@ -384,7 +384,8 @@ class SendLocationNotification {
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
-      positionStream = Geolocator.getPositionStream(distanceFilter: 100)
+      positionStream = Geolocator.getPositionStream(
+              locationSettings: const LocationSettings(distanceFilter: 100))
           .listen((myLocation) async {
         //// Enhancement: send location only when myLocation has changed
         if (masterSwitchState) {

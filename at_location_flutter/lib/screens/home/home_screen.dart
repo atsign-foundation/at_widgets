@@ -54,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
-      Geolocator.getPositionStream(distanceFilter: 2)
+      Geolocator.getPositionStream(
+              locationSettings: const LocationSettings(distanceFilter: 2))
           .listen((locationStream) async {
         setState(() {
           myLatLng = LatLng(locationStream.latitude, locationStream.longitude);
