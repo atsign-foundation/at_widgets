@@ -103,8 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             minHeight: 267.toHeight,
                             maxHeight: 530.toHeight,
                             panelBuilder: (scrollController) =>
-                                collapsedContent(false, scrollController,
-                                    emptyWidget(AllText().SOMETHING_WENT_WRONG)));
+                                collapsedContent(
+                                    false,
+                                    scrollController,
+                                    emptyWidget(
+                                        AllText().SOMETHING_WENT_WRONG)));
                       } else {
                         return SlidingUpPanel(
                           controller: pc,

@@ -1,5 +1,4 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';

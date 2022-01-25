@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_void_to_null
 
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';

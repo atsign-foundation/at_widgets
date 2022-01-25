@@ -40,7 +40,8 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AllText().REQUEST_LOCATION, style: CustomTextStyles().black18),
+              Text(AllText().REQUEST_LOCATION,
+                  style: CustomTextStyles().black18),
               PopButton(label: AllText().CANCEL)
             ],
           ),
@@ -106,14 +107,15 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     }
 
     if (result == true) {
-      CustomToast().show(AllText().REQUEST_LOCATION_SENT, context, isSuccess: true);
+      CustomToast()
+          .show(AllText().REQUEST_LOCATION_SENT, context, isSuccess: true);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast()
-          .show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context, isError: true);
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context,
+          isError: true);
       setState(() {
         isLoading = false;
       });

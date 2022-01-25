@@ -81,8 +81,12 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
               value: selectedOption,
               hint: Text(AllText().OCCURS_ON),
-              items: [AllText().k30mins, AllText().k2hours, AllText().k24hours, AllText().untilTurnedOff]
-                  .map((String option) {
+              items: [
+                AllText().k30mins,
+                AllText().k2hours,
+                AllText().k24hours,
+                AllText().untilTurnedOff
+              ].map((String option) {
                 return DropdownMenuItem<String>(
                   value: option,
                   child: Text(option),
@@ -157,8 +161,8 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast()
-          .show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context, isError: true);
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context,
+          isError: true);
       setState(() {
         isLoading = false;
       });
