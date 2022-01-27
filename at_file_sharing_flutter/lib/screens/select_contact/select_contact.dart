@@ -2,6 +2,8 @@ import 'package:at_file_sharing_flutter/utils/at_file_sharing_flutter_utils.dart
 import 'package:flutter/material.dart';
 
 class SelectContactWidget extends StatefulWidget {
+  const SelectContactWidget({Key? key}) : super(key: key);
+
   //final Function(bool) onUpdate;
   // final String contactIcon;
   // SelectContactWidget(this.contactIcon);
@@ -50,7 +52,7 @@ class _SelectContactWidgetState extends State<SelectContactWidget> {
 class _ExpansionTileWidget extends StatelessWidget {
   final String headerText;
   final Function(int) onSelected;
-  _ExpansionTileWidget(this.headerText, this.onSelected);
+  const _ExpansionTileWidget(this.headerText, this.onSelected);
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
@@ -69,7 +71,7 @@ class _ExpansionTileWidget extends StatelessWidget {
         onTap: () async {},
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Icon(Icons.account_circle_rounded,color: Colors.black)
+          child: const Icon(Icons.account_circle_rounded,color: Colors.black)
         ),
       ),
     );

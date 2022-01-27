@@ -22,7 +22,7 @@ class _FileShareState extends State<FileShare> {
                 horizontal: 20.toWidth, vertical: 20.toHeight),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 SelectContactWidget(),
               ],
             )));

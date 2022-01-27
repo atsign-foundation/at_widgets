@@ -23,7 +23,6 @@ Future<AtClientPreference> loadAtClientPreference() async {
         ..hiveStoragePath = dir.path
         ..commitLogPath = dir.path
         ..isLocalStoreRequired = true
-      // TODO set the rest of your AtClientPreference here
       ;
 }
 
@@ -87,14 +86,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Get the AtClientManager instance
-    var atClientManager = AtClientManager.getInstance();
+    // var atClientManager = AtClientManager.getInstance();
 
     return Scaffold(
       backgroundColor: Colors.blue[200],
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: FileShare(),
+      body: const FileShare(),
     );
   }
 }
