@@ -7,17 +7,23 @@
 # at_follows_flutter
 
 ### Introduction
-A Flutter plugin project that provides a basic social "follows" functionality for @‎signs. Provides a list of followers and following for @‎signs with the option to unfollow them. It also provides services to follow, unfollow, remove from follwers list, list of followers, and list of following.
+A Flutter plugin that provides a basic social "follows" functionality for @‎signs. This plugin provides a list of followers and following for @‎signs with the option to unfollow them. 
+
+##Features
+Asides providing the list of followers and following, this plugin:
+
+- Provides services to follow and unfollow.
+- Remove contact from followers list, manage list of followers, and list of following.
 
 ## Get Started
 
-Initially to get a basic overview of the @protocol packages, You must read the [atsign docs](https://atsign.dev/docs/overview/).
+To get a basic overview of the @protocol and it's packages. Please visit the [atsign docs](https://atsign.dev/docs/overview/).
 
-> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+> To use this package you must be have a basic setup of the @platform/at_app. Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
 
 
 ### Android
-Add the following permissions to AndroidManifest.xml
+Add the following permissions to AndroidManifest.xml: 
 
 ```xml
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -30,7 +36,7 @@ Add the following permissions to AndroidManifest.xml
 <uses-feature android:name="android.hardware.camera.flash" />
 ```
 
-Also, the Android version support in app/build.gradle
+Also, update the Android version support in app/build.gradle:
 
 ```gradle
 compileSdkVersion 29 // And above
@@ -41,7 +47,7 @@ targetSdkVersion 29 // And above
 
 
 ### iOS
-Add the following permission string to info.plist
+Add the following permission string to info.plist:
 
 ```xml
 <key>NSCameraUsageDescription</key>
@@ -94,7 +100,7 @@ Displays all the @‎signs that are being followed and followers of the given @�
 Scan the QR code of an @‎sign or type the @‎sign to follow.
 
 ### Sample usage
-The plugin will takes AtClientService instance to show the follows list of an @‎sign. 
+The plugin takes AtClientService instance to show the follows list of an @‎sign. 
 
 ```
 TextButton(
@@ -113,11 +119,11 @@ TextButton(
 
 ##### Plugin parameters
 1. atClientserviceInstance - to perform further actions for the given @‎sign.
-2. appColor - applies to plugin screens to match the app's theme. This should be bright color as it takes white font over that. Defaults to orange.
+2. appColor - applies to plugin screens to match the app's theme. (This should be bright color as it takes white font over that. Defaults to orange).
 3. followerAtsignTitle - follower @‎sign received from app's notification
 4. followAtsignTitle - @‎sign followed from webapp.
 
-### Follow a @‎sign
+### Follow an @‎sign
 To follow an @‎sign, call the following method:
 ```dart
 /// Get the AtFollowServices instance
@@ -130,7 +136,7 @@ Future<bool> followAtSign(String atSign)async {
 }
 ```
 
-### Unfollow a @‎sign
+### Unfollow an @‎sign
 To unfollow an @‎sign, call the following method and pass the @‎sign to unfollow:
 
 ```dart
