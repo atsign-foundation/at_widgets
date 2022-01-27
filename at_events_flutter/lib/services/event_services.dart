@@ -39,6 +39,7 @@ class EventService {
   StreamSink<EventNotificationModel?> get eventSink =>
       _atEventNotificationController.sink;
 
+  /// always called before creating or editing an event
   // ignore: always_declare_return_types
   init(bool isUpdate, EventNotificationModel? eventData) {
     if (eventData != null) {
@@ -62,6 +63,7 @@ class EventService {
     });
   }
 
+  /// [eventData] is added to the [eventSink]
   // ignore: always_declare_return_types
   update({EventNotificationModel? eventData}) {
     if (eventData != null) {
@@ -70,6 +72,7 @@ class EventService {
     eventSink.add(eventNotificationModel);
   }
 
+  /// creates a new event or edits the event passed to init() function
   // ignore: always_declare_return_types
   createEvent({bool isEventOverlap = false, BuildContext? context}) async {
     var result;
@@ -87,6 +90,7 @@ class EventService {
     }
   }
 
+  /// edits the event passed to init() function
   Future<dynamic> editEvent() async {
     try {
       var key = eventNotificationModel!.key!;
@@ -133,6 +137,7 @@ class EventService {
     }
   }
 
+  /// sends a new 'createevent' key
   // ignore: always_declare_return_types
   sendEventNotification() async {
     try {
@@ -184,6 +189,7 @@ class EventService {
     }
   }
 
+  /// adds [selectedContactList] for the event being created
   // ignore: always_declare_return_types
   addNewGroupMembers(List<AtContact> selectedContactList) {
     EventService().selectedContacts = [];
@@ -277,6 +283,7 @@ class EventService {
     }
   }
 
+  /// checks if [newEvent] overlaps with any other event
   bool? showConcurrentEventDialog(List<EventNotificationModel>? createdEvents,
       EventNotificationModel? newEvent, BuildContext context) {
     try {
@@ -340,6 +347,7 @@ class EventService {
     return [isOverlap, overlapEvent];
   }
 
+  /// validates event details
   dynamic createEventFormValidation() {
     var eventData = EventService().eventNotificationModel!;
     if (eventData.group!.members == null ||
@@ -432,6 +440,7 @@ class EventService {
     }
   }
 
+  /// returns [AtKey] of [regexKey]
   AtKey getAtKey(String regexKey) {
     var atKey = AtKey.fromString(regexKey);
     atKey.metadata!.ttr = -1;
@@ -440,6 +449,7 @@ class EventService {
     return atKey;
   }
 
+  /// checks [receiver] is a valid atsign
   Future<bool> checkAtsign(String receiver,
       {String root = 'root.atsign.org'}) async {
     // ignore: unnecessary_null_comparison

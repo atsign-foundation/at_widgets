@@ -6,8 +6,6 @@ import 'package:at_events_flutter/screens/selected_location.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:at_events_flutter/utils/texts.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
-import 'package:at_location_flutter/location_modal/location_modal.dart';
-import 'package:at_location_flutter/service/my_location.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
@@ -110,8 +108,8 @@ class _SelectLocationState extends State<SelectLocation> {
                 children: [
                   InkWell(
                       onTap: () => Navigator.pop(context),
-                      child:
-                          Text(AllText().CANCEL, style: CustomTextStyles().orange16)),
+                      child: Text(AllText().CANCEL,
+                          style: CustomTextStyles().orange16)),
                 ],
               ),
             ],
@@ -167,7 +165,8 @@ class _SelectLocationState extends State<SelectLocation> {
                           (!_isLocationServiceEnabled)
                               ? Flexible(
                                   child: Text(
-                                      AllText().CANNOT_ACCESS_LOCATION_PERMISSION,
+                                      AllText()
+                                          .CANNOT_ACCESS_LOCATION_PERMISSION,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: CustomTextStyles().red12),
@@ -184,8 +183,8 @@ class _SelectLocationState extends State<SelectLocation> {
           InkWell(
             onTap: () async {
               if (!_isLocationServiceEnabled) {
-                CustomToast()
-                    .show(AllText().UNABLE_TO_ACCESS_LOCATION, context, isError: true);
+                CustomToast().show(AllText().UNABLE_TO_ACCESS_LOCATION, context,
+                    isError: true);
                 return;
               }
               currentLocation = await getCurrentPosition();
@@ -195,9 +194,11 @@ class _SelectLocationState extends State<SelectLocation> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AllText().CURRENT_LOCATION, style: CustomTextStyles().greyLabel14),
+                Text(AllText().CURRENT_LOCATION,
+                    style: CustomTextStyles().greyLabel14),
                 SizedBox(height: 5.toHeight),
-                Text(AllText().USING_GPS, style: CustomTextStyles().greyLabel12),
+                Text(AllText().USING_GPS,
+                    style: CustomTextStyles().greyLabel12),
               ],
             ),
           ),
@@ -244,9 +245,9 @@ class _SelectLocationState extends State<SelectLocation> {
                                     ),
                                     child: LocationTile(
                                       icon: Icons.location_on,
-                                      title: snapshot.data![index].city,
-                                      subTitle:
-                                          snapshot.data![index].displayName,
+                                      title: snapshot.data![index].displayName,
+                                      // subTitle:
+                                      //     snapshot.data![index].displayName,
                                     ),
                                   );
                                 },

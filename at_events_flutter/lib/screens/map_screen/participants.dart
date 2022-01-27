@@ -2,10 +2,8 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/common_components/custom_heading.dart';
-import 'package:at_events_flutter/common_components/display_tile.dart';
 import 'package:at_events_flutter/common_components/draggable_symbol.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
-import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:at_events_flutter/utils/texts.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
@@ -64,7 +62,8 @@ class _ParticipantsState extends State<Participants> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const DraggableSymbol(),
-             CustomHeading(heading: AllText().PARTICIPANTS, action: AllText().CLOSE),
+            CustomHeading(
+                heading: AllText().PARTICIPANTS, action: AllText().CLOSE),
             SizedBox(
               height: 10.toHeight,
             ),

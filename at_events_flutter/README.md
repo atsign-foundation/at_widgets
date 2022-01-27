@@ -2,7 +2,7 @@
 
 ### Now for some internet optimism.
 
-[![pub package](https://img.shields.io/pub/v/at_events_flutter)](https://pub.dev/packages/at_events_flutter) [![pub points](https://badges.bar/at_events_flutter/pub%20points)](https://pub.dev/packages/at_events_flutter/score) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+[![pub package](https://img.shields.io/pub/v/at_events_flutter)](https://pub.dev/packages/at_events_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 # at_events_flutter
 
@@ -23,7 +23,7 @@ Initially to get a basic overview of the SDK, you must read the [atsign docs](ht
 
 ```dart
   dependencies:
-    at_events_flutter: ^3.1.0
+    at_events_flutter: ^3.1.1
 ```
 #### Add to your project
 

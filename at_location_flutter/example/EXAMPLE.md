@@ -15,11 +15,13 @@ As the [at_location_flutter] package has to be initialised, so we initialise it 
 ```dart
     initializeLocationService(
       NavService.navKey,
-      mapKey: '',
-      apiKey: '',
+      mapKey: dotenv.get('MAP_KEY'),
+      apiKey: dotenv.get('API_KEY'),
       showDialogBox: true,
     );
 ```
+
+NOTE: Make sure to pass in the [MAP_KEY] and the [API_KEY] in the `.env` file.
 
 The [second_screen.dart] consists of the following functions:
  - Show maps - Will navigate to the default home screen. If you want to use this functionality then navigate to the [HomeScreen()].

@@ -28,6 +28,7 @@ class RequestLocationService {
     return _singleton;
   }
 
+  /// checks if logged in user has already requested location from [atsign].
   List checkForAlreadyExisting(String? atsign) {
     var index = KeyStreamService().allLocationNotifications.indexWhere((e) =>
         ((e.locationNotificationModel!.atsignCreator == atsign) &&
@@ -45,6 +46,25 @@ class RequestLocationService {
     }
   }
 
+  /// checks if [atsign] is already sharing location with logged in user.
+  List checkForAlreadyExistingShareLocation(String? atsign) {
+    var index = KeyStreamService().allLocationNotifications.indexWhere((e) =>
+        ((e.locationNotificationModel!.atsignCreator == atsign) &&
+            (e.locationNotificationModel!.key!
+                .contains(MixedConstants.SHARE_LOCATION))));
+    if (index > -1) {
+      return [
+        true,
+        KeyStreamService()
+            .allLocationNotifications[index]
+            .locationNotificationModel
+      ];
+    } else {
+      return [false];
+    }
+  }
+
+  /// checks if logged in user's already requested location with [atsign] is not responded.
   bool checkIfEventIsNotResponded(
       LocationNotificationModel locationNotificationModel) {
     if ((!locationNotificationModel.isAccepted) &&
@@ -55,6 +75,7 @@ class RequestLocationService {
     return false;
   }
 
+  /// checks if logged in user's already requested location with [atsign] is rejected.
   bool checkIfEventIsRejected(
       LocationNotificationModel locationNotificationModel) {
     if ((!locationNotificationModel.isAccepted) &&
@@ -65,6 +86,7 @@ class RequestLocationService {
     return false;
   }
 
+  /// Sends request location to [selectedContacts].
   Future<void> sendRequestLocationToGroup(
       List<AtContact> selectedContacts) async {
     await Future.forEach(selectedContacts, (AtContact selectedContact) async {
@@ -88,6 +110,19 @@ class RequestLocationService {
   /// Sends a 'requestlocation' key to [atsign].
   Future<bool?> sendRequestLocationEvent(String? atsign) async {
     try {
+      var alreadySharingLocation = checkForAlreadyExistingShareLocation(atsign);
+
+      if (alreadySharingLocation[0]) {
+        await locationPromptDialog(
+          text: '$atsign is already sharing their location',
+          isShareLocationData: false,
+          isRequestLocationData: false,
+          onlyText: true,
+        );
+
+        return null;
+      }
+
       var alreadyExists = checkForAlreadyExisting(atsign);
       var result;
 
@@ -399,6 +434,7 @@ class RequestLocationService {
     return result;
   }
 
+  /// returns a new [AtKey].
   AtKey newAtKey(int ttr, String key, String? sharedWith,
       {int? ttl, DateTime? expiresAt}) {
     var atKey = AtKey()

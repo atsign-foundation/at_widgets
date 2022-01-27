@@ -54,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
-      Geolocator.getPositionStream(distanceFilter: 2)
+      Geolocator.getPositionStream(
+              locationSettings: const LocationSettings(distanceFilter: 2))
           .listen((locationStream) async {
         setState(() {
           myLatLng = LatLng(locationStream.latitude, locationStream.longitude);
@@ -103,8 +104,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             minHeight: 267.toHeight,
                             maxHeight: 530.toHeight,
                             panelBuilder: (scrollController) =>
-                                collapsedContent(false, scrollController,
-                                    emptyWidget(AllText().SOMETHING_WENT_WRONG)));
+                                collapsedContent(
+                                    false,
+                                    scrollController,
+                                    emptyWidget(
+                                        AllText().SOMETHING_WENT_WRONG)));
                       } else {
                         return SlidingUpPanel(
                           controller: pc,

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class AllText {
   AllText._();
   static final AllText _instance = AllText._();

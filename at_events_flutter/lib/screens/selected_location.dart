@@ -8,7 +8,6 @@ import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:at_events_flutter/utils/texts.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
-import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
@@ -94,7 +93,8 @@ class _SelectedLocationState extends State<SelectedLocation> {
                                 style: CustomTextStyles().greyLabel14),
                           ),
                           SizedBox(height: 20.toHeight),
-                          Text(AllText().LABEL, style: CustomTextStyles().greyLabel14),
+                          Text(AllText().LABEL,
+                              style: CustomTextStyles().greyLabel14),
                           SizedBox(height: 5.toHeight),
                           CustomInputField(
                             width: 321.toWidth,

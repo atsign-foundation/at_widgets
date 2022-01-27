@@ -123,11 +123,13 @@ class _DisplayTileState extends State<DisplayTile> {
                   widget.semiTitle != null
                       ? Text(
                           widget.semiTitle!,
-                          style: (widget.semiTitle == AllText().ACTION_REQUIRED ||
-                                      widget.semiTitle == AllText().REQUEST_DECLINED) ||
-                                  (widget.semiTitle == AllText().CANCELLED)
-                              ? CustomTextStyles().orange12
-                              : CustomTextStyles().darkGrey12,
+                          style:
+                              (widget.semiTitle == AllText().ACTION_REQUIRED ||
+                                          widget.semiTitle ==
+                                              AllText().REQUEST_DECLINED) ||
+                                      (widget.semiTitle == AllText().CANCELLED)
+                                  ? CustomTextStyles().orange12
+                                  : CustomTextStyles().darkGrey12,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )

@@ -6,8 +6,6 @@ import 'package:at_location_flutter/show_location.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
-import 'package:at_location_flutter/map_content/flutter_map/src/layer/marker_layer.dart';
-import 'package:at_location_flutter/map_content/flutter_map/src/layer/tile_layer.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_layer_options.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_cluster/src/marker_cluster_plugin.dart';
 import 'package:at_location_flutter/map_content/flutter_map_marker_popup/src/popup_controller.dart';
