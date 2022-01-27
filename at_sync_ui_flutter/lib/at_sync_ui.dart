@@ -133,12 +133,12 @@ class AtSyncUI {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   style == AtSyncUIStyle.cupertino
-                      ? material.AtSyncIndicator(
-                          color: _kDefaultPrimaryColor,
+                      ? cupertino.AtSyncIndicator(
+                          color: primaryColors,
                           radius: 24,
                         )
                       : material.AtSyncIndicator(
-                          color: _kDefaultPrimaryColor,
+                          color: primaryColors,
                           radius: 24,
                         ),
                   if ((message ?? '').isNotEmpty)
@@ -198,11 +198,11 @@ class AtSyncUI {
               children: [
                 style == AtSyncUIStyle.cupertino
                     ? cupertino.AtSyncIndicator(
-                        color: _kDefaultPrimaryColor,
+                        color: primaryColors,
                         radius: 12,
                       )
                     : material.AtSyncIndicator(
-                        color: _kDefaultPrimaryColor,
+                        color: primaryColors,
                         radius: 12,
                       ),
                 if ((message ?? '').isNotEmpty)

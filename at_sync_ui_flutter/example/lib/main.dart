@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       primaryColor: Colors.red,
       backgroundColor: Colors.yellow,
       labelColor: Colors.green,
-      style: AtSyncUIStyle.cupertino,
+      style: AtSyncUIStyle.material,
     );
     return MaterialApp(
       title: 'AtSync Widget',
