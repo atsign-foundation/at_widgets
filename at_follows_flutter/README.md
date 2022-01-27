@@ -17,7 +17,8 @@ with the option to unfollow them.
 In addition to providing the list of followers and following, this plugin:
 
 - Provides services to follow and unfollow.
-- Remove contact from followers list, manage list of followers, and list of following.
+- Remove contact from followers list, manage list of followers, and list of
+following.
 
 ## Get Started
 
@@ -52,8 +53,8 @@ minSdkVersion 24
 targetSdkVersion 29 // And above
 ```
 
-
 ### iOS
+
 Add the following permission string to info.plist:
 
 ```xml
@@ -97,6 +98,7 @@ post_install do |installer|
   end
 end
 ```
+
 ### Plugin description
 
 Supports for single @‎sign follows feature. This plugin provides two screens:
