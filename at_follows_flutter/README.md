@@ -7,22 +7,29 @@
 # at_follows_flutter
 
 ### Introduction
-A Flutter plugin that provides a basic social "follows" functionality for @‎signs. This plugin provides a list of followers and following for @‎signs with the option to unfollow them. 
 
-##Features
-Asides providing the list of followers and following, this plugin:
+A Flutter plugin that provides a basic social "follows" functionality for
+@‎signs. This plugin provides a list of followers and following for @‎signs
+with the option to unfollow them. 
+
+## Features
+
+In addition to providing the list of followers and following, this plugin:
 
 - Provides services to follow and unfollow.
 - Remove contact from followers list, manage list of followers, and list of following.
 
 ## Get Started
 
-To get a basic overview of the @protocol and it's packages. Please visit the [atsign docs](https://atsign.dev/docs/overview/).
+To get a basic overview of the @protocol and it's packages. Please visit
+the [atsign docs](https://atsign.dev/docs/overview/).
 
-> To use this package you must be have a basic setup of the @platform/at_app. Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+> To use this package you must be have a basic setup of the @platform/at_app.
+Go here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
 
 
 ### Android
+
 Add the following permissions to AndroidManifest.xml: 
 
 ```xml
@@ -91,15 +98,18 @@ post_install do |installer|
 end
 ```
 ### Plugin description
+
 Supports for single @‎sign follows feature. This plugin provides two screens:
 
-### Follows screen
-Displays all the @‎signs that are being followed and followers of the given @‎sign. Unfollow button will remove the particular @‎sign from following whereas follow button adds the @‎sign to following list.
+1. **Follows screen** - Displays all the @‎signs that are being followed and
+followers of the given @‎sign. Unfollow button will remove the particular
+@‎sign from following whereas follow button adds the @‎sign to following list.
 
-### Add @‎sign to follow
-Scan the QR code of an @‎sign or type the @‎sign to follow.
+2. **Add @‎sign to follow** - Scan the QR code of an @‎sign or type the @‎sign
+to follow.
 
 ### Sample usage
+
 The plugin takes AtClientService instance to show the follows list of an @‎sign. 
 
 ```
@@ -118,13 +128,18 @@ TextButton(
 ```
 
 ##### Plugin parameters
-1. atClientserviceInstance - to perform further actions for the given @‎sign.
-2. appColor - applies to plugin screens to match the app's theme. (This should be bright color as it takes white font over that. Defaults to orange).
-3. followerAtsignTitle - follower @‎sign received from app's notification
-4. followAtsignTitle - @‎sign followed from webapp.
+
+1. `atClientserviceInstance` - to perform further actions for the given @‎sign.
+2. `appColor` - applies to plugin screens to match the app's theme.
+(This should be bright color as it takes white font over that. Defaults to
+orange).
+3. `followerAtsignTitle` - follower @‎sign received from app's notification
+4. `followAtsignTitle` - @‎sign followed from webapp.
 
 ### Follow an @‎sign
+
 To follow an @‎sign, call the following method:
+
 ```dart
 /// Get the AtFollowServices instance
 AtFollowServices atFollowServices = AtFollowServices();
@@ -137,7 +152,9 @@ Future<bool> followAtSign(String atSign)async {
 ```
 
 ### Unfollow an @‎sign
-To unfollow an @‎sign, call the following method and pass the @‎sign to unfollow:
+
+To unfollow an @‎sign, call the following method and pass the @‎sign to
+unfollow:
 
 ```dart
 Future<bool> unfollowAtSign(String atSign)async {
@@ -149,7 +166,10 @@ Future<bool> unfollowAtSign(String atSign)async {
 ```
 
 ### Remove a @‎sign from following list
-To remove an @‎sign from following list, call the following method and pass the @‎sign to remove:
+
+To remove an @‎sign from following list, call the following method and pass
+the @‎sign to remove:
+
 ```dart
 Future<bool> removeFollower(String atSign)async {
   /// ... YOUR CODE ... ///
@@ -160,7 +180,9 @@ Future<bool> removeFollower(String atSign)async {
 ```
 
 ### Get the list of followers
+
 To get the list of followers, call the following method:
+
 ```dart
 Future<AtFollowsList?> getFollowers()async {
   /// ... YOUR CODE ... ///
@@ -171,7 +193,9 @@ Future<AtFollowsList?> getFollowers()async {
 ```
 
 ### Get the list of following
+
 To get the list of following, call the following method:
+
 ```dart
 Future<AtFollowsList?> getFollowings()async {
   /// ... YOUR CODE ... ///
