@@ -27,12 +27,8 @@ dependencies:
   at_contacts_group_flutter: ^3.1.2
   # at_chat_flutter: ^2.0.2
   at_contacts_flutter: ^3.1.2
-  at_location_flutter: ^3.1.0
+  at_location_flutter: ^3.1.1
   at_common_flutter: ^2.0.4
-
-dependency_overrides:
-  at_location_flutter: 
-    path: ../at_location_flutter
 
 dev_dependencies:
   flutter_lints: ^1.0.4
