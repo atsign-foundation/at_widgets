@@ -23,7 +23,7 @@ Initially to get a basic overview of the SDK, you must read the [atsign docs](ht
 
 ```dart 
   dependencies:
-    at_location_flutter: ^3.0.2
+    at_location_flutter: ^3.1.1
 ```
 
 #### Add to your project

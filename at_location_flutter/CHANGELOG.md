@@ -1,3 +1,8 @@
+## 3.1.1
+- Changed order of storing notifications
+- Moved location sharing functionality to background
+- Changed location search api
+
 ## 3.1.0
 - Changed location sharing logic
 - Replaced put calls with a combination of put & notify
