@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       labelColor: Colors.green,
       style: AtSyncUIStyle.material,
     );
+    AtSyncUI.instance.setupController(controller: AtSyncUIController());
     return MaterialApp(
       title: 'AtSync Widget',
       navigatorKey: navKey,
@@ -288,6 +289,15 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    child: const Text('Show queue loading Dialog'),
+                    onPressed: _showQueueLoadingDialog,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -391,5 +401,23 @@ class _MyHomePageState extends State<MyHomePage>
     AtSyncUI.instance.showSnackBar(message: "Downloading");
     await Future.delayed(const Duration(seconds: 3));
     AtSyncUI.instance.hideSnackBar();
+  }
+
+  void _showQueueLoadingDialog() async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    final controller = AtSyncUI.instance.syncUIController;
+
+    print('add loading 1');
+    controller?.addLoadingQueue();
+    await Future.delayed(const Duration(seconds: 1));
+    print('add loading 2');
+    controller?.addLoadingQueue();
+    await Future.delayed(const Duration(seconds: 1));
+    print('remove loading 1');
+    controller?.removeLoadingQueue();
+    await Future.delayed(const Duration(seconds: 1));
+    print('remove loading 1');
+    controller?.removeLoadingQueue();
   }
 }

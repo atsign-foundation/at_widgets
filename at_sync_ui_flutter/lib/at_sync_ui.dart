@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'at_sync_cupertino.dart' as cupertino;
@@ -13,6 +16,39 @@ Color _kDefaultPrimaryColor = const Color(0xFFf4533d);
 Color _kDefaultBackgroundColor = const Color(0xFFFFFFFF);
 Color _kDefaultLabelColor = const Color(0xFF000000);
 
+class AtSyncUIController {
+  final ValueNotifier<bool> loading = ValueNotifier<bool>(false);
+
+  final Queue<String> _loadingQueue = Queue<String>();
+
+  void addLoadingQueue() {
+    _loadingQueue.add("loading");
+    if (_loadingQueue.isNotEmpty && loading.value == false) {
+      loading.value = true;
+    }
+  }
+
+  void removeLoadingQueue() {
+    _loadingQueue.removeFirst();
+    if (_loadingQueue.isEmpty && loading.value == true) {
+      loading.value = false;
+    }
+  }
+
+  void clearLoadingQueue() {
+    _loadingQueue.clear();
+    if (_loadingQueue.isEmpty && loading.value == false) {
+      loading.value = false;
+    }
+  }
+
+  void dispose() {
+    loading.value = false;
+    loading.dispose();
+    _loadingQueue.clear();
+  }
+}
+
 class AtSyncUI {
   AtSyncUI._();
 
@@ -22,6 +58,10 @@ class AtSyncUI {
 
   static AtSyncUI get instance => _instance;
 
+  AtSyncUIController? _syncUIController;
+
+  AtSyncUIController? get syncUIController => _syncUIController;
+
   ///Config
   AtSyncUIStyle _style = AtSyncUIStyle.cupertino;
   Color _primaryColor = _kDefaultPrimaryColor;
@@ -29,6 +69,7 @@ class AtSyncUI {
   Color _labelColor = _kDefaultLabelColor;
 
   /// Sync Fullscreen
+  OverlayEntry? loadingOverlayEntry;
   OverlayEntry? dialogOverlayEntry;
   OverlayEntry? snackBarOverlayEntry;
 
@@ -49,6 +90,37 @@ class AtSyncUI {
     _labelColor = labelColor ?? _kDefaultLabelColor;
     _style = style ?? _kDefaultStyle;
   }
+
+  void setupController({required AtSyncUIController controller}) {
+    if (_syncUIController != null) {
+      _syncUIController?.dispose();
+      _syncUIController = null;
+    }
+    _syncUIController = controller;
+    _syncUIController?.loading.addListener(() {
+      if (_syncUIController?.loading.value == true) {
+        showDialog();
+      } else {
+        hideDialog();
+      }
+    });
+  }
+
+  // ///
+  // void addLoading() {
+  //   loadingOverlayEntry = _buildDialogOverlayEntry(
+  //     primaryColors: _primaryColor,
+  //     backgroundColor: _backgroundColor,
+  //     labelColor: _labelColor,
+  //     style: _style,
+  //   );
+  //   _appNavigatorKey?.currentState?.overlay?.insert(loadingOverlayEntry!);
+  // }
+  //
+  // void removeLoading() {
+  //   loadingOverlayEntry?.remove();
+  //   loadingOverlayEntry = null;
+  // }
 
   /// Show dialog UI
   /// Display fullscreen with 50% opacity and can't interact
