@@ -1,3 +1,7 @@
+## 3.1.1
+- Changed order of storing notifications
+- Updated at_location_flutter reference
+
 ## 3.1.0
 - Changed event sharing logic
 - Replaced put calls with a combination of put & notify

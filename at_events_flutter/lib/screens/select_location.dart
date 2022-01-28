@@ -4,9 +4,8 @@ import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/common_components/location_tile.dart';
 import 'package:at_events_flutter/screens/selected_location.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
-import 'package:at_location_flutter/location_modal/location_modal.dart';
-import 'package:at_location_flutter/service/my_location.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
@@ -60,7 +59,7 @@ class _SelectLocationState extends State<SelectLocation> {
             children: <Widget>[
               Expanded(
                 child: CustomInputField(
-                  hintText: 'Search an area, street name…',
+                  hintText: AllText().SEARCH_AN_AREA_STREET_NAME,
                   height: 50.toHeight,
                   initialValue: inputText,
                   onSubmitted: (String str) async {
@@ -109,8 +108,8 @@ class _SelectLocationState extends State<SelectLocation> {
                 children: [
                   InkWell(
                       onTap: () => Navigator.pop(context),
-                      child:
-                          Text('Cancel', style: CustomTextStyles().orange16)),
+                      child: Text(AllText().CANCEL,
+                          style: CustomTextStyles().orange16)),
                 ],
               ),
             ],
@@ -119,7 +118,7 @@ class _SelectLocationState extends State<SelectLocation> {
           loadingForPermission
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text('Getting location permission',
+                  child: Text(AllText().GETTING_LOCATION_PERMISSION,
                       style: CustomTextStyles().red12),
                 )
               : Row(
@@ -141,7 +140,7 @@ class _SelectLocationState extends State<SelectLocation> {
 
                         if (!_isLocationServiceEnabled) {
                           CustomToast().show(
-                              'Unable to access location', context,
+                              AllText().UNABLE_TO_ACCESS_LOCATION, context,
                               isError: true);
                           setState(() {
                             nearMe = false;
@@ -161,12 +160,13 @@ class _SelectLocationState extends State<SelectLocation> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Near me',
+                          Text(AllText().NEAR_ME,
                               style: CustomTextStyles().greyLabel14),
                           (!_isLocationServiceEnabled)
                               ? Flexible(
                                   child: Text(
-                                      '(Cannot access location permission)',
+                                      AllText()
+                                          .CANNOT_ACCESS_LOCATION_PERMISSION,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: CustomTextStyles().red12),
@@ -183,8 +183,8 @@ class _SelectLocationState extends State<SelectLocation> {
           InkWell(
             onTap: () async {
               if (!_isLocationServiceEnabled) {
-                CustomToast()
-                    .show('Unable to access location', context, isError: true);
+                CustomToast().show(AllText().UNABLE_TO_ACCESS_LOCATION, context,
+                    isError: true);
                 return;
               }
               currentLocation = await getCurrentPosition();
@@ -194,9 +194,11 @@ class _SelectLocationState extends State<SelectLocation> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Current Location', style: CustomTextStyles().greyLabel14),
+                Text(AllText().CURRENT_LOCATION,
+                    style: CustomTextStyles().greyLabel14),
                 SizedBox(height: 5.toHeight),
-                Text('Using GPS', style: CustomTextStyles().greyLabel12),
+                Text(AllText().USING_GPS,
+                    style: CustomTextStyles().greyLabel12),
               ],
             ),
           ),
@@ -217,7 +219,7 @@ class _SelectLocationState extends State<SelectLocation> {
                   : snapshot.hasData
                       // ignore: prefer_is_empty
                       ? snapshot.data!.length == 0
-                          ? const Text('No such location found')
+                          ? Text(AllText().NO_SUCH_LOCATION_FOUND)
                           : Expanded(
                               child: ListView.separated(
                                 itemCount: snapshot.data!.length,
@@ -243,16 +245,16 @@ class _SelectLocationState extends State<SelectLocation> {
                                     ),
                                     child: LocationTile(
                                       icon: Icons.location_on,
-                                      title: snapshot.data![index].city,
-                                      subTitle:
-                                          snapshot.data![index].displayName,
+                                      title: snapshot.data![index].displayName,
+                                      // subTitle:
+                                      //     snapshot.data![index].displayName,
                                     ),
                                   );
                                 },
                               ),
                             )
                       : snapshot.hasError
-                          ? const Text('Something Went wrong')
+                          ? Text(AllText().SOMETHING_WENT_WRONG)
                           : const SizedBox();
             },
           ),
@@ -268,5 +270,5 @@ void onLocationSelect(BuildContext context, LatLng point,
       context,
       MaterialPageRoute(
           builder: (context) =>
-              SelectedLocation(displayName ?? 'Your location', point)));
+              SelectedLocation(displayName ?? AllText().YOUR_LOCATION, point)));
 }

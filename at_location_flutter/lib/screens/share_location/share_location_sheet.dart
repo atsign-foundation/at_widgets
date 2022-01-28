@@ -5,6 +5,7 @@ import 'package:at_location_flutter/common_components/pop_button.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
@@ -39,19 +40,19 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Share Location', style: CustomTextStyles().black18),
-              const PopButton(label: 'Cancel')
+              Text(AllText().SHARE_LOCATION, style: CustomTextStyles().black18),
+              PopButton(label: AllText().CANCEL)
             ],
           ),
           const SizedBox(
             height: 25,
           ),
-          Text('Share with', style: CustomTextStyles().greyLabel14),
+          Text(AllText().SHARE_WITH, style: CustomTextStyles().greyLabel14),
           const SizedBox(height: 10),
           CustomInputField(
             width: 330.toWidth,
             height: 50,
-            hintText: 'Type @sign ',
+            hintText: AllText().TYPE_AT_SIGN,
             initialValue: textField ?? '',
             value: (str) {
               if (!str.contains('@')) {
@@ -64,7 +65,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
           ),
           const SizedBox(height: 25),
           Text(
-            'Duration',
+            AllText().DURATION,
             style: CustomTextStyles().greyLabel14,
           ),
           const SizedBox(height: 10),
@@ -79,9 +80,13 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               elevation: 0,
               dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
               value: selectedOption,
-              hint: const Text('Occurs on'),
-              items: ['30 mins', '2 hours', '24 hours', 'Until turned off']
-                  .map((String option) {
+              hint: Text(AllText().OCCURS_ON),
+              items: [
+                AllText().k30mins,
+                AllText().k2hours,
+                AllText().k24hours,
+                AllText().untilTurnedOff
+              ].map((String option) {
                 return DropdownMenuItem<String>(
                   value: option,
                   child: Text(option),
@@ -100,7 +105,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
             child: isLoading
                 ? const CircularProgressIndicator()
                 : CustomButton(
-                    buttonText: 'Share',
+                    buttonText: AllText().SHARE,
                     onPressed: onShareTap,
                     fontColor: AllColors().WHITE,
                     width: 164,
@@ -122,20 +127,20 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
       setState(() {
         isLoading = false;
       });
-      CustomToast().show('Atsign not valid', context, isError: true);
+      CustomToast().show(AllText().AT_SIGN_NOT_VALID, context, isError: true);
       return;
     }
 
     if (selectedOption == null) {
-      CustomToast().show('Select time', context, isError: true);
+      CustomToast().show(AllText().SELECT_TIME, context, isError: true);
       return;
     }
 
-    var minutes = (selectedOption == '30 mins'
+    var minutes = (selectedOption == AllText().k30mins
         ? 30
-        : (selectedOption == '2 hours'
+        : (selectedOption == AllText().k2hours
             ? (2 * 60)
-            : (selectedOption == '24 hours' ? (24 * 60) : null)));
+            : (selectedOption == AllText().k24hours ? (24 * 60) : null)));
 
     var result = await SharingLocationService()
         .sendShareLocationEvent(textField, false, minutes: minutes);
@@ -150,14 +155,14 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
 
     if (result == true) {
       CustomToast()
-          .show('Share Location Request sent', context, isSuccess: true);
+          .show(AllText().SHARE_LOC_REQ_SENT, context, isSuccess: true);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast()
-          .show('some thing went wrong , try again.', context, isError: true);
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context,
+          isError: true);
       setState(() {
         isLoading = false;
       });

@@ -9,8 +9,6 @@ import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
-import 'package:at_location_flutter/common_components/build_marker.dart';
-import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';

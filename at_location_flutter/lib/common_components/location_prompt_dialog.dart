@@ -1,9 +1,9 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/sharing_location_service.dart';
+import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -82,7 +82,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                       const SizedBox(height: 30),
                       CustomButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        buttonText: 'Okay!',
+                        buttonText: AllText().OKAY,
                         fontColor: Colors.white,
                         width: 100.toWidth,
                         height: 48.toHeight,
@@ -124,7 +124,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                                         .currentContext!)
                                     .pop();
                               },
-                              buttonText: widget.yesText ?? 'Yes!',
+                              buttonText: widget.yesText ?? AllText().YES + '!',
                               fontColor: Colors.white,
                               width: 164.toWidth,
                               height: 48.toHeight,
@@ -133,13 +133,15 @@ class _LocationPromptState extends State<LocationPrompt> {
                       CustomButton(
                         onPressed: () async {
                           if (widget.isShareLocationData) {
-                            CustomToast().show('Update cancelled', context);
+                            CustomToast()
+                                .show(AllText().UPDATE_CANCELLED, context);
                           } else if (widget.isRequestLocationData) {
-                            CustomToast().show('Prompt cancelled', context);
+                            CustomToast()
+                                .show(AllText().PROMPT_CANCELLED, context);
                           }
                           Navigator.of(context).pop();
                         },
-                        buttonText: widget.noText ?? 'No!',
+                        buttonText: widget.noText ?? AllText().NO + '!',
                         buttonColor: Colors.white,
                         fontColor: Colors.black,
                         width: 164.toWidth,
@@ -161,12 +163,12 @@ class _LocationPromptState extends State<LocationPrompt> {
 
     if (update) {
       CustomToast().show(
-          'Share Location Request sent to ${widget.locationNotificationModel!.receiver}',
+          '${AllText().SHARE_LOC_REQ_SENT_TO} ${widget.locationNotificationModel!.receiver}',
           context,
           isSuccess: true);
     } else {
       CustomToast().show(
-          'Something went wrong for ${widget.locationNotificationModel!.receiver}',
+          '${AllText().SOMETHING_WENT_WRONG_FOR} ${widget.locationNotificationModel!.receiver}',
           context,
           isError: true);
     }
@@ -179,12 +181,12 @@ class _LocationPromptState extends State<LocationPrompt> {
 
     if (update) {
       CustomToast().show(
-          'Prompted again to ${widget.locationNotificationModel!.atsignCreator}',
+          '${AllText().PROMPTED_AGAIN_TO} ${widget.locationNotificationModel!.atsignCreator}',
           context,
           isSuccess: true);
     } else {
       CustomToast().show(
-          'Something went wrong for ${widget.locationNotificationModel!.atsignCreator}',
+          '${AllText().SOMETHING_WENT_WRONG_FOR} ${widget.locationNotificationModel!.atsignCreator}',
           context,
           isError: true);
     }

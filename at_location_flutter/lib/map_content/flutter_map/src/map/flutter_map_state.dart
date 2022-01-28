@@ -6,10 +6,7 @@ import 'dart:math';
 import 'package:async/async.dart';
 import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
-import 'package:at_location_flutter/map_content/flutter_map/src/core/point.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/gestures/gestures.dart';
-import 'package:at_location_flutter/map_content/flutter_map/src/layer/group_layer.dart';
-import 'package:at_location_flutter/map_content/flutter_map/src/layer/overlay_image_layer.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map_state_widget.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -205,8 +202,7 @@ class FlutterMapState extends MapGestureMixin {
     if (options is OverlayImageLayerOptions) {
       return OverlayImageLayer(options, mapState, _merge(options));
     }
-    assert(false,
-        """
+    assert(false, """
 Can't find correct layer for $options. Perhaps when you create your FlutterMap you need something like this:
 
     options: new MapOptions(plugins: [MyFlutterMapPlugin()])""");

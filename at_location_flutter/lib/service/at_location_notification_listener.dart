@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_data_model.dart';
@@ -36,6 +35,7 @@ class AtLocationNotificationListener {
   bool isEventInUse = false, monitorStarted = false;
   final _logger = AtSignLogger('AtLocationNotificationListener');
 
+  /// called when switching atsign
   resetMonitor() {
     monitorStarted = false;
   }
@@ -56,6 +56,7 @@ class AtLocationNotificationListener {
     startMonitor();
   }
 
+  /// starts monitor to receive incoming notifications.
   Future<void> startMonitor() async {
     if (!monitorStarted) {
       AtClientManager.getInstance()
@@ -73,6 +74,7 @@ class AtLocationNotificationListener {
     return await KeychainUtil.getPrivateKey(atsign);
   }
 
+  /// filters out the received notification.
   void _notificationCallback(AtNotification notification) async {
     if ((notification.id == '-1') ||
         compareAtSign(notification.from,
@@ -137,8 +139,7 @@ class AtLocationNotificationListener {
         // ignore: return_of_invalid_type_from_catch_error
         .catchError((e) {
       /// only show failure for sharelocation/requestlocation keys
-      if ((e is KeyNotFoundException) &&
-              (notificationKey.contains(MixedConstants.SHARE_LOCATION)) ||
+      if ((notificationKey.contains(MixedConstants.SHARE_LOCATION)) ||
           (notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) ||
           (notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
         showToast(

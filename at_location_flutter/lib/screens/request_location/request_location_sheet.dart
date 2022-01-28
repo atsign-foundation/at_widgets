@@ -5,6 +5,7 @@ import 'package:at_location_flutter/common_components/pop_button.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
@@ -39,19 +40,20 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Request Location', style: CustomTextStyles().black18),
-              const PopButton(label: 'Cancel')
+              Text(AllText().REQUEST_LOCATION,
+                  style: CustomTextStyles().black18),
+              PopButton(label: AllText().CANCEL)
             ],
           ),
           const SizedBox(
             height: 25,
           ),
-          Text('Request From', style: CustomTextStyles().greyLabel14),
+          Text(AllText().REQUEST_FROM, style: CustomTextStyles().greyLabel14),
           const SizedBox(height: 10),
           CustomInputField(
             width: 330.toWidth,
             height: 50,
-            hintText: 'Type @sign ',
+            hintText: AllText().TYPE_AT_SIGN,
             initialValue: textField ?? '',
             value: (str) {
               if (!str.contains('@')) {
@@ -67,7 +69,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
             child: isLoading
                 ? const CircularProgressIndicator()
                 : CustomButton(
-                    buttonText: 'Request',
+                    buttonText: AllText().REQUEST,
                     onPressed: onRequestTap,
                     fontColor: AllColors().WHITE,
                     width: 164,
@@ -89,7 +91,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
       setState(() {
         isLoading = false;
       });
-      CustomToast().show('Atsign not valid', context, isError: true);
+      CustomToast().show(AllText().AT_SIGN_NOT_VALID, context, isError: true);
       return;
     }
 
@@ -105,14 +107,15 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     }
 
     if (result == true) {
-      CustomToast().show('Request Location sent', context, isSuccess: true);
+      CustomToast()
+          .show(AllText().REQUEST_LOCATION_SENT, context, isSuccess: true);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast()
-          .show('some thing went wrong , try again.', context, isError: true);
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context,
+          isError: true);
       setState(() {
         isLoading = false;
       });

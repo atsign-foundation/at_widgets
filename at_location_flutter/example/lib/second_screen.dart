@@ -2,14 +2,13 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
-import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
-import 'package:at_location_flutter/screens/home/home_screen.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'main.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -245,8 +244,8 @@ class _SecondScreenState extends State<SecondScreen> {
     activeAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     initializeLocationService(
       NavService.navKey,
-      mapKey: '',
-      apiKey: '',
+      mapKey: dotenv.get('MAP_KEY'),
+      apiKey: dotenv.get('API_KEY'),
       showDialogBox: true,
     );
     newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;

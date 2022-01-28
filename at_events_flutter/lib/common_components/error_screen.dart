@@ -1,5 +1,5 @@
-import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_events_flutter/utils/colors.dart';
+import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
@@ -13,10 +13,10 @@ class ErrorScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Something went wrong.'),
+          Text(AllText().SOMETHING_WENT_WRONG),
           const SizedBox(height: 10),
           CustomButton(
-            buttonText: 'Retry',
+            buttonText: AllText().RETRY,
             width: 120.toWidth,
             height: 40.toHeight,
             buttonColor: Theme.of(context).brightness == Brightness.light

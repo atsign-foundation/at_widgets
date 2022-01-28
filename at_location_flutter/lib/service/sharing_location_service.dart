@@ -26,6 +26,7 @@ class SharingLocationService {
     return _singleton;
   }
 
+  /// checks if logged in user is already sharing location with [atsign].
   List checkForAlreadyExisting(String? atsign) {
     var index = KeyStreamService().allLocationNotifications.indexWhere((e) =>
         ((e.locationNotificationModel!.receiver == atsign) &&
@@ -43,6 +44,7 @@ class SharingLocationService {
     }
   }
 
+  /// checks if logged in user's already shared location with [atsign] is rejected.
   bool checkIfEventIsRejected(
       LocationNotificationModel locationNotificationModel) {
     if ((!locationNotificationModel.isAccepted) &&
@@ -53,6 +55,7 @@ class SharingLocationService {
     return false;
   }
 
+  /// Sends location to [selectedContacts] for [minutes].
   Future<void> sendShareLocationToGroup(List<AtContact> selectedContacts,
       {int? minutes}) async {
     await Future.forEach(selectedContacts, (AtContact selectedContact) async {
@@ -355,6 +358,7 @@ class SharingLocationService {
     });
   }
 
+  /// returns a new [AtKey].
   AtKey newAtKey(int ttr, String key, String? sharedWith,
       {int? ttl, DateTime? expiresAt}) {
     var atKey = AtKey()

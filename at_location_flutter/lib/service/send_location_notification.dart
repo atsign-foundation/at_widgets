@@ -49,6 +49,7 @@ class SendLocationNotification {
 
   // Enhacement: Write a function to compare new data with saved ones and remove the expired data.
 
+  /// should be called while switching an atsign
   reset() {
     allAtsignsLocationData = {};
     _atsignsToSendLocationwith = [];
@@ -58,6 +59,7 @@ class SendLocationNotification {
     isEventDataInitialized = false;
   }
 
+  /// initialises all the variables
   void init(AtClient? newAtClient) {
     if ((timer != null) && (timer!.isActive)) timer!.cancel();
     atClient = newAtClient;
@@ -66,6 +68,18 @@ class SendLocationNotification {
     findAtSignsToShareLocationWith();
   }
 
+  /// should be called if at_events_flutter package is being used.
+  initEventData(List<LocationDataModel> locationDataModel) {
+    // _appendLocationDataModelData(locationDataModel);
+    compareForMissingInvites(locationDataModel);
+
+    isEventDataInitialized = true;
+    if (isLocationDataInitialized) {
+      sendLocation();
+    }
+  }
+
+  /// checks if [_newLocationDataModel] is already present in [allAtsignsLocationData].
   bool ifLocationDataAlreadyExists(LocationDataModel _newLocationDataModel) {
     if (SendLocationNotification()
             .allAtsignsLocationData[_newLocationDataModel.receiver] !=
@@ -87,6 +101,7 @@ class SendLocationNotification {
     return false;
   }
 
+  /// gets all 'location-notify' keys sent from the logged in atsign.
   getAllLocationShareKeys() async {
     var allLocationKeyStrings =
         await AtClientManager.getInstance().atClient.getKeys(
@@ -113,6 +128,7 @@ class SendLocationNotification {
     checkForExpiredInvites();
   }
 
+  /// checks for expired [LocationDataModel] and removes from [allAtsignsLocationData].
   checkForExpiredInvites() {
     List<String> _idsToDelete = [];
     List<String> _atsignsToDelete = [];
@@ -140,6 +156,7 @@ class SendLocationNotification {
     }
   }
 
+  /// looks for newly added [LocationDataModel] and adds to [allAtsignsLocationData].
   compareForMissingInvites(List<LocationDataModel> _newLocationDataModel) {
     for (var _locationDataModel in _newLocationDataModel) {
       if (allAtsignsLocationData[_locationDataModel.receiver] != null) {
@@ -171,16 +188,7 @@ class SendLocationNotification {
     }
   }
 
-  initEventData(List<LocationDataModel> locationDataModel) {
-    // _appendLocationDataModelData(locationDataModel);
-    compareForMissingInvites(locationDataModel);
-
-    isEventDataInitialized = true;
-    if (isLocationDataInitialized) {
-      sendLocation();
-    }
-  }
-
+  /// appends [locationDataModel] to [locationDataModel.receiver].
   _appendLocationDataModelData(List<LocationDataModel> locationDataModel) {
     for (var element in locationDataModel) {
       if (allAtsignsLocationData[element.receiver] != null) {
@@ -194,6 +202,7 @@ class SendLocationNotification {
     }
   }
 
+  /// checks for atsigns to share location with.
   void findAtSignsToShareLocationWith() {
     List<LocationDataModel> _newlocationDataModel = [];
     for (var notification in KeyStreamService().allLocationNotifications) {
@@ -273,6 +282,7 @@ class SendLocationNotification {
     }
   }
 
+  /// removes a [inviteId] LocationDataModel from [atsignsToRemove] of [allAtsignsLocationData].
   Future<void> removeMember(String inviteId, List<String> atsignsToRemove,
       {bool isSharing = false,
       required bool isExited,
@@ -315,6 +325,7 @@ class SendLocationNotification {
     }
   }
 
+  /// update [allAtsignsLocationData[_newLocationDataModel.receiver]] with new values and sends updated location
   updateExistingLocationDataModel(
       List<LocationDataModel> _newLocationDataModel) async {
     List<String> _atsignsUpdated = [];
@@ -337,6 +348,7 @@ class SendLocationNotification {
         .sendLocationAfterDataUpdate(_atsignsUpdated);
   }
 
+  /// sends 'location-notify' key with updated [LocationDataModel] to [atsignsUpdated].
   sendLocationAfterDataUpdate(List<String> atsignsUpdated) async {
     var _currentMyLatLng = await getMyLocation();
 
@@ -366,12 +378,14 @@ class SendLocationNotification {
     });
   }
 
+  /// sends 'location-notify' to all [allAtsignsLocationData] on every 100 metre location change.
   void sendLocation() async {
     var permission = await Geolocator.checkPermission();
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
-      positionStream = Geolocator.getPositionStream(distanceFilter: 100)
+      positionStream = Geolocator.getPositionStream(
+              locationSettings: const LocationSettings(distanceFilter: 100))
           .listen((myLocation) async {
         //// Enhancement: send location only when myLocation has changed
         if (masterSwitchState) {
@@ -515,6 +529,7 @@ class SendLocationNotification {
     return atKey;
   }
 
+  /// converts [LocationNotificationModel] to [LocationDataModel].
   LocationDataModel locationNotificationModelToLocationDataModel(
       LocationNotificationModel locationNotificationModel) {
     return LocationDataModel(

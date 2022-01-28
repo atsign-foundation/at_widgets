@@ -3,6 +3,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/service/contact_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'contacts_initial.dart';
@@ -122,11 +123,13 @@ class _DisplayTileState extends State<DisplayTile> {
                   widget.semiTitle != null
                       ? Text(
                           widget.semiTitle!,
-                          style: (widget.semiTitle == 'Action required' ||
-                                      widget.semiTitle == 'Request declined') ||
-                                  (widget.semiTitle == 'Cancelled')
-                              ? CustomTextStyles().orange12
-                              : CustomTextStyles().darkGrey12,
+                          style:
+                              (widget.semiTitle == AllText().ACTION_REQUIRED ||
+                                          widget.semiTitle ==
+                                              AllText().REQUEST_DECLINED) ||
+                                      (widget.semiTitle == AllText().CANCELLED)
+                                  ? CustomTextStyles().orange12
+                                  : CustomTextStyles().darkGrey12,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
@@ -159,7 +162,7 @@ class _DisplayTileState extends State<DisplayTile> {
                     widget.onRetryTapped!();
                   },
                   child: Text(
-                    'Retry',
+                    AllText().RETRY,
                     style: TextStyle(
                         color: AllColors().ORANGE, fontSize: 14.toFont),
                     maxLines: 1,

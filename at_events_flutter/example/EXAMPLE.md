@@ -14,12 +14,13 @@ If you want to remove any already paired atsign, use the `Clear paired atsigns` 
 As the [at_events_flutter] package has to be initialised, so we initialise it in the [init()] of `second_screen.dart` by calling
 ```dart
     initialiseEventService(NavService.navKey,
-        mapKey: '',
-        apiKey: '',
+        mapKey: dotenv.get('MAP_KEY'),
+        apiKey: dotenv.get('API_KEY'),
         rootDomain: 'root.atsign.org',
         streamAlternative: updateEvents
     );
 ```
+NOTE: Make sure to pass in the [MAP_KEY] and the [API_KEY] in the `.env` file.
 
 NOTE: The [at_events_flutter] depends on [at_location_flutter] for location sharing, so we use the default value of [initLocation] (true) in [initialiseEventService()].
 

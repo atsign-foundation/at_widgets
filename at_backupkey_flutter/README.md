@@ -1,12 +1,41 @@
-<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
-### Now for a little internet optimism
+[![pub package](https://img.shields.io/pub/v/at_backupkey_flutter)](https://pub.dev/packages/at_backupkey_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
-[![Pub Package](https://img.shields.io/pub/v/at_backupkey_flutter)](https://pub.dev/packages/at_backupkey_flutter)
+## Overview
+The at_backupkey_flutter package provides the functionality to take backup of secret keys of an onboarded @‎sign.
 
-# at_backupkey_flutter
+This open source package is written in Dart, supports Flutter and follows the
+@‎platform's decentralized, edge computing model with the following features: 
+- Cryptographic control of data access through personal data stores
+- No application backend needed
+- End to end encryption where only the data owner has the keys
+- Private and surveillance free connectivity
 
-A flutter plugin project to provide backup keys of an @sign generated during onboarding flow of @protocol.
+We call giving people control of access to their data “flipping the internet”
+and you can learn more about how it works by reading this
+[overview](https://atsign.dev/docs/overview/).
+
+## Get started
+There are two options to get started using this package.
+
+### 1. Clone it from GitHub
+Feel free to fork a copy of the source from the [GitHub repo](https://github.com/atsign-foundation/at_widgets). The example code contained there demonstrates the usage of this package.
+
+```sh
+$ git clone https://github.com/atsign-foundation/at_widgets
+```
+
+### 2. Manually add the package to a project
+
+Instructions on how to manually add this package to you project can be found on pub.dev [here](https://pub.dev/packages/at_backupkey_flutter/install).
+
+## How it works
+
+Secret keys are generated for an @‎sign during onboarding flow of @‎protocol. This package helps to add those keys in '.atKeys' file. This file can then be saved in the local filesystem or iCloud/Gdrive.
+
+## Setup
+The following platform specific setups are required:
 
 ### Android
 Add the following permissions to AndroidManifest.xml
@@ -25,6 +54,7 @@ compileSdkVersion 29
 minSdkVersion 24
 targetSdkVersion 29
 ```
+
 ### iOS
 Update the Podfile with the following lines of code:
 
@@ -63,56 +93,18 @@ post_install do |installer|
   end
 end
 ```
+
 ### macOS:
 Go to your project folder, macOS/Runner/DebugProfile.entitlements
-
-For release you need to open macOS/Runner/Release.entitlements
+(For release mode, you need to open macOS/Runner/Release.entitlements)
 
 and add the following key:
-
 ```
 <key>com.apple.security.files.downloads.read-write</key>
 <true/>
 ```
 
-### Plugin description
-Provides backup keys for an @sign. Can be used as an icon or a button. Priorily an @sign should be authenticated through any of @protocol apps to make use of this widget.
-
-### Sample usage
-Provides '.atKeys' file to save it in iCloud/Gdrive.
-
-Plugin as icon
-```dart
-BackupKeyWidget(
-    atsign: atsign,
-    atClientService: atClientServiceMap[atsign],
-    isIcon: true,
-)
-```
-
-Plugin as button
-```dart
-BackupKeyWidget(
-    atsign: atsign,
-    atClientService: atClientServiceMap[atsign],
-    isButton: true,
-    buttonText: 'BackupKeys',
-)
-```
-
-Plugin with custom widget
-```dart
-ElevatedButton.icon(
-    icon: Icon(
-        Icons.file_copy,
-        color: Colors.white,
-    ),
-    label: Text('Backup your key'),
-    onPressed: () async {
-        BackupKeyWidget(
-            atsign: atsign,
-            atClientService: atClientServiceMap[atsign],
-        ).showBackupDialog(context);
-    },
-),
-```
+## Open source usage and contributions
+This is  open source code, so feel free to use it as is, suggest changes or 
+enhancements or create your own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) 
+for detailed guidance on how to setup tools, tests and make a pull request.

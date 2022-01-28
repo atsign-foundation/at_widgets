@@ -1,6 +1,7 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
+import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,7 @@ Future<void> confirmationDialog(String title,
                         buttonColor: AllColors().Black,
                         width: 164.toWidth,
                         height: 48.toHeight,
-                        buttonText: 'Yes',
+                        buttonText: AllText().YES,
                         fontColor: AllColors().WHITE,
                       ),
                 const SizedBox(height: 5),
@@ -59,7 +60,7 @@ Future<void> confirmationDialog(String title,
                         buttonColor: AllColors().WHITE,
                         width: 140.toWidth,
                         height: 36.toHeight,
-                        buttonText: 'No',
+                        buttonText: AllText().NO,
                         fontColor: AllColors().Black,
                       ),
               ],
