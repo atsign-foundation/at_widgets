@@ -9,8 +9,7 @@
 
 
 
-# at_onboarding_flutter
-## Introduction
+## Overview
 This at_onboarding_flutter package handles secure management of secret keys for authenticating an atsign as cryptographically secure replacement for usernames and passwords.
 
 This open source package is written in Dart, supports Flutter and follows the @‎platform's decentralized, edge computing model with the following features :
