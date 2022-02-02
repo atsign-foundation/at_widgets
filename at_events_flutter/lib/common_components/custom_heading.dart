@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class CustomHeading extends StatelessWidget {
   final String? heading, action;
+  final Function? onTap;
   // ignore: use_key_in_widget_constructors
-  const CustomHeading({this.heading, this.action});
+  const CustomHeading({this.heading, this.action, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,13 @@ class CustomHeading extends StatelessWidget {
                     : CustomTextStyles().white18)
             : const SizedBox(),
         action != null
-            ? Text(action!, style: CustomTextStyles().orange18)
+            ? InkWell(
+                onTap: () {
+                  if (onTap != null) {
+                    onTap!();
+                  }
+                },
+                child: Text(action!, style: CustomTextStyles().orange18))
             : const SizedBox()
       ],
     );
