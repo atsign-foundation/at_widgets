@@ -14,6 +14,7 @@ import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 
 // ignore: must_be_immutable
 class NotificationDialog extends StatefulWidget {
@@ -122,6 +123,15 @@ class _NotificationDialogState extends State<NotificationDialog> {
                     : const SizedBox()
               ],
             ),
+            SizedBox(height: 10.toHeight),
+            (ContactService().contactList.indexWhere(
+                        (element) => element?.atSign == widget.userName) ==
+                    -1)
+                ? Text(
+                    'NOTE: ${widget.userName} is not in your contacts list.',
+                    style: CustomTextStyles().red12,
+                  )
+                : const SizedBox(),
             SizedBox(height: 10.toHeight),
             loading
                 ? const CircularProgressIndicator()
