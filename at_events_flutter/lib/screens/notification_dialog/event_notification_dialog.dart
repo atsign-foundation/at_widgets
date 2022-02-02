@@ -352,6 +352,17 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                             style: CustomTextStyles().black14,
                           ),
                         ),
+                  loading! ? const SizedBox() : SizedBox(height: 10.toHeight),
+                  loading!
+                      ? const SizedBox()
+                      : InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(AllText().DECIDE_LATER,
+                              style: CustomTextStyles().orange14,
+                              textAlign: TextAlign.center),
+                        ),
                 ],
               ),
             ),

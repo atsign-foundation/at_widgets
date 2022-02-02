@@ -154,9 +154,12 @@ class AtEventNotificationListener {
       {EventNotificationModel? eventNotificationModel}) async {
     return showDialog<void>(
       context: navKey!.currentContext!,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (BuildContext context) {
-        return EventNotificationDialog(eventData: eventNotificationModel);
+        return EventNotificationDialog(
+          eventData: eventNotificationModel,
+          key: UniqueKey(),
+        );
       },
     );
   }

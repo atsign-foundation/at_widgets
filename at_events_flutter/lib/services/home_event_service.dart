@@ -109,9 +109,12 @@ class HomeEventService {
       }
       return showDialog<void>(
         context: AtEventNotificationListener().navKey!.currentContext!,
-        barrierDismissible: true,
+        barrierDismissible: false,
         builder: (BuildContext context) {
-          return EventNotificationDialog(eventData: eventNotificationModel);
+          return EventNotificationDialog(
+            eventData: eventNotificationModel,
+            key: UniqueKey(),
+          );
         },
       );
     }

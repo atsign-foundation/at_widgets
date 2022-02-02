@@ -189,6 +189,17 @@ class _NotificationDialogState extends State<NotificationDialog> {
                     width: 164.toWidth,
                     height: 48.toHeight,
                   ),
+            loading ? const SizedBox() : SizedBox(height: 10.toHeight),
+            loading
+                ? const SizedBox()
+                : InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(AllText().DECIDE_LATER,
+                        style: CustomTextStyles().orange14,
+                        textAlign: TextAlign.center),
+                  ),
           ],
         ),
       ),
