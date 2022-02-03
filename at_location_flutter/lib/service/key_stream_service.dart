@@ -87,8 +87,11 @@ class KeyStreamService {
           if ((value.value != null) && (value.value != 'null')) {
             var locationNotificationModel =
                 LocationNotificationModel.fromJson(jsonDecode(value.value));
-            allLocationNotifications.add(KeyLocationModel(
-                locationNotificationModel: locationNotificationModel));
+            allLocationNotifications.insert(
+                0,
+                KeyLocationModel(
+                    locationNotificationModel:
+                        locationNotificationModel)); // last item to come in would be at the top of the list
           }
         } catch (e) {
           _logger.severe('convertJsonToLocationModel error :$e');
@@ -263,7 +266,7 @@ class KeyStreamService {
           .locationSharingFor[trimAtsignsFromKey(locationData.key!)]!
           .to = locationData.to;
 
-      await SendLocationNotification()
+      SendLocationNotification()
           .sendLocationAfterDataUpdate([locationData.receiver!]);
 
       return;
@@ -286,16 +289,16 @@ class KeyStreamService {
             ..._tempLocationDataModel.locationSharingFor,
           };
 
-          await SendLocationNotification()
+          SendLocationNotification()
               .sendLocationAfterDataUpdate([locationData.receiver!]);
         } else {
-          await SendLocationNotification().addMember(_tempLocationDataModel);
+          SendLocationNotification().addMember(_tempLocationDataModel);
         }
       }
     } else {
       if (compareAtSign(locationData.atsignCreator!, currentAtSign!)) {
         //// ifLocationDataAlreadyExists remove
-        await SendLocationNotification().removeMember(
+        SendLocationNotification().removeMember(
             locationData.key!, [locationData.receiver!],
             isExited: locationData.isExited,
             isAccepted: locationData.isAccepted,
@@ -364,13 +367,14 @@ class KeyStreamService {
     var tempHyridNotificationModel = KeyLocationModel();
     tempHyridNotificationModel.locationNotificationModel =
         locationNotificationModel;
-    allLocationNotifications.add(tempHyridNotificationModel);
+    allLocationNotifications.insert(0,
+        tempHyridNotificationModel); // last item to come in would be at the top of the list
 
     if ((tempHyridNotificationModel.locationNotificationModel!.isSharing)) {
       if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==
           currentAtSign) {
         // ignore: unawaited_futures
-        await SendLocationNotification().addMember(SendLocationNotification()
+        SendLocationNotification().addMember(SendLocationNotification()
             .locationNotificationModelToLocationDataModel(
                 tempHyridNotificationModel.locationNotificationModel!));
       }

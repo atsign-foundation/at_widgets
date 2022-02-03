@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/bounds.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/core/center_zoom.dart';
-import 'package:at_location_flutter/map_content/flutter_map/src/core/point.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map_state_widget.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';

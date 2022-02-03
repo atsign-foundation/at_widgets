@@ -117,6 +117,7 @@ class GroupService {
     _atsign = atClientManager.atClient.getCurrentAtSign()!;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
+    allContacts = [];
     atContactImpl = await AtContactsImpl.getInstance(_atsign);
     await fetchGroupsAndContacts();
   }
@@ -147,13 +148,17 @@ class GroupService {
 
       for (var i = 0; i < groupIds.length; i++) {
         var groupDetail = await (getGroupDetail(groupIds[i]!));
-        // ignore: unnecessary_null_comparison
         if (groupDetail != null) groupList.add(groupDetail);
       }
 
       groupList.forEach((AtGroup group) {
-        allContacts.add(
-            GroupContactsModel(group: group, contactType: ContactsType.GROUP));
+        var index = allContacts.indexWhere((element) =>
+            element!.group != null && element.group!.groupId == group.groupId);
+
+        if (index == -1) {
+          allContacts.add(GroupContactsModel(
+              group: group, contactType: ContactsType.GROUP));
+        }
       });
 
       if (expandIndex != null) {
@@ -171,7 +176,7 @@ class GroupService {
         atGroupSink.add(groupList);
       }
     } catch (e) {
-      print('error in getting group list: $e');
+      atGroupSink.add([]);
     }
   }
 
@@ -291,14 +296,23 @@ class GroupService {
       var contactList = await fetchContacts();
       if (contactList != null) {
         contactList.forEach((AtContact? contact) {
-          allContacts.add(GroupContactsModel(
-              contact: contact, contactType: ContactsType.CONTACT));
+          var index = -1;
+          if (contact != null) {
+            index = allContacts.indexWhere((element) =>
+                element!.contact != null &&
+                element.contact!.atSign == contact.atSign);
+          }
+
+          if (index == -1) {
+            allContacts.add(GroupContactsModel(
+                contact: contact, contactType: ContactsType.CONTACT));
+          }
         });
         await getAllGroupsDetails(addToGroupSink: !isDesktop);
         _allContactsStreamController.add(allContacts);
       }
     } catch (e) {
-      print(e);
+      _allContactsStreamController.add([]);
     }
   }
 
@@ -373,7 +387,7 @@ class GroupService {
 
       selectedContactsSink.add(selectedGroupContacts);
     } catch (e) {
-      print(e);
+      selectedContactsSink.add([]);
     }
   }
 

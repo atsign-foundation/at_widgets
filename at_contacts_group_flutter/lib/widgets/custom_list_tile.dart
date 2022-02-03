@@ -91,9 +91,11 @@ class _CustomListTileState extends State<CustomListTile> {
 
   // ignore: always_declare_return_types
   getImage() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     Uint8List image;
 
     if (widget.item!.contact == null) {
@@ -137,11 +139,11 @@ class _CustomListTileState extends State<CustomListTile> {
       }
     }
 
-    setState(() {
-      isLoading = false;
-    });
-
-    ;
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -174,14 +176,16 @@ class _CustomListTileState extends State<CustomListTile> {
                   widget.selectedList!([widget.item]);
                   Navigator.pop(context);
                 } else if (!widget.selectSingle) {
-                  setState(() {
-                    if (isSelected) {
-                      _groupService.removeGroupContact(widget.item);
-                    } else {
-                      _groupService.addGroupContact(widget.item);
-                    }
-                    isSelected = !isSelected;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      if (isSelected) {
+                        _groupService.removeGroupContact(widget.item);
+                      } else {
+                        _groupService.addGroupContact(widget.item);
+                      }
+                      isSelected = !isSelected;
+                    });
+                  }
                 }
               } else {
                 widget.onTap!();

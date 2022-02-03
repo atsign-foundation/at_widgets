@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_member_location.dart';
@@ -31,6 +30,7 @@ class AtEventNotificationListener {
 
   final _logger = AtSignLogger('AtEventNotificationListener');
 
+  /// called when switching atsign
   resetMonitor() {
     monitorStarted = false;
   }
@@ -47,6 +47,7 @@ class AtEventNotificationListener {
     startMonitor();
   }
 
+  /// starts monitor to receive incoming notifications.
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
       AtClientManager.getInstance()
@@ -61,6 +62,7 @@ class AtEventNotificationListener {
     return true;
   }
 
+  /// filters out the received notification.
   void _notificationCallback(AtNotification notification) async {
     if ((notification.id == '-1') ||
         compareAtSign(notification.from,
@@ -93,8 +95,7 @@ class AtEventNotificationListener {
         .decrypt(value ?? '', fromAtSign)
         .catchError((e) {
       /// only show failure for createevent keys
-      if ((e is KeyNotFoundException) &&
-          notificationKey.contains('createevent')) {
+      if (notificationKey.contains('createevent')) {
         AtLocationNotificationListener().showToast(
           'Decryption failed for Event notification received from $fromAtSign with $e',
           navKey!.currentContext!,

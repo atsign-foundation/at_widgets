@@ -44,6 +44,7 @@ Future<LatLng?> getMyLocation() async {
   }
 }
 
+/// checks if location service is enabled.
 Future<bool> isLocationServiceEnabled() async {
   final _logger = AtSignLogger('isLocationServiceEnabled');
 

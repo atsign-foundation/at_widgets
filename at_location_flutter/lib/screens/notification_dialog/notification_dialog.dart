@@ -79,8 +79,8 @@ class _NotificationDialogState extends State<NotificationDialog> {
           children: <Widget>[
             Text(
                 ((!widget.locationData!.isRequest)
-                    ? '${widget.userName} '+ AllText().ACCEPT_SHARE_LOCATION
-                    : '${widget.userName} '+ AllText().SHARE_YOUR_LOCATION ),
+                    ? '${widget.userName} ' + AllText().ACCEPT_SHARE_LOCATION
+                    : '${widget.userName} ' + AllText().SHARE_YOUR_LOCATION),
                 style: CustomTextStyles().grey16,
                 textAlign: TextAlign.center),
             const SizedBox(height: 30),
@@ -191,7 +191,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
         context,
         TextTileRepeater(
           title: AllText().HOW_LONG_DO_YOU_WANT_SHARE_YOUR_LOCATION,
-          options:  [
+          options: [
             AllText().k30mins, AllText().k2hours, AllText().k24hours,
             // , 'Until turned off'
           ],
@@ -202,7 +202,9 @@ class _NotificationDialogState extends State<NotificationDialog> {
                     ? (2 * 60)
                     : (value == AllText().k24hours
                         ? (24 * 60)
-                        : (value == AllText().untilTurnedOff ? (24 * 60) : null))));
+                        : (value == AllText().untilTurnedOff
+                            ? (24 * 60)
+                            : null))));
           },
         ),
         350, onSheetCLosed: () async {

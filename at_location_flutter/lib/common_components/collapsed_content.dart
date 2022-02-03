@@ -139,7 +139,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           amICreator
                               ? AllText().PER_NOT_SHARING_LOC
                               : locationAvailable
-                                  ? (AllText().SHARING_LOCATION +' $time')
+                                  ? (AllText().SHARING_LOCATION + ' $time')
                                   : (AllText().LOC_SHARING_TURNED_OFF),
                           style: ((amICreator) || locationAvailable)
                               ? CustomTextStyles().grey12
@@ -147,7 +147,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                         ),
                         amICreator
                             ? Text(
-                                AllText().SHARING_MY_LOC +' $time',
+                                AllText().SHARING_MY_LOC + ' $time',
                                 style: CustomTextStyles().black12,
                               )
                             : const SizedBox()
@@ -235,7 +235,8 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                     });
                                                   } else {
                                                     CustomToast().show(
-                                                        AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
+                                                        AllText()
+                                                            .SOMETHING_WENT_WRONG_TRY_AGAIN,
                                                         context,
                                                         isError: true);
                                                   }
@@ -243,7 +244,8 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                 } catch (e) {
                                                   _logger.severe(e);
                                                   CustomToast().show(
-                                                      AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
+                                                      AllText()
+                                                          .SOMETHING_WENT_WRONG_TRY_AGAIN,
                                                       context,
                                                       isError: true);
                                                   LoadingDialog().hide();
@@ -265,18 +267,21 @@ class _CollapsedContentState extends State<CollapsedContent> {
                                                     .receiver);
                                         if (result == true) {
                                           CustomToast().show(
-                                              AllText().REQUEST_LOCATION_SENT, context,
+                                              AllText().REQUEST_LOCATION_SENT,
+                                              context,
                                               isSuccess: true);
                                         } else if (result == false) {
                                           CustomToast().show(
-                                              AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
+                                              AllText()
+                                                  .SOMETHING_WENT_WRONG_TRY_AGAIN,
                                               context,
                                               isError: true);
                                         }
                                       } catch (e) {
                                         _logger.severe(e);
                                         CustomToast().show(
-                                            AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
+                                            AllText()
+                                                .SOMETHING_WENT_WRONG_TRY_AGAIN,
                                             context,
                                             isError: true);
                                       }
@@ -312,7 +317,8 @@ class _CollapsedContentState extends State<CollapsedContent> {
   // ignore: always_declare_return_types
   removePerson() async {
     await confirmationDialog(
-        AllText().DO_YOU_WANT_TO_REMOVE+' ${widget.userListenerKeyword!.receiver}?',
+        AllText().DO_YOU_WANT_TO_REMOVE +
+            ' ${widget.userListenerKeyword!.receiver}?',
         onYesPressed: _onRemovePersonYesPressed);
   }
 
@@ -337,8 +343,8 @@ class _CollapsedContentState extends State<CollapsedContent> {
       } else {
         LoadingDialog().hide();
 
-        CustomToast()
-            .show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context, isError: true);
+        CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context,
+            isError: true);
       }
     } catch (e) {
       _logger.severe(e);

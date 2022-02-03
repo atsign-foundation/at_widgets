@@ -6,6 +6,7 @@ import 'package:at_contact/at_contact.dart';
 import 'event_key_stream_service.dart';
 import 'package:at_utils/at_logger.dart';
 
+/// returns [atSign]'s AtContact details
 Future<AtContact> getAtSignDetails(String? atSign) async {
   var atContact = getCachedContactDetail(atSign);
   if (atContact == null) {
@@ -18,6 +19,7 @@ Future<AtContact> getAtSignDetails(String? atSign) async {
   return atContact;
 }
 
+/// returns [atsign]'s AtContact details from cached list, if present
 AtContact? getCachedContactDetail(String? atsign) {
   if (atsign ==
       EventKeyStreamService().atContactImpl?.atClient?.getCurrentAtSign()) {
@@ -32,6 +34,7 @@ AtContact? getCachedContactDetail(String? atsign) {
   return null;
 }
 
+/// returns [atSign]'s AtContact details from server
 Future<Map<String, dynamic>> getContactDetails(atSign) async {
   final _logger = AtSignLogger('getContactDetails');
 

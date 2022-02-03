@@ -1,7 +1,6 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
-import 'package:at_events_flutter/models/event_key_location_model.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
@@ -42,6 +41,7 @@ class HomeEventService {
     }
   }
 
+  /// returns current status of the [event]
   String getActionString(EventNotificationModel event, bool haveResponded) {
     if (isEventCancelled(event)) return 'Cancelled';
 
@@ -68,6 +68,7 @@ class HomeEventService {
     }
   }
 
+  /// returns event timing details
   String getSubTitle(EventNotificationModel _event) {
     return _event.event != null
         ? _event.event!.date != null

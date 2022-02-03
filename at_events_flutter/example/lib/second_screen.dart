@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 import 'main.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -133,8 +134,8 @@ class _SecondScreenState extends State<SecondScreen> {
 
   void initializeEventService() {
     initialiseEventService(NavService.navKey,
-        mapKey: '',
-        apiKey: '',
+        mapKey: dotenv.get('MAP_KEY'),
+        apiKey: dotenv.get('API_KEY'),
         rootDomain: 'root.atsign.org',
         streamAlternative: updateEvents);
   }

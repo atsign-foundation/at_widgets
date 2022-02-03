@@ -12,11 +12,13 @@ class LocationModal {
   });
 
   LocationModal.fromJson(Map<dynamic, dynamic> ad) {
-    lat = ad['position']['lat'].toString();
-    long = ad['position']['lng'].toString();
-    displayName = ad['address']['label'].toString();
-    state = ad['address']['state'] ?? '';
-    city = ad['address']['city'] ?? '';
-    postalCode = ad['address']['postalCode'] ?? '';
+    lat = ad['position'][0].toString(); // 0th index is latitude
+    long = ad['position'][1].toString(); // 1st index is longitude
+    displayName = ad['title'].toString();
+    displayName = '''${(displayName ?? '')},
+${ad['vicinity'].toString().replaceAll('<br/>', ' ')}
+    ''';
+    city = (ad['vicinity'] ?? '')
+        .replaceAll('<br/>', ' '); // [vicinity] gives entire address
   }
 }
