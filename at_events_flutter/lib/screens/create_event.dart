@@ -14,10 +14,12 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/one_day_event.dart';
 import 'package:at_events_flutter/common_components/custom_heading.dart';
 import 'package:at_events_flutter/screens/select_location.dart';
+import 'package:at_events_flutter/services/venues_services.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:at_events_flutter/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../at_events_flutter.dart';
 
@@ -444,6 +446,12 @@ class _CreateEventState extends State<CreateEvent> {
         context)!;
 
     if (isOverlap) {
+      VenuesServices().storeNewVenue(
+        LatLng(EventService().eventNotificationModel!.venue!.latitude!,
+            EventService().eventNotificationModel!.venue!.longitude!),
+        EventService().eventNotificationModel!.venue!.label!,
+      ); // store venue
+
       setState(() {
         isLoading = false;
       });
@@ -453,6 +461,12 @@ class _CreateEventState extends State<CreateEvent> {
     var result = await EventService().createEvent();
 
     if (result is bool && result == true) {
+      VenuesServices().storeNewVenue(
+        LatLng(EventService().eventNotificationModel!.venue!.latitude!,
+            EventService().eventNotificationModel!.venue!.longitude!),
+        EventService().eventNotificationModel!.venue!.label!,
+      ); // store venue
+
       CustomToast().show(
           EventService().isEventUpdate
               ? AllText().EVENT_UPDATED

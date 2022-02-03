@@ -3,6 +3,8 @@ import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:at_events_flutter/common_components/custom_toast.dart';
 import 'package:at_events_flutter/common_components/location_tile.dart';
 import 'package:at_events_flutter/screens/selected_location.dart';
+import 'package:at_events_flutter/services/venues_services.dart';
+import 'package:at_events_flutter/utils/colors.dart';
 import 'package:at_events_flutter/utils/text_styles.dart';
 import 'package:at_events_flutter/utils/texts.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
@@ -209,6 +211,13 @@ class _SelectLocationState extends State<SelectLocation> {
               SizedBox(height: 20.toHeight),
               const Divider(),
               SizedBox(height: 20.toHeight),
+              renderPastVenues(),
+              VenuesServices().venues.isNotEmpty
+                  ? const Divider()
+                  : const SizedBox(),
+              VenuesServices().venues.isNotEmpty
+                  ? SizedBox(height: 20.toHeight)
+                  : const SizedBox(),
               isLoader
                   ? const Center(
                       child: CircularProgressIndicator(),
@@ -269,13 +278,65 @@ class _SelectLocationState extends State<SelectLocation> {
       ),
     );
   }
+
+  Widget renderPastVenues() {
+    return VenuesServices().venues.isNotEmpty
+        ? Container(
+            color: AllColors().INPUT_GREY_BACKGROUND,
+            width: SizeConfig().screenWidth * 0.95,
+            height: 50.toFont,
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+            child: DropdownButton<VenueLatLng?>(
+              isExpanded: true,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              underline: const SizedBox(),
+              elevation: 0,
+              dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
+              value: null,
+              hint: Text(AllText().PAST_VENUES,
+                  style: TextStyle(
+                      color: AllColors().LIGHT_GREY_LABEL,
+                      fontSize: 15.toFont)),
+              style:
+                  TextStyle(color: AllColors().DARK_GREY, fontSize: 13.toFont),
+              items: VenuesServices()
+                  .venues
+                  .map((_venue) {
+                    return _venue;
+                  })
+                  .toList()
+                  .map((VenueLatLng option) {
+                    return DropdownMenuItem<VenueLatLng>(
+                      value: option,
+                      child: Text(option.venue,
+                          style: TextStyle(
+                              color: AllColors().DARK_GREY,
+                              fontSize: 13.toFont)),
+                    );
+                  })
+                  .toList(),
+              onChanged: (value) {
+                onLocationSelect(
+                  context,
+                  LatLng(value!.latitude, value.longitude),
+                  displayName: value.displayName,
+                  label: value.venue,
+                );
+              },
+            ),
+          )
+        : const SizedBox();
+  }
 }
 
 void onLocationSelect(BuildContext context, LatLng point,
-    {String? displayName}) {
+    {String? displayName, String? label}) {
   Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              SelectedLocation(displayName ?? AllText().YOUR_LOCATION, point)));
+          builder: (context) => SelectedLocation(
+                displayName ?? AllText().YOUR_LOCATION,
+                point,
+                label: label,
+              )));
 }

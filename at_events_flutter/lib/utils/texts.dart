@@ -117,6 +117,7 @@ class AllText {
   String USING_GPS = 'Using GPS';
   String NO_SUCH_LOCATION_FOUND = 'No such location found';
   String YOUR_LOCATION = 'Your location';
+  String PAST_VENUES = 'Select from past venues';
 
   // Selected Location
   String LABEL = 'Label';
