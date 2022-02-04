@@ -6,6 +6,8 @@ import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'third_screen.dart';
 
 class SecondScreen extends StatefulWidget {
+  const SecondScreen({Key? key}) : super(key: key);
+
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
@@ -36,26 +38,26 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text('Second Screen')),
+      appBar: AppBar(title: const Text('Second Screen')),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             Container(
-              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
                 'Welcome $activeAtSign!',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
-            Text('Enter an atsign to chat with'),
-            SizedBox(
+            const Text('Enter an atsign to chat with'),
+            const SizedBox(
               height: 10.0,
             ),
             Padding(
@@ -71,57 +73,53 @@ class _SecondScreenState extends State<SecondScreen> {
                   }
                 },
                 // validator: Validators.validateAdduser,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixText: '@',
                   prefixStyle: TextStyle(color: Colors.grey),
                   hintText: '\tEnter user atsign',
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 50.0,
             ),
             showOptions
                 ? Column(
                     children: [
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       TextButton(
                         onPressed: () {
                           scaffoldKey!.currentState!
-                              .showBottomSheet((context) => ChatScreen());
+                              .showBottomSheet((context) => const ChatScreen());
                         },
-                        child: Container(
-                          height: 40,
-                          child: Text(
-                            'Open chat in bottom sheet',
-                            style: TextStyle(color: Colors.black),
-                          ),
+                        child: const Text(
+                          'Open chat in bottom sheet',
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
+                      const SizedBox(height: 10.0),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ThirdScreen()));
+                                  builder: (context) => const ThirdScreen()));
                         },
-                        child: Container(
-                          height: 40,
-                          child: Text(
-                            'Navigate to chat screen',
-                            style: TextStyle(color: Colors.black),
-                          ),
+                        child: const Text(
+                          'Navigate to chat screen',
+                          style: TextStyle(color: Colors.black),
                         ),
-                      )
+                      ),
+                      const SizedBox(height: 10.0),
                     ],
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      const SizedBox(height: 10.0),
                       TextButton(
                         onPressed: () {
-                          if (chatWithAtSign != null &&
-                              chatWithAtSign.trim() != '') {
+                          if (chatWithAtSign.trim() != '') {
                             setAtsignToChatWith();
                             setState(() {
                               showOptions = true;
@@ -130,21 +128,19 @@ class _SecondScreenState extends State<SecondScreen> {
                             showAtsignErrorDialog(context);
                           }
                         },
-                        child: Container(
-                          height: 40,
-                          child: Text(
-                            'Chat options',
-                            style: TextStyle(color: Colors.black),
-                          ),
+                        child: const Text(
+                          'Chat options',
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
+                      const SizedBox(height: 10.0),
                     ],
                   ),
-            Divider(
+            const Divider(
               thickness: 2,
               height: 20,
             ),
-            Text('Group chat:'),
+            const Text('Group chat:'),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
               child: TextFormField(
@@ -153,12 +149,12 @@ class _SecondScreenState extends State<SecondScreen> {
                   groupId = value;
                 },
                 // validator: Validators.validateAdduser,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: '\tEnter the group ID',
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
               child: TextFormField(
@@ -167,14 +163,14 @@ class _SecondScreenState extends State<SecondScreen> {
                   member1 = value;
                 },
                 // validator: Validators.validateAdduser,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixText: '@',
                   prefixStyle: TextStyle(color: Colors.grey),
                   hintText: '\tEnter first user atsign',
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
               child: TextFormField(
@@ -183,14 +179,14 @@ class _SecondScreenState extends State<SecondScreen> {
                   member2 = value;
                 },
                 // validator: Validators.validateAdduser,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixText: '@',
                   prefixStyle: TextStyle(color: Colors.grey),
                   hintText: '\tEnter second user atsign',
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -198,7 +194,7 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 setGroupToChatWith(context);
               },
-              child: Text(
+              child: const Text(
                 'Show group chat',
                 style: TextStyle(color: Colors.white),
               ),
@@ -223,20 +219,14 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void setGroupToChatWith(BuildContext context) {
-    print('setGroupToChatWith');
-    if (member1 != null &&
-        member1.trim() != '' &&
-        member2 != null &&
-        member2.trim() != '' &&
-        groupId != null &&
-        groupId != '') {
+    if (member1.trim() != '' && member2.trim() != '' && groupId != '') {
       setChatWithAtSign(null, isGroup: true, groupId: groupId, groupMembers: [
         activeAtSign!,
         member1.startsWith('@') ? member1 : '@' + member1,
         member2.startsWith('@') ? member2 : '@' + member2
       ]);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ThirdScreen()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const ThirdScreen()));
     } else {
       showAtsignErrorDialog(context);
     }
@@ -249,15 +239,15 @@ class _SecondScreenState extends State<SecondScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Row(
-              children: [Text('Some details are missing!')],
+              children: const [Text('Some details are missing!')],
             ),
-            content: Text('Please enter all fields'),
+            content: const Text('Please enter all fields'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(
+                child: const Text(
                   'Close',
                   style: TextStyle(color: Colors.black),
                 ),

@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'dart:typed_data';
 
-enum MessageType { INCOMING, OUTGOING }
-enum MessageContentType { TEXT, IMAGE }
+enum MessageType { incoming, outgoing }
+enum MessageContentType { text, image }
 
 extension MessageContentTypeExt on MessageContentType {
   static MessageContentType? fromIndex(int index) {
@@ -30,7 +30,7 @@ class Message {
       this.time,
       this.message,
       this.type,
-      this.contentType = MessageContentType.TEXT,
+      this.contentType = MessageContentType.text,
       this.sender,
       this.imageData});
 
@@ -88,17 +88,17 @@ class Message {
       'contentType ${contentType.toString()}, sender: $sender, imageType: $imageData)';
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    return o is Message &&
-        o.id == id &&
-        o.time == time &&
-        o.message == message &&
-        o.type == type &&
-        o.contentType == contentType &&
-        o.sender == sender &&
-        o.imageData == imageData;
+    return other is Message &&
+        other.id == id &&
+        other.time == time &&
+        other.message == message &&
+        other.type == type &&
+        other.contentType == contentType &&
+        other.sender == sender &&
+        other.imageData == imageData;
   }
 
   @override

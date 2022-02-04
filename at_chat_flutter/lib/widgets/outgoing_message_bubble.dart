@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:at_chat_flutter/models/message_model.dart';
-import 'package:at_chat_flutter/services/chat_service.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
 import 'package:at_chat_flutter/utils/dialog_utils.dart';
 
@@ -76,7 +74,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
   }
 
   Widget _buildContentMessage() {
-    if (widget.message?.contentType == MessageContentType.IMAGE) {
+    if (widget.message?.contentType == MessageContentType.image) {
       return ConstrainedBox(
         constraints: BoxConstraints(maxHeight: 165.toWidth),
         child: Image.memory(widget.message?.imageData ?? Uint8List(0)),

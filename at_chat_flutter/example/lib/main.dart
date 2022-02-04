@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
                           await Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SecondScreen()));
+                                  builder: (context) => const SecondScreen()));
                         },
                         onError: (error) async {
                           _logger.severe('Onboarding throws $error error');
@@ -120,7 +120,6 @@ class _MyAppState extends State<MyApp> {
                         ),
                         onPressed: () {
                           FlutterKeychain.remove(key: '@atsign');
-                          print('after delete');
                         },
                         child: const Text('Clear paired atsigns',
                             style: TextStyle(color: Colors.black)))),

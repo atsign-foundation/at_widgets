@@ -1,3 +1,6 @@
+## 3.0.5
+- **DOCS**: Updated documentation
+
 ## 3.0.4
 - **DOCS**: Updated documentation
 

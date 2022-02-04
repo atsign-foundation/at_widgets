@@ -1,8 +1,6 @@
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/services/chat_service.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
-import 'package:at_chat_flutter/utils/dialog_utils.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_chat_flutter/widgets/incoming_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/outgoing_message_bubble.dart';
@@ -100,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
           color: Theme.of(context).brightness == Brightness.dark
               ? Colors.black87
               : Colors.white,
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.grey,
               offset: Offset(0.0, 1.0),
@@ -117,20 +115,21 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
                             widget.title,
-                            style: TextStyle(color: Colors.black, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 14),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: Text(
+                          child: const Text(
                             'Close',
                             style: TextStyle(
                                 color: Color(0xffFC7B30), fontSize: 14),
@@ -146,11 +145,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     builder: (context, snapshot) {
                       return (snapshot.connectionState ==
                               ConnectionState.waiting)
-                          ? Center(
+                          ? const Center(
                               child: CircularProgressIndicator(),
                             )
                           : (snapshot.data == null || snapshot.data!.isEmpty)
-                              ? Center(
+                              ? const Center(
                                   child: Text('No chat history found'),
                                 )
                               : ListView.builder(
@@ -160,10 +159,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 10.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
                                       child: snapshot.data![index].type ==
-                                              MessageType.INCOMING
+                                              MessageType.incoming
                                           ? IncomingMessageBubble(
                                               message: snapshot.data![index],
                                               color:
