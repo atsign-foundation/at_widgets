@@ -96,7 +96,7 @@ class _MyAppState extends State<MyApp> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                ProfilePage()));
+                                                const ProfilePage()));
                                   },
                                   onError: (error) async {
                                     _logger.severe(
@@ -134,7 +134,6 @@ class _MyAppState extends State<MyApp> {
                                   ),
                                   onPressed: () {
                                     FlutterKeychain.remove(key: '@atsign');
-                                    print('after delete');
                                   },
                                   child: const Text('Clear paired atsigns',
                                       style: TextStyle(color: Colors.black)))),
