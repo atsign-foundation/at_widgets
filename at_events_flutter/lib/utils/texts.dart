@@ -38,6 +38,7 @@ class AllText {
   String DO_YOU_WANT_TO_EXIT = 'Do you want to exit';
   String DO_YOU_WANT_TO_CANCEL = 'Do you want to cancel';
   String EXITED = 'Exited';
+  String ACCEPTED = 'Accepted';
   String EXIT_EVENT = 'Exit Event';
   String CANCEL_EVENT = 'Cancel Event';
   String CANCELLING = 'Cancelling';

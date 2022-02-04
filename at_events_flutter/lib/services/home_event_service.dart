@@ -173,9 +173,11 @@ class HomeEventService {
             .locationSharingFor[_id]!;
 
         return EventInfo(
-            isSharing: _locationSharingFor.isSharing,
-            isExited: _locationSharingFor.isExited,
-            isAccepted: _locationSharingFor.isAccepted);
+          isSharing: _locationSharingFor.isSharing,
+          isExited: _locationSharingFor.isExited,
+          isAccepted: _locationSharingFor.isAccepted,
+          from: _locationSharingFor.from,
+        );
       }
     }
   }
@@ -195,9 +197,11 @@ class HomeEventService {
           .locationSharingFor[_id]!;
 
       return EventInfo(
-          isSharing: _locationSharingFor.isSharing,
-          isExited: _locationSharingFor.isExited,
-          isAccepted: _locationSharingFor.isAccepted);
+        isSharing: _locationSharingFor.isSharing,
+        isExited: _locationSharingFor.isExited,
+        isAccepted: _locationSharingFor.isAccepted,
+        from: _locationSharingFor.from,
+      );
     }
     // }
   }
