@@ -1,3 +1,4 @@
+import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_notify_flutter/screens/notify_screen.dart';
@@ -138,7 +139,7 @@ class _SecondScreenState extends State<SecondScreen> {
       atSignController.text = '@' + atSignController.text;
     }
     var checkPresence = await AtLookupImpl.findSecondary(
-        atSignController.text, MixedConstants.ROOT_DOMAIN, 64);
+        atSignController.text, AtEnv.rootDomain, 64);
     return checkPresence != null;
   }
 
@@ -154,7 +155,7 @@ class _SecondScreenState extends State<SecondScreen> {
       atClientManager,
       activeAtSign!,
       atClientPreference,
-      rootDomain: MixedConstants.ROOT_DOMAIN,
+      rootDomain: AtEnv.rootDomain,
     );
   }
 

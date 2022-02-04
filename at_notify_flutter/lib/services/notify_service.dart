@@ -34,8 +34,10 @@ class NotifyService {
   int? rootPort;
   String? currentAtSign;
 
+  /// List to store notification objects
   List<Notify> notifies = [];
 
+  /// Stream to put the notification object list
   StreamController<List<Notify>> notifyStreamController =
       StreamController<List<Notify>>.broadcast();
 
@@ -47,6 +49,7 @@ class NotifyService {
     notifyStreamController.close();
   }
 
+  /// Initialise function to set the client preference, atsign and root domain
   void initNotifyService(
       AtClientPreference atClientPreference,
       String currentAtSignFromApp,
@@ -232,7 +235,7 @@ class NotifyService {
     var androidChannelSpecifics = const AndroidNotificationDetails(
       'notify_id',
       'notify',
-      "notify_description",
+      channelDescription: "notify_description",
       importance: Importance.high,
       priority: Priority.high,
       playSound: true,
@@ -258,6 +261,7 @@ class NotifyService {
   }
 }
 
+/// Model for received notification
 class ReceivedNotification {
   final int id;
   final String title;
