@@ -172,7 +172,7 @@ class _SelectLocationState extends State<SelectLocation> {
                                       child: Text(
                                           AllText()
                                               .CANNOT_ACCESS_LOCATION_PERMISSION,
-                                          maxLines: 1,
+                                          maxLines: 4,
                                           overflow: TextOverflow.ellipsis,
                                           style: CustomTextStyles().red12),
                                     )
