@@ -14,14 +14,14 @@ dependencies:
   flutter:
     sdk: flutter
   at_contact: ^3.0.3
-  at_common_flutter: ^2.0.4
-  at_commons: ^3.0.2
-  at_client_mobile: ^3.1.3
-  at_client: ^3.0.7
-  at_lookup: ^3.0.5
+  at_common_flutter: ^2.0.5
+  at_commons: ^3.0.3
+  at_client_mobile: ^3.1.4
+  at_client: ^3.0.9
+  at_lookup: ^3.0.7
 
   #Picker
-  file_picker: ^4.2.3
+  file_picker: ^4.3.3
 
 dev_dependencies:
   flutter_lints: ^1.0.4

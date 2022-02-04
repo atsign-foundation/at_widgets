@@ -1,46 +1,47 @@
 ## 3.0.3
-- updated dependencies
+- **CHORE**: Updated dependencies
+
 ## 3.0.2
-- updated dependencies and bug fixes
+- **CHORE**: Updated dependencies
+- **FIX**: Fix for cached messages
 
 ## 3.0.1
-- updated documentation
-- bug fix for outgoing message not displayed immediately
+- **DOCS**: Updated documentation
+- **FIX**: Fix for outgoing message not displayed immediately
 
 ## 3.0.0
-- added ability to handle images
-- added ability to delete messages
-- Updated packages to rSDK
+- **FEAT**: Added ability to handle images
+- **FEAT**: Added ability to delete messages
+- **CHORE**: Updated packages to rSDK
 
 ## 2.0.2
-- Updated repository link, description
-- Updated packages
+- **CHORE**: Updated repository link, description and packages
 
 ## 2.0.1
-- Updated packages
+- **CHORE**: Updated packages
 
 ## 2.0.0
-- Null safe version
+- **CHORE**: Upgraded to Null safe version
 
 ## 1.0.2
-- Fix for key saving failure
+- **FIX**: Fix for key saving failure
 
 ## 1.0.1
-- Updated dependent packages
-- Improved avatar placeholder
+- **CHORE**: Updated dependent packages
+- **FIX**: Improved avatar placeholder
 
 ## 1.0.0
-- Updated example app
+- **CHORE**: Updated example app
 
 ## 0.0.4
-- Updated dependent packages
+- **CHORE**: Updated dependent packages
 
 ## 0.0.3
-- Fix for messages from different atsigns getting mixed on posting message
+- **FIX**: Fix for messages from different atsigns getting mixed on posting message
 
 ## 0.0.2
-- Fix for messages from different atsigns getting mixed
-- Updated dependency packages for adding monitoring refresh from sdk
+- **FIX**: Fix for messages from different atsigns getting mixed
+- **CHORE**: Updated dependency packages for adding monitoring refresh from sdk
 
 ## 0.0.1
 - The initial release provides a widget screen for one on one chat.
