@@ -13,10 +13,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  at_client_mobile: ^3.0.3
-  at_common_flutter: ^2.0.2
-  at_commons: ^3.0.0
-  fluttertoast: ^8.0.5
+  at_client_mobile: ^3.1.4
+  at_common_flutter: ^2.0.5
+  at_commons: ^3.0.3
+  fluttertoast: ^8.0.8
 
 
 dev_dependencies:

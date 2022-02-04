@@ -1,10 +1,8 @@
+import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
-import 'package:at_theme_flutter/services/theme_service.dart';
-import 'package:at_theme_flutter/utils/init_theme_flutter.dart';
 import 'package:at_theme_flutter_example/main.dart';
 import 'package:at_theme_flutter_example/src/utils/color_constants.dart';
-import 'package:at_theme_flutter_example/src/utils/constants.dart';
 import 'package:at_theme_flutter_example/src/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -32,8 +30,8 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    getAtSignAndInitializeChat();
-    initializeThemeService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    getAtSignAndInitialize();
+    initializeThemeService(rootDomain: AtEnv.rootDomain);
     tabController = TabController(length: 3, vsync: this);
     getSavedTheme();
   }
@@ -70,7 +68,9 @@ class _ProfilePageState extends State<ProfilePage>
           children: <Widget>[
             Row(
               children: [
-                CircleAvatar(backgroundColor: appTheme.primaryColor,),
+                CircleAvatar(
+                  backgroundColor: appTheme.primaryColor,
+                ),
                 SizedBox(width: 8),
                 Expanded(
                   child: Column(
@@ -265,7 +265,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  void getAtSignAndInitializeChat() async {
+  void getAtSignAndInitialize() async {
     var currentAtSign = atClientManager.atClient.getCurrentAtSign();
     setState(() {
       activeAtSign = currentAtSign;

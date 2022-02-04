@@ -1,52 +1,60 @@
-<img src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
-### Now for a little internet optimism
+[![pub package](https://img.shields.io/pub/v/at_theme_flutter)](https://pub.dev/packages/at_theme_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
-[![pub package](https://img.shields.io/pub/v/at_theme_flutter)](https://pub.dev/packages/at_theme_flutter) [![pub points](https://badges.bar/at_theme_flutter/pub%20points)](https://pub.dev/packages/at_theme_flutter/score) [![build status](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml/badge.svg?branch=trunk)](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+## Overview
 
-# at_theme_flutter
+The at_theme_flutter package is for Flutter developers who want to add ability to switch theme in their @‎platform apps.
 
-## Introduction
+This open source package is written in Dart, supports Flutter and follows the
+@‎platform's decentralized, edge computing model with the following features: 
+- Cryptographic control of data access through personal data stores
+- No application backend needed
+- End to end encryption where only the data owner has the keys
+- Private and surveillance free connectivity
+- Ability to select and switch themes
 
-A Flutter plugin project to provide theme selection in @‎platform apps with ease.
+We call giving people control of access to their data “flipping the internet” and you can learn more about how it works by reading this
+[overview](https://atsign.dev/docs/overview/).
 
 ## Get Started:
 
-Initially to get a basic overview of the SDK, you must read the [atsign docs](https://atsign.dev/docs/overview/).
+There are three options to get started using this package.
 
-> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+### 1. Quick start - generate a skeleton app with at_app
+This package includes a working sample application in the [Example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_theme_flutter/example) directory that you can use to create a personalized copy using ```at_app create``` in four commands.
 
-
-### Installation:
-
- To use this library in your app, add it to your pubspec.yaml
-
-``` 
-  dependencies:
-    at_theme_flutter: ^1.0.0
+```sh
+$ flutter pub global activate at_app 
+$ at_app create --sample=<package ID> <app name> 
+$ cd <app name>
+$ flutter run
 ```
-#### Add to your project
-
- ```dart
- flutter pub get 
- ```
- #### Import in your application code
-
- ```dart
- import 'package:at_theme_flutter/at_theme_flutter.dart';
- ```
-### Clone it from github
-
- Feel free to fork a copy of the source from the [GitHub Repo](https://github.com/atsign-foundation/at_widgets)
+Notes: 
+1. You only need to run ```flutter pub global activate``` once
+2. Use ```at_app.bat``` for Windows
 
 
-## Initialising
+### 2. Clone it from GitHub
+Feel free to fork a copy the source from the [GitHub repo](https://github.com/atsign-foundation/at_widgets). The example code contained there is the same as the template that is used by at_app above.
+
+```sh
+$ git clone https://github.com/atsign-foundation/at_widgets.git
+```
+
+### 3. Manually add the package to a project
+
+Instructions on how to manually add this package to you project can be found on pub.dev [here](https://pub.dev/packages/at_theme_flutter/install).
+
+
+## How it works
+This package provide a UI screen to present the theme selection, preview and apply. It also supports custom theme data.
+
+### Setup
 The theme service needs to be initialised. The root domain has to be specified.
 
 ```dart
-initializeThemeService(
-    rootDomain: MixedConstants.ROOT_DOMAIN
-);
+initializeThemeService(rootDomain: AtEnv.rootDomain);
 ```
 
 ## Usage
@@ -62,11 +70,6 @@ var appTheme = AppTheme.from();
 var result = await setAppTheme(appTheme);
 ```
 
-## Example
-
-We have a good example with explanation in the [at_theme_flutter](https://pub.dev/packages/at_theme_flutter/example) package.
-
 ## Open source usage and contributions
-
- This is freely licensed open source code, so feel free to use it as is, suggest changes or enhancements or create your
- own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.
+This is open source code, so feel free to use it as is, suggest changes or 
+enhancements or create your own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.
