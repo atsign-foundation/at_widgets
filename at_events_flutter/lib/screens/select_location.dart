@@ -193,7 +193,13 @@ class _SelectLocationState extends State<SelectLocation> {
                         isError: true);
                     return;
                   }
+                  setState(() {
+                    isLoader = true;
+                  });
                   currentLocation = await getCurrentPosition();
+                  setState(() {
+                    isLoader = false;
+                  });
 
                   onLocationSelect(context, currentLocation!);
                 },
