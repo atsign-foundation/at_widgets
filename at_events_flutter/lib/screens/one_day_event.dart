@@ -47,9 +47,11 @@ class _OneDayEventState extends State<OneDayEvent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     CustomHeading(
-                        heading: AllText().ONE_DAY_EVENT, action: AllText().CANCEL),
+                        heading: AllText().ONE_DAY_EVENT,
+                        action: AllText().CANCEL),
                     const SizedBox(height: 25),
-                    Text(AllText().SELECT_DATE, style: CustomTextStyles().greyLabel14),
+                    Text(AllText().SELECT_DATE,
+                        style: CustomTextStyles().greyLabel14),
                     SizedBox(height: 6.toHeight),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +127,8 @@ class _OneDayEventState extends State<OneDayEvent> {
                       ],
                     ),
                     const SizedBox(height: 25),
-                    Text(AllText().SELECT_TIME, style: CustomTextStyles().greyLabel14),
+                    Text(AllText().SELECT_TIME,
+                        style: CustomTextStyles().greyLabel14),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -179,12 +182,15 @@ class _OneDayEventState extends State<OneDayEvent> {
                                   initialTime: eventData.event!.endTime != null
                                       ? TimeOfDay.fromDateTime(
                                           eventData.event!.endTime!)
-                                      : TimeOfDay.now(),
+                                      : (eventData.event!.startTime != null
+                                          ? TimeOfDay.fromDateTime(
+                                              eventData.event!.startTime!)
+                                          : TimeOfDay.now()),
                                   initialEntryMode: TimePickerEntryMode.input);
 
                               if (eventData.event!.endDate == null) {
                                 CustomToast().show(
-                                   AllText().SELECT_START_TIME_FIRST, context,
+                                    AllText().SELECT_START_TIME_FIRST, context,
                                     isError: true);
                                 return;
                               }

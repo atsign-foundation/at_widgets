@@ -109,9 +109,12 @@ class HomeEventService {
       }
       return showDialog<void>(
         context: AtEventNotificationListener().navKey!.currentContext!,
-        barrierDismissible: true,
+        barrierDismissible: false,
         builder: (BuildContext context) {
-          return EventNotificationDialog(eventData: eventNotificationModel);
+          return EventNotificationDialog(
+            eventData: eventNotificationModel,
+            key: UniqueKey(),
+          );
         },
       );
     }
@@ -170,9 +173,11 @@ class HomeEventService {
             .locationSharingFor[_id]!;
 
         return EventInfo(
-            isSharing: _locationSharingFor.isSharing,
-            isExited: _locationSharingFor.isExited,
-            isAccepted: _locationSharingFor.isAccepted);
+          isSharing: _locationSharingFor.isSharing,
+          isExited: _locationSharingFor.isExited,
+          isAccepted: _locationSharingFor.isAccepted,
+          from: _locationSharingFor.from,
+        );
       }
     }
   }
@@ -192,9 +197,11 @@ class HomeEventService {
           .locationSharingFor[_id]!;
 
       return EventInfo(
-          isSharing: _locationSharingFor.isSharing,
-          isExited: _locationSharingFor.isExited,
-          isAccepted: _locationSharingFor.isAccepted);
+        isSharing: _locationSharingFor.isSharing,
+        isExited: _locationSharingFor.isExited,
+        isAccepted: _locationSharingFor.isAccepted,
+        from: _locationSharingFor.from,
+      );
     }
     // }
   }

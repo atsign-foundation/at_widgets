@@ -17,24 +17,10 @@ Initially to get a basic overview of the SDK, you must read the [atsign docs](ht
 > To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
 
 
-### Installation:
+### Manually add the package to a project:
 
- To use this library in your app, add it to your pubspec.yaml
+Instructions on how to manually add this package to you project can be found on pub.dev [here](https://pub.dev/packages/at_events_flutter/install).
 
-```dart
-  dependencies:
-    at_events_flutter: ^3.1.1
-```
-#### Add to your project
-
- ```dart
- flutter pub get 
- ```
- #### Import in your application code
-
- ```dart
- import 'package:at_events_flutter/at_events_flutter.dart';
- ```
 ### Clone it from github
 
  Feel free to fork a copy of the source from the [GitHub Repo](https://github.com/atsign-foundation/at_widgets)
