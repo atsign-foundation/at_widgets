@@ -134,8 +134,8 @@ class _SecondScreenState extends State<SecondScreen> {
 
   void initializeEventService() {
     initialiseEventService(NavService.navKey,
-        mapKey: dotenv.get('MAP_KEY'),
-        apiKey: dotenv.get('API_KEY'),
+        mapKey: dotenv.get('MAP_KEY', fallback: ''),
+        apiKey: dotenv.get('API_KEY', fallback: ''),
         rootDomain: 'root.atsign.org',
         streamAlternative: updateEvents);
   }

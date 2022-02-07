@@ -244,8 +244,8 @@ class _SecondScreenState extends State<SecondScreen> {
     activeAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     initializeLocationService(
       NavService.navKey,
-      mapKey: dotenv.get('MAP_KEY'),
-      apiKey: dotenv.get('API_KEY'),
+      mapKey: dotenv.get('MAP_KEY', fallback: ''),
+      apiKey: dotenv.get('API_KEY', fallback: ''),
       showDialogBox: true,
     );
     newStream = getAllNotification() as Stream<List<KeyLocationModel>?>?;
