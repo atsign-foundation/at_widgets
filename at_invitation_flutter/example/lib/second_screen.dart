@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_invitation_flutter/at_invitation_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -7,6 +7,8 @@ import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SecondScreen extends StatefulWidget {
+  const SecondScreen({Key? key}) : super(key: key);
+
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
@@ -17,10 +19,6 @@ class _SecondScreenState extends State<SecondScreen> {
   GlobalKey<NavigatorState> scaffoldKey = GlobalKey();
   String chatWithAtSign = '';
   bool showOptions = false;
-
-  Uri? _latestUri;
-  Object? _err;
-  StreamSubscription? _sub;
 
   // for goup chat
   String groupId = '';
@@ -42,30 +40,30 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text('Second Screen')),
+      appBar: AppBar(title: const Text('Second Screen')),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             Container(
-              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
                 'Welcome $activeAtSign!',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
+            const Padding(
+              padding: EdgeInsets.all(20.0),
               child: Text(
                   'Use this button to invite any of your contacts to this app using their email or phone number'),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
             TextButton(
@@ -76,12 +74,12 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 shareAndInvite(context, 'welcome');
               },
-              child: Text(
+              child: const Text(
                 'Share with a friend',
                 style: TextStyle(color: Colors.black),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
             TextButton(
@@ -92,7 +90,7 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 _checkForInvite();
               },
-              child: Text(
+              child: const Text(
                 'Check for invite',
                 style: TextStyle(color: Colors.black),
               ),
@@ -112,12 +110,12 @@ class _SecondScreenState extends State<SecondScreen> {
         navkey: scaffoldKey,
         atClientInstance: atClientManager.atClient,
         currentAtSign: activeAtSign,
-        webPage: MixedConstants.COOKIE_PAGE,
-        rootDomain: MixedConstants.ROOT_DOMAIN);
+        webPage: MixedConstants.cookiePage,
+        rootDomain: AtEnv.rootDomain);
   }
 
   void _checkForInvite() async {
-    String _url = MixedConstants.COOKIE_PAGE;
+    String _url = MixedConstants.cookiePage;
     await canLaunch(_url)
         ? await launch(_url, forceSafariVC: false)
         : throw 'Could not launch $_url';
@@ -126,11 +124,8 @@ class _SecondScreenState extends State<SecondScreen> {
   void _handleIncomingLinks() {
     // It will handle app links while the app is already started - be it in
     // the foreground or in the background.
-    _sub = uriLinkStream.listen((Uri? uri) {
-      print('got uri: $uri');
-      if (!mounted) {
-        print('not mounted');
-      } else {
+    uriLinkStream.listen((Uri? uri) {
+      if (mounted) {
         if (uri != null) {
           var queryParameters = uri.queryParameters;
           print(queryParameters);
