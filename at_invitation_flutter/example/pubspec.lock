@@ -335,13 +335,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
-  flutter_pin_code_fields:
-    dependency: transitive
-    description:
-      name: flutter_pin_code_fields
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:

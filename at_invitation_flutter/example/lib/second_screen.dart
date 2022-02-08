@@ -112,12 +112,12 @@ class _SecondScreenState extends State<SecondScreen> {
         navkey: scaffoldKey,
         atClientInstance: atClientManager.atClient,
         currentAtSign: activeAtSign,
-        webPage: 'https://3cb8767f51fa.ngrok.io',
+        webPage: MixedConstants.COOKIE_PAGE,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
   void _checkForInvite() async {
-    String _url = "https://3cb8767f51fa.ngrok.io";
+    String _url = MixedConstants.COOKIE_PAGE;
     await canLaunch(_url)
         ? await launch(_url, forceSafariVC: false)
         : throw 'Could not launch $_url';
