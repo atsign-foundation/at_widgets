@@ -18,25 +18,25 @@ void main() {
     testWidgets('Contacts initial with text', (WidgetTester tester) async {
       await tester
           .pumpWidget(_homeWidget(home: ContactInitial(initials:'@')));
-      final customButton =
+      final contactsInitial =
           tester.widget<ContactInitial>(find.byType(ContactInitial));
-      expect(customButton.initials, '@');
+      expect(contactsInitial.initials, '@');
     });
     testWidgets('Contacts initial with background color',
         (WidgetTester tester) async {
       await tester.pumpWidget(_homeWidget(
           home: ContactInitial(initials: '@',backgroundColor: CustomColors.defaultColor,)));
-      final customButton =
+      final contactsInitial =
           tester.widget<ContactInitial>(find.byType(ContactInitial));
-      expect(customButton.backgroundColor, CustomColors.defaultColor,);
+      expect(contactsInitial.backgroundColor, CustomColors.defaultColor,);
     });
 
     testWidgets('Contacts initial without background color',
         (WidgetTester tester) async {
       await tester.pumpWidget(_homeWidget(home: ContactInitial(initials: '@',)));
-      final customButton =
+      final contactsInitial =
           tester.widget<ContactInitial>(find.byType(ContactInitial));
-      expect(customButton.backgroundColor, '');
+      expect(contactsInitial.backgroundColor, '');
     });
   });
 }
