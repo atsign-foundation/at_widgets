@@ -113,9 +113,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                             value: index,
                             activeColor: ColorConstants.appColor,
                             title: Text(currentItem,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                )),
+                                style: CustomTextStyles.fontR14primary),
                           ),
                         );
                       },
@@ -133,7 +131,9 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
         builder: (_) => AlertDialog(
               content: RichText(
                 text: TextSpan(
-                    style: CustomTextStyles.fontR14primary,
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? CustomTextStyles.fontR14secondary
+                        : CustomTextStyles.fontR14primary,
                     children: <InlineSpan>[
                       const TextSpan(text: 'You have selected  '),
                       TextSpan(

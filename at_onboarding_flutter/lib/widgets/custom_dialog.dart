@@ -262,8 +262,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                                         : !otp
                                                             ? 'Enter your email'
                                                             : 'Enter Verification Code',
-                                                // style: CustomTextStyles
-                                                //     .fontR16primary,
+                                                style: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR14secondary
+                                                    : CustomTextStyles
+                                                        .fontR16primary,
                                               ),
                                             ),
                                             widget.hideReferences
@@ -296,9 +301,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 !widget.isQR
                                                     ? 'A verification code has been sent to ${_emailController.text}'
                                                     : 'A verification code has been sent to your registered email.',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 13.toFont),
+                                                style: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR14secondary
+                                                    : CustomTextStyles
+                                                        .fontR14primary,
                                               )
                                             : Container()
                                       ]))
@@ -327,9 +336,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                             enabled: isfreeAtsign & !pair
                                                 ? false
                                                 : true,
-                                            style: TextStyle(
-                                                fontSize: 14.toFont,
-                                                height: 1.0.toHeight),
+                                            style:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR14secondary
+                                                    : CustomTextStyles
+                                                        .fontR14primary,
                                             validator: (String? value) {
                                               if (value == null ||
                                                   value == '') {
@@ -403,8 +416,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                             onChanged: (String value) {
                                               verificationCode = value;
                                             },
-                                            textStyle: const TextStyle(
-                                                fontWeight: FontWeight.w500),
+                                            textStyle:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR16secondary
+                                                    : CustomTextStyles
+                                                        .fontR16primary,
                                             pinTheme: PinTheme(
                                               selectedColor: Colors.black,
                                               inactiveColor: Colors.grey[500],
@@ -474,7 +492,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                     ],
                                   ),
                                   SizedBox(height: 20.toHeight),
-                                  const Text('Need an @sign?'),
+                                  Text(
+                                    'Need an @sign?',
+                                    style: Theme.of(context).brightness !=
+                                            Brightness.dark
+                                        ? CustomTextStyles.fontR14primary
+                                        : CustomTextStyles.fontR14secondary,
+                                  ),
                                   SizedBox(height: 5.toHeight),
                                   SizedBox(
                                       width: MediaQuery.of(context).size.width,
@@ -517,7 +541,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                   SizedBox(height: 20.toHeight),
                                   widget.hideQrScan
                                       ? const SizedBox()
-                                      : const Text('Have a QR Code?'),
+                                      : Text('Have a QR Code?',
+                                          style: Theme.of(context).brightness !=
+                                                  Brightness.dark
+                                              ? CustomTextStyles.fontR14primary
+                                              : CustomTextStyles
+                                                  .fontR14secondary),
                                   widget.hideQrScan
                                       ? const SizedBox()
                                       : SizedBox(height: 5.toHeight),
