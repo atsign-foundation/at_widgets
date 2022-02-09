@@ -892,8 +892,10 @@ class _CustomDialogState extends State<CustomDialog> {
     //   loading = true;
     // });
     try {
-      //await _controller!.stopCamera();
-      await _controller!.stopCamera();
+      //Relate: https://github.com/atsign-foundation/at_widgets/issues/353
+      //If added [await] will make an error because [stopCamera] invoke a channel method which don't have a return and waiting forever.
+      //It's an issue in flutter_qr_reader package and no need [await] keyword
+      _controller!.stopCamera();
     } catch (e) {
       print(e.toString());
     }
