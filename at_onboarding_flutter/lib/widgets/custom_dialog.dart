@@ -203,9 +203,14 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 .width,
                                             child: ElevatedButton(
                                               style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Colors.grey[800])),
+                                                  backgroundColor: Theme.of(
+                                                                  context)
+                                                              .brightness ==
+                                                          Brightness.light
+                                                      ? MaterialStateProperty
+                                                          .all(Colors.grey[800])
+                                                      : MaterialStateProperty
+                                                          .all(Colors.white)),
                                               // key: Key(''),
                                               onPressed: () {
                                                 setState(() {
@@ -215,7 +220,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                               child: Text(
                                                 'Cancel',
                                                 style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.light
+                                                        ? Colors.white
+                                                        : Colors.black,
                                                     fontSize: 15.toFont),
                                               ),
                                             ))
