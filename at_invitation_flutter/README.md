@@ -1,45 +1,52 @@
-<img src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
-
-## Now for some internet optimism.
-
-[![pub package](https://img.shields.io/pub/v/at_invitation_flutter)](https://pub.dev/packages/at_invitation_flutter) [![pub points](https://badges.bar/at_invitation_flutter/pub%20points)](https://pub.dev/packages/at_invitation_flutter/score) [![build status](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml/badge.svg?branch=trunk)](https://github.com/atsign-foundation/at_client_sdk/actions/workflows/at_client_sdk.yaml) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
 
-# at_invitation_flutter
-
-## Introduction
-
-A Flutter package to share data and invite contacts using SMS or email to the @platform.
-
-## Get Started:
-
-Initially to get a basic overview of the SDK, you must read the [atsign docs](https://atsign.dev/docs/overview/).
-
-> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+[![pub package](https://img.shields.io/pub/v/at_invitation_flutter)](https://pub.dev/packages/at_invitation_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 
-### Installation:
+## Overview
+The at_invitation_flutter package is for Flutter developers who want to share data and invite contacts using SMS or email to the @platform.
 
- To use this library in your app, add it to your pubspec.yaml
 
-``` 
-  dependencies:
-    at_invitation_flutter: ^1.0.1
+This open source package is written in Dart, supports Flutter and follows the @‎platform's decentralized, edge computing model with the following features: 
+- Cryptographic control of data access through personal data stores
+- No application backend needed
+- End to end encryption where only the data owner has the keys
+- Private and surveillance free connectivity
+- Ability to send an invite to people not on the apps built on @‎platform
+
+We call giving people control of access to their data “flipping the internet” and you can learn more about how it works by reading this [overview](https://atsign.dev/docs/overview/).
+
+## Get started
+There are three options to get started using this package.
+
+### 1. Quick start - generate a skeleton app with at_app
+This package includes a working sample application in the [Example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_invitation_flutter/example) directory that you can use to create a personalized copy using ```at_app create``` in four commands.
+
+```sh
+$ flutter pub global activate at_app 
+$ at_app create --sample=<package ID> <app name> 
+$ cd <app name>
+$ flutter run
 ```
-#### Add to your project
+Notes: 
+1. You only need to run ```flutter pub global activate``` once
+2. Use ```at_app.bat``` for Windows
 
- ```dart
- flutter pub get 
- ```
- #### Import in your application code
+### 2. Clone it from GitHub
+Feel free to fork a copy of the source from the [GitHub repo](https://github.com/atsign-foundation/at_widgets). The example code contained there is the same as the template that is used by at_app above.
 
- ```dart
- import 'package:at_invitation_flutter/at_invitation_flutter.dart';
- ```
-### Clone it from github
+```sh
+$ git clone https://github.com/atsign-foundation/at_widgets.git
+```
 
- Feel free to fork a copy of the source from the [GitHub Repo](https://github.com/atsign-foundation/at_widgets)
+### 3. Manually add the package to a project
 
+Instructions on how to manually add this package to you project can be found on pub.dev [here](https://pub.dev/packages/at_invitation_flutter/install).
+
+## How it works
+
+### Setup
 ### Initialising:
 It is expected that the app will first create an AtClientService instance and authenticate an atsign.
 
@@ -57,7 +64,6 @@ initializeInvitationService(
 The app also needs to handle deep links and handle incoming link with parameters.
 The [uni_links](https://pub.dev/packages/uni_links) package can be used for this.
 
-
 ### Webpage requirements
 A webpage with app information like store links will be required. It also needs to have the javascript functions provided in this [file](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_invitation_flutter/webpage_content/cookieManager.js). The function `checkAndWriteCookie` needs to be called on the `onLoad` event of the webpage.
 
@@ -67,7 +73,7 @@ A webpage with app information like store links will be required. It also needs 
   
 ### Usage
 
-### Share a Invite
+### Share an invite
 ```
 onPressed: () 
 {
@@ -75,17 +81,13 @@ onPressed: ()
 }
 ```
 
-### Fetch a Invite
+### Fetch an invite
 ```
 fetchInviteData(context, queryParameters['key'] ?? '',
               queryParameters['atsign'] ?? '');
 ```
 
-## Example
-
-We have a good example with explanation in the [at_invitation_flutter](https://pub.dev/packages/at_invitation_flutter/example) package.
 
 ## Open source usage and contributions
 
- This is freely licensed open source code, so feel free to use it as is, suggest changes or enhancements or create your
- own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.
+This is open source code, so feel free to use it as is, suggest changes or enhancements or create your own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.
