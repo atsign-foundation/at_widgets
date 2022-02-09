@@ -1,4 +1,6 @@
+import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
+import 'package:example/ui_options.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 
@@ -71,7 +73,39 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () async {
                 await AtSyncUIService().sync();
               },
-              child: const Text('Sync'),
+              child: const Text('Default Sync'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await AtSyncUIService().sync(
+                  atSyncUIOverlay: AtSyncUIOverlay.dialog,
+                );
+              },
+              child: const Text('Sync with dialog overlay'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await AtSyncUIService().sync(
+                  atSyncUIOverlay: AtSyncUIOverlay.snackbar,
+                );
+              },
+              child: const Text('Sync with snackbar'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await AtSyncUIService().sync(
+                  atSyncUIOverlay: AtSyncUIOverlay.snackbar,
+                  isSnackbarOverlay: true,
+                );
+              },
+              child: const Text('Sync with overlay snackbar'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const UIOptions()));
+              },
+              child: const Text('See all UI options'),
             ),
           ],
         ),

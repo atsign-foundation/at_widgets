@@ -316,7 +316,6 @@ class AtSyncUI {
   ) {
     return Container(
       padding: const EdgeInsets.all(8),
-      height: 30,
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).padding.bottom > 0
             ? MediaQuery.of(context).padding.bottom
@@ -326,9 +325,9 @@ class AtSyncUI {
         borderRadius: BorderRadius.circular(20),
         color: backgroundColor,
       ),
-      alignment: Alignment.center,
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           style == AtSyncUIStyle.cupertino

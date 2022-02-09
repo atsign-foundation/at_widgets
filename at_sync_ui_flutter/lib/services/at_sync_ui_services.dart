@@ -60,10 +60,20 @@ class AtSyncUIService {
     syncService.setOnDone(_onSuccessCallback);
   }
 
-  Future<void> sync() async {
+  Future<void> sync({
+    AtSyncUIOverlay? atSyncUIOverlay,
+    bool? isSnackbarOverlay = false,
+  }) async {
     assert(syncService != null, "AtSyncUIService not initialised");
 
-    _show();
+    if (atSyncUIOverlay != null) {
+      this.atSyncUIOverlay = atSyncUIOverlay;
+    }
+
+    _show(
+      atSyncUIOverlay: atSyncUIOverlay,
+      isSnackbarOverlay: isSnackbarOverlay,
+    );
     syncService.sync(onDone: _onSuccessCallback);
   }
 
@@ -80,15 +90,21 @@ class AtSyncUIService {
     }
   }
 
-  void _show() {
-    if (atSyncUIOverlay == AtSyncUIOverlay.dialog) {
+  void _show({
+    AtSyncUIOverlay? atSyncUIOverlay,
+    bool? isSnackbarOverlay = false,
+  }) {
+    if ((atSyncUIOverlay ?? this.atSyncUIOverlay) == AtSyncUIOverlay.dialog) {
       AtSyncUI.instance.showDialog(
-          message: showTextWhileSyncing ? 'Sync in progress' : null);
+        message: showTextWhileSyncing ? 'Sync in progress' : null,
+      );
       return;
     }
 
     AtSyncUI.instance.showSnackBar(
-        message: showTextWhileSyncing ? 'Sync in progress' : null);
+      message: showTextWhileSyncing ? 'Sync in progress' : null,
+      isSnackbarOverlay: isSnackbarOverlay,
+    );
   }
 
   void _hide() {
