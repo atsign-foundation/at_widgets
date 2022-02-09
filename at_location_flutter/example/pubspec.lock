@@ -85,13 +85,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.3"
+  at_contacts_flutter:
+    dependency: transitive
+    description:
+      name: at_contacts_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.2"
   at_location_flutter:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "3.1.0"
+    version: "3.1.1"
   at_lookup:
     dependency: transitive
     description:
@@ -398,6 +405,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  flutter_slidable:
+    dependency: transitive
+    description:
+      name: flutter_slidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter

@@ -249,11 +249,12 @@ class AtLocationNotificationListener {
     if (showDialogBox) {
       return showDialog<void>(
         context: navKey.currentContext!,
-        barrierDismissible: true,
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return NotificationDialog(
             userName: fromAtSign,
             locationData: locationData,
+            key: UniqueKey(),
           );
         },
       );

@@ -15,7 +15,8 @@ import 'package:latlong2/latlong.dart';
 class SelectedLocation extends StatefulWidget {
   final LatLng point;
   final String displayName;
-  const SelectedLocation(this.displayName, this.point, {Key? key})
+  final String? label;
+  const SelectedLocation(this.displayName, this.point, {Key? key, this.label})
       : super(key: key);
   @override
   _SelectedLocationState createState() => _SelectedLocationState();
@@ -23,6 +24,15 @@ class SelectedLocation extends StatefulWidget {
 
 class _SelectedLocationState extends State<SelectedLocation> {
   var mapController = MapController();
+
+  @override
+  void initState() {
+    if (widget.label != null) {
+      EventService().eventNotificationModel!.venue!.label = widget.label;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
