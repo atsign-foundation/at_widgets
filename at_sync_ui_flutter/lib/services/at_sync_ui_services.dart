@@ -15,15 +15,43 @@ class AtSyncUIService {
 
   Function? onSuccessCallback, onErrorCallback;
   var syncService;
+  AtSyncUIStyle atSyncUIStyle = AtSyncUIStyle.cupertino;
+  AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.dialog;
+  bool showTextWhileSyncing = true;
 
   void init({
     required GlobalKey<NavigatorState> appNavigator,
+    AtSyncUIStyle? atSyncUIStyle,
+    AtSyncUIOverlay? atSyncUIOverlay,
     Function? onSuccessCallback,
     Function? onErrorCallback,
+    Color? primaryColor,
+    Color? backgroundColor,
+    Color? labelColor,
+    AtSyncUIStyle? style,
+    bool? showTextWhileSyncing,
+    bool? isSnackbarOverlay,
   }) {
     this.onSuccessCallback = onSuccessCallback;
     this.onErrorCallback = onErrorCallback;
     AtSyncUI.instance.setAppNavigatorKey(appNavigator);
+    if (isSnackbarOverlay != null) {
+      AtSyncUI.instance.setSnackbarType(isSnackbarOverlay);
+    }
+    if (atSyncUIStyle != null) {
+      this.atSyncUIStyle = atSyncUIStyle;
+    }
+    if (atSyncUIOverlay != null) {
+      this.atSyncUIOverlay = atSyncUIOverlay;
+    }
+    this.showTextWhileSyncing = showTextWhileSyncing ?? true;
+
+    AtSyncUI.instance.configTheme(
+      primaryColor: primaryColor,
+      backgroundColor: backgroundColor,
+      labelColor: labelColor,
+      style: style,
+    );
 
     var _atSyncUIController = AtSyncUIController();
     AtSyncUI.instance.setupController(controller: _atSyncUIController);
@@ -35,12 +63,12 @@ class AtSyncUIService {
   Future<void> sync() async {
     assert(syncService != null, "AtSyncUIService not initialised");
 
-    AtSyncUI.instance.showDialog();
+    _show();
     syncService.sync(onDone: _onSuccessCallback);
   }
 
   Future<void> _onSuccessCallback(SyncResult syncStatus) async {
-    AtSyncUI.instance.hideDialog();
+    _hide();
 
     if ((syncStatus.syncStatus == SyncStatus.failure) &&
         (onErrorCallback != null)) {
@@ -50,5 +78,25 @@ class AtSyncUIService {
     if (onSuccessCallback != null) {
       onSuccessCallback!(syncStatus);
     }
+  }
+
+  void _show() {
+    if (atSyncUIOverlay == AtSyncUIOverlay.dialog) {
+      AtSyncUI.instance.showDialog(
+          message: showTextWhileSyncing ? 'Sync in progress' : null);
+      return;
+    }
+
+    AtSyncUI.instance.showSnackBar(
+        message: showTextWhileSyncing ? 'Sync in progress' : null);
+  }
+
+  void _hide() {
+    if (atSyncUIOverlay == AtSyncUIOverlay.dialog) {
+      AtSyncUI.instance.hideDialog();
+      return;
+    }
+
+    AtSyncUI.instance.hideSnackBar();
   }
 }

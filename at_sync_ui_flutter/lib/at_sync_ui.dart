@@ -11,6 +11,11 @@ enum AtSyncUIStyle {
   cupertino,
 }
 
+enum AtSyncUIOverlay {
+  dialog,
+  snackbar,
+}
+
 AtSyncUIStyle _kDefaultStyle = AtSyncUIStyle.cupertino;
 Color _kDefaultPrimaryColor = const Color(0xFFf4533d);
 Color _kDefaultBackgroundColor = const Color(0xFFFFFFFF);
@@ -62,6 +67,8 @@ class AtSyncUI {
 
   AtSyncUIController? get syncUIController => _syncUIController;
 
+  bool isSnackbarOverlay = false;
+
   ///Config
   AtSyncUIStyle _style = AtSyncUIStyle.cupertino;
   Color _primaryColor = _kDefaultPrimaryColor;
@@ -76,6 +83,11 @@ class AtSyncUI {
   /// It set [GlobalKey<NavigatorState>] to get [OverlayState] which use to add  [OverlayEntry]
   void setAppNavigatorKey(GlobalKey<NavigatorState>? appNavigator) {
     _appNavigatorKey = appNavigator;
+  }
+
+  /// [isSnackbarOverlay] if true, then snackbar will be an overlay
+  void setSnackbarType(bool isSnackbarOverlay) {
+    this.isSnackbarOverlay = isSnackbarOverlay;
   }
 
   /// Provide default theme for UI (dialog/snackBar ...) using in the app
@@ -152,29 +164,57 @@ class AtSyncUI {
   /// Show SnackBar UI
   /// Display fullscreen with 50% opacity and can't interact
   /// [AtSyncIndicator] place in bottomCenter of screen
-  void showSnackBar({String? message}) {
+  /// [isSnackbarOverlay] if true, then snackbar will be an overlay
+  void showSnackBar({String? message, bool? isSnackbarOverlay}) {
     assert(
         _appNavigatorKey != null, "Must set appNavigator before show dialog");
     assert(_appNavigatorKey!.currentState?.overlay != null,
         "Cannot get current context");
 
-    if (snackBarOverlayEntry != null) {
-      hideSnackBar();
+    if (isSnackbarOverlay != null) {
+      this.isSnackbarOverlay = isSnackbarOverlay;
     }
-    snackBarOverlayEntry = _buildSnackBarOverlayEntry(
-      primaryColors: _primaryColor,
-      backgroundColor: _backgroundColor,
-      labelColor: _labelColor,
-      style: _style,
-      message: message,
-    );
-    _appNavigatorKey?.currentState?.overlay?.insert(snackBarOverlayEntry!);
+
+    if (this.isSnackbarOverlay) {
+      if (snackBarOverlayEntry != null) {
+        hideSnackBar();
+      }
+      snackBarOverlayEntry = _buildSnackBarOverlayEntry(
+        primaryColors: _primaryColor,
+        backgroundColor: _backgroundColor,
+        labelColor: _labelColor,
+        style: _style,
+        message: message,
+      );
+      _appNavigatorKey?.currentState?.overlay?.insert(snackBarOverlayEntry!);
+    } else {
+      //// if interactive snackbar is needed
+      ScaffoldMessenger.of(_appNavigatorKey!.currentContext!)
+          .showSnackBar(SnackBar(
+              backgroundColor: _backgroundColor,
+              dismissDirection: DismissDirection.none,
+              content: _snackbarUI(
+                _appNavigatorKey!.currentContext!,
+                _primaryColor,
+                _backgroundColor,
+                _labelColor,
+                _style,
+                message,
+              ),
+              duration: const Duration(days: 365)));
+    }
   }
 
   /// Hide SnackBar UI
   void hideSnackBar() {
-    snackBarOverlayEntry?.remove();
-    snackBarOverlayEntry = null;
+    if (isSnackbarOverlay) {
+      snackBarOverlayEntry?.remove();
+      snackBarOverlayEntry = null;
+    } else {
+      //// if interactive snackbar is needed
+      ScaffoldMessenger.of(_appNavigatorKey!.currentContext!)
+          .hideCurrentSnackBar();
+    }
   }
 
   /// Build dialog OverlayEntry
@@ -253,51 +293,71 @@ class AtSyncUI {
         child: Container(
           color: Colors.black.withOpacity(0.5),
           alignment: Alignment.bottomCenter,
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).padding.bottom > 0
-                  ? MediaQuery.of(context).padding.bottom
-                  : 20,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: backgroundColor,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                style == AtSyncUIStyle.cupertino
-                    ? cupertino.AtSyncIndicator(
-                        color: primaryColors,
-                        radius: 12,
-                      )
-                    : material.AtSyncIndicator(
-                        color: primaryColors,
-                        radius: 12,
-                      ),
-                if ((message ?? '').isNotEmpty)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width - 68),
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: Text(
-                        message ?? '',
-                        style: TextStyle(
-                          color: labelColor,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  )
-              ],
-            ),
+          child: _snackbarUI(
+            context,
+            primaryColors,
+            backgroundColor,
+            labelColor,
+            style,
+            message,
           ),
         ),
       );
     });
+  }
+
+  static Widget _snackbarUI(
+    BuildContext context,
+    Color? primaryColors,
+    Color? backgroundColor,
+    Color? labelColor,
+    AtSyncUIStyle? style,
+    String? message,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      height: 30,
+      margin: EdgeInsets.only(
+        bottom: MediaQuery.of(context).padding.bottom > 0
+            ? MediaQuery.of(context).padding.bottom
+            : 20,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: backgroundColor,
+      ),
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          style == AtSyncUIStyle.cupertino
+              ? cupertino.AtSyncIndicator(
+                  color: primaryColors,
+                  radius: 12,
+                )
+              : material.AtSyncIndicator(
+                  color: primaryColors,
+                  radius: 12,
+                ),
+          if ((message ?? '').isNotEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width - 68),
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(
+                  message ?? '',
+                  style: TextStyle(
+                    color: labelColor,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            )
+        ],
+      ),
+    );
   }
 }
