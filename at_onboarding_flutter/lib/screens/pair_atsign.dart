@@ -507,7 +507,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     // QR Scanner
     if (scanQR) {
       return Scaffold(
-        backgroundColor: ColorConstants.light,
+        backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
           showBackButton: true,
           title: Strings.pairAtsignTitle,
@@ -525,7 +525,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       );
     }
     return Scaffold(
-        backgroundColor: ColorConstants.light,
+        backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
           showBackButton: true,
           title: Strings.pairAtsignTitle,
