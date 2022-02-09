@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_onboarding_flutter/widgets/custom_reset_button.dart';
+import 'package:at_onboarding_flutter/utils/color_constants.dart';
 
 Future<void> main() async {
   await AtEnv.load();
@@ -101,6 +102,7 @@ class _MyAppState extends State<MyApp> {
                           domain: AtEnv.rootDomain,
                           rootEnvironment: AtEnv.rootEnvironment,
                           appAPIKey: AtEnv.appApiKey,
+                          appColor: Theme.of(context).primaryColor,
                           onboard: (value, atsign) {
                             _logger.finer('Successfully onboarded $atsign');
                           },

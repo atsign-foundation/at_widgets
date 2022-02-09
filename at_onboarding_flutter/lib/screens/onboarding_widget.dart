@@ -100,6 +100,7 @@ class Onboarding {
     }
   }
   void _show() async {
+    ColorConstants.darkTheme = Theme.of(context).brightness == Brightness.dark;
     await showDialog(
       context: context,
       barrierDismissible: false,
