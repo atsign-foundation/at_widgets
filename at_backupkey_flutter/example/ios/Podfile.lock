@@ -127,7 +127,7 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
   SwiftyGif: 5d4af95df24caf1c570dbbcb32a3b8a0763bc6d7
-  url_launcher_ios: 02f1989d4e14e998335b02b67a7590fa34f971af
+  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   webview_flutter_wkwebview: 005fbd90c888a42c5690919a1527ecc6649e1162
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c

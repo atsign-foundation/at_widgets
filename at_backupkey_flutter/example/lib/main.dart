@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:at_backupkey_flutter/at_backupkey_flutter.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +12,14 @@ enum OnboardingState {
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 final StreamController<ThemeMode> updateThemeMode =
     StreamController<ThemeMode>.broadcast();
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -56,17 +56,19 @@ class _MyAppState extends State<MyApp> {
       builder: (context, snapshot) {
         final themeMode = snapshot.data;
         return MaterialApp(
-          theme: ThemeData(
+          theme: ThemeData().copyWith(
             brightness: Brightness.light,
-            primaryColor: Color(0xFFf4533d),
-            accentColor: Colors.black,
+            primaryColor: const Color(0xFFf4533d),
+            colorScheme:
+                ThemeData().colorScheme.copyWith(secondary: Colors.black),
             backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
           ),
-          darkTheme: ThemeData(
+          darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
             primaryColor: Colors.blue,
-            accentColor: Colors.white,
+            colorScheme:
+                ThemeData().colorScheme.copyWith(secondary: Colors.white),
             backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
           ),
@@ -103,10 +105,11 @@ class _MyAppState extends State<MyApp> {
                           Onboarding(
                             context: context,
                             domain: rootDomain,
-                            appColor: Color.fromARGB(255, 240, 94, 62),
+                            rootEnvironment: RootEnvironment.Staging,
+                            appColor: const Color.fromARGB(255, 240, 94, 62),
                             atClientPreference: _atClientPreference,
                             onboard: (map, atsign) {
-                              this.atClientServiceMap = map;
+                              atClientServiceMap = map;
                               this.atsign = atsign;
                               onboardingState = OnboardingState.success;
                               setState(() {});
@@ -117,7 +120,7 @@ class _MyAppState extends State<MyApp> {
                             },
                           );
                         },
-                        child: Text('Onboard my @sign'),
+                        child: const Text('Onboard my @sign'),
                       ),
                     ),
                   if (onboardingState == OnboardingState.error ||
@@ -132,7 +135,7 @@ class _MyAppState extends State<MyApp> {
                           onboardingState = OnboardingState.initial;
                           setState(() {});
                         },
-                        child: Text('Clear onboarded @sign'),
+                        child: const Text('Clear onboarded @sign'),
                       ),
                     ),
                   if (onboardingState == OnboardingState.success)
@@ -140,25 +143,20 @@ class _MyAppState extends State<MyApp> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 32),
-                        Text('Default button:'),
-                        BackupKeyWidget(
-                          atsign: this.atsign,
-                          atClientService: this.atClientServiceMap[atsign],
-                        ),
-                        SizedBox(height: 16),
-                        Text('Custom button:'),
+                        const SizedBox(height: 32),
+                        const Text('Default button:'),
+                        BackupKeyWidget(atsign: atsign),
+                        const SizedBox(height: 16),
+                        const Text('Custom button:'),
                         ElevatedButton.icon(
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.file_copy,
                             color: Colors.white,
                           ),
-                          label: Text('Backup your key'),
+                          label: const Text('Backup your key'),
                           onPressed: () async {
-                            BackupKeyWidget(
-                              atsign: atsign,
-                              atClientService: atClientServiceMap[atsign],
-                            ).showBackupDialog(context);
+                            BackupKeyWidget(atsign: atsign)
+                                .showBackupDialog(context);
                           },
                         ),
                       ],
