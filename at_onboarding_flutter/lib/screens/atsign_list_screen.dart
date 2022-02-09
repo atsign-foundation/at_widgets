@@ -17,7 +17,9 @@ class AtsignListScreen extends StatefulWidget {
   /// the new atsign selected in the free atsign generator
   final String? newAtsign;
 
-  const AtsignListScreen({required this.atsigns, this.message, this.newAtsign});
+  const AtsignListScreen(
+      {Key? key, required this.atsigns, this.message, this.newAtsign})
+      : super(key: key);
 
   @override
   _AtsignListScreenState createState() => _AtsignListScreenState();
@@ -145,8 +147,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                   onPressed: () => Navigator.pop(_),
                   child: Text(
                     Strings.cancelButton,
-                    style: TextStyle(
-                        fontSize: 12.toFont),
+                    style: TextStyle(fontSize: 12.toFont),
                   ),
                 ),
                 TextButton(
@@ -157,8 +158,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                   child: Text(
                     'Yes, continue',
                     style: TextStyle(
-                        fontSize: 12.toFont,
-                        fontWeight: FontWeight.bold),
+                        fontSize: 12.toFont, fontWeight: FontWeight.bold),
                   ),
                 )
               ],

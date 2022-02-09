@@ -6,7 +6,6 @@ import 'package:at_notify_flutter/services/notify_service.dart';
 import 'package:at_notify_flutter/utils/init_notify_service.dart';
 import 'package:at_notify_flutter/utils/notify_utils.dart';
 
-import 'constants.dart';
 import 'package:at_lookup/at_lookup.dart';
 
 import 'main.dart';
