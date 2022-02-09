@@ -6,14 +6,14 @@ description: Demonstrates how to use the at_backupkey_flutter plugin.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
+  flutter: ">=1.20.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  at_onboarding_flutter:
-    path: ../../at_onboarding_flutter
+  at_onboarding_flutter: ^3.1.4
 
   # When depending on this package from a real application you should use:
   #   at_backupkey_flutter: ^x.y.z

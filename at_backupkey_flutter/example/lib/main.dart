@@ -19,15 +19,16 @@ final StreamController<ThemeMode> updateThemeMode =
     StreamController<ThemeMode>.broadcast();
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  static const appKey = Key('myapp');
+  const MyApp({Key key = appKey}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   OnboardingState onboardingState = OnboardingState.initial;
-  Map<String, AtClientService> atClientServiceMap;
-  String atsign;
+  late Map<String?, AtClientService>? atClientServiceMap;
+  String? atsign;
   final String rootDomain = 'root.atsign.org';
 
   @override
@@ -145,7 +146,7 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         const SizedBox(height: 32),
                         const Text('Default button:'),
-                        BackupKeyWidget(atsign: atsign),
+                        BackupKeyWidget(atsign: atsign ?? ''),
                         const SizedBox(height: 16),
                         const Text('Custom button:'),
                         ElevatedButton.icon(
@@ -155,7 +156,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                           label: const Text('Backup your key'),
                           onPressed: () async {
-                            BackupKeyWidget(atsign: atsign)
+                            BackupKeyWidget(atsign: atsign ?? '')
                                 .showBackupDialog(context);
                           },
                         ),
