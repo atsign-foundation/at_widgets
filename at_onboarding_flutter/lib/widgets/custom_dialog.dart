@@ -421,6 +421,9 @@ class _CustomDialogState extends State<CustomDialog> {
                                             onCompleted: (String v) {
                                               verificationCode = v;
                                             },
+                                            inputFormatters: <TextInputFormatter>[
+                                              UpperCaseInputFormatter(),
+                                            ],
                                           )),
                                 if (!isfreeAtsign &&
                                     !widget.isQR &&
@@ -1351,5 +1354,15 @@ class _CustomDialogState extends State<CustomDialog> {
       print('Error in desktopImagePicker $e');
       return null;
     }
+  }
+}
+
+class UpperCaseInputFormatter extends TextInputFormatter {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
   }
 }
