@@ -59,6 +59,14 @@ class SizeConfig {
     isReady = true;
   }
 
+  bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 700;
+  bool isTablet(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 700 &&
+      MediaQuery.of(context).size.width < 1200;
+  bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 1200;
+
   double getWidthRatio(double val) {
     if (screenWidth! >= 1200) {
       return val;
