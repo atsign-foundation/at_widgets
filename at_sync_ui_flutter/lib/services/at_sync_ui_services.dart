@@ -19,18 +19,25 @@ class AtSyncUIService {
   AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.dialog;
   bool showTextWhileSyncing = true;
 
+  /// [appNavigator] is used for navigation purpose
+  /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
+  /// [style] if material or cupertino style to be applied
+  /// [isSnackbarOverlay] decides if snackbar should be overlay or not
+  /// [showTextWhileSyncing] should text be shown while syncing
+  /// [onSuccessCallback] called after successful sync
+  /// [onErrorCallback] called after failure in sync
+  /// [primaryColor],[backgroundColor], [labelColor] will be used while displaying overlay/snackbar.
   void init({
     required GlobalKey<NavigatorState> appNavigator,
-    AtSyncUIStyle? atSyncUIStyle,
     AtSyncUIOverlay? atSyncUIOverlay,
+    AtSyncUIStyle? style,
+    bool? isSnackbarOverlay,
+    bool? showTextWhileSyncing,
     Function? onSuccessCallback,
     Function? onErrorCallback,
     Color? primaryColor,
     Color? backgroundColor,
     Color? labelColor,
-    AtSyncUIStyle? style,
-    bool? showTextWhileSyncing,
-    bool? isSnackbarOverlay,
   }) {
     this.onSuccessCallback = onSuccessCallback;
     this.onErrorCallback = onErrorCallback;
@@ -38,8 +45,8 @@ class AtSyncUIService {
     if (isSnackbarOverlay != null) {
       AtSyncUI.instance.setSnackbarType(isSnackbarOverlay);
     }
-    if (atSyncUIStyle != null) {
-      this.atSyncUIStyle = atSyncUIStyle;
+    if (style != null) {
+      atSyncUIStyle = style;
     }
     if (atSyncUIOverlay != null) {
       this.atSyncUIOverlay = atSyncUIOverlay;
@@ -60,6 +67,9 @@ class AtSyncUIService {
     syncService.setOnDone(_onSuccessCallback);
   }
 
+  /// calls sync and shows selected UI
+  /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
+  /// [isSnackbarOverlay] decides if snackbar should be overlay or not
   Future<void> sync({
     AtSyncUIOverlay? atSyncUIOverlay,
     bool? isSnackbarOverlay = false,
