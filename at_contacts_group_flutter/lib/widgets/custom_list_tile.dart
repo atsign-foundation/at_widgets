@@ -96,7 +96,7 @@ class _CustomListTileState extends State<CustomListTile> {
         isLoading = true;
       });
     }
-    Uint8List image;
+    Uint8List? image;
 
     if (widget.item!.contact == null) {
       if (widget.item?.group?.groupName == null) {
@@ -113,29 +113,29 @@ class _CustomListTileState extends State<CustomListTile> {
     } else {
       if ((widget.item?.contact?.tags != null &&
           widget.item?.contact?.tags!['image'] != null)) {
-        List<int> intList = widget.item?.contact?.tags!['image'].cast<int>();
-        image = Uint8List.fromList(intList);
-        if (Platform.isAndroid || Platform.isIOS) {
+        try {
+          List<int> intList = widget.item?.contact?.tags!['image'].cast<int>();
+          image = Uint8List.fromList(intList);
+        } catch (e) {
+          print('error in converting image: $e');
+        }
+
+        if ((Platform.isAndroid || Platform.isIOS) && image != null) {
           image = await FlutterImageCompress.compressWithList(
             image,
             minWidth: 400,
             minHeight: 200,
           );
-        }
 
-        contactImage = CustomCircleAvatar(
-          byteImage: image,
-          nonAsset: true,
-        );
-      } else {
-        String initial;
-        if (widget.item?.contact?.atSign == null) {
-          initial = '    ';
+          contactImage = CustomCircleAvatar(
+            byteImage: image,
+            nonAsset: true,
+          );
         } else {
-          initial = widget.item!.contact!.atSign!;
+          getContactInitial();
         }
-
-        contactImage = ContactInitial(initials: initial);
+      } else {
+        getContactInitial();
       }
     }
 
@@ -144,6 +144,16 @@ class _CustomListTileState extends State<CustomListTile> {
         isLoading = false;
       });
     }
+  }
+
+  getContactInitial() {
+    String initial;
+    if (widget.item?.contact?.atSign == null) {
+      initial = '    ';
+    } else {
+      initial = widget.item!.contact!.atSign!;
+    }
+    contactImage = ContactInitial(initials: initial);
   }
 
   @override

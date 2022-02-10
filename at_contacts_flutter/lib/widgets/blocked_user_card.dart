@@ -24,7 +24,6 @@ class BlockedUserCard extends StatefulWidget {
 }
 
 class _BlockedUserCardState extends State<BlockedUserCard> {
-
   @override
   void initState() {
     super.initState();
@@ -35,12 +34,20 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
     Widget contactImage;
     if (widget.blockeduser!.tags != null &&
         widget.blockeduser!.tags!['image'] != null) {
-      List<int> intList = widget.blockeduser!.tags!['image'].cast<int>();
-      var image = Uint8List.fromList(intList);
-      contactImage = CustomCircleAvatar(
-        byteImage: image,
-        nonAsset: true,
-      );
+      Uint8List? image;
+      try {
+        List<int> intList = widget.blockeduser!.tags!['image'].cast<int>();
+        image = Uint8List.fromList(intList);
+      } catch (e) {}
+
+      contactImage = image != null
+          ? CustomCircleAvatar(
+              byteImage: image,
+              nonAsset: true,
+            )
+          : ContactInitial(
+              initials: widget.blockeduser!.atSign!,
+            );
     } else {
       contactImage = ContactInitial(
         initials: widget.blockeduser!.atSign!,
