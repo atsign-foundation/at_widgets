@@ -7,46 +7,76 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _homeWidget({required Widget home}) {
+  Widget _wrapWidgetWithMaterialApp({required Widget buttonWidget}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
-      return home;
+      return buttonWidget;
     }));
   }
 
-  group('CustomButton widget Tests', () {
-    testWidgets('CustomButton with text onPressed', (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
-          home: ButtonWidget(
+  /// Functional test cases for ButtonWidget
+  group('Button widget Tests:', () {
+
+    // variable widget to be tested in each case
+    final buttonWidget = ButtonWidget(
+        onPress: () {},
+        colorButton: CustomColors.defaultColor,
+        textButton: 'Click here',
         borderRadius: const BorderRadius.all(
           Radius.circular(5.0),
         ),
-        colorButton: CustomColors.defaultColor,
-        onPress: () {
-          prints('Button Pressed ');
-        },
-        textButton: '',
-      )));
-      final customButton =
-          tester.widget<CustomButton>(find.byType(CustomButton));
-      expect(customButton.buttonText, 'Yes');
+      );
+
+    // Test case to identify button is used in screen or not
+    testWidgets("Button widget is used and shown on screen",
+        (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+
+      expect(find.byType(ButtonWidget), findsOneWidget);
+    });
+
+    // Test case to check button string is given
+    testWidgets("Button text displayed", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+      expect(find.text('Click here'), findsOneWidget);
+    });
+
+    // Test case to check onPress functionality
+    testWidgets("OnPress is given an action", (WidgetTester tester) async {
+      var onPressed = false;
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+      await tester.tap((find.byType(GestureDetector)));
+      expect(onPressed, true);
+    });
+
+    // Test case to check button BorderRadius
+    testWidgets("BorderRadius of button widget as circular",
+        (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+      final container = tester.widget<Container>(find.byType(Container));
+      final decoration = container.decoration as BoxDecoration;
+      final borderRadius = decoration.borderRadius as BorderRadius;
+      expect(borderRadius.bottomLeft, const Radius.circular(5.0));
+      expect(borderRadius.topLeft, const Radius.circular(5.0));
+      expect(borderRadius.bottomRight, const Radius.circular(5.0));
+      expect(borderRadius.topRight, const Radius.circular(5.0));
     });
     
-    testWidgets('CustomButton with text onPressed', (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
-          home: ButtonWidget(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(5.0),
-        ),
-        colorButton: CustomColors.defaultColor,
-        onPress: () {
-          prints('Button Pressed ');
-        },
-        textButton: '',
-      )));
-      final customButton =
-          tester.widget<CustomButton>(find.byType(CustomButton));
-      expect(customButton.buttonText, 'No');
+    // Test case to check button Color
+    testWidgets("Color of button is button default color",
+        (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+      final container = tester.widget<Container>(find.byType(Container));
+      final decoration = container.decoration as BoxDecoration;
+      expect(
+        decoration.color,
+        CustomColors.defaultColor,
+      );
     });
   });
 }

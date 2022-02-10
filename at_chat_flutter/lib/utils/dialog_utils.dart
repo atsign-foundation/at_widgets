@@ -79,7 +79,7 @@ Future<dynamic> showConfirmDialog(
               marginBottom: 16.0,
               marginRight: 4.0,
               colorText: Colors.white,
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(5.0),
               ),
               colorButton: CustomColors.defaultColor,
@@ -96,7 +96,7 @@ Future<dynamic> showConfirmDialog(
             marginRight: 8.0,
             colorText: CustomColors.defaultColor,
             colorButton: Colors.white,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(5.0),
             ),
             onPress: () {
