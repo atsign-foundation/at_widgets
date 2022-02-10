@@ -44,7 +44,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
               child: Container(
                 height: 100,
                 width: screenSize.width,
-                color: Colors.white,
+                color: Theme.of(context).backgroundColor,
                 child: Row(
                   children: [
                     Expanded(

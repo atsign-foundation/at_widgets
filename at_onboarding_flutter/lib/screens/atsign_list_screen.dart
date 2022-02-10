@@ -41,7 +41,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.light,
+      backgroundColor: ColorConstants.backgroundColor,
       appBar: CustomAppBar(
         title: 'Select @signs',
         showBackButton: true,
@@ -146,7 +146,6 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                   child: Text(
                     Strings.cancelButton,
                     style: TextStyle(
-                        color: ColorConstants.lightBackgroundColor,
                         fontSize: 12.toFont),
                   ),
                 ),
@@ -158,7 +157,6 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                   child: Text(
                     'Yes, continue',
                     style: TextStyle(
-                        color: ColorConstants.dark,
                         fontSize: 12.toFont,
                         fontWeight: FontWeight.bold),
                   ),

@@ -207,9 +207,14 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     : null,
                                             child: ElevatedButton(
                                               style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Colors.grey[800])),
+                                                  backgroundColor: Theme.of(
+                                                                  context)
+                                                              .brightness ==
+                                                          Brightness.light
+                                                      ? MaterialStateProperty
+                                                          .all(Colors.grey[800])
+                                                      : MaterialStateProperty
+                                                          .all(Colors.white)),
                                               // key: Key(''),
                                               onPressed: () {
                                                 setState(() {
@@ -219,7 +224,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                               child: Text(
                                                 'Cancel',
                                                 style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.light
+                                                        ? Colors.white
+                                                        : Colors.black,
                                                     fontSize: 15.toFont),
                                               ),
                                             ))
@@ -420,6 +429,9 @@ class _CustomDialogState extends State<CustomDialog> {
                                             onCompleted: (String v) {
                                               verificationCode = v;
                                             },
+                                            inputFormatters: <TextInputFormatter>[
+                                              UpperCaseInputFormatter(),
+                                            ],
                                           )),
                                 if (!isfreeAtsign &&
                                     !widget.isQR &&
@@ -939,8 +951,10 @@ class _CustomDialogState extends State<CustomDialog> {
     //   loading = true;
     // });
     try {
-      //await _controller!.stopCamera();
-      await _controller!.stopCamera();
+      //Relate: https://github.com/atsign-foundation/at_widgets/issues/353
+      //If added [await] will make an error because [stopCamera] invoke a channel method which don't have a return and waiting forever.
+      //It's an issue in flutter_qr_reader package and no need [await] keyword
+      _controller!.stopCamera();
     } catch (e) {
       print(e.toString());
     }
@@ -1387,5 +1401,15 @@ class _CustomDialogState extends State<CustomDialog> {
       print('Error in desktopImagePicker $e');
       return null;
     }
+  }
+}
+
+class UpperCaseInputFormatter extends TextInputFormatter {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
   }
 }

@@ -50,19 +50,17 @@ class AtSyncIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: radius * 2,
-        height: radius * 2,
-        child: Padding(
-          padding: EdgeInsets.all(radius / _kDefaultIndicatorRadius),
-          child: CircularProgressIndicator(
-            value: value,
-            backgroundColor: backgroundColor ??
-                (color ?? _kDefaultActiveTickColor).withAlpha(46),
-            color: (color ?? _kDefaultActiveTickColor).withAlpha(146),
-            strokeWidth: radius / _kDefaultIndicatorRadius * 2,
-          ),
+    return SizedBox(
+      width: radius * 2,
+      height: radius * 2,
+      child: Padding(
+        padding: EdgeInsets.all(radius / _kDefaultIndicatorRadius),
+        child: CircularProgressIndicator(
+          value: value,
+          backgroundColor: backgroundColor ??
+              (color ?? _kDefaultActiveTickColor).withAlpha(46),
+          color: (color ?? _kDefaultActiveTickColor).withAlpha(146),
+          strokeWidth: radius / _kDefaultIndicatorRadius * 2,
         ),
       ),
     );
