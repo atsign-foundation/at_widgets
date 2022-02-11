@@ -38,7 +38,7 @@ class _BottomSheetDialogState extends State<BottomSheetDialog> {
             padding: EdgeInsets.symmetric(
                 vertical: 16.toHeight, horizontal: 0.toWidth),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(5.0),
               ),
               border: Border.all(color: Colors.grey.shade50),
@@ -51,7 +51,7 @@ class _BottomSheetDialogState extends State<BottomSheetDialog> {
                 SizedBox(
                   width: 36.toWidth,
                 ),
-                Text(
+                const Text(
                   'Delete Message',
                   style: TextStyle(color: Colors.red, fontSize: 14),
                 ),
@@ -63,7 +63,7 @@ class _BottomSheetDialogState extends State<BottomSheetDialog> {
                   height: 20.toHeight,
                   child: Visibility(
                     visible: isLoading,
-                    child: CircularProgressIndicator(),
+                    child: const CircularProgressIndicator(),
                   ),
                 ),
               ],
@@ -82,13 +82,13 @@ class _BottomSheetDialogState extends State<BottomSheetDialog> {
             padding: EdgeInsets.symmetric(
                 vertical: 16.toHeight, horizontal: 0.toWidth),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(5.0),
               ),
               border: Border.all(color: Colors.grey.shade50),
               color: Colors.white,
             ),
-            child: Center(
+            child: const Center(
               child: Text(
                 'Cancel',
                 style: TextStyle(color: Colors.black, fontSize: 14),

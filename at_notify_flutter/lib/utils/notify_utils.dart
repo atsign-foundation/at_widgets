@@ -8,6 +8,7 @@ enum NotifyEnum {
   notifyText,
 }
 
+/// Notification handling service
 NotifyService _notifyService = NotifyService();
 
 /// Notify Text

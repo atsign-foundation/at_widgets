@@ -44,7 +44,7 @@ class AppConstants {
   static String? get apiKey => _apiKey;
 }
 
-extension customMessages on OnboardingStatus {
+extension CustomMessages on OnboardingStatus {
   String get message {
     switch (this) {
       case (OnboardingStatus.ACTIVATE):
@@ -66,16 +66,19 @@ enum RootEnvironment {
   /// Staging will provide you all the flexibility of
   /// latest server updates which are used for testing,
   /// but will not be available for production.
+  // ignore: constant_identifier_names
   Staging,
 
   /// Production is used for production environment.
+  // ignore: constant_identifier_names
   Production,
 
   /// Testing is used for testing(docker) environment.
+  // ignore: constant_identifier_names
   Testing,
 }
 
-extension value on RootEnvironment {
+extension Value on RootEnvironment {
   String get domain {
     switch (this) {
       case RootEnvironment.Staging:

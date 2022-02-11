@@ -11,7 +11,7 @@ void showBottomSheetDialog(BuildContext context, Function() deleteCallback) {
   showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
       ),
@@ -56,7 +56,8 @@ Future<dynamic> showConfirmDialog(
         title: Center(
           child: Text(
             title ?? 'Confirm Dialog',
-            style: TextStyle(color: CustomColors.defaultColor, fontSize: 20),
+            style:
+                const TextStyle(color: CustomColors.defaultColor, fontSize: 20),
           ),
         ),
         content: SingleChildScrollView(
@@ -65,7 +66,7 @@ Future<dynamic> showConfirmDialog(
               Text(
                 body ?? 'Do you want to delete this?',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black, fontSize: 14),
+                style: const TextStyle(color: Colors.black, fontSize: 14),
               ),
             ],
           ),
@@ -79,7 +80,7 @@ Future<dynamic> showConfirmDialog(
               marginBottom: 16.0,
               marginRight: 4.0,
               colorText: Colors.white,
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(5.0),
               ),
               colorButton: CustomColors.defaultColor,
@@ -96,7 +97,7 @@ Future<dynamic> showConfirmDialog(
             marginRight: 8.0,
             colorText: CustomColors.defaultColor,
             colorButton: Colors.white,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(5.0),
             ),
             onPress: () {

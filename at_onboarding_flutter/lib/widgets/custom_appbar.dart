@@ -11,10 +11,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget> actionItems;
 
   CustomAppBar(
-      {this.title,
+      {Key? key,
+      this.title,
       this.elevation = 0.0,
       this.showBackButton = false,
-      this.actionItems = const <Widget>[]});
+      this.actionItems = const <Widget>[]})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return AppBar(

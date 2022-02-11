@@ -22,7 +22,7 @@ class ColorConstants {
   static const Color redText = Color(0xFFF05E3E);
 
   ///dark background color
-  static Color dark = Color.fromARGB(255, 45, 42, 48);
+  static Color dark = const Color.fromARGB(255, 45, 42, 48);
 
   static Color light = Colors.white;
 

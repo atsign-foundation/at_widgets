@@ -13,7 +13,7 @@ class CustomButton extends StatelessWidget {
   final String? buttonText;
   final double? width;
   final double? height;
-  CustomButton(
+  const CustomButton(
       {Key? key,
       this.isInverted = false,
       this.buttonText,

@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 class ContactInitial extends StatelessWidget {
   final double size;
   final String initials;
-  int index;
 
-  ContactInitial(
+  const ContactInitial(
       {Key key = const Key('contact_initial'),
       this.size = 40,
-      this.initials = 'AT',
-      this.index = 2})
+      this.initials = 'AT'})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    int index = 2;
     if (initials.length < 3) {
       index = initials.length;
     } else {

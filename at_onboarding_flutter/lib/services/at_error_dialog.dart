@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:at_client/at_client.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_server_status/at_server_status.dart';
 
 /// Common error dialog to show the error to user
 class AtErrorDialog {
@@ -20,7 +18,7 @@ class AtErrorDialog {
           const Icon(Icons.sentiment_dissatisfied)
         ],
       ),
-      content: Text('$errorMessage'),
+      content: Text(errorMessage),
       actions: <Widget>[
         TextButton(
           onPressed: () {
@@ -61,32 +59,6 @@ class AtErrorDialog {
         return 'unable to connect. Please refresh the page';
     }
   }
-
-  static String _getServerStatusMessage(ServerStatus message) {
-    switch (message) {
-      case ServerStatus.unavailable:
-      case ServerStatus.stopped:
-        return 'Server is unavailable. Please try again later.';
-      case ServerStatus.error:
-        return 'Unable to connect. Please check with network connection and try again.';
-      default:
-        return '';
-    }
-  }
-
-  static String _message(OnboardingStatus status) {
-    switch (status) {
-      case (OnboardingStatus.ENCRYPTION_PRIVATE_KEY_NOT_FOUND):
-      case (OnboardingStatus.ENCRYPTION_PUBLIC_KEY_NOT_FOUND):
-      case (OnboardingStatus.PKAM_PRIVATE_KEY_NOT_FOUND):
-      case (OnboardingStatus.PKAM_PUBLIC_KEY_NOT_FOUND):
-        return 'Fatal error occurred. Please contact support@atsign.com';
-      case (OnboardingStatus.RESTORE):
-        return 'Please restore it with the available backup zip file as the local keys were missing.';
-      default:
-        return '';
-    }
-  }
 }
 
-extension customMessages on OnboardingStatus {}
+extension CustomMessages on OnboardingStatus {}

@@ -14,10 +14,10 @@ class BackUpKeyService {
   }
 
   static Future<Map<String, String>> getEncryptedKeys(String atsign) async {
-    var result;
+    Map<String, String> result;
     try {
       result = await KeychainUtil.getEncryptedKeys(atsign);
-      result[atsign] = await _getAESKey(atsign);
+      result[atsign] = await _getAESKey(atsign) ?? '';
     } catch (e) {
       result = {};
     }
