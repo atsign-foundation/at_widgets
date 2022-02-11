@@ -101,7 +101,9 @@ class _CustomListTileState extends State<CustomListTile> {
 
                 widget.selectedList!(widget.contactService!.selectedContacts);
               } else {
-                widget.onTap!();
+                if (widget.onTap != null) {
+                  widget.onTap!();
+                }
               }
             },
             title: Text(
