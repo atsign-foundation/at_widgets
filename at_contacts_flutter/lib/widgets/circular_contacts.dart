@@ -21,8 +21,10 @@ class CircularContacts extends StatelessWidget {
   Widget build(BuildContext context) {
     Uint8List? image;
     if (contact!.tags != null && contact!.tags!['image'] != null) {
-      List<int> intList = contact!.tags!['image'].cast<int>();
-      image = Uint8List.fromList(intList);
+      try {
+        List<int> intList = contact!.tags!['image'].cast<int>();
+        image = Uint8List.fromList(intList);
+      } catch (e) {}
     }
     return Container(
       padding:
@@ -36,16 +38,14 @@ class CircularContacts extends StatelessWidget {
               SizedBox(
                 height: 50.toHeight,
                 width: 50.toHeight,
-                child:
-                    (contact!.tags != null && contact!.tags!['image'] != null)
-                        ? CustomCircleAvatar(
-                            byteImage: image,
-                            nonAsset: true,
-                          )
-                        : ContactInitial(
-                            initials: contact!.atSign!,
-                          ),
-                // child:
+                child: (image != null)
+                    ? CustomCircleAvatar(
+                        byteImage: image,
+                        nonAsset: true,
+                      )
+                    : ContactInitial(
+                        initials: contact!.atSign!,
+                      ),
               ),
               Positioned(
                 right: 0,
@@ -53,13 +53,13 @@ class CircularContacts extends StatelessWidget {
                 child: GestureDetector(
                   onTap: onCrossPressed as void Function()?,
                   child: Container(
-                    height: 12.toHeight,
-                    width: 12.toHeight,
+                    height: 15.toHeight,
+                    width: 15.toHeight,
                     decoration: const BoxDecoration(
                         color: Colors.black, shape: BoxShape.circle),
                     child: Icon(
                       Icons.close,
-                      size: 10.toHeight,
+                      size: 15.toHeight,
                       color: Colors.white,
                     ),
                   ),

@@ -53,13 +53,13 @@ class CircularContacts extends StatelessWidget {
                 child: GestureDetector(
                   onTap: onCrossPressed as void Function()?,
                   child: Container(
-                    height: 12.toHeight,
-                    width: 12.toHeight,
+                    height: 15.toHeight,
+                    width: 15.toHeight,
                     decoration: BoxDecoration(
                         color: Colors.black, shape: BoxShape.circle),
                     child: Icon(
                       Icons.close,
-                      size: 10.toHeight,
+                      size: 15.toHeight,
                       color: Colors.white,
                     ),
                   ),
