@@ -5,6 +5,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'constants.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:at_utils/at_logger.dart';
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
+  final AtSignLogger _logger = AtSignLogger('Second Screen');
   AtClientService? atClientService;
   String activeAtSign = '';
   GlobalKey<NavigatorState> scaffoldKey = GlobalKey();
@@ -108,8 +110,6 @@ class _SecondScreenState extends State<SecondScreen> {
     });
     initializeInvitationService(
         navkey: scaffoldKey,
-        atClientInstance: atClientManager.atClient,
-        currentAtSign: activeAtSign,
         webPage: MixedConstants.cookiePage,
         rootDomain: AtEnv.rootDomain);
   }
@@ -128,13 +128,12 @@ class _SecondScreenState extends State<SecondScreen> {
       if (mounted) {
         if (uri != null) {
           var queryParameters = uri.queryParameters;
-          print(queryParameters);
           fetchInviteData(context, queryParameters['key'] ?? '',
               queryParameters['atsign'] ?? '');
         }
       }
     }, onError: (Object err) {
-      print('got err: $err');
+      _logger.severe('Error in incoming links: ${err.toString()}');
     });
   }
 }

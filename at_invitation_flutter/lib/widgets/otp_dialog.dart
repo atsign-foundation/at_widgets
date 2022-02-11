@@ -1,8 +1,6 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'dart:async';
 
 import 'package:at_common_flutter/at_common_flutter.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_invitation_flutter/utils/text_styles.dart'
     as invitation_text_styles;
 import 'package:flutter/material.dart';

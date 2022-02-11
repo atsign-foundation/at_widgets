@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_invitation_flutter/services/invitation_service.dart';
-import 'package:at_invitation_flutter/widgets/share_dialog.dart';
 
 void initializeInvitationService(
     {@required GlobalKey<NavigatorState>? navkey,
-    @required AtClient? atClientInstance,
-    @required String? currentAtSign,
     @required String? webPage,
     rootDomain = 'root.atsign.wtf',
     rootPort = 64}) {
-  InvitationService().initInvitationService(
-      navkey, atClientInstance, currentAtSign, webPage, rootDomain, rootPort);
+  InvitationService()
+      .initInvitationService(navkey, webPage, rootDomain, rootPort);
 }
 
 void shareAndInvite(BuildContext context, String jsonData) {
