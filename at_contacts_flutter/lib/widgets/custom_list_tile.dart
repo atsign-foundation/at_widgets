@@ -126,7 +126,7 @@ class _CustomListTileState extends State<CustomListTile> {
                 child: contactImage),
             trailing: IconButton(
               onPressed: widget.asSelectionTile
-                  ? selectRemoveContact
+                  ? null
                   : () {
                       if (widget.onTrailingPressed != null) {
                         widget.onTrailingPressed!(widget.contact!.atSign);
@@ -146,6 +146,4 @@ class _CustomListTileState extends State<CustomListTile> {
           );
         });
   }
-
-  void selectRemoveContact() {}
 }
