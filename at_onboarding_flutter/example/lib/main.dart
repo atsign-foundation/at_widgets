@@ -9,7 +9,6 @@ import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_onboarding_flutter/widgets/custom_reset_button.dart';
-import 'package:at_onboarding_flutter/utils/color_constants.dart';
 
 Future<void> main() async {
   await AtEnv.load();
@@ -53,19 +52,25 @@ class _MyAppState extends State<MyApp> {
         ThemeMode themeMode = snapshot.data ?? ThemeMode.light;
         return MaterialApp(
           // * The onboarding screen (first screen)
-          theme: ThemeData(
+          theme: ThemeData().copyWith(
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
-            accentColor: Colors.black,
+            colorScheme:
+                ThemeData().colorScheme.copyWith(secondary: Colors.black),
             backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
+            textTheme:
+                const TextTheme(bodyText1: TextStyle(color: Colors.black)),
           ),
-          darkTheme: ThemeData(
+          darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
             primaryColor: Colors.blue,
-            accentColor: Colors.white,
+            colorScheme:
+                ThemeData().colorScheme.copyWith(secondary: Colors.white),
             backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
+            textTheme:
+                const TextTheme(bodyText1: TextStyle(color: Colors.white)),
           ),
           themeMode: themeMode,
           home: Scaffold(
@@ -114,8 +119,7 @@ class _MyAppState extends State<MyApp> {
                       },
                       child: const Text('Onboard an @sign'),
                     ),
-                    CustomResetButton(
-                      loading: false,
+                    const CustomResetButton(
                       buttonText: 'Reset',
                       width: 90,
                       height: 40,

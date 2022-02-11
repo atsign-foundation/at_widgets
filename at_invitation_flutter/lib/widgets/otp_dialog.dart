@@ -1,22 +1,16 @@
-// ignore: import_of_legacy_library_into_null_safe
-import 'dart:io';
+import 'dart:async';
 
 import 'package:at_common_flutter/at_common_flutter.dart';
-// import 'package:at_common_flutter/services/size_config.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_invitation_flutter/services/invitation_service.dart';
 import 'package:at_invitation_flutter/utils/text_styles.dart'
-    as invitationTextStyles;
+    as invitation_text_styles;
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OTPDialog extends StatefulWidget {
   final String? uniqueID;
   final String? passcode;
   final String? webPageLink;
-  OTPDialog({Key? key, this.uniqueID, this.passcode, this.webPageLink})
+  const OTPDialog({Key? key, this.uniqueID, this.passcode, this.webPageLink})
       : super(key: key);
 
   @override
@@ -24,22 +18,28 @@ class OTPDialog extends StatefulWidget {
 }
 
 class _OTPDialogState extends State<OTPDialog> {
-  TextEditingController newTextEditingController = TextEditingController();
-  FocusNode focusNode = FocusNode();
+  TextEditingController textEditingController = TextEditingController();
+  // ignore: close_sinks
+  StreamController<ErrorAnimationType>? errorController;
+
+  @override
+  void initState() {
+    errorController = StreamController<ErrorAnimationType>();
+    super.initState();
+  }
 
   @override
   void dispose() {
-    // newTextEditingController.dispose();
-    // focusNode.dispose();
+    errorController!.close();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var _invitationService = InvitationService();
     var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-    return Container(
+    return SizedBox(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,
       child: SingleChildScrollView(
@@ -55,7 +55,7 @@ class _OTPDialogState extends State<OTPDialog> {
                 child: Text(
                   'Invite confirmation',
                   textAlign: TextAlign.center,
-                  style: invitationTextStyles.CustomTextStyles.primaryBold18,
+                  style: invitation_text_styles.CustomTextStyles.primaryBold18,
                 ),
               )
             ],
@@ -63,35 +63,59 @@ class _OTPDialogState extends State<OTPDialog> {
           content: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: 200.toHeight),
             child: Column(children: [
-              Text(
+              const Text(
                 'Please enter the OTP that you have recieved with the invite link',
                 textAlign: TextAlign.center,
               ),
               SizedBox(
                 height: 20.toHeight,
               ),
-              PinCodeFields(
-                length: 4,
-                controller: newTextEditingController,
-                focusNode: focusNode,
-                fieldBorderStyle: FieldBorderStyle.Square,
-                responsive: false,
-                fieldHeight: 50.0,
-                fieldWidth: 30.0,
-                borderWidth: 1.0,
-                activeBorderColor: Colors.black,
-                borderRadius: BorderRadius.circular(2.0),
-                keyboardType: TextInputType.number,
-                autoHideKeyboard: true,
-                borderColor: Colors.grey,
-                textStyle: TextStyle(
-                  fontSize: 16.0,
+              PinCodeTextField(
+                appContext: context,
+                pastedTextStyle: TextStyle(
+                  color: Colors.green.shade600,
                   fontWeight: FontWeight.bold,
                 ),
-                onComplete: (result) {
-                  // Your logic with code
-                  print(result);
-                  Navigator.pop(context, result);
+                length: 4,
+                obscureText: true,
+                obscuringCharacter: '*',
+                blinkWhenObscuring: true,
+                animationType: AnimationType.fade,
+                validator: (v) {
+                  if (v!.length < 4) {
+                    return "It is a 4 digit pin";
+                  } else {
+                    return null;
+                  }
+                },
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(5),
+                  fieldHeight: 50,
+                  fieldWidth: 40,
+                  activeFillColor: Colors.white,
+                ),
+                cursorColor: Colors.black,
+                animationDuration: const Duration(milliseconds: 300),
+                enableActiveFill: true,
+                errorAnimationController: errorController,
+                controller: textEditingController,
+                keyboardType: TextInputType.number,
+                boxShadows: const [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    color: Colors.black12,
+                    blurRadius: 10,
+                  )
+                ],
+                onCompleted: (v) {
+                  Navigator.pop(context, v);
+                },
+                onChanged: (value) {},
+                beforeTextPaste: (text) {
+                  //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                  //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                  return true;
                 },
               ),
             ]),

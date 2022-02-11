@@ -1,3 +1,7 @@
+## 4.0.0
+- **CHORE**: Updated dependencies
+- **BREAKING CHANGE**: Removed redundant required parameter `atClientService`
+
 ## 3.1.3
 - **DOCS**: Updated documentation
 

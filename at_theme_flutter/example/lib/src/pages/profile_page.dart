@@ -1,18 +1,16 @@
+import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
-import 'package:at_theme_flutter/services/theme_service.dart';
-import 'package:at_theme_flutter/utils/init_theme_flutter.dart';
-import 'package:example/client_sdk_service.dart';
-import 'package:example/main.dart';
-import 'package:example/src/utils/color_constants.dart';
-import 'package:example/src/utils/constants.dart';
-import 'package:example/src/utils/text_styles.dart';
+import 'package:at_theme_flutter_example/main.dart';
+import 'package:at_theme_flutter_example/src/utils/color_constants.dart';
+import 'package:at_theme_flutter_example/src/utils/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
 class ProfilePage extends StatefulWidget {
   final String title;
 
-  ProfilePage({
+  const ProfilePage({
     Key? key,
     this.title = 'My Profile',
   }) : super(key: key);
@@ -24,13 +22,16 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  String? activeAtSign;
+
+  /// Get the AtClientManager instance
+  var atClientManager = AtClientManager.getInstance();
 
   @override
   void initState() {
     super.initState();
-
-    initializeThemeService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    getAtSignAndInitialize();
+    initializeThemeService(rootDomain: AtEnv.rootDomain);
     tabController = TabController(length: 3, vsync: this);
     getSavedTheme();
   }
@@ -47,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage>
     final appTheme = AppTheme.of(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: appTheme.primaryColor,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
@@ -58,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage>
         ],
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -66,8 +68,10 @@ class _ProfilePageState extends State<ProfilePage>
           children: <Widget>[
             Row(
               children: [
-                CircleAvatar(),
-                SizedBox(width: 8),
+                CircleAvatar(
+                  backgroundColor: appTheme.primaryColor,
+                ),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage>
                         style: TextStyle(fontSize: 15.toFont),
                       ),
                       Text(
-                        clientSdkService.currentAtsign ?? 'Atsign',
+                        activeAtSign ?? 'Atsign',
                         style: TextStyle(
                             color: appTheme.secondaryColor,
                             fontSize: 15.toFont),
@@ -89,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             Container(
               height: 56.toHeight,
-              margin: EdgeInsets.symmetric(vertical: 8),
+              margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 // color: appTheme.primary,
                 borderRadius: BorderRadius.circular(28.toHeight),
@@ -136,8 +140,8 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               decoration: BoxDecoration(
                 color: appTheme.primaryColor.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(10),
@@ -149,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage>
                     "Phone number",
                     style: TextStyle(
                       fontSize: 16.toFont,
-                      color: Color(0xFF707070),
+                      color: const Color(0xFF707070),
                     ),
                   ),
                   Text(
@@ -160,13 +164,13 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                   ),
                   SizedBox(height: 8.toHeight),
-                  Divider(height: 1),
+                  const Divider(height: 1),
                   SizedBox(height: 8.toHeight),
                   Text(
                     "Email Address",
                     style: TextStyle(
                       fontSize: 16.toFont,
-                      color: Color(0xFF707070),
+                      color: const Color(0xFF707070),
                     ),
                   ),
                   Text(
@@ -248,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage>
                   data: appTheme.toThemeData(),
                   child: InheritedAppTheme(
                     theme: appTheme,
-                    child: ProfilePage(
+                    child: const ProfilePage(
                       title: "Preview",
                     ),
                   ),
@@ -261,13 +265,20 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  void getAtSignAndInitialize() async {
+    var currentAtSign = atClientManager.atClient.getCurrentAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
+  }
+
   void _openCustomThemSetting() {
     final appTheme = AppTheme.of(context);
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ThemeSettingPage(
           currentAppTheme: appTheme,
-          primaryColors: [
+          primaryColors: const [
             Colors.red,
             Colors.redAccent,
             Colors.green,
@@ -299,7 +310,7 @@ class _ProfilePageState extends State<ProfilePage>
                   data: appTheme.toThemeData(),
                   child: InheritedAppTheme(
                     theme: appTheme,
-                    child: ProfilePage(
+                    child: const ProfilePage(
                       title: "Preview",
                     ),
                   ),

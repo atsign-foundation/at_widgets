@@ -17,7 +17,7 @@ class Strings {
   static const String scanQrMessage = 'Just scan the QR code displayed at ';
   static const String pairAtsignTitle = 'Pair your @sign';
   static const String uploadQRTitle = 'Upload activation QR code';
-  static const String recurr_server_check =
+  static const String recurrServerCheck =
       'Trying to reach server to perform authentication. Click to stop rigorous server check';
   static const String stopButtonTitle = 'stop';
   //backuzip file save texts
@@ -41,7 +41,7 @@ class Strings {
   static const String mailUrlScheme = 'mailto';
 
   //custom reset button texts
-  static final String resetButton = 'Reset';
+  static const String resetButton = 'Reset';
   static const String resetDescription =
       'This will remove the selected @sign and its details from this app only.';
   static const String noAtsignToReset = 'No @signs are paired to reset. ';

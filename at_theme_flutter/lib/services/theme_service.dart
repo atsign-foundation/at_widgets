@@ -17,9 +17,7 @@ class ThemeService {
   initThemeService(String rootDomainFromApp, int rootPortFromApp) {
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
-    if (AtClientManager.getInstance().atClient != null) {
-      currentAtsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
-    }
+    currentAtsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
   }
 
   Future<bool> updateThemeData(AppTheme themeData) async {

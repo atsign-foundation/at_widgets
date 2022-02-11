@@ -152,6 +152,8 @@ class CustomTextStyles {
       TextStyle(fontSize: 16.toFont, color: ColorConstants.secondary);
   static TextStyle fontR14secondary =
       TextStyle(fontSize: 14.toFont, color: ColorConstants.secondary);
+  static TextStyle fontR12secondary =
+      TextStyle(fontSize: 12.toFont, color: ColorConstants.secondary);
 
   //medium textstyles
   static TextStyle fontM20secondary = TextStyle(

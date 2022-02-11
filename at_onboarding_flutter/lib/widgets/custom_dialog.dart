@@ -13,6 +13,7 @@ import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_server_status/at_server_status.dart';
@@ -124,6 +125,7 @@ class _CustomDialogState extends State<CustomDialog> {
 
   Future<bool>? scanResult;
 
+  final AtSignLogger _logger = AtSignLogger('Onboarding Service Custom Dialog');
   @override
   Widget build(BuildContext context) {
     if (widget.isQR) {
@@ -151,7 +153,7 @@ class _CustomDialogState extends State<CustomDialog> {
                               widget.title ?? Strings.errorTitle,
                               style: CustomTextStyles.fontR16primary,
                             ),
-                            widget.message == ResponseStatus.TIME_OUT
+                            widget.message == ResponseStatus.timeOut
                                 ? Icon(Icons.access_time, size: 18.toFont)
                                 : Icon(Icons.sentiment_dissatisfied,
                                     size: 18.toFont)
@@ -266,9 +268,20 @@ class _CustomDialogState extends State<CustomDialog> {
                                                             : 'Enter Verification Code',
                                                 style: SizeConfig()
                                                         .isTablet(context)
-                                                    ? CustomTextStyles
-                                                        .fontR12primary
-                                                    : null,
+                                                    ? Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? CustomTextStyles
+                                                            .fontR12secondary
+                                                        : CustomTextStyles
+                                                            .fontR12primary
+                                                    : Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? CustomTextStyles
+                                                            .fontR14secondary
+                                                        : CustomTextStyles
+                                                            .fontR14primary,
                                               ),
                                             ),
                                             widget.hideReferences
@@ -287,7 +300,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                                   Widget>(
                                                               builder: (BuildContext
                                                                       context) =>
-                                                                  WebViewScreen(
+                                                                  const WebViewScreen(
                                                                     title: Strings
                                                                         .faqTitle,
                                                                     url: Strings
@@ -301,9 +314,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 !widget.isQR
                                                     ? 'A verification code has been sent to ${_emailController.text}'
                                                     : 'A verification code has been sent to your registered email.',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 13.toFont),
+                                                style: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR14secondary
+                                                    : CustomTextStyles
+                                                        .fontR14primary,
                                               )
                                             : Container()
                                       ]))
@@ -332,9 +349,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                             enabled: isfreeAtsign & !pair
                                                 ? false
                                                 : true,
-                                            style: TextStyle(
-                                                fontSize: 14.toFont,
-                                                height: 1.0.toHeight),
+                                            style:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR14secondary
+                                                    : CustomTextStyles
+                                                        .fontR14primary,
                                             validator: (String? value) {
                                               if (value == null ||
                                                   value == '') {
@@ -409,8 +430,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                             onChanged: (String value) {
                                               verificationCode = value;
                                             },
-                                            textStyle: const TextStyle(
-                                                fontWeight: FontWeight.w500),
+                                            textStyle:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR16secondary
+                                                    : CustomTextStyles
+                                                        .fontR16primary,
                                             pinTheme: PinTheme(
                                               selectedColor: Colors.black,
                                               inactiveColor: Colors.grey[500],
@@ -429,7 +455,8 @@ class _CustomDialogState extends State<CustomDialog> {
                                             onCompleted: (String v) {
                                               verificationCode = v;
                                             },
-                                            inputFormatters: <TextInputFormatter>[
+                                            inputFormatters: <
+                                                TextInputFormatter>[
                                               UpperCaseInputFormatter(),
                                             ],
                                           )),
@@ -481,7 +508,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                   SizedBox(height: 20.toHeight),
                                   Text(
                                     'Need an @sign?',
-                                    style: CustomTextStyles.fontR12primary,
+                                    style: Theme.of(context).brightness !=
+                                            Brightness.dark
+                                        ? CustomTextStyles.fontR12primary
+                                        : CustomTextStyles.fontR12secondary,
                                   ),
                                   SizedBox(height: 5.toHeight),
                                   SizedBox(
@@ -531,11 +561,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                   SizedBox(height: 20.toHeight),
                                   widget.hideQrScan
                                       ? const SizedBox()
-                                      : Text(
-                                          'Have a QR Code?',
-                                          style:
-                                              CustomTextStyles.fontR12primary,
-                                        ),
+                                      : Text('Have a QR Code?',
+                                          style: Theme.of(context).brightness !=
+                                                  Brightness.dark
+                                              ? CustomTextStyles.fontR12primary
+                                              : CustomTextStyles
+                                                  .fontR12secondary),
                                   widget.hideQrScan
                                       ? const SizedBox()
                                       : SizedBox(height: 5.toHeight),
@@ -937,7 +968,6 @@ class _CustomDialogState extends State<CustomDialog> {
 
   Future<bool> _verifyCameraPermissions() async {
     PermissionStatus status = await Permission.camera.status;
-    print('camera status => $status');
     if (status.isGranted) {
       return true;
     }
@@ -956,9 +986,8 @@ class _CustomDialogState extends State<CustomDialog> {
       //It's an issue in flutter_qr_reader package and no need [await] keyword
       _controller!.stopCamera();
     } catch (e) {
-      print(e.toString());
+      _logger.warning(e.toString());
     }
-    print('SCANNED: => $data');
     List<String> values = data.split(':');
     await widget.onValidate!(values[0], values[1], true);
 
@@ -996,7 +1025,6 @@ class _CustomDialogState extends State<CustomDialog> {
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
-      print(data);
       status = true;
       // atsign = data['data']['atsign'];
     } else {
@@ -1028,7 +1056,6 @@ class _CustomDialogState extends State<CustomDialog> {
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
-      print(data['data']);
       //check for the atsign list and display them.
       if (data['data'] != null &&
           data['data'].length == 2 &&
@@ -1091,7 +1118,6 @@ class _CustomDialogState extends State<CustomDialog> {
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
-      print(data['data']);
       //check for the atsign list and display them.
       if (data['message'] == 'Verified') {
         cramSecret = data['cramkey'];
@@ -1118,7 +1144,6 @@ class _CustomDialogState extends State<CustomDialog> {
       data = response.body;
       data = jsonDecode(data);
 
-      print(data);
       status = true;
       // atsign = data['data']['atsign'];
     } else {
@@ -1157,7 +1182,7 @@ class _CustomDialogState extends State<CustomDialog> {
       case OnboardingStatus:
         return error.toString();
       case ResponseStatus:
-        if (error == ResponseStatus.AUTH_FAILED) {
+        if (error == ResponseStatus.authFailed) {
           if (_onboardingService.isPkam!) {
             return 'Please provide valid backupkey file to continue.';
           } else {
@@ -1165,7 +1190,7 @@ class _CustomDialogState extends State<CustomDialog> {
                 ? 'Please provide a relevant backupkey file to authenticate.'
                 : 'Please provide a valid QRcode to authenticate.';
           }
-        } else if (error == ResponseStatus.TIME_OUT) {
+        } else if (error == ResponseStatus.timeOut) {
           return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AppConstants.contactAddress} if the issue still persists.';
         } else {
           return '';
@@ -1260,7 +1285,7 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget? _getMessage(dynamic message, bool isErrorDialog) {
-    String? highLightText = message == ResponseStatus.TIME_OUT
+    String? highLightText = message == ResponseStatus.timeOut
         ? AppConstants.contactAddress
         : AppConstants.website;
     if (message == null) {
@@ -1335,7 +1360,6 @@ class _CustomDialogState extends State<CustomDialog> {
         loading = true;
       });
       String? path = await _desktopKeyPicker();
-      print(path);
       if (path == null) {
         setState(() {
           loading = false;
@@ -1375,7 +1399,7 @@ class _CustomDialogState extends State<CustomDialog> {
         loading = false;
       });
     } catch (error) {
-      print(error);
+      _logger.warning(error);
       setState(() {
         loading = false;
       });
@@ -1398,13 +1422,14 @@ class _CustomDialogState extends State<CustomDialog> {
       XFile file = files[0];
       return file.path;
     } catch (e) {
-      print('Error in desktopImagePicker $e');
+      _logger.severe('Error in desktopImagePicker $e');
       return null;
     }
   }
 }
 
 class UpperCaseInputFormatter extends TextInputFormatter {
+  @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(

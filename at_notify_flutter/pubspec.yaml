@@ -1,24 +1,11 @@
 name: at_notify_flutter
 description: A Flutter plugin project to send notification to any @‎sign in @‎platform
   apps with ease.
-
-# The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
-# publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.2
+version: 1.0.3
 homepage: https://atsign.dev
-repository: https://github.com/atsign-foundation/at_widgets
+repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_notify_flutter
+issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
+documentation: https://atsign.dev/docs/functional_architecture/
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -28,11 +15,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  at_client_mobile: ^3.1.3
-  at_client: ^3.0.7
-  at_commons: ^3.0.2
-  at_common_flutter: ^2.0.4
-  flutter_local_notifications: ^6.0.0
+  at_client_mobile: ^3.1.4
+  at_client: ^3.0.9
+  at_commons: ^3.0.3
+  at_common_flutter: ^2.0.5
+  flutter_local_notifications: ^9.2.0
 
 dev_dependencies:
   flutter_lints: ^1.0.4

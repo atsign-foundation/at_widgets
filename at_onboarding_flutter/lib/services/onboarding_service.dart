@@ -105,7 +105,7 @@ class OnboardingService {
       serverStatus = await _checkAtSignServerStatus(atsign);
       if (serverStatus != ServerStatus.teapot &&
           serverStatus != ServerStatus.activated) {
-        c.complete(ResponseStatus.SERVER_NOT_REACHED);
+        c.complete(ResponseStatus.serverNotReached);
         if (cramSecret == null) {
           _isPkam = true;
         }
@@ -122,16 +122,16 @@ class OnboardingService {
       if (isAuthenticated) {
         _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
-        c.complete(ResponseStatus.AUTH_SUCCESS);
+        c.complete(ResponseStatus.authSuccess);
         await _sync(_atsign);
       }
     } catch (e) {
       _logger.severe('error in authenticating =>  ${e.toString()}');
-      if (e == ResponseStatus.TIME_OUT) {
+      if (e == ResponseStatus.timeOut) {
         c.completeError(e);
       } else {
         c.completeError(
-            e.runtimeType == OnboardingStatus ? e : ResponseStatus.AUTH_FAILED);
+            e.runtimeType == OnboardingStatus ? e : ResponseStatus.authFailed);
       }
     }
     return c.future;
@@ -178,7 +178,7 @@ class OnboardingService {
     List<String> atSignsList = await getAtsignList();
     ServerStatus? status = await _checkAtSignServerStatus(atsign!).timeout(
         Duration(seconds: AppConstants.responseTimeLimit),
-        onTimeout: () => throw ResponseStatus.TIME_OUT);
+        onTimeout: () => throw ResponseStatus.timeOut);
     bool isExist =
         atSignsList.isNotEmpty ? atSignsList.contains(atsign) : false;
     if (status == ServerStatus.teapot) {
