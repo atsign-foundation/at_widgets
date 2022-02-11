@@ -259,13 +259,13 @@ class _GroupViewState extends State<GroupView> {
                                 },
                                 saveGroup: () async {
                                   if (GroupService()
-                                      .selecteContactList!
+                                      .selecteContactList
                                       .isNotEmpty) {
                                     GroupService().showLoaderSink.add(true);
 
                                     var result = await GroupService()
                                         .addGroupMembers([
-                                      ...GroupService().selecteContactList!
+                                      ...GroupService().selecteContactList
                                     ], widget.group);
 
                                     GroupService().showLoaderSink.add(false);

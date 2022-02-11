@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:at_contacts_group_flutter_example/second_screen.dart';
+import 'second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
@@ -19,13 +19,11 @@ Future<void> main() async {
 Future<AtClientPreference> loadAtClientPreference() async {
   var dir = await getApplicationSupportDirectory();
   return AtClientPreference()
-        ..rootDomain = AtEnv.rootDomain
-        ..namespace = AtEnv.appNamespace
-        ..hiveStoragePath = dir.path
-        ..commitLogPath = dir.path
-        ..isLocalStoreRequired = true
-      // TODO set the rest of your AtClientPreference here
-      ;
+    ..rootDomain = AtEnv.rootDomain
+    ..namespace = AtEnv.appNamespace
+    ..hiveStoragePath = dir.path
+    ..commitLogPath = dir.path
+    ..isLocalStoreRequired = true;
 }
 
 class MyApp extends StatefulWidget {

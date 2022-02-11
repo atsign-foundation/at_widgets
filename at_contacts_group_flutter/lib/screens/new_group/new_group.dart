@@ -54,7 +54,7 @@ class _NewGroupState extends State<NewGroup> {
 
   // ignore: always_declare_return_types
   getContacts() {
-    if (GroupService().selecteContactList!.isNotEmpty) {
+    if (GroupService().selecteContactList.isNotEmpty) {
       selectedContacts = GroupService().selecteContactList;
     } else {
       selectedContacts = [];
