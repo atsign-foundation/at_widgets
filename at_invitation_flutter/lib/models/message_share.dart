@@ -12,10 +12,10 @@ class MessageShareModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['passcode'] = this.passcode;
-    data['message'] = this.message;
-    data['identifier'] = this.identifier;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['passcode'] = passcode;
+    data['message'] = message;
+    data['identifier'] = identifier;
     return data;
   }
 }

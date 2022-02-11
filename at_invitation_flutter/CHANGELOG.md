@@ -1,3 +1,8 @@
+## 2.0.0
+- **DOCS**: Updated documentation
+- **CHORE**: Updated dependencies
+- **CHORE**: updated example to null safe version
+
 ## 1.0.1
 - **DOCS**: Updated documentation
 

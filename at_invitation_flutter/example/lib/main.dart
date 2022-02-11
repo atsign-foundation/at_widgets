@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:at_invitation_flutter_example/second_screen.dart';

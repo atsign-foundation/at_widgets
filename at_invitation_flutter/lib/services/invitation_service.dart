@@ -10,11 +10,14 @@ import 'package:at_invitation_flutter/widgets/otp_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:uuid/uuid.dart';
+import 'package:at_utils/at_logger.dart';
 
 class InvitationService {
   InvitationService._();
   static final InvitationService _instance = InvitationService._();
   factory InvitationService() => _instance;
+
+  final AtSignLogger _logger = AtSignLogger('Invitation Service');
 
   final String invitationKey = 'invite';
   final String invitationAckKey = 'invite-ack';
@@ -78,13 +81,12 @@ class InvitationService {
           .encryptionService
           ?.decrypt(message, fromAtsign)
           .catchError((e) {
-        print('error in decrypting message ${e.toString()}');
+        _logger.severe('error in decrypting message ${e.toString()}');
       });
-      print('message received => $decryptedMessage $fromAtsign');
       if (notificationKey.startsWith(invitationAckKey)) {
         _processInviteAcknowledgement(decryptedMessage, fromAtsign);
       } else {
-        print('received invited data => $decryptedMessage');
+        _logger.info('received invited data => $decryptedMessage');
       }
     }
   }
@@ -93,14 +95,12 @@ class InvitationService {
     if (data != null && fromAtsign != null) {
       MessageShareModel receivedInformation =
           MessageShareModel.fromJson(jsonDecode(data));
-      print('receivedInformation $receivedInformation');
 
       // build and fetch self key
       AtKey atKey = AtKey()..metadata = Metadata();
       atKey.key = invitationKey + '.' + (receivedInformation.identifier ?? '');
       atKey.metadata?.ttr = -1;
       var result = await AtClientManager.getInstance().atClient.get(atKey);
-      print('fetch result $result');
       MessageShareModel sentInformation =
           MessageShareModel.fromJson(jsonDecode(result.value));
 
@@ -113,7 +113,7 @@ class InvitationService {
             .atClient
             .put(atKey, jsonEncode(sentInformation.message))
             .catchError((e) {
-          print('Error in sharing saved message => $e');
+          _logger.severe('Error in sharing saved message => $e');
         });
       }
     }
@@ -135,10 +135,8 @@ class InvitationService {
         .atClient
         .put(atKey, jsonEncode(messageContent))
         .catchError((e) {
-      print('Error in saving shared data => $e');
+      _logger.severe('Error in saving shared data => $e');
     });
-    ;
-    print(atKey.key);
     if (result == true) {
       showDialog(
         context: context,
@@ -159,21 +157,17 @@ class InvitationService {
       context: context,
       builder: (context) => const OTPDialog(),
     );
-    print('otp received => $otp');
     AtKey atKey = AtKey()..metadata = Metadata();
     atKey.key = invitationAckKey + '.' + data;
     atKey.sharedWith = atsign;
     atKey.metadata?.ttr = -1;
     MessageShareModel messageContent = MessageShareModel(
         passcode: otp, identifier: data, message: 'invite acknowledgement');
-    print('created message');
     await AtClientManager.getInstance()
         .atClient
         .put(atKey, jsonEncode(messageContent))
         .catchError((e) {
-      print('Error in saving acknowledge message => $e');
+      _logger.severe('Error in saving acknowledge message => $e');
     });
-
-    print(atKey.key);
   }
 }
