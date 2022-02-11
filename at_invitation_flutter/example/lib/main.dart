@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -29,7 +29,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -37,8 +37,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
-  AtClientPreference atClientPreference;
-  AtClientService atClientService;
+  late AtClientPreference atClientPreference;
+  AtClientService? atClientService;
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
@@ -79,8 +79,8 @@ class _MyAppState extends State<MyApp> {
                         domain: AtEnv.rootDomain,
                         rootEnvironment: AtEnv.rootEnvironment,
                         appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                        onboard: (Map<String, AtClientService> value,
-                            String atsign) async {
+                        onboard: (Map<String?, AtClientService> value,
+                            String? atsign) async {
                           atClientService = value[atsign];
                           await Navigator.pushReplacement(
                               context,
