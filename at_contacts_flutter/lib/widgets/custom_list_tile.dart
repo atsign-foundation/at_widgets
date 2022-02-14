@@ -47,12 +47,20 @@ class _CustomListTileState extends State<CustomListTile> {
     Widget contactImage;
     if (widget.contact!.tags != null &&
         widget.contact!.tags!['image'] != null) {
-      List<int> intList = widget.contact!.tags!['image'].cast<int>();
-      var image = Uint8List.fromList(intList);
-      contactImage = CustomCircleAvatar(
-        byteImage: image,
-        nonAsset: true,
-      );
+      Uint8List? image;
+      try {
+        List<int> intList = widget.contact!.tags!['image'].cast<int>();
+        image = Uint8List.fromList(intList);
+      } catch (e) {}
+
+      contactImage = image != null
+          ? CustomCircleAvatar(
+              byteImage: image,
+              nonAsset: true,
+            )
+          : ContactInitial(
+              initials: widget.contact!.atSign!,
+            );
     } else {
       contactImage = ContactInitial(
         initials: widget.contact!.atSign!,
@@ -93,7 +101,9 @@ class _CustomListTileState extends State<CustomListTile> {
 
                 widget.selectedList!(widget.contactService!.selectedContacts);
               } else {
-                widget.onTap!();
+                if (widget.onTap != null) {
+                  widget.onTap!();
+                }
               }
             },
             title: Text(

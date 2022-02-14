@@ -32,7 +32,8 @@ class ContactsScreen extends StatefulWidget {
   const ContactsScreen(
       {Key? key,
       this.selectedList,
-      this.context,
+      @Deprecated('context is no longer required and will be removed in upcoming version')
+          this.context,
       this.asSelectionScreen = false,
       this.asSingleSelectionScreen = false,
       this.saveGroup,
@@ -63,7 +64,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   @override
   void initState() {
     _contactService = ContactService();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var _result = await _contactService!.fetchContacts();
       if (_result == null) {
         if (mounted) {
@@ -86,7 +87,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
               ? Container(height: 0)
               : CustomBottomSheet(
                   onPressed: () {
-                    Navigator.pop(widget.context!);
+                    Navigator.pop(context);
                     if (widget.saveGroup != null) {
                       ContactService().clearAtSigns();
                     }
@@ -113,7 +114,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
             if (widget.asSelectionScreen) {
               ContactService().clearAtSigns();
               selectedList = [];
-              widget.selectedList!(selectedList);
+              if (widget.selectedList != null) {
+                widget.selectedList!(selectedList);
+              }
             }
           });
         },
@@ -240,125 +243,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                       ),
                                     ],
                                   ),
-                                  ListView.separated(
-                                      itemCount: contactsForAlphabet.length,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      separatorBuilder: (context, _) => Divider(
-                                            color: ColorConstants.dividerColor
-                                                .withOpacity(0.2),
-                                            height: 1.toHeight,
-                                          ),
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Slidable(
-                                            actionPane:
-                                                const SlidableDrawerActionPane(),
-                                            actionExtentRatio: 0.25,
-                                            secondaryActions: <Widget>[
-                                              IconSlideAction(
-                                                caption: TextStrings().block,
-                                                color: ColorConstants
-                                                    .inputFieldColor,
-                                                icon: Icons.block,
-                                                onTap: () async {
-                                                  setState(() {
-                                                    blockingContact = true;
-                                                  });
-                                                  // ignore: unawaited_futures
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        AlertDialog(
-                                                      title: Center(
-                                                        child: Text(
-                                                            TextStrings()
-                                                                .blockContact),
-                                                      ),
-                                                      content: SizedBox(
-                                                        height: 100.toHeight,
-                                                        child: const Center(
-                                                          child:
-                                                              CircularProgressIndicator(),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                  await _contactService!
-                                                      .blockUnblockContact(
-                                                          contact:
-                                                              contactsForAlphabet[
-                                                                  index]!,
-                                                          blockAction: true);
-                                                  setState(() {
-                                                    blockingContact = false;
-                                                    Navigator.pop(context);
-                                                  });
-                                                },
-                                              ),
-                                              IconSlideAction(
-                                                caption: TextStrings().delete,
-                                                color: Colors.red,
-                                                icon: Icons.delete,
-                                                onTap: () async {
-                                                  setState(() {
-                                                    deletingContact = true;
-                                                  });
-                                                  // ignore: unawaited_futures
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        AlertDialog(
-                                                      title: Center(
-                                                        child: Text(
-                                                            TextStrings()
-                                                                .deleteContact),
-                                                      ),
-                                                      content: SizedBox(
-                                                        height: 100.toHeight,
-                                                        child: const Center(
-                                                          child:
-                                                              CircularProgressIndicator(),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                  await _contactService!
-                                                      .deleteAtSign(
-                                                          atSign:
-                                                              contactsForAlphabet[
-                                                                      index]!
-                                                                  .atSign!);
-                                                  setState(() {
-                                                    deletingContact = false;
-                                                    Navigator.pop(context);
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                            child: CustomListTile(
-                                              key: UniqueKey(),
-                                              contactService: _contactService,
-                                              onTap: () {},
-                                              asSelectionTile:
-                                                  widget.asSelectionScreen,
-                                              asSingleSelectionTile: widget
-                                                  .asSingleSelectionScreen,
-                                              contact:
-                                                  contactsForAlphabet[index],
-                                              selectedList: (s) {
-                                                selectedList = s!;
-                                                widget.selectedList!(
-                                                    selectedList);
-                                              },
-                                              onTrailingPressed:
-                                                  widget.onSendIconPressed,
-                                            ),
-                                          ),
-                                        );
-                                      }),
+                                  contactListBuilder(contactsForAlphabet),
                                 ],
                               );
                             },
@@ -371,5 +256,110 @@ class _ContactsScreenState extends State<ContactsScreen> {
               ),
             ),
     );
+  }
+
+  Widget contactListBuilder(List<AtContact?> contactsForAlphabet) {
+    return ListView.separated(
+        itemCount: contactsForAlphabet.length,
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        separatorBuilder: (context, _) => Divider(
+              color: ColorConstants.dividerColor.withOpacity(0.2),
+              height: 1.toHeight,
+            ),
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Slidable(
+              actionPane: const SlidableDrawerActionPane(),
+              actionExtentRatio: 0.25,
+              secondaryActions: <Widget>[
+                IconSlideAction(
+                  caption: TextStrings().block,
+                  color: ColorConstants.inputFieldColor,
+                  icon: Icons.block,
+                  onTap: () async {
+                    blockUnblockContact(contactsForAlphabet[index]!);
+                  },
+                ),
+                IconSlideAction(
+                  caption: TextStrings().delete,
+                  color: Colors.red,
+                  icon: Icons.delete,
+                  onTap: () async {
+                    deleteContact(contactsForAlphabet[index]!);
+                  },
+                ),
+              ],
+              child: CustomListTile(
+                key: UniqueKey(),
+                contactService: _contactService,
+                asSelectionTile: widget.asSelectionScreen,
+                asSingleSelectionTile: widget.asSingleSelectionScreen,
+                contact: contactsForAlphabet[index],
+                selectedList: (s) {
+                  selectedList = s!;
+                  if (widget.selectedList != null) {
+                    widget.selectedList!(selectedList);
+                  }
+                },
+                onTrailingPressed: widget.onSendIconPressed,
+              ),
+            ),
+          );
+        });
+  }
+
+  blockUnblockContact(AtContact contact) async {
+    setState(() {
+      blockingContact = true;
+    });
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Center(
+          child: Text(TextStrings().blockContact),
+        ),
+        content: SizedBox(
+          height: 100.toHeight,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+    await _contactService!
+        .blockUnblockContact(contact: contact, blockAction: true);
+    setState(() {
+      blockingContact = false;
+      Navigator.pop(context);
+    });
+  }
+
+  deleteContact(AtContact contact) async {
+    setState(() {
+      deletingContact = true;
+    });
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Center(
+          child: Text(TextStrings().deleteContact),
+        ),
+        content: SizedBox(
+          height: 100.toHeight,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+    await _contactService!.deleteAtSign(atSign: contact.atSign!);
+    setState(() {
+      deletingContact = false;
+      Navigator.pop(context);
+    });
   }
 }
