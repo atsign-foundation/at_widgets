@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
+import 'package:at_utils/at_logger.dart';
 
 ///
 
@@ -19,12 +20,15 @@ class CircularContacts extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final AtSignLogger _logger = AtSignLogger('Circular Contacts');
     Uint8List? image;
     if (contact!.tags != null && contact!.tags!['image'] != null) {
       try {
         List<int> intList = contact!.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
-      } catch (e) {}
+      } catch (e) {
+        _logger.severe('Error in image: $e');
+      }
     }
     return Container(
       padding:

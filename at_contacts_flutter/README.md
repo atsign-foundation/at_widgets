@@ -1,45 +1,75 @@
 <img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
-## Now for some internet optimism.
 
-[![pub package](https://img.shields.io/pub/v/at_contacts_flutter)](https://pub.dev/packages/at_contacts_flutter) [![pub points](https://badges.bar/at_contacts_flutter/pub%20points)](https://pub.dev/packages/at_contacts_flutter/score) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
-
-# at_contacts_flutter
-
-### Introduction
-
-at_contacts_flutter library persists contacts across different @platform applications. This is a Flutter plugin project that provides an ease of managing contacts for an @‎sign built on the @‎platform.
-
-## Get Started
-
-To get a basic overview of the @protocol packages, Please visit the [atsign docs](https://atsign.dev/docs/overview/).
-
-> A basic setup is required to use this package. Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+[![pub package](https://img.shields.io/pub/v/at_client_mobile)](https://pub.dev/packages/at_client_mobile) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 
-This plugin provides two screens:
+## Overview
 
-## Usage
+The at_contacts_flutter package is for Flutter developers who want to add the ability to manage contacts in their @‎platform apps.
 
-Initialize the contact services initially by calling    `initializeContactsService()` function.
+This open source package is written in Dart, supports Flutter and follows the @‎platform's decentralized, edge computing model with the following features: 
+- Cryptographic control of data access through personal data stores
+- No application backend needed
+- End to end encryption where only the data owner has the keys
+- Private and surveillance free connectivity
+- Add new contacts
+- Block/unblock contacts
+- Delete contacts
 
-```dart
-@override
-void initState() {
-    super.initState();
-    initializeContactsService(rootDomain: AppConstants.rootDomain);
-}
+We call giving people control of access to their data “flipping the internet” and you can learn more about how it works by reading this [overview](https://atsign.dev/docs/overview/).
+
+## Get started
+There are three options to get started using this package.
+
+### 1. Quick start - generate a skeleton app with at_app
+This package includes a working sample application in the [Example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_contacts_flutter/example) directory that you can use to create a personalized copy using ```at_app create``` in four commands.
+
+```sh
+$ flutter pub global activate at_app 
+$ at_app create --sample=<package ID> <app name> 
+$ cd <app name>
+$ flutter run
+```
+Notes: 
+1. You only need to run ```flutter pub global activate``` once
+2. Use ```at_app.bat``` for Windows
+
+### 2. Clone it from GitHub
+Feel free to fork a copy the source from the [GitHub repo](https://github.com/atsign-foundation/at_widgets). The example code contained there is the same as the template that is used by at_app above.
+
+```sh
+$ git clone https://github.com/atsign-foundation/at_widgets.git
 ```
 
-- Dispose any dispose stream controllers of the pacakge from the app level.
+### 3. Manually add the package to a project
 
-```dart
-@override
-void dispose(){
-    disposeContactsControllers();
-    super.dispose();
-}
+Instructions on how to manually add this package to you project can be found on pub.dev [here](https://pub.dev/packages/at_contacts_flutter/install).
+
+
+## How it works
+
+### Setup
+This package needs to be initialised using:
 ```
+initializeContactsService(rootDomain: AtEnv.rootDomain);
+```
+
+If you are using UI widgets from the package then you also have to initialise SizeConfig service.
+```
+SizeConfig().init(context);
+```
+
+### Usage
+
+This package provides two UI screens:
+- Contacts Screen
+- Blocked Contacts Screen
+
+The usage can be found in the example.
+
+
+This package also provides useful calls:
 
 - Get an atSign details.
 
@@ -65,40 +95,5 @@ TextButton(
 ),
 ```
 
-### Contacts
-
-This lists the contacts. From this screen a new contact can be added. This screen is exposed from the library for displaying, adding, selecting and deleting Contacts.
-
-- If the user wants to go to the contacts list screen, call `ContactsScreen()` Widget in Navigator.
-
-```dart
-TextButton(
-    onPressed: () async {
-        await Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (BuildContext context) => ContactsScreen(),
-            ),
-        );
-    },
-    child: Text('Contacts'), 
-),
-```
-
-### Blocked Contacts
-
-This screen lists the blocked contacts. It also gives the option to unblock a contact in it.
-
-- If the user wants to go to the block list screen, call `BlockedScreen()` Widget in Navigator.
-
-```dart
-TextButton(
-    onPressed: () async {
-        await Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (BuildContext context) => BlockedScreen(),
-            ),
-        );
-    },
-    child: Text('Blocked List'), 
-),
-```
+## Open source usage and contributions
+This is  open source code, so feel free to use it as is, suggest changes or enhancements or create your own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.

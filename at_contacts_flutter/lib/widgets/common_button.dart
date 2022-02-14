@@ -11,7 +11,8 @@ class CommonButton extends StatelessWidget {
   final Widget? leading;
   const CommonButton(
     this.title,
-    this.onTap, {Key? key, 
+    this.onTap, {
+    Key? key,
     this.border,
     this.color,
     this.height,
