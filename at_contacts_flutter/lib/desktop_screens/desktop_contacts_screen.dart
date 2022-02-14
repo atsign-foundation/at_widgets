@@ -17,9 +17,8 @@ class DesktopContactsScreen extends StatefulWidget {
   final bool isBlockedScreen;
   final Function onBackArrowTap;
   final bool showBackButton;
-  Key? key;
-  DesktopContactsScreen(this.onBackArrowTap,
-      {this.key, this.isBlockedScreen = false, this.showBackButton = true})
+  const DesktopContactsScreen(this.onBackArrowTap,
+      {Key? key, this.isBlockedScreen = false, this.showBackButton = true})
       : super(key: key);
 
   @override
@@ -321,12 +320,11 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
 }
 
 class ContactListTile extends StatefulWidget {
-  BaseContact? baseContact;
-  bool isBlockedScreen;
-  Key? key;
-  ContactListTile(
+  final BaseContact? baseContact;
+  final bool isBlockedScreen;
+  const ContactListTile(
     this.baseContact, {
-    this.key,
+    Key? key,
     this.isBlockedScreen = false,
   }) : super(key: key);
 

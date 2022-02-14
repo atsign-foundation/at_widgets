@@ -12,6 +12,7 @@ import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/images.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -40,6 +41,7 @@ class CustomListTile extends StatefulWidget {
 }
 
 class _CustomListTileState extends State<CustomListTile> {
+  final AtSignLogger _logger = AtSignLogger('Custom List Tile');
   bool isSelected = false;
 
   @override
@@ -51,7 +53,9 @@ class _CustomListTileState extends State<CustomListTile> {
       try {
         List<int> intList = widget.contact!.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
-      } catch (e) {}
+      } catch (e) {
+        _logger.severe('Error in image: $e');
+      }
 
       contactImage = image != null
           ? CustomCircleAvatar(

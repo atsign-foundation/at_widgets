@@ -11,6 +11,7 @@ import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 
 class BlockedUserCard extends StatefulWidget {
@@ -24,6 +25,8 @@ class BlockedUserCard extends StatefulWidget {
 }
 
 class _BlockedUserCardState extends State<BlockedUserCard> {
+  final AtSignLogger _logger = AtSignLogger('Blocked User Card');
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +41,9 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
       try {
         List<int> intList = widget.blockeduser!.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
-      } catch (e) {}
+      } catch (e) {
+        _logger.severe('Error in image: $e');
+      }
 
       contactImage = image != null
           ? CustomCircleAvatar(
