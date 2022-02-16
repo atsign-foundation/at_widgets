@@ -67,8 +67,6 @@ class AtSyncUI {
 
   AtSyncUIController? get syncUIController => _syncUIController;
 
-  bool isSnackbarOverlay = false;
-
   ///Config
   AtSyncUIStyle _style = AtSyncUIStyle.cupertino;
   Color _primaryColor = _kDefaultPrimaryColor;
@@ -83,11 +81,6 @@ class AtSyncUI {
   /// It set [GlobalKey<NavigatorState>] to get [OverlayState] which use to add  [OverlayEntry]
   void setAppNavigatorKey(GlobalKey<NavigatorState>? appNavigator) {
     _appNavigatorKey = appNavigator;
-  }
-
-  /// [isSnackbarOverlay] if true, then snackbar will be an overlay
-  void setSnackbarType(bool isSnackbarOverlay) {
-    this.isSnackbarOverlay = isSnackbarOverlay;
   }
 
   /// Provide default theme for UI (dialog/snackBar ...) using in the app
@@ -118,25 +111,7 @@ class AtSyncUI {
     });
   }
 
-  // ///
-  // void addLoading() {
-  //   loadingOverlayEntry = _buildDialogOverlayEntry(
-  //     primaryColors: _primaryColor,
-  //     backgroundColor: _backgroundColor,
-  //     labelColor: _labelColor,
-  //     style: _style,
-  //   );
-  //   _appNavigatorKey?.currentState?.overlay?.insert(loadingOverlayEntry!);
-  // }
-  //
-  // void removeLoading() {
-  //   loadingOverlayEntry?.remove();
-  //   loadingOverlayEntry = null;
-  // }
-
   /// Show dialog UI
-  /// Display fullscreen with 50% opacity and can't interact
-  /// [AtSyncIndicator] place in center of screen
   void showDialog({String? message}) {
     assert(
         _appNavigatorKey != null, "Must set appNavigator before show dialog");
@@ -162,59 +137,29 @@ class AtSyncUI {
   }
 
   /// Show SnackBar UI
-  /// Display fullscreen with 50% opacity and can't interact
-  /// [AtSyncIndicator] place in bottomCenter of screen
-  /// [isSnackbarOverlay] if true, then snackbar will be an overlay
-  void showSnackBar({String? message, bool? isSnackbarOverlay}) {
+  void showSnackBar({String? message}) {
     assert(
         _appNavigatorKey != null, "Must set appNavigator before show dialog");
     assert(_appNavigatorKey!.currentState?.overlay != null,
         "Cannot get current context");
 
-    if (isSnackbarOverlay != null) {
-      this.isSnackbarOverlay = isSnackbarOverlay;
+    if (snackBarOverlayEntry != null) {
+      hideSnackBar();
     }
-
-    if (this.isSnackbarOverlay) {
-      if (snackBarOverlayEntry != null) {
-        hideSnackBar();
-      }
-      snackBarOverlayEntry = _buildSnackBarOverlayEntry(
-        primaryColors: _primaryColor,
-        backgroundColor: _backgroundColor,
-        labelColor: _labelColor,
-        style: _style,
-        message: message,
-      );
-      _appNavigatorKey?.currentState?.overlay?.insert(snackBarOverlayEntry!);
-    } else {
-      //// if interactive snackbar is needed
-      ScaffoldMessenger.of(_appNavigatorKey!.currentContext!)
-          .showSnackBar(SnackBar(
-              backgroundColor: _backgroundColor,
-              dismissDirection: DismissDirection.none,
-              content: _snackbarUI(
-                _appNavigatorKey!.currentContext!,
-                _primaryColor,
-                _backgroundColor,
-                _labelColor,
-                _style,
-                message,
-              ),
-              duration: const Duration(days: 365)));
-    }
+    snackBarOverlayEntry = _buildSnackBarOverlayEntry(
+      primaryColors: _primaryColor,
+      backgroundColor: _backgroundColor,
+      labelColor: _labelColor,
+      style: _style,
+      message: message,
+    );
+    _appNavigatorKey?.currentState?.overlay?.insert(snackBarOverlayEntry!);
   }
 
   /// Hide SnackBar UI
   void hideSnackBar() {
-    if (isSnackbarOverlay) {
-      snackBarOverlayEntry?.remove();
-      snackBarOverlayEntry = null;
-    } else {
-      //// if interactive snackbar is needed
-      ScaffoldMessenger.of(_appNavigatorKey!.currentContext!)
-          .hideCurrentSnackBar();
-    }
+    snackBarOverlayEntry?.remove();
+    snackBarOverlayEntry = null;
   }
 
   /// Build dialog OverlayEntry
@@ -289,9 +234,12 @@ class AtSyncUI {
     return OverlayEntry(builder: (context) {
       // You can return any widget you like here
       // to be displayed on the Overlay
-      return Positioned.fill(
+      final size = MediaQuery.of(context).size;
+      return Positioned(
+        width: size.width,
+        height: 100,
+        bottom: 0,
         child: Container(
-          color: Colors.black.withOpacity(0.5),
           alignment: Alignment.bottomCenter,
           child: _snackbarUI(
             context,

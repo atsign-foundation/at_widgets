@@ -22,7 +22,6 @@ class AtSyncUIService {
   /// [appNavigator] is used for navigation purpose
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
   /// [style] if material or cupertino style to be applied
-  /// [isSnackbarOverlay] decides if snackbar should be overlay or not
   /// [showTextWhileSyncing] should text be shown while syncing
   /// [onSuccessCallback] called after successful sync
   /// [onErrorCallback] called after failure in sync
@@ -31,7 +30,6 @@ class AtSyncUIService {
     required GlobalKey<NavigatorState> appNavigator,
     AtSyncUIOverlay? atSyncUIOverlay,
     AtSyncUIStyle? style,
-    bool? isSnackbarOverlay,
     bool? showTextWhileSyncing,
     Function? onSuccessCallback,
     Function? onErrorCallback,
@@ -42,9 +40,7 @@ class AtSyncUIService {
     this.onSuccessCallback = onSuccessCallback;
     this.onErrorCallback = onErrorCallback;
     AtSyncUI.instance.setAppNavigatorKey(appNavigator);
-    if (isSnackbarOverlay != null) {
-      AtSyncUI.instance.setSnackbarType(isSnackbarOverlay);
-    }
+
     if (style != null) {
       atSyncUIStyle = style;
     }
@@ -69,21 +65,14 @@ class AtSyncUIService {
 
   /// calls sync and shows selected UI
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
-  /// [isSnackbarOverlay] decides if snackbar should be overlay or not
-  Future<void> sync({
-    AtSyncUIOverlay? atSyncUIOverlay,
-    bool? isSnackbarOverlay = false,
-  }) async {
+  Future<void> sync({AtSyncUIOverlay? atSyncUIOverlay}) async {
     assert(syncService != null, "AtSyncUIService not initialised");
 
     if (atSyncUIOverlay != null) {
       this.atSyncUIOverlay = atSyncUIOverlay;
     }
 
-    _show(
-      atSyncUIOverlay: atSyncUIOverlay,
-      isSnackbarOverlay: isSnackbarOverlay,
-    );
+    _show(atSyncUIOverlay: atSyncUIOverlay);
     syncService.sync(onDone: _onSuccessCallback);
   }
 
@@ -100,10 +89,7 @@ class AtSyncUIService {
     }
   }
 
-  void _show({
-    AtSyncUIOverlay? atSyncUIOverlay,
-    bool? isSnackbarOverlay = false,
-  }) {
+  void _show({AtSyncUIOverlay? atSyncUIOverlay}) {
     if ((atSyncUIOverlay ?? this.atSyncUIOverlay) == AtSyncUIOverlay.dialog) {
       AtSyncUI.instance.showDialog(
         message: showTextWhileSyncing ? 'Sync in progress' : null,
@@ -113,7 +99,6 @@ class AtSyncUIService {
 
     AtSyncUI.instance.showSnackBar(
       message: showTextWhileSyncing ? 'Sync in progress' : null,
-      isSnackbarOverlay: isSnackbarOverlay,
     );
   }
 
