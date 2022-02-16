@@ -93,15 +93,6 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await AtSyncUIService().sync(
-                  atSyncUIOverlay: AtSyncUIOverlay.snackbar,
-                  isSnackbarOverlay: true,
-                );
-              },
-              child: const Text('Sync with overlay snackbar'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const UIOptions()));
               },

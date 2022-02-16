@@ -41,7 +41,6 @@ The app can select:
 
 - the style of the UI either `Material` or `Cupertino` by passing the `style` param to [init()] call.
 - the type of overlay to be shown while syncing either `Dialog` or `Snackbar` by passing the `atSyncUIOverlay` param to [init()] call.
-- if the type of overlay selected is `AtSyncUIOverlay.snackbar` then, `isSnackbarOverlay` will help the package to decide if the snackbar should be shown with an overlay or not.
 - the `onSuccessCallback` will be called everytime sync completes with success.
 - the `onErrorCallback` will be called everytime sync completes with failure.
 - the `primaryColor`, `backgroundColor`, `labelColor` will be used while displaying overlay/snackbar.
