@@ -1,164 +1,135 @@
-import 'package:at_follows_flutter/screens/connections.dart';
-import 'package:at_follows_flutter_example/services/at_service.dart';
-import 'package:at_follows_flutter_example/services/notification_service.dart';
-import 'package:at_follows_flutter_example/utils/app_constants.dart';
-import 'package:at_follows_flutter_example/utils/app_strings.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:flutter/material.dart';
-import 'package:at_utils/at_logger.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
+import 'dart:async';
 import 'package:at_follows_flutter_example/screens/follows_screen.dart';
-import 'package:at_onboarding_flutter/widgets/custom_reset_button.dart';
+import 'package:flutter/material.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
+    show Onboarding;
+import 'package:at_utils/at_logger.dart' show AtSignLogger;
+import 'package:path_provider/path_provider.dart'
+    show getApplicationSupportDirectory;
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 
-void main() {
-  runApp(MyApp());
+import 'services/at_service.dart';
+
+Future<void> main() async {
+  await AtEnv.load();
+  runApp(const MyApp());
+}
+
+Future<AtClientPreference> loadAtClientPreference() async {
+  var dir = await getApplicationSupportDirectory();
+  return AtClientPreference()
+        ..rootDomain = AtEnv.rootDomain
+        ..namespace = AtEnv.appNamespace
+        ..hiveStoragePath = dir.path
+        ..commitLogPath = dir.path
+        ..isLocalStoreRequired = true
+      // TODO set the rest of your AtClientPreference here
+      ;
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  // final _formKey = GlobalKey<FormState>();
-  // final _atsignController = TextEditingController();
-  final AtSignLogger _logger = AtSignLogger('Plugin example app');
-  String? atSign;
-  AtService atService = AtService.getInstance();
-  late NotificationService _notificationService;
-  bool _loading = false;
-  // List<String> _atsignsList = [];
-  String? _atsign;
-  @override
-  void initState() {
-    super.initState();
-    _notificationService = NotificationService();
-    _notificationService.setOnNotificationClick(onNotificationClick);
-  }
+  // * load the AtClientPreference in the background
+  Future<AtClientPreference> futurePreference = loadAtClientPreference();
+  AtClientPreference? atClientPreference;
+  AtClientService? atClientService;
 
-  onNotificationClick(String payload) {
-    print(
-        'clicked inside on notification click and received atsign is $payload');
-  }
+  final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      // * The onboarding screen (first screen)
+      navigatorKey: NavService.navKey,
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('AtFollows example app'),
-          actions: [
-            // if (_atsign != null)
-          ],
-        ),
-        body: Builder(builder: (context) {
-          return Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Stack(
+          appBar: AppBar(
+            title: const Text('at_location_flutter example app'),
+          ),
+          body: Builder(
+            builder: (context) => Column(
               children: [
-                Column(
-                  children: [
-                    if (_atsign != null)
-                      ListTile(
-                          leading: Text(
-                            '$_atsign',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.group),
-                                onPressed: () async {
-                                  setState(() {
-                                    _loading = true;
-                                  });
-                                  await _getFollows(context);
-                                  setState(() {
-                                    _loading = false;
-                                  });
-                                },
-                              ),
-                              IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () async {
-                                    setState(() {
-                                      _loading = true;
-                                    });
-                                    await atService.deleteAtsign(_atsign!);
-                                    _atsign = null;
-                                    setState(() {
-                                      _loading = false;
-                                    });
-                                  }),
-                            ],
-                          )),
-                    if (_atsign != null) Divider(thickness: 0.8),
-                    if (_atsign == null)
-                      Center(
-                        child: TextButton(
-                            onPressed: () async {
-                              await _onboard(context);
-                            },
-                            child: Text(AppStrings.onboard)),
-                      ),
-                    if (_atsign == null)
-                      Center(
-                          child: CustomResetButton(
-                        buttonText: "Reset",
-                        height: 50,
-                        width: 100,
-                      )),
-                  ],
+                const SizedBox(
+                  height: 25,
                 ),
-                if (_loading) Center(child: CircularProgressIndicator())
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      var preference = await futurePreference;
+                      setState(() {
+                        atClientPreference = preference;
+                      });
+                      Onboarding(
+                        context: context,
+                        atClientPreference: atClientPreference!,
+                        domain: AtEnv.rootDomain,
+                        rootEnvironment: AtEnv.rootEnvironment,
+                        appAPIKey: '477b-876u-bcez-c42z-6a3d',
+                        onboard: (Map<String?, AtClientService> value,
+                            String? atsign) async {
+                          atClientService = value[atsign];
+                          AtService.getInstance().atClientServiceInstance =
+                              value[atsign];
+                          await Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NextScreen()));
+                        },
+                        onError: (error) async {
+                          _logger.severe('Onboarding throws $error error');
+                          await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: const Text('Something went wrong'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('ok'))
+                                  ],
+                                );
+                              });
+                        },
+                      );
+                    },
+                    child: const Text('Start onboarding'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Center(
+                    child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black12),
+                        ),
+                        onPressed: () async {
+                          var _atsignsList = await KeychainUtil.getAtsignList();
+                          for (String atsign in (_atsignsList ?? [])) {
+                            await KeychainUtil.resetAtSignFromKeychain(atsign);
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Cleared all paired atsigns')));
+                        },
+                        child: const Text('Clear paired atsigns',
+                            style: TextStyle(color: Colors.black)))),
               ],
             ),
-          );
-        }),
-      ),
+          )),
     );
   }
+}
 
-  _getFollows(ctxt) async {
-    try {
-      await atService.startMonitor();
-      Navigator.push(
-          ctxt,
-          MaterialPageRoute(
-              builder: (context) => Connections(
-                  atClientserviceInstance: atService.atClientServiceInstance!,
-                  appColor: Colors.blue)));
-    } catch (e) {
-      print('Fetching follows throws $e exception');
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  _onboard(context) async {
-    var atService = AtService.getInstance();
-    var preference = await atService.getAtClientPreference();
-
-    Onboarding(
-      domain: AppConstants.rootDomain,
-      appAPIKey: AppConstants.devAPIKey,
-      rootEnvironment: RootEnvironment.Production,
-      context: context,
-      onboard: (Map<String?, AtClientService> value, String? atsign) async {
-        atSign = atsign;
-        atService.atsign = atsign!;
-        atService.atClientServiceMap = value;
-        atService.atClientServiceInstance = value[atsign];
-        _logger.finer('Successfully onboarded $atsign');
-      },
-      onError: (error) {
-        Center(child: Text('Onboarding throws $error'));
-      },
-      nextScreen: NextScreen(),
-      atClientPreference: preference,
-    );
-  }
+class NavService {
+  static GlobalKey<NavigatorState> navKey = GlobalKey();
 }
