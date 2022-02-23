@@ -19,7 +19,9 @@ void main() {
 
     // variable widget to be tested in each case
     final buttonWidget = ButtonWidget(
-        onPress: () {},
+        onPress: () {
+          print('clicked on this button');
+        },
         colorButton: CustomColors.defaultColor,
         textButton: 'Click here',
         borderRadius: const BorderRadius.all(
@@ -45,11 +47,16 @@ void main() {
 
     // Test case to check onPress functionality
     testWidgets("OnPress is given an action", (WidgetTester tester) async {
-      var onPressed = false;
       await tester
           .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
-      await tester.tap((find.byType(GestureDetector)));
-      expect(onPressed, true);
+      expect(buttonWidget.onPress!.call(), null);
+    });
+
+    // Test case to check onPress functionality
+    testWidgets("OnPress is not given an action", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+       expect(buttonWidget.onPress, null);
     });
 
     // Test case to check button BorderRadius
