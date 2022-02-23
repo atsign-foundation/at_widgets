@@ -382,29 +382,34 @@ class ConnectionsService {
       atKey = AtKey()..sharedBy = connection;
       AtFollowsValue atValue = AtFollowsValue();
       for (var key in PublicData.list) {
-        atKey..metadata = _getPublicFieldsMetadata(key);
-        atKey..key = key;
-        atKey..sharedWith = null;
-        atValue = await _sdkService.get(atKey);
-        //performs plookup if the data is not in cache.
-        if (atValue.value == null) {
-          //plookup for wavi keys.
-          atKey.metadata!.isCached = false;
+        /// if fetching one key fails, should not effect other keys
+        try {
+          atKey..metadata = _getPublicFieldsMetadata(key);
+          atKey..key = key;
+          atKey..sharedWith = null;
           atValue = await _sdkService.get(atKey);
-          //cache lookup for persona keys
+          //performs plookup if the data is not in cache.
           if (atValue.value == null) {
-            atKey.key = PublicData.personaMap[key];
-            atKey.metadata!.isCached = true;
+            //plookup for wavi keys.
+            atKey.metadata!.isCached = false;
             atValue = await _sdkService.get(atKey);
-            //plookup for persona keys.
+            //cache lookup for persona keys
             if (atValue.value == null) {
-              atKey.metadata!.isCached = false;
+              atKey.key = PublicData.personaMap[key];
+              atKey.metadata!.isCached = true;
               atValue = await _sdkService.get(atKey);
+              //plookup for persona keys.
+              if (atValue.value == null) {
+                atKey.metadata!.isCached = false;
+                atValue = await _sdkService.get(atKey);
+              }
             }
           }
-        }
 
-        atsignData.setData(atValue);
+          atsignData.setData(atValue);
+        } catch (e) {
+          _logger.severe('Error in _getAtsignData getting value ${e}');
+        }
       }
     } on AtLookUpException catch (e) {
       _logger.severe('Fetching keys for $connection throws ${e.errorMessage}');
