@@ -19,7 +19,7 @@ void main() {
     final chatScreen = ChatScreen();
 
     // Test case to identify button is used in screen or not
-    testWidgets("Button widget is used and shown on screen",
+    testWidgets("Chat Screen is displayed",
         (WidgetTester tester) async {
       await tester
           .pumpWidget(_wrapWidgetWithMaterialApp(chatScreen: chatScreen));

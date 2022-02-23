@@ -16,18 +16,17 @@ void main() {
 
   /// Functional test cases for ButtonWidget
   group('Button widget Tests:', () {
-
     // variable widget to be tested in each case
     final buttonWidget = ButtonWidget(
-        onPress: () {
-          print('clicked on this button');
-        },
-        colorButton: CustomColors.defaultColor,
-        textButton: 'Click here',
-        borderRadius: const BorderRadius.all(
-          Radius.circular(5.0),
-        ),
-      );
+      onPress: () {
+        print('clicked on this button');
+      },
+      colorButton: CustomColors.defaultColor,
+      textButton: 'Click here',
+      borderRadius: const BorderRadius.all(
+        Radius.circular(5.0),
+      ),
+    );
 
     // Test case to identify button is used in screen or not
     testWidgets("Button widget is used and shown on screen",
@@ -52,12 +51,14 @@ void main() {
       expect(buttonWidget.onPress!.call(), null);
     });
 
-    // Test case to check onPress functionality
-    testWidgets("OnPress is not given an action", (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
-       expect(buttonWidget.onPress, null);
-    });
+    // TODO: Test case to check onPress functionality 
+    // testWidgets("OnPress is not given an action", (WidgetTester tester) async {
+    //   await tester
+    //       .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+    //   // final buttonWidgetTest = tester.widget<ButtonWidget>(find.byType(ButtonWidget));
+    //   // await tester.tap(find.byType(ButtonWidget));
+    //   expect(buttonWidget.onPress, null);
+    // });
 
     // Test case to check button BorderRadius
     testWidgets("BorderRadius of button widget as circular",
@@ -72,7 +73,7 @@ void main() {
       expect(borderRadius.bottomRight, const Radius.circular(5.0));
       expect(borderRadius.topRight, const Radius.circular(5.0));
     });
-    
+
     // Test case to check button Color
     testWidgets("Color of button is button default color",
         (WidgetTester tester) async {

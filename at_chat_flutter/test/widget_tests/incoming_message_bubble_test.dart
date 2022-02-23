@@ -1,4 +1,4 @@
-import 'package:at_chat_flutter/models/message_model.dart';
+// import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
 import 'package:at_chat_flutter/widgets/contacts_initials.dart';
 import 'package:at_chat_flutter/widgets/incoming_message_bubble.dart';
@@ -27,31 +27,31 @@ void main() {
 
       expect(find.byType(IncomingMessageBubble), findsOneWidget);
     });
-    // Test case to identify incoming message has text
-    testWidgets("Check message in incoming message bubble",
-        (WidgetTester tester) async {
-      Message displayMessage =
-          Message(id: '1', time: 9, message: 'Hi', sender: 'x');
-      final incomingMessageBubble =
-          IncomingMessageBubble(message: displayMessage);
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
-          incomingMessageBubble: incomingMessageBubble));
-      expect(find.text(displayMessage.toString()), findsOneWidget);
-    });
+    // TODO: Test case to identify incoming message has text
+    // testWidgets("Check message in incoming message bubble",
+    //     (WidgetTester tester) async {
+    //   Message displayMessage =
+    //       Message(id: '1', time: 9, message: 'Hi', sender: 'x');
+    //   final incomingMessageBubble =
+    //       IncomingMessageBubble(message: displayMessage);
+    //   await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+    //       incomingMessageBubble: incomingMessageBubble));
+    //   expect(find.text(displayMessage.toString()), findsOneWidget);
+    // });
 
-    // Test case to identify color of incoming message bubble
-    testWidgets("Color of button is button default color",
-        (WidgetTester tester) async {
-      final incomingMessageBubble = IncomingMessageBubble();
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
-          incomingMessageBubble: incomingMessageBubble));
-      final container = tester.widget<Container>(find.byType(Container));
-      final decoration = container.decoration as BoxDecoration;
-      expect(
-        decoration.color,
-        CustomColors.defaultColor,
-      );
-    });
+    // TODO: Test case to identify color of incoming message bubble
+    // testWidgets("Color of button is button default color",
+    //     (WidgetTester tester) async {
+    //   final incomingMessageBubble = IncomingMessageBubble();
+    //   await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+    //       incomingMessageBubble: incomingMessageBubble));
+    //   final container = tester.widget<Container>(find.byType(Container));
+    //   final decoration = container.decoration as BoxDecoration;
+    //   expect(
+    //     decoration.color,
+    //     CustomColors.defaultColor,
+    //   );
+    // });
 
     // Test case to identify color of avatar in incoming message bubble
     testWidgets("Color of avatar in incoming message bubble",
