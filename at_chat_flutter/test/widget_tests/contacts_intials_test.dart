@@ -45,7 +45,7 @@ void main() {
       expect(contactsInitial.backgroundColor, CustomColors.defaultColor,);
     });
     
-   // TODO: Test case to check contact initial to check given without background color
+   // Test case to check contact initial to check given without background color
     testWidgets('Contacts initial without background color',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(contactInitial: ContactInitial(initials: '@',)));
