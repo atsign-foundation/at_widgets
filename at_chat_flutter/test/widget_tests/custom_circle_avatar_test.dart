@@ -1,4 +1,4 @@
-// import 'package:at_chat_flutter/widgets/custom_circle_avatar.dart';
+import 'package:at_chat_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,13 +6,14 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget customCircularAvatar}) {
+  Widget _wrapWidgetWithMaterialApp({Widget? customCircularAvatar}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
-      return customCircularAvatar;
+      return customCircularAvatar!;
     }));
   }
-
+  
+  /// Circular Avatar is not used anywhere in the screens it can be commented out once it is used or displayed
   /// Functional test cases for [customCircularAvatar]
   group('Circular Avatar Widget Tests:', () {
     // TODO: Test Case to custom circular avatar is displayed

@@ -12,45 +12,35 @@ void main() {
       return sendMessage;
     }));
   }
-
+  // TODO: Need to correct up the material/parent widget
   /// Functional test cases for Send Message
   group('Button widget Tests:', () {
-    // TODO: Test case to identify send message is used in screen or not
-
-    // testWidgets("Send message widget is used and shown on screen",
-    //     (WidgetTester tester) async {
-    //   // ignore: prefer_const_constructors
-    //   final sendMessage = SendMessage();
-    //   await tester
-    //       .pumpWidget(_wrapWidgetWithMaterialApp(sendMessage: sendMessage));
-
-    //   expect(find.byType(SendMessage), findsOneWidget);
-    // });
-
-    // TODO: Test case to identify media button color is given
+    // Test case to identify media button color is given
     // testWidgets("Color of button is button default color",
     //     (WidgetTester tester) async {
     //   // ignore: prefer_const_constructors
-    //   final sendMessage = SendMessage();
-    //   await tester
-    //       .pumpWidget(_wrapWidgetWithMaterialApp(sendMessage: sendMessage));
-    //   final iconButton = tester.widget<IconButton>(find.byType(IconButton));
-    //   final mediaButtonColor = iconButton.color;
-    //   expect(
-    //     mediaButtonColor,
-    //     Colors.orange
+    //   final sendMessage = SendMessage(
+    //     mediaButtonColor: Colors.orange,
     //   );
-    // });
-    
-    // TODO: Test case to check media button is clicked
-    // testWidgets("OnPress is given an action", (WidgetTester tester) async {
-    //   // ignore: prefer_const_constructors
-    //   final sendMessage = SendMessage();
-    //   var onPressed = false;
     //   await tester
     //       .pumpWidget(_wrapWidgetWithMaterialApp(sendMessage: sendMessage));
-    //   await tester.tap((find.byType(IconButton)));
-    //   expect(onPressed, true);
+    //   final buttonColor = tester.widget<SendMessage>(find.byType(SendMessage));
+    //   expect(buttonColor.mediaButtonColor, Colors.orange);
+    // });
+
+    // Test case to check Send button is clicked
+    // testWidgets("Media Button is given an action", (WidgetTester tester) async {
+    //   // ignore: prefer_const_constructors
+    //   await tester
+    //       .pumpWidget(_wrapWidgetWithMaterialApp(sendMessage: SendMessage(
+    //     onSend: () {
+    //       print('Send button is clicked');
+    //     },
+    //   )));
+    //   final sendMessageMedia =
+    //       tester.widget<SendMessage>(find.byType(SendMessage));
+    //   await tester.tap((find.byType(SendMessage)));
+    //   expect(sendMessageMedia.onSend!.call(), null);
     // });
   });
 }
