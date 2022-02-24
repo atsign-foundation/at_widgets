@@ -25,7 +25,7 @@ class DesktopGroupSetupRoutes {
       {int? expandIndex}) {
     return {
       DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL: (context) {
-        if (_data.length == 0) {
+        if (_data.isEmpty) {
           return DesktopEmptyGroup(true);
         } else {
           return DesktopGroupList(
@@ -116,6 +116,7 @@ class DesktopGroupSetupRoutes {
           Navigator.of(NavService.groupPckgLeftHalfNavKey.currentContext!)
               .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_LIST,
                   arguments: {
+                ...arguments,
                 'onDone': navigator(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL),
               });
         };
@@ -143,7 +144,7 @@ class DesktopGroupSetupRoutes {
                   });
               Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
                   .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
-                      arguments: {});
+                      arguments: arguments);
             }
           });
         };

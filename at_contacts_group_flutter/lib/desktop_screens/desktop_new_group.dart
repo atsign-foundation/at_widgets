@@ -74,7 +74,6 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
         }
 
         var result = await GroupService().createGroup(group);
-
         if (result is AtGroup) {
           // Navigator.of(context).pop();
 
