@@ -50,16 +50,7 @@ void main() {
           .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
       expect(buttonWidget.onPress!.call(), null);
     });
-
-    // TODO: Test case to check onPress functionality 
-    // testWidgets("OnPress is not given an action", (WidgetTester tester) async {
-    //   await tester
-    //       .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
-    //   // final buttonWidgetTest = tester.widget<ButtonWidget>(find.byType(ButtonWidget));
-    //   // await tester.tap(find.byType(ButtonWidget));
-    //   expect(buttonWidget.onPress, null);
-    // });
-
+    
     // Test case to check button BorderRadius
     testWidgets("BorderRadius of button widget as circular",
         (WidgetTester tester) async {
