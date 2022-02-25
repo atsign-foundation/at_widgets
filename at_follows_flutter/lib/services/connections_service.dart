@@ -1,3 +1,5 @@
+import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_follows_flutter/domain/at_follows_list.dart';
 import 'package:at_follows_flutter/domain/atsign.dart';
 import 'package:at_follows_flutter/domain/connection_model.dart';
@@ -392,6 +394,10 @@ class ConnectionsService {
           if (atValue.value == null) {
             //plookup for wavi keys.
             atKey.metadata!.isCached = false;
+
+            /// remove cached
+            key.replaceAll('cached:', '');
+            atKey.key?.replaceAll('cached:', '');
             atValue = await _sdkService.get(atKey);
             //cache lookup for persona keys
             if (atValue.value == null) {
@@ -411,8 +417,8 @@ class ConnectionsService {
           _logger.severe('Error in _getAtsignData getting value ${e}');
         }
       }
-    } on AtLookUpException catch (e) {
-      _logger.severe('Fetching keys for $connection throws ${e.errorMessage}');
+    } catch (e) {
+      _logger.severe('Fetching keys for $connection throws ${e}');
     }
 
     return atsignData;
@@ -421,7 +427,9 @@ class ConnectionsService {
   _getPublicFieldsMetadata(String key) {
     var atmetadata = Metadata()
       ..namespaceAware = false
-      ..isCached = true
+
+      /// if cached
+      ..isCached = key.contains('cached')
       ..isBinary = key == PublicData.image || key == PublicData.imagePersona
       ..isPublic = true;
     return atmetadata;
