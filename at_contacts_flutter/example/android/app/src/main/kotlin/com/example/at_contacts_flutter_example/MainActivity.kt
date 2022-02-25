@@ -1,4 +1,4 @@
-package com.atsign.at_contacts_flutter_example
+package com.example.at_contacts_flutter_example
 
 import io.flutter.embedding.android.FlutterActivity
 

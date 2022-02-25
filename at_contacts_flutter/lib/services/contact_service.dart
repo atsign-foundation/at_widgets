@@ -445,7 +445,7 @@ class ContactService {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
       String? firstname;
-      if (result != null && result.value != null) {
+      if (result.value != null) {
         firstname = result.value;
       }
 
@@ -455,13 +455,13 @@ class ContactService {
         print('error in getting last name $e');
       });
       String? lastname;
-      if (result != null && result.value != null) {
+      if (result.value != null) {
         lastname = result.value;
       }
 
       // construct name
       var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
-      if (name.length == 0) {
+      if (name.isEmpty) {
         name = atSign.substring(1);
       }
 
@@ -473,7 +473,7 @@ class ContactService {
         print('error in getting image $e');
       });
 
-      if (result != null && result.value != null) {
+      if (result.value != null) {
         try {
           List<int> intList = result.value.cast<int>();
           image = Uint8List.fromList(intList);
