@@ -56,14 +56,14 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.11"
+    version: "3.0.12"
   at_client_mobile:
     dependency: transitive
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.7"
+    version: "3.1.8"
   at_common_flutter:
     dependency: transitive
     description:

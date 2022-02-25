@@ -1,3 +1,7 @@
+## 4.0.1
+- **CHORE**: Updated package dependencies
+- **CHORE**: Updated documentation
+
 ## 4.0.0
 - **FEAT**: Exposed contact services
 - **CHORE**: Updated return type of contact services
