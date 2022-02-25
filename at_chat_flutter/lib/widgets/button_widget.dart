@@ -19,7 +19,7 @@ class ButtonWidget extends StatelessWidget {
     this.width = double.infinity,
   }) : super(key: key);
 
-  final GestureTapCallback onPress;
+  final Function()? onPress;
   final Color colorButton;
   final Color colorBorder;
   final Color colorText;
