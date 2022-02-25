@@ -75,6 +75,13 @@ class _MyAppState extends State<MyApp> {
                           atClientService = value[atsign];
                           AtService.getInstance().atClientServiceInstance =
                               value[atsign];
+
+                          await AtClientManager.getInstance().setCurrentAtSign(
+                            atsign!,
+                            atClientPreference!.namespace!,
+                            atClientPreference!,
+                          );
+
                           await Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
