@@ -14,11 +14,13 @@ import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_group_flutter/widgets/person_horizontal_tile.dart';
-import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
+import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 
 /// This widget gives a screen to display list of groups
 class GroupList extends StatefulWidget {
+  const GroupList({Key? key}) : super(key: key);
   @override
   _GroupListState createState() => _GroupListState();
 }
@@ -26,7 +28,7 @@ class GroupList extends StatefulWidget {
 class _GroupListState extends State<GroupList> {
   List<AtContact?> selectedContactList = [];
   bool showAddGroupIcon = false, errorOcurred = false;
-
+  AtSignLogger atSignLogger = AtSignLogger('GroupList');
   @override
   void initState() {
     try {
@@ -41,7 +43,7 @@ class _GroupListState extends State<GroupList> {
         if (mounted) setState(() {});
       });
     } catch (e) {
-      print('Error in init of Group_list $e');
+      atSignLogger.severe('Error in init of Group_list $e');
       if (mounted) {
         setState(() {
           errorOcurred = true;
@@ -72,7 +74,6 @@ class _GroupListState extends State<GroupList> {
           context,
           MaterialPageRoute(
             builder: (context) => ContactsScreen(
-              context: context,
               asSelectionScreen: true,
               selectedList: (selectedList) {
                 selectedContactList = selectedList;
@@ -84,7 +85,7 @@ class _GroupListState extends State<GroupList> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NewGroup(),
+                    builder: (context) => const NewGroup(),
                   ),
                 );
               },
@@ -94,13 +95,13 @@ class _GroupListState extends State<GroupList> {
       ),
       body: SafeArea(
         child: errorOcurred
-            ? ErrorScreen()
+            ? const ErrorScreen()
             : StreamBuilder(
                 stream: GroupService().atGroupStream,
                 builder: (BuildContext context,
                     AsyncSnapshot<List<AtGroup>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else {
                     if (snapshot.hasError) {
                       return ErrorScreen(onPressed: () {
@@ -111,12 +112,12 @@ class _GroupListState extends State<GroupList> {
                         if (snapshot.data!.isEmpty) {
                           showAddGroupIcon = false;
 
-                          return EmptyGroup();
+                          return const EmptyGroup();
                         } else {
                           return GridView.count(
                             childAspectRatio: 150 / 60, // width/height
                             primary: false,
-                            padding: EdgeInsets.all(20.0),
+                            padding: const EdgeInsets.all(20.0),
                             crossAxisSpacing: 1,
                             mainAxisSpacing: 20,
                             crossAxisCount: 2,
@@ -156,7 +157,7 @@ class _GroupListState extends State<GroupList> {
                           );
                         }
                       } else {
-                        return EmptyGroup();
+                        return const EmptyGroup();
                       }
                     }
                   }
@@ -183,8 +184,8 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
         onYesPressed: () async {
           var result = await GroupService().deleteGroup(group);
 
-          if (result is bool) {
-            result ? Navigator.of(context).pop() : null;
+          if (result is bool && result) {
+            Navigator.of(context).pop();
           } else {
             CustomToast().show(TextConstants().SERVICE_ERROR, context);
           }

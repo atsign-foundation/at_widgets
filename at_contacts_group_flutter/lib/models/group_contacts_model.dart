@@ -55,13 +55,13 @@ class GroupContactsModel {
       'GroupContactsModel(contact: $contact, group: $group, contactType: $contactType)';
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    return o is GroupContactsModel &&
-        o.contact == contact &&
-        o.group == group &&
-        o.contactType == contactType;
+    return other is GroupContactsModel &&
+        other.contact == contact &&
+        other.group == group &&
+        other.contactType == contactType;
   }
 
   @override
@@ -74,5 +74,7 @@ class GroupPreference {
 }
 
 /// Enum for contact types
+// ignore: constant_identifier_names
 enum ContactsType { CONTACT, GROUP }
+// ignore: constant_identifier_names
 enum ContactTabs { RECENT, FAVS, ALL }

@@ -15,34 +15,35 @@ class DesktopCustomInputField extends StatelessWidget {
 
   TextEditingController textController = TextEditingController();
 
-  DesktopCustomInputField(
-      {this.hintText = '',
-      this.height = 50,
-      this.width = 300,
-      this.iconColor,
-      this.icon,
-      this.onTap,
-      this.onIconTap,
-      this.value,
-      this.initialValue = '',
-      this.onSubmitted,
-      this.backgroundColor,
-      this.isReadOnly = false});
+  DesktopCustomInputField({
+    Key? key,
+    this.hintText = '',
+    this.height = 50,
+    this.width = 300,
+    this.iconColor,
+    this.icon,
+    this.onTap,
+    this.onIconTap,
+    this.value,
+    this.initialValue = '',
+    this.onSubmitted,
+    this.backgroundColor,
+    this.isReadOnly = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     textController = TextEditingController.fromValue(TextEditingValue(
-        text: initialValue != null ? initialValue : '',
-        selection: TextSelection.collapsed(
-            offset: initialValue != null ? initialValue.length : -1)));
+        text: initialValue,
+        selection: TextSelection.collapsed(offset: initialValue.length)));
     return Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
           color: backgroundColor ?? ColorConstants.inputFieldColor,
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Color(0xFFBFBFBF))),
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+          border: Border.all(color: const Color(0xFFBFBFBF))),
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
         child: Row(
@@ -58,8 +59,8 @@ class DesktopCustomInputField extends StatelessWidget {
                   hintText: hintText,
                   enabledBorder: InputBorder.none,
                   border: InputBorder.none,
-                  hintStyle:
-                      TextStyle(color: Color(0xFFBFBFBF), fontSize: 15.toFont),
+                  hintStyle: TextStyle(
+                      color: const Color(0xFFBFBFBF), fontSize: 15.toFont),
                 ),
                 onTap: onTap ?? () {},
                 onChanged: (val) {
@@ -84,7 +85,7 @@ class DesktopCustomInputField extends StatelessWidget {
                       ),
                     ),
                   )
-                : SizedBox()
+                : const SizedBox()
           ],
         ),
       ),

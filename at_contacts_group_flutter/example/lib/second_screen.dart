@@ -50,10 +50,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => ContactsScreen(
-                    context: context,
-                    selectedList: (s) {
-                      print('selected list: $s');
-                    },
+                    selectedList: (s) {},
                   ),
                 ));
               },
@@ -67,9 +64,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       showContacts: true,
                       showGroups: true,
                       asSelectionScreen: true,
-                      selectedList: (List<GroupContactsModel?> s) {
-                        print('selected list: $s');
-                      }),
+                      selectedList: (List<GroupContactsModel?> s) {}),
                 ));
               },
               child: const Text('Show Group view contacts'),
@@ -78,7 +73,7 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => BlockedScreen(),
+                  builder: (BuildContext context) => const BlockedScreen(),
                 ));
               },
               child: const Text('Show blocked contacts'),
@@ -87,7 +82,7 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => GroupList(),
+                  builder: (BuildContext context) => const GroupList(),
                 ));
               },
               child: const Text('Show groups screen'),

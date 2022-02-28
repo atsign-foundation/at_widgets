@@ -3,6 +3,7 @@ import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class DesktopHeader extends StatelessWidget {
   final String? title;
   final ValueChanged<bool>? onFilter;
@@ -16,33 +17,35 @@ class DesktopHeader extends StatelessWidget {
     'add-btn'
   ];
   bool showBackIcon, isTitleCentered;
-  DesktopHeader(
-      {required this.onBackTap,
-      this.title,
-      this.showBackIcon = true,
-      this.onFilter,
-      this.actions,
-      this.isTitleCentered = false});
+  DesktopHeader({
+    Key? key,
+    required this.onBackTap,
+    this.title,
+    this.showBackIcon = true,
+    this.onFilter,
+    this.actions,
+    this.isTitleCentered = false,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: SizeConfig().screenWidth - TextConstants.SIDEBAR_WIDTH,
       child: Row(
         children: <Widget>[
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           showBackIcon
               ? InkWell(
                   onTap: () {
                     onBackTap();
                   },
-                  child: Icon(Icons.arrow_back),
+                  child: const Icon(Icons.arrow_back),
                 )
-              : SizedBox(),
-          SizedBox(width: 15),
+              : const SizedBox(),
+          const SizedBox(width: 15),
           title != null && isTitleCentered
               ? Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 20),
+                    padding: const EdgeInsets.only(left: 20),
                     child: Center(
                       child: Text(
                         title!,
@@ -51,18 +54,16 @@ class DesktopHeader extends StatelessWidget {
                     ),
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
           title != null && !isTitleCentered
-              ? Container(
-                  child: Center(
-                    child: Text(
-                      title!,
-                      style: CustomTextStyles.primaryRegular20,
-                    ),
+              ? Center(
+                  child: Text(
+                    title!,
+                    style: CustomTextStyles.primaryRegular20,
                   ),
                 )
-              : SizedBox(),
-          SizedBox(width: 15),
+              : const SizedBox(),
+          const SizedBox(width: 15),
           // !isTitleCentered ? Expanded(child: SizedBox()) : SizedBox(),
           actions != null
               ? Expanded(
@@ -70,7 +71,7 @@ class DesktopHeader extends StatelessWidget {
                     children: actions!,
                   ),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );

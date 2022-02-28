@@ -1,9 +1,8 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:flutter/material.dart';
 
-import 'desktop_group_detail.dart';
-
 class DesktopGroupView extends StatefulWidget {
+  const DesktopGroupView({Key? key}) : super(key: key);
   @override
   _DesktopGroupViewState createState() => _DesktopGroupViewState();
 }
@@ -11,7 +10,7 @@ class DesktopGroupView extends StatefulWidget {
 class _DesktopGroupViewState extends State<DesktopGroupView> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: SizeConfig().screenWidth,
       child: Row(
         children: [
@@ -19,8 +18,9 @@ class _DesktopGroupViewState extends State<DesktopGroupView> {
           //   width: SizeConfig().screenWidth / 2 - 35,
           //   child: DesktopGroupList(),
           // ),
-          Container(
-              width: SizeConfig().screenWidth / 2 - 35, child: Text('Commented')
+          SizedBox(
+              width: SizeConfig().screenWidth / 2 - 35,
+              child: const Text('Commented')
               // DesktopGroupDetail(),
               )
         ],

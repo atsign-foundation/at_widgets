@@ -6,6 +6,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
@@ -13,7 +14,7 @@ import 'package:collection/collection.dart';
 
 class DesktopGroupInitialScreen extends StatefulWidget {
   final bool showBackButton;
-  DesktopGroupInitialScreen({Key? key, this.showBackButton = true})
+  const DesktopGroupInitialScreen({Key? key, this.showBackButton = true})
       : super(key: key);
 
   @override
@@ -27,6 +28,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
   bool shouldUpdate = false;
   List<AtGroup>? previousData;
 
+  AtSignLogger atSignLogger = AtSignLogger('DesktopGroupInitialScreen');
   @override
   void initState() {
     try {
@@ -34,7 +36,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
       GroupService().groupPreferece.showBackButton = widget.showBackButton;
       GroupService().getAllGroupsDetails();
     } catch (e) {
-      print('Error in init of Group_list $e');
+      atSignLogger.severe('Error in init of Group_list $e');
     }
   }
 
@@ -43,12 +45,12 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
     SizeConfig().init(context);
     return Container(
       width: SizeConfig().screenWidth - TextConstants.SIDEBAR_WIDTH,
-      color: Color(0xFFF7F7FF),
+      color: const Color(0xFFF7F7FF),
       child: StreamBuilder(
         stream: GroupService().atGroupStream,
         builder: (BuildContext context, AsyncSnapshot<List<AtGroup>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else {
             if (snapshot.hasError) {
               return ErrorScreen(onPressed: () {
@@ -115,7 +117,7 @@ class NestedNavigators extends StatefulWidget {
   final Function initialRouteOnArrowBackTap;
   final bool shouldUpdate;
   final int expandIndex;
-  NestedNavigators(this.data, this.initialRouteOnArrowBackTap,
+  const NestedNavigators(this.data, this.initialRouteOnArrowBackTap,
       {Key? key, this.shouldUpdate = false, required this.expandIndex})
       : super(key: key);
 

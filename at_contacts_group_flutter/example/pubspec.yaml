@@ -42,8 +42,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
-  at_contacts_flutter: ^4.0.0
-  at_app_flutter: 4.0.1
+  # at_contacts_flutter: ^4.0.0
+  at_app_flutter: 5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -60,7 +60,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 dependency_overrides:
-  at_onboarding_flutter: ^4.0.0
+  # at_onboarding_flutter: ^4.0.0
   biometric_storage: ^4.0.1
 
 # The following section is specific to Flutter.
