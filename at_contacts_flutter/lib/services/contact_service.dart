@@ -443,6 +443,7 @@ class ContactService {
       key.key = contactFields[0];
       var result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
+        return AtValue();
       });
       String? firstname;
       if (result.value != null) {
@@ -453,6 +454,7 @@ class ContactService {
       key.key = contactFields[1];
       result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in getting last name $e');
+        return AtValue();
       });
       String? lastname;
       if (result.value != null) {
@@ -471,6 +473,7 @@ class ContactService {
       Uint8List? image;
       result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in getting image $e');
+        return AtValue();
       });
 
       if (result.value != null) {
