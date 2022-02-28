@@ -8,13 +8,11 @@ import 'package:flutter/material.dart';
 /// Custom reset button widget is to reset an atsign from keychain list,
 
 class CustomResetButton extends StatefulWidget {
-  bool? loading;
   final String? buttonText;
   final double? width;
   final double? height;
-  CustomResetButton({
+  const CustomResetButton({
     Key? key,
-    this.loading = false,
     this.buttonText,
     this.height,
     this.width,
@@ -25,6 +23,7 @@ class CustomResetButton extends StatefulWidget {
 }
 
 class _CustomResetButtonState extends State<CustomResetButton> {
+  bool? loading = false;
   // @override
   // void initState() {
   //   super.initState();
@@ -109,11 +108,11 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                             CheckboxListTile(
                               onChanged: (bool? value) {
                                 isSelectAll = value!;
-                                atsignMap.isNotEmpty
-                                    ? atsignMap.updateAll(
-                                        (String? key, bool? value1) =>
-                                            value1 = value)
-                                    : true;
+                                if (atsignMap.isNotEmpty) {
+                                  atsignMap.updateAll(
+                                      (String? key, bool? value1) =>
+                                          value1 = value);
+                                }
                                 // atsignMap[atsign] = value;
                                 stateSet(() {});
                               },
@@ -131,9 +130,9 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                             for (String atsign in atsignsList)
                               CheckboxListTile(
                                 onChanged: (bool? value) {
-                                  atsignMap.isNotEmpty
-                                      ? atsignMap[atsign] = value
-                                      : true;
+                                  if (atsignMap.isNotEmpty) {
+                                    atsignMap[atsign] = value;
+                                  }
                                   stateSet(() {});
                                 },
                                 value: atsignMap.isNotEmpty
@@ -142,7 +141,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                                 checkColor: Colors.white,
                                 activeColor:
                                     const Color.fromARGB(255, 240, 94, 62),
-                                title: Text('$atsign'),
+                                title: Text(atsign),
                                 // trailing: Checkbox,
                               ),
                             const Divider(thickness: 0.8),
@@ -204,15 +203,15 @@ class _CustomResetButtonState extends State<CustomResetButton> {
   Future<void> _resetDevice(List<String> checkedAtsigns) async {
     Navigator.of(context).pop();
     setState(() {
-      widget.loading = true;
+      loading = true;
     });
     await SDKService().resetAtsigns(checkedAtsigns).then((void value) async {
       setState(() {
-        widget.loading = false;
+        loading = false;
       });
     }).catchError((Object error) {
       setState(() {
-        widget.loading = false;
+        loading = false;
       });
       showDialog(
           barrierDismissible: false,

@@ -11,7 +11,7 @@ class CustomStrings {
   String get invalidData =>
       'Received content is invalid. Please scan or upload relevant files to pair your atsign';
   String invalidCram(String atsign) =>
-      'Click on \"${Strings.saveButtonTitle}"\ for pairing $atsign with the device using backupzip file. Otherwise provide a valid QRcode';
+      'Click on "${Strings.saveButtonTitle}" for pairing $atsign with the device using backupzip file. Otherwise provide a valid QRcode';
 
   String pairedAtsign(String? atsign) =>
       '$atsign was already paired with this device. First delete/reset this @sign from device to add.';

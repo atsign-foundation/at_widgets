@@ -15,7 +15,6 @@ import 'package:file_selector/file_selector.dart';
 
 class BackupKeyWidget extends StatelessWidget {
   final AtSignLogger _logger = AtSignLogger('BackUp Key Widget');
-  final _backupKeyService = BackUpKeyService();
 
   ///[required] to provide backup keys for `atsign` to save.
   final String atsign;
@@ -25,9 +24,6 @@ class BackupKeyWidget extends StatelessWidget {
 
   ///set to `true` for using widget as an icon.
   final bool? isIcon;
-
-  ///[required] to provide backupkeys.
-  final atClientService;
 
   ///takes a `String` and displays on button. set [isButton] to `true` to use this.
   final String? buttonText;
@@ -48,8 +44,8 @@ class BackupKeyWidget extends StatelessWidget {
   final Color? buttonColor;
 
   BackupKeyWidget(
-      {required this.atsign,
-      required this.atClientService,
+      {Key? key,
+      required this.atsign,
       this.isButton = false,
       this.isIcon,
       this.buttonText,
@@ -57,7 +53,8 @@ class BackupKeyWidget extends StatelessWidget {
       this.buttonWidth,
       this.buttonHeight,
       this.buttonColor,
-      this.iconSize}) {}
+      this.iconSize})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,14 +68,12 @@ class BackupKeyWidget extends StatelessWidget {
               }
             },
             child: Container(
-              width: this.buttonWidth ?? 158.toWidth,
-              height: this.buttonHeight ?? (50.toHeight),
+              width: buttonWidth ?? 158.toWidth,
+              height: buttonHeight ?? (50.toHeight),
               padding: EdgeInsets.symmetric(horizontal: 10.toWidth),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30.toWidth),
-                  color: this.buttonColor == null
-                      ? Colors.black
-                      : this.buttonColor),
+                  color: buttonColor ?? Colors.black),
               child: Center(
                 child: Text(buttonText!,
                     textAlign: TextAlign.center,
@@ -92,7 +87,7 @@ class BackupKeyWidget extends StatelessWidget {
         : IconButton(
             icon: Icon(
               Icons.file_copy,
-              color: this.iconColor,
+              color: iconColor,
             ),
             onPressed: () {
               showBackupDialog(context);
@@ -126,7 +121,7 @@ class BackupKeyWidget extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(_);
                 },
-                child: Text('Close'),
+                child: const Text('Close'),
               )
             ],
           );
@@ -139,7 +134,7 @@ class BackupKeyWidget extends StatelessWidget {
         context: context,
         builder: (BuildContext ctxt) {
           return AlertDialog(
-            title: Center(
+            title: const Center(
               child: Text(
                 Strings.backUpKeysTitle,
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -148,7 +143,7 @@ class BackupKeyWidget extends StatelessWidget {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   Strings.backUpKeysDescription,
                   textAlign: TextAlign.center,
                 ),
@@ -156,7 +151,7 @@ class BackupKeyWidget extends StatelessWidget {
                 Row(
                   children: [
                     TextButton(
-                        child: Text(Strings.backButtonTitle,
+                        child: const Text(Strings.backButtonTitle,
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         onPressed: () async {
                           var result = await _onBackup(context);
@@ -165,10 +160,10 @@ class BackupKeyWidget extends StatelessWidget {
                             _showAlertDialog(context);
                           }
                         }),
-                    Spacer(),
+                    const Spacer(),
                     TextButton(
-                        child:
-                            Text(Strings.cancelButtonTitle, style: TextStyle()),
+                        child: const Text(Strings.cancelButtonTitle,
+                            style: TextStyle()),
                         onPressed: () {
                           Navigator.pop(context);
                         })
@@ -198,8 +193,8 @@ class BackupKeyWidget extends StatelessWidget {
         final file = XFile(tempFilePath);
         await file.saveTo(path ?? '');
       }
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('File saved successfully')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('File saved successfully')));
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
     } on Error catch (err) {
@@ -217,7 +212,7 @@ class BackupKeyWidget extends StatelessWidget {
       var directory = await path_provider.getApplicationSupportDirectory();
       String path = directory.path.toString() + '/';
       final encryptedKeysFile =
-          await File('$path' + '$atsign${Strings.backupKeyName}').create();
+          await File('$path$atsign${Strings.backupKeyName}').create();
       var keyString = jsonEncode(aesEncryptedKeys);
       encryptedKeysFile.writeAsStringSync(keyString);
       return encryptedKeysFile.path;
@@ -229,7 +224,6 @@ class BackupKeyWidget extends StatelessWidget {
       String desktopPath = await FileSaver.instance.saveFile(
           encryptedKeysFile, data, Strings.backupKeyExtension,
           mimeType: MimeType.OTHER);
-      print('Backup file saved to: $desktopPath');
       return desktopPath;
     }
   }

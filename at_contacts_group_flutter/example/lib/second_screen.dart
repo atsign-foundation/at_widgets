@@ -1,20 +1,21 @@
+import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
-import 'package:at_contacts_group_flutter/screens/list/group_list.dart';
-import 'package:at_contacts_group_flutter_example/constants.dart';
 import 'package:flutter/material.dart';
-import 'client_sdk_service.dart';
-import 'package:at_contacts_flutter/screens/contacts_screen.dart';
-import 'package:at_contacts_flutter/screens/blocked_screen.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 
 class SecondScreen extends StatefulWidget {
+  const SecondScreen({Key? key}) : super(key: key);
+
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  /// Get the AtClientManager instance
+  var atClientManager = AtClientManager.getInstance();
+
   String? activeAtSign;
   @override
   void initState() {
@@ -32,16 +33,16 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Second Screen'),
+        title: const Text('Second Screen'),
       ),
       body: Center(
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
                 'Welcome $activeAtSign!',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
             ElevatedButton(
@@ -56,7 +57,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   ),
                 ));
               },
-              child: Text('Show contacts'),
+              child: const Text('Show contacts'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -71,7 +72,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       }),
                 ));
               },
-              child: Text('Show Group view contacts'),
+              child: const Text('Show Group view contacts'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -80,7 +81,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   builder: (BuildContext context) => BlockedScreen(),
                 ));
               },
-              child: Text('Show blocked contacts'),
+              child: const Text('Show blocked contacts'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -89,7 +90,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   builder: (BuildContext context) => GroupList(),
                 ));
               },
-              child: Text('Show groups screen'),
+              child: const Text('Show groups screen'),
             ),
           ],
         ),
@@ -99,11 +100,11 @@ class _SecondScreenState extends State<SecondScreen> {
 
   // ignore: always_declare_return_types
   getAtSignAndInitializeContacts() async {
-    var currentAtSign = await (clientSdkService.getAtSign());
+    var currentAtSign = atClientManager.atClient.getCurrentAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
-    initializeContactsService(rootDomain: MixedConstants.ROOT_DOMAIN);
-    initializeGroupService(rootDomain: MixedConstants.ROOT_DOMAIN);
+    initializeContactsService(rootDomain: AtEnv.rootDomain);
+    initializeGroupService(rootDomain: AtEnv.rootDomain);
   }
 }

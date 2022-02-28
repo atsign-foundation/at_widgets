@@ -17,26 +17,9 @@ Initially to get a basic overview of the SDK, you must read the [atsign docs](ht
 > To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
 
 
-### Installation:
+### Manually add the package to a project:
 
- To use this library in your app, add it to your pubspec.yaml
-
-```dart 
-  dependencies:
-    at_location_flutter: ^3.1.1
-```
-
-#### Add to your project
-
- ```dart
- flutter pub get 
- ```
-
- #### Import in your application code
-
- ```dart
- import 'package:at_location_flutter/at_location_flutter.dart';
- ```
+Instructions on how to manually add this package to you project can be found on pub.dev [here](https://pub.dev/packages/at_location_flutter/install).
 
 ### Clone it from github
 

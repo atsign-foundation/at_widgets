@@ -13,6 +13,7 @@ import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_server_status/at_server_status.dart';
@@ -124,6 +125,7 @@ class _CustomDialogState extends State<CustomDialog> {
 
   Future<bool>? scanResult;
 
+  final AtSignLogger _logger = AtSignLogger('Onboarding Service Custom Dialog');
   @override
   Widget build(BuildContext context) {
     if (widget.isQR) {
@@ -151,7 +153,7 @@ class _CustomDialogState extends State<CustomDialog> {
                               widget.title ?? Strings.errorTitle,
                               style: CustomTextStyles.fontR16primary,
                             ),
-                            widget.message == ResponseStatus.TIME_OUT
+                            widget.message == ResponseStatus.timeOut
                                 ? Icon(Icons.access_time, size: 18.toFont)
                                 : Icon(Icons.sentiment_dissatisfied,
                                     size: 18.toFont)
@@ -201,11 +203,20 @@ class _CustomDialogState extends State<CustomDialog> {
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
+                                            height:
+                                                SizeConfig().isTablet(context)
+                                                    ? 50.toHeight
+                                                    : null,
                                             child: ElevatedButton(
                                               style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Colors.grey[800])),
+                                                  backgroundColor: Theme.of(
+                                                                  context)
+                                                              .brightness ==
+                                                          Brightness.light
+                                                      ? MaterialStateProperty
+                                                          .all(Colors.grey[800])
+                                                      : MaterialStateProperty
+                                                          .all(Colors.white)),
                                               // key: Key(''),
                                               onPressed: () {
                                                 setState(() {
@@ -215,7 +226,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                               child: Text(
                                                 'Cancel',
                                                 style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.light
+                                                        ? Colors.white
+                                                        : Colors.black,
                                                     fontSize: 15.toFont),
                                               ),
                                             ))
@@ -251,8 +266,22 @@ class _CustomDialogState extends State<CustomDialog> {
                                                         : !otp
                                                             ? 'Enter your email'
                                                             : 'Enter Verification Code',
-                                                // style: CustomTextStyles
-                                                //     .fontR16primary,
+                                                style: SizeConfig()
+                                                        .isTablet(context)
+                                                    ? Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? CustomTextStyles
+                                                            .fontR12secondary
+                                                        : CustomTextStyles
+                                                            .fontR12primary
+                                                    : Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? CustomTextStyles
+                                                            .fontR14secondary
+                                                        : CustomTextStyles
+                                                            .fontR14primary,
                                               ),
                                             ),
                                             widget.hideReferences
@@ -271,7 +300,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                                   Widget>(
                                                               builder: (BuildContext
                                                                       context) =>
-                                                                  WebViewScreen(
+                                                                  const WebViewScreen(
                                                                     title: Strings
                                                                         .faqTitle,
                                                                     url: Strings
@@ -285,9 +314,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 !widget.isQR
                                                     ? 'A verification code has been sent to ${_emailController.text}'
                                                     : 'A verification code has been sent to your registered email.',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 13.toFont),
+                                                style: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR14secondary
+                                                    : CustomTextStyles
+                                                        .fontR14primary,
                                               )
                                             : Container()
                                       ]))
@@ -316,9 +349,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                             enabled: isfreeAtsign & !pair
                                                 ? false
                                                 : true,
-                                            style: TextStyle(
-                                                fontSize: 14.toFont,
-                                                height: 1.0.toHeight),
+                                            style:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR14secondary
+                                                    : CustomTextStyles
+                                                        .fontR14primary,
                                             validator: (String? value) {
                                               if (value == null ||
                                                   value == '') {
@@ -374,7 +411,8 @@ class _CustomDialogState extends State<CustomDialog> {
                                               prefixText: !pair ? '@' : '',
                                               prefixStyle: TextStyle(
                                                   color:
-                                                      ColorConstants.appColor),
+                                                      ColorConstants.appColor,
+                                                  fontSize: 15.toFont),
                                               border: OutlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color:
@@ -392,8 +430,13 @@ class _CustomDialogState extends State<CustomDialog> {
                                             onChanged: (String value) {
                                               verificationCode = value;
                                             },
-                                            textStyle: const TextStyle(
-                                                fontWeight: FontWeight.w500),
+                                            textStyle:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? CustomTextStyles
+                                                        .fontR16secondary
+                                                    : CustomTextStyles
+                                                        .fontR16primary,
                                             pinTheme: PinTheme(
                                               selectedColor: Colors.black,
                                               inactiveColor: Colors.grey[500],
@@ -412,6 +455,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                             onCompleted: (String v) {
                                               verificationCode = v;
                                             },
+                                            inputFormatters: <
+                                                TextInputFormatter>[
+                                              UpperCaseInputFormatter(),
+                                            ],
                                           )),
                                 if (!isfreeAtsign &&
                                     !widget.isQR &&
@@ -459,10 +506,22 @@ class _CustomDialogState extends State<CustomDialog> {
                                     ],
                                   ),
                                   SizedBox(height: 20.toHeight),
-                                  const Text('Need an @sign?'),
+                                  Text(
+                                    'Need an @sign?',
+                                    style: Theme.of(context).brightness !=
+                                            Brightness.dark
+                                        ? CustomTextStyles.fontR12primary
+                                        : CustomTextStyles.fontR12secondary,
+                                  ),
                                   SizedBox(height: 5.toHeight),
                                   SizedBox(
-                                      width: MediaQuery.of(context).size.width,
+                                      width: MediaQuery.of(context)
+                                          .size
+                                          .width
+                                          .toWidth,
+                                      height: SizeConfig().isTablet(context)
+                                          ? 50.toHeight
+                                          : null,
                                       child: ElevatedButton(
                                         style: Theme.of(context).brightness ==
                                                 Brightness.light
@@ -502,7 +561,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                   SizedBox(height: 20.toHeight),
                                   widget.hideQrScan
                                       ? const SizedBox()
-                                      : const Text('Have a QR Code?'),
+                                      : Text('Have a QR Code?',
+                                          style: Theme.of(context).brightness !=
+                                                  Brightness.dark
+                                              ? CustomTextStyles.fontR12primary
+                                              : CustomTextStyles
+                                                  .fontR12secondary),
                                   widget.hideQrScan
                                       ? const SizedBox()
                                       : SizedBox(height: 5.toHeight),
@@ -512,7 +576,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                           ? SizedBox(
                                               width: MediaQuery.of(context)
                                                   .size
-                                                  .width,
+                                                  .width
+                                                  .toWidth,
+                                              height:
+                                                  SizeConfig().isTablet(context)
+                                                      ? 50.toHeight
+                                                      : null,
                                               child: ElevatedButton(
                                                 style: Theme.of(context)
                                                             .brightness ==
@@ -549,6 +618,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
+                                              height:
+                                                  SizeConfig().isTablet(context)
+                                                      ? 50.toHeight
+                                                      : null,
                                               child: ElevatedButton(
                                                 style: ButtonStyle(
                                                     backgroundColor:
@@ -577,6 +650,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
+                                              height:
+                                                  SizeConfig().isTablet(context)
+                                                      ? 50.toHeight
+                                                      : null,
                                               child: ElevatedButton(
                                                 style: ButtonStyle(
                                                     backgroundColor:
@@ -610,6 +687,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                       const Icon(
                                                         Icons.refresh,
                                                         color: Colors.white,
+                                                        size: 30,
                                                       )
                                                     ]),
                                               ))
@@ -699,6 +777,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
+                                              height:
+                                                  SizeConfig().isTablet(context)
+                                                      ? 50.toHeight
+                                                      : null,
                                               child: ElevatedButton(
                                                 style: ButtonStyle(
                                                     backgroundColor:
@@ -784,8 +866,9 @@ class _CustomDialogState extends State<CustomDialog> {
                                               child: Text(
                                                 'Resend Code',
                                                 style: TextStyle(
-                                                    color: ColorConstants
-                                                        .appColor),
+                                                    color:
+                                                        ColorConstants.appColor,
+                                                    fontSize: 15.toFont),
                                               )),
                                           SizedBox(height: 10.toHeight),
                                           if (!widget.isQR)
@@ -797,10 +880,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                       _emailController.text;
                                                   stateSet(() {});
                                                 },
-                                                child: const Text(
+                                                child: Text(
                                                   'Wrong email?',
                                                   style: TextStyle(
-                                                      color: Colors.grey),
+                                                      color: Colors.grey,
+                                                      fontSize: 15.toFont),
                                                 )),
                                           if (widget.isQR)
                                             TextButton(
@@ -808,10 +892,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                   Navigator.pop(context);
                                                   Navigator.pop(context);
                                                 },
-                                                child: const Text(
+                                                child: Text(
                                                   'Back',
                                                   style: TextStyle(
-                                                      color: Colors.grey),
+                                                      color: Colors.grey,
+                                                      fontSize: 15.toFont),
                                                 ))
                                         ]),
                                   if (!pair) ...<Widget>[
@@ -819,6 +904,9 @@ class _CustomDialogState extends State<CustomDialog> {
                                     SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width,
+                                        height: SizeConfig().isTablet(context)
+                                            ? 50.toHeight
+                                            : null,
                                         child: ElevatedButton(
                                           style: ButtonStyle(
                                               backgroundColor:
@@ -837,6 +925,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 fontSize: 15.toFont),
                                           )),
                                         )),
+                                    const SizedBox(height: 10),
                                     Center(
                                         child: TextButton(
                                             onPressed: () {
@@ -844,10 +933,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                               _atsignController.text = '';
                                               stateSet(() {});
                                             },
-                                            child: const Text(
+                                            child: Text(
                                               'Back',
-                                              style:
-                                                  TextStyle(color: Colors.grey),
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12.toFont),
                                             )))
                                   ]
                                 ]
@@ -878,7 +968,6 @@ class _CustomDialogState extends State<CustomDialog> {
 
   Future<bool> _verifyCameraPermissions() async {
     PermissionStatus status = await Permission.camera.status;
-    print('camera status => $status');
     if (status.isGranted) {
       return true;
     }
@@ -892,12 +981,13 @@ class _CustomDialogState extends State<CustomDialog> {
     //   loading = true;
     // });
     try {
-      //await _controller!.stopCamera();
-      await _controller!.stopCamera();
+      //Relate: https://github.com/atsign-foundation/at_widgets/issues/353
+      //If added [await] will make an error because [stopCamera] invoke a channel method which don't have a return and waiting forever.
+      //It's an issue in flutter_qr_reader package and no need [await] keyword
+      _controller!.stopCamera();
     } catch (e) {
-      print(e.toString());
+      _logger.warning(e.toString());
     }
-    print('SCANNED: => $data');
     List<String> values = data.split(':');
     await widget.onValidate!(values[0], values[1], true);
 
@@ -935,7 +1025,6 @@ class _CustomDialogState extends State<CustomDialog> {
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
-      print(data);
       status = true;
       // atsign = data['data']['atsign'];
     } else {
@@ -967,7 +1056,6 @@ class _CustomDialogState extends State<CustomDialog> {
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
-      print(data['data']);
       //check for the atsign list and display them.
       if (data['data'] != null &&
           data['data'].length == 2 &&
@@ -1030,7 +1118,6 @@ class _CustomDialogState extends State<CustomDialog> {
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
-      print(data['data']);
       //check for the atsign list and display them.
       if (data['message'] == 'Verified') {
         cramSecret = data['cramkey'];
@@ -1057,7 +1144,6 @@ class _CustomDialogState extends State<CustomDialog> {
       data = response.body;
       data = jsonDecode(data);
 
-      print(data);
       status = true;
       // atsign = data['data']['atsign'];
     } else {
@@ -1096,7 +1182,7 @@ class _CustomDialogState extends State<CustomDialog> {
       case OnboardingStatus:
         return error.toString();
       case ResponseStatus:
-        if (error == ResponseStatus.AUTH_FAILED) {
+        if (error == ResponseStatus.authFailed) {
           if (_onboardingService.isPkam!) {
             return 'Please provide valid backupkey file to continue.';
           } else {
@@ -1104,7 +1190,7 @@ class _CustomDialogState extends State<CustomDialog> {
                 ? 'Please provide a relevant backupkey file to authenticate.'
                 : 'Please provide a valid QRcode to authenticate.';
           }
-        } else if (error == ResponseStatus.TIME_OUT) {
+        } else if (error == ResponseStatus.timeOut) {
           return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AppConstants.contactAddress} if the issue still persists.';
         } else {
           return '';
@@ -1199,7 +1285,7 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget? _getMessage(dynamic message, bool isErrorDialog) {
-    String? highLightText = message == ResponseStatus.TIME_OUT
+    String? highLightText = message == ResponseStatus.timeOut
         ? AppConstants.contactAddress
         : AppConstants.website;
     if (message == null) {
@@ -1274,7 +1360,6 @@ class _CustomDialogState extends State<CustomDialog> {
         loading = true;
       });
       String? path = await _desktopKeyPicker();
-      print(path);
       if (path == null) {
         setState(() {
           loading = false;
@@ -1314,7 +1399,7 @@ class _CustomDialogState extends State<CustomDialog> {
         loading = false;
       });
     } catch (error) {
-      print(error);
+      _logger.warning(error);
       setState(() {
         loading = false;
       });
@@ -1337,8 +1422,19 @@ class _CustomDialogState extends State<CustomDialog> {
       XFile file = files[0];
       return file.path;
     } catch (e) {
-      print('Error in desktopImagePicker $e');
+      _logger.severe('Error in desktopImagePicker $e');
       return null;
     }
+  }
+}
+
+class UpperCaseInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
   }
 }

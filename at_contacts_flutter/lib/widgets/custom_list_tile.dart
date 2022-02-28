@@ -12,6 +12,7 @@ import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/images.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -40,6 +41,7 @@ class CustomListTile extends StatefulWidget {
 }
 
 class _CustomListTileState extends State<CustomListTile> {
+  final AtSignLogger _logger = AtSignLogger('Custom List Tile');
   bool isSelected = false;
 
   @override
@@ -47,12 +49,22 @@ class _CustomListTileState extends State<CustomListTile> {
     Widget contactImage;
     if (widget.contact!.tags != null &&
         widget.contact!.tags!['image'] != null) {
-      List<int> intList = widget.contact!.tags!['image'].cast<int>();
-      var image = Uint8List.fromList(intList);
-      contactImage = CustomCircleAvatar(
-        byteImage: image,
-        nonAsset: true,
-      );
+      Uint8List? image;
+      try {
+        List<int> intList = widget.contact!.tags!['image'].cast<int>();
+        image = Uint8List.fromList(intList);
+      } catch (e) {
+        _logger.severe('Error in image: $e');
+      }
+
+      contactImage = image != null
+          ? CustomCircleAvatar(
+              byteImage: image,
+              nonAsset: true,
+            )
+          : ContactInitial(
+              initials: widget.contact!.atSign!,
+            );
     } else {
       contactImage = ContactInitial(
         initials: widget.contact!.atSign!,
@@ -93,7 +105,9 @@ class _CustomListTileState extends State<CustomListTile> {
 
                 widget.selectedList!(widget.contactService!.selectedContacts);
               } else {
-                widget.onTap!();
+                if (widget.onTap != null) {
+                  widget.onTap!();
+                }
               }
             },
             title: Text(
@@ -126,7 +140,7 @@ class _CustomListTileState extends State<CustomListTile> {
                 child: contactImage),
             trailing: IconButton(
               onPressed: widget.asSelectionTile
-                  ? selectRemoveContact
+                  ? null
                   : () {
                       if (widget.onTrailingPressed != null) {
                         widget.onTrailingPressed!(widget.contact!.atSign);
@@ -146,6 +160,4 @@ class _CustomListTileState extends State<CustomListTile> {
           );
         });
   }
-
-  void selectRemoveContact() {}
 }

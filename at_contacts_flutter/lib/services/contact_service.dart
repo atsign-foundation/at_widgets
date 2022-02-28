@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
@@ -358,7 +359,7 @@ class ContactService {
         return false;
       }
     } catch (e) {
-      print(e);
+      print(' error in adding atsign: $e');
       return false;
     }
   }
@@ -443,12 +444,20 @@ class ContactService {
       var result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
       });
-      var firstname = result.value;
+      String? firstname;
+      if (result != null && result.value != null) {
+        firstname = result.value;
+      }
 
       // lastname
       key.key = contactFields[1];
-      result = await atClientManager.atClient.get(key);
-      var lastname = result.value;
+      result = await atClientManager.atClient.get(key).catchError((e) {
+        print('error in getting last name $e');
+      });
+      String? lastname;
+      if (result != null && result.value != null) {
+        lastname = result.value;
+      }
 
       // construct name
       var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
@@ -459,8 +468,20 @@ class ContactService {
       // profile picture
       key.metadata?.isBinary = true;
       key.key = contactFields[2];
-      result = await atClientManager.atClient.get(key);
-      var image = result.value;
+      Uint8List? image;
+      result = await atClientManager.atClient.get(key).catchError((e) {
+        print('error in getting image $e');
+      });
+
+      if (result != null && result.value != null) {
+        try {
+          List<int> intList = result.value.cast<int>();
+          image = Uint8List.fromList(intList);
+        } catch (e) {
+          print('invalid iamge data: $e');
+        }
+      }
+
       contactDetails['name'] = name;
       contactDetails['image'] = image;
       contactDetails['nickname'] = nickName != '' ? nickName : null;

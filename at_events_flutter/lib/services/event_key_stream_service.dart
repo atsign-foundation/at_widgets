@@ -11,6 +11,7 @@ import 'package:at_events_flutter/models/enums_model.dart';
 import 'package:at_events_flutter/models/event_member_location.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
+import 'package:at_events_flutter/services/venues_services.dart';
 import 'package:at_events_flutter/utils/constants.dart';
 import 'package:at_location_flutter/location_modal/location_data_model.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
@@ -52,6 +53,8 @@ class EventKeyStreamService {
     allEventNotifications = [];
     allPastEventNotifications = [];
     this.streamAlternative = streamAlternative;
+
+    await VenuesServices().getVenues();
 
     atNotificationsController =
         StreamController<List<EventKeyLocationModel>>.broadcast();

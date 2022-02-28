@@ -304,10 +304,12 @@ Map<String, dynamic> get monthsList => {
 
 class EventInfo {
   late bool isAccepted, isSharing, isExited;
+  DateTime? from;
 
   EventInfo({
     required this.isSharing,
     required this.isExited,
     required this.isAccepted,
+    this.from,
   });
 }

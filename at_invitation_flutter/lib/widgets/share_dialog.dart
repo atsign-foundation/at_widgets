@@ -1,13 +1,8 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'dart:io';
 
 import 'package:at_common_flutter/at_common_flutter.dart';
-// import 'package:at_common_flutter/services/size_config.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_invitation_flutter/services/invitation_service.dart';
 import 'package:at_invitation_flutter/utils/text_styles.dart'
-    as invitationTextStyles;
+    as invitation_text_styles;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,7 +11,7 @@ class ShareDialog extends StatefulWidget {
   final String? passcode;
   final String? webPageLink;
   final String currentAtsign;
-  ShareDialog(
+  const ShareDialog(
       {Key? key,
       this.uniqueID,
       this.passcode,
@@ -54,9 +49,8 @@ class _ShareDialogState extends State<ShareDialog> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var _invitationService = InvitationService();
     var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-    return Container(
+    return SizedBox(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,
       child: SingleChildScrollView(
@@ -72,7 +66,7 @@ class _ShareDialogState extends State<ShareDialog> {
                 child: Text(
                   'Share information',
                   textAlign: TextAlign.center,
-                  style: invitationTextStyles.CustomTextStyles.primaryBold18,
+                  style: invitation_text_styles.CustomTextStyles.primaryBold18,
                 ),
               )
             ],
@@ -84,17 +78,17 @@ class _ShareDialogState extends State<ShareDialog> {
                     : 500.toHeight),
             child: Column(
               children: [
-                Text(
+                const Text(
                   'Would you like to invite someone via',
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
                   height: 20.toHeight,
                 ),
-                new Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    new Radio(
+                    Radio(
                       value: 0,
                       groupValue: activeOption,
                       onChanged: (e) {
@@ -103,11 +97,11 @@ class _ShareDialogState extends State<ShareDialog> {
                         });
                       },
                     ),
-                    new Text(
+                    const Text(
                       'SMS',
-                      style: new TextStyle(fontSize: 16.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
-                    new Radio(
+                    Radio(
                       value: 1,
                       groupValue: activeOption,
                       onChanged: (e) {
@@ -116,9 +110,9 @@ class _ShareDialogState extends State<ShareDialog> {
                         });
                       },
                     ),
-                    new Text(
+                    const Text(
                       'Email',
-                      style: new TextStyle(
+                      style: TextStyle(
                         fontSize: 16.0,
                       ),
                     ),
@@ -213,7 +207,7 @@ class _ShareDialogState extends State<ShareDialog> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     (isLoading)
-                        ? CircularProgressIndicator()
+                        ? const CircularProgressIndicator()
                         : CustomButton(
                             height: 50.toHeight * deviceTextFactor,
                             buttonText: 'Share',
@@ -283,7 +277,6 @@ class _ShareDialogState extends State<ShareDialog> {
         var uri = 'sms:' + phoneNumber + '?body=' + messageBody;
         if (await canLaunch(uri)) {
           await launch(uri);
-          print('sent to $phoneNumber');
         }
       } else if (Platform.isIOS) {
         var uri = 'sms:' + phoneNumber + '&body=' + messageBody;
@@ -296,10 +289,8 @@ class _ShareDialogState extends State<ShareDialog> {
     else if (emailAddress != '') {
       var uri =
           'mailto:' + emailAddress + '?subject=Invitation&body=' + messageBody;
-      print(uri);
       if (await canLaunch(uri)) {
         await launch(uri);
-        print('sent to $emailAddress');
       }
     }
   }

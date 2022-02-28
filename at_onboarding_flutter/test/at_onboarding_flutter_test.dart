@@ -28,7 +28,6 @@ void main() {
 
     testWidgets('entering invalid @signs', (WidgetTester tester) async {
       void onSubmit(String atsign) {
-        print('atsign is $atsign');
         _atsign = atsign;
       }
 
@@ -49,7 +48,6 @@ void main() {
 
     testWidgets('entering valid @sign', (WidgetTester tester) async {
       void onSubmit(String atsign) {
-        print('atsign is $atsign');
         _atsign = atsign;
       }
 

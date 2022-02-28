@@ -100,6 +100,7 @@ class Onboarding {
     }
   }
   void _show() async {
+    ColorConstants.darkTheme = Theme.of(context).brightness == Brightness.dark;
     await showDialog(
       context: context,
       barrierDismissible: false,
@@ -107,8 +108,8 @@ class Onboarding {
         atsign: atsign,
         onboard: onboard,
         onError: onError,
-        hideReferences: this.hideReferences,
-        hideQrScan: this.hideQrScan,
+        hideReferences: hideReferences,
+        hideQrScan: hideQrScan,
         nextScreen: nextScreen,
         fistTimeAuthNextScreen: fistTimeAuthNextScreen,
         atClientPreference: atClientPreference,
@@ -162,8 +163,7 @@ class OnboardingWidget extends StatefulWidget {
 
   /// API authentication key for getting free atsigns
   final String appAPIKey;
-
-  OnboardingWidget(
+  const OnboardingWidget(
       {Key? key,
       this.atsign,
       this.hideReferences,
@@ -176,7 +176,8 @@ class OnboardingWidget extends StatefulWidget {
       this.appColor,
       this.logo,
       this.domain,
-      required this.appAPIKey});
+      required this.appAPIKey})
+      : super(key: key);
   @override
   _OnboardingWidgetState createState() => _OnboardingWidgetState();
 }

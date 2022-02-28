@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:at_chat_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ButtonWidget extends StatelessWidget {
   ButtonWidget({
+    Key? key,
     required this.onPress,
     required this.colorButton,
     this.colorBorder = CustomColors.defaultColor,
@@ -15,9 +17,9 @@ class ButtonWidget extends StatelessWidget {
     this.marginBottom = 0,
     this.marginRight = 0,
     this.width = double.infinity,
-  });
+  }) : super(key: key);
 
-  final GestureTapCallback onPress;
+  final Function()? onPress;
   final Color colorButton;
   final Color colorBorder;
   final Color colorText;

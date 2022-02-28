@@ -24,7 +24,7 @@ class AtSignBottomSheet extends StatefulWidget {
 class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
 //  var atClientManager = AtClientManager.getInstance();
   bool isLoading = false;
-  var atClientPreferenceLocal;
+  late AtClientPreference atClientPreferenceLocal;
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
   @override
@@ -44,7 +44,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
               child: Container(
                 height: 100,
                 width: screenSize.width,
-                color: Colors.white,
+                color: Theme.of(context).backgroundColor,
                 child: Row(
                   children: [
                     Expanded(
@@ -96,7 +96,10 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                               ContactInitial(
                                 initials: widget.atSignList[index],
                               ),
-                              Text(widget.atSignList[index])
+                              Text(
+                                widget.atSignList[index],
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )
                             ],
                           ),
                         ),
@@ -136,7 +139,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         }
                       },
                       child: Container(
-                        margin: EdgeInsets.only(right: 10),
+                        margin: const EdgeInsets.only(right: 10),
                         height: 40,
                         width: 40,
                         child: const Icon(
@@ -154,7 +157,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
         isLoading
             ? Center(
                 child: Column(
-                  children: [
+                  children: const [
                     Text(
                       'Switching atsign...',
                       style: TextStyle(

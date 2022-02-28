@@ -47,7 +47,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
         return grp.groupName!.contains(searchText);
       }).toList();
     } else {
-      _filteredList = widget.groups;
+      _filteredList = widget.groups ?? [];
     }
 
     return Container(

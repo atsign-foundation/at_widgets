@@ -22,6 +22,7 @@ dependencies:
   at_contact: ^3.0.3
   at_common_flutter: ^2.0.5
   at_client: ^3.0.8
+  at_utils: ^3.0.5
 
 dev_dependencies:
   flutter_lints: ^1.0.4
