@@ -443,9 +443,10 @@ class ContactService {
       key.key = contactFields[0];
       var result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in get ${e.errorCode} ${e.errorMessage}');
+        return AtValue();
       });
       String? firstname;
-      if (result != null && result.value != null) {
+      if (result.value != null) {
         firstname = result.value;
       }
 
@@ -453,15 +454,16 @@ class ContactService {
       key.key = contactFields[1];
       result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in getting last name $e');
+        return AtValue();
       });
       String? lastname;
-      if (result != null && result.value != null) {
+      if (result.value != null) {
         lastname = result.value;
       }
 
       // construct name
       var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
-      if (name.length == 0) {
+      if (name.isEmpty) {
         name = atSign.substring(1);
       }
 
@@ -471,9 +473,10 @@ class ContactService {
       Uint8List? image;
       result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in getting image $e');
+        return AtValue();
       });
 
-      if (result != null && result.value != null) {
+      if (result.value != null) {
         try {
           List<int> intList = result.value.cast<int>();
           image = Uint8List.fromList(intList);

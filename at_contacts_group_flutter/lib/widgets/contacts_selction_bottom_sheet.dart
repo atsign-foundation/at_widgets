@@ -45,7 +45,7 @@ class _ContactSelectionBottomSheetState
           : Container(
               padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
               height: 70.toHeight,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color(0xffF7F7FF),
                   boxShadow: [BoxShadow(color: Colors.grey)]),
               child: Row(

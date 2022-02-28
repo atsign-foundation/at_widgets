@@ -26,7 +26,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-    return Container(
+    return SizedBox(
       height: 100 * deviceTextFactor,
       width: 100,
       child: AlertDialog(
@@ -72,7 +72,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
               //   style: CustomTextStyles.secondaryRegular16,
               // ),
               (isLoading)
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : CustomButton(
                       buttonText: TextStrings().yes,
                       buttonColor:

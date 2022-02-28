@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
+import 'package:at_utils/at_logger.dart';
 import 'package:file_selector/file_selector.dart';
 
 dynamic desktopImagePicker() async {
+  AtSignLogger atSignLogger = AtSignLogger('desktopImagePicker');
   try {
     // ignore: omit_local_variable_types
     final XTypeGroup typeGroup = XTypeGroup(
@@ -18,7 +20,7 @@ dynamic desktopImagePicker() async {
     final Uint8List image = await file.readAsBytes();
     return image;
   } catch (e) {
-    print('Error in desktopImagePicker $e');
+    atSignLogger.severe('Error in desktopImagePicker $e');
     return null;
   }
 }

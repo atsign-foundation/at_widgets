@@ -1,10 +1,7 @@
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/desktop_screens/desktop_contacts_screen.dart';
-import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_empty_group.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_detail.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_list.dart';
-import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_view.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_new_group.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -26,7 +23,7 @@ class DesktopGroupSetupRoutes {
     return {
       DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL: (context) {
         if (_data.isEmpty) {
-          return DesktopEmptyGroup(true);
+          return const DesktopEmptyGroup(true);
         } else {
           return DesktopGroupList(
             _data,

@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
@@ -17,12 +15,14 @@ class ConfirmationDialog extends StatefulWidget {
   final Function onYesPressed;
   final Uint8List? image;
   ConfirmationDialog(
-      {required this.heading,
+      {Key? key,
+      required this.heading,
       required this.title,
       required this.onYesPressed,
       this.subtitle,
       this.atsign,
-      this.image});
+      this.image})
+      : super(key: key);
 
   @override
   _ConfirmationDialogState createState() => _ConfirmationDialogState();
@@ -64,7 +64,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.only(top: 0),
+      contentPadding: const EdgeInsets.only(top: 0),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.toWidth)),
       content: Container(
@@ -74,7 +74,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             ? AllColors().WHITE
             : AllColors().Black,
         child: Container(
-          padding: EdgeInsets.fromLTRB(24, 20, 24, 24),
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -121,10 +121,10 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                       widget.subtitle!,
                       style: CustomTextStyles().grey16,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               SizedBox(height: 20.toHeight),
               isLoading
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : CustomButton(
                       height: 60.toHeight,
                       width: double.infinity,

@@ -3,7 +3,6 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/image_picker.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
-import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
@@ -17,7 +16,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 /// Screen to edit group details
 class GroupEdit extends StatefulWidget {
   final AtGroup group;
-  GroupEdit({required this.group});
+  const GroupEdit({Key? key, required this.group}) : super(key: key);
 
   @override
   _GroupEditState createState() => _GroupEditState();
@@ -55,7 +54,7 @@ class _GroupEditState extends State<GroupEdit> {
     textController = TextEditingController.fromValue(
       TextEditingValue(
         text: groupName != null ? groupName! : '',
-        selection: TextSelection.collapsed(offset: -1),
+        selection: const TextSelection.collapsed(offset: -1),
       ),
     );
 
@@ -73,7 +72,7 @@ class _GroupEditState extends State<GroupEdit> {
         showLeadingIcon: true,
         leadingIcon: Center(
           child: Container(
-            padding: EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 10),
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
@@ -99,7 +98,7 @@ class _GroupEditState extends State<GroupEdit> {
                   child: SizedBox(
                     width: 20.toHeight,
                     height: 20.toHeight,
-                    child: CircularProgressIndicator(),
+                    child: const CircularProgressIndicator(),
                   ),
                 )
               : Text('Done',
@@ -147,7 +146,7 @@ class _GroupEditState extends State<GroupEdit> {
                     width: double.infinity,
                     child: Icon(Icons.groups_rounded,
                         size: 200, color: AllColors().LIGHT_GREY)),
-            Divider(height: 1),
+            const Divider(height: 1),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: 27.toWidth, vertical: 15.toHeight),
@@ -176,7 +175,7 @@ class _GroupEditState extends State<GroupEdit> {
               ),
             ),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 child: SingleChildScrollView(
                     child: Column(
@@ -199,7 +198,7 @@ class _GroupEditState extends State<GroupEdit> {
                             color: AllColors().INPUT_FIELD_COLOR,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                           child: Row(
                             children: <Widget>[
                               Expanded(
@@ -236,7 +235,7 @@ class _GroupEditState extends State<GroupEdit> {
 
                                   setState(() {});
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.emoji_emotions_outlined,
                                   color: Colors.grey,
                                 ),
@@ -246,11 +245,11 @@ class _GroupEditState extends State<GroupEdit> {
                         )),
                     showEmojiPicker
                         ? Stack(children: [
-                            Container(
+                            SizedBox(
                               height: 250,
                               child: EmojiPicker(
                                 key: UniqueKey(),
-                                config: Config(
+                                config: const Config(
                                     columns: 7,
                                     emojiSizeMax: 32.0,
                                     verticalSpacing: 0,
@@ -264,9 +263,9 @@ class _GroupEditState extends State<GroupEdit> {
                                     showRecentsTab: true,
                                     recentsLimit: 28,
                                     noRecentsText: "No Recents",
-                                    noRecentsStyle: const TextStyle(
+                                    noRecentsStyle: TextStyle(
                                         fontSize: 20, color: Colors.black26),
-                                    categoryIcons: const CategoryIcons(),
+                                    categoryIcons: CategoryIcons(),
                                     buttonMode: ButtonMode.MATERIAL),
                                 onEmojiSelected: (category, emoji) {
                                   textController!.text += emoji.emoji;
@@ -274,7 +273,7 @@ class _GroupEditState extends State<GroupEdit> {
                               ),
                             ),
                           ])
-                        : SizedBox()
+                        : const SizedBox()
                   ],
                 )),
               ),
@@ -289,7 +288,7 @@ class _GroupEditState extends State<GroupEdit> {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        shape: StadiumBorder(),
+        shape: const StadiumBorder(),
         builder: (BuildContext context) {
           return Container(
             height: 119.toHeight,
@@ -297,9 +296,9 @@ class _GroupEditState extends State<GroupEdit> {
               color: Theme.of(context).brightness == Brightness.light
                   ? AllColors().WHITE
                   : AllColors().Black,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(12.0),
-                topRight: const Radius.circular(12.0),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12.0),
+                topRight: Radius.circular(12.0),
               ),
             ),
             child: Padding(
@@ -323,7 +322,7 @@ class _GroupEditState extends State<GroupEdit> {
                       style: CustomTextStyles().grey16,
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   InkWell(
                     onTap: () {
                       setState(() {

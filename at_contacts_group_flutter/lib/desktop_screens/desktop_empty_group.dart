@@ -1,26 +1,20 @@
-import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
-import 'package:at_contacts_group_flutter/services/group_service.dart';
-import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
-import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
-import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
-import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
-import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 /// TODO:
 /// Duplicate GlobalKey detected in widget tree as we now have
 /// select contacts on right side and left side we have empty widget
-/// and empty widget inturn has nested widgets, so it thriws error
+/// and empty widget inturn has nested widgets, so it throws error
 
 class DesktopEmptyGroup extends StatefulWidget {
   final bool createBtnTapped;
   final Function? onCreateBtnTap;
 
-  DesktopEmptyGroup(this.createBtnTapped, {this.onCreateBtnTap});
+  const DesktopEmptyGroup(this.createBtnTapped, {Key? key, this.onCreateBtnTap})
+      : super(key: key);
   @override
   _DesktopEmptyGroupState createState() => _DesktopEmptyGroupState();
 }
@@ -131,10 +125,10 @@ class _DesktopEmptyGroupState extends State<DesktopEmptyGroup> {
             },
           ), fixedSize: MaterialStateProperty.resolveWith<Size>(
             (Set<MaterialState> states) {
-              return Size(160, 45);
+              return const Size(160, 45);
             },
           )),
-          child: Text(
+          child: const Text(
             'Create',
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),

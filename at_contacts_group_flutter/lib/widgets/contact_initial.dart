@@ -2,6 +2,7 @@ import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
+// ignore: must_be_immutable
 class ContactInitial extends StatelessWidget {
   /// Size of the circular profile placeholder
   final double size;
@@ -12,15 +13,15 @@ class ContactInitial extends StatelessWidget {
 
   /// Index in the list of atsigns
   int? index;
-  final Key? key;
 
-  ContactInitial(
-      {this.size = 40,
-      this.key,
-      required this.initials,
-      this.index,
-      this.maxSize,
-      this.minSize});
+  ContactInitial({
+    Key? key,
+    this.size = 40,
+    required this.initials,
+    this.index,
+    this.maxSize,
+    this.minSize,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var encodedInitials = initials.runes;

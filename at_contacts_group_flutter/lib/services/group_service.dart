@@ -5,6 +5,7 @@ import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'dart:async';
 import 'package:at_contacts_flutter/utils/exposed_service.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -101,6 +102,7 @@ class GroupService {
 
   int? expandIndex = 0;
 
+  AtSignLogger atSignLogger = AtSignLogger('GroupService');
   // ignore: always_declare_return_types
   setSelectedContacts(List<AtContact?>? list) {
     selecteContactList = list ?? [];
@@ -131,7 +133,7 @@ class GroupService {
         return group;
       }
     } catch (e) {
-      print('error in creating group: $e');
+      atSignLogger.severe('error in creating group: $e');
       return;
     }
   }
@@ -151,7 +153,7 @@ class GroupService {
         if (groupDetail != null) groupList.add(groupDetail);
       }
 
-      groupList.forEach((AtGroup group) {
+      for (AtGroup group in groupList) {
         var index = allContacts.indexWhere((element) =>
             element!.group != null && element.group!.groupId == group.groupId);
 
@@ -159,7 +161,7 @@ class GroupService {
           allContacts.add(GroupContactsModel(
               group: group, contactType: ContactsType.GROUP));
         }
-      });
+      }
 
       if (expandIndex != null) {
         this.expandIndex = expandIndex;
@@ -196,7 +198,7 @@ class GroupService {
       var group = await atContactImpl.getGroup(groupId);
       return group;
     } catch (e) {
-      print('error in getting group details : $e');
+      atSignLogger.severe('error in getting group details : $e');
       return null;
     }
   }
@@ -206,12 +208,10 @@ class GroupService {
       List<AtContact> contacts, AtGroup group) async {
     try {
       var result = await atContactImpl.deleteMembers(Set.from(contacts), group);
-      if (result is bool) {
-        await updateGroupStreams(group, expandGroup: true);
-        return result;
-      }
+      await updateGroupStreams(group, expandGroup: true);
+      return result;
     } catch (e) {
-      print('error in deleting group members:$e');
+      atSignLogger.severe('error in deleting group members:$e');
       return e;
     }
   }
@@ -221,12 +221,10 @@ class GroupService {
       List<AtContact?> contacts, AtGroup group) async {
     try {
       var result = await atContactImpl.addMembers(Set.from(contacts), group);
-      if (result is bool) {
-        await updateGroupStreams(group, expandGroup: true);
-        return result;
-      }
+      await updateGroupStreams(group, expandGroup: true);
+      return result;
     } catch (e) {
-      print('error in adding members: $e');
+      atSignLogger.severe('error in adding members: $e');
       return e;
     }
   }
@@ -242,7 +240,7 @@ class GroupService {
         return 'something went wrong';
       }
     } catch (e) {
-      print('error in updating group: $e');
+      atSignLogger.severe('error in updating group: $e');
       return e;
     }
   }
@@ -263,7 +261,7 @@ class GroupService {
       await getAllGroupsDetails(); //updating group list sink
       return result;
     } catch (e) {
-      print('error in deleting group: $e');
+      atSignLogger.severe('error in deleting group: $e');
       return null;
     }
   }
@@ -295,7 +293,7 @@ class GroupService {
       allContacts = [];
       var contactList = await fetchContacts();
       if (contactList != null) {
-        contactList.forEach((AtContact? contact) {
+        for (AtContact? contact in contactList) {
           var index = -1;
           if (contact != null) {
             index = allContacts.indexWhere((element) =>
@@ -307,7 +305,7 @@ class GroupService {
             allContacts.add(GroupContactsModel(
                 contact: contact, contactType: ContactsType.CONTACT));
           }
-        });
+        }
         await getAllGroupsDetails(addToGroupSink: !isDesktop);
         _allContactsStreamController.add(allContacts);
       }
@@ -321,13 +319,13 @@ class GroupService {
     try {
       length = 0;
       if (selectedGroupContacts.isNotEmpty) {
-        selectedGroupContacts.forEach((groupContact) {
+        for (var groupContact in selectedGroupContacts) {
           if (groupContact!.contactType == ContactsType.CONTACT) {
             length++;
           } else if (groupContact.contactType == ContactsType.GROUP) {
             length = length + groupContact.group!.members!.length;
           }
-        });
+        }
       }
 
       // ignore: omit_local_variable_types
@@ -346,7 +344,7 @@ class GroupService {
 
       selectedContactsSink.add(selectedGroupContacts);
     } catch (e) {
-      print(e);
+      atSignLogger.severe('Error in removeGroupContact $e');
     }
   }
 
@@ -356,13 +354,13 @@ class GroupService {
       var isSelected = false;
       length = 0;
       if (selectedGroupContacts.isNotEmpty) {
-        selectedGroupContacts.forEach((groupContact) {
+        for (var groupContact in selectedGroupContacts) {
           if (groupContact!.contactType == ContactsType.CONTACT) {
             length++;
           } else if (groupContact.contactType == ContactsType.GROUP) {
             length = length + groupContact.group!.members!.length;
           }
-        });
+        }
       }
 
       // ignore: omit_local_variable_types

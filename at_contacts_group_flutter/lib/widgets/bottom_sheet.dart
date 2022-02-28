@@ -10,10 +10,11 @@ class GroupBottomSheet extends StatefulWidget {
   final Function? onPressed;
   final String buttontext, message;
   const GroupBottomSheet({
+    Key? key,
     this.onPressed,
     required this.buttontext,
     this.message = '',
-  });
+  }) : super(key: key);
 
   @override
   _GroupBottomSheetState createState() => _GroupBottomSheetState();
@@ -32,7 +33,7 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
       height: 70.toHeight,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Color(0xffF7F7FF), boxShadow: [BoxShadow(color: Colors.grey)]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -44,7 +45,7 @@ class _GroupBottomSheetState extends State<GroupBottomSheet> {
             ),
           ),
           isLoading
-              ? CircularProgressIndicator()
+              ? const CircularProgressIndicator()
               : CustomButton(
                   buttonText: widget.buttontext,
                   width: 120.toWidth,

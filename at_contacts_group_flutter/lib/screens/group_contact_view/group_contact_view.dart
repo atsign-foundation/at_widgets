@@ -1,8 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:at_common_flutter/widgets/custom_app_bar.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -20,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 /// This widget gives a screen view for displaying contacts and group details
+// ignore: must_be_immutable
 class GroupContactView extends StatefulWidget {
   /// Boolean flag to set view to show contacts
   final bool showContacts;
@@ -137,7 +136,7 @@ class _GroupContactViewState extends State<GroupContactView> {
         onTrailingIconPressed: () {
           showDialog(
             context: context,
-            builder: (context) => AddContactDialog(),
+            builder: (context) => const AddContactDialog(),
           );
         },
       ),
@@ -453,7 +452,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   List<GroupContactsModel?> getAllContactList(
       List<GroupContactsModel?> allGroupContactData) {
     var _filteredList = <GroupContactsModel?>[];
-    allGroupContactData.forEach((c) {
+    for (var c in allGroupContactData) {
       if (widget.showContacts &&
           c!.contact != null &&
           c.contact!.atSign
@@ -470,7 +469,8 @@ class _GroupContactViewState extends State<GroupContactView> {
               .contains(searchText.toUpperCase())) {
         _filteredList.add(c);
       }
-    });
+    }
+
     return _filteredList;
   }
 
@@ -496,35 +496,35 @@ class _GroupContactViewState extends State<GroupContactView> {
       int alphabetIndex) {
     var contactsForAlphabet = <GroupContactsModel?>[];
     if (alphabetIndex == 26) {
-      _filteredList.forEach((c) {
+      for (var c in _filteredList) {
         if (widget.showContacts &&
             c!.contact != null &&
             int.tryParse(c.contact!.atSign![1]) != null) {
           contactsForAlphabet.add(c);
         }
-      });
-      _filteredList.forEach((c) {
+      }
+      for (var c in _filteredList) {
         if (widget.showGroups &&
             c!.group != null &&
             int.tryParse(c.group!.displayName![0]) != null) {
           contactsForAlphabet.add(c);
         }
-      });
+      }
     } else {
-      _filteredList.forEach((c) {
+      for (var c in _filteredList) {
         if (widget.showContacts &&
             c!.contact != null &&
             c.contact?.atSign![1].toUpperCase() == currentChar) {
           contactsForAlphabet.add(c);
         }
-      });
-      _filteredList.forEach((c) {
+      }
+      for (var c in _filteredList) {
         if (widget.showGroups &&
             c!.group != null &&
             c.group?.displayName![0].toUpperCase() == currentChar) {
           contactsForAlphabet.add(c);
         }
-      });
+      }
     }
 
     return contactsForAlphabet;

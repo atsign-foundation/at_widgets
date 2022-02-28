@@ -17,7 +17,8 @@ import 'package:flutter/material.dart';
 
 class DesktopNewGroup extends StatefulWidget {
   final Function? onPop, onDone;
-  DesktopNewGroup({this.onPop, @required this.onDone});
+  const DesktopNewGroup({Key? key, this.onPop, @required this.onDone})
+      : super(key: key);
   @override
   _DesktopNewGroupState createState() => _DesktopNewGroupState();
 }
@@ -39,7 +40,7 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
 
   // ignore: always_declare_return_types
   getContacts() {
-    if (GroupService().selecteContactList!.isNotEmpty) {
+    if (GroupService().selecteContactList.isNotEmpty) {
       selectedContacts = GroupService().selecteContactList;
     } else {
       selectedContacts = [];
@@ -175,7 +176,7 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                       Container(
                         width: 100.toWidth,
                         height: 100.toWidth,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: ColorConstants.dividerColor,
                           shape: BoxShape.circle,
                         ),
@@ -190,7 +191,7 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                                             .image,
                                   ),
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                         ),
                       ),
                       Positioned(
@@ -208,17 +209,17 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                           child: Container(
                               width: 30,
                               height: 30,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: ColorConstants.fadedbackground,
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(Icons.image)),
+                              child: const Icon(Icons.image)),
                         ),
                       )
                     ],
                   ),
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -230,7 +231,7 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Padding(
                             padding: const EdgeInsets.only(right: 15.0),
                             child: Container(
@@ -243,7 +244,7 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                                 color: ColorConstants.listBackground,
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                               child: Row(
                                 children: <Widget>[
                                   Expanded(
@@ -254,8 +255,9 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                                       ),
                                       decoration: InputDecoration(
                                         hintText: 'Enter Group Name',
-                                        enabledBorder: UnderlineInputBorder(),
-                                        border: UnderlineInputBorder(),
+                                        enabledBorder:
+                                            const UnderlineInputBorder(),
+                                        border: const UnderlineInputBorder(),
                                         hintStyle:
                                             TextStyle(fontSize: 15.toFont),
                                       ),
@@ -283,12 +285,12 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                   ],
                 ),
                 SizedBox(height: 13.toHeight),
-                Divider(),
+                const Divider(),
                 SizedBox(height: 13.toHeight),
                 Expanded(
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(right: 15, left: 15),
+                    padding: const EdgeInsets.only(right: 15, left: 15),
                     child: SingleChildScrollView(
                       child: Wrap(
                         alignment: WrapAlignment.start,
@@ -322,10 +324,10 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                         onTap: () {
                           widget.onPop!();
                         },
-                        child: Icon(Icons.arrow_back,
+                        child: const Icon(Icons.arrow_back,
                             size: 25, color: Colors.black)),
                   )
-                : SizedBox()
+                : const SizedBox()
           ],
         ),
       ),

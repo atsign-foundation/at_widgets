@@ -17,6 +17,7 @@ import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
+import 'package:at_utils/at_logger.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -48,6 +49,7 @@ class _CustomListTileState extends State<CustomListTile> {
   late GroupService _groupService;
   AtContact? localContact;
   AtGroup? localGroup;
+  AtSignLogger atSignLogger = AtSignLogger('CustomListTile');
   @override
   void initState() {
     _groupService = GroupService();
@@ -117,7 +119,7 @@ class _CustomListTileState extends State<CustomListTile> {
           List<int> intList = widget.item?.contact?.tags!['image'].cast<int>();
           image = Uint8List.fromList(intList);
         } catch (e) {
-          print('error in converting image: $e');
+          atSignLogger.severe('error in converting image: $e');
         }
 
         if ((Platform.isAndroid || Platform.isIOS) && image != null) {
@@ -227,12 +229,13 @@ class _CustomListTileState extends State<CustomListTile> {
             leading: Container(
                 height: 40.toHeight,
                 width: 40.toHeight,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.circle,
                 ),
-                child:
-                    (isLoading) ? CircularProgressIndicator() : contactImage),
+                child: (isLoading)
+                    ? const CircularProgressIndicator()
+                    : contactImage),
             trailing: IconButton(
               onPressed: (widget.asSelectionTile == false &&
                       widget.onTrailingPressed != null)
@@ -240,8 +243,8 @@ class _CustomListTileState extends State<CustomListTile> {
                   : selectRemoveContact(),
               icon: (widget.asSelectionTile)
                   ? (isSelected)
-                      ? Icon(Icons.close)
-                      : Icon(Icons.add)
+                      ? const Icon(Icons.close)
+                      : const Icon(Icons.add)
                   : Image.asset(
                       AllImages().SEND,
                       width: 21.toWidth,

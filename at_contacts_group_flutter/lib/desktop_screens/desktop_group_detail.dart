@@ -2,12 +2,10 @@ import 'dart:typed_data';
 
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
-import 'package:at_contacts_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
-import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_image_picker.dart';
@@ -16,10 +14,12 @@ import 'package:at_contacts_group_flutter/widgets/remove_trusted_contact_dialog.
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
+// ignore: must_be_immutable
 class DesktopGroupDetail extends StatefulWidget {
   AtGroup group;
   int currentIndex;
-  DesktopGroupDetail(this.group, this.currentIndex);
+  DesktopGroupDetail(this.group, this.currentIndex, {Key? key})
+      : super(key: key);
 
   @override
   _DesktopGroupDetailState createState() => _DesktopGroupDetailState();
@@ -35,7 +35,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
     textController = TextEditingController.fromValue(
       TextEditingValue(
         text: widget.group.groupName ?? '',
-        selection: TextSelection.collapsed(offset: -1),
+        selection: const TextSelection.collapsed(offset: -1),
       ),
     );
     if (widget.group.groupPicture != null) {
@@ -71,7 +71,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                     child: Text('Updating image...',
                                         style: CustomTextStyles.primaryBold16),
                                   )
-                                : SizedBox()
+                                : const SizedBox()
                           ],
                         )
                       : Stack(
@@ -87,7 +87,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                     child: Text('Updating image...',
                                         style: CustomTextStyles.primaryBold16),
                                   )
-                                : SizedBox()
+                                : const SizedBox()
                           ],
                         ),
                   SizedBox(
@@ -144,7 +144,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                     color: Theme.of(context).brightness == Brightness.light
                         ? Colors.white
                         : Colors.black,
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: ColorConstants.greyText,
                         blurRadius: 10.0,
@@ -165,7 +165,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                   child: TextField(
                                     textInputAction: TextInputAction.search,
                                     controller: textController,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Change name',
                                       hintStyle: TextStyle(
@@ -177,7 +177,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                       contentPadding: EdgeInsets.symmetric(
                                           vertical: 15, horizontal: 5),
                                     ),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       color: ColorConstants.fontPrimary,
                                     ),
@@ -185,12 +185,11 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                   ),
                                 ),
                                 updatingName
-                                    ? SizedBox(
+                                    ? const SizedBox(
                                         width: 35,
                                         height: 25,
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
+                                          padding: EdgeInsets.only(left: 8.0),
                                           child: CircularProgressIndicator(),
                                         ),
                                       )
@@ -233,7 +232,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                               // TODO: Doubt
                                               widget.group = _group;
                                               ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
+                                                  .showSnackBar(const SnackBar(
                                                       content: Text(
                                                           'Name updated')));
                                             } else if (result == null) {
@@ -259,9 +258,8 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                             isEditingName = false;
                                           });
                                         },
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
+                                        child: const Padding(
+                                          padding: EdgeInsets.only(left: 8.0),
                                           child: Icon(
                                             Icons.done,
                                             color: Colors.black,
@@ -275,47 +273,43 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: 250.toWidth,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            text:
-                                                '${widget.group.groupName}   ',
-                                            style: TextStyle(
-                                              color: ColorConstants.fontPrimary,
-                                              fontSize: 16.toFont,
-                                            ),
-                                            children: [
-                                              WidgetSpan(
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      isEditingName = true;
-                                                    });
-                                                  },
-                                                  child: Icon(
-                                                    Icons.edit,
-                                                    color: Colors.black,
-                                                    size: 20,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: 250.toWidth,
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: '${widget.group.groupName}   ',
+                                          style: TextStyle(
+                                            color: ColorConstants.fontPrimary,
+                                            fontSize: 16.toFont,
                                           ),
+                                          children: [
+                                            WidgetSpan(
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    isEditingName = true;
+                                                  });
+                                                },
+                                                child: const Icon(
+                                                  Icons.edit,
+                                                  color: Colors.black,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ),
-                                      Text(
-                                        '${widget.group.members!.length} members',
-                                        style: CustomTextStyles
-                                            .desktopPrimaryRegular14,
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    Text(
+                                      '${widget.group.members!.length} members',
+                                      style: CustomTextStyles
+                                          .desktopPrimaryRegular14,
+                                    ),
+                                  ],
                                 )
                               ],
                             ),
@@ -377,11 +371,11 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                   child: Container(
                       width: 30,
                       height: 30,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: ColorConstants.fadedbackground,
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.image)),
+                      child: const Icon(Icons.image)),
                 ),
               )
             ],
@@ -417,7 +411,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
     if (result is AtGroup) {
       // TODO: Doubt
       widget.group = _group;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
         'Image updated',
         textAlign: TextAlign.center,

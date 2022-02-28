@@ -4,15 +4,17 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 
 class CircularContacts extends StatelessWidget {
   final Function? onCrossPressed;
-
   final GroupContactsModel? groupContact;
+  final AtSignLogger atSignLogger = AtSignLogger('CircularContacts');
 
-  const CircularContacts({Key? key, this.onCrossPressed, this.groupContact})
+  CircularContacts({Key? key, this.onCrossPressed, this.groupContact})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -22,7 +24,9 @@ class CircularContacts extends StatelessWidget {
       try {
         List<int> intList = groupContact?.contact?.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
-      } catch (e) {}
+      } catch (e) {
+        atSignLogger.info('Error in getting image');
+      }
     }
     return Container(
       padding:
@@ -33,7 +37,7 @@ class CircularContacts extends StatelessWidget {
           Stack(
             alignment: AlignmentDirectional.topCenter,
             children: [
-              Container(
+              SizedBox(
                 height: 50.toHeight,
                 width: 50.toHeight,
                 child: (image != null)
@@ -55,7 +59,7 @@ class CircularContacts extends StatelessWidget {
                   child: Container(
                     height: 15.toHeight,
                     width: 15.toHeight,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Colors.black, shape: BoxShape.circle),
                     child: Icon(
                       Icons.close,
@@ -68,7 +72,7 @@ class CircularContacts extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10.toHeight),
-          Container(
+          SizedBox(
             width: 80.toWidth,
             child: Text(
               groupContact?.contact?.tags != null &&
@@ -82,7 +86,7 @@ class CircularContacts extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.toHeight),
-          Container(
+          SizedBox(
             width: 60.toWidth,
             child: Text(
               (groupContact?.contact?.atSign ??

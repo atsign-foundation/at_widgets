@@ -1,6 +1,5 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contacts_flutter/utils/colors.dart';
-import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -12,8 +11,9 @@ class DesktopGroupBottomSheet extends StatefulWidget {
   const DesktopGroupBottomSheet(
     this.onPressed,
     this.buttontext, {
+    Key? key,
     this.message = '',
-  });
+  }) : super(key: key);
 
   @override
   _DesktopGroupBottomSheetState createState() =>
@@ -28,7 +28,7 @@ class _DesktopGroupBottomSheetState extends State<DesktopGroupBottomSheet> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
       height: 70.toHeight,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.white, boxShadow: [BoxShadow(color: Colors.grey)]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -40,7 +40,7 @@ class _DesktopGroupBottomSheetState extends State<DesktopGroupBottomSheet> {
             ),
           ),
           isLoading
-              ? CircularProgressIndicator()
+              ? const CircularProgressIndicator()
               : TextButton(
                   onPressed: () {},
                   style: ButtonStyle(
@@ -50,10 +50,10 @@ class _DesktopGroupBottomSheetState extends State<DesktopGroupBottomSheet> {
                     },
                   ), fixedSize: MaterialStateProperty.resolveWith<Size>(
                     (Set<MaterialState> states) {
-                      return Size(120, 40);
+                      return const Size(120, 40);
                     },
                   )),
-                  child: Text(
+                  child: const Text(
                     'Done',
                     style: TextStyle(
                       color: Colors.white,
