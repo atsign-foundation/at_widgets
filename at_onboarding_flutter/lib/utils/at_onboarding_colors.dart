@@ -1,0 +1,4 @@
+class AtOnboardingColor {
+  AtOnboardingColor._();
+
+}
