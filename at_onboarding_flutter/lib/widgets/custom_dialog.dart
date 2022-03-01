@@ -176,11 +176,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                         ),
                                         SizedBox(height: 20.toHeight),
                                         SizedBox(
-                                          width: 300.toWidth,
-                                          height: 350.toHeight,
+                                          width: MediaQuery.of(context).size.width - 128 - 2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
+                                          height: MediaQuery.of(context).size.width - 128 - 2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
                                           child: QrReaderView(
-                                            width: 300.toWidth,
-                                            height: 350.toHeight,
+                                            width: MediaQuery.of(context).size.width - 128 - 2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
+                                            height: MediaQuery.of(context).size.width - 128 - 2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
                                             callback: (QrReaderViewController
                                                 controller) {
                                               _controller = controller;
