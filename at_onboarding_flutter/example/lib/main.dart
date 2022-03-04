@@ -59,8 +59,11 @@ class _MyAppState extends State<MyApp> {
                 ThemeData().colorScheme.copyWith(secondary: Colors.black),
             backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
-            textTheme:
-                const TextTheme(bodyText1: TextStyle(color: Colors.black)),
+            textTheme: const TextTheme(
+                bodyText1: TextStyle(
+                  color: Colors.black,
+                ),
+                bodyText2: TextStyle(color: Colors.black)),
           ),
           darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
