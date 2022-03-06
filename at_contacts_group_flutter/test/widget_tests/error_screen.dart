@@ -24,5 +24,18 @@ void main() {
           errorScreen: errorScreen ));
       expect(find.byType(ErrorScreen), findsOneWidget);
     });
+       // Test case to identify msg text is given
+    testWidgets("identify contact initial text", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(errorScreen: errorScreen));
+
+      expect(find.text('Error'), findsOneWidget);
+    });
+    // Test case to check onTap functionality
+    testWidgets("OnPress is given an action", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(errorScreen: errorScreen));
+      expect(errorScreen.onPressed!.call(), null);
+    });
   });
 }

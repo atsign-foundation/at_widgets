@@ -15,12 +15,23 @@ void main() {
 
   /// Functional test cases for Error Screen Widget
   group('Error Screen Widget Tests:', () {
+     final errorScreen = ErrorScreen(
+      onPressed: () {
+        print('OnPress is given an action');
+      },
+    );
     // Test Case to Check Error Screen is displayed
-    final errorScreen = ErrorScreen();
     testWidgets("Error Screen is displayed", (WidgetTester tester) async {
       await tester.pumpWidget(
           _wrapWidgetWithMaterialApp(errorScreen: errorScreen));
       expect(find.byType(ErrorScreen), findsOneWidget);
+    });
+
+    // Test case to check onTap functionality
+    testWidgets("OnPress is given an action", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(errorScreen: errorScreen));
+      expect(errorScreen.onPressed!.call(), null);
     });
   });
 }

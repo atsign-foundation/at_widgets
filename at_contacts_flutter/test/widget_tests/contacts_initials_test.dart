@@ -28,5 +28,14 @@ void main() {
 
       expect(find.byType(ContactInitial), findsOneWidget);
     });
+    // Test case to identify contact initial text
+    testWidgets("identify contact initial text",
+        (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(contactInitial: ContactInitial(initials:'@')));
+
+      expect(find.text('@'), findsOneWidget);
+    });
+
   });
 }

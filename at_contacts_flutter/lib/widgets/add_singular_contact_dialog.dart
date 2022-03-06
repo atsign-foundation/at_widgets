@@ -48,30 +48,32 @@ class _AddSingleContactState extends State<AddSingleContact> {
         ),
         content: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: 190.toHeight),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 21.toHeight,
-              ),
-              CustomCircleAvatar(
-                image: ImageConstants.imagePlaceholder,
-                size: 75,
-              ),
-              SizedBox(
-                height: 10.toHeight,
-              ),
-              Text(
-                widget.atSignName!.substring(1),
-                style: CustomTextStyles.primaryBold16,
-              ),
-              SizedBox(
-                height: 2.toHeight,
-              ),
-              Text(
-                widget.atSignName ?? '',
-                style: CustomTextStyles.secondaryRegular16,
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 21.toHeight,
+                ),
+                CustomCircleAvatar(
+                  image: ImageConstants.imagePlaceholder,
+                  size: 75,
+                ),
+                SizedBox(
+                  height: 10.toHeight,
+                ),
+                Text(
+                  widget.atSignName!.substring(1),
+                  style: CustomTextStyles.primaryBold16,
+                ),
+                SizedBox(
+                  height: 2.toHeight,
+                ),
+                Text(
+                  widget.atSignName ?? '',
+                  style: CustomTextStyles.secondaryRegular16,
+                ),
+              ],
+            ),
           ),
         ),
         actions: [

@@ -15,12 +15,25 @@ void main() {
 
   /// Functional test cases for Location Tile Widget
   group('Location Tile Widget Tests:', () {
+   
+    final locationTile = LocationTile(title: 'Title',subTitle: 'SubTitle',);
     // Test Case to Check Location Tile is displayed
-    final locationTile = LocationTile();
     testWidgets("Location Tile is displayed", (WidgetTester tester) async {
       await tester
           .pumpWidget(_wrapWidgetWithMaterialApp(locationTile: locationTile));
       expect(find.byType(LocationTile), findsOneWidget);
+    });
+    // Test case to check button string is given
+    testWidgets("Button text displayed", (WidgetTester tester) async {
+     await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(locationTile: locationTile));
+      expect(find.text('Title'), findsOneWidget);
+    });
+    // Test case to check button string is given
+    testWidgets("Button text displayed", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(locationTile: locationTile));
+      expect(find.text('SubTitle'), findsOneWidget);
     });
   });
 }
