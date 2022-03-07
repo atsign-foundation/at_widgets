@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: NavService.navKey,
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('at_location_flutter example app'),
+            title: const Text('at_follows_flutter example app'),
           ),
           body: Builder(
             builder: (context) => Column(
