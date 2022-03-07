@@ -14,7 +14,13 @@ dependencies:
     sdk: flutter
   at_client: ^3.0.6
 
-
+dependency_overrides:
+  at_client:
+    git:
+      url: git@github.com:atsign-foundation/at_client_sdk.git
+      ref: switch_atsign_bug
+      path: at_client
+      
 dev_dependencies:
   flutter_test:
     sdk: flutter

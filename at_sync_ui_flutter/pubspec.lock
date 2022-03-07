@@ -39,9 +39,11 @@ packages:
   at_client:
     dependency: "direct main"
     description:
-      name: at_client
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: at_client
+      ref: switch_atsign_bug
+      resolved-ref: "6b3b68629da4f7530603cae880f3ca3a3a037e61"
+      url: "git@github.com:atsign-foundation/at_client_sdk.git"
+    source: git
     version: "3.0.9"
   at_commons:
     dependency: transitive
@@ -235,6 +237,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.11"
+  material_color_utilities:
+    dependency: transitive
+    description:
+      name: material_color_utilities
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.3"
   meta:
     dependency: transitive
     description:
@@ -302,7 +311,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.4.8"
   typed_data:
     dependency: transitive
     description:

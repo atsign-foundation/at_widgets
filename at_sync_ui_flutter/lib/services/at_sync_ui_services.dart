@@ -4,6 +4,8 @@ import 'package:at_client/at_client.dart';
 import 'package:at_client/src/service/sync_service_impl.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:at_client/src/service/sync/sync_result.dart';
+import 'package:at_client/src/service/sync/sync_status.dart';
 
 class AtSyncUIService {
   static final AtSyncUIService _singleton = AtSyncUIService._internal();
