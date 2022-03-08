@@ -85,8 +85,10 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     dynamic overlapData = [];
 
     allSavedEvents.forEach((event) {
-      var keyMicrosecondId = event.key!.split('createevent-')[1].split('@')[0];
-      if (!event.key!.contains(keyMicrosecondId)) {
+      var keyMicrosecondId = event.eventNotificationModel!.key!
+          .split('createevent-')[1]
+          .split('@')[0];
+      if (!event.eventNotificationModel!.key!.contains(keyMicrosecondId)) {
         allEventsExcludingCurrentEvent.add(event);
       }
     });
