@@ -25,6 +25,7 @@ import 'package:zxing2/qrcode.dart';
 import 'package:image/image.dart' as img;
 
 import 'at_onboarding.dart';
+import 'at_onboarding_backup_screen.dart';
 import 'at_onboarding_reference_screen.dart';
 import 'screens/private_key_qrcode_generator.dart';
 import 'widgets/at_onboarding_button.dart';
@@ -307,7 +308,7 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
         extensions: <String>['png'],
       );
       List<XFile> files =
-      await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
+          await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
       if (files.isEmpty) {
         return null;
       }
@@ -632,19 +633,10 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
           cramSecret: secret, status: widget.onboardStatus);
       _inprogressDialog.close();
       if (authResponse == ResponseStatus.authSuccess) {
-        if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
-            widget.onboardStatus == OnboardingStatus.RESTORE) {
-          _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
-              _onboardingService.currentAtsign);
-          Navigator.pop(context, AtOnboardingResult.success);
-        } else {
-          await Navigator.pushReplacement(
-            context,
-            MaterialPageRoute<PrivateKeyQRCodeGenScreen>(
-                builder: (BuildContext context) =>
-                    const PrivateKeyQRCodeGenScreen()),
-          );
-        }
+        await AtOnboardingBackupScreen.push(context: context);
+        Navigator.pop(context, AtOnboardingResult.success);
+      } else {
+        //Todo:
       }
     } catch (e) {
       _inprogressDialog.close();
