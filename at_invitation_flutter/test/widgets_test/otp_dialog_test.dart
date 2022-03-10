@@ -16,12 +16,31 @@ void main() {
 
   /// Functional test cases for OTP Dialog Widget
   group('OTP Dialog Widget Tests:', () {
+    final otpDialog = OTPDialog(uniqueID: '25',passcode: '25032511',webPageLink: 'url for the site',);
     // Test Case to Check OTP Dialog is displayed
     testWidgets("OTP Dialog is displayed", (WidgetTester tester) async {
-      final otpDialog = OTPDialog();
+      
       await tester
           .pumpWidget(_wrapWidgetWithMaterialApp(otpDialog: otpDialog));
       expect(find.byType(OTPDialog), findsOneWidget);
+    });
+     // Test case to check uniqueId given
+     testWidgets("Test case to check unique id is given", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(otpDialog: otpDialog));
+      expect(otpDialog.uniqueID, '25');
+    });
+    // Test case to check passcode is given
+     testWidgets("Test case to check passcode is given", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(otpDialog: otpDialog));
+      expect(otpDialog.passcode, '25032511');
+    });
+    // Test case to check web page link is given
+     testWidgets("Test case to check web page link is given", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(otpDialog: otpDialog));
+      expect(otpDialog.webPageLink, 'url for the site');
     });
   });
 }
