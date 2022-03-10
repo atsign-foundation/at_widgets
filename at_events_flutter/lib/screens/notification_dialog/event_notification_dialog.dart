@@ -163,7 +163,8 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                   ),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
                   (ContactService().contactList.indexWhere((element) =>
-                              element?.atSign == widget.userName) ==
+                              element?.atSign ==
+                              widget.eventData!.atsignCreator) ==
                           -1)
                       ? Text(
                           'NOTE: ${widget.eventData!.atsignCreator} is not in your contacts list.',
