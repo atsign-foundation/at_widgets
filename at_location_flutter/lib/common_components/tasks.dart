@@ -20,7 +20,7 @@ class Tasks extends StatelessWidget {
     return InkWell(
       onTap: onTap as void Function()?,
       child: SizedBox(
-        height: 54.toHeight,
+        height: 58.toHeight,
         width: 70.toWidth,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
