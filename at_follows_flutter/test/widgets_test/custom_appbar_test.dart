@@ -17,7 +17,7 @@ void main() {
   group('Custom App Bar Widget Tests:', () {
     // Test Case to Check custom app bar is displayed
     testWidgets("Custom App Bar is displayed", (WidgetTester tester) async {
-      final customAppBar = CustomAppBar();
+      final customAppBar = CustomAppBar(title: 'Custom App Bar',);
       await tester
           .pumpWidget(_wrapWidgetWithMaterialApp(customAppBar: customAppBar));
       expect(find.byType(CustomAppBar), findsOneWidget);
