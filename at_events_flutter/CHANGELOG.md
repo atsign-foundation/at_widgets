@@ -1,3 +1,6 @@
+## 3.1.3
+- **FEAT**: Removed key, atKey, atValue from EventKeyLocationModel
+
 ## 3.1.2
 - **FEAT**: Added alert message for not in contacts atsigns.
 - **FEAT**: Made notification dialogs non-dismissible.
