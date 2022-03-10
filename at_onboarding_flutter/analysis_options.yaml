@@ -6,7 +6,7 @@ analyzer:
     invalid_assignment: warning
     missing_return: error
     annotate_overrides: error
-    always_specify_types: error
+    always_specify_types: warning
     dead_code: warning
     todo: ignore
 
