@@ -85,8 +85,10 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     dynamic overlapData = [];
 
     allSavedEvents.forEach((event) {
-      var keyMicrosecondId = event.key!.split('createevent-')[1].split('@')[0];
-      if (!event.key!.contains(keyMicrosecondId)) {
+      var keyMicrosecondId = event.eventNotificationModel!.key!
+          .split('createevent-')[1]
+          .split('@')[0];
+      if (!event.eventNotificationModel!.key!.contains(keyMicrosecondId)) {
         allEventsExcludingCurrentEvent.add(event);
       }
     });
@@ -161,7 +163,8 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                   ),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
                   (ContactService().contactList.indexWhere((element) =>
-                              element?.atSign == widget.userName) ==
+                              element?.atSign ==
+                              widget.eventData!.atsignCreator) ==
                           -1)
                       ? Text(
                           'NOTE: ${widget.eventData!.atsignCreator} is not in your contacts list.',
