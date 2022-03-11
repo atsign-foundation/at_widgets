@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/at_onboarding_activate_account_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/at_onboarding_generate_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_qrcode_screen.dart';
@@ -26,8 +27,8 @@ import 'package:image/image.dart' as img;
 
 import 'at_onboarding.dart';
 import 'at_onboarding_backup_screen.dart';
+import 'at_onboarding_input_atsign_screen.dart';
 import 'at_onboarding_reference_screen.dart';
-import 'screens/private_key_qrcode_generator.dart';
 import 'widgets/at_onboarding_button.dart';
 import 'widgets/at_onboarding_dialog.dart';
 
@@ -358,22 +359,10 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
           jsonData: contents, decryptKey: aesKey);
       _inprogressDialog.close();
       if (authResponse == ResponseStatus.authSuccess) {
-        // if (_onboardingService.nextScreen == null) {
-        //   Navigator.pop(context);
-        //   _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
-        //       _onboardingService.currentAtsign);
-        // } else {
-        //   _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
-        //       _onboardingService.currentAtsign);
-        //   await Navigator.pushReplacement(
-        //       context,
-        //       MaterialPageRoute<Widget>(
-        //           builder: (BuildContext context) =>
-        //               _onboardingService.nextScreen!));
-        // }
-        Navigator.of(context).pop(AtOnboardingResult.success);
+        await AtOnboardingBackupScreen.push(context: context);
+        Navigator.pop(context, AtOnboardingResult.success);
       } else {
-        //Todo: handle on error
+        //Todo:
       }
     } catch (e) {
       _inprogressDialog.close();
@@ -561,12 +550,73 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
                             ],
                           ),
                         ),
+                SizedBox(height: 20.toHeight),
+                if (!widget.hideQrScan)
+                  const Text(
+                    'Activate an @sign?',
+                    style: TextStyle(
+                      fontSize: AtOnboardingDimens.fontLarge,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                if (!widget.hideQrScan) SizedBox(height: 5.toHeight),
+                if (!widget.hideQrScan)
+                  AtOnboardingSecondaryButton(
+                    height: 48,
+                    borderRadius: 24,
+                    onPressed: () async {
+                      _showActiveScreen(context: context);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          'Activate @sign',
+                          style:
+                              TextStyle(fontSize: AtOnboardingDimens.fontLarge),
+                        ),
+                        Icon(Icons.arrow_right_alt_rounded)
+                      ],
+                    ),
+                  )
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _showActiveScreen({
+    required BuildContext context,
+  }) async {
+    final result = await AtOnboardingInputAtSignScreen.push(context: context);
+    if ((result ?? '').isNotEmpty) {
+      final result2 = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => AtOnboardingActivateAccountScreen(
+                  hideReferences: true,
+                  atSign: result!,
+                )),
+      );
+      if (result2 is AtOnboardingResult) {
+        switch (result2) {
+          case AtOnboardingResult.success:
+            Navigator.pop(context, AtOnboardingResult.success);
+            break;
+          case AtOnboardingResult.error:
+            Navigator.pop(context, AtOnboardingResult.error);
+            break;
+          case AtOnboardingResult.notFound:
+            break;
+          case AtOnboardingResult.activate:
+            break;
+          case AtOnboardingResult.cancel:
+            break;
+        }
+      }
+    }
   }
 
   void _showGenerateScreen({
