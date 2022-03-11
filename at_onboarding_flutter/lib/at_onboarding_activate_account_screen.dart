@@ -10,6 +10,7 @@ import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 
 import 'at_onboarding.dart';
+import 'at_onboarding_backup_screen.dart';
 import 'at_onboarding_otp_screen.dart';
 import 'at_onboarding_reference_screen.dart';
 import 'services/free_atsign_service.dart';
@@ -19,10 +20,12 @@ import 'widgets/custom_strings.dart';
 class AtOnboardingActivateAccountScreen extends StatefulWidget {
   ///will hide webpage references.
   final bool hideReferences;
+  final String? atSign;
 
   const AtOnboardingActivateAccountScreen({
     Key? key,
     required this.hideReferences,
+    this.atSign,
   }) : super(key: key);
 
   @override
@@ -96,7 +99,8 @@ class _AtOnboardingActivateAccountScreenState
     }
     dynamic data;
 
-    dynamic response = await _freeAtsignService.loginWithAtsign(atsign!);
+    dynamic response = await _freeAtsignService
+        .loginWithAtsign(atsign ?? (widget.atSign ?? ''));
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
@@ -107,9 +111,10 @@ class _AtOnboardingActivateAccountScreenState
       await showErrorDialog(context, errorMessage);
     }
     final result = await AtOnboardingOTPScreen.push(
-        context: context, atSign: atsign, hideReferences: false);
+        context: context, atSign: atsign ?? (widget.atSign ?? ''), hideReferences: false);
     if (result != null) {
-      _processSharedSecret(atsign: result.atSign, secret: result.secret ?? '');
+      String? secret = result.secret?.split(':')?.last ?? '';
+      _processSharedSecret(atsign: result.atSign, secret: secret);
     } else {
       Navigator.pop(context, AtOnboardingResult.cancel);
     }
@@ -141,19 +146,10 @@ class _AtOnboardingActivateAccountScreenState
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
       if (authResponse == ResponseStatus.authSuccess) {
-        // if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
-        //     widget.onboardStatus == OnboardingStatus.RESTORE) {
-        //   _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
-        //       _onboardingService.currentAtsign);
+        await AtOnboardingBackupScreen.push(context: context);
         Navigator.pop(context, AtOnboardingResult.success);
-        // } else {
-        //   await Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute<PrivateKeyQRCodeGenScreen>(
-        //         builder: (BuildContext context) =>
-        //         const PrivateKeyQRCodeGenScreen()),
-        //   );
-        // }
+      } else {
+        //Todo:
       }
     } catch (e) {
       if (e == ResponseStatus.authFailed) {

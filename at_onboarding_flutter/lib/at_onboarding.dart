@@ -82,6 +82,8 @@ class AtOnboarding {
           return AtOnboardingResult.success;
         case AtOnboardingResult.error:
           return AtOnboardingResult.error;
+        case AtOnboardingResult.activate:
+          return activateAccount(context: context);
       }
     }
     return AtOnboardingResult.cancel;
