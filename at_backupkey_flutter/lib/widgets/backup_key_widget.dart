@@ -210,7 +210,7 @@ class BackupKeyWidget extends StatelessWidget {
       }
 
       var directory = await path_provider.getApplicationSupportDirectory();
-      String path = directory.path.toString() + '/';
+      String path = directory.path.toString() + Platform.pathSeparator;
       final encryptedKeysFile =
           await File('$path$atsign${Strings.backupKeyName}').create();
       var keyString = jsonEncode(aesEncryptedKeys);

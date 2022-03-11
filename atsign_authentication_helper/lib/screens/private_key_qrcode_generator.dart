@@ -7,7 +7,7 @@ import 'package:atsign_authentication_helper/services/authentication_service.dar
 import 'package:atsign_authentication_helper/services/size_config.dart';
 import 'package:atsign_authentication_helper/utils/text_strings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';  
+import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:at_utils/at_logger.dart';
@@ -52,7 +52,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
       var directory;
       if (fileLocation == null) {
         directory = await path_provider.getApplicationDocumentsDirectory();
-        fileLocation = directory.path.toString() + '/';
+        fileLocation = directory.path.toString() + Platform.pathSeparator;
         await Permission.storage.request();
       }
       String path = fileLocation;
@@ -177,7 +177,7 @@ class _PrivateKeyQRCodeGenScreenState extends State<PrivateKeyQRCodeGenScreen> {
     var directory;
     String path;
     directory = await path_provider.getApplicationDocumentsDirectory();
-    path = directory.path.toString() + '/';
+    path = directory.path.toString() + Platform.pathSeparator;
     await Permission.storage.request();
     fileLocation = path;
     var _encryptKeys = atsign + '_encrypt_keys';
