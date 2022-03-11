@@ -18,6 +18,7 @@ class AppConstants {
   static String backupZipExtension = '_atKeys.zip';
   static int responseTimeLimit = 30;
   static String contactAddress = 'support@atsign.com';
+  static String activateAtSign = '/api/activateAtSign';
 
   //Button titles
   static const String closeButton = 'Close';

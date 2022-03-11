@@ -170,6 +170,9 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
             bottom: AtOnboardingDimens.paddingNormal +
                 MediaQuery.of(context).padding.bottom,
           ),
+          constraints: const BoxConstraints(
+            maxWidth: 400,
+          ),
           child: AtOnboardingPrimaryButton(
             height: 48,
             borderRadius: 24,

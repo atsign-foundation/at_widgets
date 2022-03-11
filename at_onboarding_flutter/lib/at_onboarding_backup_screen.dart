@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
@@ -45,7 +47,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
       return const Text('An @sign is required.');
     }
     return Scaffold(
-      backgroundColor: ColorConstants.light,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       key: _scaffoldKey,
       appBar: AppBar(
         title: const Text(Strings.saveBackupKeyTitle),
@@ -74,8 +76,8 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
             Center(
                 child: Image.asset(
               Images.backupZip,
-              height: MediaQuery.of(context).size.height * 0.3,
-              width: MediaQuery.of(context).size.width * 0.6,
+              height: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
+              width: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
               fit: BoxFit.fill,
               package: AppConstants.package,
             )),
