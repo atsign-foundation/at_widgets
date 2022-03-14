@@ -1,35 +1,55 @@
 <img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
-### Now for some internet optimism.
-
 [![pub package](https://img.shields.io/pub/v/at_events_flutter)](https://pub.dev/packages/at_events_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
-# at_events_flutter
+## Overview
+The at_events_flutter package is for Flutter developers who would like to integrate event management feature in their apps.
 
-## Introduction
+This open source package is written in Dart, supports Flutter and follows the @‎platform's decentralized, edge computing model with the following features: 
+- Cryptographic control of data access through personal data stores
+- No application backend needed
+- End to end encryption where only the data owner has the keys
+- Private and surveillance free connectivity
+- Create and update event with location and participants
 
-A flutter plugin project to manage events between atsigns.
+We call giving people control of access to their data “flipping the internet” and you can learn more about how it works by reading this [overview](https://atsign.dev/docs/overview/).
 
 ## Get Started:
 
-Initially to get a basic overview of the SDK, you must read the [atsign docs](https://atsign.dev/docs/overview/).
+There are three options to get started using this package.
 
-> To use this package you must be having a basic setup, Follow here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
+### 1. Quick start - generate a skeleton app with at_app
+This package includes a working sample application in the
+[Example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_events_flutter/example) directory that you can use to create a personalized copy using ```at_app create``` in four commands.
 
+```sh
+$ flutter pub global activate at_app 
+$ at_app create --sample=<package ID> <app name> 
+$ cd <app name>
+$ flutter run
+```
+Notes: 
+1. You only need to run ```flutter pub global activate``` once
+2. Use ```at_app.bat``` for Windows
 
-### Manually add the package to a project:
+### 2. Clone it from GitHub
+Feel free to fork a copy of the source from the [GitHub repo](https://github.com/atsign-foundation/at_widgets). The example code contained there is the same as the template that is used by at_app above.
+
+```sh
+$ git clone https://github.com/atsign-foundation/at_widgets.git
+```
+
+### 3. Manually add the package to a project
 
 Instructions on how to manually add this package to you project can be found on pub.dev [here](https://pub.dev/packages/at_events_flutter/install).
 
-### Clone it from github
+## How it works
 
- Feel free to fork a copy of the source from the [GitHub Repo](https://github.com/atsign-foundation/at_widgets)
-
+### Setup
 ### Initialising:
 It is expected that the app will first authenticate an atsign using the Onboarding widget.
 
-The event service needs to be initialised with a required GlobalKey<NavigatorState> parameter for
-navigation purpose (make sure the key is passed to the parent [MaterialApp]), the rest being optional parameters.
+The event service needs to be initialised with a required GlobalKey<NavigatorState> parameter for navigation purpose (make sure the key is passed to the parent [MaterialApp]), the rest being optional parameters.
 
 ```
   initialiseEventService(
@@ -71,8 +91,7 @@ To create a new event, using the default screen:
   ),
 ```
 
-To use event creation/edit functions, use the [EventService()] singleton, 
-make sure to call [EventService().init()] before using these functions:
+To use event creation/edit functions, use the [EventService()] singleton, make sure to call [EventService().init()] before using these functions:
 - createEvent() - Can create and edit based on [isEventUpdate] passed to [init()]
 - editEvent() - Will update the already created event
 - sendEventNotification() - Will create a new event
@@ -105,7 +124,8 @@ Different datatypes used in the package:
 
 We have a good example with explanation in the [at_events_flutter](https://pub.dev/packages/at_events_flutter/example) package.
 
-## Open source usage and contributions
 
- This is freely licensed open source code, so feel free to use it as is, suggest changes or enhancements or create your
- own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.
+## Open source usage and contributions
+This is  open source code, so feel free to use it as is, suggest changes or enhancements or create your own version. See [CONTRIBUTING.md](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.
+
+
