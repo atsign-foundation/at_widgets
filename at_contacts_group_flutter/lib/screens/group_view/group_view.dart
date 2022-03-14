@@ -11,7 +11,7 @@ import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
-import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
+import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
@@ -19,7 +19,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 /// This widget shows the group details with it's members in a grid view
 class GroupView extends StatefulWidget {
   final AtGroup group;
-  GroupView({required this.group});
+  const GroupView({Key? key, required this.group}) : super(key: key);
 
   @override
   _GroupViewState createState() => _GroupViewState();
@@ -71,7 +71,7 @@ class _GroupViewState extends State<GroupView> {
                                     size: 200, color: AllColors().LIGHT_GREY));
                           }
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       } else {
                         return SizedBox(
@@ -85,22 +85,19 @@ class _GroupViewState extends State<GroupView> {
                   SizedBox(
                     height: 60.toHeight,
                   ),
-                  Container(
-                    child: StreamBuilder(
-                      stream: GroupService().showLoaderStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.active) {
-                          if (snapshot.data == true) {
-                            return CircularProgressIndicator();
-                          } else {
-                            return SizedBox();
-                          }
+                  StreamBuilder(
+                    stream: GroupService().showLoaderStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        if (snapshot.data == true) {
+                          return const CircularProgressIndicator();
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
-                      },
-                    ),
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
                   ),
                   Padding(
                       padding: EdgeInsets.symmetric(
@@ -121,7 +118,7 @@ class _GroupViewState extends State<GroupView> {
                               if (snapshot.hasData) {
                                 var groupData = snapshot.data!;
                                 return GridView.count(
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   crossAxisCount: 4,
                                   childAspectRatio:
@@ -165,11 +162,11 @@ class _GroupViewState extends State<GroupView> {
                                   }),
                                 );
                               } else {
-                                return SizedBox();
+                                return const SizedBox();
                               }
                             }
                           } else {
-                            return SizedBox();
+                            return const SizedBox();
                           }
                         },
                       )),
@@ -194,7 +191,7 @@ class _GroupViewState extends State<GroupView> {
                         color: AllColors().DARK_GREY,
                         blurRadius: 10.0,
                         spreadRadius: 1.0,
-                        offset: Offset(0.0, 0.0),
+                        offset: const Offset(0.0, 0.0),
                       )
                     ],
                   ),
@@ -213,33 +210,31 @@ class _GroupViewState extends State<GroupView> {
                                 if (snapshot.connectionState ==
                                     ConnectionState.active) {
                                   var groupData = snapshot.data!;
-                                  return Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 250.toWidth,
-                                          child: Text(
-                                            groupData.displayName!,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            // softWrap: false,
-                                            style: TextStyle(
-                                              color: AllColors().GREY,
-                                              fontSize: 16.toFont,
-                                            ),
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 250.toWidth,
+                                        child: Text(
+                                          groupData.displayName!,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          // softWrap: false,
+                                          style: TextStyle(
+                                            color: AllColors().GREY,
+                                            fontSize: 16.toFont,
                                           ),
                                         ),
-                                        Text(
-                                          '${groupData.members!.length} members',
-                                          style: CustomTextStyles().grey14,
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                      Text(
+                                        '${groupData.members!.length} members',
+                                        style: CustomTextStyles().grey14,
+                                      ),
+                                    ],
                                   );
                                 } else {
-                                  return SizedBox();
+                                  return const SizedBox();
                                 }
                               }),
                         ],
@@ -251,7 +246,6 @@ class _GroupViewState extends State<GroupView> {
                             MaterialPageRoute(
                               builder: (context) => ContactsScreen(
                                 asSelectionScreen: true,
-                                context: context,
                                 selectedList:
                                     (List<AtContact?> selectedList) async {
                                   GroupService().selecteContactList =
@@ -259,13 +253,13 @@ class _GroupViewState extends State<GroupView> {
                                 },
                                 saveGroup: () async {
                                   if (GroupService()
-                                      .selecteContactList!
+                                      .selecteContactList
                                       .isNotEmpty) {
                                     GroupService().showLoaderSink.add(true);
 
                                     var result = await GroupService()
                                         .addGroupMembers([
-                                      ...GroupService().selecteContactList!
+                                      ...GroupService().selecteContactList
                                     ], widget.group);
 
                                     GroupService().showLoaderSink.add(false);
@@ -305,7 +299,7 @@ class _GroupViewState extends State<GroupView> {
                     onTap: () => Navigator.pop(context),
                     child: Container(
                       padding: EdgeInsets.all(5.toFont),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
@@ -327,7 +321,7 @@ class _GroupViewState extends State<GroupView> {
                   ),
                   child: Container(
                     padding: EdgeInsets.all(5.toFont),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
@@ -359,8 +353,8 @@ class _GroupViewState extends State<GroupView> {
             var result =
                 await GroupService().deletGroupMembers([contact], widget.group);
 
-            if (result is bool) {
-              result ? Navigator.of(context).pop() : null;
+            if (result is bool && result) {
+              Navigator.of(context).pop();
             } else if (result == null) {
               CustomToast().show(TextConstants().SERVICE_ERROR, context);
             } else {

@@ -17,9 +17,8 @@ class DesktopContactsScreen extends StatefulWidget {
   final bool isBlockedScreen;
   final Function onBackArrowTap;
   final bool showBackButton;
-  Key? key;
-  DesktopContactsScreen(this.onBackArrowTap,
-      {this.key, this.isBlockedScreen = false, this.showBackButton = true})
+  const DesktopContactsScreen(this.onBackArrowTap,
+      {Key? key, this.isBlockedScreen = false, this.showBackButton = true})
       : super(key: key);
 
   @override
@@ -177,7 +176,10 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                               if (baseContact.contact!.atSign!
                                   .contains(searchText)) {
                                 _filteredList.add(baseContact);
-                                return contactsTile(baseContact);
+                                return Container(
+                                  key: UniqueKey(),
+                                  child: contactsTile(baseContact),
+                                );
                               } else {
                                 _filteredList.remove(baseContact);
 
@@ -226,7 +228,10 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                               if (contact.contact!.atSign!
                                   .contains(searchText)) {
                                 _filteredList.add(contact);
-                                return contactsTile(contact);
+                                return Container(
+                                  key: UniqueKey(),
+                                  child: contactsTile(contact),
+                                );
                               } else {
                                 _filteredList.remove(contact);
 
@@ -321,12 +326,11 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
 }
 
 class ContactListTile extends StatefulWidget {
-  BaseContact? baseContact;
-  bool isBlockedScreen;
-  Key? key;
-  ContactListTile(
+  final BaseContact? baseContact;
+  final bool isBlockedScreen;
+  const ContactListTile(
     this.baseContact, {
-    this.key,
+    Key? key,
     this.isBlockedScreen = false,
   }) : super(key: key);
 
@@ -382,8 +386,6 @@ class _ContactListTileState extends State<ContactListTile> {
                       .updateState(STATE_UPDATE.block, contact, true);
                   await _contactService!
                       .blockUnblockContact(contact: contact, blockAction: true);
-                  _contactService!
-                      .updateState(STATE_UPDATE.block, contact, false);
                 },
                 child: const Icon(
                   Icons.block,
@@ -429,8 +431,6 @@ class _ContactListTileState extends State<ContactListTile> {
               _contactService!.updateState(STATE_UPDATE.unblock, contact, true);
               await _contactService!
                   .blockUnblockContact(contact: contact, blockAction: false);
-              _contactService!
-                  .updateState(STATE_UPDATE.unblock, contact, false);
             },
             child: Text(
               'Unblock',

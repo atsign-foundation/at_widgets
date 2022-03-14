@@ -10,13 +10,15 @@ class CustomInputField extends StatelessWidget {
   final Function? onTap;
   final Color? iconColor;
 
-  CustomInputField(
-      {this.hintText = '',
-      this.height = 50,
-      this.width = 300,
-      this.iconColor,
-      this.icon,
-      this.onTap});
+  const CustomInputField({
+    Key? key,
+    this.hintText = '',
+    this.height = 50,
+    this.width = 300,
+    this.iconColor,
+    this.icon,
+    this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class CustomInputField extends StatelessWidget {
         color: AllColors().INPUT_GREY_BACKGROUND,
         borderRadius: BorderRadius.circular(5),
       ),
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -46,7 +48,7 @@ class CustomInputField extends StatelessWidget {
                   icon,
                   color: iconColor ?? AllColors().DARK_GREY,
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );

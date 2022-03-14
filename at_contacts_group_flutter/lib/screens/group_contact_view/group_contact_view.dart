@@ -1,8 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:at_common_flutter/widgets/custom_app_bar.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
@@ -20,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 /// This widget gives a screen view for displaying contacts and group details
+// ignore: must_be_immutable
 class GroupContactView extends StatefulWidget {
   /// Boolean flag to set view to show contacts
   final bool showContacts;
@@ -132,16 +131,12 @@ class _GroupContactViewState extends State<GroupContactView> {
         },
         showBackButton: true,
         showLeadingIcon: true,
-        // showTrailingIcon: widget.asSelectionScreen == null ||
-        //         widget.asSelectionScreen == false
-        //     ? true
-        //     : false,
         showTrailingIcon: true,
-        trailingIcon: Icon(Icons.add, color: Colors.black),
+        trailingIcon: const Icon(Icons.add, color: Colors.black),
         onTrailingIconPressed: () {
           showDialog(
             context: context,
-            builder: (context) => AddContactDialog(),
+            builder: (context) => const AddContactDialog(),
           );
         },
       ),
@@ -154,32 +149,8 @@ class _GroupContactViewState extends State<GroupContactView> {
             widget.isDesktop
                 ? Row(
                     children: <Widget>[
-                      // TODO: recent tab is not implemented for now.
-                      // Container(
-                      //   padding: EdgeInsets.all(8),
-                      //   decoration: BoxDecoration(
-                      //     color: contactTabs == ContactTabs.RECENT
-                      //         ? ColorConstants.orangeColor
-                      //         : ColorConstants.fadedGreyBackground,
-                      //     borderRadius: BorderRadius.circular(30.toWidth),
-                      //   ),
-                      //   child: InkWell(
-                      //     onTap: () {
-                      //       setState(() {
-                      //         contactTabs = ContactTabs.RECENT;
-                      //       });
-                      //     },
-                      //     child: Text(
-                      //       'Recent',
-                      //       style: contactTabs == ContactTabs.RECENT
-                      //           ? TextStyle(color: Colors.white)
-                      //           : null,
-                      //     ),
-                      //   ),
-                      // ),
-                      // SizedBox(width: 15.toHeight),
                       Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: contactTabs == ContactTabs.FAVS
                               ? ColorConstants.orangeColor
@@ -194,13 +165,13 @@ class _GroupContactViewState extends State<GroupContactView> {
                           },
                           child: Text('Favourites',
                               style: contactTabs == ContactTabs.FAVS
-                                  ? TextStyle(color: Colors.white)
+                                  ? const TextStyle(color: Colors.white)
                                   : null),
                         ),
                       ),
                       SizedBox(width: 15.toHeight),
                       Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: contactTabs == ContactTabs.ALL
                               ? ColorConstants.orangeColor
@@ -215,13 +186,13 @@ class _GroupContactViewState extends State<GroupContactView> {
                           },
                           child: Text('All Members',
                               style: contactTabs == ContactTabs.ALL
-                                  ? TextStyle(color: Colors.white)
+                                  ? const TextStyle(color: Colors.white)
                                   : null),
                         ),
                       ),
                     ],
                   )
-                : SizedBox(),
+                : const SizedBox(),
             SizedBox(height: widget.isDesktop ? 20.toHeight : 0),
             ContactSearchField(
               TextStrings().searchContact,
@@ -235,7 +206,7 @@ class _GroupContactViewState extends State<GroupContactView> {
             (widget.asSelectionScreen)
                 ? (widget.singleSelection)
                     ? Container()
-                    : HorizontalCircularList()
+                    : const HorizontalCircularList()
                 : Container(),
             Expanded(
                 child: StreamBuilder<List<GroupContactsModel?>>(
@@ -244,7 +215,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                     builder: (context, snapshot) {
                       if ((snapshot.connectionState ==
                           ConnectionState.waiting)) {
-                        return Center(
+                        return const Center(
                           child: CircularProgressIndicator(),
                         );
                       } else {
@@ -253,38 +224,13 @@ class _GroupContactViewState extends State<GroupContactView> {
                             child: Text(TextStrings().noContacts),
                           );
                         } else {
+                          // filtering contacts and groups
                           var _filteredList = <GroupContactsModel?>[];
-                          snapshot.data!.forEach((c) {
-                            if (widget.showContacts &&
-                                c!.contact != null &&
-                                c.contact!.atSign
-                                    .toString()
-                                    .toUpperCase()
-                                    .contains(searchText.toUpperCase())) {
-                              _filteredList.add(c);
-                            }
-                            if (widget.showGroups &&
-                                c!.group != null &&
-                                c.group!.displayName != null &&
-                                c.group!.displayName!
-                                    .toUpperCase()
-                                    .contains(searchText.toUpperCase())) {
-                              _filteredList.add(c);
-                            }
-                          });
+                          _filteredList =
+                              getAllContactList(snapshot.data ?? []);
 
                           if (contactTabs == ContactTabs.FAVS) {
-                            _filteredList.removeWhere((groupContact) {
-                              if (groupContact != null &&
-                                  groupContact.contact != null) {
-                                return groupContact.contact!.favourite == false;
-                              } else if (groupContact != null &&
-                                  groupContact.contact == null) {
-                                return true;
-                              } else {
-                                return false;
-                              }
-                            });
+                            _filteredList = filterFavContacts(_filteredList);
                           }
 
                           if (_filteredList.isEmpty) {
@@ -295,11 +241,13 @@ class _GroupContactViewState extends State<GroupContactView> {
                               ),
                             );
                           }
+
+                          // renders contacts according to the initial alphabet
                           return ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.toHeight),
                             itemCount: 27,
                             shrinkWrap: true,
-                            physics: AlwaysScrollableScrollPhysics(),
+                            physics: const AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, alphabetIndex) {
                               var contactsForAlphabet = <GroupContactsModel?>[];
                               var currentChar =
@@ -308,40 +256,13 @@ class _GroupContactViewState extends State<GroupContactView> {
 
                               if (alphabetIndex == 26) {
                                 currentChar = 'Others';
-                                _filteredList.forEach((c) {
-                                  if (widget.showContacts &&
-                                      c!.contact != null &&
-                                      int.tryParse(c.contact!.atSign![1]) !=
-                                          null) {
-                                    contactsForAlphabet.add(c);
-                                  }
-                                });
-                                _filteredList.forEach((c) {
-                                  if (widget.showGroups &&
-                                      c!.group != null &&
-                                      int.tryParse(c.group!.displayName![0]) !=
-                                          null) {
-                                    contactsForAlphabet.add(c);
-                                  }
-                                });
-                              } else {
-                                _filteredList.forEach((c) {
-                                  if (widget.showContacts &&
-                                      c!.contact != null &&
-                                      c.contact?.atSign![1].toUpperCase() ==
-                                          currentChar) {
-                                    contactsForAlphabet.add(c);
-                                  }
-                                });
-                                _filteredList.forEach((c) {
-                                  if (widget.showGroups &&
-                                      c!.group != null &&
-                                      c.group?.displayName![0].toUpperCase() ==
-                                          currentChar) {
-                                    contactsForAlphabet.add(c);
-                                  }
-                                });
                               }
+
+                              contactsForAlphabet = getContactsForAlphabets(
+                                _filteredList,
+                                currentChar,
+                                alphabetIndex,
+                              );
 
                               if (_filteredList.isEmpty) {
                                 return Center(
@@ -353,235 +274,31 @@ class _GroupContactViewState extends State<GroupContactView> {
                                 return Container();
                               }
 
-                              return Container(
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          currentChar,
-                                          style: TextStyle(
-                                            color: AllColors().BLUE_TEXT,
-                                            fontSize: 16.toFont,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        currentChar,
+                                        style: TextStyle(
+                                          color: AllColors().BLUE_TEXT,
+                                          fontSize: 16.toFont,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        SizedBox(width: 4.toWidth),
-                                        Expanded(
-                                          child: Divider(
-                                            color: AllColors()
-                                                .DIVIDER_COLOR
-                                                .withOpacity(0.2),
-                                            height: 1.toHeight,
-                                          ),
+                                      ),
+                                      SizedBox(width: 4.toWidth),
+                                      Expanded(
+                                        child: Divider(
+                                          color: AllColors()
+                                              .DIVIDER_COLOR
+                                              .withOpacity(0.2),
+                                          height: 1.toHeight,
                                         ),
-                                      ],
-                                    ),
-                                    ListView.separated(
-                                        itemCount: contactsForAlphabet.length,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        separatorBuilder: (context, _) =>
-                                            Divider(
-                                              color: AllColors()
-                                                  .DIVIDER_COLOR
-                                                  .withOpacity(0.2),
-                                              height: 1.toHeight,
-                                            ),
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                child: (contactsForAlphabet[
-                                                                index]!
-                                                            .contact !=
-                                                        null)
-                                                    ? Slidable(
-                                                        actionPane:
-                                                            SlidableDrawerActionPane(),
-                                                        actionExtentRatio: 0.25,
-                                                        secondaryActions: <
-                                                            Widget>[
-                                                          IconSlideAction(
-                                                            caption:
-                                                                TextStrings()
-                                                                    .block,
-                                                            color: ColorConstants
-                                                                .inputFieldColor,
-                                                            icon: Icons.block,
-                                                            onTap: () async {
-                                                              setState(() {
-                                                                blockingContact =
-                                                                    true;
-                                                              });
-                                                              showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (context) =>
-                                                                        AlertDialog(
-                                                                  title: Center(
-                                                                    child: Text(
-                                                                        TextStrings()
-                                                                            .blockContact),
-                                                                  ),
-                                                                  content:
-                                                                      Container(
-                                                                    height: 100
-                                                                        .toHeight,
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          CircularProgressIndicator(),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              );
-                                                              await _contactService.blockUnblockContact(
-                                                                  contact: contactsForAlphabet[
-                                                                          index]!
-                                                                      .contact!,
-                                                                  blockAction:
-                                                                      true);
-                                                              await _groupService
-                                                                  .fetchGroupsAndContacts();
-                                                              setState(() {
-                                                                blockingContact =
-                                                                    true;
-                                                                Navigator.pop(
-                                                                    context);
-                                                              });
-                                                            },
-                                                          ),
-                                                          IconSlideAction(
-                                                            caption:
-                                                                TextStrings()
-                                                                    .delete,
-                                                            color: Colors.red,
-                                                            icon: Icons.delete,
-                                                            onTap: () async {
-                                                              setState(() {
-                                                                deletingContact =
-                                                                    true;
-                                                              });
-                                                              showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (context) =>
-                                                                        AlertDialog(
-                                                                  title: Center(
-                                                                    child: Text(
-                                                                        TextStrings()
-                                                                            .deleteContact),
-                                                                  ),
-                                                                  content:
-                                                                      Container(
-                                                                    height: 100
-                                                                        .toHeight,
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          CircularProgressIndicator(),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              );
-                                                              await _contactService.deleteAtSign(
-                                                                  atSign: contactsForAlphabet[
-                                                                          index]!
-                                                                      .contact!
-                                                                      .atSign!);
-                                                              await _groupService
-                                                                  .fetchGroupsAndContacts();
-                                                              setState(() {
-                                                                deletingContact =
-                                                                    false;
-                                                                Navigator.pop(
-                                                                    context);
-                                                              });
-                                                            },
-                                                          ),
-                                                        ],
-                                                        child: Container(
-                                                          child: CustomListTile(
-                                                            key: UniqueKey(),
-                                                            onTap: () {},
-                                                            asSelectionTile: widget
-                                                                .asSelectionScreen,
-                                                            selectSingle: widget
-                                                                .singleSelection,
-                                                            item:
-                                                                contactsForAlphabet[
-                                                                    index],
-                                                            selectedList: (s) {
-                                                              widget.selectedList!(
-                                                                  s);
-                                                            },
-                                                            onTrailingPressed:
-                                                                () {
-                                                              if (contactsForAlphabet[
-                                                                          index]!
-                                                                      .contact !=
-                                                                  null) {
-                                                                Navigator.pop(
-                                                                    context);
-
-                                                                _groupService
-                                                                    .addGroupContact(
-                                                                        contactsForAlphabet[
-                                                                            index]);
-                                                                widget.selectedList!(
-                                                                    GroupService()
-                                                                        .selectedGroupContacts);
-                                                              }
-                                                            },
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : CustomListTile(
-                                                        key: UniqueKey(),
-                                                        onTap: () {},
-                                                        // asSelectionTile: widget
-                                                        //     .asSelectionScreen,
-                                                        // selectSingle: widget
-                                                        //     .singleSelection,
-                                                        asSelectionTile: widget
-                                                            .asSelectionScreen,
-                                                        selectSingle: widget
-                                                            .singleSelection,
-                                                        item:
-                                                            contactsForAlphabet[
-                                                                index],
-                                                        selectedList: (s) {
-                                                          widget
-                                                              .selectedList!(s);
-                                                        },
-                                                        onTrailingPressed: () {
-                                                          if (contactsForAlphabet[
-                                                                      index]!
-                                                                  .group !=
-                                                              null) {
-                                                            Navigator.pop(
-                                                                context);
-
-                                                            _groupService
-                                                                .addGroupContact(
-                                                                    contactsForAlphabet[
-                                                                        index]);
-                                                            widget.selectedList!(
-                                                                GroupService()
-                                                                    .selectedGroupContacts);
-                                                          }
-                                                        },
-                                                      ),
-
-                                                // child:,
-                                              ));
-                                        }),
-                                  ],
-                                ),
+                                      ),
+                                    ],
+                                  ),
+                                  contactListBuilder(contactsForAlphabet)
+                                ],
                               );
                             },
                           );
@@ -592,5 +309,224 @@ class _GroupContactViewState extends State<GroupContactView> {
         ),
       ),
     );
+  }
+
+  Widget contactListBuilder(
+    List<GroupContactsModel?> contactsForAlphabet,
+  ) {
+    return ListView.separated(
+        itemCount: contactsForAlphabet.length,
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        separatorBuilder: (context, _) => Divider(
+              color: AllColors().DIVIDER_COLOR.withOpacity(0.2),
+              height: 1.toHeight,
+            ),
+        itemBuilder: (context, index) {
+          return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: (contactsForAlphabet[index]!.contact != null)
+                    ? Slidable(
+                        actionPane: const SlidableDrawerActionPane(),
+                        actionExtentRatio: 0.25,
+                        secondaryActions: <Widget>[
+                          IconSlideAction(
+                            caption: TextStrings().block,
+                            color: ColorConstants.inputFieldColor,
+                            icon: Icons.block,
+                            onTap: () async {
+                              blockUnblockContact(
+                                  contactsForAlphabet[index]!.contact!);
+                            },
+                          ),
+                          IconSlideAction(
+                            caption: TextStrings().delete,
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () async {
+                              deleteAtSign(
+                                  contactsForAlphabet[index]!.contact!);
+                            },
+                          ),
+                        ],
+                        child: CustomListTile(
+                          key: UniqueKey(),
+                          onTap: () {},
+                          asSelectionTile: widget.asSelectionScreen,
+                          selectSingle: widget.singleSelection,
+                          item: contactsForAlphabet[index],
+                          selectedList: (s) {
+                            widget.selectedList!(s);
+                          },
+                          onTrailingPressed: () {
+                            if (contactsForAlphabet[index]!.contact != null) {
+                              Navigator.pop(context);
+
+                              _groupService
+                                  .addGroupContact(contactsForAlphabet[index]);
+                              widget.selectedList!(
+                                  GroupService().selectedGroupContacts);
+                            }
+                          },
+                        ),
+                      )
+                    : CustomListTile(
+                        key: UniqueKey(),
+                        onTap: () {},
+                        asSelectionTile: widget.asSelectionScreen,
+                        selectSingle: widget.singleSelection,
+                        item: contactsForAlphabet[index],
+                        selectedList: (s) {
+                          widget.selectedList!(s);
+                        },
+                        onTrailingPressed: () {
+                          if (contactsForAlphabet[index]!.group != null) {
+                            Navigator.pop(context);
+
+                            _groupService
+                                .addGroupContact(contactsForAlphabet[index]);
+                            widget.selectedList!(
+                                GroupService().selectedGroupContacts);
+                          }
+                        },
+                      ),
+              ));
+        });
+  }
+
+  blockUnblockContact(AtContact contact) async {
+    setState(() {
+      blockingContact = true;
+    });
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Center(
+          child: Text(TextStrings().blockContact),
+        ),
+        content: SizedBox(
+          height: 100.toHeight,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+    await _contactService.blockUnblockContact(
+        contact: contact, blockAction: true);
+    await _groupService.fetchGroupsAndContacts();
+    setState(() {
+      blockingContact = true;
+      Navigator.pop(context);
+    });
+  }
+
+  deleteAtSign(AtContact contact) async {
+    setState(() {
+      deletingContact = true;
+    });
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Center(
+          child: Text(TextStrings().deleteContact),
+        ),
+        content: SizedBox(
+          height: 100.toHeight,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+    await _contactService.deleteAtSign(atSign: contact.atSign!);
+    await _groupService.fetchGroupsAndContacts();
+    setState(() {
+      deletingContact = false;
+      Navigator.pop(context);
+    });
+  }
+
+// creates a list of contacts by merging atsigns and groups.
+  List<GroupContactsModel?> getAllContactList(
+      List<GroupContactsModel?> allGroupContactData) {
+    var _filteredList = <GroupContactsModel?>[];
+    for (var c in allGroupContactData) {
+      if (widget.showContacts &&
+          c!.contact != null &&
+          c.contact!.atSign
+              .toString()
+              .toUpperCase()
+              .contains(searchText.toUpperCase())) {
+        _filteredList.add(c);
+      }
+      if (widget.showGroups &&
+          c!.group != null &&
+          c.group!.displayName != null &&
+          c.group!.displayName!
+              .toUpperCase()
+              .contains(searchText.toUpperCase())) {
+        _filteredList.add(c);
+      }
+    }
+
+    return _filteredList;
+  }
+
+  List<GroupContactsModel?> filterFavContacts(
+      List<GroupContactsModel?> _filteredList) {
+    _filteredList.removeWhere((groupContact) {
+      if (groupContact != null && groupContact.contact != null) {
+        return groupContact.contact!.favourite == false;
+      } else if (groupContact != null && groupContact.contact == null) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    return _filteredList;
+  }
+
+  /// returns list of atsigns, that matches with [currentChar] in [_filteredList]
+  List<GroupContactsModel?> getContactsForAlphabets(
+      List<GroupContactsModel?> _filteredList,
+      String currentChar,
+      int alphabetIndex) {
+    var contactsForAlphabet = <GroupContactsModel?>[];
+    if (alphabetIndex == 26) {
+      for (var c in _filteredList) {
+        if (widget.showContacts &&
+            c!.contact != null &&
+            int.tryParse(c.contact!.atSign![1]) != null) {
+          contactsForAlphabet.add(c);
+        }
+      }
+      for (var c in _filteredList) {
+        if (widget.showGroups &&
+            c!.group != null &&
+            int.tryParse(c.group!.displayName![0]) != null) {
+          contactsForAlphabet.add(c);
+        }
+      }
+    } else {
+      for (var c in _filteredList) {
+        if (widget.showContacts &&
+            c!.contact != null &&
+            c.contact?.atSign![1].toUpperCase() == currentChar) {
+          contactsForAlphabet.add(c);
+        }
+      }
+      for (var c in _filteredList) {
+        if (widget.showGroups &&
+            c!.group != null &&
+            c.group?.displayName![0].toUpperCase() == currentChar) {
+          contactsForAlphabet.add(c);
+        }
+      }
+    }
+
+    return contactsForAlphabet;
   }
 }

@@ -17,7 +17,9 @@ class AtsignListScreen extends StatefulWidget {
   /// the new atsign selected in the free atsign generator
   final String? newAtsign;
 
-  const AtsignListScreen({required this.atsigns, this.message, this.newAtsign});
+  const AtsignListScreen(
+      {Key? key, required this.atsigns, this.message, this.newAtsign})
+      : super(key: key);
 
   @override
   _AtsignListScreenState createState() => _AtsignListScreenState();
@@ -41,7 +43,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.light,
+      backgroundColor: ColorConstants.backgroundColor,
       appBar: CustomAppBar(
         title: 'Select @signs',
         showBackButton: true,
@@ -111,9 +113,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                             value: index,
                             activeColor: ColorConstants.appColor,
                             title: Text(currentItem,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                )),
+                                style: CustomTextStyles.fontR14primary),
                           ),
                         );
                       },
@@ -131,7 +131,9 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
         builder: (_) => AlertDialog(
               content: RichText(
                 text: TextSpan(
-                    style: CustomTextStyles.fontR14primary,
+                    style: Theme.of(context).brightness == Brightness.dark
+                        ? CustomTextStyles.fontR14secondary
+                        : CustomTextStyles.fontR14primary,
                     children: <InlineSpan>[
                       const TextSpan(text: 'You have selected  '),
                       TextSpan(
@@ -145,9 +147,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                   onPressed: () => Navigator.pop(_),
                   child: Text(
                     Strings.cancelButton,
-                    style: TextStyle(
-                        color: ColorConstants.lightBackgroundColor,
-                        fontSize: 12.toFont),
+                    style: TextStyle(fontSize: 12.toFont),
                   ),
                 ),
                 TextButton(
@@ -158,9 +158,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                   child: Text(
                     'Yes, continue',
                     style: TextStyle(
-                        color: ColorConstants.dark,
-                        fontSize: 12.toFont,
-                        fontWeight: FontWeight.bold),
+                        fontSize: 12.toFont, fontWeight: FontWeight.bold),
                   ),
                 )
               ],

@@ -24,6 +24,7 @@ class AllText {
   String k30mins = '30 mins';
   String k2hours = '2 hours';
   String k24hours = '24 hours';
+  String DECIDE_LATER = 'Decide Later';
 
   // Request Location Sheet
   String CANCEL = 'Cancel';

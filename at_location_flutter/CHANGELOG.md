@@ -1,58 +1,62 @@
+## 3.1.2
+- **FEAT**: Added alert message for not in contacts atsigns.
+- **FEAT**: Made notification dialogs non-dismissible.
+
 ## 3.1.1
-- Changed order of storing notifications
-- Moved location sharing functionality to background
-- Changed location search api
+- **FEAT**: Changed order of storing notifications
+- **FEAT**: Moved location sharing functionality to background
+- **UPDATE**: Changed location search api
 
 ## 3.1.0
-- Changed location sharing logic
-- Replaced put calls with a combination of put & notify
+- **UPDATE**: Changed location sharing logic
+- **UPDATE**: Replaced put calls with a combination of put & notify
 
 ## 3.0.2
-- Fixed at client dependency issue
-- Updated dependencies
+- **FIX**: Fixed at client dependency issue
+- **CHORE**: Updated dependencies
 
 ## 3.0.1
-- Bug fixes
+- **FIX**: Bug fixes
 
 ## 3.0.0
-- Resilient SDK changes for notification improvements
+- **UPDATE**: Resilient SDK changes for notification improvements
 
 ## 2.0.4
-- Bug fixes
-- Added send location to group
+- **FIX**: Bug fixes
+- **FEAT**: Added send location to group
 
 ## 2.0.3
-- Updated repository link and description
-- Updated packages
-- Added zoom parameter to returned position
+- **CHORE**: Updated repository link and description
+- **CHORE**: Updated packages
+- **FEAT**: Added zoom parameter to returned position
 
 ## 2.0.2
-- Null safe code changes
-- Updated documentation
+- **CHORE**: Null safe code changes
+- **DOCS**: Updated documentation
 
 ## 2.0.1
-- Updated packages
+- **CHORE**: Updated packages
 
 ## 2.0.0
-- Null safe support
+- **CHORE**: Null safe support
 
 ## 1.0.3
-- Improved notification handling
+- **UPDATE**: Improved notification handling
 
 ## 1.0.2
-- Updated dependent packages
+- **CHORE**: Updated dependent packages
 
 ## 1.0.1
-- Resolved static analysis issues
+- **UPDATE**: Resolved static analysis issues
 
 ## 1.0.0
-- Updated dependent packages
+- **CHORE**: Updated dependent packages
 
 ## 0.0.3
-- Updated example app
+- **UPDATE**: Updated example app
 
 ## 0.0.2
-- Bug fixes and updated dependent packages.
+- **FIX**: Bug fixes and updated dependent packages.
 
 ## 0.0.1
 - The initial release consists of sharing and requesting for location between two atsigns

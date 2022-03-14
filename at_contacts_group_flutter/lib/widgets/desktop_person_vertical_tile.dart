@@ -13,18 +13,20 @@ class DesktopCustomPersonVerticalTile extends StatefulWidget {
   final bool isTopRight, isAssetImage;
   final IconData? icon;
   final Function? onCrossPressed;
-  List<dynamic>? imageByteList;
+  final List<dynamic>? imageByteList;
 
-  DesktopCustomPersonVerticalTile(
-      {this.imageLocation,
-      this.title,
-      this.subTitle,
-      this.isTopRight = false,
-      this.icon,
-      this.onCrossPressed,
-      this.isAssetImage = true,
-      this.imageByteList,
-      this.atsign});
+  const DesktopCustomPersonVerticalTile({
+    Key? key,
+    this.imageLocation,
+    this.title,
+    this.subTitle,
+    this.isTopRight = false,
+    this.icon,
+    this.onCrossPressed,
+    this.isAssetImage = true,
+    this.imageByteList,
+    this.atsign,
+  }) : super(key: key);
 
   @override
   _DesktopCustomPersonVerticalTileState createState() =>
@@ -60,7 +62,7 @@ class _DesktopCustomPersonVerticalTileState
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 10),
       child: Column(
         children: <Widget>[
           Stack(
@@ -98,7 +100,7 @@ class _DesktopCustomPersonVerticalTileState
                         child: Container(
                           height: 20.toHeight,
                           width: 20.toHeight,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               color: Colors.black, shape: BoxShape.circle),
                           child: Icon(
                             Icons.close,
@@ -108,10 +110,10 @@ class _DesktopCustomPersonVerticalTileState
                         ),
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
-          SizedBox(height: 2),
+          const SizedBox(height: 2),
           contactName != null
               ? Text(
                   contactName!,
@@ -120,8 +122,8 @@ class _DesktopCustomPersonVerticalTileState
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 )
-              : SizedBox(),
-          SizedBox(height: 2),
+              : const SizedBox(),
+          const SizedBox(height: 2),
           widget.subTitle != null
               ? SizedBox(
                   width: 120,
@@ -133,8 +135,8 @@ class _DesktopCustomPersonVerticalTileState
                     textAlign: TextAlign.center,
                   ),
                 )
-              : SizedBox(),
-          SizedBox(height: 2),
+              : const SizedBox(),
+          const SizedBox(height: 2),
         ],
       ),
     );

@@ -12,6 +12,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 
 /// This widget gives option to create group when there is no group
 class EmptyGroup extends StatefulWidget {
+  const EmptyGroup({Key? key}) : super(key: key);
   @override
   _EmptyGroupState createState() => _EmptyGroupState();
 }
@@ -64,9 +65,7 @@ class _EmptyGroupState extends State<EmptyGroup> {
                   MaterialPageRoute(
                     builder: (context) => ContactsScreen(
                       asSelectionScreen: true,
-                      context: context,
                       selectedList: (selectedList) {
-                        print('in selectedList => selectedList');
                         selectedContactList = selectedList;
 
                         if (selectedContactList!.isNotEmpty) {
@@ -78,7 +77,7 @@ class _EmptyGroupState extends State<EmptyGroup> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => NewGroup(),
+                            builder: (context) => const NewGroup(),
                           ),
                         );
                       },

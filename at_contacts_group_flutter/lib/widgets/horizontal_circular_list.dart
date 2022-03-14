@@ -1,6 +1,4 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -33,7 +31,7 @@ class _HorizontalCircularListState extends State<HorizontalCircularList> {
           // ignore: omit_local_variable_types
           List<GroupContactsModel?> selectedContacts = snapshot.data!;
 
-          return Container(
+          return SizedBox(
             height: (selectedContacts.isEmpty) ? 0 : 150.toHeight,
             child: ListView.builder(
               itemCount: selectedContacts.length,

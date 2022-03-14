@@ -1,3 +1,7 @@
+## 4.0.0
+- **CHORE**: Updated dependencies
+- **BREAKING CHANGE**: at_backupkey_flutter exposed in this package has breaking change - removed redundant, required parameter `atClientService`.
+
 ## 3.1.4
 - **DOCS**: Updated documentation
 - **CHORE**: Updated dependencies

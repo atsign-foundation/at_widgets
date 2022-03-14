@@ -7,7 +7,10 @@ class ErrorScreen extends StatelessWidget {
   final Function? onPressed;
   final String msg;
   const ErrorScreen(
-      {Key? key, this.onPressed, this.msg = 'Something went wrong, please retry.'}) : super(key: key);
+      {Key? key,
+      this.onPressed,
+      this.msg = 'Something went wrong, please retry.'})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -16,7 +19,8 @@ class ErrorScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(msg,
-              textAlign: TextAlign.center, style: const TextStyle(fontSize: 20)),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 20)),
           const SizedBox(height: 10),
           onPressed != null
               ? CustomButton(

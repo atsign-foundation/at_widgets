@@ -126,7 +126,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
-      if (authResponse == ResponseStatus.AUTH_SUCCESS) {
+      if (authResponse == ResponseStatus.authSuccess) {
         if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
             widget.onboardStatus == OnboardingStatus.RESTORE) {
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
@@ -146,7 +146,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
           await Navigator.pushReplacement(
             context,
             MaterialPageRoute<PrivateKeyQRCodeGenScreen>(
-                builder: (BuildContext context) => PrivateKeyQRCodeGenScreen()),
+                builder: (BuildContext context) =>
+                    const PrivateKeyQRCodeGenScreen()),
           );
         }
       }
@@ -154,13 +155,13 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = false;
       });
-      if (e == ResponseStatus.AUTH_FAILED) {
+      if (e == ResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWith cram secret');
         await _showAlertDialog(e, title: 'Auth Failed');
-      } else if (e == ResponseStatus.SERVER_NOT_REACHED && _isContinue) {
+      } else if (e == ResponseStatus.serverNotReached && _isContinue) {
         _isServerCheck = _isContinue;
         await _processSharedSecret(atsign, secret);
-      } else if (e == ResponseStatus.TIME_OUT) {
+      } else if (e == ResponseStatus.timeOut) {
         await _showAlertDialog(e, title: 'Response Time out');
       }
     }
@@ -192,7 +193,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     setState(() {
       loading = false;
     });
-    if (message != ResponseStatus.AUTH_SUCCESS) {
+    if (message != ResponseStatus.authSuccess) {
       scanCompleted = false;
       await _controller.startCamera((String data, List<Offset> offsets) {
         if (!scanCompleted) {
@@ -260,7 +261,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       }
       dynamic authResponse = await _onboardingService.authenticate(atsign,
           jsonData: contents, decryptKey: aesKey);
-      if (authResponse == ResponseStatus.AUTH_SUCCESS) {
+      if (authResponse == ResponseStatus.authSuccess) {
         if (_onboardingService.nextScreen == null) {
           Navigator.pop(context);
           _onboardingService.onboardFunc(_onboardingService.atClientServiceMap,
@@ -279,16 +280,16 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       setState(() {
         loading = false;
       });
-      if (e == ResponseStatus.SERVER_NOT_REACHED && _isContinue) {
+      if (e == ResponseStatus.serverNotReached && _isContinue) {
         _isServerCheck = _isContinue;
         await _processAESKey(atsign, aesKey, contents);
-      } else if (e == ResponseStatus.AUTH_FAILED) {
+      } else if (e == ResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWithAESKey');
         await _showAlertDialog(e, isPkam: true, title: 'Auth Failed');
-      } else if (e == ResponseStatus.TIME_OUT) {
+      } else if (e == ResponseStatus.timeOut) {
         await _showAlertDialog(e, title: 'Response Time out');
       } else {
-        print(e);
+        _logger.warning(e);
       }
     }
   }
@@ -402,7 +403,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
   }
 
   Future<void> _uploadKeyFileForDesktop() async {
-    print('_uploadKeyFileForDesktop called');
     try {
       _isServerCheck = false;
       _isContinue = true;
@@ -476,7 +476,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       XFile file = files[0];
       return file.path;
     } catch (e) {
-      print('Error in desktopImagePicker $e');
+      _logger.severe('Error in desktopImagePicker $e');
       return null;
     }
   }
@@ -507,7 +507,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     // QR Scanner
     if (scanQR) {
       return Scaffold(
-        backgroundColor: ColorConstants.light,
+        backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
           showBackButton: true,
           title: Strings.pairAtsignTitle,
@@ -525,7 +525,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       );
     }
     return Scaffold(
-        backgroundColor: ColorConstants.light,
+        backgroundColor: ColorConstants.backgroundColor,
         appBar: CustomAppBar(
           showBackButton: true,
           title: Strings.pairAtsignTitle,
@@ -538,7 +538,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                       Navigator.push(
                           context,
                           MaterialPageRoute<Widget>(
-                              builder: (BuildContext context) => WebViewScreen(
+                              builder: (BuildContext context) =>
+                                  const WebViewScreen(
                                     title: Strings.faqTitle,
                                     url: Strings.faqUrl,
                                   )));
@@ -621,7 +622,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                                           Flexible(
                                             flex: 7,
                                             child: Text(
-                                                Strings.recurr_server_check,
+                                                Strings.recurrServerCheck,
                                                 textAlign: TextAlign.start,
                                                 style: CustomTextStyles
                                                     .fontR16primary),
@@ -715,7 +716,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                             atsigns: atsignsList,
                             message: message,
                           ))).then((dynamic value) async {
-                print('value is $value');
                 value == null ? _getAtsignForm() : await _onAtSignSubmit(value);
               });
             },
@@ -854,7 +854,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       data = response.body;
       data = jsonDecode(data);
 
-      print(data);
       status = true;
       // atsign = data['data']['atsign'];
     } else {
@@ -900,7 +899,6 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
       data = response.body;
       data = jsonDecode(data);
 
-      print(data);
       status = true;
       // atsign = data['data']['atsign'];
     } else {

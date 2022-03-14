@@ -7,11 +7,13 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
   final String? title, subTitle;
   final bool showCancelIcon;
   final Function? onRemovePress;
-  DesktopCustomPersonVerticalTile(
-      {this.title,
-      this.subTitle,
-      this.showCancelIcon = true,
-      this.onRemovePress});
+  const DesktopCustomPersonVerticalTile({
+    Key? key,
+    this.title,
+    this.subTitle,
+    this.showCancelIcon = true,
+    this.onRemovePress,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,15 +36,15 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
                       onTap: () {
                         onRemovePress!();
                       },
-                      child: Icon(Icons.cancel),
+                      child: const Icon(Icons.cancel),
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
         SizedBox(width: 10.toHeight),
         Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,7 +63,7 @@ class DesktopCustomPersonVerticalTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
         )

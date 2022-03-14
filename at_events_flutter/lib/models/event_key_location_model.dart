@@ -1,18 +1,9 @@
-import 'package:at_commons/at_commons.dart';
-
 import 'event_notification.dart';
 
-/// Model containing the [atKey], [atValue], [eventNotificationModel] associated with the [key].
+/// Model containing the [eventNotificationModel] associated with the event.
 class EventKeyLocationModel {
-  String? key;
-  AtKey? atKey;
-  AtValue? atValue;
   EventNotificationModel? eventNotificationModel;
   bool haveResponded;
   EventKeyLocationModel(
-      {this.key,
-      this.atKey,
-      this.atValue,
-      this.eventNotificationModel,
-      this.haveResponded = false});
+      {this.eventNotificationModel, this.haveResponded = false});
 }

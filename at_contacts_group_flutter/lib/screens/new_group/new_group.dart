@@ -10,15 +10,13 @@ import 'package:at_contacts_group_flutter/widgets/bottom_sheet.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:at_commons/src/exception/at_exceptions.dart';
-// ignore: import_of_legacy_library_into_null_safe
+import 'package:at_commons/at_commons.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 /// This widget provides screen to create a new group
 class NewGroup extends StatefulWidget {
+  const NewGroup({Key? key}) : super(key: key);
   @override
   _NewGroupState createState() => _NewGroupState();
 }
@@ -54,7 +52,7 @@ class _NewGroupState extends State<NewGroup> {
 
   // ignore: always_declare_return_types
   getContacts() {
-    if (GroupService().selecteContactList!.isNotEmpty) {
+    if (GroupService().selecteContactList.isNotEmpty) {
       selectedContacts = GroupService().selecteContactList;
     } else {
       selectedContacts = [];
@@ -121,22 +119,22 @@ class _NewGroupState extends State<NewGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).brightness == Brightness.light
-            ? AllColors().WHITE
-            : AllColors().Black,
-        bottomSheet: GroupBottomSheet(
-          onPressed: createGroup,
-          message: '${selectedContacts!.length} Contacts Selected',
-          buttontext: 'Done',
-        ),
-        appBar: CustomAppBar(
-            titleText: 'New Group',
-            showTitle: true,
-            showBackButton: true,
-            showLeadingIcon: true),
-        body: Column(
+    return Scaffold(
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? AllColors().WHITE
+          : AllColors().Black,
+      bottomSheet: GroupBottomSheet(
+        onPressed: createGroup,
+        message: '${selectedContacts!.length} Contacts Selected',
+        buttontext: 'Done',
+      ),
+      appBar: const CustomAppBar(
+          titleText: 'New Group',
+          showTitle: true,
+          showBackButton: true,
+          showLeadingIcon: true),
+      body: SafeArea(
+        child: Column(
           children: <Widget>[
             SizedBox(height: 20.toHeight),
             Row(
@@ -179,7 +177,7 @@ class _NewGroupState extends State<NewGroup> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Group name', style: TextStyle(fontSize: 18.toFont)),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.only(right: 15.0),
                         child: Container(
@@ -189,7 +187,7 @@ class _NewGroupState extends State<NewGroup> {
                             color: AllColors().INPUT_FIELD_COLOR,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                           child: Row(
                             children: <Widget>[
                               Expanded(
@@ -244,15 +242,15 @@ class _NewGroupState extends State<NewGroup> {
               ],
             ),
             SizedBox(height: 13.toHeight),
-            Divider(),
+            const Divider(),
             SizedBox(height: 13.toHeight),
             Expanded(
               child: Container(
                 width: double.infinity,
-                padding: EdgeInsets.only(right: 15, left: 15),
+                padding: const EdgeInsets.only(right: 15, left: 15),
                 child: SingleChildScrollView(
                   child: GridView.count(
-                    physics: ScrollPhysics(),
+                    physics: const ScrollPhysics(),
                     shrinkWrap: true,
                     crossAxisCount: 4,
                     childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
@@ -283,7 +281,7 @@ class _NewGroupState extends State<NewGroup> {
                     margin: EdgeInsets.only(bottom: 70.toHeight),
                     child: EmojiPicker(
                       key: UniqueKey(),
-                      config: Config(
+                      config: const Config(
                           columns: 7,
                           emojiSizeMax: 32.0,
                           verticalSpacing: 0,
@@ -297,16 +295,16 @@ class _NewGroupState extends State<NewGroup> {
                           showRecentsTab: true,
                           recentsLimit: 28,
                           noRecentsText: 'No Recents',
-                          noRecentsStyle: const TextStyle(
-                              fontSize: 20, color: Colors.black26),
-                          categoryIcons: const CategoryIcons(),
+                          noRecentsStyle:
+                              TextStyle(fontSize: 20, color: Colors.black26),
+                          categoryIcons: CategoryIcons(),
                           buttonMode: ButtonMode.MATERIAL),
                       onEmojiSelected: (category, emoji) {
                         textController.text += emoji.emoji;
                       },
                     ),
                   )
-                : SizedBox()
+                : const SizedBox()
           ],
         ),
       ),

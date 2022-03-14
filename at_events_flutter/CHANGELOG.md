@@ -1,40 +1,50 @@
+## 3.1.3
+- **FEAT**: Removed key, atKey, atValue from EventKeyLocationModel
+
+## 3.1.2
+- **FEAT**: Added alert message for not in contacts atsigns.
+- **FEAT**: Made notification dialogs non-dismissible.
+- **UPDATE**: Moved events from bottomSheet to full screen.
+- **FEAT**: Made venues re-usable.
+- **FEAT**: Added detailed discription in participants list.
+
 ## 3.1.1
-- Changed order of storing notifications
-- Updated at_location_flutter reference
+- **UPDATE**: Changed order of storing notifications
+- **CHORE**: Updated at_location_flutter reference
 
 ## 3.1.0
-- Changed event sharing logic
-- Replaced put calls with a combination of put & notify
+- **UPDATE**: Changed event sharing logic
+- **UPDATE**: Replaced put calls with a combination of put & notify
 
 ## 3.0.2
-- Fixed at client dependency issue. Removed reference to SyncStrategy which is deprecated
-- Updated dependencies
+- **FIX**: Fixed at client dependency issue. Removed reference to SyncStrategy which is deprecated
+- **CHORE**: Updated dependencies
 
 ## 3.0.1
-- Bug fixes
+- **FIX**: Bug fixes
 
 ## 3.0.0
-- Resilient SDK changes for notification improvements
+- **UPDATE**: Resilient SDK changes for notification improvements
 
 ## 2.0.3
-- Bug fixes
+- **FIX**: Bug fixes
 
 ## 2.0.2
-- Updated repository link and description
-- Updated packages
+- **CHORE**: Updated repository link and description
+- **CHORE**: Updated packages
 
 ## 2.0.1
-- Updated documentation
+- **DOCS**: Updated documentation
 
 ## 2.0.0
-- Null safe version
+- **UPDATE**: Null safe version
 
 ## 1.0.2
-- Updated dependent packages
-- Improved notification handling
+- **CHORE**: Updated dependent packages
+- **UPDATE**: Improved notification handling
 
 ## 1.0.1
-- Resolved static analysis issues
+- **CHORE**: Resolved static analysis issues
 
 ## 1.0.0
 - The initial release consists of two functionalities - create a new event and view a list of already created events

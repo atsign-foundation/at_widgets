@@ -8,7 +8,7 @@ import 'custom_popup_route.dart';
 class LoadingDialog {
   LoadingDialog._();
 
-  static LoadingDialog _instance = LoadingDialog._();
+  static final LoadingDialog _instance = LoadingDialog._();
 
   factory LoadingDialog() => _instance;
   bool _showing = false;
@@ -19,11 +19,10 @@ class LoadingDialog {
       key.currentState!
           .push(CustomPopupRoutes(
               pageBuilder: (_, __, ___) {
-                print("building loader");
                 return Center(
                   child: (text != null)
                       ? onlyText(text)
-                      : CircularProgressIndicator(),
+                      : const CircularProgressIndicator(),
                 );
               },
               barrierDismissible: false))
@@ -32,7 +31,6 @@ class LoadingDialog {
   }
 
   hide(GlobalKey<NavigatorState> key) {
-    print("hide called");
     if (_showing) {
       key.currentState!.pop();
       _showing = false;
@@ -55,7 +53,7 @@ class LoadingDialog {
                     decoration: TextDecoration.none),
           ),
         ),
-        TypingIndicator(
+        const TypingIndicator(
           showIndicator: true,
           flashingCircleBrightColor: ColorConstants.dullText,
           flashingCircleDarkColor: ColorConstants.fadedText,

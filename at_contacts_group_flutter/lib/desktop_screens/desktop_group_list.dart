@@ -7,21 +7,20 @@ import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
-import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
+import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_custom_input_field.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_header.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_person_horizontal_tile.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 class DesktopGroupList extends StatefulWidget {
   final List<AtGroup> groups;
   final int expandIndex;
   final bool showBackButton;
-  Key? key;
-  DesktopGroupList(this.groups,
-      {this.key, this.expandIndex = 0, this.showBackButton = true})
+
+  const DesktopGroupList(this.groups,
+      {Key? key, this.expandIndex = 0, this.showBackButton = true})
       : super(key: key);
   @override
   _DesktopGroupListState createState() => _DesktopGroupListState();
@@ -51,10 +50,10 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
     }
 
     return Container(
-      color: Color(0xFFF7F7FF),
+      color: const Color(0xFFF7F7FF),
       child: Column(
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           DesktopHeader(
@@ -80,7 +79,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                   initialValue: searchText,
                 ),
               ),
-              SizedBox(width: 15),
+              const SizedBox(width: 15),
               TextButton(
                 onPressed: () {
                   Navigator.of(
@@ -115,20 +114,20 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                   },
                 ), fixedSize: MaterialStateProperty.resolveWith<Size>(
                   (Set<MaterialState> states) {
-                    return Size(100, 40);
+                    return const Size(100, 40);
                   },
                 )),
-                child: Text(
+                child: const Text(
                   'Add',
                   style: TextStyle(
                     color: Colors.white,
                   ),
                 ),
               ),
-              SizedBox(width: 10)
+              const SizedBox(width: 10)
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
               itemCount: _filteredList.length,
@@ -147,7 +146,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                   },
                   child: Container(
                     color: index == _selectedIndex
-                        ? Color(0xffF86060).withAlpha(20)
+                        ? const Color(0xffF86060).withAlpha(20)
                         : Colors.transparent,
                     child: Row(
                       children: [
@@ -182,7 +181,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                                       showMyDialog(
                                           context, _filteredList[index]);
                                     },
-                                    child: Icon(Icons.delete),
+                                    child: const Icon(Icons.delete),
                                   )),
                             ],
                           ),
@@ -215,8 +214,8 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
           onYesPressed: () async {
             var result = await GroupService().deleteGroup(group);
 
-            if (result is bool) {
-              result ? Navigator.of(context).pop() : null;
+            if (result != null && result) {
+              Navigator.of(context).pop();
             } else {
               CustomToast().show(TextConstants().SERVICE_ERROR, context);
             }

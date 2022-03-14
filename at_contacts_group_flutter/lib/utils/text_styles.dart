@@ -46,7 +46,7 @@ class CustomTextStyles {
   TextStyle grey14 = TextStyle(color: AllColors().GREY, fontSize: 14.toFont);
 
   //desktop
-  static TextStyle desktopPrimaryRegular14 = TextStyle(
+  static TextStyle desktopPrimaryRegular14 = const TextStyle(
       color: Colors.black,
       fontSize: 14,
       letterSpacing: 0.1,

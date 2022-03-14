@@ -84,7 +84,6 @@ class ChatService {
           .listen((notification) {
         _notificationCallback(notification);
       });
-      print('Monitor started');
       monitorStarted = true;
     }
     return true;
@@ -98,14 +97,11 @@ class ChatService {
 
   /// Captures and processes notifications
   void _notificationCallback(dynamic notification) async {
-    print('notification received: $notification');
-
     var notificationKey = notification.key;
     var fromAtsign = notification.from;
 
     // ignore notification for image key delete
     if (notification.operation == 'delete') {
-      print('delete notification - ignored');
       return;
     }
     // remove from and to atsigns from the notification key
@@ -125,11 +121,8 @@ class ChatService {
       var message = notification.value;
       var decryptedMessage = await atClientManager.atClient.encryptionService!
           .decrypt(message, fromAtsign)
-          .catchError((e) {
-        print('error in decrypting message ${e.errorCode} ${e.errorMessage}');
-      });
-      chatHistoryMessagesOther =
-          json.decode((decryptedMessage) as String) as List;
+          .catchError((e) {});
+      chatHistoryMessagesOther = json.decode(decryptedMessage) as List;
       chatHistory =
           await interleave(chatHistoryMessages, chatHistoryMessagesOther);
       chatSink.add(chatHistory);
@@ -167,9 +160,7 @@ class ChatService {
         ..sharedWith = chatWithAtSign
         ..metadata = Metadata();
       key.metadata?.ccd = true;
-      var keyValue = await atClientManager.atClient.get(key).catchError((e) {
-        print('error in get ${e.errorCode} ${e.errorMessage}');
-      });
+      var keyValue = await atClientManager.atClient.get(key).catchError((e) {});
       // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
         chatHistoryMessages = json.decode((keyValue.value) as String) as List;
@@ -182,11 +173,8 @@ class ChatService {
           (chatWithAtSign != null ? currentAtSign! : ' ').substring(1);
       key.sharedBy = chatWithAtSign;
       key.sharedWith = currentAtSign!;
-      keyValue = await atClientManager.atClient.get(key).catchError((e) {
-        print(
-            'error in getting other history ${e.errorCode} ${e.errorMessage}');
-      });
-      if (keyValue != null && keyValue.value != null) {
+      keyValue = await atClientManager.atClient.get(key).catchError((e) {});
+      if (keyValue.value != null) {
         chatHistoryMessagesOther =
             json.decode((keyValue.value) as String) as List;
       } else {
@@ -196,7 +184,6 @@ class ChatService {
           await interleave(chatHistoryMessages, chatHistoryMessagesOther);
       chatSink.add(chatHistory);
     } catch (error) {
-      print('Error in getting chat -> $error');
       chatSink.add(chatHistory);
     }
   }
@@ -208,19 +195,19 @@ class ChatService {
     final itb = b.iterator;
     bool hasa = ita.moveNext();
     bool hasb = itb.moveNext();
-    var valueA, valueB;
+    Message valueA, valueB;
     while (hasa | hasb) {
       if (hasa && hasb) {
         valueA = Message.fromJson(ita.current);
-        if (valueA.contentType == MessageContentType.IMAGE) {
-          valueA.imageData = await getImage(valueA.message);
+        if (valueA.contentType == MessageContentType.image) {
+          valueA.imageData = await getImage(valueA.message ?? '');
         }
         valueB = Message.fromJson(itb.current);
-        valueB.type = MessageType.INCOMING;
-        if (valueB.contentType == MessageContentType.IMAGE) {
-          valueB.imageData = await getImage(valueB.message);
+        valueB.type = MessageType.incoming;
+        if (valueB.contentType == MessageContentType.image) {
+          valueB.imageData = await getImage(valueB.message ?? '');
         }
-        if (valueA.time > valueB.time) {
+        if ((valueA.time ?? 0) > (valueB.time ?? 0)) {
           result.add(valueA);
           hasa = ita.moveNext();
         } else {
@@ -229,29 +216,29 @@ class ChatService {
         }
       } else if (hasa) {
         valueA = Message.fromJson(ita.current);
-        if (valueA.contentType == MessageContentType.IMAGE) {
-          valueA.imageData = await getImage(valueA.message);
+        if (valueA.contentType == MessageContentType.image) {
+          valueA.imageData = await getImage(valueA.message ?? '');
         }
         result.add(valueA);
         while (hasa = ita.moveNext()) {
           valueA = Message.fromJson(ita.current);
-          if (valueA.contentType == MessageContentType.IMAGE) {
-            valueA.imageData = await getImage(valueA.message);
+          if (valueA.contentType == MessageContentType.image) {
+            valueA.imageData = await getImage(valueA.message ?? '');
           }
           result.add(valueA);
         }
       } else if (hasb) {
         valueB = Message.fromJson(itb.current);
-        valueB.type = MessageType.INCOMING;
-        if (valueB.contentType == MessageContentType.IMAGE) {
-          valueB.imageData = await getImage(valueB.message);
+        valueB.type = MessageType.incoming;
+        if (valueB.contentType == MessageContentType.image) {
+          valueB.imageData = await getImage(valueB.message ?? '');
         }
         result.add(valueB);
         while (hasb = itb.moveNext()) {
           valueB = Message.fromJson(itb.current);
-          valueB.type = MessageType.INCOMING;
-          if (valueB.contentType == MessageContentType.IMAGE) {
-            valueB.imageData = await getImage(valueB.message);
+          valueB.type = MessageType.incoming;
+          if (valueB.contentType == MessageContentType.image) {
+            valueB.imageData = await getImage(valueB.message ?? '');
           }
           result.add(valueB);
         }
@@ -274,14 +261,14 @@ class ChatService {
       key.metadata?.ttr = -1;
 
       chatHistoryMessages.insert(0, message.toJson());
-      if (message.contentType == MessageContentType.IMAGE) {
+      if (message.contentType == MessageContentType.image) {
         message.imageData = imageData ?? Uint8List(0);
       }
       chatHistory.insert(0, message);
       chatSink.add(chatHistory);
       await atClientManager.atClient.put(key, json.encode(chatHistoryMessages));
     } catch (e) {
-      print('Error in setting chat => $e');
+      chatSink.add([]);
     }
   }
 
@@ -291,7 +278,7 @@ class ChatService {
         message: message,
         sender: currentAtSign,
         time: DateTime.now().millisecondsSinceEpoch,
-        type: MessageType.OUTGOING));
+        type: MessageType.outgoing));
   }
 
   /// deletes self owned messages only
@@ -307,7 +294,7 @@ class ChatService {
     try {
       for (var i = 0; i < chatHistoryMessages.length; i++) {
         var message = Message.fromJson(chatHistoryMessages[i]);
-        if (message.contentType == MessageContentType.IMAGE) {
+        if (message.contentType == MessageContentType.image) {
           // removing 'AtKey{' and ending '}'
           var savedKey =
               message.message?.substring(6, (message.message?.length ?? 1) - 1);
@@ -322,7 +309,6 @@ class ChatService {
       await getChatHistory();
       return result;
     } catch (e) {
-      print('error in deleting => $e');
       return false;
     }
   }
@@ -341,7 +327,7 @@ class ChatService {
       for (var i = 0; i < chatHistoryMessages.length; i++) {
         var message = Message.fromJson(chatHistoryMessages[i]);
         if (message.id == id &&
-            message.contentType == MessageContentType.IMAGE) {
+            message.contentType == MessageContentType.image) {
           // removing 'AtKey{' and ending '}'
           var savedKey =
               message.message?.substring(6, (message.message?.length ?? 1) - 1);
@@ -359,7 +345,6 @@ class ChatService {
       await getChatHistory();
       return result;
     } catch (e) {
-      print('error in deleting => $e');
       return false;
     }
   }
@@ -368,7 +353,7 @@ class ChatService {
     Uint8List imageBytes = file.readAsBytesSync();
     var size = imageBytes.length;
     if (size > 512000) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
               'Image exceeds the maximum limit of 512KB. Please try with an image of lower size.')));
     } else {
@@ -387,21 +372,21 @@ class ChatService {
         await Future.forEach(groupChatMembers!, (dynamic member) async {
           if (member != currentAtSign) {
             key.sharedWith = member;
-            var result = await atClientManager.atClient.put(key, imageBytes);
-            print('send notification for groupChat => $result');
+            await atClientManager.atClient.put(key, imageBytes);
+            // send notification for groupChat
           }
         });
       } else {
-        var result = await atClientManager.atClient.put(key, imageBytes);
-        print('send notification => $result');
+        await atClientManager.atClient.put(key, imageBytes);
+        //send notification
       }
       await setChatHistory(
           Message(
             message: key.toString(),
             sender: currentAtSign,
             time: DateTime.now().millisecondsSinceEpoch,
-            type: MessageType.OUTGOING,
-            contentType: MessageContentType.IMAGE,
+            type: MessageType.outgoing,
+            contentType: MessageContentType.image,
           ),
           imageData: imageBytes);
     }
@@ -413,9 +398,7 @@ class ChatService {
       savedKey = savedKey.substring(6, savedKey.length - 1);
 
       var key = constructKey(savedKey);
-      var keyValue = await atClientManager.atClient.get(key).catchError((e) {
-        print('error in get ${e.errorCode} ${e.errorMessage}');
-      });
+      var keyValue = await atClientManager.atClient.get(key).catchError((e) {});
       // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
         return keyValue.value;
@@ -424,7 +407,6 @@ class ChatService {
         return Uint8List(0);
       }
     } else {
-      print('Invalid image key => $savedKey');
       return Uint8List(0);
     }
   }
@@ -447,10 +429,10 @@ class ChatService {
   Map<String, String> fieldSeparator(String data) {
     var fieldStrings = data.split(',');
     Map<String, String> keyValues = {};
-    fieldStrings.forEach((value) {
+    for (String value in fieldStrings) {
       var subParts = value.split(':');
       keyValues[subParts[0].trim()] = subParts[1].trim();
-    });
+    }
     return keyValues;
   }
 }

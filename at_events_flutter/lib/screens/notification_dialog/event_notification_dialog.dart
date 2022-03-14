@@ -4,6 +4,7 @@
 import 'dart:typed_data';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_events_flutter/common_components/bottom_sheet.dart';
 import 'package:at_events_flutter/common_components/contacts_initials.dart';
 import 'package:at_events_flutter/common_components/custom_button.dart';
@@ -84,8 +85,10 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     dynamic overlapData = [];
 
     allSavedEvents.forEach((event) {
-      var keyMicrosecondId = event.key!.split('createevent-')[1].split('@')[0];
-      if (!event.key!.contains(keyMicrosecondId)) {
+      var keyMicrosecondId = event.eventNotificationModel!.key!
+          .split('createevent-')[1]
+          .split('@')[0];
+      if (!event.eventNotificationModel!.key!.contains(keyMicrosecondId)) {
         allEventsExcludingCurrentEvent.add(event);
       }
     });
@@ -112,7 +115,8 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                      '${widget.eventData!.atsignCreator} '+ AllText().SHARE_EVENT_DES,
+                      '${widget.eventData!.atsignCreator} ' +
+                          AllText().SHARE_EVENT_DES,
                       style: CustomTextStyles().grey16,
                       textAlign: TextAlign.center),
                   const SizedBox(height: 30),
@@ -158,6 +162,16 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                     ],
                   ),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
+                  (ContactService().contactList.indexWhere((element) =>
+                              element?.atSign ==
+                              widget.eventData!.atsignCreator) ==
+                          -1)
+                      ? Text(
+                          'NOTE: ${widget.eventData!.atsignCreator} is not in your contacts list.',
+                          style: CustomTextStyles().red12,
+                        )
+                      : const SizedBox(),
+                  SizedBox(height: 10.toHeight),
                   widget.eventData != null
                       ? Text(
                           widget.eventData!.title!,
@@ -169,8 +183,10 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                   widget.eventData != null
                       ? Text(
                           (widget.eventData!.group!.members!.length == 1)
-                              ? '${widget.eventData!.group!.members!.length} '+ AllText().PER_INVITED
-                              : '${widget.eventData!.group!.members!.length} '+ AllText().PEP_INVITED,
+                              ? '${widget.eventData!.group!.members!.length} ' +
+                                  AllText().PER_INVITED
+                              : '${widget.eventData!.group!.members!.length} ' +
+                                  AllText().PEP_INVITED,
                           style: CustomTextStyles().grey14)
                       : const SizedBox(),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
@@ -265,14 +281,16 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
 
                                               if (result == true) {
                                                 CustomToast().show(
-                                                    AllText().REQ_TO_UPDATE_DATA_SUB,
+                                                    AllText()
+                                                        .REQ_TO_UPDATE_DATA_SUB,
                                                     AtEventNotificationListener()
                                                         .navKey!
                                                         .currentContext,
                                                     isSuccess: true);
                                               } else {
                                                 CustomToast().show(
-                                                    AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
+                                                    AllText()
+                                                        .SOMETHING_WENT_WRONG_TRY_AGAIN,
                                                     AtEventNotificationListener()
                                                         .navKey!
                                                         .currentContext,
@@ -313,7 +331,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
 
                             if (result == true) {
                               CustomToast().show(
-                                 AllText().REQ_TO_UPDATE_DATA_SUB,
+                                  AllText().REQ_TO_UPDATE_DATA_SUB,
                                   AtEventNotificationListener()
                                       .navKey!
                                       .currentContext,
@@ -336,6 +354,17 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                             AllText().NO,
                             style: CustomTextStyles().black14,
                           ),
+                        ),
+                  loading! ? const SizedBox() : SizedBox(height: 10.toHeight),
+                  loading!
+                      ? const SizedBox()
+                      : InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(AllText().DECIDE_LATER,
+                              style: CustomTextStyles().orange14,
+                              textAlign: TextAlign.center),
                         ),
                 ],
               ),

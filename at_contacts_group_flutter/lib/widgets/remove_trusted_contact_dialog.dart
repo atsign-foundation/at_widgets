@@ -63,7 +63,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
           ),
         ],
       ),
-      content: Container(
+      content: SizedBox(
         height: 280.toHeight,
         child: Column(
           children: [
@@ -124,7 +124,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
               height: 20.toHeight,
             ),
             loading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : Column(
                     children: [
                       Row(
@@ -145,8 +145,8 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                                 widget.atGroup!,
                               );
 
-                              if (result is bool) {
-                                result ? Navigator.of(context).pop() : null;
+                              if (result is bool && result) {
+                                Navigator.of(context).pop();
                               } else if (result == null) {
                                 _error = 'Something went wrong';
                               } else {
@@ -177,7 +177,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                               _error!,
                               style: CustomTextStyles.error14,
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                     ],
                   )
           ],

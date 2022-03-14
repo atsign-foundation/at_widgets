@@ -52,19 +52,28 @@ class _MyAppState extends State<MyApp> {
         ThemeMode themeMode = snapshot.data ?? ThemeMode.light;
         return MaterialApp(
           // * The onboarding screen (first screen)
-          theme: ThemeData(
+          theme: ThemeData().copyWith(
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
-            accentColor: Colors.black,
+            colorScheme:
+                ThemeData().colorScheme.copyWith(secondary: Colors.black),
             backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
+            textTheme: const TextTheme(
+                bodyText1: TextStyle(
+                  color: Colors.black,
+                ),
+                bodyText2: TextStyle(color: Colors.black)),
           ),
-          darkTheme: ThemeData(
+          darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
             primaryColor: Colors.blue,
-            accentColor: Colors.white,
+            colorScheme:
+                ThemeData().colorScheme.copyWith(secondary: Colors.white),
             backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
+            textTheme:
+                const TextTheme(bodyText1: TextStyle(color: Colors.white)),
           ),
           themeMode: themeMode,
           home: Scaffold(
@@ -101,6 +110,7 @@ class _MyAppState extends State<MyApp> {
                           domain: AtEnv.rootDomain,
                           rootEnvironment: AtEnv.rootEnvironment,
                           appAPIKey: AtEnv.appApiKey,
+                          appColor: Theme.of(context).primaryColor,
                           onboard: (value, atsign) {
                             _logger.finer('Successfully onboarded $atsign');
                           },
@@ -112,8 +122,7 @@ class _MyAppState extends State<MyApp> {
                       },
                       child: const Text('Onboard an @sign'),
                     ),
-                    CustomResetButton(
-                      loading: false,
+                    const CustomResetButton(
                       buttonText: 'Reset',
                       width: 90,
                       height: 40,

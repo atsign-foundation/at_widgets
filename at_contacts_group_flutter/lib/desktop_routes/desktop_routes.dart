@@ -1,10 +1,7 @@
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/desktop_screens/desktop_contacts_screen.dart';
-import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_empty_group.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_detail.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_list.dart';
-import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_view.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_new_group.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -25,8 +22,8 @@ class DesktopGroupSetupRoutes {
       {int? expandIndex}) {
     return {
       DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL: (context) {
-        if (_data.length == 0) {
-          return DesktopEmptyGroup(true);
+        if (_data.isEmpty) {
+          return const DesktopEmptyGroup(true);
         } else {
           return DesktopGroupList(
             _data,
@@ -116,6 +113,7 @@ class DesktopGroupSetupRoutes {
           Navigator.of(NavService.groupPckgLeftHalfNavKey.currentContext!)
               .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_LIST,
                   arguments: {
+                ...arguments,
                 'onDone': navigator(DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL),
               });
         };
@@ -143,7 +141,7 @@ class DesktopGroupSetupRoutes {
                   });
               Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
                   .pushReplacementNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL,
-                      arguments: {});
+                      arguments: arguments);
             }
           });
         };

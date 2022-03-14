@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class SizeConfig {
   SizeConfig._();
 
-  static SizeConfig _instance = SizeConfig._();
+  static final SizeConfig _instance = SizeConfig._();
 
   factory SizeConfig() => _instance;
   late MediaQueryData _mediaQueryData;
@@ -59,6 +59,14 @@ class SizeConfig {
     isReady = true;
   }
 
+  bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 700;
+  bool isTablet(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 700 &&
+      MediaQuery.of(context).size.width < 1200;
+  bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 1200;
+
   double getWidthRatio(double val) {
     if (screenWidth! >= 1200) {
       return val;
@@ -97,9 +105,9 @@ class SizeConfig {
 }
 
 extension SizeUtils on num {
-  double get toWidth => SizeConfig().getWidthRatio(this.toDouble());
+  double get toWidth => SizeConfig().getWidthRatio(toDouble());
 
-  double get toHeight => SizeConfig().getHeightRatio(this.toDouble());
+  double get toHeight => SizeConfig().getHeightRatio(toDouble());
 
-  double get toFont => SizeConfig().getFontRatio(this.toDouble());
+  double get toFont => SizeConfig().getFontRatio(toDouble());
 }

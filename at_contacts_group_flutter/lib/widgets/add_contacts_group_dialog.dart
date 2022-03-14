@@ -3,8 +3,6 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart' as contact_strings;
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart'
     as contact_text_styles;
@@ -12,7 +10,7 @@ import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:flutter/material.dart';
 
 class AddContactDialog extends StatefulWidget {
-  AddContactDialog({
+  const AddContactDialog({
     Key? key,
   }) : super(key: key);
 
@@ -35,7 +33,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
   Widget build(BuildContext context) {
     var _contactService = ContactService();
     var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
-    return Container(
+    return SizedBox(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,
       child: SingleChildScrollView(
@@ -90,7 +88,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                           Expanded(
                             child: Text(
                               _contactService.getAtSignError,
-                              style: TextStyle(color: Colors.red),
+                              style: const TextStyle(color: Colors.red),
                             ),
                           )
                         ],
@@ -102,7 +100,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     (isLoading)
-                        ? CircularProgressIndicator()
+                        ? const CircularProgressIndicator()
                         : CustomButton(
                             height: 50.toHeight * deviceTextFactor,
                             buttonText:
