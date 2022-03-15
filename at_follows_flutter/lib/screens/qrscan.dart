@@ -34,26 +34,23 @@ class _QrScanState extends State<QrScan> {
 
   checkPermissions() async {
     var cameraStatus = await Permission.camera.status;
-    var storageStatus = await Permission.storage.status;
     _logger.info("camera status => $cameraStatus");
-    _logger.info('storage status is $storageStatus');
 
-    if (cameraStatus.isRestricted || cameraStatus.isDenied) {
+    if (!cameraStatus.isGranted &&
+        !cameraStatus.isPermanentlyDenied &&
+        !cameraStatus.isLimited) {
       await askPermissions(Permission.camera);
-    } else if (storageStatus.isRestricted || storageStatus.isDenied) {
-      await askPermissions(Permission.storage);
-    } else if (cameraStatus.isGranted && storageStatus.isGranted) {
-      setState(() {
-        permissionGrated = true;
-      });
     }
   }
 
   askPermissions(Permission type) async {
     if (type == Permission.camera) {
-      await Permission.camera.request();
-    } else if (type == Permission.storage) {
-      await Permission.storage.request();
+      var _res = await Permission.camera.request();
+
+      if (_res == PermissionStatus.granted ||
+          _res == PermissionStatus.limited) {
+        setState(() {});
+      }
     }
   }
 
@@ -142,7 +139,7 @@ class _QrScanState extends State<QrScan> {
                         width: 300.toWidth,
                         height: 350.toHeight,
                         color: Colors.black,
-                        child: !permissionGrated || !_isScan
+                        child: !_isScan
                             ? SizedBox()
                             : Stack(
                                 children: [
