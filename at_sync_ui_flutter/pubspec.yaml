@@ -4,6 +4,7 @@ version: 1.0.1
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_sync_ui_flutter
 issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
+documentation: https://atsign.dev/docs/functional_architecture/libraries/
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -19,6 +20,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
+  at_common_flutter: ^2.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

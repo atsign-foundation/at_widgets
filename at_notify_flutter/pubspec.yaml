@@ -5,7 +5,7 @@ version: 1.0.3
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_notify_flutter
 issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
-documentation: https://atsign.dev/docs/functional_architecture/
+documentation: https://atsign.dev/docs/functional_architecture/libraries/
 
 environment:
   sdk: '>=2.12.0 <3.0.0'

@@ -1,3 +1,5 @@
+import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_follows_flutter/domain/at_follows_list.dart';
 import 'package:at_follows_flutter/domain/atsign.dart';
 import 'package:at_follows_flutter/domain/connection_model.dart';
@@ -382,32 +384,41 @@ class ConnectionsService {
       atKey = AtKey()..sharedBy = connection;
       AtFollowsValue atValue = AtFollowsValue();
       for (var key in PublicData.list) {
-        atKey..metadata = _getPublicFieldsMetadata(key);
-        atKey..key = key;
-        atKey..sharedWith = null;
-        atValue = await _sdkService.get(atKey);
-        //performs plookup if the data is not in cache.
-        if (atValue.value == null) {
-          //plookup for wavi keys.
-          atKey.metadata!.isCached = false;
+        /// if fetching one key fails, should not effect other keys
+        try {
+          atKey..metadata = _getPublicFieldsMetadata(key);
+          atKey..key = key;
+          atKey..sharedWith = null;
           atValue = await _sdkService.get(atKey);
-          //cache lookup for persona keys
+          //performs plookup if the data is not in cache.
           if (atValue.value == null) {
-            atKey.key = PublicData.personaMap[key];
-            atKey.metadata!.isCached = true;
+            //plookup for wavi keys.
+            atKey.metadata!.isCached = false;
+
+            /// remove cached
+            key.replaceAll('cached:', '');
+            atKey.key?.replaceAll('cached:', '');
             atValue = await _sdkService.get(atKey);
-            //plookup for persona keys.
+            //cache lookup for persona keys
             if (atValue.value == null) {
-              atKey.metadata!.isCached = false;
+              atKey.key = PublicData.personaMap[key];
+              atKey.metadata!.isCached = true;
               atValue = await _sdkService.get(atKey);
+              //plookup for persona keys.
+              if (atValue.value == null) {
+                atKey.metadata!.isCached = false;
+                atValue = await _sdkService.get(atKey);
+              }
             }
           }
-        }
 
-        atsignData.setData(atValue);
+          atsignData.setData(atValue);
+        } catch (e) {
+          _logger.severe('Error in _getAtsignData getting value ${e}');
+        }
       }
-    } on AtLookUpException catch (e) {
-      _logger.severe('Fetching keys for $connection throws ${e.errorMessage}');
+    } catch (e) {
+      _logger.severe('Fetching keys for $connection throws ${e}');
     }
 
     return atsignData;
@@ -416,7 +427,9 @@ class ConnectionsService {
   _getPublicFieldsMetadata(String key) {
     var atmetadata = Metadata()
       ..namespaceAware = false
-      ..isCached = true
+
+      /// if cached
+      ..isCached = key.contains('cached')
       ..isBinary = key == PublicData.image || key == PublicData.imagePersona
       ..isPublic = true;
     return atmetadata;
