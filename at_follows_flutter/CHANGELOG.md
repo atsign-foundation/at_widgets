@@ -1,3 +1,7 @@
+## 3.0.6
+- **FIX**: Fixed getting details of following/follower list
+- **FIX**: Fixed QR Scanner not working.
+
 ## 3.0.5
 - Fix for at client dependency issue. Removed reference to deprecated SyncStrategy
 - updated dependencies
