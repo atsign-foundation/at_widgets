@@ -1,5 +1,3 @@
-import 'package:at_contacts_flutter/at_contacts_flutter.dart';
-import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_follows_flutter/domain/at_follows_list.dart';
 import 'package:at_follows_flutter/domain/atsign.dart';
 import 'package:at_follows_flutter/domain/connection_model.dart';
