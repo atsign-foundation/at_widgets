@@ -466,7 +466,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     try {
       XTypeGroup typeGroup = XTypeGroup(
         label: 'images',
-        extensions: <String>['atKeys'],
+        extensions: <String>[
+          'atKeys',
+          ''
+        ], //empty quotes picks up files without extension
       );
       List<XFile> files =
           await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
