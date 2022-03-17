@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
@@ -25,6 +24,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:image/image.dart' as img;
 import 'package:zxing2/qrcode.dart';
+
+import '../at_onboarding_webview_screen.dart';
 
 // ignore: must_be_immutable
 class CustomDialog extends StatefulWidget {
@@ -299,7 +300,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                                                   Widget>(
                                                               builder: (BuildContext
                                                                       context) =>
-                                                                  const WebViewScreen(
+                                                                  const AtOnboardingWebviewScreen(
                                                                     title: Strings
                                                                         .faqTitle,
                                                                     url: Strings

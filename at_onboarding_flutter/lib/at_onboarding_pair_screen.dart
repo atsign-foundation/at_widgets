@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'at_onboarding.dart';
 import 'at_onboarding_otp_screen.dart';
-import 'screens/web_view_screen.dart';
+import 'at_onboarding_webview_screen.dart';
 import 'services/free_atsign_service.dart';
 import 'services/onboarding_service.dart';
 import 'widgets/at_onboarding_dialog.dart';
@@ -202,7 +202,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
     Navigator.push(
         context,
         MaterialPageRoute<Widget>(
-            builder: (BuildContext context) => const WebViewScreen(
+            builder: (BuildContext context) => const AtOnboardingWebviewScreen(
                   title: Strings.faqTitle,
                   url: Strings.faqUrl,
                 )));
