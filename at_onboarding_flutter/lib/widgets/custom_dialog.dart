@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
 import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
 import 'package:at_onboarding_flutter/services/backend_service.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
@@ -1139,43 +1138,6 @@ class _CustomDialogState extends State<CustomDialog> {
 
           widget.onLimitExceed!(atsigns, responseData['message']);
           return limitExceeded;
-        }
-        //displays list of atsign along with newAtsign
-        else {
-          await Navigator.push(
-              context,
-              MaterialPageRoute<dynamic>(
-                  builder: (_) => AtsignListScreen(
-                        atsigns: atsigns,
-                        newAtsign: responseData['newAtsign'],
-                      ))).then((dynamic value) async {
-            if (value == responseData['newAtsign']) {
-              cramSecret = await validatePerson(value, email, otp, context,
-                  isConfirmation: true);
-              return cramSecret;
-            } else if (value != null) {
-              AtStatusImpl atStatusImpl =
-                  AtStatusImpl(rootUrl: AppConstants.serverDomain);
-              AtStatus status = await atStatusImpl.get(value);
-
-              /// if atsign is not yet activated, it will be activated.
-              if (status.atSignStatus == AtSignStatus.unavailable &&
-                  status.serverLocation == null &&
-                  status.serverStatus == ServerStatus.unavailable) {
-                cramSecret = await validatePerson(value, email, otp, context,
-                    isConfirmation: true);
-              } else {
-                Navigator.pop(context);
-                widget.onSubmit!(value);
-              }
-            } else {
-              if (value != null) {
-                Navigator.pop(context);
-                widget.onSubmit!(value);
-              }
-              return null;
-            }
-          });
         }
       } else if (data['status'] != 'error') {
         cramSecret = data['cramkey'];

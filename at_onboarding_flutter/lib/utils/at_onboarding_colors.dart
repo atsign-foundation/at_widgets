@@ -1,4 +1,0 @@
-class AtOnboardingColor {
-  AtOnboardingColor._();
-
-}
