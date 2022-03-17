@@ -4,7 +4,6 @@ import 'package:at_onboarding_flutter/utils/color_constants.dart';
 import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
-import 'package:at_onboarding_flutter/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 

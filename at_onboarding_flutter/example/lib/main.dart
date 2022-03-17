@@ -8,7 +8,6 @@ import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
-import 'package:at_onboarding_flutter/widgets/custom_reset_button.dart';
 import 'package:at_onboarding_flutter/at_onboarding.dart';
 
 Future<void> main() async {
@@ -110,36 +109,6 @@ class _MyAppState extends State<MyApp> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        var preference = await futurePreference;
-                        setState(() {
-                          atClientPreference = preference;
-                        });
-                        Onboarding(
-                          context: context,
-                          atClientPreference: atClientPreference!,
-                          domain: AtEnv.rootDomain,
-                          rootEnvironment: AtEnv.rootEnvironment,
-                          appAPIKey: AtEnv.appApiKey,
-                          appColor: Theme.of(context).primaryColor,
-                          onboard: (value, atsign) {
-                            _logger.finer('Successfully onboarded $atsign');
-                          },
-                          onError: (error) {
-                            _logger.severe('Onboarding throws $error error');
-                          },
-                          nextScreen: const HomeScreen(),
-                        );
-                      },
-                      child: const Text('Onboard an @sign'),
-                    ),
-                    const SizedBox(height: 10),
-                    const CustomResetButton(
-                      buttonText: 'Reset',
-                      width: 90,
-                      height: 40,
-                    ),
                     const SizedBox(height: 100),
                     ElevatedButton(
                       onPressed: () async {
@@ -164,12 +133,6 @@ class _MyAppState extends State<MyApp> {
                             },
                             nextScreen: const HomeScreen(),
                           ),
-                          // onSuccess: () {
-                          //
-                          // },
-                          // onError: () {
-                          //   //Do nothing
-                          // },
                         );
                         switch (result) {
                           case AtOnboardingResult.success:
@@ -188,24 +151,6 @@ class _MyAppState extends State<MyApp> {
                             // TODO: Handle this case.
                             break;
                         }
-                        // AtOnboarding.start(
-                        //   context: context,
-                        //   config: AtOnboardingConfig(
-                        //     context: context,
-                        //     atClientPreference: atClientPreference!,
-                        //     domain: AtEnv.rootDomain,
-                        //     rootEnvironment: AtEnv.rootEnvironment,
-                        //     appAPIKey: AtEnv.appApiKey,
-                        //     appColor: Theme.of(context).primaryColor,
-                        //     onboard: (value, atsign) {
-                        //       _logger.finer('Successfully onboarded $atsign');
-                        //     },
-                        //     onError: (error) {
-                        //       _logger.severe('Onboarding throws $error error');
-                        //     },
-                        //     nextScreen: const HomeScreen(),
-                        //   ),
-                        // );
                       },
                       child: const Text('Onboard an @sign - 2'),
                     ),
