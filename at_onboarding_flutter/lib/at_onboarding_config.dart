@@ -1,9 +1,4 @@
-import 'package:at_onboarding_flutter/screens/pair_atsign.dart';
-import 'package:at_onboarding_flutter/services/custom_nav.dart';
-import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
-import 'package:at_onboarding_flutter/utils/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_utils/at_logger.dart';

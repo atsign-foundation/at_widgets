@@ -2,16 +2,11 @@ import 'dart:io';
 
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/color_constants.dart';
-import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
 import 'package:at_onboarding_flutter/utils/images.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
-import 'package:at_onboarding_flutter/widgets/custom_appbar.dart';
-import 'package:at_onboarding_flutter/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class AtOnboardingBackupScreen extends StatefulWidget {
