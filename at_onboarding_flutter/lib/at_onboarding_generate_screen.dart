@@ -9,7 +9,6 @@ import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 
-import 'screens/web_view_screen.dart';
 import 'services/free_atsign_service.dart';
 import 'widgets/custom_dialog.dart';
 
