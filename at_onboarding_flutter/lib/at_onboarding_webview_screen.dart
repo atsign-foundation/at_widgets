@@ -1,19 +1,25 @@
 import 'dart:io';
 
-import 'package:at_onboarding_flutter/utils/color_constants.dart';
+import 'package:at_backupkey_flutter/utils/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewScreen extends StatefulWidget {
+class AtOnboardingWebviewScreen extends StatefulWidget {
   final String? url;
   final String? title;
 
-  const WebViewScreen({Key? key, this.url, this.title}) : super(key: key);
+  const AtOnboardingWebviewScreen({
+    Key? key,
+    this.url,
+    this.title,
+  }) : super(key: key);
+
   @override
-  _WebViewScreenState createState() => _WebViewScreenState();
+  State<AtOnboardingWebviewScreen> createState() =>
+      _AtOnboardingWebviewScreenState();
 }
 
-class _WebViewScreenState extends State<WebViewScreen> {
+class _AtOnboardingWebviewScreenState extends State<AtOnboardingWebviewScreen> {
   late bool isLoading;
 
   @override
@@ -52,11 +58,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
           ),
           isLoading
               ? Center(
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                    ColorConstants.appColor,
-                  )),
-                )
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  ColorConstants.appColor,
+                )),
+          )
               : const SizedBox()
         ],
       ),
