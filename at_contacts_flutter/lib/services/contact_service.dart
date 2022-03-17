@@ -2,14 +2,15 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+
+import 'package:at_client/at_client.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_lookup/at_lookup.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
-import 'package:at_client/at_client.dart';
+import 'package:at_lookup/at_lookup.dart';
 
 /// A service to handle CRUD operation on contacts
 class ContactService {
@@ -352,6 +353,13 @@ class ContactService {
         var result = await atContactImpl.add(contact).catchError((e) {
           print('error to add contact => $e');
         });
+        // Adding dummy key to expedite sharing of encryption keys
+        await atClientManager.atClient.put(
+            AtKey()
+              ..key = 'addContactWelcomeNote'
+              ..sharedWith = atSign
+              ..metadata = (Metadata()..ttl = 300000),
+            '${atClientManager.atClient.getCurrentAtSign()} added you as a contact');
         print(result);
         fetchContacts();
         return true;
