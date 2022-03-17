@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
 import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
@@ -1129,28 +1128,6 @@ class _CustomDialogState extends State<CustomDialog> {
 
           widget.onLimitExceed!(atsigns, responseData['message']);
           return limitExceeded;
-        }
-        //displays list of atsign along with newAtsign
-        else {
-          await Navigator.push(
-              context,
-              MaterialPageRoute<dynamic>(
-                  builder: (_) => AtsignListScreen(
-                        atsigns: atsigns,
-                        newAtsign: responseData['newAtsign'],
-                      ))).then((dynamic value) async {
-            if (value == responseData['newAtsign']) {
-              cramSecret = await validatePerson(value, email, otp, context,
-                  isConfirmation: true);
-              return cramSecret;
-            } else {
-              if (value != null) {
-                Navigator.pop(context);
-                widget.onSubmit!(value);
-              }
-              return null;
-            }
-          });
         }
       } else if (data['status'] != 'error') {
         cramSecret = data['cramkey'];

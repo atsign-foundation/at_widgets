@@ -60,28 +60,25 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                     isLoading = true;
                                   });
                                 }
-                                Onboarding(
+                                AtOnboarding.onboard(
                                   context: context,
-                                  atsign: widget.atSignList[index],
-                                  // This domain parameter is optional.
-                                  domain: AtEnv.rootDomain,
-                                  atClientPreference: atClientPreferenceLocal,
-                                  appColor:
-                                      const Color.fromARGB(255, 240, 94, 62),
-                                  onboard: (value, atsign) {
-                                    _logger.finer(
-                                        'Successfully onboarded $atsign');
-                                  },
-                                  onError: (Object? error) {
-                                    _logger.severe(
-                                        'Onboarding throws $error error');
-                                  },
-                                  rootEnvironment: RootEnvironment.Staging,
-                                  // API Key is mandatory for production environment.
-                                  // appAPIKey: YOUR_API_KEY_HERE
-                                  nextScreen: const HomeScreen(),
+                                  config: AtOnboardingConfig(
+                                    context: context,
+                                    atsign: widget.atSignList[index],
+                                    atClientPreference: atClientPreferenceLocal,
+                                    domain: AtEnv.rootDomain,
+                                    rootEnvironment: AtEnv.rootEnvironment,
+                                    appAPIKey: AtEnv.appApiKey,
+                                    appColor: Theme.of(context).primaryColor,
+                                    onboard: (value, atsign) {
+                                      _logger.finer('Successfully onboarded $atsign');
+                                    },
+                                    onError: (error) {
+                                      _logger.severe('Onboarding throws $error error');
+                                    },
+                                    nextScreen: const HomeScreen(),
+                                  ),
                                 );
-
                                 if (mounted) {
                                   setState(() {
                                     isLoading = false;
@@ -113,24 +110,42 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         setState(() {
                           isLoading = true;
                         });
-                        Onboarding(
+                        final result = await AtOnboarding.start(
                           context: context,
-                          atsign: '',
-                          // This domain parameter is optional.
-                          domain: AtEnv.rootDomain,
-                          atClientPreference: atClientPreferenceLocal,
-                          appColor: const Color.fromARGB(255, 240, 94, 62),
-                          onboard: (value, atsign) {
-                            _logger.finer('Successfully onboarded $atsign');
-                          },
-                          onError: (Object? error) {
-                            _logger.severe('Onboarding throws $error error');
-                          },
-                          rootEnvironment: RootEnvironment.Staging,
-                          // API Key is mandatory for production environment.
-                          // appAPIKey: YOUR_API_KEY_HERE
-                          nextScreen: const HomeScreen(),
+                          config: AtOnboardingConfig(
+                            context: context,
+                            atsign: '',
+                            atClientPreference: atClientPreferenceLocal,
+                            domain: AtEnv.rootDomain,
+                            rootEnvironment: AtEnv.rootEnvironment,
+                            appAPIKey: AtEnv.appApiKey,
+                            appColor: Theme.of(context).primaryColor,
+                            onboard: (value, atsign) {
+                              _logger.finer('Successfully onboarded $atsign');
+                            },
+                            onError: (error) {
+                              _logger.severe('Onboarding throws $error error');
+                            },
+                          ),
                         );
+                        switch (result) {
+                          case AtOnboardingResult.success:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const HomeScreen()));
+                            break;
+                          case AtOnboardingResult.error:
+                          // TODO: Handle this case.
+                            break;
+                          case AtOnboardingResult.notFound:
+                          // TODO: Handle this case.
+                            break;
+                          case AtOnboardingResult.cancel:
+                          // TODO: Handle this case.
+                            break;
+                        }
+
 
                         if (mounted) {
                           setState(() {
