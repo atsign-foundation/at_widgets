@@ -10,10 +10,9 @@ import 'package:at_onboarding_flutter/at_onboarding_qrcode_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/error_util.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
-import 'package:at_onboarding_flutter/widgets/custom_strings.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:file_picker/file_picker.dart';
@@ -221,7 +220,7 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
               _pairingAtsign &&
           _pairingAtsign != null) {
         await showErrorDialog(
-            context, CustomStrings().atsignMismatch(_pairingAtsign));
+            context, AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
         setState(() {
           loading = false;
         });
@@ -282,7 +281,7 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
               _pairingAtsign &&
           _pairingAtsign != null) {
         await showErrorDialog(
-            context, CustomStrings().atsignMismatch(_pairingAtsign));
+            context, AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
         setState(() {
           loading = false;
         });
@@ -352,7 +351,7 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
         _inprogressDialog.close();
-        await showErrorDialog(context, CustomStrings().pairedAtsign(atsign));
+        await showErrorDialog(context, AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
       authResponse = await _onboardingService.authenticate(atsign,
@@ -676,7 +675,7 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
         _inprogressDialog.close();
-        await _showAlertDialog(CustomStrings().pairedAtsign(atsign));
+        await _showAlertDialog(AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
       authResponse = await _onboardingService.authenticate(atsign,
@@ -759,7 +758,7 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
   }
 
   Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString = ConvertErrorToString().getErrorMessage(errorMessage);
+    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
     return AtOnboardingDialog.showError(
         context: context, title: title, message: messageString);
   }

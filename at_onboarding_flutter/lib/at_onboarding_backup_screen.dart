@@ -4,7 +4,6 @@ import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/images.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +69,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
             const SizedBox(height: 40),
             Center(
                 child: Image.asset(
-              Images.backupZip,
+              Strings.backupZip,
               height: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
               width: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
               fit: BoxFit.fill,

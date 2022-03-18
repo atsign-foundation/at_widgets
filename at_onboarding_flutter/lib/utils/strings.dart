@@ -62,4 +62,7 @@ class Strings {
 
   static const String faqTitle = 'FAQ';
   static const String faqUrl = 'https://atsign.com/faqs/#atsigns';
+
+  static const String _basepath = 'assets/images';
+  static const String backupZip = '$_basepath/backup_key.png';
 }
