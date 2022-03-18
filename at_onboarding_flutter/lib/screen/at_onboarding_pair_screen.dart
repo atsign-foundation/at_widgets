@@ -1,22 +1,22 @@
 import 'dart:convert';
 
-import 'package:at_onboarding_flutter/services/size_config.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
+import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
-import 'package:at_onboarding_flutter/utils/color_constants.dart';
-import 'package:at_onboarding_flutter/utils/strings.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
+import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'at_onboarding.dart';
+import '../at_onboarding.dart';
 import 'at_onboarding_otp_screen.dart';
 import 'at_onboarding_webview_screen.dart';
-import 'services/free_atsign_service.dart';
-import 'services/onboarding_service.dart';
-import 'widgets/at_onboarding_dialog.dart';
+
 
 class AtOnboardingPairScreen extends StatefulWidget {
   final String atSign;
@@ -124,7 +124,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                         fontSize: 15.toFont),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: ColorConstants.appColor,
+                        color: AtOnboardingColorConstants.appColor,
                       ),
                     ),
                     contentPadding: EdgeInsets.symmetric(
@@ -135,7 +135,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   height: 10.toHeight,
                 ),
                 const Text(
-                  Strings.emailNote,
+                  AtOnboardingStrings.emailNote,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: AtOnboardingDimens.fontNormal,
@@ -203,8 +203,8 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
         context,
         MaterialPageRoute<Widget>(
             builder: (BuildContext context) => const AtOnboardingWebviewScreen(
-                  title: Strings.faqTitle,
-                  url: Strings.faqUrl,
+                  title: AtOnboardingStrings.faqTitle,
+                  url: AtOnboardingStrings.faqUrl,
                 )));
   }
 
@@ -282,7 +282,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                       text: 'https://my.atsign.com',
                       style: TextStyle(
                           fontSize: 16.toFont,
-                          color: ColorConstants.appColor,
+                          color: AtOnboardingColorConstants.appColor,
                           letterSpacing: 0.5,
                           decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()
@@ -309,7 +309,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   },
                   child: Text(
                     'Close',
-                    style: TextStyle(color: ColorConstants.appColor),
+                    style: TextStyle(color: AtOnboardingColorConstants.appColor),
                   ))
             ],
           );
@@ -353,35 +353,5 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
         Navigator.pop(context, AtOnboardingResult.cancel);
       }
     }
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (_) => AtOnboardingOTPScreen(
-    //       atSign: atSign,
-    //       hideReferences: false,
-    //       email: email,
-    //       onGenerateSuccess: (
-    //           {required String atSign, required String secret}) {
-    //         Navigator.pop(context);
-    //         widget.onGenerateSuccess?.call(atSign: atSign, secret: secret);
-    //       },
-    //     ),
-    //   ),
-    // );
-  }
-
-  Future<void> _onAtSignSubmit(String atsign) async {
-    bool? isExist = await OnboardingService.getInstance()
-        .isExistingAtsign(atsign)
-        .catchError((dynamic error) async {
-      await _showAlertDialog(error);
-    });
-    //Todo:
-  }
-
-  Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
-    return AtOnboardingDialog.showError(
-        context: context, message: messageString);
   }
 }

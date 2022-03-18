@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/utils/app_constants.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/strings.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +44,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text(Strings.saveBackupKeyTitle),
+        title: const Text(AtOnboardingStrings.saveBackupKeyTitle),
         leading: Container(),
         centerTitle: true,
       ),
@@ -54,7 +54,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
           children: <Widget>[
             const SizedBox(height: 10),
             const Text(
-              Strings.saveImportantTitle,
+              AtOnboardingStrings.saveImportantTitle,
               style: TextStyle(
                   fontSize: AtOnboardingDimens.fontLarge,
                   fontWeight: FontWeight.bold),
@@ -62,18 +62,18 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
             ),
             const SizedBox(height: 10),
             const Text(
-              Strings.saveBackupDescription,
+              AtOnboardingStrings.saveBackupDescription,
               style: TextStyle(fontSize: AtOnboardingDimens.fontNormal),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
             Center(
                 child: Image.asset(
-              Strings.backupZip,
+                  AtOnboardingStrings.backupZip,
               height: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
               width: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
               fit: BoxFit.fill,
-              package: AppConstants.package,
+              package: AtOnboardingAppConstants.package,
             )),
             const SizedBox(height: 40),
             Container(
@@ -83,7 +83,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               child: AtOnboardingPrimaryButton(
                 height: 48,
                 borderRadius: 24,
-                child: const Text(Strings.saveButtonTitle),
+                child: const Text(AtOnboardingStrings.saveButtonTitle),
                 onPressed: () {
                   BackupKeyWidget(atsign: atsign ?? '')
                       .showBackupDialog(context);
@@ -98,7 +98,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               child: AtOnboardingSecondaryButton(
                 height: 48,
                 borderRadius: 24,
-                child: const Text(Strings.continueButtonTitle),
+                child: const Text(AtOnboardingStrings.continueButtonTitle),
                 onPressed: Navigator.of(context).pop,
               ),
             ),

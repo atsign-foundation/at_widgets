@@ -1,13 +1,13 @@
-import 'package:at_onboarding_flutter/at_onboarding_activate_account_screen.dart';
-import 'package:at_onboarding_flutter/at_onboarding_reset_screen.dart';
-import 'package:at_onboarding_flutter/at_onboarding_screen.dart';
-import 'package:at_onboarding_flutter/utils/color_constants.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_activate_account_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_screen.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:flutter/material.dart';
 
-import 'at_onboarding_config.dart';
-import 'at_onboarding_start_screen.dart';
-import 'services/size_config.dart';
-import 'utils/app_constants.dart';
+import 'services/at_onboarding_config.dart';
+import 'screen/at_onboarding_start_screen.dart';
 
 enum AtOnboardingResult {
   success, //Authenticate success
@@ -22,12 +22,12 @@ class AtOnboarding {
     required BuildContext context,
     required AtOnboardingConfig config,
   }) async {
-    ColorConstants.darkTheme = Theme.of(context).brightness == Brightness.dark;
-    AppConstants.setApiKey(
-        config.appAPIKey ?? (AppConstants.rootEnvironment.apikey ?? ''));
-    AppConstants.rootDomain =
-        config.domain ?? AppConstants.rootEnvironment.domain;
-    SizeConfig().init(context);
+    AtOnboardingColorConstants.darkTheme = Theme.of(context).brightness == Brightness.dark;
+    AtOnboardingAppConstants.setApiKey(
+        config.appAPIKey ?? (AtOnboardingAppConstants.rootEnvironment.apikey ?? ''));
+    AtOnboardingAppConstants.rootDomain =
+        config.domain ?? AtOnboardingAppConstants.rootEnvironment.domain;
+    AtOnboardingSizeConfig().init(context);
     final result = await showDialog(
       context: context,
       barrierDismissible: false,
@@ -60,11 +60,11 @@ class AtOnboarding {
     VoidCallback? onSuccess,
     VoidCallback? onError,
   }) async {
-    ColorConstants.darkTheme = Theme.of(context).brightness == Brightness.dark;
-    AppConstants.setApiKey(
-        config.appAPIKey ?? (AppConstants.rootEnvironment.apikey ?? ''));
-    AppConstants.rootDomain =
-        config.domain ?? AppConstants.rootEnvironment.domain;
+    AtOnboardingColorConstants.darkTheme = Theme.of(context).brightness == Brightness.dark;
+    AtOnboardingAppConstants.setApiKey(
+        config.appAPIKey ?? (AtOnboardingAppConstants.rootEnvironment.apikey ?? ''));
+    AtOnboardingAppConstants.rootDomain =
+        config.domain ?? AtOnboardingAppConstants.rootEnvironment.domain;
     // await showDialog(
     //   context: context,
     //   barrierDismissible: false,

@@ -1,13 +1,13 @@
+import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
-import 'package:at_onboarding_flutter/utils/strings.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/material.dart';
 
-import 'at_onboarding_config.dart';
-import 'services/sdk_service.dart';
-import 'utils/app_constants.dart';
+import '../services/at_onboarding_config.dart';
+import '../services/sdk_service.dart';
 
 enum AtOnboardingResetResult {
   canceled,
@@ -75,7 +75,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
           children: [
             Container(
               padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              child: const Text(Strings.resetDescription,
+              child: const Text(AtOnboardingStrings.resetDescription,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: AtOnboardingDimens.fontNormal)),
             ),
@@ -93,7 +93,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: const <Widget>[
         Text(
-          Strings.noAtsignToReset,
+          AtOnboardingStrings.noAtsignToReset,
           style: TextStyle(fontSize: 15),
         ),
       ],
@@ -154,7 +154,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(
               horizontal: AtOnboardingDimens.paddingNormal),
-          child: Text(Strings.resetWarningText,
+          child: Text(AtOnboardingStrings.resetWarningText,
               style: TextStyle(
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -177,7 +177,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
             height: 48,
             borderRadius: 24,
             onPressed: _onResetPressed,
-            child: const Text(AppConstants.removeButton),
+            child: const Text(AtOnboardingAppConstants.removeButton),
           ),
         )
       ],
@@ -190,7 +190,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
     tempAtsignMap.removeWhere((String? key, bool? value) => value == false);
     if (tempAtsignMap.keys.toList().isEmpty) {
       AtOnboardingDialog.showError(
-          context: context, message: Strings.resetErrorText);
+          context: context, message: AtOnboardingStrings.resetErrorText);
     } else {
       _resetDevice(tempAtsignMap.keys.toList());
     }
