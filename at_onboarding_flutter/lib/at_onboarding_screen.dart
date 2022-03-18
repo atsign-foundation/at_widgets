@@ -10,9 +10,9 @@ import 'package:at_onboarding_flutter/at_onboarding_qrcode_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/utils/error_util.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
-import 'package:at_onboarding_flutter/widgets/custom_dialog.dart';
 import 'package:at_onboarding_flutter/widgets/custom_strings.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:at_utils/at_logger.dart';
@@ -758,25 +758,11 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
     }
   }
 
-  Future<void> _showAlertDialog(dynamic errorMessage,
-          {bool? isPkam,
-          String? title,
-          bool? getClose,
-          Function? onClose}) async =>
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return CustomDialog(
-                context: context,
-                hideReferences: widget.hideReferences,
-                hideQrScan: widget.hideQrScan,
-                isErrorDialog: true,
-                showClose: true,
-                message: errorMessage,
-                title: title,
-                onClose: getClose == true ? onClose : () {});
-          });
+  Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
+    String? messageString = ConvertErrorToString().getErrorMessage(errorMessage);
+    return AtOnboardingDialog.showError(
+        context: context, title: title, message: messageString);
+  }
 
   void _showReferenceWebview() {
     AtOnboardingReferenceScreen.push(
