@@ -1,10 +1,10 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_server_status/at_server_status.dart';
 
-import 'app_constants.dart';
+import 'at_onboarding_app_constants.dart';
+import 'at_onboarding_response_status.dart';
 
 class AtOnboardingErrorToString {
   String getErrorMessage(dynamic error) {
@@ -32,8 +32,8 @@ class AtOnboardingErrorToString {
         return _getServerStatusMessage(error);
       case OnboardingStatus:
         return error.toString();
-      case ResponseStatus:
-        if (error == ResponseStatus.authFailed) {
+      case AtOnboardingResponseStatus:
+        if (error == AtOnboardingResponseStatus.authFailed) {
           if (_onboardingService.isPkam!) {
             return 'Please provide valid backupkey file to continue.';
           } else {
@@ -41,8 +41,8 @@ class AtOnboardingErrorToString {
                 ? 'Please provide a relevant backupkey file to authenticate.'
                 : 'Please provide a valid QRcode to authenticate.';
           }
-        } else if (error == ResponseStatus.timeOut) {
-          return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AppConstants.contactAddress} if the issue still persists.';
+        } else if (error == AtOnboardingResponseStatus.timeOut) {
+          return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AtOnboardingAppConstants.contactAddress} if the issue still persists.';
         } else {
           return '';
         }

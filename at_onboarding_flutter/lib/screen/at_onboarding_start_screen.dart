@@ -4,8 +4,8 @@ import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 
-import 'at_onboarding.dart';
-import 'at_onboarding_config.dart';
+import '../at_onboarding.dart';
+import '../services/at_onboarding_config.dart';
 
 class AtOnboardingStartScreen extends StatefulWidget {
   final AtOnboardingConfig config;

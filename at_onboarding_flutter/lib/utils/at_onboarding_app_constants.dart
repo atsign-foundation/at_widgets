@@ -1,6 +1,6 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 
-class AppConstants {
+class AtOnboardingAppConstants {
   static String _rootDomain = 'root.atsign.org';
   static dynamic contentType = 'application/json';
   static String getFreeAtsign = 'get-free-atsign';
@@ -49,7 +49,7 @@ extension CustomMessages on OnboardingStatus {
   String get message {
     switch (this) {
       case (OnboardingStatus.ACTIVATE):
-        return 'Your atsign got reactivated. Please activate with the new QRCode available on ${AppConstants.serverDomain} website.';
+        return 'Your atsign got reactivated. Please activate with the new QRCode available on ${AtOnboardingAppConstants.serverDomain} website.';
       case (OnboardingStatus.ENCRYPTION_PRIVATE_KEY_NOT_FOUND):
       case (OnboardingStatus.ENCRYPTION_PUBLIC_KEY_NOT_FOUND):
       case (OnboardingStatus.PKAM_PRIVATE_KEY_NOT_FOUND):
@@ -96,13 +96,13 @@ extension Value on RootEnvironment {
   String? get apikey {
     switch (this) {
       case RootEnvironment.Staging:
-        return AppConstants.deviceapikey;
+        return AtOnboardingAppConstants.deviceapikey;
       case RootEnvironment.Production:
-        return AppConstants.apiKey;
+        return AtOnboardingAppConstants.apiKey;
       case RootEnvironment.Testing:
-        return AppConstants.deviceapikey;
+        return AtOnboardingAppConstants.deviceapikey;
       default:
-        return AppConstants.deviceapikey;
+        return AtOnboardingAppConstants.deviceapikey;
     }
   }
 
