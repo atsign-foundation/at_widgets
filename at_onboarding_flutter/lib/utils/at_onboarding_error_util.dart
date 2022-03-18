@@ -6,7 +6,7 @@ import 'package:at_server_status/at_server_status.dart';
 
 import 'app_constants.dart';
 
-class ConvertErrorToString {
+class AtOnboardingErrorToString {
   String getErrorMessage(dynamic error) {
     OnboardingService _onboardingService = OnboardingService.getInstance();
     switch (error.runtimeType) {
@@ -62,6 +62,17 @@ class ConvertErrorToString {
         return 'Unable to connect. Please check with network connection and try again.';
       default:
         return '';
+    }
+  }
+
+  String pairedAtsign(String? atsign) =>
+      '$atsign was already paired with this device. First delete/reset this @sign from device to add.';
+
+  String atsignMismatch(String? givenAtsign, {bool isQr = false}) {
+    if (isQr) {
+      return '@sign mismatches. Please provide the QRcode of $givenAtsign to pair.';
+    } else {
+      return '@sign mismatches. Please provide the backup key file of $givenAtsign to pair.';
     }
   }
 }

@@ -1,11 +1,11 @@
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'at_onboarding_config.dart';
-import 'services/at_error_dialog.dart';
 import 'services/sdk_service.dart';
 import 'utils/app_constants.dart';
 
@@ -200,12 +200,13 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
     await SDKService().resetAtsigns(checkedAtsigns).then((void value) async {
       Navigator.pop(context, AtOnboardingResetResult.success);
     }).catchError((Object error) {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return AtErrorDialog.getAlertDialog(error, context);
-          });
+      showErrorDialog(error);
     });
+  }
+
+  Future<void> showErrorDialog(dynamic errorMessage, {String? title}) async {
+    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
+    return AtOnboardingDialog.showError(
+        context: context, message: messageString);
   }
 }
