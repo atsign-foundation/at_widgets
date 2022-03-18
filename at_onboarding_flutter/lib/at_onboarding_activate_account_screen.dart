@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/utils/error_util.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
@@ -14,7 +15,6 @@ import 'at_onboarding_backup_screen.dart';
 import 'at_onboarding_otp_screen.dart';
 import 'at_onboarding_reference_screen.dart';
 import 'services/free_atsign_service.dart';
-import 'widgets/custom_dialog.dart';
 import 'widgets/custom_strings.dart';
 
 class AtOnboardingActivateAccountScreen extends StatefulWidget {
@@ -164,19 +164,15 @@ class _AtOnboardingActivateAccountScreenState
   }
 
   Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
-    await showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return CustomDialog(
-              context: context,
-              hideReferences: widget.hideReferences,
-              hideQrScan: true,
-              isErrorDialog: true,
-              showClose: true,
-              message: errorMessage,
-              title: title);
-        });
-    Navigator.pop(context, AtOnboardingResult.error);
+    String? messageString =
+        ConvertErrorToString().getErrorMessage(errorMessage);
+    return AtOnboardingDialog.showError(
+      context: context,
+      title: title,
+      message: messageString,
+      onCancel: () {
+        Navigator.pop(context);
+      },
+    );
   }
 }
