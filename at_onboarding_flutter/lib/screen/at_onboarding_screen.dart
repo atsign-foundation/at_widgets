@@ -3,16 +3,14 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/at_onboarding_activate_account_screen.dart';
-import 'package:at_onboarding_flutter/at_onboarding_config.dart';
-import 'package:at_onboarding_flutter/at_onboarding_generate_screen.dart';
-import 'package:at_onboarding_flutter/at_onboarding_qrcode_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_activate_account_screen.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
-import 'package:at_onboarding_flutter/utils/response_status.dart';
-import 'package:at_onboarding_flutter/utils/strings.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:file_picker/file_picker.dart';
@@ -24,12 +22,14 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:zxing2/qrcode.dart';
 import 'package:image/image.dart' as img;
 
-import 'at_onboarding.dart';
+import '../at_onboarding.dart';
 import 'at_onboarding_backup_screen.dart';
+import 'at_onboarding_generate_screen.dart';
 import 'at_onboarding_input_atsign_screen.dart';
+import '../widgets/at_onboarding_button.dart';
+import '../widgets/at_onboarding_dialog.dart';
+import 'at_onboarding_qrcode_screen.dart';
 import 'at_onboarding_reference_screen.dart';
-import 'widgets/at_onboarding_button.dart';
-import 'widgets/at_onboarding_dialog.dart';
 
 class AtOnboardingScreen extends StatefulWidget {
   final AtOnboardingConfig config;
@@ -357,7 +357,7 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       authResponse = await _onboardingService.authenticate(atsign,
           jsonData: contents, decryptKey: aesKey);
       _inprogressDialog.close();
-      if (authResponse == ResponseStatus.authSuccess) {
+      if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
         Navigator.pop(context, AtOnboardingResult.success);
       } else {
@@ -365,13 +365,13 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       }
     } catch (e) {
       _inprogressDialog.close();
-      if (e == ResponseStatus.serverNotReached && _isContinue) {
+      if (e == AtOnboardingResponseStatus.serverNotReached && _isContinue) {
         _isServerCheck = _isContinue;
         await _processAESKey(atsign, aesKey, contents);
-      } else if (e == ResponseStatus.authFailed) {
+      } else if (e == AtOnboardingResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWithAESKey');
         await showErrorDialog(context, 'Auth Failed');
-      } else if (e == ResponseStatus.timeOut) {
+      } else if (e == AtOnboardingResponseStatus.timeOut) {
         await showErrorDialog(context, 'Response Time out');
       } else {
         _logger.warning(e);
@@ -681,7 +681,7 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
       _inprogressDialog.close();
-      if (authResponse == ResponseStatus.authSuccess) {
+      if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
         Navigator.pop(context, AtOnboardingResult.success);
       } else {
@@ -689,13 +689,13 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       }
     } catch (e) {
       _inprogressDialog.close();
-      if (e == ResponseStatus.authFailed) {
+      if (e == AtOnboardingResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWith cram secret');
         await _showAlertDialog(e, title: 'Auth Failed');
-      } else if (e == ResponseStatus.serverNotReached && _isContinue) {
+      } else if (e == AtOnboardingResponseStatus.serverNotReached && _isContinue) {
         _isServerCheck = _isContinue;
         await _processSharedSecret(atsign, secret);
-      } else if (e == ResponseStatus.timeOut) {
+      } else if (e == AtOnboardingResponseStatus.timeOut) {
         await _showAlertDialog(e, title: 'Response Time out');
       }
     }
@@ -766,8 +766,8 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
   void _showReferenceWebview() {
     AtOnboardingReferenceScreen.push(
       context: context,
-      title: Strings.faqTitle,
-      url: Strings.faqUrl,
+      title: AtOnboardingStrings.faqTitle,
+      url: AtOnboardingStrings.faqUrl,
     );
   }
 }

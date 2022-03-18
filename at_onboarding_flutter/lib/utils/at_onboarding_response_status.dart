@@ -1,4 +1,4 @@
-enum ResponseStatus {
+enum AtOnboardingResponseStatus {
   serverNotReached,
   authSuccess,
   authFailed,

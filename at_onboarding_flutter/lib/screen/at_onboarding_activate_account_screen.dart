@@ -4,17 +4,17 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
-import 'package:at_onboarding_flutter/utils/response_status.dart';
-import 'package:at_onboarding_flutter/utils/strings.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 
-import 'at_onboarding.dart';
+import '../at_onboarding.dart';
 import 'at_onboarding_backup_screen.dart';
 import 'at_onboarding_otp_screen.dart';
+import '../services/free_atsign_service.dart';
 import 'at_onboarding_reference_screen.dart';
-import 'services/free_atsign_service.dart';
 
 class AtOnboardingActivateAccountScreen extends StatefulWidget {
   ///will hide webpage references.
@@ -128,8 +128,8 @@ class _AtOnboardingActivateAccountScreenState
   void _showReferenceWebview() {
     AtOnboardingReferenceScreen.push(
       context: context,
-      title: Strings.faqTitle,
-      url: Strings.faqUrl,
+      title: AtOnboardingStrings.faqTitle,
+      url: AtOnboardingStrings.faqUrl,
     );
   }
 
@@ -144,18 +144,18 @@ class _AtOnboardingActivateAccountScreenState
       }
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
-      if (authResponse == ResponseStatus.authSuccess) {
+      if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
         Navigator.pop(context, AtOnboardingResult.success);
       } else {
         //Todo:
       }
     } catch (e) {
-      if (e == ResponseStatus.authFailed) {
+      if (e == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(e, title: 'Auth Failed');
-      } else if (e == ResponseStatus.serverNotReached) {
+      } else if (e == AtOnboardingResponseStatus.serverNotReached) {
         await _processSharedSecret(atsign: atsign, secret: secret);
-      } else if (e == ResponseStatus.timeOut) {
+      } else if (e == AtOnboardingResponseStatus.timeOut) {
         await _showAlertDialog(e, title: 'Response Time out');
       }
     }

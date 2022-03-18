@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 /// This class helps with responsiveness in various screen sizes
-class SizeConfig {
-  SizeConfig._();
+class AtOnboardingSizeConfig {
+  AtOnboardingSizeConfig._();
 
-  static final SizeConfig _instance = SizeConfig._();
+  static final AtOnboardingSizeConfig _instance = AtOnboardingSizeConfig._();
 
-  factory SizeConfig() => _instance;
+  factory AtOnboardingSizeConfig() => _instance;
   late MediaQueryData _mediaQueryData;
   double? screenWidth;
   late double screenHeight;
@@ -105,9 +105,9 @@ class SizeConfig {
 }
 
 extension SizeUtils on num {
-  double get toWidth => SizeConfig().getWidthRatio(toDouble());
+  double get toWidth => AtOnboardingSizeConfig().getWidthRatio(toDouble());
 
-  double get toHeight => SizeConfig().getHeightRatio(toDouble());
+  double get toHeight => AtOnboardingSizeConfig().getHeightRatio(toDouble());
 
-  double get toFont => SizeConfig().getFontRatio(toDouble());
+  double get toFont => AtOnboardingSizeConfig().getFontRatio(toDouble());
 }

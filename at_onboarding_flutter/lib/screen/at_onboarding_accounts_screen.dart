@@ -1,11 +1,10 @@
+import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/color_constants.dart';
-import 'package:at_onboarding_flutter/utils/custom_textstyles.dart';
-import 'package:at_onboarding_flutter/utils/strings.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
 
 /// This screen shows the list of atsigns already available for the given email
 class AtOnboardingAccountsScreen extends StatefulWidget {
@@ -61,10 +60,12 @@ class _AtOnboardingAccountsScreenState
                 children: <Widget>[
                   CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                          ColorConstants.appColor)),
-                  Text(
+                          AtOnboardingColorConstants.appColor)),
+                  const Text(
                     'Loading atsigns',
-                    style: CustomTextStyles.fontBold16dark,
+                    style: TextStyle(
+                        fontSize: AtOnboardingDimens.fontLarge,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ))
@@ -153,7 +154,7 @@ class _AtOnboardingAccountsScreenState
             AtOnboardingSecondaryButton(
               onPressed: () => Navigator.pop(_),
               child: const Text(
-                Strings.cancelButton,
+                AtOnboardingStrings.cancelButton,
               ),
             ),
             AtOnboardingPrimaryButton(

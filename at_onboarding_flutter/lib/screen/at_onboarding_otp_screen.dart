@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:at_onboarding_flutter/services/size_config.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/color_constants.dart';
-import 'package:at_onboarding_flutter/utils/input_formatter.dart';
-import 'package:at_onboarding_flutter/utils/strings.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_input_formatter.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/gestures.dart';
@@ -14,8 +14,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'at_onboarding_accounts_screen.dart';
+import '../services/free_atsign_service.dart';
 import 'at_onboarding_reference_screen.dart';
-import 'services/free_atsign_service.dart';
 
 class AtOnboardingOTPResult {
   String atSign;
@@ -134,7 +134,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   // controller: _otpController,
                   keyboardType: TextInputType.text,
                   inputFormatters: <TextInputFormatter>[
-                    InputFormatter(),
+                    AtOnboardingInputFormatter(),
                   ],
                   onChanged: (String value) {},
                 ),
@@ -182,8 +182,8 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
   void _showReferenceWebview() {
     AtOnboardingReferenceScreen.push(
       context: context,
-      title: Strings.faqTitle,
-      url: Strings.faqUrl,
+      title: AtOnboardingStrings.faqTitle,
+      url: AtOnboardingStrings.faqUrl,
     );
   }
 
@@ -425,7 +425,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                       text: 'https://my.atsign.com',
                       style: TextStyle(
                           fontSize: 16.toFont,
-                          color: ColorConstants.appColor,
+                          color: AtOnboardingColorConstants.appColor,
                           letterSpacing: 0.5,
                           decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()
@@ -452,7 +452,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   },
                   child: Text(
                     'Close',
-                    style: TextStyle(color: ColorConstants.appColor),
+                    style: TextStyle(color: AtOnboardingColorConstants.appColor),
                   ))
             ],
           );
