@@ -1,10 +1,11 @@
-import 'package:at_onboarding_flutter/at_onboarding_reference_screen.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/color_constants.dart';
-import 'package:at_onboarding_flutter/utils/strings.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
+
+import 'at_onboarding_reference_screen.dart';
 
 class AtOnboardingInputAtSignScreen extends StatefulWidget {
   static Future<String?> push({
@@ -80,14 +81,14 @@ class _AtOnboardingInputAtSignScreenState
                 },
                 controller: _atsignController,
                 decoration: InputDecoration(
-                  hintText: Strings.atsignHintText,
+                  hintText: AtOnboardingStrings.atsignHintText,
                   prefix: Text(
                     '@',
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: ColorConstants.appColor,
+                      color: AtOnboardingColorConstants.appColor,
                     ),
                   ),
                   contentPadding: EdgeInsets.symmetric(
@@ -121,8 +122,8 @@ class _AtOnboardingInputAtSignScreenState
   void _showReferenceWebview() {
     AtOnboardingReferenceScreen.push(
       context: context,
-      title: Strings.faqTitle,
-      url: Strings.faqUrl,
+      title: AtOnboardingStrings.faqTitle,
+      url: AtOnboardingStrings.faqUrl,
     );
   }
 

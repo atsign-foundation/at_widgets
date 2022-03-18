@@ -1,4 +1,4 @@
-class Strings {
+class AtOnboardingStrings {
   //atsign texts
   static const String enterAtsignTitle = 'Enter your @sign';
   static const String freeAtsignTitle = 'Free @sign';

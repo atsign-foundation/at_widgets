@@ -1,7 +1,7 @@
 
 import 'package:flutter/services.dart';
 
-class InputFormatter extends TextInputFormatter {
+class AtOnboardingInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
