@@ -5,12 +5,13 @@ import 'package:at_onboarding_flutter/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
+import 'package:at_onboarding_flutter/utils/error_util.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
+import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'services/free_atsign_service.dart';
-import 'widgets/custom_dialog.dart';
 
 class AtOnboardingGenerateScreen extends StatefulWidget {
   final Function({required String atSign, required String secret})?
@@ -192,19 +193,10 @@ class _AtOnboardingGenerateScreenState
     }
   }
 
-  Future<CustomDialog?> showErrorDialog(String? errorMessage) async {
-    return showDialog<CustomDialog>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return CustomDialog(
-            context: context,
-            isErrorDialog: true,
-            showClose: true,
-            message: errorMessage,
-            onClose: () {},
-          );
-        });
+  Future<void> showErrorDialog(dynamic errorMessage, {String? title}) async {
+    String? messageString = ConvertErrorToString().getErrorMessage(errorMessage);
+    return AtOnboardingDialog.showError(
+        context: context, message: messageString);
   }
 
   void _showReferenceWebview() {

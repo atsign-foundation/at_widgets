@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
+import 'package:at_onboarding_flutter/utils/error_util.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/gestures.dart';
@@ -16,7 +17,6 @@ import 'at_onboarding_webview_screen.dart';
 import 'services/free_atsign_service.dart';
 import 'services/onboarding_service.dart';
 import 'widgets/at_onboarding_dialog.dart';
-import 'widgets/custom_dialog.dart';
 
 class AtOnboardingPairScreen extends StatefulWidget {
   final String atSign;
@@ -379,23 +379,9 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
     //Todo:
   }
 
-  Future<void> _showAlertDialog(dynamic errorMessage,
-          {bool? isPkam,
-          String? title,
-          bool? getClose,
-          Function? onClose}) async =>
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return CustomDialog(
-                context: context,
-                hideReferences: widget.hideReferences,
-                hideQrScan: true,
-                isErrorDialog: true,
-                showClose: true,
-                message: errorMessage,
-                title: title,
-                onClose: getClose == true ? onClose : () {});
-          });
+  Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
+    String? messageString = ConvertErrorToString().getErrorMessage(errorMessage);
+    return AtOnboardingDialog.showError(
+        context: context, message: messageString);
+  }
 }
