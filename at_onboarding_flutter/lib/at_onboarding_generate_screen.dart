@@ -4,8 +4,8 @@ import 'package:at_onboarding_flutter/at_onboarding_pair_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/utils/color_constants.dart';
-import 'package:at_onboarding_flutter/utils/error_util.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
@@ -194,7 +194,7 @@ class _AtOnboardingGenerateScreenState
   }
 
   Future<void> showErrorDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString = ConvertErrorToString().getErrorMessage(errorMessage);
+    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
     return AtOnboardingDialog.showError(
         context: context, message: messageString);
   }

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/error_util.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/utils/response_status.dart';
 import 'package:at_onboarding_flutter/utils/strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
@@ -15,7 +15,6 @@ import 'at_onboarding_backup_screen.dart';
 import 'at_onboarding_otp_screen.dart';
 import 'at_onboarding_reference_screen.dart';
 import 'services/free_atsign_service.dart';
-import 'widgets/custom_strings.dart';
 
 class AtOnboardingActivateAccountScreen extends StatefulWidget {
   ///will hide webpage references.
@@ -140,7 +139,7 @@ class _AtOnboardingActivateAccountScreenState
     try {
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
-        await _showAlertDialog(CustomStrings().pairedAtsign(atsign));
+        await _showAlertDialog(AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
       authResponse = await _onboardingService.authenticate(atsign,
@@ -165,7 +164,7 @@ class _AtOnboardingActivateAccountScreenState
 
   Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
     String? messageString =
-        ConvertErrorToString().getErrorMessage(errorMessage);
+    AtOnboardingErrorToString().getErrorMessage(errorMessage);
     return AtOnboardingDialog.showError(
       context: context,
       title: title,
