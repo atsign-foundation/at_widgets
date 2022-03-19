@@ -3,7 +3,7 @@ import 'package:at_onboarding_flutter_example/switch_atsign.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show AtOnboardingConfig, Onboarding;
+    show AtOnboardingConfig;
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
@@ -124,14 +124,6 @@ class _MyAppState extends State<MyApp> {
                             domain: AtEnv.rootDomain,
                             rootEnvironment: AtEnv.rootEnvironment,
                             appAPIKey: AtEnv.appApiKey,
-                            appColor: Theme.of(context).primaryColor,
-                            onboard: (value, atsign) {
-                              _logger.finer('Successfully onboarded $atsign');
-                            },
-                            onError: (error) {
-                              _logger.severe('Onboarding throws $error error');
-                            },
-                            nextScreen: const HomeScreen(),
                           ),
                         );
                         switch (result) {
@@ -148,6 +140,9 @@ class _MyAppState extends State<MyApp> {
                             // TODO: Handle this case.
                             break;
                           case AtOnboardingResult.cancel:
+                            // TODO: Handle this case.
+                            break;
+                          case AtOnboardingResult.activate:
                             // TODO: Handle this case.
                             break;
                         }
@@ -167,14 +162,6 @@ class _MyAppState extends State<MyApp> {
                             domain: AtEnv.rootDomain,
                             rootEnvironment: AtEnv.rootEnvironment,
                             appAPIKey: AtEnv.appApiKey,
-                            appColor: Theme.of(context).primaryColor,
-                            onboard: (value, atsign) {
-                              _logger.finer('Successfully onboarded $atsign');
-                            },
-                            onError: (error) {
-                              _logger.severe('Onboarding throws $error error');
-                            },
-                            nextScreen: const HomeScreen(),
                           ),
                         );
                       },

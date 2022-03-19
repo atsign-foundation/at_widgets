@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_activate_account_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
@@ -31,7 +31,7 @@ import '../widgets/at_onboarding_dialog.dart';
 import 'at_onboarding_qrcode_screen.dart';
 import 'at_onboarding_reference_screen.dart';
 
-class AtOnboardingScreen extends StatefulWidget {
+class AtOnboardingHomeScreen extends StatefulWidget {
   final AtOnboardingConfig config;
 
   /// If true, shows the custom dialog to get an atsign
@@ -41,7 +41,7 @@ class AtOnboardingScreen extends StatefulWidget {
 
   final onboardStatus = OnboardingStatus.ACTIVATE;
 
-  const AtOnboardingScreen({
+  const AtOnboardingHomeScreen({
     Key? key,
     required this.config,
     this.getAtSign = false,
@@ -50,10 +50,10 @@ class AtOnboardingScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AtOnboardingScreen> createState() => _AtOnboardingScreenState();
+  State<AtOnboardingHomeScreen> createState() => _AtOnboardingHomeScreenState();
 }
 
-class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
+class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   final AtSignLogger _logger = AtSignLogger('At Onboarding');
   final OnboardingService _onboardingService = OnboardingService.getInstance();
 
@@ -64,12 +64,6 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
   bool loading = false;
   bool permissionGrated = false;
 
-  // bool otp = false;
-  // bool pair = false;
-  // bool isfreeAtsign = false;
-  // bool isAtsignForm = true;
-  // bool isQrScanner = false;
-  bool _isServerCheck = false;
   bool _isContinue = true;
   bool _uploadingQRCode = false;
   String? _pairingAtsign;
@@ -131,7 +125,6 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       if (!permissionGrated) {
         await checkPermissions();
       }
-      _isServerCheck = false;
       _isContinue = true;
       String? fileContents, aesKey, atsign;
       FilePickerResult? result = await FilePicker.platform
@@ -219,8 +212,8 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
               _pairingAtsign &&
           _pairingAtsign != null) {
-        await showErrorDialog(
-            context, AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
+        await showErrorDialog(context,
+            AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
         setState(() {
           loading = false;
         });
@@ -241,7 +234,6 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
 
   Future<void> _uploadKeyFileForDesktop() async {
     try {
-      _isServerCheck = false;
       _isContinue = true;
       String? fileContents, aesKey, atsign;
       setState(() {
@@ -280,8 +272,8 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
               _pairingAtsign &&
           _pairingAtsign != null) {
-        await showErrorDialog(
-            context, AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
+        await showErrorDialog(context,
+            AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
         setState(() {
           loading = false;
         });
@@ -351,7 +343,8 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
         _inprogressDialog.close();
-        await showErrorDialog(context, AtOnboardingErrorToString().pairedAtsign(atsign));
+        await showErrorDialog(
+            context, AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
       authResponse = await _onboardingService.authenticate(atsign,
@@ -366,7 +359,6 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
     } catch (e) {
       _inprogressDialog.close();
       if (e == AtOnboardingResponseStatus.serverNotReached && _isContinue) {
-        _isServerCheck = _isContinue;
         await _processAESKey(atsign, aesKey, contents);
       } else if (e == AtOnboardingResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWithAESKey');
@@ -594,7 +586,7 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       final result2 = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) => AtOnboardingActivateAccountScreen(
+            builder: (_) => AtOnboardingActivateScreen(
                   hideReferences: true,
                   atSign: result!,
                 )),
@@ -675,7 +667,8 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
         _inprogressDialog.close();
-        await _showAlertDialog(AtOnboardingErrorToString().pairedAtsign(atsign));
+        await _showAlertDialog(
+            AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
       authResponse = await _onboardingService.authenticate(atsign,
@@ -692,8 +685,8 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
       if (e == AtOnboardingResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWith cram secret');
         await _showAlertDialog(e, title: 'Auth Failed');
-      } else if (e == AtOnboardingResponseStatus.serverNotReached && _isContinue) {
-        _isServerCheck = _isContinue;
+      } else if (e == AtOnboardingResponseStatus.serverNotReached &&
+          _isContinue) {
         await _processSharedSecret(atsign, secret);
       } else if (e == AtOnboardingResponseStatus.timeOut) {
         await _showAlertDialog(e, title: 'Response Time out');
@@ -758,7 +751,8 @@ class _AtOnboardingScreenState extends State<AtOnboardingScreen> {
   }
 
   Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
+    String? messageString =
+        AtOnboardingErrorToString().getErrorMessage(errorMessage);
     return AtOnboardingDialog.showError(
         context: context, title: title, message: messageString);
   }

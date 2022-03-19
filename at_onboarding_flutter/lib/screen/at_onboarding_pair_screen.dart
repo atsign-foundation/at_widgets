@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
@@ -15,8 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../at_onboarding.dart';
 import 'at_onboarding_otp_screen.dart';
-import 'at_onboarding_webview_screen.dart';
-
+import 'at_onboarding_reference_screen.dart';
 
 class AtOnboardingPairScreen extends StatefulWidget {
   final String atSign;
@@ -124,7 +121,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                         fontSize: 15.toFont),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: AtOnboardingColorConstants.appColor,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     contentPadding: EdgeInsets.symmetric(
@@ -165,47 +162,15 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
             ),
           ),
         ),
-        // actions: <Widget>[
-        //   AtOnboardingSecondaryButton(
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //     child: const Text(
-        //       Strings.cancelButton,
-        //       style: TextStyle(
-        //         fontSize: AtOnboardingDimens.fontNormal,
-        //       ),
-        //     ),
-        //   ),
-        // ],
       ),
     );
   }
 
-  // Future<CustomDialog?> showErrorDialog(
-  //     BuildContext context, String? errorMessage) async {
-  //   return showDialog<CustomDialog>(
-  //       barrierDismissible: false,
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return CustomDialog(
-  //           context: context,
-  //           isErrorDialog: true,
-  //           showClose: true,
-  //           message: errorMessage,
-  //           onClose: () {},
-  //         );
-  //       });
-  // }
-
   void _showReferenceWebview() {
-    Navigator.push(
-        context,
-        MaterialPageRoute<Widget>(
-            builder: (BuildContext context) => const AtOnboardingWebviewScreen(
-                  title: AtOnboardingStrings.faqTitle,
-                  url: AtOnboardingStrings.faqUrl,
-                )));
+    AtOnboardingReferenceScreen.push(
+        context: context,
+        url: AtOnboardingStrings.faqUrl,
+        title: AtOnboardingStrings.faqTitle);
   }
 
   void _onSendCodePressed() async {
@@ -214,14 +179,8 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       isParing = true;
       setState(() {});
       bool status = false;
-      // if (!wrongEmail) {
       status =
           await registerPersona(widget.atSign, _emailController.text, context);
-      // } else {
-      //   status = await registerPersona(
-      //       widget.atSign, _emailController.text, context,
-      //       oldEmail: oldEmail);
-      // }
       isParing = false;
       setState(() {});
       if (status) {
@@ -244,7 +203,6 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       data = response.body;
       data = jsonDecode(data);
       status = true;
-      // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
@@ -255,7 +213,6 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       if (errorMessage.contains('maximum number of free @signs')) {
         await showlimitDialog(context);
       } else {
-        // await showErrorDialog(context, errorMessage);
         AtOnboardingDialog.showError(context: context, message: errorMessage);
       }
     }
@@ -282,7 +239,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                       text: 'https://my.atsign.com',
                       style: TextStyle(
                           fontSize: 16.toFont,
-                          color: AtOnboardingColorConstants.appColor,
+                          color: Theme.of(context).primaryColor,
                           letterSpacing: 0.5,
                           decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()
@@ -309,7 +266,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   },
                   child: Text(
                     'Close',
-                    style: TextStyle(color: AtOnboardingColorConstants.appColor),
+                    style: TextStyle(color: Theme.of(context).primaryColor),
                   ))
             ],
           );
