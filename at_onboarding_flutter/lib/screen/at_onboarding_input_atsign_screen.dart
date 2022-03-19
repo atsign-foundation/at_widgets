@@ -1,5 +1,4 @@
 import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
@@ -88,7 +87,7 @@ class _AtOnboardingInputAtSignScreenState
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AtOnboardingColorConstants.appColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   contentPadding: EdgeInsets.symmetric(

@@ -16,24 +16,24 @@ import 'at_onboarding_otp_screen.dart';
 import '../services/free_atsign_service.dart';
 import 'at_onboarding_reference_screen.dart';
 
-class AtOnboardingActivateAccountScreen extends StatefulWidget {
+class AtOnboardingActivateScreen extends StatefulWidget {
   ///will hide webpage references.
   final bool hideReferences;
   final String? atSign;
 
-  const AtOnboardingActivateAccountScreen({
+  const AtOnboardingActivateScreen({
     Key? key,
     required this.hideReferences,
     this.atSign,
   }) : super(key: key);
 
   @override
-  State<AtOnboardingActivateAccountScreen> createState() =>
-      _AtOnboardingActivateAccountScreenState();
+  State<AtOnboardingActivateScreen> createState() =>
+      _AtOnboardingActivateScreenState();
 }
 
-class _AtOnboardingActivateAccountScreenState
-    extends State<AtOnboardingActivateAccountScreen> {
+class _AtOnboardingActivateScreenState
+    extends State<AtOnboardingActivateScreen> {
   final FreeAtsignService _freeAtsignService = FreeAtsignService();
 
   bool isVerifing = false;
@@ -112,7 +112,7 @@ class _AtOnboardingActivateAccountScreenState
     final result = await AtOnboardingOTPScreen.push(
         context: context, atSign: atsign ?? (widget.atSign ?? ''), hideReferences: false);
     if (result != null) {
-      String? secret = result.secret?.split(':')?.last ?? '';
+      String? secret = result.secret?.split(':').last ?? '';
       _processSharedSecret(atsign: result.atSign, secret: secret);
     } else {
       Navigator.pop(context, AtOnboardingResult.cancel);

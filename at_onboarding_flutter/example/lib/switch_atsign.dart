@@ -11,6 +11,7 @@ import 'main.dart';
 class AtSignBottomSheet extends StatefulWidget {
   final List<String> atSignList;
   final Function? showLoader;
+
   const AtSignBottomSheet(
       {Key key = const Key('atsign'),
       this.atSignList = const [],
@@ -69,14 +70,6 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                     domain: AtEnv.rootDomain,
                                     rootEnvironment: AtEnv.rootEnvironment,
                                     appAPIKey: AtEnv.appApiKey,
-                                    appColor: Theme.of(context).primaryColor,
-                                    onboard: (value, atsign) {
-                                      _logger.finer('Successfully onboarded $atsign');
-                                    },
-                                    onError: (error) {
-                                      _logger.severe('Onboarding throws $error error');
-                                    },
-                                    nextScreen: const HomeScreen(),
                                   ),
                                 );
                                 if (mounted) {
@@ -119,13 +112,6 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                             domain: AtEnv.rootDomain,
                             rootEnvironment: AtEnv.rootEnvironment,
                             appAPIKey: AtEnv.appApiKey,
-                            appColor: Theme.of(context).primaryColor,
-                            onboard: (value, atsign) {
-                              _logger.finer('Successfully onboarded $atsign');
-                            },
-                            onError: (error) {
-                              _logger.severe('Onboarding throws $error error');
-                            },
                           ),
                         );
                         switch (result) {
@@ -136,16 +122,18 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                     builder: (_) => const HomeScreen()));
                             break;
                           case AtOnboardingResult.error:
-                          // TODO: Handle this case.
+                            // TODO: Handle this case.
                             break;
                           case AtOnboardingResult.notFound:
-                          // TODO: Handle this case.
+                            // TODO: Handle this case.
                             break;
                           case AtOnboardingResult.cancel:
-                          // TODO: Handle this case.
+                            // TODO: Handle this case.
+                            break;
+                          case AtOnboardingResult.activate:
+                            // TODO: Handle this case.
                             break;
                         }
-
 
                         if (mounted) {
                           setState(() {

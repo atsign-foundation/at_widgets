@@ -177,7 +177,7 @@ class OnboardingService {
     atsign = formatAtSign(atsign);
     List<String> atSignsList = await getAtsignList();
     ServerStatus? status = await _checkAtSignServerStatus(atsign!).timeout(
-        Duration(seconds: AtOnboardingAppConstants.responseTimeLimit),
+        Duration(seconds: AtOnboardingConstants.responseTimeLimit),
         onTimeout: () => throw AtOnboardingResponseStatus.timeOut);
     bool isExist =
         atSignsList.isNotEmpty ? atSignsList.contains(atsign) : false;
@@ -197,7 +197,7 @@ class OnboardingService {
 
   Future<ServerStatus?> _checkAtSignServerStatus(String atsign) async {
     AtStatusImpl atStatusImpl =
-        AtStatusImpl(rootUrl: AtOnboardingAppConstants.serverDomain);
+        AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
     AtStatus status = await atStatusImpl.get(atsign);
     return status.serverStatus;
   }
@@ -210,7 +210,7 @@ class OnboardingService {
     }
     atsign = formatAtSign(atsign);
     AtStatusImpl atStatusImpl =
-        AtStatusImpl(rootUrl: AtOnboardingAppConstants.serverDomain);
+        AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
     AtStatus status = await atStatusImpl.get(atsign!);
     return status.status();
   }

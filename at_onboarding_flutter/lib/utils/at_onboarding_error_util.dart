@@ -42,7 +42,7 @@ class AtOnboardingErrorToString {
                 : 'Please provide a valid QRcode to authenticate.';
           }
         } else if (error == AtOnboardingResponseStatus.timeOut) {
-          return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AtOnboardingAppConstants.contactAddress} if the issue still persists.';
+          return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AtOnboardingConstants.contactAddress} if the issue still persists.';
         } else {
           return '';
         }

@@ -1,4 +1,3 @@
-import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -28,7 +27,6 @@ class AtOnboardingResetScreen extends StatefulWidget {
 }
 
 class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
-  // bool? loading = false;
   List<String> atsignsList = [];
   Map<String, bool?> atsignMap = <String, bool>{};
   bool isSelectAll = false;
@@ -177,7 +175,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
             height: 48,
             borderRadius: 24,
             onPressed: _onResetPressed,
-            child: const Text(AtOnboardingAppConstants.removeButton),
+            child: const Text(AtOnboardingStrings.removeButton),
           ),
         )
       ],

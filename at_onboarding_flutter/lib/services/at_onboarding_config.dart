@@ -8,10 +8,10 @@ class AtOnboardingConfig {
   final BuildContext context;
 
   ///hides the references to webpages if set to true
-  final bool? hideReferences;
+  final bool hideReferences;
 
   ///hides the qr functionality if set to true
-  final bool? hideQrScan;
+  final bool hideQrScan;
 
   ///Onboards the given [atsign] if not null.
   ///if [atsign] is null then takes the atsign from keychain.
@@ -25,24 +25,6 @@ class AtOnboardingConfig {
 
   ///Default the plugin connects to [root.atsign.org] to perform onboarding.
   final String? domain;
-
-  ///The color of the screen to match with the app's aesthetics. default it is [black].
-  final Color? appColor;
-
-  ///if logo is not null then displays the widget in the left side of appbar else displays nothing.
-  final Widget? logo;
-
-  ///Function returns atClientServiceMap on successful onboarding along with onboarded @sign.
-  late Function(Map<String?, AtClientService>, String?) onboard;
-
-  ///Function returns error when failed in onboarding the existing or given atsign if [nextScreen] is null;
-  final Function(Object?) onError;
-
-  ///after successful onboarding will gets redirected to this screen if it is not null.
-  final Widget? nextScreen;
-
-  ///after first time succesful onboarding it will get redirected to this screen if not null.
-  final Widget? fistTimeAuthNextScreen;
 
   /// API authentication key for getting free atsigns
   final String? appAPIKey;
@@ -72,18 +54,12 @@ class AtOnboardingConfig {
 
   AtOnboardingConfig({
     required this.context,
-    this.hideReferences,
-    this.hideQrScan,
-    this.atsign,
     required this.atClientPreference,
-    this.domain,
-    this.appColor,
-    this.logo,
-    required this.onboard,
-    required this.onError,
-    this.nextScreen,
-    this.fistTimeAuthNextScreen,
-    this.appAPIKey,
     required this.rootEnvironment,
+    this.atsign,
+    this.domain,
+    this.appAPIKey,
+    this.hideReferences = false,
+    this.hideQrScan = false,
   });
 }
