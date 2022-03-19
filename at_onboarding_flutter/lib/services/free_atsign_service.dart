@@ -34,7 +34,7 @@ class FreeAtsignService {
     }
     Map<String, String?> data = <String, String?>{'atsign': atsign};
 
-    String path = AtOnboardingAppConstants.apiPath + AtOnboardingAppConstants.authWithAtsign;
+    String path = AtOnboardingConstants.apiPath + AtOnboardingConstants.authWithAtsign;
 
     dynamic response = await postRequest(path, data);
 
@@ -48,7 +48,7 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    String path = AtOnboardingAppConstants.apiPath + AtOnboardingAppConstants.validationWithAtsign;
+    String path = AtOnboardingConstants.apiPath + AtOnboardingConstants.validationWithAtsign;
     Map<String, String?> data = <String, String?>{
       'atsign': atsign,
       'otp': verificationCode
@@ -65,13 +65,13 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    Uri url = Uri.https(AtOnboardingAppConstants.apiEndPoint,
-        '${AtOnboardingAppConstants.apiPath}${AtOnboardingAppConstants.getFreeAtsign}');
+    Uri url = Uri.https(AtOnboardingConstants.apiEndPoint,
+        '${AtOnboardingConstants.apiPath}${AtOnboardingConstants.getFreeAtsign}');
 
     Response response = await _http.get(
       url,
       headers: <String, String>{
-        'Authorization': AtOnboardingAppConstants.apiKey!,
+        'Authorization': AtOnboardingConstants.apiKey!,
         'Content-Type': 'application/json',
       },
     );
@@ -87,7 +87,7 @@ class FreeAtsignService {
       _init();
     }
     Map<String, String?> data;
-    String path = AtOnboardingAppConstants.apiPath + AtOnboardingAppConstants.registerPerson;
+    String path = AtOnboardingConstants.apiPath + AtOnboardingConstants.registerPerson;
     if (oldEmail != null) {
       data = <String, String?>{
         'email': email,
@@ -110,7 +110,7 @@ class FreeAtsignService {
       _init();
     }
     Map<String, String?> data;
-    String path = AtOnboardingAppConstants.apiPath + AtOnboardingAppConstants.validatePerson;
+    String path = AtOnboardingConstants.apiPath + AtOnboardingConstants.validatePerson;
     data = <String, String?>{
       'email': email,
       'atsign': atsign,
@@ -124,14 +124,14 @@ class FreeAtsignService {
 
   /// common POST request call
   Future<dynamic> postRequest(String path, Map<String, String?> data) async {
-    Uri url = Uri.https(AtOnboardingAppConstants.apiEndPoint, path);
+    Uri url = Uri.https(AtOnboardingConstants.apiEndPoint, path);
 
     String body = json.encode(data);
     return _http.post(
       url,
       body: body,
       headers: <String, String>{
-        'Authorization': AtOnboardingAppConstants.apiKey!,
+        'Authorization': AtOnboardingConstants.apiKey!,
         'Content-Type': 'application/json',
       },
     );

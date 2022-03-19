@@ -1,11 +1,10 @@
-import 'package:at_onboarding_flutter/screen/at_onboarding_activate_account_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:flutter/material.dart';
 
+import 'screen/at_onboarding_home_screen.dart';
 import 'services/at_onboarding_config.dart';
 import 'screen/at_onboarding_start_screen.dart';
 
@@ -22,11 +21,10 @@ class AtOnboarding {
     required BuildContext context,
     required AtOnboardingConfig config,
   }) async {
-    AtOnboardingColorConstants.darkTheme = Theme.of(context).brightness == Brightness.dark;
-    AtOnboardingAppConstants.setApiKey(
-        config.appAPIKey ?? (AtOnboardingAppConstants.rootEnvironment.apikey ?? ''));
-    AtOnboardingAppConstants.rootDomain =
-        config.domain ?? AtOnboardingAppConstants.rootEnvironment.domain;
+    AtOnboardingConstants.setApiKey(config.appAPIKey ??
+        (AtOnboardingConstants.rootEnvironment.apikey ?? ''));
+    AtOnboardingConstants.rootDomain =
+        config.domain ?? AtOnboardingConstants.rootEnvironment.domain;
     AtOnboardingSizeConfig().init(context);
     final result = await showDialog(
       context: context,
@@ -44,7 +42,6 @@ class AtOnboarding {
             context: context,
             config: config,
           );
-          break;
         case AtOnboardingResult.activate:
           return activateAccount(context: context);
         case AtOnboardingResult.cancel:
@@ -60,20 +57,14 @@ class AtOnboarding {
     VoidCallback? onSuccess,
     VoidCallback? onError,
   }) async {
-    AtOnboardingColorConstants.darkTheme = Theme.of(context).brightness == Brightness.dark;
-    AtOnboardingAppConstants.setApiKey(
-        config.appAPIKey ?? (AtOnboardingAppConstants.rootEnvironment.apikey ?? ''));
-    AtOnboardingAppConstants.rootDomain =
-        config.domain ?? AtOnboardingAppConstants.rootEnvironment.domain;
-    // await showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (_) => AtOnboardingScreen(config: config),
-    // );
-
+    AtOnboardingConstants.setApiKey(config.appAPIKey ??
+        (AtOnboardingConstants.rootEnvironment.apikey ?? ''));
+    AtOnboardingConstants.rootDomain =
+        config.domain ?? AtOnboardingConstants.rootEnvironment.domain;
+    AtOnboardingSizeConfig().init(context);
     final result = await Navigator.push(context,
         MaterialPageRoute(builder: (BuildContext context) {
-      return AtOnboardingScreen(config: config);
+      return AtOnboardingHomeScreen(config: config);
     }));
 
     if (result is AtOnboardingResult) {
@@ -84,6 +75,12 @@ class AtOnboarding {
           return AtOnboardingResult.error;
         case AtOnboardingResult.activate:
           return activateAccount(context: context);
+        case AtOnboardingResult.notFound:
+          // TODO: Handle this case.
+          break;
+        case AtOnboardingResult.cancel:
+          // TODO: Handle this case.
+          break;
       }
     }
     return AtOnboardingResult.cancel;
@@ -94,7 +91,7 @@ class AtOnboarding {
   }) async {
     final result = await Navigator.push(context,
         MaterialPageRoute(builder: (BuildContext context) {
-      return const AtOnboardingActivateAccountScreen(
+      return const AtOnboardingActivateScreen(
         hideReferences: false,
       );
     }));
@@ -105,6 +102,15 @@ class AtOnboarding {
           return AtOnboardingResult.success;
         case AtOnboardingResult.error:
           return AtOnboardingResult.error;
+        case AtOnboardingResult.notFound:
+          // TODO: Handle this case.
+          break;
+        case AtOnboardingResult.activate:
+          // TODO: Handle this case.
+          break;
+        case AtOnboardingResult.cancel:
+          // TODO: Handle this case.
+          break;
       }
     }
     return AtOnboardingResult.cancel;
