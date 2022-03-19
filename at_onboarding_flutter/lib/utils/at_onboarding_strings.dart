@@ -5,6 +5,8 @@ class AtOnboardingStrings {
   static const String atsignHintText = 'alice';
   static const String submitButton = 'Submit';
   static const String cancelButton = 'Cancel';
+  static const String closeButton = 'Close';
+  static const String removeButton = 'Remove';
 
   //atsignStatus texts
   static String atsignNotFound =

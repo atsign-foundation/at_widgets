@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_input_formatter.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -425,7 +424,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                       text: 'https://my.atsign.com',
                       style: TextStyle(
                           fontSize: 16.toFont,
-                          color: AtOnboardingColorConstants.appColor,
+                          color: Theme.of(context).primaryColor,
                           letterSpacing: 0.5,
                           decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()
@@ -452,40 +451,10 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   },
                   child: Text(
                     'Close',
-                    style: TextStyle(color: AtOnboardingColorConstants.appColor),
+                    style: TextStyle(color: Theme.of(context).primaryColor),
                   ))
             ],
           );
         });
   }
-
-// Future<String?> _openAccountScreen({
-//   required List<String> atsigns,
-//   required String newAtsign,
-//   required String email,
-//   required String? otp,
-// }) async {
-//   final selectedAtSign = await Navigator.push(
-//       context,
-//       MaterialPageRoute<String?>(
-//           builder: (_) => AtOnboardingAccountsScreen(
-//                 atsigns: atsigns,
-//                 newAtsign: newAtsign,
-//               )));
-//   if (selectedAtSign == newAtsign) {
-//     final cramSecret = await validatePerson(newAtsign, email, otp, context,
-//         isConfirmation: true);
-//     return cramSecret;
-//   } else {
-//     if (selectedAtSign != null) {
-//       Navigator.pop(
-//           context,
-//           AtOnboardingOTPResult(
-//             atSign: selectedAtSign,
-//             secret: '',
-//           ));
-//     }
-//     return null;
-//   }
-// }
 }

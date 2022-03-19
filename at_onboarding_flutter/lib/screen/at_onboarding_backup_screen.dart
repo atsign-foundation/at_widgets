@@ -73,7 +73,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               height: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
               width: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
               fit: BoxFit.fill,
-              package: AtOnboardingAppConstants.package,
+              package: AtOnboardingConstants.package,
             )),
             const SizedBox(height: 40),
             Container(

@@ -1,6 +1,5 @@
 import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_color_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
@@ -60,7 +59,7 @@ class _AtOnboardingAccountsScreenState
                 children: <Widget>[
                   CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                          AtOnboardingColorConstants.appColor)),
+                          Theme.of(context).primaryColor)),
                   const Text(
                     'Loading atsigns',
                     style: TextStyle(
