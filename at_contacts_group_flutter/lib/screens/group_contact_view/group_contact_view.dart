@@ -86,8 +86,7 @@ class _GroupContactViewState extends State<GroupContactView> {
     unmodifiedSelectedGroupContacts =
         List.from(_groupService.selectedGroupContacts);
 
-    if (widget.contactSelectedHistory != null &&
-        widget.contactSelectedHistory!.isNotEmpty) {
+    if (widget.contactSelectedHistory != null) {
       _groupService.selectedGroupContacts = [...widget.contactSelectedHistory!];
     }
 
