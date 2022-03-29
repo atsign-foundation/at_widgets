@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
     show AtOnboardingConfig, AtOnboardingResultStatus;
+
 // import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
@@ -41,6 +42,19 @@ class _MyAppState extends State<MyApp> {
   AtClientPreference? atClientPreference;
 
   // final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
+  bool? _usingSharedStore;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialSettup();
+  }
+
+  void _initialSettup() async {
+    _usingSharedStore =
+        await KeyChainManager.getInstance().isUsingSharedStorage();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +156,26 @@ class _MyAppState extends State<MyApp> {
                       },
                       child: const Text('Reset'),
                     ),
+                    const SizedBox(height: 10),
+                    if (_usingSharedStore != null)
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_usingSharedStore == true) {
+                            await KeyChainManager.getInstance()
+                                .disableUsingSharedStorage();
+                          } else {
+                            await KeyChainManager.getInstance()
+                                .enableUsingSharedStorage();
+                          }
+                          _usingSharedStore =
+                              await KeyChainManager.getInstance()
+                                  .isUsingSharedStorage();
+                          setState(() {});
+                        },
+                        child: Text(_usingSharedStore == true
+                            ? 'Disable using shared storage'
+                            : 'Enable use shared storage'),
+                      ),
                   ],
                 ),
               ),
