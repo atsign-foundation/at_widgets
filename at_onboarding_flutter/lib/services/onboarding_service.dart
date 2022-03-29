@@ -76,6 +76,17 @@ class OnboardingService {
     return _keyChainManager.getAtSign();
   }
 
+  ///
+  Future<bool?> isUsingSharedStorage() async {
+    final result = await _keyChainManager.isUsingSharedStorage();
+    return result;
+  }
+
+  ///Call this function before start onboarding
+  Future<void> initialSetup({required bool usingSharedStorage}) async {
+    await _keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
+  }
+
   /// Returns `true` if authentication is successful for the existing atsign in device.
   Future<bool> onboard() async {
     AtClientService atClientServiceInstance =

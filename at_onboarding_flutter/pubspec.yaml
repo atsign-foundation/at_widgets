@@ -50,6 +50,11 @@ dev_dependencies:
 
 dependency_overrides:
   lints: ^2.0.0
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      ref: bugfix/keychain-store-key
+      path: at_client_mobile
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
