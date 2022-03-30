@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -87,7 +86,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 5.toHeight,
+                  height: 5,
                 ),
                 TextFormField(
                   enabled: true,
@@ -114,22 +113,22 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   decoration: InputDecoration(
                     fillColor: Colors.blueAccent,
                     errorStyle: TextStyle(
-                      fontSize: 12.toFont,
+                      fontSize: 12,
                     ),
                     prefixStyle: TextStyle(
                         color: Theme.of(context).primaryColor,
-                        fontSize: 15.toFont),
+                        fontSize: 15),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
                     contentPadding: EdgeInsets.symmetric(
-                        horizontal: AtOnboardingDimens.paddingSmall.toWidth),
+                        horizontal: AtOnboardingDimens.paddingSmall),
                   ),
                 ),
                 SizedBox(
-                  height: 10.toHeight,
+                  height: 10,
                 ),
                 const Text(
                   AtOnboardingStrings.emailNote,
@@ -139,7 +138,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 20.toHeight,
+                  height: 20,
                 ),
                 AtOnboardingPrimaryButton(
                   height: 48,
@@ -230,7 +229,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   TextSpan(
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16.toFont,
+                        fontSize: 16,
                         letterSpacing: 0.5),
                     text:
                         'Oops! You already have the maximum number of free @signs. Please login to ',
@@ -238,7 +237,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   TextSpan(
                       text: 'https://my.atsign.com',
                       style: TextStyle(
-                          fontSize: 16.toFont,
+                          fontSize: 16,
                           color: Theme.of(context).primaryColor,
                           letterSpacing: 0.5,
                           decoration: TextDecoration.underline),
@@ -253,7 +252,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                     text: '  to select one of your existing @signs.',
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16.toFont,
+                        fontSize: 16,
                         letterSpacing: 0.5),
                   ),
                 ],
