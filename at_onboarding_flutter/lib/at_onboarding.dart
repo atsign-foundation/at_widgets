@@ -1,6 +1,5 @@
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
-import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +25,6 @@ class AtOnboarding {
         (AtOnboardingConstants.rootEnvironment.apikey ?? ''));
     AtOnboardingConstants.rootDomain =
         config.domain ?? AtOnboardingConstants.rootEnvironment.domain;
-    AtOnboardingSizeConfig().init(context);
     final result = await showDialog(
       context: context,
       barrierDismissible: false,
@@ -62,7 +60,6 @@ class AtOnboarding {
         (AtOnboardingConstants.rootEnvironment.apikey ?? ''));
     AtOnboardingConstants.rootDomain =
         config.domain ?? AtOnboardingConstants.rootEnvironment.domain;
-    AtOnboardingSizeConfig().init(context);
     final result = await Navigator.push(context,
         MaterialPageRoute(builder: (BuildContext context) {
       return AtOnboardingHomeScreen(config: config);

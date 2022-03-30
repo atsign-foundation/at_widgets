@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
@@ -77,7 +76,7 @@ class _AtOnboardingGenerateScreenState
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 5.toHeight),
+                const SizedBox(height: 5),
                 TextFormField(
                   enabled: false,
                   validator: (String? value) {
@@ -98,12 +97,12 @@ class _AtOnboardingGenerateScreenState
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: AtOnboardingDimens.paddingSmall.toWidth),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: AtOnboardingDimens.paddingSmall),
                   ),
                 ),
-                SizedBox(height: 20.toHeight),
-                SizedBox(height: 20.toHeight),
+                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 AtOnboardingSecondaryButton(
                   height: 48,
                   borderRadius: 24,
@@ -127,7 +126,7 @@ class _AtOnboardingGenerateScreenState
                     ],
                   ),
                 ),
-                SizedBox(height: 20.toHeight),
+                const SizedBox(height: 20),
                 AtOnboardingPrimaryButton(
                   height: 48,
                   borderRadius: 24,
