@@ -50,7 +50,9 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-        child: ListView(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const SizedBox(height: 10),
             const Text(
@@ -66,16 +68,20 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               style: TextStyle(fontSize: AtOnboardingDimens.fontNormal),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 40),
+            Expanded(child: Container(), flex: 1),
             Center(
                 child: Image.asset(
-                  AtOnboardingStrings.backupZip,
-              height: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
-              width: Platform.isAndroid || Platform.isIOS ? MediaQuery.of(context).size.height * 0.3 : 250,
+              AtOnboardingStrings.backupZip,
+              height: Platform.isAndroid || Platform.isIOS
+                  ? MediaQuery.of(context).size.height * 0.3
+                  : 250,
+              width: Platform.isAndroid || Platform.isIOS
+                  ? MediaQuery.of(context).size.height * 0.3
+                  : 250,
               fit: BoxFit.fill,
               package: AtOnboardingConstants.package,
             )),
-            const SizedBox(height: 40),
+            Expanded(child: Container(), flex: 1),
             Container(
               constraints: const BoxConstraints(
                 maxWidth: 400,

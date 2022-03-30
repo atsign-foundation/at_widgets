@@ -5,7 +5,6 @@ import 'package:archive/archive.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
-import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
@@ -435,7 +434,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 5.toHeight),
+                SizedBox(height: 5),
                 AtOnboardingPrimaryButton(
                   height: 48,
                   borderRadius: 24,
@@ -461,12 +460,12 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                   ),
                   isLoading: loading,
                 ),
-                SizedBox(height: 5.toHeight),
+                SizedBox(height: 5),
                 const Text(
                   'Upload your backup key file from stored location which was generated during the pairing process of your @sign.',
                   style: TextStyle(fontSize: AtOnboardingDimens.fontSmall),
                 ),
-                SizedBox(height: 20.toHeight),
+                SizedBox(height: 20),
                 const Text(
                   'Need an @sign?',
                   style: TextStyle(
@@ -474,7 +473,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 5.toHeight),
+                SizedBox(height: 5),
                 AtOnboardingSecondaryButton(
                     height: 48,
                     borderRadius: 24,
@@ -492,7 +491,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                         Icon(Icons.arrow_right_alt_rounded)
                       ],
                     )),
-                SizedBox(height: 20.toHeight),
+                SizedBox(height: 20),
                 if (!widget.hideQrScan)
                   const Text(
                     'Have a QR Code?',
@@ -501,7 +500,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                if (!widget.hideQrScan) SizedBox(height: 5.toHeight),
+                if (!widget.hideQrScan) SizedBox(height: 5),
                 if (!widget.hideQrScan)
                   (Platform.isAndroid || Platform.isIOS)
                       ? AtOnboardingSecondaryButton(
@@ -541,7 +540,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                             ],
                           ),
                         ),
-                SizedBox(height: 20.toHeight),
+                SizedBox(height: 20),
                 if (!widget.hideQrScan)
                   const Text(
                     'Activate an @sign?',
@@ -550,7 +549,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                if (!widget.hideQrScan) SizedBox(height: 5.toHeight),
+                if (!widget.hideQrScan) SizedBox(height: 5),
                 if (!widget.hideQrScan)
                   AtOnboardingSecondaryButton(
                     height: 48,
