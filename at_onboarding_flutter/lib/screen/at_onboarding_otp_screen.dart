@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_input_formatter.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -107,7 +106,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 5.toHeight,
+                  height: 5,
                 ),
                 PinCodeTextField(
                   controller: _pinCodeController,
@@ -143,7 +142,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                       const TextStyle(fontSize: AtOnboardingDimens.fontNormal),
                 ),
                 SizedBox(
-                  height: 10.toHeight,
+                  height: 10,
                 ),
                 AtOnboardingPrimaryButton(
                   height: 48,
@@ -154,7 +153,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   child: const Text('Verify & Login'),
                 ),
                 SizedBox(
-                  height: 10.toHeight,
+                  height: 10,
                 ),
                 AtOnboardingSecondaryButton(
                   height: 48,
@@ -415,7 +414,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   TextSpan(
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16.toFont,
+                        fontSize: 16,
                         letterSpacing: 0.5),
                     text:
                         'Oops! You already have the maximum number of free @signs. Please login to ',
@@ -423,7 +422,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   TextSpan(
                       text: 'https://my.atsign.com',
                       style: TextStyle(
-                          fontSize: 16.toFont,
+                          fontSize: 16,
                           color: Theme.of(context).primaryColor,
                           letterSpacing: 0.5,
                           decoration: TextDecoration.underline),
@@ -438,7 +437,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                     text: '  to select one of your existing @signs.',
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16.toFont,
+                        fontSize: 16,
                         letterSpacing: 0.5),
                   ),
                 ],

@@ -1,4 +1,3 @@
-import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
@@ -69,7 +68,7 @@ class _AtOnboardingInputAtSignScreenState
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 5.toHeight),
+              SizedBox(height: 5),
               TextFormField(
                 enabled: true,
                 validator: (String? value) {
@@ -91,10 +90,10 @@ class _AtOnboardingInputAtSignScreenState
                     ),
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                      horizontal: AtOnboardingDimens.paddingSmall.toWidth),
+                      horizontal: AtOnboardingDimens.paddingSmall),
                 ),
               ),
-              SizedBox(height: 20.toHeight),
+              SizedBox(height: 20),
               AtOnboardingPrimaryButton(
                 height: 48,
                 borderRadius: 24,

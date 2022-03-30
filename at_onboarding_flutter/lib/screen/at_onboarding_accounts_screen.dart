@@ -1,4 +1,3 @@
-import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -52,7 +51,7 @@ class _AtOnboardingAccountsScreenState
         title: const Text('Select @signs'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.toFont),
+        padding: const EdgeInsets.all(16),
         child: pairedAtsignsList == null
             ? Center(
                 child: Column(
@@ -104,7 +103,7 @@ class _AtOnboardingAccountsScreenState
                         String currentItem = '@' + widget.atsigns[index];
                         bool isExist = pairedAtsignsList!.contains(currentItem);
                         return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 2.0.toFont),
+                          padding: const EdgeInsets.symmetric(vertical: 2.0),
                           child: RadioListTile<Object>(
                             controlAffinity: ListTileControlAffinity.trailing,
                             groupValue: lastSelectedIndex,
@@ -157,6 +156,8 @@ class _AtOnboardingAccountsScreenState
               ),
             ),
             AtOnboardingPrimaryButton(
+              height: 48,
+              borderRadius: 24,
               onPressed: () {
                 Navigator.pop(_);
                 Navigator.pop(context, atsign);
