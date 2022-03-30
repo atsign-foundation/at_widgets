@@ -215,6 +215,15 @@ class OnboardingService {
     return status.status();
   }
 
+  /// Function to make the atsign passed as primary
+  Future<bool> changePrimaryAtsign({required String atsign}) async {
+    final result = await _keyChainManager.makeAtSignPrimary(atsign);
+    if (result == true) {
+      setAtsign = atsign;
+    }
+    return result;
+  }
+
   /// sync call to get data from secondary
   Future<void> _sync(String? atSign) async {
     _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
