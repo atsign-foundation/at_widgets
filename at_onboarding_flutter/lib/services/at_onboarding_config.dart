@@ -4,21 +4,12 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_utils/at_logger.dart';
 
 class AtOnboardingConfig {
-  ///Required field as for navigation.
-  final BuildContext context;
 
   ///hides the references to webpages if set to true
   final bool hideReferences;
 
   ///hides the qr functionality if set to true
   final bool hideQrScan;
-
-  ///Onboards the given [atsign] if not null.
-  ///if [atsign] is null then takes the atsign from keychain.
-  ///if[atsign] is empty then it directly jumps into authenticate without performing onboarding. (or)
-  ///if [atsign] is empty then it just presents pairAtSign screen without onboarding the atsign. (or)
-  ///Just provide an empty string for ignoring existing atsign in keychain or app's atsign.
-  final String? atsign;
 
   ///The atClientPreference [required] to continue with the onboarding.
   final AtClientPreference atClientPreference;
@@ -53,10 +44,8 @@ class AtOnboardingConfig {
   final AtSignLogger logger = AtSignLogger('At Onboarding Flutter');
 
   AtOnboardingConfig({
-    required this.context,
     required this.atClientPreference,
     required this.rootEnvironment,
-    this.atsign,
     this.domain,
     this.appAPIKey,
     this.hideReferences = false,

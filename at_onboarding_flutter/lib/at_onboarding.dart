@@ -1,6 +1,7 @@
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_size_config.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -114,6 +115,11 @@ class AtOnboarding {
       }
     }
     return AtOnboardingResult.cancel;
+  }
+
+  static Future<bool> changePrimaryAtsign({required String atsign}) async {
+    return await OnboardingService.getInstance()
+        .changePrimaryAtsign(atsign: atsign);
   }
 
   static Future<AtOnboardingResult> reset({
