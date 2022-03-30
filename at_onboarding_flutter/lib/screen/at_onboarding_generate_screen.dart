@@ -148,21 +148,6 @@ class _AtOnboardingGenerateScreenState
             ),
           ),
         ),
-        // actions: <Widget>[
-        //   AtOnboardingSecondaryButton(
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //       //Todo
-        //       // widget.onClose!();
-        //     },
-        //     child: const Text(
-        //       Strings.closeTitle,
-        //       style: TextStyle(
-        //         fontSize: AtOnboardingDimens.fontNormal,
-        //       ),
-        //     ),
-        //   ),
-        // ],
       ),
     );
   }

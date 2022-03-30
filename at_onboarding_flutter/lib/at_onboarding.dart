@@ -11,8 +11,6 @@ import 'screen/at_onboarding_start_screen.dart';
 enum AtOnboardingResult {
   success, //Authenticate success
   error, //Authenticate error
-  notFound, //Don't exist any account
-  activate, //Have an account and need to activate
   cancel, //User canceled
 }
 
@@ -36,13 +34,13 @@ class AtOnboarding {
           return AtOnboardingResult.success;
         case AtOnboardingResult.error:
           return AtOnboardingResult.error;
-        case AtOnboardingResult.notFound:
-          return start(
-            context: context,
-            config: config,
-          );
-        case AtOnboardingResult.activate:
-          return activateAccount(context: context);
+        // case AtOnboardingResult.notFound:
+        //   return start(
+        //     context: context,
+        //     config: config,
+        //   );
+        // case AtOnboardingResult.activate:
+        //   return activateAccount(context: context);
         case AtOnboardingResult.cancel:
           break;
       }
@@ -71,11 +69,6 @@ class AtOnboarding {
           return AtOnboardingResult.success;
         case AtOnboardingResult.error:
           return AtOnboardingResult.error;
-        case AtOnboardingResult.activate:
-          return activateAccount(context: context);
-        case AtOnboardingResult.notFound:
-          // TODO: Handle this case.
-          break;
         case AtOnboardingResult.cancel:
           // TODO: Handle this case.
           break;
@@ -100,12 +93,6 @@ class AtOnboarding {
           return AtOnboardingResult.success;
         case AtOnboardingResult.error:
           return AtOnboardingResult.error;
-        case AtOnboardingResult.notFound:
-          // TODO: Handle this case.
-          break;
-        case AtOnboardingResult.activate:
-          // TODO: Handle this case.
-          break;
         case AtOnboardingResult.cancel:
           // TODO: Handle this case.
           break;
