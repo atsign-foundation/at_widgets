@@ -37,12 +37,18 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
       Navigator.pop(context, AtOnboardingResult.success);
     } catch (e) {
       debugPrint("AtOnboardingInitScreen: error - $e");
-      //Todo
       if (e == OnboardingStatus.ATSIGN_NOT_FOUND ||
           e == OnboardingStatus.PRIVATE_KEY_NOT_FOUND) {
-        Navigator.pop(context, AtOnboardingResult.notFound);
+        final result = await AtOnboarding.start(
+          context: context,
+          config: widget.config,
+        );
+        Navigator.pop(context, result);
       } else if (e == OnboardingStatus.ACTIVATE) {
-        Navigator.pop(context, AtOnboardingResult.activate);
+        final result = await AtOnboarding.activateAccount(
+          context: context,
+        );
+        Navigator.pop(context, result);
       } else {
         Navigator.pop(context, AtOnboardingResult.error);
       }
