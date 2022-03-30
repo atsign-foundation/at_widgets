@@ -61,21 +61,31 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                     isLoading = true;
                                   });
                                 }
-                                AtOnboarding.onboard(
-                                  context: context,
-                                  config: AtOnboardingConfig(
+                                final result = await AtOnboarding.changePrimaryAtsign(atsign: widget.atSignList[index]);
+                                if(result) {
+                                  await AtOnboarding.onboard(
                                     context: context,
-                                    atsign: widget.atSignList[index],
-                                    atClientPreference: atClientPreferenceLocal,
-                                    domain: AtEnv.rootDomain,
-                                    rootEnvironment: AtEnv.rootEnvironment,
-                                    appAPIKey: AtEnv.appApiKey,
-                                  ),
-                                );
-                                if (mounted) {
-                                  setState(() {
-                                    isLoading = false;
-                                  });
+                                    config: AtOnboardingConfig(
+                                      atClientPreference:
+                                          atClientPreferenceLocal,
+                                      domain: AtEnv.rootDomain,
+                                      rootEnvironment: AtEnv.rootEnvironment,
+                                      appAPIKey: AtEnv.appApiKey,
+                                    ),
+                                  );
+                                  if (mounted) {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  }
+                                  Navigator.pop(context);
+                                } else {
+                                  //Failure
+                                  if (mounted) {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  }
                                 }
                               },
                         child: Padding(
@@ -106,8 +116,6 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         final result = await AtOnboarding.start(
                           context: context,
                           config: AtOnboardingConfig(
-                            context: context,
-                            atsign: '',
                             atClientPreference: atClientPreferenceLocal,
                             domain: AtEnv.rootDomain,
                             rootEnvironment: AtEnv.rootEnvironment,
