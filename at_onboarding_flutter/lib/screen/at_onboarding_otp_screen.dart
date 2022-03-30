@@ -331,10 +331,6 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                 context, AtOnboardingOTPResult(atSign: value, secret: null));
           }
           return null;
-          // Navigator.pop(context);
-          //Todo
-          // widget.onLimitExceed!(atsigns, responseData['message']);
-          // return limitExceeded;
         }
         //displays list of atsign along with newAtsign
         else {

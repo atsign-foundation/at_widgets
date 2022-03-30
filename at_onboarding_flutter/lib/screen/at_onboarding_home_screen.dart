@@ -598,10 +598,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           case AtOnboardingResult.error:
             Navigator.pop(context, AtOnboardingResult.error);
             break;
-          case AtOnboardingResult.notFound:
-            break;
-          case AtOnboardingResult.activate:
-            break;
           case AtOnboardingResult.cancel:
             break;
         }

@@ -134,13 +134,7 @@ class _MyAppState extends State<MyApp> {
                           case AtOnboardingResult.error:
                             // TODO: Handle this case.
                             break;
-                          case AtOnboardingResult.notFound:
-                            // TODO: Handle this case.
-                            break;
                           case AtOnboardingResult.cancel:
-                            // TODO: Handle this case.
-                            break;
-                          case AtOnboardingResult.activate:
                             // TODO: Handle this case.
                             break;
                         }
