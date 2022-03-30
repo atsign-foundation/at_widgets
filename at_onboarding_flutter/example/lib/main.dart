@@ -107,7 +107,6 @@ class _MyAppState extends State<MyApp> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 100),
                     ElevatedButton(
                       onPressed: () async {
                         var preference = await futurePreference;
@@ -117,7 +116,6 @@ class _MyAppState extends State<MyApp> {
                         final result = await AtOnboarding.onboard(
                           context: context,
                           config: AtOnboardingConfig(
-                            context: context,
                             atClientPreference: atClientPreference!,
                             domain: AtEnv.rootDomain,
                             rootEnvironment: AtEnv.rootEnvironment,
@@ -155,7 +153,6 @@ class _MyAppState extends State<MyApp> {
                         AtOnboarding.reset(
                           context: context,
                           config: AtOnboardingConfig(
-                            context: context,
                             atClientPreference: atClientPreference!,
                             domain: AtEnv.rootDomain,
                             rootEnvironment: AtEnv.rootEnvironment,
@@ -177,9 +174,14 @@ class _MyAppState extends State<MyApp> {
 }
 
 //* The next screen after onboarding (second screen)
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     /// Get the AtClientManager instance
@@ -200,6 +202,7 @@ class HomeScreen extends StatelessWidget {
                 builder: (context) =>
                     AtSignBottomSheet(atSignList: atSignList ?? []),
               );
+              setState(() {});
             },
           ),
         ],
