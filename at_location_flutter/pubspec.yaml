@@ -39,6 +39,8 @@ dependencies:
   at_common_flutter: ^2.0.4
   at_contacts_flutter: ^3.1.2
 
+dependency_overrides:
+  geolocator: 7.0.1
 
 dev_dependencies:
   flutter_lints: ^1.0.4

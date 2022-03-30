@@ -122,8 +122,7 @@ class LocationService {
 
       updateMyLatLng(_myData);
 
-      myLocationStream = Geolocator.getPositionStream(
-              locationSettings: const LocationSettings(distanceFilter: 10))
+      myLocationStream = Geolocator.getPositionStream(distanceFilter: 2)
           .listen((myLocation) async {
         var mylatlng = LatLng(myLocation.latitude, myLocation.longitude);
 
