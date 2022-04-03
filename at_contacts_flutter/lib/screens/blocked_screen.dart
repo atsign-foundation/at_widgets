@@ -5,6 +5,7 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/widgets/blocked_user_card.dart';
+import 'package:at_contacts_flutter/widgets/circular_contacts.dart';
 import 'package:at_contacts_flutter/widgets/error_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
 
   /// boolean flag to indicate if blocking flow is in progress
   bool isBlocking = false;
-
+  bool toggleList = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -68,6 +69,37 @@ class _BlockedScreenState extends State<BlockedScreen> {
                 color: ColorConstants.appBarColor,
                 child: Column(
                   children: [
+                    _contactService.blockContactList.isEmpty
+                        ? Container()
+                        : Container(
+                            padding: EdgeInsets.only(right: 20.toWidth),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                    // ignore: prefer_const_constructors
+                                    child: Icon(
+                                  Icons.view_module,
+                                  color: ColorConstants.greyText,
+                                )),
+                                Switch(
+                                    value: toggleList,
+                                    activeColor: Colors.white,
+                                    activeTrackColor:
+                                        ColorConstants.fadedGreyBackground,
+                                    onChanged: (s) {
+                                      setState(() {
+                                        toggleList = !toggleList;
+                                      });
+                                    }),
+                                Container(
+                                  // ignore: prefer_const_constructors
+                                  child: Icon(Icons.view_list,
+                                      color: ColorConstants.greyText),
+                                ),
+                              ],
+                            ),
+                          ),
                     Expanded(
                       child: StreamBuilder(
                         initialData: _contactService.baseBlockedList,
@@ -86,26 +118,57 @@ class _BlockedScreenState extends State<BlockedScreen> {
                                       ),
                                     ),
                                   )
-                                : ListView.separated(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 40.toHeight),
-                                    itemCount:
-                                        _contactService.blockContactList.length,
-                                    separatorBuilder: (context, index) =>
-                                        Divider(
-                                      indent: 16.toWidth,
-                                    ),
-                                    itemBuilder: (context, index) {
-                                      return BlockedUserCard(
-                                          blockeduser:
-                                              snapshot.data?[index]?.contact,
-                                          unblockAtsign: () async {
-                                            await unblockAtsign(snapshot
-                                                    .data?[index]?.contact ??
-                                                AtContact());
-                                          });
-                                    },
-                                  );
+                                : (toggleList)
+                                    ? ListView.separated(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 40.toHeight),
+                                        itemCount: _contactService
+                                            .blockContactList.length,
+                                        separatorBuilder: (context, index) =>
+                                            Divider(
+                                          indent: 16.toWidth,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          return BlockedUserCard(
+                                              blockeduser: snapshot
+                                                  .data?[index]?.contact,
+                                              unblockAtsign: () async {
+                                                await unblockAtsign(snapshot
+                                                        .data?[index]
+                                                        ?.contact ??
+                                                    AtContact());
+                                              });
+                                        },
+                                      )
+                                    : GridView.builder(
+                                        physics:
+                                            AlwaysScrollableScrollPhysics(),
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: SizeConfig()
+                                                        .isTablet(context)
+                                                    ? 5
+                                                    : 3,
+                                                childAspectRatio: 1 /
+                                                    (SizeConfig()
+                                                            .isTablet(context)
+                                                        ? 1.2
+                                                        : 1.1)),
+                                        shrinkWrap: true,
+                                        itemCount: _contactService
+                                            .blockContactList.length,
+                                        itemBuilder: (context, index) {
+                                          return CircularContacts(
+                                              contact: snapshot
+                                                  .data?[index]?.contact,
+                                              onCrossPressed: () async {
+                                                await unblockAtsign(snapshot
+                                                        .data?[index]
+                                                        ?.contact ??
+                                                    AtContact());
+                                              });
+                                        },
+                                      );
                           } else {
                             return const Center(
                               child: CircularProgressIndicator(),
