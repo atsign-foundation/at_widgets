@@ -1,3 +1,7 @@
+## 4.0.2
+- **CHORE**: Updated package dependencies
+- **FEAT**: Added functionality to remove selected contacts while navigating
+
 ## 4.0.1
 - **CHORE**: Updated package dependencies
 - **FIX**: Fixed package example

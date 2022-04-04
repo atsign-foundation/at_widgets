@@ -1,3 +1,6 @@
+## 2.0.6
+- **DOCS**: Documentation updated
+
 ## 2.0.5
 - **DOCS**: Updated Readme.md and example.md
 - **CHORE**: Updated example to demonstrate inheriting theme from calling app

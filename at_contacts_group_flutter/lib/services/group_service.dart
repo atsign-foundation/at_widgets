@@ -5,6 +5,7 @@ import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'dart:async';
 import 'package:at_contacts_flutter/utils/exposed_service.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
+import 'package:at_contacts_group_flutter/widgets/yes_no_dialog.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -122,6 +123,26 @@ class GroupService {
     allContacts = [];
     atContactImpl = await AtContactsImpl.getInstance(_atsign);
     await fetchGroupsAndContacts();
+  }
+
+  /// Will show a dialog box, if yes is pressed, will clear the selectedGroupContacts
+  void clearSelectedGroupContacts(
+      {required BuildContext context, Function? onYesTap}) {
+    if (selectedGroupContacts.isNotEmpty) {
+      shownConfirmationDialog(
+          context, 'Selected contacts will not be added , confirm?', () {
+        selectedGroupContacts = [];
+        selectedContactsSink.add(selectedGroupContacts); // to update the UI
+
+        if (onYesTap != null) {
+          onYesTap();
+        }
+      });
+    } else {
+      if (onYesTap != null) {
+        onYesTap();
+      }
+    }
   }
 
   /// Function to create a group

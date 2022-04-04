@@ -96,6 +96,7 @@ class DesktopGroupSetupRoutes {
           },
           onBackArrowTap: args['onBackArrowTap'],
           onDoneTap: args['onDoneTap'],
+          contactSelectedHistory: args['contactSelectedHistory'],
         );
       }
     };

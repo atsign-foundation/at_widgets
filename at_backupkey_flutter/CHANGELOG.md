@@ -1,3 +1,6 @@
+## 4.0.1
+- **CHORE**: Updated dependencies
+
 ## 4.0.0
 - **CHORE**: Updated dependencies
 - **BREAKING CHANGE**: Removed redundant required parameter `atClientService`

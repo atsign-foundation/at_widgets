@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/navigation_service.dart';
@@ -335,7 +336,10 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                           .groupPckgRightHalfNavKey
                                           .currentContext!)
                                       .pop();
-                                }
+                                },
+                                'contactSelectedHistory': widget.group.members
+                                    ?.map((e) => GroupContactsModel(contact: e))
+                                    .toList() // get contacts out of the group to display
                               });
                         },
                         child: Icon(
