@@ -1,3 +1,7 @@
+## 1.0.2
+- **CHORE**: Updated dependencies
+- **DOCS**: Updated documentation
+
 ## 1.0.1
 - **FEAT**: Added sdk support
 - **DOCS**: Updated documentation
