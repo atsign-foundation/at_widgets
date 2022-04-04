@@ -1,3 +1,7 @@
+## 3.1.3
+- **CHORE**: Updated dependencies
+- **DOCS**: Updated documentation
+
 ## 3.1.2
 - **FEAT**: Added alert message for not in contacts atsigns.
 - **FEAT**: Made notification dialogs non-dismissible.
