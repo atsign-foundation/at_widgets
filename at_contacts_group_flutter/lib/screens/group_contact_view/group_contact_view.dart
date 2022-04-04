@@ -86,8 +86,7 @@ class _GroupContactViewState extends State<GroupContactView> {
     unmodifiedSelectedGroupContacts =
         List.from(_groupService.selectedGroupContacts);
 
-    if (widget.contactSelectedHistory != null &&
-        widget.contactSelectedHistory!.isNotEmpty) {
+    if (widget.contactSelectedHistory != null) {
       _groupService.selectedGroupContacts = [...widget.contactSelectedHistory!];
     }
 
@@ -106,9 +105,12 @@ class _GroupContactViewState extends State<GroupContactView> {
           : (widget.asSelectionScreen)
               ? ContactSelectionBottomSheet(
                   onPressed: () {
-                    widget.isDesktop
-                        ? widget.onDoneTap!()
-                        : Navigator.pop(context);
+                    if (widget.isDesktop) {
+                      widget.onDoneTap!();
+                      _groupService.selectedGroupContacts = [];
+                    } else {
+                      Navigator.pop(context);
+                    }
                   },
                   selectedList: (s) {
                     if (widget.selectedList != null) {
