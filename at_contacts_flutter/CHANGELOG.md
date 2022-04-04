@@ -1,3 +1,7 @@
+## 4.0.2
+- **CHORE**: Updated package dependencies
+- **FEAT**: Improved error handling
+
 ## 4.0.1
 - **CHORE**: Updated package dependencies
 - **CHORE**: Updated documentation
