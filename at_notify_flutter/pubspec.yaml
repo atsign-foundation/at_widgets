@@ -1,7 +1,7 @@
 name: at_notify_flutter
 description: A Flutter plugin project to send notification to any @‎sign in @‎platform
   apps with ease.
-version: 1.0.3
+version: 1.0.4
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_notify_flutter
 issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
@@ -15,11 +15,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  at_client_mobile: ^3.1.4
-  at_client: ^3.0.9
-  at_commons: ^3.0.3
-  at_common_flutter: ^2.0.5
-  flutter_local_notifications: ^9.2.0
+  at_client_mobile: ^3.1.11
+  at_client: ^3.0.15
+  at_commons: ^3.0.9
+  at_common_flutter: ^2.0.6
+  flutter_local_notifications: ^9.4.0
 
 dev_dependencies:
   flutter_lints: ^1.0.4

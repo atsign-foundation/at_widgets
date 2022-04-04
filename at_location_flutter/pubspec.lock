@@ -42,63 +42,63 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.8"
+    version: "3.0.15"
   at_client_mobile:
     dependency: "direct main"
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.4"
+    version: "3.1.11"
   at_common_flutter:
     dependency: "direct main"
     description:
       name: at_common_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.6"
   at_commons:
     dependency: "direct main"
     description:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.9"
   at_contact:
     dependency: "direct main"
     description:
       name: at_contact
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.5"
   at_contacts_flutter:
     dependency: "direct main"
     description:
       name: at_contacts_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.2"
+    version: "4.0.2"
   at_lookup:
     dependency: "direct main"
     description:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.5"
+    version: "3.0.14"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.12"
+    version: "3.0.19"
   at_persistence_spec:
     dependency: transitive
     description:
       name: at_persistence_spec
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.5"
   at_utf7:
     dependency: transitive
     description:
@@ -112,7 +112,7 @@ packages:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.6"
   biometric_storage:
     dependency: transitive
     description:
@@ -295,35 +295,35 @@ packages:
       name: fluttertoast
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.0.8"
+    version: "8.0.9"
   geolocator:
     dependency: "direct main"
     description:
       name: geolocator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.0.5"
+    version: "8.2.0"
   geolocator_android:
     dependency: transitive
     description:
       name: geolocator_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.4"
   geolocator_apple:
     dependency: transitive
     description:
       name: geolocator_apple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.1.1+1"
   geolocator_platform_interface:
     dependency: transitive
     description:
       name: geolocator_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.4"
   geolocator_web:
     dependency: transitive
     description:
@@ -331,6 +331,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.4"
+  geolocator_windows:
+    dependency: transitive
+    description:
+      name: geolocator_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   hive:
     dependency: transitive
     description:
@@ -408,6 +415,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.11"
+  material_color_utilities:
+    dependency: transitive
+    description:
+      name: material_color_utilities
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.3"
   meta:
     dependency: "direct main"
     description:
@@ -422,6 +436,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  mutex:
+    dependency: transitive
+    description:
+      name: mutex
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   octo_image:
     dependency: transitive
     description:
@@ -442,7 +463,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.8"
+    version: "2.0.9"
   path_provider_android:
     dependency: transitive
     description:
@@ -622,7 +643,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.4.8"
   transparent_image:
     dependency: "direct main"
     description:
@@ -695,4 +716,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.15.0 <3.0.0"
-  flutter: ">=2.5.0"
+  flutter: ">=2.8.0"
