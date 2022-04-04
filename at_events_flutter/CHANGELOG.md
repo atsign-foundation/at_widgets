@@ -1,3 +1,7 @@
+## 3.1.4
+- **CHORE**: Updated dependencies
+- **DOCS**: Updated documentation
+
 ## 3.1.3
 - **FEAT**: Removed key, atKey, atValue from EventKeyLocationModel
 
