@@ -59,9 +59,6 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
-dependency_overrides:
-  # at_onboarding_flutter: ^4.0.0
-  biometric_storage: ^4.0.1
 
 # The following section is specific to Flutter.
 flutter:
