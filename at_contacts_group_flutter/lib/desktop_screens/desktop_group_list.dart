@@ -4,6 +4,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
+import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
@@ -105,6 +106,8 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                                 'onDone': () {},
                               });
                         },
+                        'contactSelectedHistory':
+                            <GroupContactsModel>[] // will always be empty
                       });
                 },
                 style: ButtonStyle(

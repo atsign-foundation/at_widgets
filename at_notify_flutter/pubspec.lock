@@ -42,49 +42,49 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.13"
+    version: "3.0.15"
   at_client_mobile:
     dependency: "direct main"
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.9"
+    version: "3.1.11"
   at_common_flutter:
     dependency: "direct main"
     description:
       name: at_common_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.6"
   at_commons:
     dependency: "direct main"
     description:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.5"
+    version: "3.0.9"
   at_lookup:
     dependency: transitive
     description:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.11"
+    version: "3.0.14"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.17"
+    version: "3.0.19"
   at_persistence_spec:
     dependency: transitive
     description:
       name: at_persistence_spec
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   at_utf7:
     dependency: transitive
     description:
@@ -229,7 +229,7 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "9.2.0"
+    version: "9.4.0"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -337,7 +337,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.11.1"
+    version: "1.8.0"
   petitparser:
     dependency: transitive
     description:

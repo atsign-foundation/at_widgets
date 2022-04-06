@@ -163,7 +163,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                   ),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
                   (ContactService().contactList.indexWhere((element) =>
-                              element?.atSign ==
+                              element.atSign ==
                               widget.eventData!.atsignCreator) ==
                           -1)
                       ? Text(

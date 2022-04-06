@@ -1,3 +1,7 @@
+## 4.0.1
+- **CHORE**: Updated dependencies
+- **FEAT**: Added ability to select files without extension.
+
 ## 4.0.0
 - **CHORE**: Updated dependencies
 - **BREAKING CHANGE**: at_backupkey_flutter exposed in this package has breaking change - removed redundant, required parameter `atClientService`.

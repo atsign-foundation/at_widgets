@@ -1,3 +1,7 @@
+## 1.0.4
+- **CHORE**: Updated dependencies
+- **DOCS**: Updated documentation
+
 ## 1.0.3
 - **CHORE**: Updated dependencies
 

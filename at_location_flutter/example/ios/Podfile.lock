@@ -157,9 +157,9 @@ SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_keychain: 01aabf894ffe8b01adfda1d9df21c210c1b4b452
   flutter_qr_reader: d930dde3b2cfe2b3d0bb7d66e5ff3e514300a5e5
-  fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
+  fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  geolocator_apple: b741765c55dc21950e3e106e8b3584e55cf81ce5
+  geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
   path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
