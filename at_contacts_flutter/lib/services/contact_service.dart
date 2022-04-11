@@ -459,6 +459,11 @@ class ContactService {
       }
 
       // lastname
+      metadata.isPublic = true;
+      metadata.namespaceAware = false;
+      key.sharedBy = atSign;
+      key.metadata = metadata;
+      // making isPublic true (as get method changes it to false)
       key.key = contactFields[1];
       result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in getting last name $e');
@@ -476,6 +481,11 @@ class ContactService {
       }
 
       // profile picture
+      metadata.isPublic = true;
+      metadata.namespaceAware = false;
+      key.sharedBy = atSign;
+      key.metadata = metadata;
+      // making isPublic true (as get method changes it to false)
       key.metadata?.isBinary = true;
       key.key = contactFields[2];
       Uint8List? image;
