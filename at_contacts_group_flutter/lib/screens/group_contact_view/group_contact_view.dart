@@ -210,37 +210,34 @@ class _GroupContactViewState extends State<GroupContactView> {
                     ? Container()
                     : const HorizontalCircularList()
                 : Container(),
-            unmodifiedSelectedGroupContacts.isEmpty
-                ? Container(
-                    padding: EdgeInsets.only(right: 20.toWidth),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                            // ignore: prefer_const_constructors
-                            child: Icon(
-                          Icons.view_module,
-                          color: ColorConstants.greyText,
-                        )),
-                        Switch(
-                            value: toggleList,
-                            activeColor: Colors.white,
-                            activeTrackColor:
-                                ColorConstants.fadedGreyBackground,
-                            onChanged: (s) {
-                              setState(() {
-                                toggleList = !toggleList;
-                              });
-                            }),
-                        Container(
-                          // ignore: prefer_const_constructors
-                          child: Icon(Icons.view_list,
-                              color: ColorConstants.greyText),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
+            Container(
+              padding: EdgeInsets.only(right: 20.toWidth),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                      // ignore: prefer_const_constructors
+                      child: Icon(
+                    Icons.view_module,
+                    color: ColorConstants.greyText,
+                  )),
+                  Switch(
+                      value: toggleList,
+                      activeColor: ColorConstants.fadedGreyBackground,
+                      activeTrackColor: Colors.black,
+                      onChanged: (s) {
+                        setState(() {
+                          toggleList = !toggleList;
+                        });
+                      }),
+                  Container(
+                    // ignore: prefer_const_constructors
+                    child:
+                        Icon(Icons.view_list, color: ColorConstants.greyText),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
                 child: StreamBuilder<List<GroupContactsModel?>>(
                     stream: _groupService.allContactsStream,
@@ -306,7 +303,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                               if (contactsForAlphabet.isEmpty) {
                                 return Container();
                               }
-                              
+
                               return Column(
                                 children: [
                                   Row(
@@ -434,10 +431,10 @@ class _GroupContactViewState extends State<GroupContactView> {
   Widget gridViewContactList(
       List<GroupContactsModel?> contactsForAlphabet, BuildContext context) {
     return GridView.builder(
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: SizeConfig().isTablet(context) ? 5 : 3,
-          childAspectRatio: 1 / (SizeConfig().isTablet(context) ? 1.2 : 1.1)),
+          childAspectRatio: 1 / (SizeConfig().isTablet(context) ? 1.2 : 1.3)),
       shrinkWrap: true,
       itemCount: contactsForAlphabet.length,
       itemBuilder: (context, alphabetIndex) {
