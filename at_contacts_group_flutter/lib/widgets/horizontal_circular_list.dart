@@ -39,6 +39,7 @@ class _HorizontalCircularListState extends State<HorizontalCircularList> {
               itemBuilder: (context, index) {
                 return CircularContacts(
                   groupContact: selectedContacts[index],
+                  asSelectionTile: true,
                   onCrossPressed: () {
                     setState(() {
                       _groupService.removeGroupContact(selectedContacts[index]);

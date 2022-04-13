@@ -11,6 +11,7 @@ import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/widgets/add_contacts_group_dialog.dart';
+import 'package:at_contacts_group_flutter/widgets/circular_contacts.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_selction_bottom_sheet.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_list_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/horizontal_circular_list.dart';
@@ -94,6 +95,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   }
 
   List<AtContact> selectedList = [];
+  bool toggleList = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -210,6 +212,34 @@ class _GroupContactViewState extends State<GroupContactView> {
                     ? Container()
                     : const HorizontalCircularList()
                 : Container(),
+            Container(
+              padding: EdgeInsets.only(right: 20.toWidth),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                      // ignore: prefer_const_constructors
+                      child: Icon(
+                    Icons.view_module,
+                    color: ColorConstants.greyText,
+                  )),
+                  Switch(
+                      value: toggleList,
+                      activeColor: ColorConstants.fadedGreyBackground,
+                      activeTrackColor: Colors.black,
+                      onChanged: (s) {
+                        setState(() {
+                          toggleList = !toggleList;
+                        });
+                      }),
+                  Container(
+                    // ignore: prefer_const_constructors
+                    child:
+                        Icon(Icons.view_list, color: ColorConstants.greyText),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
                 child: StreamBuilder<List<GroupContactsModel?>>(
                     stream: _groupService.allContactsStream,
@@ -299,7 +329,10 @@ class _GroupContactViewState extends State<GroupContactView> {
                                       ),
                                     ],
                                   ),
-                                  contactListBuilder(contactsForAlphabet)
+                                  toggleList
+                                      ? contactListBuilder(contactsForAlphabet)
+                                      : gridViewContactList(
+                                          contactsForAlphabet, context)
                                 ],
                               );
                             },
@@ -395,6 +428,82 @@ class _GroupContactViewState extends State<GroupContactView> {
                       ),
               ));
         });
+  }
+
+  Widget gridViewContactList(
+      List<GroupContactsModel?> contactsForAlphabet, BuildContext context) {
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: SizeConfig().isTablet(context) ? 5 : 3,
+          childAspectRatio: 1 / (SizeConfig().isTablet(context) ? 1.2 : 1.3)),
+      shrinkWrap: true,
+      itemCount: contactsForAlphabet.length,
+      itemBuilder: (context, alphabetIndex) {
+        return CircularContacts(
+          asSelectionTile: widget.asSelectionScreen,
+          selectSingle: widget.singleSelection,
+          selectedList: (s) {
+            widget.selectedList!(s);
+          },
+          onTap: () {
+            if (contactsForAlphabet[alphabetIndex]!.group != null) {
+              Navigator.pop(context);
+              _groupService.addGroupContact(contactsForAlphabet[alphabetIndex]);
+              widget.selectedList!(GroupService().selectedGroupContacts);
+            }
+          },
+          onLongPressed: () {
+            showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
+                ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                builder: (builder) {
+                  return Container(
+                    height: 200.0,
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: const Text('Delete'),
+                            onTap: () {
+                              deleteAtSign(
+                                  contactsForAlphabet[alphabetIndex]!.contact!);
+                            },
+                            leading: const Icon(Icons.delete),
+                          ),
+                          const Divider(),
+                          ListTile(
+                            title: const Text('Block'),
+                            onTap: () {
+                              blockUnblockContact(
+                                  contactsForAlphabet[alphabetIndex]!.contact!);
+                            },
+                            leading: const Icon(Icons.block),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                });
+          },
+          onCrossPressed: () {
+            if (contactsForAlphabet[alphabetIndex]!.group != null) {
+              Navigator.pop(context);
+              _groupService.addGroupContact(contactsForAlphabet[alphabetIndex]);
+              widget.selectedList!(GroupService().selectedGroupContacts);
+            }
+          },
+          groupContact: contactsForAlphabet[alphabetIndex],
+        );
+      },
+    );
   }
 
   blockUnblockContact(AtContact contact) async {
