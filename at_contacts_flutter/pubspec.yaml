@@ -1,6 +1,6 @@
 name: at_contacts_flutter
 description: A Flutter plugin project to provide ease of managing contacts for an @‎sign using @p‎latform.
-version: 4.0.2
+version: 4.0.3
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_contacts_flutter
 issue_tracker: https://github.com/atsign-foundation/at_widgets/issues

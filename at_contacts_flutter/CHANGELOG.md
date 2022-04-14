@@ -1,3 +1,7 @@
+## 4.0.3
+- **FIX**: Fixed bug to get lastname and image
+- **FEAT**: Added list display controls
+
 ## 4.0.2
 - **CHORE**: Updated package dependencies
 - **FEAT**: Improved error handling
