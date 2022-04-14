@@ -1,3 +1,6 @@
+## 4.0.3
+- **FEAT**: Added list display controls
+
 ## 4.0.2
 - **CHORE**: Updated package dependencies
 - **FEAT**: Added functionality to remove selected contacts while navigating
