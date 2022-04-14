@@ -2,14 +2,15 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+
+import 'package:at_client/at_client.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
-import 'package:at_lookup/at_lookup.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
-import 'package:at_client/at_client.dart';
+import 'package:at_lookup/at_lookup.dart';
 
 /// A service to handle CRUD operation on contacts
 class ContactService {
@@ -352,6 +353,7 @@ class ContactService {
         var result = await atContactImpl.add(contact).catchError((e) {
           print('error to add contact => $e');
         });
+        
         print(result);
         fetchContacts();
         return true;
@@ -451,6 +453,11 @@ class ContactService {
       }
 
       // lastname
+      metadata.isPublic = true;
+      metadata.namespaceAware = false;
+      key.sharedBy = atSign;
+      key.metadata = metadata;
+      // making isPublic true (as get method changes it to false)
       key.key = contactFields[1];
       result = await atClientManager.atClient.get(key).catchError((e) {
         print('error in getting last name $e');
@@ -468,6 +475,11 @@ class ContactService {
       }
 
       // profile picture
+      metadata.isPublic = true;
+      metadata.namespaceAware = false;
+      key.sharedBy = atSign;
+      key.metadata = metadata;
+      // making isPublic true (as get method changes it to false)
       key.metadata?.isBinary = true;
       key.key = contactFields[2];
       Uint8List? image;
