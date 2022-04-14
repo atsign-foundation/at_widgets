@@ -353,13 +353,7 @@ class ContactService {
         var result = await atContactImpl.add(contact).catchError((e) {
           print('error to add contact => $e');
         });
-        // Adding dummy key to expedite sharing of encryption keys
-        await atClientManager.atClient.put(
-            AtKey()
-              ..key = 'addContactWelcomeNote'
-              ..sharedWith = atSign
-              ..metadata = (Metadata()..ttl = 300000),
-            '${atClientManager.atClient.getCurrentAtSign()} added you as a contact');
+        
         print(result);
         fetchContacts();
         return true;
