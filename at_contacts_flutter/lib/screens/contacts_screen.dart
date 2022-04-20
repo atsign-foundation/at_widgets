@@ -204,8 +204,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
                               if (alphabetIndex == 26) {
                                 currentChar = 'Others';
                                 for (var c in _filteredList) {
-                                  if (int.tryParse(c!.contact!.atSign![1]) !=
-                                      null) {
+                                  if (!RegExp(r'^[a-z]+$').hasMatch(
+                                    c!.contact!.atSign![1].toLowerCase(),
+                                  )) {
                                     contactsForAlphabet.add(c.contact!);
                                   }
                                 }
