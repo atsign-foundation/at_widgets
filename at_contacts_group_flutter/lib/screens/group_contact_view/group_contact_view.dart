@@ -606,18 +606,24 @@ class _GroupContactViewState extends State<GroupContactView> {
       String currentChar,
       int alphabetIndex) {
     var contactsForAlphabet = <GroupContactsModel?>[];
+
+    /// contacts, groups that does not starts with alphabets
     if (alphabetIndex == 26) {
       for (var c in _filteredList) {
         if (widget.showContacts &&
             c!.contact != null &&
-            int.tryParse(c.contact!.atSign![1]) != null) {
+            !RegExp(r'^[a-z]+$').hasMatch(
+              c.contact!.atSign![1].toLowerCase(),
+            )) {
           contactsForAlphabet.add(c);
         }
       }
       for (var c in _filteredList) {
         if (widget.showGroups &&
             c!.group != null &&
-            int.tryParse(c.group!.displayName![0]) != null) {
+            !RegExp(r'^[a-z]+$').hasMatch(
+              c.group!.displayName![0].toLowerCase(),
+            )) {
           contactsForAlphabet.add(c);
         }
       }
