@@ -12,21 +12,25 @@ class CustomTextStyles {
   TextStyle orange16 = TextStyle(
     color: AllColors().ORANGE,
     fontSize: 16.toFont,
+    fontWeight: FontWeight.normal,
   );
 
   TextStyle orange12 = TextStyle(
     color: AllColors().ORANGE,
     fontSize: 12.toFont,
+    fontWeight: FontWeight.normal,
   );
 
   TextStyle orange14 = TextStyle(
     color: AllColors().ORANGE,
     fontSize: 14.toFont,
+    fontWeight: FontWeight.normal,
   );
 
   TextStyle orange18 = TextStyle(
     color: AllColors().ORANGE,
     fontSize: 18.toFont,
+    fontWeight: FontWeight.normal,
   );
 
   TextStyle primaryBold18 = TextStyle(
@@ -41,9 +45,17 @@ class CustomTextStyles {
     fontWeight: FontWeight.w500,
   );
 
-  TextStyle grey16 = TextStyle(color: AllColors().GREY, fontSize: 16.toFont);
+  TextStyle grey16 = TextStyle(
+    color: AllColors().GREY,
+    fontSize: 16.toFont,
+    fontWeight: FontWeight.normal,
+  );
 
-  TextStyle grey14 = TextStyle(color: AllColors().GREY, fontSize: 14.toFont);
+  TextStyle grey14 = TextStyle(
+    color: AllColors().GREY,
+    fontSize: 14.toFont,
+    fontWeight: FontWeight.normal,
+  );
 
   //desktop
   static TextStyle desktopPrimaryRegular14 = const TextStyle(

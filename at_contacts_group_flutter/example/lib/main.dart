@@ -120,7 +120,10 @@ class _MyAppState extends State<MyApp> {
                           FlutterKeychain.remove(key: '@atsign');
                         },
                         child: const Text('Clear paired atsigns',
-                            style: TextStyle(color: Colors.black)))),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            )))),
               ],
             ),
           )),

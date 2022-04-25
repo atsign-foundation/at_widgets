@@ -57,6 +57,7 @@ class _DesktopGroupBottomSheetState extends State<DesktopGroupBottomSheet> {
                     'Done',
                     style: TextStyle(
                       color: Colors.white,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                 ),

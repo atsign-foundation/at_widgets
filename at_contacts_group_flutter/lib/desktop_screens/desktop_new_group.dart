@@ -252,14 +252,17 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
                                       readOnly: false,
                                       style: TextStyle(
                                         fontSize: 15.toFont,
+                                        fontWeight: FontWeight.normal,
                                       ),
                                       decoration: InputDecoration(
                                         hintText: 'Enter Group Name',
                                         enabledBorder:
                                             const UnderlineInputBorder(),
                                         border: const UnderlineInputBorder(),
-                                        hintStyle:
-                                            TextStyle(fontSize: 15.toFont),
+                                        hintStyle: TextStyle(
+                                          fontSize: 15.toFont,
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                       ),
                                       onTap: () {},
                                       onChanged: (val) {},

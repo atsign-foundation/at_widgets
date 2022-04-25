@@ -130,7 +130,11 @@ class _DesktopEmptyGroupState extends State<DesktopEmptyGroup> {
           )),
           child: const Text(
             'Create',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.normal,
+            ),
           ),
         ),
       ],

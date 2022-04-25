@@ -72,11 +72,17 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   // validator: Validators.validateAdduser,
                   decoration: InputDecoration(
                     prefixText: '@',
-                    prefixStyle:
-                        TextStyle(color: Colors.grey, fontSize: 15.toFont),
+                    prefixStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15.toFont,
+                      fontWeight: FontWeight.normal,
+                    ),
                     hintText: '\tEnter @Sign',
                   ),
-                  style: TextStyle(fontSize: 15.toFont),
+                  style: TextStyle(
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
                 SizedBox(
                   height: 10.toHeight,
@@ -88,7 +94,10 @@ class _AddContactDialogState extends State<AddContactDialog> {
                           Expanded(
                             child: Text(
                               _contactService.getAtSignError,
-                              style: const TextStyle(color: Colors.red),
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.normal,
+                              ),
                             ),
                           )
                         ],

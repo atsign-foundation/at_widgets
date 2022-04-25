@@ -172,6 +172,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                       hintStyle: TextStyle(
                                         fontSize: 16,
                                         color: ColorConstants.greyText,
+                                        fontWeight: FontWeight.normal,
                                       ),
                                       filled: true,
                                       // fillColor: ColorConstants.scaffoldColor,
@@ -181,6 +182,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                     style: const TextStyle(
                                       fontSize: 16,
                                       color: ColorConstants.fontPrimary,
+                                      fontWeight: FontWeight.normal,
                                     ),
                                     onChanged: (s) {},
                                   ),
@@ -285,6 +287,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                           style: TextStyle(
                                             color: ColorConstants.fontPrimary,
                                             fontSize: 16.toFont,
+                                            fontWeight: FontWeight.normal,
                                           ),
                                           children: [
                                             WidgetSpan(

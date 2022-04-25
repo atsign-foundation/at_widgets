@@ -224,6 +224,7 @@ class _GroupViewState extends State<GroupView> {
                                           style: TextStyle(
                                             color: AllColors().GREY,
                                             fontSize: 16.toFont,
+                                            fontWeight: FontWeight.normal,
                                           ),
                                         ),
                                       ),

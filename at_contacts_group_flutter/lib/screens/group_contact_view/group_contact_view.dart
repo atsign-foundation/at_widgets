@@ -169,7 +169,10 @@ class _GroupContactViewState extends State<GroupContactView> {
                           },
                           child: Text('Favourites',
                               style: contactTabs == ContactTabs.FAVS
-                                  ? const TextStyle(color: Colors.white)
+                                  ? const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.normal,
+                                    )
                                   : null),
                         ),
                       ),
@@ -190,7 +193,10 @@ class _GroupContactViewState extends State<GroupContactView> {
                           },
                           child: Text('All Members',
                               style: contactTabs == ContactTabs.ALL
-                                  ? const TextStyle(color: Colors.white)
+                                  ? const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.normal,
+                                    )
                                   : null),
                         ),
                       ),
@@ -269,7 +275,10 @@ class _GroupContactViewState extends State<GroupContactView> {
                             return Center(
                               child: Text(
                                 TextStrings().noContactsFound,
-                                style: TextStyle(fontSize: 15.toFont),
+                                style: TextStyle(
+                                  fontSize: 15.toFont,
+                                  fontWeight: FontWeight.normal,
+                                ),
                               ),
                             );
                           }
