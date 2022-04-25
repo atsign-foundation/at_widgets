@@ -103,6 +103,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                         hintStyle: const TextStyle(
                           fontSize: 16,
                           color: ColorConstants.greyText,
+                          fontWeight: FontWeight.normal,
                         ),
                         filled: true,
                         fillColor: ColorConstants.scaffoldColor,
@@ -120,6 +121,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                       style: const TextStyle(
                         fontSize: 16,
                         color: ColorConstants.fontPrimary,
+                        fontWeight: FontWeight.normal,
                       ),
                       onChanged: (s) {
                         setState(() {

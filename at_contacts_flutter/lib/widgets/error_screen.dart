@@ -20,7 +20,10 @@ class ErrorScreen extends StatelessWidget {
         children: [
           Text(msg,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20)),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.normal,
+              )),
           const SizedBox(height: 10),
           onPressed != null
               ? CustomButton(

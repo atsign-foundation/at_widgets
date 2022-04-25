@@ -118,6 +118,7 @@ class _CustomListTileState extends State<CustomListTile> {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14.toFont,
+                fontWeight: FontWeight.normal,
               ),
             ),
             subtitle: Text(
@@ -128,6 +129,7 @@ class _CustomListTileState extends State<CustomListTile> {
               style: TextStyle(
                 color: ColorConstants.fadedText,
                 fontSize: 14.toFont,
+                fontWeight: FontWeight.normal,
               ),
             ),
             leading: Container(
