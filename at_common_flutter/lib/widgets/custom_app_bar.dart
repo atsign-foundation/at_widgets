@@ -143,9 +143,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       TextStrings().buttonClose,
                       style: backTextStyle ??
                           TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'HelveticaNeu',
-                              fontSize: 22.toFont),
+                            color: Colors.black,
+                            fontFamily: 'HelveticaNeu',
+                            fontSize: 22.toFont,
+                            fontWeight: FontWeight.normal,
+                          ),
                     ),
                     onTap: () {
                       Navigator.pop(context);

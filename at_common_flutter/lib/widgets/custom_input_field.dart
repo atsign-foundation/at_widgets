@@ -67,9 +67,15 @@ class CustomInputField extends StatelessWidget {
     this.isReadOnly = false,
     this.prefix,
     this.inputFieldColor,
-    this.style = const TextStyle(fontSize: 15),
-    this.hintStyle =
-        const TextStyle(color: ColorConstants.darkGrey, fontSize: 15),
+    this.style = const TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.normal,
+    ),
+    this.hintStyle = const TextStyle(
+      color: ColorConstants.darkGrey,
+      fontSize: 15,
+      fontWeight: FontWeight.normal,
+    ),
   });
 
   @override
