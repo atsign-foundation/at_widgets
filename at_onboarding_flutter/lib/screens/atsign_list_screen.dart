@@ -147,7 +147,10 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                   onPressed: () => Navigator.pop(_),
                   child: Text(
                     Strings.cancelButton,
-                    style: TextStyle(fontSize: 12.toFont),
+                    style: TextStyle(
+                      fontSize: 12.toFont,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ),
                 TextButton(

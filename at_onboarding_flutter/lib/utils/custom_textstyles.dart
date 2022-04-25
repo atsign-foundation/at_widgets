@@ -4,14 +4,26 @@ import 'package:at_onboarding_flutter/utils/color_constants.dart';
 
 class CustomTextStyles {
   //regular textstyles
-  static TextStyle fontR20light =
-      TextStyle(fontSize: 20.0.toFont, color: ColorConstants.light);
-  static TextStyle fontR18light =
-      TextStyle(fontSize: 18.toFont, color: ColorConstants.light);
-  static TextStyle fontR16light =
-      TextStyle(fontSize: 16.toFont, color: ColorConstants.light);
-  static TextStyle fontR14light =
-      TextStyle(fontSize: 14.toFont, color: ColorConstants.light);
+  static TextStyle fontR20light = TextStyle(
+    fontSize: 20.0.toFont,
+    color: ColorConstants.light,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR18light = TextStyle(
+    fontSize: 18.toFont,
+    color: ColorConstants.light,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR16light = TextStyle(
+    fontSize: 16.toFont,
+    color: ColorConstants.light,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR14light = TextStyle(
+    fontSize: 14.toFont,
+    color: ColorConstants.light,
+    fontWeight: FontWeight.normal,
+  );
 
   //medium textstyles
   static TextStyle fontM20light = TextStyle(
@@ -50,14 +62,26 @@ class CustomTextStyles {
       fontWeight: FontWeight.bold);
 
   //regular textstyles
-  static TextStyle fontR20dark =
-      TextStyle(fontSize: 20.0.toFont, color: ColorConstants.dark);
-  static TextStyle fontR18dark =
-      TextStyle(fontSize: 18.toFont, color: ColorConstants.dark);
-  static TextStyle fontR16dark =
-      TextStyle(fontSize: 16.toFont, color: ColorConstants.dark);
-  static TextStyle fontR14dark =
-      TextStyle(fontSize: 14.toFont, color: ColorConstants.dark);
+  static TextStyle fontR20dark = TextStyle(
+    fontSize: 20.0.toFont,
+    color: ColorConstants.dark,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR18dark = TextStyle(
+    fontSize: 18.toFont,
+    color: ColorConstants.dark,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR16dark = TextStyle(
+    fontSize: 16.toFont,
+    color: ColorConstants.dark,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR14dark = TextStyle(
+    fontSize: 14.toFont,
+    color: ColorConstants.dark,
+    fontWeight: FontWeight.normal,
+  );
 
   //medium textstyles
   static TextStyle fontM20dark = TextStyle(
@@ -96,16 +120,31 @@ class CustomTextStyles {
       fontWeight: FontWeight.bold);
 
   //regular textstyles
-  static TextStyle fontR20primary =
-      TextStyle(fontSize: 20.0.toFont, color: ColorConstants.primary);
-  static TextStyle fontR18primary =
-      TextStyle(fontSize: 18.toFont, color: ColorConstants.primary);
-  static TextStyle fontR16primary =
-      TextStyle(fontSize: 16.toFont, color: ColorConstants.primary);
-  static TextStyle fontR14primary =
-      TextStyle(fontSize: 14.toFont, color: ColorConstants.primary);
-  static TextStyle fontR12primary =
-      TextStyle(fontSize: 12.toFont, color: ColorConstants.primary);
+  static TextStyle fontR20primary = TextStyle(
+    fontSize: 20.0.toFont,
+    color: ColorConstants.primary,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR18primary = TextStyle(
+    fontSize: 18.toFont,
+    color: ColorConstants.primary,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR16primary = TextStyle(
+    fontSize: 16.toFont,
+    color: ColorConstants.primary,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR14primary = TextStyle(
+    fontSize: 14.toFont,
+    color: ColorConstants.primary,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR12primary = TextStyle(
+    fontSize: 12.toFont,
+    color: ColorConstants.primary,
+    fontWeight: FontWeight.normal,
+  );
 
   //medium textstyles
   static TextStyle fontM20primary = TextStyle(
@@ -144,16 +183,31 @@ class CustomTextStyles {
       fontWeight: FontWeight.bold);
 
   //regular textstyles
-  static TextStyle fontR20secondary =
-      TextStyle(fontSize: 20.0.toFont, color: ColorConstants.secondary);
-  static TextStyle fontR18secondary =
-      TextStyle(fontSize: 18.toFont, color: ColorConstants.secondary);
-  static TextStyle fontR16secondary =
-      TextStyle(fontSize: 16.toFont, color: ColorConstants.secondary);
-  static TextStyle fontR14secondary =
-      TextStyle(fontSize: 14.toFont, color: ColorConstants.secondary);
-  static TextStyle fontR12secondary =
-      TextStyle(fontSize: 12.toFont, color: ColorConstants.secondary);
+  static TextStyle fontR20secondary = TextStyle(
+    fontSize: 20.0.toFont,
+    color: ColorConstants.secondary,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR18secondary = TextStyle(
+    fontSize: 18.toFont,
+    color: ColorConstants.secondary,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR16secondary = TextStyle(
+    fontSize: 16.toFont,
+    color: ColorConstants.secondary,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR14secondary = TextStyle(
+    fontSize: 14.toFont,
+    color: ColorConstants.secondary,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle fontR12secondary = TextStyle(
+    fontSize: 12.toFont,
+    color: ColorConstants.secondary,
+    fontWeight: FontWeight.normal,
+  );
 
   //medium textstyles
   static TextStyle fontM20secondary = TextStyle(
@@ -197,11 +251,26 @@ class CustomTextStyles {
     }
 
     //regular textstyles
-    fontR20light =
-        TextStyle(fontSize: 20.0.toFont, color: ColorConstants.light);
-    fontR18light = TextStyle(fontSize: 18.toFont, color: ColorConstants.light);
-    fontR16light = TextStyle(fontSize: 16.toFont, color: ColorConstants.light);
-    fontR14light = TextStyle(fontSize: 14.toFont, color: ColorConstants.light);
+    fontR20light = TextStyle(
+      fontSize: 20.0.toFont,
+      color: ColorConstants.light,
+      fontWeight: FontWeight.normal,
+    );
+    fontR18light = TextStyle(
+      fontSize: 18.toFont,
+      color: ColorConstants.light,
+      fontWeight: FontWeight.normal,
+    );
+    fontR16light = TextStyle(
+      fontSize: 16.toFont,
+      color: ColorConstants.light,
+      fontWeight: FontWeight.normal,
+    );
+    fontR14light = TextStyle(
+      fontSize: 14.toFont,
+      color: ColorConstants.light,
+      fontWeight: FontWeight.normal,
+    );
 
     //medium textstyles
     fontM20light = TextStyle(
@@ -240,10 +309,26 @@ class CustomTextStyles {
         fontWeight: FontWeight.bold);
 
     //regular textstyles
-    fontR20dark = TextStyle(fontSize: 20.0.toFont, color: ColorConstants.dark);
-    fontR18dark = TextStyle(fontSize: 18.toFont, color: ColorConstants.dark);
-    fontR16dark = TextStyle(fontSize: 16.toFont, color: ColorConstants.dark);
-    fontR14dark = TextStyle(fontSize: 14.toFont, color: ColorConstants.dark);
+    fontR20dark = TextStyle(
+      fontSize: 20.0.toFont,
+      color: ColorConstants.dark,
+      fontWeight: FontWeight.normal,
+    );
+    fontR18dark = TextStyle(
+      fontSize: 18.toFont,
+      color: ColorConstants.dark,
+      fontWeight: FontWeight.normal,
+    );
+    fontR16dark = TextStyle(
+      fontSize: 16.toFont,
+      color: ColorConstants.dark,
+      fontWeight: FontWeight.normal,
+    );
+    fontR14dark = TextStyle(
+      fontSize: 14.toFont,
+      color: ColorConstants.dark,
+      fontWeight: FontWeight.normal,
+    );
 
     //medium textstyles
     fontM20dark = TextStyle(
@@ -282,14 +367,26 @@ class CustomTextStyles {
         fontWeight: FontWeight.bold);
 
     //regular textstyles
-    fontR20primary =
-        TextStyle(fontSize: 20.0.toFont, color: ColorConstants.primary);
-    fontR18primary =
-        TextStyle(fontSize: 18.toFont, color: ColorConstants.primary);
-    fontR16primary =
-        TextStyle(fontSize: 16.toFont, color: ColorConstants.primary);
-    fontR14primary =
-        TextStyle(fontSize: 14.toFont, color: ColorConstants.primary);
+    fontR20primary = TextStyle(
+      fontSize: 20.0.toFont,
+      color: ColorConstants.primary,
+      fontWeight: FontWeight.normal,
+    );
+    fontR18primary = TextStyle(
+      fontSize: 18.toFont,
+      color: ColorConstants.primary,
+      fontWeight: FontWeight.normal,
+    );
+    fontR16primary = TextStyle(
+      fontSize: 16.toFont,
+      color: ColorConstants.primary,
+      fontWeight: FontWeight.normal,
+    );
+    fontR14primary = TextStyle(
+      fontSize: 14.toFont,
+      color: ColorConstants.primary,
+      fontWeight: FontWeight.normal,
+    );
 
     //medium textstyles
     fontM20primary = TextStyle(
@@ -328,14 +425,26 @@ class CustomTextStyles {
         fontWeight: FontWeight.bold);
 
     //regular textstyles
-    fontR20secondary =
-        TextStyle(fontSize: 20.0.toFont, color: ColorConstants.secondary);
-    fontR18secondary =
-        TextStyle(fontSize: 18.toFont, color: ColorConstants.secondary);
-    fontR16secondary =
-        TextStyle(fontSize: 16.toFont, color: ColorConstants.secondary);
-    fontR14secondary =
-        TextStyle(fontSize: 14.toFont, color: ColorConstants.secondary);
+    fontR20secondary = TextStyle(
+      fontSize: 20.0.toFont,
+      color: ColorConstants.secondary,
+      fontWeight: FontWeight.normal,
+    );
+    fontR18secondary = TextStyle(
+      fontSize: 18.toFont,
+      color: ColorConstants.secondary,
+      fontWeight: FontWeight.normal,
+    );
+    fontR16secondary = TextStyle(
+      fontSize: 16.toFont,
+      color: ColorConstants.secondary,
+      fontWeight: FontWeight.normal,
+    );
+    fontR14secondary = TextStyle(
+      fontSize: 14.toFont,
+      color: ColorConstants.secondary,
+      fontWeight: FontWeight.normal,
+    );
 
     //medium textstyles
     fontM20secondary = TextStyle(

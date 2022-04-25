@@ -45,6 +45,7 @@ class _CustomResetButtonState extends State<CustomResetButton> {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.grey[600],
+              fontWeight: FontWeight.normal,
             ),
             //style: CustomTextStyles.fontBold16light,
           ),
@@ -75,7 +76,10 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                   children: const <Widget>[
                     Text(Strings.resetDescription,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 15)),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal,
+                        )),
                     SizedBox(
                       height: 10,
                     ),
@@ -87,7 +91,10 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                 content: atsignsList == null
                     ? Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                         const Text(Strings.noAtsignToReset,
-                            style: TextStyle(fontSize: 15)),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
+                            )),
                         Align(
                           alignment: Alignment.bottomRight,
                           child: TextButton(
@@ -96,9 +103,10 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                               },
                               child: const Text(AppConstants.closeButton,
                                   style: TextStyle(
-                                      fontSize: 15,
-                                      color:
-                                          Color.fromARGB(255, 240, 94, 62)))),
+                                    fontSize: 15,
+                                    color: Color.fromARGB(255, 240, 94, 62),
+                                    fontWeight: FontWeight.normal,
+                                  ))),
                         )
                       ])
                     : SingleChildScrollView(
@@ -148,7 +156,10 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                             if (isSelectAtsign)
                               const Text(Strings.resetErrorText,
                                   style: TextStyle(
-                                      color: Colors.red, fontSize: 14)),
+                                    color: Colors.red,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  )),
                             const SizedBox(
                               height: 10,
                             ),
@@ -179,9 +190,10 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                                 },
                                 child: const Text(AppConstants.removeButton,
                                     style: TextStyle(
-                                        fontSize: 15,
-                                        color:
-                                            Color.fromARGB(255, 240, 94, 62))),
+                                      fontSize: 15,
+                                      color: Color.fromARGB(255, 240, 94, 62),
+                                      fontWeight: FontWeight.normal,
+                                    )),
                               ),
                               const Spacer(),
                               TextButton(
@@ -190,7 +202,10 @@ class _CustomResetButtonState extends State<CustomResetButton> {
                                   },
                                   child: const Text(AppConstants.cancelButton,
                                       style: TextStyle(
-                                          fontSize: 15, color: Colors.black)))
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                      )))
                             ])
                           ],
                         ),

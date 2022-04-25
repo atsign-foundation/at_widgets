@@ -171,16 +171,34 @@ class _CustomDialogState extends State<CustomDialog> {
                                         Text(
                                           'Scan your QR!',
                                           style: TextStyle(
-                                              color: ColorConstants.appColor,
-                                              fontSize: 16.toFont),
+                                            color: ColorConstants.appColor,
+                                            fontSize: 16.toFont,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
                                         SizedBox(height: 20.toHeight),
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width - 128 - 2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
-                                          height: MediaQuery.of(context).size.width - 128 - 2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              128 -
+                                              2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              128 -
+                                              2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
                                           child: QrReaderView(
-                                            width: MediaQuery.of(context).size.width - 128 - 2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
-                                            height: MediaQuery.of(context).size.width - 128 - 2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                128 -
+                                                2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                128 -
+                                                2 * 4.0.toFont, //Dialog have insetPadding = 40, contentPadding = 24
                                             callback: (QrReaderViewController
                                                 controller) {
                                               _controller = controller;
@@ -226,12 +244,14 @@ class _CustomDialogState extends State<CustomDialog> {
                                               child: Text(
                                                 'Cancel',
                                                 style: TextStyle(
-                                                    color: Theme.of(context)
-                                                                .brightness ==
-                                                            Brightness.light
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                    fontSize: 15.toFont),
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.light
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                  fontSize: 15.toFont,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
                                               ),
                                             ))
                                       ]),
@@ -246,8 +266,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                         Text(
                                           'Setting up your account',
                                           style: TextStyle(
-                                              color: ColorConstants.appColor,
-                                              fontSize: 16.toFont),
+                                            color: ColorConstants.appColor,
+                                            fontSize: 16.toFont,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
                                         SizedBox(height: 15.toHeight),
                                         Row(
@@ -404,15 +426,17 @@ class _CustomDialogState extends State<CustomDialog> {
                                               fillColor: Colors.blueAccent,
                                               errorStyle: TextStyle(
                                                 fontSize: 12.toFont,
+                                                fontWeight: FontWeight.normal,
                                               ),
                                               hintText: !pair
                                                   ? Strings.atsignHintText
                                                   : '',
                                               prefixText: !pair ? '@' : '',
                                               prefixStyle: TextStyle(
-                                                  color:
-                                                      ColorConstants.appColor,
-                                                  fontSize: 15.toFont),
+                                                color: ColorConstants.appColor,
+                                                fontSize: 15.toFont,
+                                                fontWeight: FontWeight.normal,
+                                              ),
                                               border: OutlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color:
@@ -476,8 +500,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                         child: Text(
                                           Strings.cancelButton,
                                           style: TextStyle(
-                                              color: ColorConstants.appColor,
-                                              fontSize: 12.toFont),
+                                            color: ColorConstants.appColor,
+                                            fontSize: 12.toFont,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
                                       ),
                                       SizedBox(width: 15.toWidth),
@@ -499,8 +525,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                         child: Text(
                                           Strings.submitButton,
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12.toFont),
+                                            color: Colors.white,
+                                            fontSize: 12.toFont,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -550,12 +578,14 @@ class _CustomDialogState extends State<CustomDialog> {
                                         child: Text(
                                           'Generate Free @sign',
                                           style: TextStyle(
-                                              color: Theme.of(context)
-                                                          .brightness ==
-                                                      Brightness.light
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              fontSize: 15.toFont),
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.light
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                            fontSize: 15.toFont,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
                                       )),
                                   SizedBox(height: 20.toHeight),
@@ -606,12 +636,15 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 child: Text(
                                                   'Scan QR code',
                                                   style: TextStyle(
-                                                      color: Theme.of(context)
-                                                                  .brightness ==
-                                                              Brightness.light
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                      fontSize: 15.toFont),
+                                                    color: Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.light
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                    fontSize: 15.toFont,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
                                                 ),
                                               ))
                                           : SizedBox(
@@ -637,8 +670,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 child: Text(
                                                   'Upload QR code',
                                                   style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15.toFont),
+                                                    color: Colors.white,
+                                                    fontSize: 15.toFont,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
                                                 ),
                                               )),
                                 ],
@@ -680,9 +716,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                           child: Text(
                                                         'Refresh',
                                                         style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize:
-                                                                15.toFont),
+                                                          color: Colors.white,
+                                                          fontSize: 15.toFont,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
                                                       )),
                                                       const Icon(
                                                         Icons.refresh,
@@ -744,8 +782,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                         child: Text(
                                                       'Send Code',
                                                       style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15.toFont),
+                                                        color: Colors.white,
+                                                        fontSize: 15.toFont,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
                                                     )),
                                                   )),
                                               SizedBox(
@@ -768,8 +809,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                       child: Text(
                                                         'Back',
                                                         style: TextStyle(
-                                                            color: Colors
-                                                                .grey[700]),
+                                                          color:
+                                                              Colors.grey[700],
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
                                                       )))
                                             ])
                                       : Column(children: <Widget>[
@@ -837,8 +881,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                     child: Text(
                                                   'Verify & Login',
                                                   style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15.toFont),
+                                                    color: Colors.white,
+                                                    fontSize: 15.toFont,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
                                                 )),
                                               )),
                                           SizedBox(height: 10.toHeight),
@@ -866,9 +913,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                               child: Text(
                                                 'Resend Code',
                                                 style: TextStyle(
-                                                    color:
-                                                        ColorConstants.appColor,
-                                                    fontSize: 15.toFont),
+                                                  color:
+                                                      ColorConstants.appColor,
+                                                  fontSize: 15.toFont,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
                                               )),
                                           SizedBox(height: 10.toHeight),
                                           if (!widget.isQR)
@@ -883,8 +932,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 child: Text(
                                                   'Wrong email?',
                                                   style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 15.toFont),
+                                                    color: Colors.grey,
+                                                    fontSize: 15.toFont,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
                                                 )),
                                           if (widget.isQR)
                                             TextButton(
@@ -895,8 +947,11 @@ class _CustomDialogState extends State<CustomDialog> {
                                                 child: Text(
                                                   'Back',
                                                   style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 15.toFont),
+                                                    color: Colors.grey,
+                                                    fontSize: 15.toFont,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
                                                 ))
                                         ]),
                                   if (!pair) ...<Widget>[
@@ -921,8 +976,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                               child: Text(
                                             'Pair',
                                             style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15.toFont),
+                                              color: Colors.white,
+                                              fontSize: 15.toFont,
+                                              fontWeight: FontWeight.normal,
+                                            ),
                                           )),
                                         )),
                                     const SizedBox(height: 10),
@@ -936,8 +993,10 @@ class _CustomDialogState extends State<CustomDialog> {
                                             child: Text(
                                               'Back',
                                               style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 12.toFont),
+                                                color: Colors.grey,
+                                                fontSize: 12.toFont,
+                                                fontWeight: FontWeight.normal,
+                                              ),
                                             )))
                                   ]
                                 ]
@@ -955,8 +1014,10 @@ class _CustomDialogState extends State<CustomDialog> {
                             child: Text(
                               Strings.closeTitle,
                               style: TextStyle(
-                                  color: ColorConstants.appColor,
-                                  fontSize: 14.toFont),
+                                color: ColorConstants.appColor,
+                                fontSize: 14.toFont,
+                                fontWeight: FontWeight.normal,
+                              ),
                             ),
                           ),
                         ]
@@ -1240,19 +1301,23 @@ class _CustomDialogState extends State<CustomDialog> {
                 children: <InlineSpan>[
                   TextSpan(
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16.toFont,
-                        letterSpacing: 0.5),
+                      color: Colors.black,
+                      fontSize: 16.toFont,
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.normal,
+                    ),
                     text:
                         'Oops! You already have the maximum number of free @signs. Please login to ',
                   ),
                   TextSpan(
                       text: 'https://my.atsign.com',
                       style: TextStyle(
-                          fontSize: 16.toFont,
-                          color: ColorConstants.appColor,
-                          letterSpacing: 0.5,
-                          decoration: TextDecoration.underline),
+                        fontSize: 16.toFont,
+                        color: ColorConstants.appColor,
+                        letterSpacing: 0.5,
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.normal,
+                      ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
                           String url = 'https://my.atsign.com';
@@ -1263,9 +1328,11 @@ class _CustomDialogState extends State<CustomDialog> {
                   TextSpan(
                     text: '  to select one of your existing @signs.',
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16.toFont,
-                        letterSpacing: 0.5),
+                      color: Colors.black,
+                      fontSize: 16.toFont,
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ],
               ),
@@ -1277,7 +1344,10 @@ class _CustomDialogState extends State<CustomDialog> {
                   },
                   child: Text(
                     'Close',
-                    style: TextStyle(color: ColorConstants.appColor),
+                    style: TextStyle(
+                      color: ColorConstants.appColor,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ))
             ],
           );
@@ -1345,7 +1415,10 @@ class _CustomDialogState extends State<CustomDialog> {
                 }),
           TextSpan(
             text: text3,
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+            ),
           ),
         ],
       ),
