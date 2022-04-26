@@ -23,6 +23,7 @@ class ContactSearchField extends StatelessWidget {
           hintStyle: TextStyle(
             fontSize: 16.toFont,
             color: ColorConstants.greyText,
+            fontWeight: FontWeight.normal,
           ),
           filled: true,
           fillColor: ColorConstants.inputFieldColor,
@@ -36,6 +37,7 @@ class ContactSearchField extends StatelessWidget {
         style: TextStyle(
           fontSize: 16.toFont,
           color: ColorConstants.fontPrimary,
+          fontWeight: FontWeight.normal,
         ),
       ),
     );

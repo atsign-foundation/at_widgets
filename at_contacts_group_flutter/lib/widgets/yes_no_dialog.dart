@@ -29,13 +29,19 @@ shownConfirmationDialog(BuildContext context, String title, Function onYesTap) {
                             onYesTap();
                           },
                           child: Text('Yes',
-                              style: TextStyle(fontSize: 16.toFont))),
+                              style: TextStyle(
+                                fontSize: 16.toFont,
+                                fontWeight: FontWeight.normal,
+                              ))),
                       TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
                           child: Text('Cancel',
-                              style: TextStyle(fontSize: 16.toFont)))
+                              style: TextStyle(
+                                fontSize: 16.toFont,
+                                fontWeight: FontWeight.normal,
+                              )))
                     ],
                   )
                 ],

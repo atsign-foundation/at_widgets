@@ -42,7 +42,10 @@ class _SecondScreenState extends State<SecondScreen> {
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
                 'Welcome $activeAtSign!',
-                style: const TextStyle(fontSize: 20),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
             ),
             ElevatedButton(

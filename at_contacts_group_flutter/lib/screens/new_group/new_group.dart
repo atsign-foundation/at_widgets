@@ -176,7 +176,11 @@ class _NewGroupState extends State<NewGroup> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Group name', style: TextStyle(fontSize: 18.toFont)),
+                      Text('Group name',
+                          style: TextStyle(
+                            fontSize: 18.toFont,
+                            fontWeight: FontWeight.normal,
+                          )),
                       const SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.only(right: 15.0),
@@ -196,14 +200,17 @@ class _NewGroupState extends State<NewGroup> {
                                   focusNode: textFieldFocus,
                                   style: TextStyle(
                                     fontSize: 15.toFont,
+                                    fontWeight: FontWeight.normal,
                                   ),
                                   decoration: InputDecoration(
                                     // hintText: hintText,
                                     enabledBorder: InputBorder.none,
                                     border: InputBorder.none,
                                     hintStyle: TextStyle(
-                                        color: AllColors().INPUT_FIELD_COLOR,
-                                        fontSize: 15.toFont),
+                                      color: AllColors().INPUT_FIELD_COLOR,
+                                      fontSize: 15.toFont,
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                   ),
                                   onTap: () {
                                     if (showEmojiPicker) {
@@ -295,8 +302,11 @@ class _NewGroupState extends State<NewGroup> {
                           showRecentsTab: true,
                           recentsLimit: 28,
                           noRecentsText: 'No Recents',
-                          noRecentsStyle:
-                              TextStyle(fontSize: 20, color: Colors.black26),
+                          noRecentsStyle: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black26,
+                            fontWeight: FontWeight.normal,
+                          ),
                           categoryIcons: CategoryIcons(),
                           buttonMode: ButtonMode.MATERIAL),
                       onEmojiSelected: (category, emoji) {

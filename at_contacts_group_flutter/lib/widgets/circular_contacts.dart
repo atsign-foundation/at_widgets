@@ -225,7 +225,8 @@ class _CircularContactsState extends State<CircularContacts> {
                                 nonAsset: true,
                               )
                             : ContactInitial(
-                                initials: (widget.groupContact?.contact?.atSign ??
+                                initials:
+                                    (widget.groupContact?.contact?.atSign ??
                                         widget.groupContact?.group?.groupName)!,
                               ),
                         // child:
@@ -234,34 +235,35 @@ class _CircularContactsState extends State<CircularContacts> {
                         right: 0,
                         bottom: 0,
                         child: GestureDetector(
-                          onTap: (widget.asSelectionTile == false &&
-                                  widget.onCrossPressed != null)
-                              ? widget.onCrossPressed as void Function()?
-                              : selectRemoveContact(),
-                          child:(widget.asSelectionTile)? 
-                          Container(
-                            height: 15.toHeight,
-                            width: 15.toHeight,
-                            decoration: const BoxDecoration(
-                                color:Colors.black, shape: BoxShape.circle),
-                            child:Icon(
-                                    (isSelected) ? Icons.close : Icons.add,
-                                    size: 15.toHeight,
-                                    color: Colors.white,
-                                  )
-                          ):Container(
-                            height: 15.toHeight,
-                            width: 15.toHeight,
-                            decoration: const BoxDecoration(
-                                color:Colors.transparent, shape: BoxShape.circle),
-                            child: Image.asset(
+                            onTap: (widget.asSelectionTile == false &&
+                                    widget.onCrossPressed != null)
+                                ? widget.onCrossPressed as void Function()?
+                                : selectRemoveContact(),
+                            child: (widget.asSelectionTile)
+                                ? Container(
+                                    height: 15.toHeight,
+                                    width: 15.toHeight,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.black,
+                                        shape: BoxShape.circle),
+                                    child: Icon(
+                                      (isSelected) ? Icons.close : Icons.add,
+                                      size: 15.toHeight,
+                                      color: Colors.white,
+                                    ))
+                                : Container(
+                                    height: 15.toHeight,
+                                    width: 15.toHeight,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.transparent,
+                                        shape: BoxShape.circle),
+                                    child: Image.asset(
                                       AllImages().SEND,
                                       width: 20.toWidth,
                                       height: 18.toHeight,
                                       package: 'at_contacts_group_flutter',
                                     ),
-                          )
-                        ),
+                                  )),
                       ),
                     ],
                   ),
@@ -279,7 +281,10 @@ class _CircularContactsState extends State<CircularContacts> {
                                   ?.substring(0))!,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 15.toFont),
+                      style: TextStyle(
+                        fontSize: 15.toFont,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                   ),
                   SizedBox(height: 10.toHeight),
@@ -290,7 +295,10 @@ class _CircularContactsState extends State<CircularContacts> {
                           widget.groupContact?.group?.groupName)!,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 15.toFont),
+                      style: TextStyle(
+                        fontSize: 15.toFont,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                   )
                 ],

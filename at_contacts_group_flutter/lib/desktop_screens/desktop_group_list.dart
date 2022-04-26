@@ -124,6 +124,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                   'Add',
                   style: TextStyle(
                     color: Colors.white,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ),

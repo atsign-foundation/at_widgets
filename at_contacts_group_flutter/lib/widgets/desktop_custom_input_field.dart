@@ -54,13 +54,17 @@ class DesktopCustomInputField extends StatelessWidget {
                 readOnly: isReadOnly,
                 style: TextStyle(
                   fontSize: 15.toFont,
+                  fontWeight: FontWeight.normal,
                 ),
                 decoration: InputDecoration(
                   hintText: hintText,
                   enabledBorder: InputBorder.none,
                   border: InputBorder.none,
                   hintStyle: TextStyle(
-                      color: const Color(0xFFBFBFBF), fontSize: 15.toFont),
+                    color: const Color(0xFFBFBFBF),
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
                 onTap: onTap ?? () {},
                 onChanged: (val) {

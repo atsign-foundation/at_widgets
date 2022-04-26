@@ -80,10 +80,12 @@ class _GroupEditState extends State<GroupEdit> {
               child: Text(
                 'Cancel',
                 style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? AllColors().Black
-                        : AllColors().Black,
-                    fontSize: 14.toFont),
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? AllColors().Black
+                      : AllColors().Black,
+                  fontSize: 14.toFont,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
             ),
           ),
@@ -103,7 +105,10 @@ class _GroupEditState extends State<GroupEdit> {
                 )
               : Text('Done',
                   style: TextStyle(
-                      color: AllColors().ORANGE, fontSize: 15.toFont)),
+                    color: AllColors().ORANGE,
+                    fontSize: 15.toFont,
+                    fontWeight: FontWeight.normal,
+                  )),
         ),
         onTrailingIconPressed: () async {
           groupName = textController!.text;
@@ -205,14 +210,19 @@ class _GroupEditState extends State<GroupEdit> {
                                 child: TextField(
                                   readOnly: false,
                                   focusNode: textFieldFocus,
-                                  style: TextStyle(fontSize: 15.toFont),
+                                  style: TextStyle(
+                                    fontSize: 15.toFont,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                   decoration: InputDecoration(
                                     // hintText: hintText,
                                     enabledBorder: InputBorder.none,
                                     border: InputBorder.none,
                                     hintStyle: TextStyle(
-                                        color: AllColors().INPUT_FIELD_COLOR,
-                                        fontSize: 15.toFont),
+                                      color: AllColors().INPUT_FIELD_COLOR,
+                                      fontSize: 15.toFont,
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                   ),
                                   onTap: () {
                                     if (showEmojiPicker) {
@@ -264,7 +274,10 @@ class _GroupEditState extends State<GroupEdit> {
                                     recentsLimit: 28,
                                     noRecentsText: "No Recents",
                                     noRecentsStyle: TextStyle(
-                                        fontSize: 20, color: Colors.black26),
+                                      fontSize: 20,
+                                      color: Colors.black26,
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                     categoryIcons: CategoryIcons(),
                                     buttonMode: ButtonMode.MATERIAL),
                                 onEmojiSelected: (category, emoji) {

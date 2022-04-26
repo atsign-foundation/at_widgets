@@ -115,6 +115,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                                       style: TextStyle(
                                         fontSize: 16.toFont,
                                         color: ColorConstants.greyText,
+                                        fontWeight: FontWeight.normal,
                                       ),
                                     ),
                                   )
