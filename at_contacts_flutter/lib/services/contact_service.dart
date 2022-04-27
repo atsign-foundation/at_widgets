@@ -202,6 +202,30 @@ class ContactService {
     }
   }
 
+  /// assigns [isBlocking], [isMarkingFav] and [isDeleting]
+  /// for contact [c].
+  void compareContactListForUpdatedStateForOneContact(AtContact c) {
+    var index =
+        baseContactList.indexWhere((e) => e.contact!.atSign == c.atSign);
+    if (index > -1) {
+      baseContactList[index] = BaseContact(
+        c,
+        isBlocking: baseContactList[index].isBlocking,
+        isMarkingFav: baseContactList[index].isMarkingFav,
+        isDeleting: baseContactList[index].isDeleting,
+      );
+    } else {
+      baseContactList.add(
+        BaseContact(
+          c,
+          isBlocking: false,
+          isMarkingFav: false,
+          isDeleting: false,
+        ),
+      );
+    }
+  }
+
   /// blocks/unblocks [contact] based on boolean [blockAction]
   /// if [blockAction] is [true] , [atContact] will be blocked.
   Future<bool> blockUnblockContact(
@@ -297,11 +321,33 @@ class ContactService {
     try {
       var result = await atContactImpl.delete(atSign);
       print('delete result => $result');
-      fetchContacts();
+      _removeContact(atSign);
       return result;
     } catch (error) {
       print('error in delete atsign:$error');
       return false;
+    }
+  }
+
+  /// remove [atSign] from all lists
+  _removeContact(String atSign) {
+    try {
+      baseContactList.removeWhere((element) {
+        return compareAtSign(element.contact!.atSign!, atSign);
+      });
+      selectedContacts.removeWhere((element) {
+        return compareAtSign(element.atSign!, atSign);
+      });
+      contactList.removeWhere((element) {
+        return compareAtSign(element.atSign!, atSign);
+      });
+      allContactsList.removeWhere((element) {
+        return compareAtSign(element, atSign);
+      });
+
+      contactSink.add(baseContactList);
+    } catch (e) {
+      print('error in _removeContact => $e');
     }
   }
 
@@ -353,9 +399,13 @@ class ContactService {
         var result = await atContactImpl.add(contact).catchError((e) {
           print('error to add contact => $e');
         });
-        
+
         print(result);
-        fetchContacts();
+        allContactsList.add(contact.atSign!);
+        contactList.add(contact);
+
+        compareContactListForUpdatedStateForOneContact(contact);
+        contactSink.add(baseContactList);
         return true;
       } else {
         return false;
@@ -544,5 +594,17 @@ class ContactService {
     } else {
       contactSink.add(baseContactList);
     }
+  }
+
+  /// returns true if [atsign1] & [atsign2] are same
+  bool compareAtSign(String atsign1, String atsign2) {
+    if (atsign1[0] != '@') {
+      atsign1 = '@' + atsign1;
+    }
+    if (atsign2[0] != '@') {
+      atsign2 = '@' + atsign2;
+    }
+
+    return atsign1.toLowerCase() == atsign2.toLowerCase() ? true : false;
   }
 }

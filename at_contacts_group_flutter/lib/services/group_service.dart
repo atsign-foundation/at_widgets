@@ -1,5 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'dart:async';
@@ -330,6 +331,45 @@ class GroupService {
         await getAllGroupsDetails(addToGroupSink: !isDesktop);
         _allContactsStreamController.add(allContacts);
       }
+    } catch (e) {
+      _allContactsStreamController.add([]);
+    }
+  }
+
+  /// adds [atSign] to [allContacts]
+  appendNewContact(String atSign) {
+    try {
+      var _indexOfContact = ContactService().contactList.indexWhere((element) {
+        return ContactService().compareAtSign(element.atSign!, atSign);
+      });
+
+      if (_indexOfContact != -1) {
+        var _indexOfContactInGroup = allContacts.indexWhere((element) =>
+            element!.contact != null && element.contact!.atSign == atSign);
+
+        if (_indexOfContactInGroup == -1) {
+          allContacts.add(GroupContactsModel(
+              contact: ContactService().contactList[_indexOfContact],
+              contactType: ContactsType.CONTACT));
+        }
+      }
+      _allContactsStreamController.add(allContacts);
+    } catch (e) {
+      _allContactsStreamController.add([]);
+    }
+  }
+
+  /// removes [atSign] to [allContacts]
+  removeContact(String atSign) {
+    try {
+      allContacts.removeWhere((element) {
+        if (element!.contact == null) {
+          return false;
+        }
+        return ContactService().compareAtSign(element.contact!.atSign!, atSign);
+      });
+
+      _allContactsStreamController.add(allContacts);
     } catch (e) {
       _allContactsStreamController.add([]);
     }

@@ -560,8 +560,10 @@ class _GroupContactViewState extends State<GroupContactView> {
         ),
       ),
     );
-    await _contactService.deleteAtSign(atSign: contact.atSign!);
-    await _groupService.fetchGroupsAndContacts();
+    var _res = await _contactService.deleteAtSign(atSign: contact.atSign!);
+    if (_res) {
+      await _groupService.removeContact(contact.atSign!);
+    }
     setState(() {
       deletingContact = false;
       Navigator.pop(context);
