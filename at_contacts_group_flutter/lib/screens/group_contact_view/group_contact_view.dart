@@ -483,7 +483,9 @@ class _GroupContactViewState extends State<GroupContactView> {
                             title: const Text('Delete'),
                             onTap: () {
                               deleteAtSign(
-                                  contactsForAlphabet[alphabetIndex]!.contact!);
+                                contactsForAlphabet[alphabetIndex]!.contact!,
+                                closeBottomSheet: true,
+                              );
                             },
                             leading: const Icon(Icons.delete),
                           ),
@@ -492,7 +494,9 @@ class _GroupContactViewState extends State<GroupContactView> {
                             title: const Text('Block'),
                             onTap: () {
                               blockUnblockContact(
-                                  contactsForAlphabet[alphabetIndex]!.contact!);
+                                contactsForAlphabet[alphabetIndex]!.contact!,
+                                closeBottomSheet: true,
+                              );
                             },
                             leading: const Icon(Icons.block),
                           )
@@ -515,7 +519,8 @@ class _GroupContactViewState extends State<GroupContactView> {
     );
   }
 
-  blockUnblockContact(AtContact contact) async {
+  blockUnblockContact(AtContact contact,
+      {bool closeBottomSheet = false}) async {
     setState(() {
       blockingContact = true;
     });
@@ -533,16 +538,21 @@ class _GroupContactViewState extends State<GroupContactView> {
         ),
       ),
     );
-    await _contactService.blockUnblockContact(
+    var _res = await _contactService.blockUnblockContact(
         contact: contact, blockAction: true);
     await _groupService.fetchGroupsAndContacts();
     setState(() {
       blockingContact = true;
       Navigator.pop(context);
     });
+
+    if (_res && closeBottomSheet) {
+      /// to close bottomsheet
+      Navigator.pop(context);
+    }
   }
 
-  deleteAtSign(AtContact contact) async {
+  deleteAtSign(AtContact contact, {bool closeBottomSheet = false}) async {
     setState(() {
       deletingContact = true;
     });
@@ -568,6 +578,11 @@ class _GroupContactViewState extends State<GroupContactView> {
       deletingContact = false;
       Navigator.pop(context);
     });
+
+    if (_res && closeBottomSheet) {
+      /// to close bottomsheet
+      Navigator.pop(context);
+    }
   }
 
 // creates a list of contacts by merging atsigns and groups.
