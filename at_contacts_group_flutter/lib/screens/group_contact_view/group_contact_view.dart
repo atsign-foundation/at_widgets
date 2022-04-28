@@ -147,8 +147,8 @@ class _GroupContactViewState extends State<GroupContactView> {
       body: Container(
         padding: EdgeInsets.only(
             left: 16.toHeight, right: 16.toHeight, bottom: 16.toHeight),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        height: double.infinity,
+        child: ListView(
           children: [
             widget.isDesktop
                 ? Row(
@@ -246,109 +246,106 @@ class _GroupContactViewState extends State<GroupContactView> {
                 ],
               ),
             ),
-            Expanded(
-                child: StreamBuilder<List<GroupContactsModel?>>(
-                    stream: _groupService.allContactsStream,
-                    initialData: _groupService.allContacts,
-                    builder: (context, snapshot) {
-                      if ((snapshot.connectionState ==
-                          ConnectionState.waiting)) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        if ((snapshot.data == null || snapshot.data!.isEmpty)) {
-                          return Center(
-                            child: Text(TextStrings().noContacts),
-                          );
-                        } else {
-                          // filtering contacts and groups
-                          var _filteredList = <GroupContactsModel?>[];
-                          _filteredList =
-                              getAllContactList(snapshot.data ?? []);
+            StreamBuilder<List<GroupContactsModel?>>(
+                stream: _groupService.allContactsStream,
+                initialData: _groupService.allContacts,
+                builder: (context, snapshot) {
+                  if ((snapshot.connectionState == ConnectionState.waiting)) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    if ((snapshot.data == null || snapshot.data!.isEmpty)) {
+                      return Center(
+                        child: Text(TextStrings().noContacts),
+                      );
+                    } else {
+                      // filtering contacts and groups
+                      var _filteredList = <GroupContactsModel?>[];
+                      _filteredList = getAllContactList(snapshot.data ?? []);
 
-                          if (contactTabs == ContactTabs.FAVS) {
-                            _filteredList = filterFavContacts(_filteredList);
+                      if (contactTabs == ContactTabs.FAVS) {
+                        _filteredList = filterFavContacts(_filteredList);
+                      }
+
+                      if (_filteredList.isEmpty) {
+                        return Center(
+                          child: Text(
+                            TextStrings().noContactsFound,
+                            style: TextStyle(
+                              fontSize: 15.toFont,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        );
+                      }
+
+                      // renders contacts according to the initial alphabet
+                      return ListView.builder(
+                        padding: EdgeInsets.only(bottom: 80.toHeight),
+                        itemCount: 27,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, alphabetIndex) {
+                          var contactsForAlphabet = <GroupContactsModel?>[];
+                          var currentChar =
+                              String.fromCharCode(alphabetIndex + 65)
+                                  .toUpperCase();
+
+                          if (alphabetIndex == 26) {
+                            currentChar = 'Others';
                           }
+
+                          contactsForAlphabet = getContactsForAlphabets(
+                            _filteredList,
+                            currentChar,
+                            alphabetIndex,
+                          );
 
                           if (_filteredList.isEmpty) {
                             return Center(
-                              child: Text(
-                                TextStrings().noContactsFound,
-                                style: TextStyle(
-                                  fontSize: 15.toFont,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
+                              child: Text(TextStrings().noContactsFound),
                             );
                           }
 
-                          // renders contacts according to the initial alphabet
-                          return ListView.builder(
-                            padding: EdgeInsets.only(bottom: 80.toHeight),
-                            itemCount: 27,
-                            shrinkWrap: true,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (context, alphabetIndex) {
-                              var contactsForAlphabet = <GroupContactsModel?>[];
-                              var currentChar =
-                                  String.fromCharCode(alphabetIndex + 65)
-                                      .toUpperCase();
+                          if (contactsForAlphabet.isEmpty) {
+                            return Container();
+                          }
 
-                              if (alphabetIndex == 26) {
-                                currentChar = 'Others';
-                              }
-
-                              contactsForAlphabet = getContactsForAlphabets(
-                                _filteredList,
-                                currentChar,
-                                alphabetIndex,
-                              );
-
-                              if (_filteredList.isEmpty) {
-                                return Center(
-                                  child: Text(TextStrings().noContactsFound),
-                                );
-                              }
-
-                              if (contactsForAlphabet.isEmpty) {
-                                return Container();
-                              }
-
-                              return Column(
+                          return Column(
+                            children: [
+                              Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        currentChar,
-                                        style: TextStyle(
-                                          color: AllColors().BLUE_TEXT,
-                                          fontSize: 16.toFont,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 4.toWidth),
-                                      Expanded(
-                                        child: Divider(
-                                          color: AllColors()
-                                              .DIVIDER_COLOR
-                                              .withOpacity(0.2),
-                                          height: 1.toHeight,
-                                        ),
-                                      ),
-                                    ],
+                                  Text(
+                                    currentChar,
+                                    style: TextStyle(
+                                      color: AllColors().BLUE_TEXT,
+                                      fontSize: 16.toFont,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  toggleList
-                                      ? contactListBuilder(contactsForAlphabet)
-                                      : gridViewContactList(
-                                          contactsForAlphabet, context)
+                                  SizedBox(width: 4.toWidth),
+                                  Expanded(
+                                    child: Divider(
+                                      color: AllColors()
+                                          .DIVIDER_COLOR
+                                          .withOpacity(0.2),
+                                      height: 1.toHeight,
+                                    ),
+                                  ),
                                 ],
-                              );
-                            },
+                              ),
+                              toggleList
+                                  ? contactListBuilder(contactsForAlphabet)
+                                  : gridViewContactList(
+                                      contactsForAlphabet, context)
+                            ],
                           );
-                        }
-                      }
-                    }))
+                        },
+                      );
+                    }
+                  }
+                })
           ],
         ),
       ),
