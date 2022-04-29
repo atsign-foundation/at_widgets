@@ -121,7 +121,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               var response = await _contactService.addAtSign(
                                   atSign: atsignName);
                               var _groupService = GroupService();
-                              await _groupService.fetchGroupsAndContacts();
+                              _groupService.appendNewContact(atsignName);
                               setState(() {
                                 isLoading = false;
                               });
