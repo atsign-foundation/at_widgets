@@ -40,6 +40,9 @@ class GroupContactView extends StatefulWidget {
   /// Callback to get the list of selected contacts back to the app
   final ValueChanged<List<GroupContactsModel?>>? selectedList;
 
+  /// When contacts are tapped, the selected list is sent to app
+  final ValueChanged<List<GroupContactsModel?>>? onContactsTap;
+
   /// to show already selected contacts.
   final List<GroupContactsModel>? contactSelectedHistory;
 
@@ -53,7 +56,8 @@ class GroupContactView extends StatefulWidget {
       this.isDesktop = false,
       this.onBackArrowTap,
       this.onDoneTap,
-      this.contactSelectedHistory})
+      this.contactSelectedHistory,
+      this.onContactsTap})
       : super(key: key);
   @override
   _GroupContactViewState createState() => _GroupContactViewState();
@@ -216,7 +220,8 @@ class _GroupContactViewState extends State<GroupContactView> {
             (widget.asSelectionScreen)
                 ? (widget.singleSelection)
                     ? Container()
-                    : const HorizontalCircularList()
+                    : HorizontalCircularList(
+                        onContactsTap: widget.onContactsTap)
                 : Container(),
             Container(
               padding: EdgeInsets.only(right: 20.toWidth),

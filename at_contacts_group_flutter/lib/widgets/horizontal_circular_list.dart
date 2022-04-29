@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 
 class HorizontalCircularList extends StatefulWidget {
   final List<AtContact>? list;
+  final ValueChanged<List<GroupContactsModel?>>? onContactsTap;
 
-  const HorizontalCircularList({Key? key, this.list}) : super(key: key);
+  const HorizontalCircularList({Key? key, this.list, this.onContactsTap})
+      : super(key: key);
 
   @override
   _HorizontalCircularListState createState() => _HorizontalCircularListState();
@@ -30,6 +32,13 @@ class _HorizontalCircularListState extends State<HorizontalCircularList> {
         builder: (context, snapshot) {
           // ignore: omit_local_variable_types
           List<GroupContactsModel?> selectedContacts = snapshot.data!;
+
+          // send data to front end.
+          WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+            if (selectedContacts.isNotEmpty && widget.onContactsTap != null) {
+              widget.onContactsTap!(selectedContacts);
+            }
+          });
 
           return SizedBox(
             height: (selectedContacts.isEmpty) ? 0 : 150.toHeight,
