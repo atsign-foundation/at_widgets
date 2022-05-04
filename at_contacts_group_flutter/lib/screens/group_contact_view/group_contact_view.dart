@@ -10,6 +10,7 @@ import 'package:at_contacts_flutter/widgets/custom_search_field.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/add_contacts_group_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/circular_contacts.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_selction_bottom_sheet.dart';
@@ -256,8 +257,29 @@ class _GroupContactViewState extends State<GroupContactView> {
                     );
                   } else {
                     if ((snapshot.data == null || snapshot.data!.isEmpty)) {
-                      return Center(
-                        child: Text(TextStrings().noContacts),
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            TextStrings().noContacts,
+                            style: CustomTextStyles.primaryBold16,
+                          ),
+                          const SizedBox(height: 20.0),
+                          CustomButton(
+                            fontColor: AllColors().WHITE,
+                            buttonColor: AllColors().ORANGE,
+                            buttonText: 'Add',
+                            height: 40.toHeight,
+                            width: 115.toWidth,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => const AddContactDialog(),
+                              );
+                            },
+                          ),
+                        ],
                       );
                     } else {
                       // filtering contacts and groups
