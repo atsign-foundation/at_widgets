@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
@@ -8,12 +10,12 @@ class ContactInitial extends StatelessWidget {
   final double? maxSize, minSize;
 
   /// Initials of the atsign
-  final String initials;
+  String initials;
 
   /// Index in the list of atsigns
   final int? index;
 
-  const ContactInitial(
+  ContactInitial(
       {Key? key,
       this.size = 40,
       required this.initials,
@@ -23,13 +25,10 @@ class ContactInitial extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    int index = this.index ?? 0;
-    var encodedInitials = initials.runes;
-    if (encodedInitials.length < 3) {
-      index = encodedInitials.length;
-    } else {
-      index = 3;
+    if (initials[0] == '@') {
+      initials = initials.substring(1);
     }
+    var encodedInitials = initials.runes;
 
     return Container(
       height: size.toFont,
@@ -40,7 +39,8 @@ class ContactInitial extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          String.fromCharCodes(encodedInitials, (index == 1) ? 0 : 1, index)
+          String.fromCharCodes(encodedInitials, 0,
+                  (encodedInitials.length < 2 ? encodedInitials.length : 2))
               .toUpperCase(),
           style: TextStyle(
             color: Colors.white,
