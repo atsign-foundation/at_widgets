@@ -51,21 +51,24 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            AtSyncIndicator(),
-            SizedBox(width: AtOnboardingDimens.paddingSmall),
-            Text('Onboarding'),
-          ],
-        ),
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius:
-              BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              AtSyncIndicator(),
+              SizedBox(width: AtOnboardingDimens.paddingSmall),
+              Text('Onboarding'),
+            ],
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius:
+                BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
+          ),
         ),
       ),
     );
