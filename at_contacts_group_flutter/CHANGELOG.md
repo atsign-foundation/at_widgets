@@ -1,3 +1,8 @@
+## 4.0.4
+- **FIX**: Added missing fontWeight
+- **FEAT**: Optimised adding and removing contacts
+- **FIX**: Fixed UI issues
+
 ## 4.0.3
 - **FEAT**: Added list display controls
 
