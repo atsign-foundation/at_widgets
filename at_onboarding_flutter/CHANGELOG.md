@@ -1,3 +1,6 @@
+## 4.0.2
+- **FIX**: Added missing fontWeight
+
 ## 4.0.1
 - **CHORE**: Updated dependencies
 - **FEAT**: Added ability to select files without extension.
