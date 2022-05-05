@@ -150,14 +150,16 @@ class _AtOnboardingAccountsScreenState
           ),
           actions: <Widget>[
             AtOnboardingSecondaryButton(
+              height: 40,
+              borderRadius: 20,
               onPressed: () => Navigator.pop(_),
               child: const Text(
                 AtOnboardingStrings.cancelButton,
               ),
             ),
             AtOnboardingPrimaryButton(
-              height: 48,
-              borderRadius: 24,
+              height: 40,
+              borderRadius: 20,
               onPressed: () {
                 Navigator.pop(_);
                 Navigator.pop(context, atsign);
