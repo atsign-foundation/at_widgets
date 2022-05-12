@@ -268,41 +268,59 @@ class _CircularContactsState extends State<CircularContacts> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.toHeight),
-                  SizedBox(
-                    width: 80.toWidth,
-                    child: Text(
-                      widget.groupContact?.contact?.tags != null &&
-                              widget.groupContact?.contact?.tags!['name'] !=
-                                  null
-                          ? widget.groupContact?.contact?.tags!['name']
-                          : (widget.groupContact?.contact?.atSign
-                                  ?.substring(1) ??
-                              widget.groupContact?.group?.groupName
-                                  ?.substring(0))!,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: AllColors().Black,
-                        fontSize: 14.toFont,
-                        fontWeight: FontWeight.normal,
+                 Tooltip(
+                      triggerMode: TooltipTriggerMode.tap,
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(color: AllColors().ORANGE,borderRadius: BorderRadius.circular(2.toWidth)),
+                      textStyle: TextStyle(color: AllColors().WHITE),
+                      message: '${widget.groupContact?.contact?.tags != null &&
+                                widget.groupContact?.contact?.tags!['name'] !=
+                                    null
+                            ? widget.groupContact?.contact?.tags!['name']
+                            : (widget.groupContact?.contact?.atSign
+                                    ?.substring(1) ??
+                                widget.groupContact?.group?.groupName
+                                    ?.substring(0))!}\n${(widget.groupContact?.contact?.atSign ??
+                            widget.groupContact?.group?.groupName)!}',
+                    child: SizedBox(
+                      child:Column(
+                        children:[
+                    SizedBox(height: 10.toHeight),
+                    SizedBox(
+                      width: 80.toWidth,
+                      child: Text(
+                        widget.groupContact?.contact?.tags != null &&
+                                widget.groupContact?.contact?.tags!['name'] !=
+                                    null
+                            ? widget.groupContact?.contact?.tags!['name']
+                            : (widget.groupContact?.contact?.atSign
+                                    ?.substring(1) ??
+                                widget.groupContact?.group?.groupName
+                                    ?.substring(0))!,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AllColors().Black,
+                          fontSize: 14.toFont,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10.toHeight),
-                  SizedBox(
-                    width: 60.toWidth,
-                    child: Text(
-                      (widget.groupContact?.contact?.atSign ??
-                          widget.groupContact?.group?.groupName)!,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: AllColors().FADED_TEXT,
-                        fontSize: 14.toFont,
-                        fontWeight: FontWeight.normal,
+                    SizedBox(height: 10.toHeight),
+                    SizedBox(
+                      width: 60.toWidth,
+                      child: Text(
+                        (widget.groupContact?.contact?.atSign ??
+                            widget.groupContact?.group?.groupName)!,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AllColors().FADED_TEXT,
+                          fontSize: 14.toFont,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
-                    ),
+                    ),])),
                   )
                 ],
               ),
