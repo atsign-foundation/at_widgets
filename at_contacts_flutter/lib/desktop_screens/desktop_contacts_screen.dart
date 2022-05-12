@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
@@ -12,6 +13,8 @@ import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+
+import '../utils/text_strings.dart';
 
 class DesktopContactsScreen extends StatefulWidget {
   final bool isBlockedScreen;
@@ -217,10 +220,37 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const SizedBox();
-                        } else if (snapshot.connectionState ==
-                                ConnectionState.active &&
-                            !snapshot.hasError) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if ((snapshot.data == null ||
+                            snapshot.data!.isEmpty)) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                TextStrings().noContacts,
+                                style: CustomTextStyles.primaryBold16,
+                              ),
+                              const SizedBox(height: 20.0),
+                              CustomButton(
+                                fontColor: Colors.white,
+                                buttonColor: Colors.orange,
+                                buttonText: 'Add',
+                                height: 40.toHeight,
+                                width: 115.toWidth,
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        const AddContactDialog(),
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        } else {
                           var itemCount = snapshot.data!.length;
                           return ListView.separated(
                             itemCount: itemCount,
@@ -259,8 +289,6 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                               return const SizedBox();
                             },
                           );
-                        } else {
-                          return const SizedBox();
                         }
                       }),
             ),
