@@ -6,6 +6,7 @@ import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
@@ -209,7 +210,7 @@ class _CircularContactsState extends State<CircularContacts> {
             onLongPress: widget.onLongPressed as void Function()?,
             child: Container(
               padding: EdgeInsets.symmetric(
-                  vertical: 10.toHeight, horizontal: 20.toWidth),
+                  vertical: 10.toHeight, horizontal: 10.toWidth),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -282,7 +283,8 @@ class _CircularContactsState extends State<CircularContacts> {
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 15.toFont,
+                        color: AllColors().Black,
+                        fontSize: 14.toFont,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
@@ -296,7 +298,8 @@ class _CircularContactsState extends State<CircularContacts> {
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 15.toFont,
+                        color: AllColors().FADED_TEXT,
+                        fontSize: 14.toFont,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
