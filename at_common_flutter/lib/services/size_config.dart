@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 /// A class defined to get dimensions for the screen size displayed,
@@ -73,7 +75,8 @@ class SizeConfig {
   }
 
   double getWidthRatio(double val) {
-    if (screenWidth >= 1200) {
+    if (screenWidth >= 1200 ||
+        (Platform.isLinux || Platform.isMacOS || Platform.isWindows)) {
       return val;
     }
     double res = (val / refWidth) * 100;
@@ -84,7 +87,8 @@ class SizeConfig {
   }
 
   double getHeightRatio(double val) {
-    if (screenWidth >= 1200) {
+    if (screenWidth >= 1200 ||
+        (Platform.isLinux || Platform.isMacOS || Platform.isWindows)) {
       return val;
     }
     double res = (val / refHeight) * 100;
@@ -93,7 +97,8 @@ class SizeConfig {
   }
 
   double getFontRatio(double val) {
-    if (screenWidth >= 1200) {
+    if (screenWidth >= 1200 ||
+        (Platform.isLinux || Platform.isMacOS || Platform.isWindows)) {
       return val;
     }
     double res = (val / refWidth) * 100;
