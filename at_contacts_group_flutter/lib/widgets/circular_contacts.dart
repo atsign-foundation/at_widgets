@@ -39,11 +39,12 @@ class _CircularContactsState extends State<CircularContacts> {
   bool isSelected = false;
   bool isLoading = false;
   late GroupService _groupService;
+  String? initials = 'UG';
+  Uint8List? image;
 
   @override
   void initState() {
     _groupService = GroupService();
-    // if (!widget.selectSingle) {
     // ignore: omit_local_variable_types
     for (GroupContactsModel? groupContact
         in _groupService.selectedGroupContacts) {
@@ -54,8 +55,6 @@ class _CircularContactsState extends State<CircularContacts> {
         isSelected = false;
       }
     }
-    getImage();
-    // }
     super.initState();
   }
 
@@ -63,7 +62,6 @@ class _CircularContactsState extends State<CircularContacts> {
   void didChangeDependencies() {
     _groupService = GroupService();
 
-    // if (!widget.selectSingle) {
     // ignore: omit_local_variable_types
     for (GroupContactsModel? groupContact
         in _groupService.selectedGroupContacts) {
@@ -74,95 +72,42 @@ class _CircularContactsState extends State<CircularContacts> {
         isSelected = false;
       }
     }
-    getImage();
-    // }
     super.didChangeDependencies();
   }
 
-  Widget? contactImage;
+  getNameAndImage() {
+    try {
+      if (widget.groupContact?.contact != null) {
+        initials = widget.groupContact?.contact?.atSign;
+        if ((initials?[0] ?? 'not@') == '@') {
+          initials = initials?.substring(1);
+        }
 
-  // ignore: always_declare_return_types
-  getImage() async {
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-      });
-    }
-    Uint8List? image;
-
-    if (widget.groupContact!.contact == null) {
-      if (widget.groupContact?.group?.groupName == null) {
-        contactImage = ContactInitial(
-            initials: (widget.groupContact!.group!.displayName!.length > 3
-                ? widget.groupContact?.group?.displayName?.substring(0, 2)
-                : widget.groupContact?.group?.displayName ?? 'UG')!);
-      } else {
-        contactImage = ContactInitial(
-            initials: (widget.groupContact!.group!.groupName!.length > 3
-                ? widget.groupContact?.group?.groupName?.substring(0, 2)
-                : widget.groupContact?.group?.groupName ?? 'UG')!);
-      }
-    } else {
-      if ((widget.groupContact?.contact?.tags != null &&
-          widget.groupContact?.contact?.tags!['image'] != null)) {
-        try {
+        if (widget.groupContact?.contact?.tags != null &&
+            widget.groupContact?.contact?.tags!['image'] != null) {
           List<int> intList =
               widget.groupContact?.contact?.tags!['image'].cast<int>();
           image = Uint8List.fromList(intList);
-        } catch (e) {
-          widget.atSignLogger.severe('error in converting image: $e');
-        }
-
-        if ((Platform.isAndroid || Platform.isIOS) && image != null) {
-          image = await FlutterImageCompress.compressWithList(
-            image,
-            minWidth: 400,
-            minHeight: 200,
-          );
-
-          contactImage = CustomCircleAvatar(
-            byteImage: image,
-            nonAsset: true,
-          );
-        } else {
-          getContactInitial();
         }
       } else {
-        getContactInitial();
+        if (widget.groupContact?.group?.groupPicture != null) {
+          image = Uint8List.fromList(
+              widget.groupContact?.group?.groupPicture?.cast<int>());
+        }
+
+        initials = widget.groupContact?.group?.displayName;
       }
+    } catch (e) {
+      initials = 'UG';
+      widget.atSignLogger.info('Error in getting image $e');
     }
-
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  getContactInitial() {
-    String initial;
-    if (widget.groupContact?.contact?.atSign == null) {
-      initial = '    ';
-    } else {
-      initial = widget.groupContact!.contact!.atSign!;
-    }
-    contactImage = ContactInitial(initials: initial);
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    Uint8List? image;
-    if (widget.groupContact?.contact?.tags != null &&
-        widget.groupContact?.contact?.tags!['image'] != null) {
-      try {
-        List<int> intList =
-            widget.groupContact?.contact?.tags!['image'].cast<int>();
-        image = Uint8List.fromList(intList);
-      } catch (e) {
-        widget.atSignLogger.info('Error in getting image');
-      }
-    }
+    getNameAndImage();
+
     return StreamBuilder<List<GroupContactsModel?>>(
         initialData: _groupService.selectedGroupContacts,
         stream: _groupService.selectedContactsStream,
@@ -225,9 +170,7 @@ class _CircularContactsState extends State<CircularContacts> {
                                 nonAsset: true,
                               )
                             : ContactInitial(
-                                initials:
-                                    (widget.groupContact?.contact?.atSign ??
-                                        widget.groupContact?.group?.groupName)!,
+                                initials: (initials ?? 'UG'),
                               ),
                         // child:
                       ),
@@ -271,14 +214,16 @@ class _CircularContactsState extends State<CircularContacts> {
                   SizedBox(
                     width: 80.toWidth,
                     child: Text(
-                      widget.groupContact?.contact?.tags != null &&
-                              widget.groupContact?.contact?.tags!['name'] !=
-                                  null
-                          ? widget.groupContact?.contact?.tags!['name']
-                          : (widget.groupContact?.contact?.atSign
-                                  ?.substring(1) ??
-                              widget.groupContact?.group?.groupName
-                                  ?.substring(0))!,
+                      widget.groupContact!.contact == null
+                          // ignore: prefer_if_null_operators
+                          ? widget.groupContact!.group!.displayName == null
+                              ? widget.groupContact!.group!.groupName
+                              : widget.groupContact!.group!.displayName
+                          // ignore: prefer_if_null_operators
+                          : widget.groupContact!.contact!.tags!['name'] == null
+                              ? widget.groupContact!.contact!.atSign!
+                                  .substring(1)
+                              : widget.groupContact!.contact!.tags!['name'],
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -292,7 +237,8 @@ class _CircularContactsState extends State<CircularContacts> {
                     width: 60.toWidth,
                     child: Text(
                       (widget.groupContact?.contact?.atSign ??
-                          widget.groupContact?.group?.groupName)!,
+                              widget.groupContact?.group?.displayName) ??
+                          '',
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
