@@ -6,6 +6,7 @@ import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +155,7 @@ class _CircularContactsState extends State<CircularContacts> {
             onLongPress: widget.onLongPressed as void Function()?,
             child: Container(
               padding: EdgeInsets.symmetric(
-                  vertical: 10.toHeight, horizontal: 20.toWidth),
+                  vertical: 10.toHeight, horizontal: 10.toWidth),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -210,42 +211,59 @@ class _CircularContactsState extends State<CircularContacts> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.toHeight),
-                  SizedBox(
-                    width: 80.toWidth,
-                    child: Text(
-                      widget.groupContact!.contact == null
-                          // ignore: prefer_if_null_operators
-                          ? widget.groupContact!.group!.displayName == null
-                              ? widget.groupContact!.group!.groupName
-                              : widget.groupContact!.group!.displayName
-                          // ignore: prefer_if_null_operators
-                          : widget.groupContact!.contact!.tags!['name'] == null
-                              ? widget.groupContact!.contact!.atSign!
-                                  .substring(1)
-                              : widget.groupContact!.contact!.tags!['name'],
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 15.toFont,
-                        fontWeight: FontWeight.normal,
+                 Tooltip(
+                      triggerMode: TooltipTriggerMode.tap,
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(color: AllColors().ORANGE,borderRadius: BorderRadius.circular(2.toWidth)),
+                      textStyle: TextStyle(color: AllColors().WHITE),
+                      message: '${widget.groupContact?.contact?.tags != null &&
+                                widget.groupContact?.contact?.tags!['name'] !=
+                                    null
+                            ? widget.groupContact?.contact?.tags!['name']
+                            : (widget.groupContact?.contact?.atSign
+                                    ?.substring(1) ??
+                                widget.groupContact?.group?.groupName
+                                    ?.substring(0))!}\n${(widget.groupContact?.contact?.atSign ??
+                            widget.groupContact?.group?.groupName)!}',
+                    child: SizedBox(
+                      child:Column(
+                        children:[
+                    SizedBox(height: 10.toHeight),
+                    SizedBox(
+                      width: 80.toWidth,
+                      child: Text(
+                        widget.groupContact?.contact?.tags != null &&
+                                widget.groupContact?.contact?.tags!['name'] !=
+                                    null
+                            ? widget.groupContact?.contact?.tags!['name']
+                            : (widget.groupContact?.contact?.atSign
+                                    ?.substring(1) ??
+                                widget.groupContact?.group?.groupName
+                                    ?.substring(0))!,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AllColors().Black,
+                          fontSize: 14.toFont,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10.toHeight),
-                  SizedBox(
-                    width: 60.toWidth,
-                    child: Text(
-                      (widget.groupContact?.contact?.atSign ??
-                              widget.groupContact?.group?.displayName) ??
-                          '',
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 15.toFont,
-                        fontWeight: FontWeight.normal,
+                    SizedBox(height: 10.toHeight),
+                    SizedBox(
+                      width: 60.toWidth,
+                      child: Text(
+                        (widget.groupContact?.contact?.atSign ??
+                            widget.groupContact?.group?.groupName)!,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AllColors().FADED_TEXT,
+                          fontSize: 14.toFont,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
-                    ),
+                    ),])),
                   )
                 ],
               ),

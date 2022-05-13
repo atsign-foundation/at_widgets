@@ -468,7 +468,7 @@ class _GroupContactViewState extends State<GroupContactView> {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: SizeConfig().isTablet(context) ? 5 : 3,
+          crossAxisCount: SizeConfig().isTablet(context) ? 4 : 3,
           childAspectRatio: 1 / (SizeConfig().isTablet(context) ? 1.2 : 1.3)),
       shrinkWrap: true,
       itemCount: contactsForAlphabet.length,
