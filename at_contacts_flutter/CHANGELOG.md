@@ -1,3 +1,7 @@
+## 4.0.4
+- **FIX**: Added missing fontWeight
+- **FEAT**: Optimised adding and removing contacts
+
 ## 4.0.3
 - **FIX**: Fixed bug to get lastname and image
 - **FEAT**: Added list display controls

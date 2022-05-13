@@ -5,6 +5,8 @@
 /// @param [contact] for details of the contact
 /// @param [contactService] to get an instance of [AtContactsImpl]
 
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
@@ -50,10 +52,12 @@ class _CustomListTileState extends State<CustomListTile> {
   AtContact? localContact;
   AtGroup? localGroup;
   AtSignLogger atSignLogger = AtSignLogger('CustomListTile');
+  String? initials = 'UG';
+  Uint8List? image;
+
   @override
   void initState() {
     _groupService = GroupService();
-    // if (!widget.selectSingle) {
     // ignore: omit_local_variable_types
     for (GroupContactsModel? groupContact
         in _groupService.selectedGroupContacts) {
@@ -64,8 +68,6 @@ class _CustomListTileState extends State<CustomListTile> {
         isSelected = false;
       }
     }
-    getImage();
-    // }
     super.initState();
   }
 
@@ -73,7 +75,6 @@ class _CustomListTileState extends State<CustomListTile> {
   void didChangeDependencies() {
     _groupService = GroupService();
 
-    // if (!widget.selectSingle) {
     // ignore: omit_local_variable_types
     for (GroupContactsModel? groupContact
         in _groupService.selectedGroupContacts) {
@@ -84,82 +85,40 @@ class _CustomListTileState extends State<CustomListTile> {
         isSelected = false;
       }
     }
-    getImage();
-    // }
     super.didChangeDependencies();
   }
 
-  Widget? contactImage;
+  getNameAndImage() {
+    try {
+      if (widget.item?.contact != null) {
+        initials = widget.item?.contact?.atSign;
+        if ((initials?[0] ?? 'not@') == '@') {
+          initials = initials?.substring(1);
+        }
 
-  // ignore: always_declare_return_types
-  getImage() async {
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-      });
-    }
-    Uint8List? image;
-
-    if (widget.item!.contact == null) {
-      if (widget.item?.group?.groupName == null) {
-        contactImage = ContactInitial(
-            initials: (widget.item!.group!.displayName!.length > 3
-                ? widget.item?.group?.displayName?.substring(0, 2)
-                : widget.item?.group?.displayName ?? 'UG')!);
-      } else {
-        contactImage = ContactInitial(
-            initials: (widget.item!.group!.groupName!.length > 3
-                ? widget.item?.group?.groupName?.substring(0, 2)
-                : widget.item?.group?.groupName ?? 'UG')!);
-      }
-    } else {
-      if ((widget.item?.contact?.tags != null &&
-          widget.item?.contact?.tags!['image'] != null)) {
-        try {
+        if (widget.item?.contact?.tags != null &&
+            widget.item?.contact?.tags!['image'] != null) {
           List<int> intList = widget.item?.contact?.tags!['image'].cast<int>();
           image = Uint8List.fromList(intList);
-        } catch (e) {
-          atSignLogger.severe('error in converting image: $e');
-        }
-
-        if ((Platform.isAndroid || Platform.isIOS) && image != null) {
-          image = await FlutterImageCompress.compressWithList(
-            image,
-            minWidth: 400,
-            minHeight: 200,
-          );
-
-          contactImage = CustomCircleAvatar(
-            byteImage: image,
-            nonAsset: true,
-          );
-        } else {
-          getContactInitial();
         }
       } else {
-        getContactInitial();
+        if (widget.item?.group?.groupPicture != null) {
+          image =
+              Uint8List.fromList(widget.item?.group?.groupPicture?.cast<int>());
+        }
+
+        initials = widget.item?.group?.displayName;
       }
+    } catch (e) {
+      initials = 'UG';
+      print('Error in getting image $e');
     }
-
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  getContactInitial() {
-    String initial;
-    if (widget.item?.contact?.atSign == null) {
-      initial = '    ';
-    } else {
-      initial = widget.item!.contact!.atSign!;
-    }
-    contactImage = ContactInitial(initials: initial);
   }
 
   @override
   Widget build(BuildContext context) {
+    getNameAndImage();
+
     return StreamBuilder<List<GroupContactsModel?>>(
         initialData: _groupService.selectedGroupContacts,
         stream: _groupService.selectedContactsStream,
@@ -237,7 +196,14 @@ class _CustomListTileState extends State<CustomListTile> {
                 ),
                 child: (isLoading)
                     ? const CircularProgressIndicator()
-                    : contactImage),
+                    : (image != null)
+                        ? CustomCircleAvatar(
+                            byteImage: image,
+                            nonAsset: true,
+                          )
+                        : ContactInitial(
+                            initials: (initials ?? 'UG'),
+                          )),
             trailing: IconButton(
               onPressed: (widget.asSelectionTile == false &&
                       widget.onTrailingPressed != null)

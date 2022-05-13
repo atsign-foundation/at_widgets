@@ -10,6 +10,7 @@ import 'package:at_contacts_flutter/widgets/custom_search_field.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/add_contacts_group_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/circular_contacts.dart';
 import 'package:at_contacts_group_flutter/widgets/contacts_selction_bottom_sheet.dart';
@@ -40,6 +41,9 @@ class GroupContactView extends StatefulWidget {
   /// Callback to get the list of selected contacts back to the app
   final ValueChanged<List<GroupContactsModel?>>? selectedList;
 
+  /// When contacts are tapped, the selected list is sent to app
+  final ValueChanged<List<GroupContactsModel?>>? onContactsTap;
+
   /// to show already selected contacts.
   final List<GroupContactsModel>? contactSelectedHistory;
 
@@ -53,7 +57,8 @@ class GroupContactView extends StatefulWidget {
       this.isDesktop = false,
       this.onBackArrowTap,
       this.onDoneTap,
-      this.contactSelectedHistory})
+      this.contactSelectedHistory,
+      this.onContactsTap})
       : super(key: key);
   @override
   _GroupContactViewState createState() => _GroupContactViewState();
@@ -216,7 +221,8 @@ class _GroupContactViewState extends State<GroupContactView> {
             (widget.asSelectionScreen)
                 ? (widget.singleSelection)
                     ? Container()
-                    : const HorizontalCircularList()
+                    : HorizontalCircularList(
+                        onContactsTap: widget.onContactsTap)
                 : Container(),
             Container(
               padding: EdgeInsets.only(right: 20.toWidth),
@@ -256,8 +262,29 @@ class _GroupContactViewState extends State<GroupContactView> {
                     );
                   } else {
                     if ((snapshot.data == null || snapshot.data!.isEmpty)) {
-                      return Center(
-                        child: Text(TextStrings().noContacts),
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            TextStrings().noContacts,
+                            style: CustomTextStyles.primaryBold16,
+                          ),
+                          const SizedBox(height: 20.0),
+                          CustomButton(
+                            fontColor: AllColors().WHITE,
+                            buttonColor: AllColors().ORANGE,
+                            buttonText: 'Add',
+                            height: 40.toHeight,
+                            width: 115.toWidth,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => const AddContactDialog(),
+                              );
+                            },
+                          ),
+                        ],
                       );
                     } else {
                       // filtering contacts and groups

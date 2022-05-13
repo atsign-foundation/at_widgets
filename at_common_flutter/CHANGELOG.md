@@ -1,3 +1,6 @@
+## 2.0.7
+- **FIX**: Added missing fontWeight
+
 ## 2.0.6
 - **DOCS**: Documentation updated
 
