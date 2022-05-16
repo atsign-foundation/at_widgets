@@ -138,7 +138,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ? Center(
                 child: Container(
                   padding: EdgeInsets.only(right: 20.toHeight),
-                  child: GestureDetector(
+                  child: MaterialButton(
+                    padding: EdgeInsets.zero,
                     child: Text(
                       TextStrings().buttonClose,
                       style: backTextStyle ??
@@ -149,7 +150,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             fontWeight: FontWeight.normal,
                           ),
                     ),
-                    onTap: () {
+                    onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
@@ -160,12 +161,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 width: 62.toWidth,
                 // margin: EdgeInsets.only(right: 20),
                 child: (showTrailingIcon)
-                    ? GestureDetector(
+                    ? MaterialButton(
                         child: trailingIcon,
-                        onTap: () {
-                          if (onTrailingIconPressed != null) {
-                            onTrailingIconPressed!();
-                          }
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          onTrailingIconPressed?.call();
                         },
                       )
                     : Container())

@@ -133,15 +133,28 @@ class _GroupContactViewState extends State<GroupContactView> {
         isDesktop: widget.isDesktop,
         showTitle: true,
         titleText: 'Contacts',
-        onLeadingIconPressed: () {
-          if (widget.onBackArrowTap != null) {
-            widget.onBackArrowTap!(_groupService.selectedGroupContacts);
-          }
-        },
-        showBackButton: true,
+        leadingIcon: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+            if (widget.onBackArrowTap != null) {
+              widget.onBackArrowTap!(_groupService.selectedGroupContacts);
+            }
+          },
+          tooltip: 'Back',
+          padding: EdgeInsets.zero,
+        ),
+        showBackButton: false,
         showLeadingIcon: true,
         showTrailingIcon: true,
-        trailingIcon: const Icon(Icons.add, color: Colors.black),
+        trailingIcon: const Icon(
+          Icons.add,
+          color: Colors.black,
+          semanticLabel: 'Add contact',
+        ),
         onTrailingIconPressed: () {
           showDialog(
             context: context,
