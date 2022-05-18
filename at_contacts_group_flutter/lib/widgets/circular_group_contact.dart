@@ -35,21 +35,23 @@ class CircularGroupContact extends StatelessWidget {
         Stack(
           alignment: AlignmentDirectional.topCenter,
           children: [
-            image != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(30.toWidth)),
-                    child: Image.memory(
-                      image as Uint8List,
-                      width: 50.toWidth,
-                      height: 50.toWidth,
-                      fit: BoxFit.fill,
+            CircleAvatar(
+              radius: 20.toWidth,
+              child: image != null
+                  ? CircleAvatar(
+                      radius: 20.toWidth,
+                      backgroundImage: MemoryImage(image as Uint8List),
+                    )
+                  : CircleAvatar(
+                      radius: 20.toWidth,
+                      backgroundColor: const Color(0xFF565656),
+                      child: ContactInitial(
+                        initials: title ?? ' ',
+                        minSize: 50.0,
+                        maxSize: 50.0,
+                      ),
                     ),
-                  )
-                : ContactInitial(
-                    initials: title ?? ' ',
-                    minSize: 40.0,
-                    maxSize: 40.0,
-                  ),
+            ),
             icon != null
                 ? Positioned(
                     top: isTopRight ? 0 : null,
