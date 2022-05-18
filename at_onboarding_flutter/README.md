@@ -1,15 +1,16 @@
 <img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
-
-
 [![pub package](https://img.shields.io/pub/v/at_onboarding_flutter)](https://pub.dev/packages/at_onboarding_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
-
-
 ## Overview
-This at_onboarding_flutter package handles secure management of secret keys for authenticating an atsign as cryptographically secure replacement for usernames and passwords.
 
-This open source package is written in Dart, supports Flutter and follows the @‎platform's decentralized, edge computing model with the following features :
+This at_onboarding_flutter package handles secure management of secret keys
+for authenticating an atsign as cryptographically secure replacement for
+usernames and passwords.
+
+This open source package is written in Dart, supports Flutter and follows
+the @‎platform's decentralized, edge computing model with the following
+features:
 
 - Takes away the difficulty in implementing atsign authentication.
 - Generate and Supports free atsigns.
@@ -17,24 +18,28 @@ This open source package is written in Dart, supports Flutter and follows the @�
 - Flexibility of either pair @‎sign with QRCode or Atkey file.
 - Reset/Sign out button.
 
-We call giving people control of access to their data “flipping the internet” and you can learn more about how it works by reading this
+We call giving people control of access to their data “flipping the internet”
+and you can learn more about how it works by reading this
 [overview](https://atsign.dev/docs/overview/).
 
-
 ## Get Started
+
 There are two options to get started using this package.
 
 ### 1. Clone it from GitHub
-Feel free to fork a copy the source from the [GitHub repo](https://github.com/atsign-foundation/at_widgets). The example code contained there demonstrates the onboarding flow of an @‎sign.
+
+Feel free to fork a copy the source from the
+[GitHub repo](https://github.com/atsign-foundation/at_widgets).
+The example code contained there demonstrates the onboarding flow of an @‎sign.
 
 ```sh
-$ git clone https://github.com/atsign-foundation/at_widgets
+git clone https://github.com/atsign-foundation/at_widgets
 ```
-
 
 ### 3. Manually add the package to a project
 
-Instructions on how to manually add this package to you project can be found on pub.dev [here](https://pub.dev/packages/at_onboarding_flutter/install).
+Instructions on how to manually add this package to you project can be found
+on pub.dev [here](https://pub.dev/packages/at_onboarding_flutter/install).
 
 #### Setup
 
@@ -131,8 +136,6 @@ and add the following key:
 ## Usage
 
 
-
-
 | Parameters              | Description                                                                                                                      |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | domain                  | Domain can differ based on the environment you are using.Default the plugin connects to 'root.atsign.org' to perform onboarding. |
@@ -175,4 +178,8 @@ TextButton(
   child: Text('Onboard my @sign'))
 ```
 ## Open source usage and contributions
-This is open source code, so feel free to use it as is, suggest changes or enhancements or create your own version. See [Contribution Guideline](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md) for detailed guidance on how to setup tools, tests and make a pull request.
+
+This is open source code, so feel free to use it as is, suggest changes
+or enhancements or create your own version. See
+[Contribution Guideline](https://github.com/atsign-foundation/at_widgets/blob/trunk/CONTRIBUTING.md)
+for detailed guidance on how to setup tools, tests and make a pull request.
