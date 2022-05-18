@@ -1,6 +1,4 @@
-<img src="https://atsign.dev/assets/img/@developersmall.png?sanitize=true">
-
-### Now for some internet optimism.
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
 # PACKAGE DEPRECATED
 ### Please do not use this package for lack of multiple atsign support. Use [at_onboarding_flutter](https://pub.dev/packages/at_onboarding_flutter) instead.
