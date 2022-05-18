@@ -251,7 +251,7 @@ class _CircularContactsState extends State<CircularContacts> {
                     ),
                     SizedBox(height: 10.toHeight),
                     SizedBox(
-                      width: 60.toWidth,
+                      width: 80.toWidth,
                       child: Text(
                         (widget.groupContact?.contact?.atSign ??
                             widget.groupContact?.group?.groupName)!,
