@@ -92,7 +92,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                       fontSize: 15.toFont,
                       fontWeight: FontWeight.normal,
                     ),
-                    hintText: '\tEnter @Sign',
+                    hintText: '\tEnter @sign',
                   ),
                   style: TextStyle(
                     fontSize: 15.toFont,
