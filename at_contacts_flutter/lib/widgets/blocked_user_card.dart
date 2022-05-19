@@ -51,10 +51,12 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
               nonAsset: true,
             )
           : ContactInitial(
+              size: SizeConfig().isTablet(context)? 32: 45,
               initials: widget.blockeduser!.atSign!,
             );
     } else {
       contactImage = ContactInitial(
+        size: SizeConfig().isTablet(context)? 32: 45,
         initials: widget.blockeduser!.atSign!,
       );
     }
