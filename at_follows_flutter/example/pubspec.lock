@@ -77,7 +77,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.0.5"
+    version: "3.0.6"
   at_lookup:
     dependency: transitive
     description:

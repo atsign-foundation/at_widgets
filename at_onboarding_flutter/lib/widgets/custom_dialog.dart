@@ -56,6 +56,9 @@ class CustomDialog extends StatefulWidget {
   ///Entered atsign.
   final String atsign;
 
+  ///Set cursorcolor.
+  final Color cursorColor;
+
   ///Returns a valid atsign if atsignForm is made true.
   final Function(String)? onSubmit;
 
@@ -80,6 +83,7 @@ class CustomDialog extends StatefulWidget {
       this.isAtsignForm = false,
       this.showClose = false,
       this.atsign = '',
+      this.cursorColor = Colors.blue,
       this.isQR = false,
       this.onSubmit,
       this.onValidate,
@@ -368,6 +372,7 @@ class _CustomDialogState extends State<CustomDialog> {
                                     key: _formKey,
                                     child: !otp
                                         ? TextFormField(
+                                            cursorColor: widget.cursorColor,
                                             enabled: isfreeAtsign & !pair
                                                 ? false
                                                 : true,
