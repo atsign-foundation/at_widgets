@@ -47,6 +47,7 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
 
       contactImage = image != null
           ? CustomCircleAvatar(
+              size: SizeConfig().isTablet(context)? 32: 45,
               byteImage: image,
               nonAsset: true,
             )
