@@ -1,5 +1,7 @@
-import 'package:at_chat_flutter/at_chat_flutter.dart';
+import 'dart:io';
+
 import 'package:at_chat_flutter/services/chat_service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -7,11 +9,18 @@ class MockChatService extends Mock implements ChatService {}
 
 void main() {
   ChatService mockChatService = MockChatService();
-  // group('Chat Screen test', () {
-  // chat service is initialized
-  // test('Chat service is initialized', () async {
-  //   ChatScreen chatScreen = ChatScreen();
-  //   expect(chatScreen._chatService, matcher)
-  // });
-  // });
+  BuildContext? context;
+  group('Chat Screen test: ', () {
+    // To test chat history retrieval
+    setUp(() {
+      reset(mockChatService);
+    });
+
+    // Test case to check retrieving chat history is successful
+    test('Chat history is retrieved', () {
+      when(() => mockChatService.getChatHistory().then((_) async {
+            print('Get chat history is successful');
+          }));
+    });
+  });
 }
