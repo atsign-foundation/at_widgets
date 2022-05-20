@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:at_chat_flutter/services/chat_service.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -9,7 +6,6 @@ class MockChatService extends Mock implements ChatService {}
 
 void main() {
   ChatService mockChatService = MockChatService();
-  BuildContext? context;
   group('Chat Screen test: ', () {
     // To test chat history retrieval
     setUp(() {
