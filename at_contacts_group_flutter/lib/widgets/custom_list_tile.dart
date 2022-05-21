@@ -212,7 +212,7 @@ class _CustomListTileState extends State<CustomListTile> {
                   : selectRemoveContact(),
               icon: (widget.asSelectionTile)
                   ? (isSelected)
-                      ? const Icon(Icons.close,size: 26.0,color: Colors.red,)
+                      ? const Icon(Icons.cancel_rounded,size: 26.0,color: Colors.red,)
                       : const Icon(Icons.add, size: 24.0,color: Colors.green)
                   : Image.asset(
                       AllImages().SEND,
