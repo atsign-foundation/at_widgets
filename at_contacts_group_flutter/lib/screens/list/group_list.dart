@@ -168,7 +168,7 @@ class _GroupListState extends State<GroupList> {
                                                     snapshot.data![index]);
                                               },
                                               onTap: () async {
-                                                WidgetsBinding.instance!
+                                                WidgetsBinding.instance
                                                     .addPostFrameCallback(
                                                         (_) async {
                                                   GroupService()
@@ -225,7 +225,7 @@ class _GroupListState extends State<GroupList> {
                                                   snapshot.data![index]);
                                             },
                                             onTap: () async {
-                                              WidgetsBinding.instance!
+                                              WidgetsBinding.instance
                                                   .addPostFrameCallback(
                                                       (_) async {
                                                 GroupService()

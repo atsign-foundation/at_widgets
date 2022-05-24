@@ -64,7 +64,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   @override
   void initState() {
     _contactService = ContactService();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var _result = await _contactService!.fetchContacts();
       if (_result == null) {
         if (mounted) {
