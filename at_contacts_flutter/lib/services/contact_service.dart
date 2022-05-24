@@ -419,9 +419,8 @@ class ContactService {
   void removeSelectedAtSign(AtContact? contact) {
     try {
       for (AtContact? atContact in selectedContacts) {
-        if (contact == atContact || atContact!.atSign == contact!.atSign) {
-          var index = selectedContacts.indexOf(contact!);
-          print('index is $index');
+        if (atContact!.atSign == contact!.atSign) {
+          var index = selectedContacts.indexOf(contact);
           selectedContacts.removeAt(index);
           break;
         }
