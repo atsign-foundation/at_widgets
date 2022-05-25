@@ -134,11 +134,37 @@ class BackupKeyWidget extends StatelessWidget {
         context: context,
         builder: (BuildContext ctxt) {
           return AlertDialog(
-            title: const Center(
-              child: Text(
-                Strings.backUpKeysTitle,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+            title: Row(
+              children: [
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      Strings.backUpKeysTitle,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: Tooltip(
+                    triggerMode: TooltipTriggerMode.tap,
+                    message: "Used to backup your secret keys",
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade400,
+                          borderRadius: BorderRadius.circular(50)),
+                      margin: const EdgeInsets.all(0),
+                      height: 20,
+                      width: 20,
+                      child: const Icon(
+                        Icons.question_mark,
+                        size: 15,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
