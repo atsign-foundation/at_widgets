@@ -22,9 +22,9 @@ void main() {
     // Test case to identify Horizontal circular list is used in screen or not
     testWidgets("Horizontal circular list widget is used and shown on screen",
         (WidgetTester tester) async {
-      final horizontalCircularList = HorizontalCircularList();
-      await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(horizontalCircularList: horizontalCircularList));
+      const horizontalCircularList = HorizontalCircularList();
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+          horizontalCircularList: horizontalCircularList));
 
       expect(find.byType(HorizontalCircularList), findsOneWidget);
     });

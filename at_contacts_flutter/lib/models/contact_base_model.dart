@@ -14,4 +14,5 @@ class BaseContact {
   });
 }
 
+// ignore: camel_case_types
 enum STATE_UPDATE { block, markFav, delete, unblock }
