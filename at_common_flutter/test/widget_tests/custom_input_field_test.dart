@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,10 +21,10 @@ void main() {
           home: CustomInputField(
         initialValue: 'Welcome',
         value: (value) {
-          print('onchanged value is $value');
+          log('onchanged value is $value');
         },
         onSubmitted: (value) {
-          print('entered value is $value');
+          log('entered value is $value');
         },
       )));
       final inputField =
@@ -55,7 +57,7 @@ void main() {
       await tester
           .enterText(find.byType(CustomInputField), 'I am logged in')
           .catchError((e) {
-        print('editing text throws $e');
+        log('editing text throws $e');
       });
     });
     testWidgets('CustomInputField with icon data passed',
@@ -67,7 +69,7 @@ void main() {
         icon: Icons.person,
         iconColor: Colors.blue,
         onIconTap: () {
-          print('Tapped on icon');
+          log('Tapped on icon');
         },
       )));
       final inputField =
