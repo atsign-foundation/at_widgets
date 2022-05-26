@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'at_sync_cupertino.dart' as cupertino;
 
@@ -320,7 +319,7 @@ class AtSyncSnackBar {
   final ValueNotifier<String> _message = ValueNotifier<String>('');
 
   /// [_dialogIsOpen] Shows whether the dialog is open.
-  bool _dialogIsOpen = false;
+  final bool _dialogIsOpen = false;
 
   /// [_context] Required to show the alert.
   late BuildContext _context;
