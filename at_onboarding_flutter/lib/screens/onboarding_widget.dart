@@ -222,7 +222,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             CustomNav().pop(context);
-            WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
+            WidgetsBinding.instance.addPostFrameCallback((Duration timeStamp) {
               widget.onboard(_onboardingService.atClientServiceMap,
                   _onboardingService.currentAtsign);
             });

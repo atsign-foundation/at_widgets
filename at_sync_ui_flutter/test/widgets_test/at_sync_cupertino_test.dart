@@ -20,7 +20,7 @@ void main() {
 
   /// Functional test cases for at_sync indicator cupertino
   group('At_Sync indicator cupertino Tests:', () {
-    final atSyncIndicatorCupertino = AtSyncIndicator(
+    const atSyncIndicatorCupertino = AtSyncIndicator(
       value: 0.0,
       color: Color(0xFFf4533d),
     );
@@ -42,7 +42,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
           atSyncIndicatorCupertino: atSyncIndicatorCupertino));
-      expect(atSyncIndicatorCupertino.color, Color(0xFFf4533d));
+      expect(atSyncIndicatorCupertino.color, const Color(0xFFf4533d));
     });
   });
 }

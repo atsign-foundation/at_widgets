@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 
 import 'at_sync_material.dart' as material;
 import 'at_sync_progress_indicator.dart';
@@ -134,7 +133,7 @@ class _AtSyncIndicatorPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint();
     final int tickCount = _kAlphaValues.length;
-    final double tickRadius = radius / tickCount * math.sqrt(2);
+    // final double tickRadius = radius / tickCount * math.sqrt(2);
 
     canvas.save();
     canvas.translate(size.width / 2.0, size.height / 2.0);

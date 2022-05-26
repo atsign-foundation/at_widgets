@@ -22,7 +22,7 @@ void main() {
     // Test case to identify incoming message bubble is used in screen or not
     testWidgets("Incoming message bubble widget is used and shown on screen",
         (WidgetTester tester) async {
-      final incomingMessageBubble = IncomingMessageBubble();
+      const incomingMessageBubble = IncomingMessageBubble();
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
           incomingMessageBubble: incomingMessageBubble));
 
@@ -32,20 +32,24 @@ void main() {
     // Test case to identify incoming message has text
     testWidgets("Check message in incoming message bubble",
         (WidgetTester tester) async {
-      Message message = Message(id: '1',message: 'Hi');
-      final incomingMessageBubble = IncomingMessageBubble(message: message,);
+      Message message = Message(id: '1', message: 'Hi');
+      final incomingMessageBubble = IncomingMessageBubble(
+        message: message,
+      );
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
           incomingMessageBubble: incomingMessageBubble));
       expect(incomingMessageBubble.message, message);
     });
 
-   // TODO: Test case to identify color of incoming message bubble
     testWidgets("Color of button is button default color",
         (WidgetTester tester) async {
-      const incomingMessageBubble = IncomingMessageBubble(color: CustomColors.defaultColor,);
+      const incomingMessageBubble = IncomingMessageBubble(
+        color: CustomColors.defaultColor,
+      );
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
           incomingMessageBubble: incomingMessageBubble));
-      final container = tester.widget<IncomingMessageBubble>(find.byType(IncomingMessageBubble));
+      final container = tester
+          .widget<IncomingMessageBubble>(find.byType(IncomingMessageBubble));
       expect(
         container.color,
         CustomColors.defaultColor,
@@ -55,7 +59,7 @@ void main() {
     // Test case to identify color of avatar in incoming message bubble
     testWidgets("Color of avatar in incoming message bubble",
         (WidgetTester tester) async {
-      final incomingMessageBubble = IncomingMessageBubble();
+      const incomingMessageBubble = IncomingMessageBubble();
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
           incomingMessageBubble: incomingMessageBubble));
       final contactInitial =

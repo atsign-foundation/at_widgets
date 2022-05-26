@@ -696,7 +696,7 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   void _getAtsignForm() {
     loading = true;
-    WidgetsBinding.instance!.addPostFrameCallback((Duration timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((Duration timeStamp) {
       showDialog(
         barrierDismissible: false,
         context: context,
