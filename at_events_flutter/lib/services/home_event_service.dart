@@ -180,6 +180,7 @@ class HomeEventService {
         );
       }
     }
+    return null;
   }
 
   /// will return for event's for which i am creator
@@ -203,6 +204,7 @@ class HomeEventService {
         from: _locationSharingFor.from,
       );
     }
+    return null;
     // }
   }
 

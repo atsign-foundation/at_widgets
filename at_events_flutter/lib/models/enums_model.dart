@@ -1,9 +1,12 @@
 // ignore_for_file: constant_identifier_names
 
+// ignore: camel_case_types
 enum LOC_START_TIME_ENUM { TWO_HOURS, SIXTY_MIN, THIRTY_MIN }
+
+// ignore: camel_case_types
 enum LOC_END_TIME_ENUM { TEN_MIN, AFTER_EVERY_ONE_REACHED, AT_EOD }
 
-// ignore: missing_return
+// ignore: missing_return, body_might_complete_normally_nullable
 DateTime? startTimeEnumToTimeOfDay(String startTimeEnum, DateTime? startTime) {
   // ignore: unnecessary_null_comparison
   if (startTimeEnum == null ||
@@ -24,7 +27,7 @@ DateTime? startTimeEnumToTimeOfDay(String startTimeEnum, DateTime? startTime) {
   }
 }
 
-// ignore: missing_return
+// ignore: missing_return, body_might_complete_normally_nullable
 DateTime? endTimeEnumToTimeOfDay(String endTimeEnum, DateTime? endTime) {
   // ignore: unnecessary_null_comparison
   if (endTimeEnum == null ||

@@ -16,10 +16,10 @@ void main() {
   /// Functional test cases for Draggable Symbol Widget
   group('Draggable Symbol Widget Tests:', () {
     // Test Case to Check Draggable Symbol is displayed
-    final draggableSymbol = DraggableSymbol();
+    const draggableSymbol = DraggableSymbol();
     testWidgets("Draggable Symbol is displayed", (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(draggableSymbol: draggableSymbol));
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(draggableSymbol: draggableSymbol));
       expect(find.byType(DraggableSymbol), findsOneWidget);
     });
   });
