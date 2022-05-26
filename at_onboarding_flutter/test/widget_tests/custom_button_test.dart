@@ -19,7 +19,7 @@ void main() {
 
   /// Functional test cases for custom button
   group('custom button Tests:', () {
-    final customButton = CustomButton(
+    const customButton = CustomButton(
       buttonText: 'Click Here',
       height: 30.0,
       width: 100.0,
