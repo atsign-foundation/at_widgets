@@ -60,6 +60,7 @@ class CustomBottomSheet extends StatelessWidget {
                     onPressed: () {
                       onPressed!();
                       selectedList!(snapshot.data);
+                      _contactServive.selectedContacts = [];
                     },
                   )
                 ],

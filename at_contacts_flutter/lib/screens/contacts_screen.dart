@@ -29,6 +29,9 @@ class ContactsScreen extends StatefulWidget {
   final bool asSingleSelectionScreen;
   final Function? saveGroup, onSendIconPressed;
 
+  /// to show already selected contacts.
+  final List<AtContact>? selectedContactsHistory;
+
   const ContactsScreen(
       {Key? key,
       this.selectedList,
@@ -37,7 +40,8 @@ class ContactsScreen extends StatefulWidget {
       this.asSelectionScreen = false,
       this.asSingleSelectionScreen = false,
       this.saveGroup,
-      this.onSendIconPressed})
+      this.onSendIconPressed,
+      this.selectedContactsHistory})
       : super(key: key);
   @override
   _ContactsScreenState createState() => _ContactsScreenState();
@@ -48,7 +52,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   String searchText = '';
 
   /// reference to singleton instance of contact service
-  ContactService? _contactService;
+  late ContactService _contactService;
 
   /// boolean flag to indicate deletion action in progress
   bool deletingContact = false;
@@ -64,14 +68,20 @@ class _ContactsScreenState extends State<ContactsScreen> {
   @override
   void initState() {
     _contactService = ContactService();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
-      var _result = await _contactService!.fetchContacts();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      var _result = await _contactService.fetchContacts();
       if (_result == null) {
         if (mounted) {
           setState(() {
             errorOcurred = true;
           });
         }
+      }
+
+      if (widget.selectedContactsHistory != null) {
+        _contactService.selectedContacts = widget.selectedContactsHistory!;
+        _contactService.selectedContactSink
+            .add(_contactService.selectedContacts);
       }
     });
 
@@ -162,8 +172,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                       : Container(),
                   Expanded(
                       child: StreamBuilder<List<BaseContact?>>(
-                    stream: _contactService!.contactStream,
-                    initialData: _contactService!.baseContactList,
+                    stream: _contactService.contactStream,
+                    initialData: _contactService.baseContactList,
                     builder: (context, snapshot) {
                       if ((snapshot.connectionState ==
                           ConnectionState.waiting)) {
@@ -330,8 +340,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
         ),
       ),
     );
-    await _contactService!
-        .blockUnblockContact(contact: contact, blockAction: true);
+    await _contactService.blockUnblockContact(
+        contact: contact, blockAction: true);
     setState(() {
       blockingContact = false;
       Navigator.pop(context);
@@ -357,7 +367,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         ),
       ),
     );
-    await _contactService!.deleteAtSign(atSign: contact.atSign!);
+    await _contactService.deleteAtSign(atSign: contact.atSign!);
     setState(() {
       deletingContact = false;
       Navigator.pop(context);

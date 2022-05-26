@@ -173,43 +173,49 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                                 ConnectionState.active &&
                             !snapshot.hasError) {
                           var itemCount = snapshot.data!.length;
-                          return ListView.separated(
-                            itemCount: itemCount,
-                            itemBuilder: (context, index) {
-                              var baseContact = snapshot.data![index]!;
+                          if (itemCount > 0) {
+                            return ListView.separated(
+                              itemCount: itemCount,
+                              itemBuilder: (context, index) {
+                                var baseContact = snapshot.data![index]!;
 
-                              if (baseContact.contact!.atSign!
-                                  .contains(searchText)) {
-                                _filteredList.add(baseContact);
-                                return Container(
-                                  key: UniqueKey(),
-                                  child: contactsTile(baseContact),
-                                );
-                              } else {
-                                _filteredList.remove(baseContact);
+                                if (baseContact.contact!.atSign!
+                                    .contains(searchText)) {
+                                  _filteredList.add(baseContact);
+                                  return Container(
+                                    key: UniqueKey(),
+                                    child: contactsTile(baseContact),
+                                  );
+                                } else {
+                                  _filteredList.remove(baseContact);
 
-                                if (_filteredList.isEmpty &&
-                                    searchText.trim().isNotEmpty &&
-                                    index == itemCount - 1) {
-                                  return const Center(
-                                    child: Text('No Contacts found'),
+                                  if (_filteredList.isEmpty &&
+                                      searchText.trim().isNotEmpty &&
+                                      index == itemCount - 1) {
+                                    return const Center(
+                                      child: Text('No Contacts found'),
+                                    );
+                                  }
+
+                                  return const SizedBox();
+                                }
+                              },
+                              separatorBuilder: (context, index) {
+                                var baseContact = snapshot.data![index]!;
+                                if (baseContact.contact!.atSign!
+                                    .contains(searchText)) {
+                                  return const Divider(
+                                    thickness: 0.2,
                                   );
                                 }
-
                                 return const SizedBox();
-                              }
-                            },
-                            separatorBuilder: (context, index) {
-                              var baseContact = snapshot.data![index]!;
-                              if (baseContact.contact!.atSign!
-                                  .contains(searchText)) {
-                                return const Divider(
-                                  thickness: 0.2,
-                                );
-                              }
-                              return const SizedBox();
-                            },
-                          );
+                              },
+                            );
+                          } else {
+                            return const Center(
+                              child: Text('No contacts found'),
+                            );
+                          }
                         } else {
                           return const SizedBox();
                         }
