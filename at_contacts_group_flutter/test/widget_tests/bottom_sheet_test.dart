@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_group_flutter/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,7 @@ void main() {
     // Test Case to check group bottom sheet is displayed or not
     testWidgets('Add Contacts Group Widget is Displayed',
         (WidgetTester tester) async {
-      final bottomSheet = GroupBottomSheet(
+      const bottomSheet = GroupBottomSheet(
         buttontext: '',
       );
       await tester
@@ -27,7 +29,7 @@ void main() {
     });
     // Test case to check button text is given
     testWidgets("Button Text is given", (WidgetTester tester) async {
-      final bottomSheet = GroupBottomSheet(
+      const bottomSheet = GroupBottomSheet(
         buttontext: 'Click here',
       );
       await tester
@@ -37,7 +39,7 @@ void main() {
 
     // Test case to message is given
     testWidgets("Message is given", (WidgetTester tester) async {
-      final bottomSheet = GroupBottomSheet(
+      const bottomSheet = GroupBottomSheet(
         buttontext: 'Click here',
         message: 'Hi',
       );
@@ -51,7 +53,7 @@ void main() {
       final bottomSheet = GroupBottomSheet(
         buttontext: 'Click here',
         onPressed: () {
-          print('Onpress given an action');
+          log('Onpress given an action');
         },
       );
       await tester

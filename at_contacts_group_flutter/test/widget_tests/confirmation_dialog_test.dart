@@ -1,5 +1,7 @@
+import 'dart:developer';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
+import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -19,7 +21,7 @@ void main() {
         heading: 'heading',
         title: 'title',
         onYesPressed: () {
-          print('Onpress is given an action');
+          log('Onpress is given an action');
         });
     // Test Case to check confirmation dialog is displayed or not
     testWidgets('Test Case to confirmation dialog is displayed',
@@ -42,11 +44,11 @@ void main() {
           _wrapWidgetWithMaterialApp(confirmationDialog: confirmationDialog));
       expect(find.text('title'), findsOneWidget);
     });
-    
-        // Test case to check onPress functionality
+
+    // Test case to check onPress functionality
     testWidgets("OnPress is given an action", (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(confirmationDialog: confirmationDialog));
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(confirmationDialog: confirmationDialog));
       expect(confirmationDialog.onYesPressed.call(), null);
     });
   });

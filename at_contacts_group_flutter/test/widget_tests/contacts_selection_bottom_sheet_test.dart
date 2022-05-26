@@ -16,12 +16,13 @@ void main() {
 
   /// Functional test cases for contact selection bottom sheet
   group('Contact selection bottom sheet widget Test', () {
-    final contactSelectionBottomSheet = ContactSelectionBottomSheet();
+    const contactSelectionBottomSheet = ContactSelectionBottomSheet();
     // Test Case to check  is contact selection bottom sheet displayed or not
-    testWidgets('Test Case to check contact selection bottom sheet is displayed',
+    testWidgets(
+        'Test Case to check contact selection bottom sheet is displayed',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(contactSelectionBottomSheet: contactSelectionBottomSheet));
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+          contactSelectionBottomSheet: contactSelectionBottomSheet));
       expect(find.byType(ContactSelectionBottomSheet), findsOneWidget);
     });
   });

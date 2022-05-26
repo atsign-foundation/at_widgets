@@ -242,12 +242,10 @@ class _GroupContactViewState extends State<GroupContactView> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                      // ignore: prefer_const_constructors
-                      child: Icon(
+                  const Icon(
                     Icons.view_module,
                     color: ColorConstants.greyText,
-                  )),
+                  ),
                   Switch(
                       value: toggleList,
                       activeColor: ColorConstants.fadedGreyBackground,
@@ -257,11 +255,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                           toggleList = !toggleList;
                         });
                       }),
-                  Container(
-                    // ignore: prefer_const_constructors
-                    child:
-                        Icon(Icons.view_list, color: ColorConstants.greyText),
-                  ),
+                  const Icon(Icons.view_list, color: ColorConstants.greyText),
                 ],
               ),
             ),

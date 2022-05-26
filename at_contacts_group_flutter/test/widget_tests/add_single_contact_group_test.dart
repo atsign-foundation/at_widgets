@@ -1,5 +1,4 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_contacts_group_flutter/widgets/add_contacts_group_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/add_single_contact_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,16 +18,18 @@ void main() {
     // Test Case to Add single contact contact is displayed or not
     testWidgets('Add Contacts Group Widget is Displayed',
         (WidgetTester tester) async {
-      final addSingleContactGroup = AddSingleContact();
+      const addSingleContactGroup = AddSingleContact();
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
           addSingleContactGroup: addSingleContactGroup));
-    expect(find.byType(AddSingleContact), findsOneWidget);
+      expect(find.byType(AddSingleContact), findsOneWidget);
     });
-     // Test case to check atsign name is given or not
+    // Test case to check atsign name is given or not
     testWidgets("Atsign name is displayed", (WidgetTester tester) async {
-      final addSingleContactGroup = AddSingleContact(atSignName: '@',);
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(addSingleContactGroup: addSingleContactGroup));
+      const addSingleContactGroup = AddSingleContact(
+        atSignName: '@',
+      );
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+          addSingleContactGroup: addSingleContactGroup));
       expect(find.text('@'), findsOneWidget);
     });
   });
