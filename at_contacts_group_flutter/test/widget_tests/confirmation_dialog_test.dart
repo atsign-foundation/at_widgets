@@ -1,5 +1,5 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_contacts_group_flutter/widgets/confirmation-dialog.dart';
+import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
