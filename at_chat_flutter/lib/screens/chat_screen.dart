@@ -72,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _scrollController = ScrollController();
     _chatService = ChatService();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await _chatService.getChatHistory();
     });
   }
