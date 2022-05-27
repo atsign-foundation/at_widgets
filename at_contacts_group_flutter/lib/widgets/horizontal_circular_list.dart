@@ -47,6 +47,7 @@ class _HorizontalCircularListState extends State<HorizontalCircularList> {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 return CircularContacts(
+                  key: Key(selectedContacts[index].toString()),
                   groupContact: selectedContacts[index],
                   asSelectionTile: true,
                   onCrossPressed: () {

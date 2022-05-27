@@ -139,7 +139,10 @@ class _GroupContactViewState extends State<GroupContactView> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            if (!widget.isDesktop) {
+              Navigator.pop(context);
+            }
+
             if (widget.onBackArrowTap != null) {
               widget.onBackArrowTap!(_groupService.selectedGroupContacts);
             }

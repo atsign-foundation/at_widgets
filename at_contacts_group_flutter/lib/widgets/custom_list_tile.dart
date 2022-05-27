@@ -57,33 +57,24 @@ class _CustomListTileState extends State<CustomListTile> {
   void initState() {
     _groupService = GroupService();
     // ignore: omit_local_variable_types
-    for (GroupContactsModel? groupContact
-        in _groupService.selectedGroupContacts) {
-      if (widget.item.toString() == groupContact.toString()) {
-        isSelected = true;
-        break;
-      } else {
-        isSelected = false;
-      }
-    }
+
+    getIsSelectedValue(_groupService.selectedGroupContacts);
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    _groupService = GroupService();
-
-    // ignore: omit_local_variable_types
-    for (GroupContactsModel? groupContact
-        in _groupService.selectedGroupContacts) {
-      if (widget.item.toString() == groupContact.toString()) {
+  getIsSelectedValue(List<GroupContactsModel?> selectedGroupContacts) {
+    isSelected = false;
+    for (GroupContactsModel? groupContact in selectedGroupContacts) {
+      if (groupContact!.contact != null &&
+          widget.item!.contact != null &&
+          groupContact.contact!.atSign == widget.item!.contact!.atSign) {
         isSelected = true;
-        break;
-      } else {
-        isSelected = false;
+      } else if (groupContact.group != null &&
+          widget.item!.group != null &&
+          groupContact.group!.groupId == widget.item!.group!.groupId) {
+        isSelected = true;
       }
     }
-    super.didChangeDependencies();
   }
 
   getNameAndImage() {
@@ -121,20 +112,7 @@ class _CustomListTileState extends State<CustomListTile> {
         initialData: _groupService.selectedGroupContacts,
         stream: _groupService.selectedContactsStream,
         builder: (context, snapshot) {
-          // if (!widget.selectSingle) {
-          // ignore: omit_local_variable_types
-          for (GroupContactsModel? groupContact
-              in _groupService.selectedGroupContacts) {
-            if (widget.item.toString() == groupContact.toString()) {
-              isSelected = true;
-              break;
-            } else {
-              isSelected = false;
-            }
-          }
-          if (_groupService.selectedGroupContacts.isEmpty) {
-            isSelected = false;
-          }
+          getIsSelectedValue(_groupService.selectedGroupContacts);
 
           return ListTile(
             onTap: () {
@@ -209,8 +187,12 @@ class _CustomListTileState extends State<CustomListTile> {
                   : selectRemoveContact(),
               icon: (widget.asSelectionTile)
                   ? (isSelected)
-                      ? const Icon(Icons.close)
-                      : const Icon(Icons.add)
+                      ? const Icon(
+                          Icons.cancel_rounded,
+                          size: 26.0,
+                          color: Colors.red,
+                        )
+                      : const Icon(Icons.add, size: 24.0, color: Colors.green)
                   : Image.asset(
                       AllImages().SEND,
                       width: 21.toWidth,

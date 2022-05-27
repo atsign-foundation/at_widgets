@@ -419,9 +419,8 @@ class ContactService {
   void removeSelectedAtSign(AtContact? contact) {
     try {
       for (AtContact? atContact in selectedContacts) {
-        if (contact == atContact || atContact!.atSign == contact!.atSign) {
-          var index = selectedContacts.indexOf(contact!);
-          print('index is $index');
+        if (atContact!.atSign == contact!.atSign) {
+          var index = selectedContacts.indexOf(contact);
           selectedContacts.removeAt(index);
           break;
         }
@@ -467,9 +466,13 @@ class ContactService {
     } else if (!atSign.contains('@')) {
       atSign = '@' + atSign;
     }
-    var checkPresence =
-        await AtLookupImpl.findSecondary(atSign, rootDomain, rootPort);
-    return checkPresence != null;
+    try {
+      var checkPresence =
+          await AtLookupImpl.findSecondary(atSign, rootDomain, rootPort);
+      return checkPresence != null;
+    } catch (e) {
+      return false;
+    }
   }
 
   /// Function to get firstname, lastname and profile picture of an atsign

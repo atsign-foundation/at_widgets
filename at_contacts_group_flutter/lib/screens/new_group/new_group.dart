@@ -301,12 +301,6 @@ class _NewGroupState extends State<NewGroup> {
                           progressIndicatorColor: Colors.blue,
                           showRecentsTab: true,
                           recentsLimit: 28,
-                          noRecentsText: 'No Recents',
-                          noRecentsStyle: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black26,
-                            fontWeight: FontWeight.normal,
-                          ),
                           categoryIcons: CategoryIcons(),
                           buttonMode: ButtonMode.MATERIAL),
                       onEmojiSelected: (category, emoji) {

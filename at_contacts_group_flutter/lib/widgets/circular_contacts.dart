@@ -45,33 +45,24 @@ class _CircularContactsState extends State<CircularContacts> {
   void initState() {
     _groupService = GroupService();
     // ignore: omit_local_variable_types
-    for (GroupContactsModel? groupContact
-        in _groupService.selectedGroupContacts) {
-      if (widget.groupContact.toString() == groupContact.toString()) {
-        isSelected = true;
-        break;
-      } else {
-        isSelected = false;
-      }
-    }
+    getIsSelectedValue();
+
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    _groupService = GroupService();
-
-    // ignore: omit_local_variable_types
-    for (GroupContactsModel? groupContact
-        in _groupService.selectedGroupContacts) {
-      if (widget.groupContact.toString() == groupContact.toString()) {
+  getIsSelectedValue() {
+    isSelected = false;
+    for (GroupContactsModel? el in _groupService.selectedGroupContacts) {
+      if (el!.contact != null &&
+          widget.groupContact!.contact != null &&
+          el.contact!.atSign == widget.groupContact!.contact!.atSign) {
         isSelected = true;
-        break;
-      } else {
-        isSelected = false;
+      } else if (el.group != null &&
+          widget.groupContact!.group != null &&
+          el.group!.groupId == widget.groupContact!.group!.groupId) {
+        isSelected = true;
       }
     }
-    super.didChangeDependencies();
   }
 
   getNameAndImage() {
@@ -111,21 +102,7 @@ class _CircularContactsState extends State<CircularContacts> {
         initialData: _groupService.selectedGroupContacts,
         stream: _groupService.selectedContactsStream,
         builder: (context, snapshot) {
-          // if (!widget.selectSingle) {
-          // ignore: omit_local_variable_types
-          for (GroupContactsModel? groupContact
-              in _groupService.selectedGroupContacts) {
-            if (widget.groupContact.toString() == groupContact.toString()) {
-              isSelected = true;
-              break;
-            } else {
-              isSelected = false;
-            }
-          }
-          if (_groupService.selectedGroupContacts.isEmpty) {
-            isSelected = false;
-          }
-
+          getIsSelectedValue();
           return GestureDetector(
             onTap: () {
               if (widget.asSelectionTile) {
@@ -243,7 +220,7 @@ class _CircularContactsState extends State<CircularContacts> {
                       ),
                       SizedBox(height: 10.toHeight),
                       SizedBox(
-                        width: 60.toWidth,
+                        width: 80.toWidth,
                         child: Text(
                           (widget.groupContact?.contact?.atSign ??
                               widget.groupContact?.group?.groupName)!,
