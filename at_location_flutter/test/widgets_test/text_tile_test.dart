@@ -18,7 +18,7 @@ void main() {
     // Test case to identify Text tile is used in screen or not
     testWidgets("Test case to identify Text tile is used in screen or not",
         (WidgetTester tester) async {
-      final textTile = TextTile();
+      const textTile = TextTile();
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(textTile: textTile));
 
       expect(find.byType(TextTile), findsOneWidget);
@@ -27,7 +27,7 @@ void main() {
     // Test case to identify Text tile bg color and icon color is given
     testWidgets("Test case to identify Text tile title is given",
         (WidgetTester tester) async {
-      final textTile = TextTile(
+      const textTile = TextTile(
         title: 'Text Tile Title',
       );
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(textTile: textTile));
@@ -36,7 +36,7 @@ void main() {
     // Test case to identify Text tile widget icon is given
     testWidgets("Test case to identify Text tile widget icon is given",
         (WidgetTester tester) async {
-      final textTile = TextTile(
+      const textTile = TextTile(
         icon: Icons.add,
       );
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(textTile: textTile));

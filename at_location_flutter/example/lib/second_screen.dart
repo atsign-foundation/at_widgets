@@ -33,7 +33,7 @@ class _SecondScreenState extends State<SecondScreen> {
       getAtSignAndInitializeLocation();
       scaffoldKey = GlobalKey<ScaffoldState>();
     } catch (e) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         showDialog(
           context: context,
           barrierDismissible: false,
