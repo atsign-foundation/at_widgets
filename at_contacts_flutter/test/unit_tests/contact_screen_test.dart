@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -12,7 +14,7 @@ void main() {
     });
     test('Contacts fetched form contacts service', () {
       when(() => mockContactService.fetchContacts().then((_) async {
-            print('Contacts fetched successfully');
+            log('Contacts fetched successfully');
           }));
     });
   });
