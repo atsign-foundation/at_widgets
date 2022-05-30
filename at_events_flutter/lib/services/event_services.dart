@@ -11,6 +11,7 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
+// ignore: implementation_imports
 import 'package:at_client/src/service/notification_service.dart';
 
 import 'event_key_stream_service.dart';
