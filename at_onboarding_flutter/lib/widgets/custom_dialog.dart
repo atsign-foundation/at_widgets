@@ -1321,8 +1321,9 @@ class _CustomDialogState extends State<CustomDialog> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
                           String url = 'https://my.atsign.com';
-                          if (!widget.hideReferences && await canLaunch(url)) {
-                            await launch(url);
+                          if (!widget.hideReferences &&
+                              await canLaunchUrl(Uri(path: url))) {
+                            await launchUrl(Uri(path: url));
                           }
                         }),
                   TextSpan(
@@ -1396,8 +1397,8 @@ class _CustomDialogState extends State<CustomDialog> {
                       ? params.toString()
                       : highLightText;
                   String errorMessage = 'Cannot launch $url';
-                  if (await canLaunch(url)) {
-                    if (!widget.hideReferences) await launch(url);
+                  if (await canLaunchUrl(Uri(path: url))) {
+                    if (!widget.hideReferences) await launchUrl(Uri(path: url));
                   } else {
                     await showDialog(
                         barrierDismissible: false,
