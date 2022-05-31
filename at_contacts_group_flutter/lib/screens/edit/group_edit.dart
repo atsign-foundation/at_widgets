@@ -179,7 +179,7 @@ class _GroupEditState extends State<GroupEdit> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          'Edit Text Picture',
+                          'Edit group picture',
                           style: CustomTextStyles().orange12,
                         ),
                         SizedBox(
