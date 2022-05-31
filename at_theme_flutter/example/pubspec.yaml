@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   at_theme_flutter:
     path: ../
-  at_app_flutter: 4.0.1
+  at_app_flutter: ^5.0.0+1
 
 dev_dependencies:
   flutter_test:
