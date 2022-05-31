@@ -37,7 +37,7 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
   @override
   void initState() {
     _contactService = ContactService();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       List<AtContact>? _result, _result2;
       if (widget.isBlockedScreen) {
         _result2 = await _contactService!.fetchBlockContactList();

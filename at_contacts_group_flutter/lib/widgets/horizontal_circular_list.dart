@@ -34,7 +34,7 @@ class _HorizontalCircularListState extends State<HorizontalCircularList> {
           List<GroupContactsModel?> selectedContacts = snapshot.data!;
 
           // send data to front end.
-          WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             if (selectedContacts.isNotEmpty && widget.onContactsTap != null) {
               widget.onContactsTap!(selectedContacts);
             }
