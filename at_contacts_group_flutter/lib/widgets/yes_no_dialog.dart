@@ -1,7 +1,12 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 
-shownConfirmationDialog(BuildContext context, String title, Function onYesTap) {
+shownConfirmationDialog(
+  BuildContext context,
+  String title,
+  Function onYesTap, {
+  Function? onNoTap,
+}) {
   showDialog(
       context: context,
       builder: (context) {
@@ -36,6 +41,7 @@ shownConfirmationDialog(BuildContext context, String title, Function onYesTap) {
                       TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
+                            onNoTap?.call();
                           },
                           child: Text('Cancel',
                               style: TextStyle(
