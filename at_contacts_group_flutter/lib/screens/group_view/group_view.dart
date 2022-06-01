@@ -13,12 +13,16 @@ import 'package:at_contacts_group_flutter/widgets/error_screen.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
+
+import '../list/group_list.dart';
 
 /// This widget shows the group details with it's members in a grid view
 class GroupView extends StatefulWidget {
   final AtGroup group;
+
   const GroupView({Key? key, required this.group}) : super(key: key);
 
   @override
@@ -26,7 +30,8 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
-  // List<AtContact> selectedContactList = GroupService().selecteContactList;
+  List<AtContact> contacts = [];
+
   @override
   void initState() {
     super.initState();
@@ -117,6 +122,7 @@ class _GroupViewState extends State<GroupView> {
                             } else {
                               if (snapshot.hasData) {
                                 var groupData = snapshot.data!;
+                                contacts = groupData.members?.toList() ?? [];
                                 return GridView.count(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
@@ -315,11 +321,16 @@ class _GroupViewState extends State<GroupView> {
                 top: 30.toHeight,
                 right: 10.toWidth,
                 child: InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GroupEdit(group: widget.group)),
-                  ),
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GroupEdit(
+                          group: widget.group,
+                        ),
+                      ),
+                    );
+                  },
                   child: Container(
                     padding: EdgeInsets.all(5.toFont),
                     decoration: const BoxDecoration(
@@ -353,9 +364,17 @@ class _GroupViewState extends State<GroupView> {
           onYesPressed: () async {
             var result =
                 await GroupService().deletGroupMembers([contact], widget.group);
-
             if (result is bool && result) {
               Navigator.of(context).pop();
+              CustomToast()
+                  .show("${contact.atSign ?? ''} deleted successfully!", context);
+              if (contacts.isEmpty) {
+                showDeleteGroupDialog(
+                  context,
+                  widget.group,
+                  heading: "Do you want to remove this group?",
+                );
+              }
             } else if (result == null) {
               CustomToast().show(TextConstants().SERVICE_ERROR, context);
             } else {

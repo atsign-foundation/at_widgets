@@ -159,7 +159,7 @@ class _GroupListState extends State<GroupList> {
                                             padding: const EdgeInsets.all(8.0),
                                             child: InkWell(
                                               onLongPress: () {
-                                                showMyDialog(context,
+                                                showDeleteGroupDialog(context,
                                                     snapshot.data![index]);
                                               },
                                               onTap: () async {
@@ -218,7 +218,7 @@ class _GroupListState extends State<GroupList> {
                                         itemBuilder: (context, index) {
                                           return InkWell(
                                             onLongPress: () {
-                                              showMyDialog(context,
+                                              showDeleteGroupDialog(context,
                                                   snapshot.data![index]);
                                             },
                                             onTap: () async {
@@ -271,7 +271,11 @@ class _GroupListState extends State<GroupList> {
   }
 }
 
-Future<void> showMyDialog(BuildContext context, AtGroup group) async {
+Future<void> showDeleteGroupDialog(
+  BuildContext context,
+  AtGroup group, {
+  String? heading,
+}) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: true,
@@ -283,7 +287,7 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
       }
       return ConfirmationDialog(
         title: '${group.displayName}',
-        heading: 'Are you sure you want to delete this group?',
+        heading: heading ?? 'Are you sure you want to delete this group?',
         onYesPressed: () async {
           var result = await GroupService().deleteGroup(group);
 
