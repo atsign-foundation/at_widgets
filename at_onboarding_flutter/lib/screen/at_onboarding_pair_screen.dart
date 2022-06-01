@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../at_onboarding.dart';
 import '../at_onboarding_result.dart';
 import 'at_onboarding_otp_screen.dart';
 import 'at_onboarding_reference_screen.dart';
@@ -86,9 +85,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
+                const SizedBox(height: 5),
                 TextFormField(
                   enabled: true,
                   focusNode: _focusNode,
@@ -113,24 +110,19 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   textCapitalization: TextCapitalization.none,
                   decoration: InputDecoration(
                     fillColor: Colors.blueAccent,
-                    errorStyle: TextStyle(
-                      fontSize: 12,
-                    ),
+                    errorStyle: const TextStyle(fontSize: 12),
                     prefixStyle: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 15),
+                        color: Theme.of(context).primaryColor, fontSize: 15),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                         horizontal: AtOnboardingDimens.paddingSmall),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 const Text(
                   AtOnboardingStrings.emailNote,
                   style: TextStyle(
@@ -138,9 +130,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                     fontSize: AtOnboardingDimens.fontNormal,
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 AtOnboardingPrimaryButton(
                   height: 48,
                   borderRadius: 24,
@@ -211,7 +201,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
         oldEmail = email;
       }
       if (errorMessage.contains('maximum number of free @signs')) {
-        await showlimitDialog(context);
+        await showlimitDialog();
       } else {
         AtOnboardingDialog.showError(context: context, message: errorMessage);
       }
@@ -219,7 +209,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
     return status;
   }
 
-  Future<AlertDialog?> showlimitDialog(BuildContext context) async {
+  Future<AlertDialog?> showlimitDialog() async {
     return showDialog<AlertDialog>(
         context: context,
         builder: (BuildContext context) {
@@ -227,11 +217,9 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
             content: RichText(
               text: TextSpan(
                 children: <InlineSpan>[
-                  TextSpan(
+                  const TextSpan(
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        letterSpacing: 0.5),
+                        color: Colors.black, fontSize: 16, letterSpacing: 0.5),
                     text:
                         'Oops! You already have the maximum number of free @signs. Please login to ',
                   ),
@@ -249,12 +237,10 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                             await launch(url);
                           }
                         }),
-                  TextSpan(
+                  const TextSpan(
                     text: '  to select one of your existing @signs.',
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        letterSpacing: 0.5),
+                        color: Colors.black, fontSize: 16, letterSpacing: 0.5),
                   ),
                 ],
               ),
@@ -283,6 +269,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       hideReferences: false,
     );
     if (result != null && result.secret != null) {
+      if (!mounted) return;
       Navigator.pop(context);
       widget.onGenerateSuccess
           ?.call(atSign: result.atSign, secret: result.secret ?? '');
@@ -303,10 +290,12 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       final result2 = await AtOnboardingOTPScreen.push(
           context: context, atSign: result.atSign, hideReferences: false);
       if (result2 != null) {
+        if (!mounted) return;
         Navigator.pop(context);
         widget.onGenerateSuccess
             ?.call(atSign: result2.atSign, secret: result2.secret ?? '');
       } else {
+        if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.cancelled());
       }
     }

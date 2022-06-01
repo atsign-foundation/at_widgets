@@ -105,9 +105,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
+                const SizedBox(height: 5),
                 PinCodeTextField(
                   controller: _pinCodeController,
                   animationType: AnimationType.none,
@@ -141,9 +139,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   style:
                       const TextStyle(fontSize: AtOnboardingDimens.fontNormal),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 AtOnboardingPrimaryButton(
                   height: 48,
                   borderRadius: 24,
@@ -152,9 +148,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   onPressed: _onVerifyPressed,
                   child: const Text('Verify & Login'),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 AtOnboardingSecondaryButton(
                   height: 48,
                   borderRadius: 24,
@@ -171,8 +165,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
     );
   }
 
-  Future<void> showErrorDialog(
-      BuildContext context, String? errorMessage) async {
+  Future<void> showErrorDialog(String? errorMessage) async {
     return AtOnboardingDialog.showError(
         context: context, message: errorMessage ?? '');
   }
@@ -193,6 +186,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
           widget.atSign, _pinCodeController.text, context);
       isVerifing = false;
       setState(() {});
+      if (!mounted) return;
       Navigator.pop(context,
           AtOnboardingOTPResult(atSign: widget.atSign, secret: secret));
       return;
@@ -207,6 +201,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
     setState(() {});
     if (result != null && result != limitExceeded) {
       List<String> params = result.split(':');
+      if (!mounted) return;
       Navigator.pop(
           context, AtOnboardingOTPResult(atSign: params[0], secret: params[1]));
     }
@@ -229,14 +224,14 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         cramSecret = data['cramkey'];
       } else {
         String errorMessage = data['message'];
-        await showErrorDialog(context, errorMessage);
+        await showErrorDialog(errorMessage);
       }
       // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      await showErrorDialog(context, errorMessage);
+      await showErrorDialog(errorMessage);
     }
     return cramSecret ?? '';
   }
@@ -256,7 +251,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      await showErrorDialog(context, errorMessage);
+      await showErrorDialog(errorMessage);
     }
     return status;
   }
@@ -276,7 +271,6 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         await _freeAtsignService.registerPerson(widget.atSign, widget.email!);
     if (response.statusCode == 200) {
       //Success
-      final data = jsonDecode(response.body);
       _pinCodeController.text = '';
       // status = true;
       // atsign = data['data']['atsign'];
@@ -288,9 +282,9 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
       //   oldEmail = email;
       // }
       if (errorMessage.contains('maximum number of free @signs')) {
-        await showlimitDialog(context);
+        await showlimitDialog();
       } else {
-        await showErrorDialog(context, errorMessage);
+        await showErrorDialog(errorMessage);
       }
     }
     setState(() {
@@ -358,14 +352,14 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         cramSecret = data['cramkey'];
       } else {
         String? errorMessage = data['message'];
-        await showErrorDialog(context, errorMessage);
+        await showErrorDialog(errorMessage);
       }
       // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
       String? errorMessage = data['message'];
-      await showErrorDialog(context, errorMessage);
+      await showErrorDialog(errorMessage);
     }
     return cramSecret;
   }
@@ -391,15 +385,15 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         oldEmail = email;
       }
       if (errorMessage.contains('maximum number of free @signs')) {
-        await showlimitDialog(context);
+        await showlimitDialog();
       } else {
-        await showErrorDialog(context, errorMessage);
+        await showErrorDialog(errorMessage);
       }
     }
     return status;
   }
 
-  Future<AlertDialog?> showlimitDialog(BuildContext context) async {
+  Future<AlertDialog?> showlimitDialog() async {
     return showDialog<AlertDialog>(
         context: context,
         builder: (BuildContext context) {
@@ -407,11 +401,9 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
             content: RichText(
               text: TextSpan(
                 children: <InlineSpan>[
-                  TextSpan(
+                  const TextSpan(
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        letterSpacing: 0.5),
+                        color: Colors.black, fontSize: 16, letterSpacing: 0.5),
                     text:
                         'Oops! You already have the maximum number of free @signs. Please login to ',
                   ),
@@ -429,12 +421,10 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                             await launch(url);
                           }
                         }),
-                  TextSpan(
+                  const TextSpan(
                     text: '  to select one of your existing @signs.',
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        letterSpacing: 0.5),
+                        color: Colors.black, fontSize: 16, letterSpacing: 0.5),
                   ),
                 ],
               ),

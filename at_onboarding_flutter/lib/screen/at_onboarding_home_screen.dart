@@ -144,7 +144,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         File selectedFile = File(path);
         int length = selectedFile.lengthSync();
         if (length < 10) {
-          await showErrorDialog(context, _incorrectKeyFile);
+          await showErrorDialog(_incorrectKeyFile);
           return;
         }
 
@@ -159,13 +159,13 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 file.name.contains('_private_key.png')) {
               List<int> bytes = file.content as List<int>;
               String path = (await path_provider.getTemporaryDirectory()).path;
-              File file1 = await File(path + 'test').create();
+              File file1 = await File('${path}test').create();
               file1.writeAsBytesSync(bytes);
               String result = await FlutterQrReader.imgScan(file1.path);
               List<String> params = result.replaceAll('"', '').split(':');
               atsign = params[0];
               aesKey = params[1];
-              await File(path + 'test').delete();
+              await File('${path}test').delete();
               //read scan QRcode and extract atsign,aeskey
             }
           }
@@ -185,7 +185,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           bool result = _validatePickedFileContents(fileContents);
           _logger.finer('result after extracting data is......$result');
           if (!result) {
-            await showErrorDialog(context, _incorrectKeyFile);
+            await showErrorDialog(_incorrectKeyFile);
             setState(() {
               loading = false;
             });
@@ -203,7 +203,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         aesKey = params[1];
       }
       if (fileContents == null || (aesKey == null && atsign == null)) {
-        await showErrorDialog(context, _incorrectKeyFile);
+        await showErrorDialog(_incorrectKeyFile);
         setState(() {
           loading = false;
         });
@@ -211,7 +211,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
               _pairingAtsign &&
           _pairingAtsign != null) {
-        await showErrorDialog(context,
+        await showErrorDialog(
             AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
         setState(() {
           loading = false;
@@ -227,7 +227,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         loading = false;
       });
       _logger.severe('Uploading backup zip file throws $error');
-      await showErrorDialog(context, _failedFileProcessing);
+      await showErrorDialog(_failedFileProcessing);
     }
   }
 
@@ -247,7 +247,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       File selectedFile = File(path);
       int length = selectedFile.lengthSync();
       if (length < 10) {
-        await showErrorDialog(context, _incorrectKeyFile);
+        await showErrorDialog(_incorrectKeyFile);
         return;
       }
 
@@ -263,7 +263,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         aesKey = params[1];
       }
       if (fileContents.isEmpty || (aesKey == null && atsign == null)) {
-        await showErrorDialog(context, _incorrectKeyFile);
+        await showErrorDialog(_incorrectKeyFile);
         setState(() {
           loading = false;
         });
@@ -271,7 +271,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       } else if (OnboardingService.getInstance().formatAtSign(atsign) !=
               _pairingAtsign &&
           _pairingAtsign != null) {
-        await showErrorDialog(context,
+        await showErrorDialog(
             AtOnboardingErrorToString().atsignMismatch(_pairingAtsign));
         setState(() {
           loading = false;
@@ -287,7 +287,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         loading = false;
       });
       _logger.severe('Uploading backup zip file throws $error');
-      await showErrorDialog(context, _failedFileProcessing);
+      await showErrorDialog(_failedFileProcessing);
     }
   }
 
@@ -342,8 +342,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
         _inprogressDialog.close();
-        await showErrorDialog(
-            context, AtOnboardingErrorToString().pairedAtsign(atsign));
+        await showErrorDialog(AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
       authResponse = await _onboardingService.authenticate(atsign,
@@ -351,6 +350,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
+        if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign!));
       } else {
         //Todo:
@@ -361,17 +361,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         await _processAESKey(atsign, aesKey, contents);
       } else if (e == AtOnboardingResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWithAESKey');
-        await showErrorDialog(context, 'Auth Failed');
+        await showErrorDialog('Auth Failed');
       } else if (e == AtOnboardingResponseStatus.timeOut) {
-        await showErrorDialog(context, 'Response Time out');
+        await showErrorDialog('Response Time out');
       } else {
         _logger.warning(e);
       }
     }
   }
 
-  Future<void> showErrorDialog(
-      BuildContext context, String? errorMessage) async {
+  Future<void> showErrorDialog(String? errorMessage) async {
     return AtOnboardingDialog.showError(
         context: context, message: errorMessage ?? '');
   }
@@ -443,6 +442,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                           Platform.isWindows)
                       ? _uploadKeyFileForDesktop
                       : _uploadKeyFile,
+                  isLoading: loading,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
@@ -458,14 +458,13 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       )
                     ],
                   ),
-                  isLoading: loading,
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 const Text(
                   'Upload your backup key file from stored location which was generated during the pairing process of your @sign.',
                   style: TextStyle(fontSize: AtOnboardingDimens.fontSmall),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 const Text(
                   'Need an @sign?',
                   style: TextStyle(
@@ -491,7 +490,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                         Icon(Icons.arrow_right_alt_rounded)
                       ],
                     )),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 if (!widget.hideQrScan)
                   const Text(
                     'Have a QR Code?',
@@ -500,7 +499,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                if (!widget.hideQrScan) SizedBox(height: 5),
+                if (!widget.hideQrScan) const SizedBox(height: 5),
                 if (!widget.hideQrScan)
                   (Platform.isAndroid || Platform.isIOS)
                       ? AtOnboardingSecondaryButton(
@@ -540,7 +539,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                             ],
                           ),
                         ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 if (!widget.hideQrScan)
                   const Text(
                     'Activate an @sign?',
@@ -549,7 +548,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                if (!widget.hideQrScan) SizedBox(height: 5),
+                if (!widget.hideQrScan) const SizedBox(height: 5),
                 if (!widget.hideQrScan)
                   AtOnboardingSecondaryButton(
                     height: 48,
@@ -582,6 +581,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   }) async {
     final result = await AtOnboardingInputAtSignScreen.push(context: context);
     if ((result ?? '').isNotEmpty) {
+      if (!mounted) return;
       final result2 = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -593,9 +593,11 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       if (result2 is AtOnboardingResult) {
         switch (result2.status) {
           case AtOnboardingResultStatus.success:
-            Navigator.pop(context, result2);
+            if (!mounted) return;
+            Navigator.of(context).pop(result2);
             break;
           case AtOnboardingResultStatus.error:
+            if (!mounted) return;
             Navigator.pop(context, result2);
             break;
           case AtOnboardingResultStatus.cancel:
@@ -619,15 +621,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         ),
       ),
     );
-    // await showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (_) => AtOnboardingGenerateScreen(
-    //     onGenerateSuccess: ({required String atSign, required String secret}) {
-    //       _processSharedSecret(atSign, secret);
-    //     },
-    //   ),
-    // );
   }
 
   void _showQRCodeScreen({
@@ -642,19 +635,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     if (result is AtOnboardingQRCodeResult) {
       _processSharedSecret(result.atSign, result.secret);
     }
-    // await showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (_) => AtOnboardingQRCodeScreen(
-    //     onScanSuccess: ({required String atSign, required String secret}) {
-    //       _processSharedSecret(atSign, secret);
-    //     },
-    //   ),
-    // );
   }
 
-  Future<dynamic> _processSharedSecret(String atsign, String secret,
-      {bool isScanner = false}) async {
+  Future<dynamic> _processSharedSecret(String atsign, String secret) async {
     dynamic authResponse;
     try {
       _inprogressDialog.show(message: 'Processing...');
@@ -671,6 +654,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
+        if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else {
         //Todo:
@@ -708,7 +692,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
       int length = selectedFile.lengthSync();
       if (length < 10) {
-        await showErrorDialog(context, 'Incorrect QR file');
+        await showErrorDialog('Incorrect QR file');
         return;
       }
 
@@ -725,7 +709,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       aesKey = params[1];
 
       if (aesKey.isEmpty && atsign.isEmpty) {
-        await showErrorDialog(context, 'Incorrect QR file');
+        await showErrorDialog('Incorrect QR file');
         setState(() {
           _uploadingQRCode = false;
         });
@@ -741,7 +725,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       setState(() {
         _uploadingQRCode = false;
       });
-      await showErrorDialog(context, 'Failed to process file');
+      await showErrorDialog('Failed to process file');
     }
   }
 

@@ -17,7 +17,7 @@ class AtOnboardingStartScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AtOnboardingStartScreenState createState() =>
+  State<AtOnboardingStartScreen> createState() =>
       _AtOnboardingStartScreenState();
 }
 
@@ -29,13 +29,14 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
   }
 
   void _init() async {
-    final OnboardingService _onboardingService =
+    final OnboardingService onboardingService =
         OnboardingService.getInstance();
-    _onboardingService.setAtClientPreference = widget.config.atClientPreference;
+    onboardingService.setAtClientPreference = widget.config.atClientPreference;
     try {
-      final result = await _onboardingService.onboard();
+      final result = await onboardingService.onboard();
       debugPrint("AtOnboardingInitScreen: result - $result");
-      Navigator.pop(context, AtOnboardingResult.success(atsign: _onboardingService.currentAtsign!));
+      if (!mounted) return;
+      Navigator.pop(context, AtOnboardingResult.success(atsign: onboardingService.currentAtsign!));
     } catch (e) {
       debugPrint("AtOnboardingInitScreen: error - $e");
       if (e == OnboardingStatus.ATSIGN_NOT_FOUND ||
@@ -44,11 +45,13 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
           context: context,
           config: widget.config,
         );
+        if (!mounted) return;
         Navigator.pop(context, result);
       } else if (e == OnboardingStatus.ACTIVATE) {
         final result = await AtOnboarding.activateAccount(
           context: context,
         );
+        if (!mounted) return;
         Navigator.pop(context, result);
       } else {
         Navigator.pop(context, AtOnboardingResult.error());

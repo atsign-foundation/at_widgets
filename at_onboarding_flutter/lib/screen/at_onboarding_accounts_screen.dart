@@ -23,7 +23,7 @@ class AtOnboardingAccountsScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AtOnboardingAccountsScreenState createState() =>
+  State<AtOnboardingAccountsScreen> createState() =>
       _AtOnboardingAccountsScreenState();
 }
 
@@ -100,7 +100,7 @@ class _AtOnboardingAccountsScreenState
                     child: ListView.builder(
                       itemCount: widget.atsigns.length,
                       itemBuilder: (BuildContext context, int index) {
-                        String currentItem = '@' + widget.atsigns[index];
+                        String currentItem = '@${widget.atsigns[index]}';
                         bool isExist = pairedAtsignsList!.contains(currentItem);
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -136,37 +136,37 @@ class _AtOnboardingAccountsScreenState
     await showDialog<AlertDialog>(
         context: context,
         builder: (_) => AlertDialog(
-          content: RichText(
-            text: TextSpan(
-                style: Theme.of(context).textTheme.bodyText1,
-                children: <InlineSpan>[
-                  const TextSpan(text: 'You have selected  '),
-                  TextSpan(
-                      text: '$atsign ',
-                      style:
-                          const TextStyle(fontWeight: FontWeight.bold)),
-                  const TextSpan(text: 'to pair with this device')
-                ]),
-          ),
-          actions: <Widget>[
-            AtOnboardingSecondaryButton(
-              height: 40,
-              borderRadius: 20,
-              onPressed: () => Navigator.pop(_),
-              child: const Text(
-                AtOnboardingStrings.cancelButton,
+              content: RichText(
+                text: TextSpan(
+                    style: Theme.of(context).textTheme.bodyText1,
+                    children: <InlineSpan>[
+                      const TextSpan(text: 'You have selected  '),
+                      TextSpan(
+                          text: '$atsign ',
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: 'to pair with this device')
+                    ]),
               ),
-            ),
-            AtOnboardingPrimaryButton(
-              height: 40,
-              borderRadius: 20,
-              onPressed: () {
-                Navigator.pop(_);
-                Navigator.pop(context, atsign);
-              },
-              child: const Text('Yes, continue'),
-            )
-          ],
-        ));
+              actions: <Widget>[
+                AtOnboardingSecondaryButton(
+                  height: 40,
+                  borderRadius: 20,
+                  onPressed: () => Navigator.pop(_),
+                  child: const Text(
+                    AtOnboardingStrings.cancelButton,
+                  ),
+                ),
+                AtOnboardingPrimaryButton(
+                  height: 40,
+                  borderRadius: 20,
+                  onPressed: () {
+                    Navigator.pop(_);
+                    Navigator.pop(context, atsign);
+                  },
+                  child: const Text('Yes, continue'),
+                )
+              ],
+            ));
+    return null;
   }
 }

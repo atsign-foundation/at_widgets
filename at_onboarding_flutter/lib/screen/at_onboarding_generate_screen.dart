@@ -102,7 +102,7 @@ class _AtOnboardingGenerateScreenState
                   ),
                 ),
                 const SizedBox(height: 20),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 AtOnboardingSecondaryButton(
                   height: 48,
                   borderRadius: 24,

@@ -19,7 +19,7 @@ class AtOnboardingBackupScreen extends StatefulWidget {
   }
 
   @override
-  _AtOnboardingBackupScreenState createState() =>
+  State<AtOnboardingBackupScreen> createState() =>
       _AtOnboardingBackupScreenState();
 }
 
@@ -68,7 +68,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               style: TextStyle(fontSize: AtOnboardingDimens.fontNormal),
               textAlign: TextAlign.center,
             ),
-            Expanded(child: Container(), flex: 1),
+            Expanded(flex: 1, child: Container()),
             Center(
                 child: Image.asset(
               AtOnboardingStrings.backupZip,
@@ -81,7 +81,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               fit: BoxFit.fill,
               package: AtOnboardingConstants.package,
             )),
-            Expanded(child: Container(), flex: 1),
+            Expanded(flex: 1, child: Container()),
             Container(
               constraints: const BoxConstraints(
                 maxWidth: 400,
@@ -104,8 +104,8 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               child: AtOnboardingSecondaryButton(
                 height: 48,
                 borderRadius: 24,
-                child: const Text(AtOnboardingStrings.continueButtonTitle),
                 onPressed: Navigator.of(context).pop,
+                child: const Text(AtOnboardingStrings.continueButtonTitle),
               ),
             ),
           ],

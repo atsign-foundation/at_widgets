@@ -28,7 +28,7 @@ class AtOnboardingReferenceScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AtOnboardingReferenceScreenState createState() =>
+  State<AtOnboardingReferenceScreen> createState() =>
       _AtOnboardingReferenceScreenState();
 }
 
