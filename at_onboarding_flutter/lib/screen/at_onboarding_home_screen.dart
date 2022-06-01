@@ -21,7 +21,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:zxing2/qrcode.dart';
 import 'package:image/image.dart' as img;
 
-import '../at_onboarding.dart';
+import '../at_onboarding_result.dart';
 import 'at_onboarding_backup_screen.dart';
 import 'at_onboarding_generate_screen.dart';
 import 'at_onboarding_input_atsign_screen.dart';
@@ -351,7 +351,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
-        Navigator.pop(context, AtOnboardingResult.success);
+        Navigator.pop(context, AtOnboardingResult.success(atsign: atsign!));
       } else {
         //Todo:
       }
@@ -434,7 +434,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 AtOnboardingPrimaryButton(
                   height: 48,
                   borderRadius: 24,
@@ -473,7 +473,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 AtOnboardingSecondaryButton(
                     height: 48,
                     borderRadius: 24,
@@ -591,18 +591,14 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 )),
       );
       if (result2 is AtOnboardingResult) {
-        switch (result2) {
-          case AtOnboardingResult.success:
-            Navigator.pop(context, AtOnboardingResult.success);
+        switch (result2.status) {
+          case AtOnboardingResultStatus.success:
+            Navigator.pop(context, result2);
             break;
-          case AtOnboardingResult.error:
-            Navigator.pop(context, AtOnboardingResult.error);
+          case AtOnboardingResultStatus.error:
+            Navigator.pop(context, result2);
             break;
-          case AtOnboardingResult.notFound:
-            break;
-          case AtOnboardingResult.activate:
-            break;
-          case AtOnboardingResult.cancel:
+          case AtOnboardingResultStatus.cancel:
             break;
         }
       }
@@ -675,7 +671,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
-        Navigator.pop(context, AtOnboardingResult.success);
+        Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else {
         //Todo:
       }
