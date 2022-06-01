@@ -1,4 +1,5 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
@@ -34,7 +35,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
     try {
       final result = await _onboardingService.onboard();
       debugPrint("AtOnboardingInitScreen: result - $result");
-      Navigator.pop(context, AtOnboardingResult.success);
+      Navigator.pop(context, AtOnboardingResult.success(atsign: _onboardingService.currentAtsign!));
     } catch (e) {
       debugPrint("AtOnboardingInitScreen: error - $e");
       if (e == OnboardingStatus.ATSIGN_NOT_FOUND ||
@@ -50,7 +51,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
         );
         Navigator.pop(context, result);
       } else {
-        Navigator.pop(context, AtOnboardingResult.error);
+        Navigator.pop(context, AtOnboardingResult.error());
       }
     }
   }
