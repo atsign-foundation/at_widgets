@@ -21,7 +21,7 @@ class AtOnboardingQRCodeScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AtOnboardingQRCodeScreenState createState() =>
+  State<AtOnboardingQRCodeScreen> createState() =>
       _AtOnboardingQRCodeScreenState();
 }
 
@@ -112,12 +112,12 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
       return;
     }
     isDetecting = true;
-    print(qrCode);
     if ((qrCode ?? '').isNotEmpty) {
       List<String> values = (qrCode ?? '').split(':');
       if (values.length == 2) {
         controller?.pauseCamera();
         await Future.delayed(const Duration(milliseconds: 400));
+        if (!mounted) return;
         Navigator.pop(
           context,
           AtOnboardingQRCodeResult(atSign: values[0], secret: values[1]),
