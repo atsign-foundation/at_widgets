@@ -3,7 +3,7 @@ import 'package:at_onboarding_flutter_example/switch_atsign.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show AtOnboardingConfig;
+    show AtOnboardingConfig, AtOnboardingResultStatus;
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
@@ -55,33 +55,19 @@ class _MyAppState extends State<MyApp> {
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
             colorScheme: ThemeData.light().colorScheme.copyWith(
-              primary: const Color(0xFFf4533d),
-            ),
+                  primary: const Color(0xFFf4533d),
+                ),
             backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
-            textTheme: const TextTheme(
-                bodyText1: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                ),
-                bodyText2: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                )),
           ),
           darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
             primaryColor: Colors.blue,
             colorScheme: ThemeData.dark().colorScheme.copyWith(
-              primary: Colors.blue,
-            ),
+                  primary: Colors.blue,
+                ),
             backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
-            textTheme: const TextTheme(
-                bodyText1: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.normal,
-            )),
           ),
           themeMode: themeMode,
           home: Scaffold(
@@ -122,17 +108,17 @@ class _MyAppState extends State<MyApp> {
                             appAPIKey: AtEnv.appApiKey,
                           ),
                         );
-                        switch (result) {
-                          case AtOnboardingResult.success:
+                        switch (result.status) {
+                          case AtOnboardingResultStatus.success:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const HomeScreen()));
                             break;
-                          case AtOnboardingResult.error:
+                          case AtOnboardingResultStatus.error:
                             // TODO: Handle this case.
                             break;
-                          case AtOnboardingResult.cancel:
+                          case AtOnboardingResultStatus.cancel:
                             // TODO: Handle this case.
                             break;
                         }

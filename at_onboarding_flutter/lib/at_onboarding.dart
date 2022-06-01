@@ -4,15 +4,10 @@ import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
 
+import 'at_onboarding_result.dart';
 import 'screen/at_onboarding_home_screen.dart';
 import 'services/at_onboarding_config.dart';
 import 'screen/at_onboarding_start_screen.dart';
-
-enum AtOnboardingResult {
-  success, //Authenticate success
-  error, //Authenticate error
-  cancel, //User canceled
-}
 
 class AtOnboarding {
   static Future<AtOnboardingResult> onboard({
@@ -29,23 +24,10 @@ class AtOnboarding {
       builder: (_) => AtOnboardingStartScreen(config: config),
     );
     if (result is AtOnboardingResult) {
-      switch (result) {
-        case AtOnboardingResult.success:
-          return AtOnboardingResult.success;
-        case AtOnboardingResult.error:
-          return AtOnboardingResult.error;
-        // case AtOnboardingResult.notFound:
-        //   return start(
-        //     context: context,
-        //     config: config,
-        //   );
-        // case AtOnboardingResult.activate:
-        //   return activateAccount(context: context);
-        case AtOnboardingResult.cancel:
-          break;
-      }
+      return result;
+    } else {
+      return AtOnboardingResult.cancelled();
     }
-    return AtOnboardingResult.cancel;
   }
 
   static Future<AtOnboardingResult> start({
@@ -62,19 +44,11 @@ class AtOnboarding {
         MaterialPageRoute(builder: (BuildContext context) {
       return AtOnboardingHomeScreen(config: config);
     }));
-
     if (result is AtOnboardingResult) {
-      switch (result) {
-        case AtOnboardingResult.success:
-          return AtOnboardingResult.success;
-        case AtOnboardingResult.error:
-          return AtOnboardingResult.error;
-        case AtOnboardingResult.cancel:
-          // TODO: Handle this case.
-          break;
-      }
+      return result;
+    } else {
+      return AtOnboardingResult.cancelled();
     }
-    return AtOnboardingResult.cancel;
   }
 
   static Future<AtOnboardingResult> activateAccount({
@@ -86,19 +60,11 @@ class AtOnboarding {
         hideReferences: false,
       );
     }));
-
     if (result is AtOnboardingResult) {
-      switch (result) {
-        case AtOnboardingResult.success:
-          return AtOnboardingResult.success;
-        case AtOnboardingResult.error:
-          return AtOnboardingResult.error;
-        case AtOnboardingResult.cancel:
-          // TODO: Handle this case.
-          break;
-      }
+      return result;
+    } else {
+      return AtOnboardingResult.cancelled();
     }
-    return AtOnboardingResult.cancel;
   }
 
   static Future<bool> changePrimaryAtsign({required String atsign}) async {
@@ -117,7 +83,7 @@ class AtOnboarding {
     if (result is AtOnboardingResult) {
       return result;
     } else {
-      return AtOnboardingResult.cancel;
+      return AtOnboardingResult.cancelled();
     }
   }
 }
