@@ -61,8 +61,10 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                     isLoading = true;
                                   });
                                 }
-                                final result = await AtOnboarding.changePrimaryAtsign(atsign: widget.atSignList[index]);
-                                if(result) {
+                                final result =
+                                    await AtOnboarding.changePrimaryAtsign(
+                                        atsign: widget.atSignList[index]);
+                                if (result) {
                                   await AtOnboarding.onboard(
                                     context: context,
                                     config: AtOnboardingConfig(
@@ -122,17 +124,17 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                             appAPIKey: AtEnv.appApiKey,
                           ),
                         );
-                        switch (result) {
-                          case AtOnboardingResult.success:
+                        switch (result.status) {
+                          case AtOnboardingResultStatus.success:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const HomeScreen()));
                             break;
-                          case AtOnboardingResult.error:
+                          case AtOnboardingResultStatus.error:
                             // TODO: Handle this case.
                             break;
-                          case AtOnboardingResult.cancel:
+                          case AtOnboardingResultStatus.cancel:
                             // TODO: Handle this case.
                             break;
                         }

@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../at_onboarding.dart';
+import '../at_onboarding_result.dart';
 import 'at_onboarding_otp_screen.dart';
 import 'at_onboarding_reference_screen.dart';
 
@@ -306,7 +307,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
         widget.onGenerateSuccess
             ?.call(atSign: result2.atSign, secret: result2.secret ?? '');
       } else {
-        Navigator.pop(context, AtOnboardingResult.cancel);
+        Navigator.pop(context, AtOnboardingResult.cancelled());
       }
     }
   }

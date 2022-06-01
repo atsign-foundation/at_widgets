@@ -11,6 +11,7 @@ import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 
 import '../at_onboarding.dart';
+import '../at_onboarding_result.dart';
 import 'at_onboarding_backup_screen.dart';
 import 'at_onboarding_otp_screen.dart';
 import '../services/free_atsign_service.dart';
@@ -46,7 +47,7 @@ class _AtOnboardingActivateScreenState
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       loginWithAtsignAfterReset(context);
     });
   }
@@ -115,7 +116,7 @@ class _AtOnboardingActivateScreenState
       String? secret = result.secret?.split(':').last ?? '';
       _processSharedSecret(atsign: result.atSign, secret: secret);
     } else {
-      Navigator.pop(context, AtOnboardingResult.cancel);
+      Navigator.pop(context, AtOnboardingResult.cancelled());
     }
   }
 
@@ -146,7 +147,7 @@ class _AtOnboardingActivateScreenState
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
-        Navigator.pop(context, AtOnboardingResult.success);
+        Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else {
         //Todo:
       }
