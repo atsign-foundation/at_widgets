@@ -22,7 +22,7 @@ class AtOnboardingResetScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AtOnboardingResetScreenState createState() =>
+  State<AtOnboardingResetScreen> createState() =>
       _AtOnboardingResetScreenState();
 }
 
@@ -203,7 +203,8 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
   }
 
   Future<void> showErrorDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
+    String? messageString =
+        AtOnboardingErrorToString().getErrorMessage(errorMessage);
     return AtOnboardingDialog.showError(
         context: context, message: messageString);
   }

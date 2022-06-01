@@ -68,7 +68,7 @@ class _AtOnboardingInputAtSignScreenState
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               TextFormField(
                 enabled: true,
                 validator: (String? value) {
@@ -89,11 +89,11 @@ class _AtOnboardingInputAtSignScreenState
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  contentPadding: EdgeInsets.symmetric(
+                  contentPadding: const EdgeInsets.symmetric(
                       horizontal: AtOnboardingDimens.paddingSmall),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               AtOnboardingPrimaryButton(
                 height: 48,
                 borderRadius: 24,

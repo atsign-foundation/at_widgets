@@ -10,7 +10,6 @@ import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 
-import '../at_onboarding.dart';
 import '../at_onboarding_result.dart';
 import 'at_onboarding_backup_screen.dart';
 import 'at_onboarding_otp_screen.dart';
@@ -108,20 +107,22 @@ class _AtOnboardingActivateScreenState
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      await showErrorDialog(context, errorMessage);
+      await showErrorDialog(errorMessage);
     }
     final result = await AtOnboardingOTPScreen.push(
-        context: context, atSign: atsign ?? (widget.atSign ?? ''), hideReferences: false);
+        context: context,
+        atSign: atsign ?? (widget.atSign ?? ''),
+        hideReferences: false);
     if (result != null) {
       String? secret = result.secret?.split(':').last ?? '';
       _processSharedSecret(atsign: result.atSign, secret: secret);
     } else {
+      if (!mounted) return;
       Navigator.pop(context, AtOnboardingResult.cancelled());
     }
   }
 
-  Future<void> showErrorDialog(
-      BuildContext context, String? errorMessage) async {
+  Future<void> showErrorDialog(String? errorMessage) async {
     return AtOnboardingDialog.showError(
         context: context, message: errorMessage ?? '');
   }
@@ -140,7 +141,8 @@ class _AtOnboardingActivateScreenState
     try {
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
-        await _showAlertDialog(AtOnboardingErrorToString().pairedAtsign(atsign));
+        await _showAlertDialog(
+            AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
       authResponse = await _onboardingService.authenticate(atsign,
@@ -165,7 +167,7 @@ class _AtOnboardingActivateScreenState
 
   Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
     String? messageString =
-    AtOnboardingErrorToString().getErrorMessage(errorMessage);
+        AtOnboardingErrorToString().getErrorMessage(errorMessage);
     return AtOnboardingDialog.showError(
       context: context,
       title: title,
