@@ -218,6 +218,7 @@ class _SecondScreenState extends State<SecondScreen> {
       receiver = '@' + receiver!;
     }
     var checkPresence =
+        // ignore: deprecated_member_use
         await AtLookupImpl.findSecondary(receiver!, 'root.atsign.org', 64);
     return checkPresence != null;
   }

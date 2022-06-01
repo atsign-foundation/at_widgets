@@ -137,6 +137,7 @@ class _SecondScreenState extends State<SecondScreen> {
     } else if (!atSignController.text.contains('@')) {
       atSignController.text = '@' + atSignController.text;
     }
+    // ignore: deprecated_member_use
     var checkPresence = await AtLookupImpl.findSecondary(
         atSignController.text, AtEnv.rootDomain, 64);
     return checkPresence != null;
