@@ -1,3 +1,6 @@
+## 4.0.5
+- **FIX**: Lint Fixes according to flutter 3.0
+
 ## 4.0.4
 - **FIX**: Added missing fontWeight
 - **FEAT**: Optimised adding and removing contacts
