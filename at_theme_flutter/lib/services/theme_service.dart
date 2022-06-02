@@ -47,6 +47,7 @@ class ThemeService {
     } catch (e) {
       print('error in getThemeData : ${e.toString()}');
     }
+    return null;
   }
 
   AtKey getAtkey() {

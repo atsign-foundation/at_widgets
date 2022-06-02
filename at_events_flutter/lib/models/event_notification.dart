@@ -214,7 +214,9 @@ class Event {
 }
 
 enum RepeatCycle { WEEK, MONTH }
+
 enum Week { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
+
 enum EndsOn { NEVER, ON, AFTER }
 
 // ignore: missing_return
@@ -285,6 +287,7 @@ List<String> get occursOnWeekOptions => [
       'Sunday'
     ];
 
+// ignore: camel_case_types
 enum ATKEY_TYPE_ENUM { CREATEEVENT, ACKNOWLEDGEEVENT }
 
 Map<String, dynamic> get monthsList => {

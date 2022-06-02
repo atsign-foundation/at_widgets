@@ -26,7 +26,7 @@ class _SecondScreenState extends State<SecondScreen> {
         onErrorCallback: _onErrorCallback,
       );
     } catch (e) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         showDialog(
           context: context,
           barrierDismissible: false,

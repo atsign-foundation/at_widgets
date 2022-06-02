@@ -16,7 +16,7 @@ void main() {
   /// Enable desktop mode before testing this widget.
   /// Functional test cases for desktop custom person tile
   group('Desktop custom person tile widget Test', () {
-    final desktopCustomPersonTile = DesktopCustomPersonVerticalTile();
+    const desktopCustomPersonTile = DesktopCustomPersonVerticalTile();
     // Test Case to check  is desktop custom person tile displayed or not
     testWidgets('Test Case to check desktop custom person tile is displayed',
         (WidgetTester tester) async {

@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
-import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -46,7 +45,9 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                     ),
                   )
                 : ContactInitial(
-                    size: SizeConfig().isTablet(context)? 28.toWidth: 45.toWidth,
+                    size: SizeConfig().isTablet(context)
+                        ? 28.toWidth
+                        : 45.toWidth,
                     initials: title ?? ' ',
                     minSize: 40.0,
                     maxSize: 40.0,

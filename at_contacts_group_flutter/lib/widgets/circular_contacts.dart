@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
@@ -10,7 +9,6 @@ import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class CircularContacts extends StatefulWidget {
   final Function? onCrossPressed, onLongPressed, onTap;

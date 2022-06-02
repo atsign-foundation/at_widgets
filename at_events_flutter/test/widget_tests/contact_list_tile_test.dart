@@ -17,8 +17,15 @@ void main() {
   group('Contact List Tile Widget Tests:', () {
     // Test Case to Check Contact List Tile is displayed
     testWidgets("Contact List Tile is displayed", (WidgetTester tester) async {
-      final contactListTile = ContactListTile(onRemove: (){},name: 'Bluebellrealted',image: Icon(Icons.add),onAdd: (){},onTileTap: (){},atSign: '@bluebellralted86',);
-         await tester.pumpWidget(
+      final contactListTile = ContactListTile(
+        onRemove: () {},
+        name: 'Bluebellrealted',
+        image: const Icon(Icons.add),
+        onAdd: () {},
+        onTileTap: () {},
+        atSign: '@bluebellralted86',
+      );
+      await tester.pumpWidget(
           _wrapWidgetWithMaterialApp(contactListTile: contactListTile));
       expect(find.byType(ContactListTile), findsOneWidget);
     });

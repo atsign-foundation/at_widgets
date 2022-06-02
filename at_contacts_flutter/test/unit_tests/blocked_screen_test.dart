@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -13,7 +15,7 @@ void main() {
     test('Blocked Contacts fetched form contacts service', () {
       when(() =>
           mockBlockedContactService.fetchBlockContactList().then((_) async {
-            print('Blocked Contacts fetched successfully');
+            log('Blocked Contacts fetched successfully');
           }));
     });
   });

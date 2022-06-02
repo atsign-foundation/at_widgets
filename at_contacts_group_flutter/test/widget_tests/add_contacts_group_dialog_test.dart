@@ -18,11 +18,10 @@ void main() {
     // Test Case to Add contact dialog is displayed or not
     testWidgets('Add Contacts Group Widget is Displayed',
         (WidgetTester tester) async {
-      final addContactDialog = AddContactDialog();
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
-          addContactsGroupDialog: addContactDialog));
+      const addContactDialog = AddContactDialog();
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(addContactsGroupDialog: addContactDialog));
       expect(find.byType(AddContactDialog), findsOneWidget);
     });
-    
   });
 }

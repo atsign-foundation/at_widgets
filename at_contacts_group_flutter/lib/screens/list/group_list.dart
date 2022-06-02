@@ -105,12 +105,10 @@ class _GroupListState extends State<GroupList> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
-                            // ignore: prefer_const_constructors
-                            child: Icon(
+                        const Icon(
                           Icons.view_module,
                           color: ColorConstants.greyText,
-                        )),
+                        ),
                         Switch(
                             value: toggleList,
                             activeColor: Colors.white,
@@ -121,11 +119,8 @@ class _GroupListState extends State<GroupList> {
                                 toggleList = !toggleList;
                               });
                             }),
-                        Container(
-                          // ignore: prefer_const_constructors
-                          child: Icon(Icons.view_list,
-                              color: ColorConstants.greyText),
-                        ),
+                        const Icon(Icons.view_list,
+                            color: ColorConstants.greyText),
                       ],
                     ),
                   ),
@@ -173,7 +168,8 @@ class _GroupListState extends State<GroupList> {
                                                         (_) async {
                                                   GroupService()
                                                       .groupViewSink
-                                                      .add(snapshot.data![index]);
+                                                      .add(snapshot
+                                                          .data![index]);
                                                 });
 
                                                 await Navigator.push(
@@ -182,15 +178,16 @@ class _GroupListState extends State<GroupList> {
                                                       builder: (context) =>
                                                           GroupView(
                                                               group: snapshot
-                                                                  .data![index])),
+                                                                      .data![
+                                                                  index])),
                                                 );
                                               },
                                               child: CustomPersonHorizontalTile(
                                                 image: (snapshot.data![index]
                                                             .groupPicture !=
                                                         null)
-                                                    ? snapshot
-                                                        .data![index].groupPicture
+                                                    ? snapshot.data![index]
+                                                        .groupPicture
                                                     : null,
                                                 title: snapshot.data![index]
                                                         .displayName ??
@@ -204,7 +201,7 @@ class _GroupListState extends State<GroupList> {
                                       )
                                     : GridView.builder(
                                         physics:
-                                            AlwaysScrollableScrollPhysics(),
+                                            const AlwaysScrollableScrollPhysics(),
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                                 crossAxisCount: SizeConfig()

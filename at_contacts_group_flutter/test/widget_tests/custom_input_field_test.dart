@@ -1,5 +1,6 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_contacts_group_flutter/widgets/custom_input_field.dart' as custominputfield ;
+import 'package:at_contacts_group_flutter/widgets/custom_input_field.dart'
+    as custominputfield;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,10 +17,9 @@ void main() {
 
   /// Functional test cases for custom input field
   group('Custom input field widget Test', () {
-    final customInputField = custominputfield.CustomInputField();
+    const customInputField = custominputfield.CustomInputField();
     // Test Case to check  is contact selection bottom sheet displayed or not
-    testWidgets(
-        'Test Case to check custom input field is displayed',
+    testWidgets('Test Case to check custom input field is displayed',
         (WidgetTester tester) async {
       await tester.pumpWidget(
           _wrapWidgetWithMaterialApp(customInputField: customInputField));

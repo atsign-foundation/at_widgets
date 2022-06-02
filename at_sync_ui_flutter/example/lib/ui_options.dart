@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_sync_ui_flutter/at_sync_material.dart' as material;
 import 'package:at_sync_ui_flutter/at_sync_cupertino.dart' as cupertino;
 import 'package:flutter/cupertino.dart';
@@ -404,16 +406,16 @@ class _MyHomePageState extends State<MyHomePage>
 
     final controller = AtSyncUI.instance.syncUIController;
 
-    print('add loading 1');
+    log('add loading 1');
     controller?.addLoadingQueue();
     await Future.delayed(const Duration(seconds: 1));
-    print('add loading 2');
+    log('add loading 2');
     controller?.addLoadingQueue();
     await Future.delayed(const Duration(seconds: 1));
-    print('remove loading 1');
+    log('remove loading 1');
     controller?.removeLoadingQueue();
     await Future.delayed(const Duration(seconds: 1));
-    print('remove loading 1');
+    log('remove loading 1');
     controller?.removeLoadingQueue();
   }
 }

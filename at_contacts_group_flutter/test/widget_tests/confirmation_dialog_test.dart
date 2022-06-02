@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,7 @@ void main() {
         heading: 'heading',
         title: 'title',
         onYesPressed: () {
-          print('Onpress is given an action');
+          log('Onpress is given an action');
         });
     // Test Case to check confirmation dialog is displayed or not
     testWidgets('Test Case to confirmation dialog is displayed',

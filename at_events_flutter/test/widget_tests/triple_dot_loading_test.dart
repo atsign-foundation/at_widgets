@@ -16,9 +16,10 @@ void main() {
   /// Functional test cases for Typing Indicator Widget
   group('Typing Indicator Widget Tests:', () {
     // Test Case to Check Typing Indicator is displayed
-    final typingIndicator = TypingIndicator();
+    const typingIndicator = TypingIndicator();
     testWidgets("Typing Indicator is displayed", (WidgetTester tester) async {
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(typingIndicator: typingIndicator));
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(typingIndicator: typingIndicator));
       expect(find.byType(TypingIndicator), findsOneWidget);
     });
   });

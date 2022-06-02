@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_chat_flutter/services/chat_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -15,7 +17,7 @@ void main() {
     // Test case to check retrieving chat history is successful
     test('Chat history is retrieved', () {
       when(() => mockChatService.getChatHistory().then((_) async {
-            print('Get chat history is successful');
+            log('Get chat history is successful');
           }));
     });
   });

@@ -23,6 +23,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
         ..hiveStoragePath = dir.path
         ..commitLogPath = dir.path
         ..isLocalStoreRequired = true
+      // ignore: todo
       // TODO set the rest of your AtClientPreference here
       ;
 }

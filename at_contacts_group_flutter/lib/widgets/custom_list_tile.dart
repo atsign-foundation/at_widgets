@@ -7,13 +7,11 @@
 
 // ignore_for_file: avoid_print
 
-import 'dart:io';
 import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
@@ -23,7 +21,6 @@ import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_utils/at_logger.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class CustomListTile extends StatefulWidget {
   final Function? onTap;
@@ -190,8 +187,12 @@ class _CustomListTileState extends State<CustomListTile> {
                   : selectRemoveContact(),
               icon: (widget.asSelectionTile)
                   ? (isSelected)
-                      ? const Icon(Icons.cancel_rounded,size: 26.0,color: Colors.red,)
-                      : const Icon(Icons.add, size: 24.0,color: Colors.green)
+                      ? const Icon(
+                          Icons.cancel_rounded,
+                          size: 26.0,
+                          color: Colors.red,
+                        )
+                      : const Icon(Icons.add, size: 24.0, color: Colors.green)
                   : Image.asset(
                       AllImages().SEND,
                       width: 21.toWidth,

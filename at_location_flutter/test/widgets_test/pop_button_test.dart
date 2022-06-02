@@ -15,7 +15,7 @@ void main() {
 
   /// Functional test cases for [popButton]
   group('Pop Button widget Tests:', () {
-    final popButton = PopButton(label: 'Pop up');
+    const popButton = PopButton(label: 'Pop up');
     // Test case to identify Pop Button is used in screen or not
     testWidgets("Test case to identify Pop Button is used in screen or not",
         (WidgetTester tester) async {
