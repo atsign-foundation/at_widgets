@@ -49,14 +49,14 @@ packages:
       name: at_app_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "5.0.0+1"
   at_backupkey_flutter:
     dependency: transitive
     description:
       name: at_backupkey_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.2"
   at_base2e15:
     dependency: transitive
     description:
@@ -84,7 +84,7 @@ packages:
       name: at_common_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   at_commons:
     dependency: transitive
     description:
@@ -105,28 +105,28 @@ packages:
       name: at_contacts_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.4"
+    version: "4.0.5"
   at_contacts_group_flutter:
     dependency: transitive
     description:
       name: at_contacts_group_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.4"
+    version: "4.0.5"
   at_events_flutter:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "3.1.4"
+    version: "3.1.5"
   at_location_flutter:
     dependency: transitive
     description:
       name: at_location_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.3"
+    version: "3.1.4"
   at_lookup:
     dependency: transitive
     description:
@@ -140,7 +140,7 @@ packages:
       name: at_onboarding_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.2"
+    version: "4.0.3"
   at_persistence_secondary_server:
     dependency: transitive
     description:
