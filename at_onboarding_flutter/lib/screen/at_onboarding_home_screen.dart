@@ -199,7 +199,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             .toString()
             .substring(0, keyData[1].length - 2)
             .split('":"');
-        atsign = params[0];
+        atsign = "@${params[0]}";
         aesKey = params[1];
       }
       if (fileContents == null || (aesKey == null && atsign == null)) {
@@ -259,7 +259,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             .toString()
             .substring(0, keyData[1].length - 2)
             .split('":"');
-        atsign = params[0];
+        atsign = "@${params[0]}";
         aesKey = params[1];
       }
       if (fileContents.isEmpty || (aesKey == null && atsign == null)) {
@@ -585,11 +585,13 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       final result2 = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) => AtOnboardingActivateScreen(
-                  hideReferences: true,
-                  atSign: result!,
-                )),
+          builder: (_) => AtOnboardingActivateScreen(
+            hideReferences: true,
+            atSign: result!,
+          ),
+        ),
       );
+
       if (result2 is AtOnboardingResult) {
         switch (result2.status) {
           case AtOnboardingResultStatus.success:
