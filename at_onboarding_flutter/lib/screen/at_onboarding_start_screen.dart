@@ -73,10 +73,10 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
-              AtSyncIndicator(),
-              SizedBox(width: AtOnboardingDimens.paddingSmall),
-              Text('Onboarding'),
+            children: [
+              AtSyncIndicator(color: Theme.of(context).primaryColor),
+              const SizedBox(width: AtOnboardingDimens.paddingSmall),
+              const Text('Onboarding'),
             ],
           ),
         ),
