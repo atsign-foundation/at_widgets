@@ -85,7 +85,7 @@ class SDKService {
   ///[atsign] must be non-null.
   String formatAtSign(String atsign) {
     atsign = atsign.trim().toLowerCase().replaceAll(' ', '');
-    atsign = !atsign.startsWith('@') ? '@' + atsign : atsign;
+    atsign = !atsign.startsWith('@') ? '@$atsign' : atsign;
     return atsign;
   }
 }

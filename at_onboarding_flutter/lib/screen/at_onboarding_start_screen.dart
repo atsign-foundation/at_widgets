@@ -66,6 +66,11 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius:
+                BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: const [
@@ -73,11 +78,6 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
               SizedBox(width: AtOnboardingDimens.paddingSmall),
               Text('Onboarding'),
             ],
-          ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius:
-                BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
           ),
         ),
       ),
