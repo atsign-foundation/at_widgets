@@ -60,6 +60,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double toolbarHeight;
 
   const CustomAppBar({
+    Key? key,
     this.titleText,
     this.showTitle = false,
     this.showBackButton = false,
@@ -76,7 +77,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.closeOnRight = false,
     this.isDesktop = false,
     this.toolbarHeight = 70,
-  });
+  }) : super(key: key);
   @override
   Size get preferredSize => Size.fromHeight(toolbarHeight.toHeight);
 
@@ -156,7 +157,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               )
-            : Container(
+            : SizedBox(
                 height: 22.toHeight,
                 width: 62.toWidth,
                 // margin: EdgeInsets.only(right: 20),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/widgets/common_button.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +22,7 @@ void main() {
   /// Functional test cases for Common Button
   group('Common Button widget Tests:', () {
     final commonButton = CommonButton('Click', () {
-      print('On Tap is given an action');
+      log('On Tap is given an action');
     });
     // Test case to identify Common Button is used in screen or not
     testWidgets("Common Button widget is used and shown on screen",

@@ -15,12 +15,13 @@ void main() {
 
   /// Functional test cases for Pop Button
   group('Pop Button widget Test', () {
-    final popButton = PopButton(label: 'Click here',);
+    const popButton = PopButton(
+      label: 'Click here',
+    );
     // Test Case to check  is Pop Button displayed or not
     testWidgets('Test Case to check Pop Button is displayed',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
-          popButton: popButton ));
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(popButton: popButton));
       expect(find.byType(PopButton), findsOneWidget);
     });
   });

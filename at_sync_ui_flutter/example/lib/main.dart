@@ -17,13 +17,11 @@ Future<void> main() async {
 Future<AtClientPreference> loadAtClientPreference() async {
   var dir = await getApplicationSupportDirectory();
   return AtClientPreference()
-        ..rootDomain = AtEnv.rootDomain
-        ..namespace = AtEnv.appNamespace
-        ..hiveStoragePath = dir.path
-        ..commitLogPath = dir.path
-        ..isLocalStoreRequired = true
-      // TODO set the rest of your AtClientPreference here
-      ;
+    ..rootDomain = AtEnv.rootDomain
+    ..namespace = AtEnv.appNamespace
+    ..hiveStoragePath = dir.path
+    ..commitLogPath = dir.path
+    ..isLocalStoreRequired = true;
 }
 
 class MyApp extends StatefulWidget {

@@ -163,7 +163,7 @@ Future<List<EventNotificationModel>?> getEvents() async {
       }
     }
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {});
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
     return allEvents;
   } catch (e) {
     print(e);

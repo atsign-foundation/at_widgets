@@ -391,12 +391,21 @@ class GroupService {
 
       // ignore: omit_local_variable_types
       for (GroupContactsModel? groupContact in selectedGroupContacts) {
-        if ((groupContact.toString() == item.toString())) {
+        if (groupContact!.contact != null &&
+            item!.contact != null &&
+            groupContact.contact!.atSign == item.contact!.atSign) {
+          var index = selectedGroupContacts.indexOf(groupContact);
+          selectedGroupContacts.removeAt(index);
+          break;
+        } else if (groupContact.group != null &&
+            item!.group != null &&
+            groupContact.group!.groupId == item.group!.groupId) {
           var index = selectedGroupContacts.indexOf(groupContact);
           selectedGroupContacts.removeAt(index);
           break;
         }
       }
+
       if (item!.contactType == ContactsType.CONTACT) {
         length--;
       } else if (item.contactType == ContactsType.GROUP) {

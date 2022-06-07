@@ -15,25 +15,26 @@ void main() {
 
   /// Functional test cases for [displayTile]
   group('Display Tile widget Tests:', () {
-    final displayTile = DisplayTile(
-        title: 'title',
-        atsignCreator: 'atsignCreator',
-        subTitle: 'subTitle',
-        semiTitle: 'semi title',
-        invitedBy: 'invited by',
-        number: 25,
-      );
+    const displayTile = DisplayTile(
+      title: 'title',
+      atsignCreator: 'atsignCreator',
+      subTitle: 'subTitle',
+      semiTitle: 'semi title',
+      invitedBy: 'invited by',
+      number: 25,
+    );
     // Test case to identify display tile is used in screen or not
     testWidgets("Test case to identify display tile is used in screen or not",
         (WidgetTester tester) async {
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
-          displayTile: displayTile));
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(displayTile: displayTile));
 
       expect(find.byType(DisplayTile), findsOneWidget);
     });
 
     // Test case to check display tile strings other than required fields are given
-    testWidgets('Test case to check display tile strings other than required fields are given',
+    testWidgets(
+        'Test case to check display tile strings other than required fields are given',
         (WidgetTester tester) async {
       await tester
           .pumpWidget(_wrapWidgetWithMaterialApp(displayTile: displayTile));
@@ -42,7 +43,7 @@ void main() {
       expect(displayTile.invitedBy, 'invited by');
     });
 
-   // Test case to check display tile number is given
+    // Test case to check display tile number is given
     testWidgets('Test case to check display tile number is given',
         (WidgetTester tester) async {
       await tester

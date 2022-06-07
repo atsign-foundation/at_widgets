@@ -32,7 +32,7 @@ class _SecondScreenState extends State<SecondScreen> {
       isAuthenticated = true;
     } catch (e) {
       isAuthenticated = false;
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         showDialog(
           context: context,
           builder: (BuildContext context) {

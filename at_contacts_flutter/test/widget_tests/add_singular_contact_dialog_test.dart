@@ -16,19 +16,24 @@ void main() {
   /// Functional test cases for Add singular contact dialog
   group('Add singular contact dialog widget Tests:', () {
     // Test case to identify Add singular contact dialog is used in screen or not
-    testWidgets("Add singular contact dialog widget is used and shown on screen",
+    testWidgets(
+        "Add singular contact dialog widget is used and shown on screen",
         (WidgetTester tester) async {
-      final addSingleContactDialog = AddSingleContact(atSignName: '@bluebellrelated86',);
-      await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(addSingleContactDialog: addSingleContactDialog));
+      const addSingleContactDialog = AddSingleContact(
+        atSignName: '@bluebellrelated86',
+      );
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+          addSingleContactDialog: addSingleContactDialog));
 
       expect(find.byType(AddSingleContact), findsOneWidget);
     });
     // Test case to check atSignName string is given
     testWidgets("Button text displayed", (WidgetTester tester) async {
-      final addSingleContactDialog = AddSingleContact(atSignName: '@bluebellrelated86',);
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(addSingleContactDialog: addSingleContactDialog));
+      const addSingleContactDialog = AddSingleContact(
+        atSignName: '@bluebellrelated86',
+      );
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+          addSingleContactDialog: addSingleContactDialog));
       expect(find.text('@bluebellrelated86'), findsOneWidget);
     });
   });

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_chat_flutter/utils/colors.dart';
 import 'package:at_chat_flutter/widgets/button_widget.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
@@ -19,7 +21,7 @@ void main() {
     // variable widget to be tested in each case
     final buttonWidget = ButtonWidget(
       onPress: () {
-        print('clicked on this button');
+        log('clicked on this button');
       },
       colorButton: CustomColors.defaultColor,
       textButton: 'Click here',
@@ -50,7 +52,7 @@ void main() {
           .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
       expect(buttonWidget.onPress!.call(), null);
     });
-    
+
     // Test case to check button BorderRadius
     testWidgets("BorderRadius of button widget as circular",
         (WidgetTester tester) async {

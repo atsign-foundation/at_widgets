@@ -29,7 +29,7 @@ class _NotifyScreenState extends State<NotifyScreen>
   @override
   void initState() {
     _selectedDate = 1;
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       /// fetch list of notifications
       await widget.notifyService!.getNotifies(
         atsign: widget.atSign,

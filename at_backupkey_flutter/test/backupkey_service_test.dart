@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:at_backupkey_flutter/utils/strings.dart';
@@ -6,7 +7,6 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'at_demo_credentials.dart' as demo_data;
 import 'package:at_commons/at_commons.dart';
-import 'package:at_client/src/util/encryption_util.dart';
 
 void main() {
   String atsign = '@alice🛠';
@@ -64,7 +64,7 @@ void main() {
   try {
     tearDown(() async => await tearDownFunc());
   } on Exception catch (e) {
-    print('error in tear down:${e.toString()}');
+    log('error in tear down:${e.toString()}');
   }
 }
 
@@ -78,12 +78,9 @@ Future<void> tearDownFunc() async {
 Future<void> setUpFunc(String atsign) async {
   var preference = getAtSignPreference(atsign);
 
-  await AtClientImpl.createClient(atsign, 'persona', preference);
-  var atClient = await AtClientImpl.getClient(atsign);
-  if (atClient == null) {
-    return;
-  }
-  await atClient.getSyncManager()!.sync();
+  await AtClientImpl.create(atsign, 'persona', preference);
+  var atClient = AtClientManager.getInstance().atClient;
+
   // To setup encryption keys
   await atClient.getLocalSecondary()!.putValue(
       AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]!);
@@ -94,7 +91,6 @@ AtClientPreference getAtSignPreference(String atsign) {
   preference.hiveStoragePath = 'test/hive/client';
   preference.commitLogPath = 'test/hive/client/commit';
   preference.isLocalStoreRequired = true;
-  preference.syncStrategy = SyncStrategy.immediate;
   preference.privateKey = demo_data.pkamPrivateKeyMap[atsign];
   preference.rootDomain = 'vip.ve.atsign.zone';
   return preference;
@@ -108,14 +104,14 @@ Future<bool> _generateFile(
   var directory = Directory('test/backup');
   String path = directory.path.toString() + '/';
   final encryptedKeysFile =
-      await File('$path' + '$atsign${Strings.backupKeyName}').create();
+      await File(path + '$atsign${Strings.backupKeyName}').create();
   var keyString = jsonEncode(aesEncryptedKeys);
   encryptedKeysFile.writeAsStringSync(keyString);
   return true;
 }
 
 class MockDataService {
-  final atsign;
+  late String atsign;
 
   MockDataService(this.atsign);
   get getAESKey => demo_data.aesKeyMap[atsign];

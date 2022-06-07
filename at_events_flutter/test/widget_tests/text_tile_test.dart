@@ -16,10 +16,9 @@ void main() {
   /// Functional test cases for Text Tile Widget
   group('Text Tile Widget Tests:', () {
     // Test Case to Check Text Tile is displayed
-    final textTile = TextTile();
+    const textTile = TextTile();
     testWidgets("Text Tile is displayed", (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(textTile: textTile));
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(textTile: textTile));
       expect(find.byType(TextTile), findsOneWidget);
     });
   });

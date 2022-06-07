@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
@@ -10,7 +9,6 @@ import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class CircularContacts extends StatefulWidget {
   final Function? onCrossPressed, onLongPressed, onTap;
@@ -47,33 +45,24 @@ class _CircularContactsState extends State<CircularContacts> {
   void initState() {
     _groupService = GroupService();
     // ignore: omit_local_variable_types
-    for (GroupContactsModel? groupContact
-        in _groupService.selectedGroupContacts) {
-      if (widget.groupContact.toString() == groupContact.toString()) {
-        isSelected = true;
-        break;
-      } else {
-        isSelected = false;
-      }
-    }
+    getIsSelectedValue();
+
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    _groupService = GroupService();
-
-    // ignore: omit_local_variable_types
-    for (GroupContactsModel? groupContact
-        in _groupService.selectedGroupContacts) {
-      if (widget.groupContact.toString() == groupContact.toString()) {
+  getIsSelectedValue() {
+    isSelected = false;
+    for (GroupContactsModel? el in _groupService.selectedGroupContacts) {
+      if (el!.contact != null &&
+          widget.groupContact!.contact != null &&
+          el.contact!.atSign == widget.groupContact!.contact!.atSign) {
         isSelected = true;
-        break;
-      } else {
-        isSelected = false;
+      } else if (el.group != null &&
+          widget.groupContact!.group != null &&
+          el.group!.groupId == widget.groupContact!.group!.groupId) {
+        isSelected = true;
       }
     }
-    super.didChangeDependencies();
   }
 
   getNameAndImage() {
@@ -113,21 +102,7 @@ class _CircularContactsState extends State<CircularContacts> {
         initialData: _groupService.selectedGroupContacts,
         stream: _groupService.selectedContactsStream,
         builder: (context, snapshot) {
-          // if (!widget.selectSingle) {
-          // ignore: omit_local_variable_types
-          for (GroupContactsModel? groupContact
-              in _groupService.selectedGroupContacts) {
-            if (widget.groupContact.toString() == groupContact.toString()) {
-              isSelected = true;
-              break;
-            } else {
-              isSelected = false;
-            }
-          }
-          if (_groupService.selectedGroupContacts.isEmpty) {
-            isSelected = false;
-          }
-
+          getIsSelectedValue();
           return GestureDetector(
             onTap: () {
               if (widget.asSelectionTile) {

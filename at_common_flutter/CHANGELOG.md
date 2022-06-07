@@ -1,3 +1,6 @@
+## 2.0.8
+- **FIX**: Lint Fixes according to flutter 3.0
+
 ## 2.0.7
 - **FIX**: Added missing fontWeight
 

@@ -9,19 +9,19 @@ void main() {
   Widget _wrapWidgetWithMaterialApp({required Widget horizontalCircularList}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
-      return horizontalCircularList ;
+      return horizontalCircularList;
     }));
   }
 
   /// Enable desktop mode before testing this widget.
   /// Functional test cases for Horizontal Circular List
   group('Horizontal Circular List widget Test', () {
-    final horizontalCircularList = HorizontalCircularList();
+    const horizontalCircularList = HorizontalCircularList();
     // Test Case to check  is Horizontal Circular List displayed or not
     testWidgets('Test Case to check Horizontal Circular List is displayed',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
-          horizontalCircularList: horizontalCircularList ));
+          horizontalCircularList: horizontalCircularList));
       expect(find.byType(HorizontalCircularList), findsOneWidget);
     });
   });

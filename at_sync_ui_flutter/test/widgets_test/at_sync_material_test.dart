@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp(
-      {required Widget atSyncIndicatorMaterial}) {
+  Widget _wrapWidgetWithMaterialApp({required Widget atSyncIndicatorMaterial}) {
     return TestMaterialApp(
       home: Builder(
         builder: (BuildContext context) {
@@ -20,7 +19,7 @@ void main() {
 
   /// Functional test cases for at_sync indicator material
   group('At_Sync indicator material Tests:', () {
-    final atSyncIndicatorMaterial = AtSyncIndicator(
+    const atSyncIndicatorMaterial = AtSyncIndicator(
       radius: 25,
       value: 0.0,
       color: Color(0xFFf4533d),
@@ -39,7 +38,7 @@ void main() {
           atSyncIndicatorMaterial: atSyncIndicatorMaterial));
       expect(atSyncIndicatorMaterial.value, 0.0);
     });
-      // Test case to at_sync indicator material radius is given
+    // Test case to at_sync indicator material radius is given
     testWidgets('Test case to check at_sync indicator material radius is given',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
@@ -51,10 +50,11 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
           atSyncIndicatorMaterial: atSyncIndicatorMaterial));
-      expect(atSyncIndicatorMaterial.color, Color(0xFFf4533d));
+      expect(atSyncIndicatorMaterial.color, const Color(0xFFf4533d));
     });
     // Test case to at_sync indicator material background color is given
-    testWidgets('Test case to check at_sync indicator material background color is given',
+    testWidgets(
+        'Test case to check at_sync indicator material background color is given',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
           atSyncIndicatorMaterial: atSyncIndicatorMaterial));

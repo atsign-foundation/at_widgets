@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_chat_flutter/widgets/bottom_sheet_dialog.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:flutter/material.dart';
@@ -26,14 +28,13 @@ void main() {
     // Test Case to Check call back function is passed
     testWidgets("Test Case to Check call back function is passed",
         (WidgetTester tester) async {
-      
       final bottomSheetDialog = BottomSheetDialog(() {
-        print('Call back is given');
+        log('Call back is given');
       });
       await tester.pumpWidget(
           _wrapWidgetWithMaterialApp(bottomSheetDialog: bottomSheetDialog));
       await tester.tap((find.byType(BottomSheetDialog)));
-      expect(bottomSheetDialog.deleteCallback.call(),null);
+      expect(bottomSheetDialog.deleteCallback.call(), null);
     });
   });
 }
