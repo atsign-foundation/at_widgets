@@ -8,7 +8,7 @@ import 'at_onboarding_response_status.dart';
 
 class AtOnboardingErrorToString {
   String getErrorMessage(dynamic error) {
-    OnboardingService _onboardingService = OnboardingService.getInstance();
+    OnboardingService onboardingService = OnboardingService.getInstance();
     switch (error.runtimeType) {
       case AtClientException:
         return 'Unable to perform this action. Please try again.';
@@ -34,10 +34,10 @@ class AtOnboardingErrorToString {
         return error.toString();
       case AtOnboardingResponseStatus:
         if (error == AtOnboardingResponseStatus.authFailed) {
-          if (_onboardingService.isPkam!) {
+          if (onboardingService.isPkam!) {
             return 'Please provide valid backupkey file to continue.';
           } else {
-            return _onboardingService.serverStatus == ServerStatus.activated
+            return onboardingService.serverStatus == ServerStatus.activated
                 ? 'Please provide a relevant backupkey file to authenticate.'
                 : 'Please provide a valid QRcode to authenticate.';
           }

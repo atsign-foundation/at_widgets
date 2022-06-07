@@ -157,6 +157,7 @@ class _AtOnboardingActivateScreenState
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
+        if(!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else {
         //Todo:

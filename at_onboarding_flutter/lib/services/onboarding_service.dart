@@ -36,8 +36,8 @@ class OnboardingService {
 
   bool? get isPkam => _isPkam;
 
-  set setAtClientPreference(AtClientPreference _preference) {
-    _atClientPreference = _preference
+  set setAtClientPreference(AtClientPreference preference) {
+    _atClientPreference = preference
       ..cramSecret = null
       ..privateKey = null;
   }
@@ -166,7 +166,7 @@ class OnboardingService {
       return null;
     }
     atsign = atsign.trim().toLowerCase().replaceAll(' ', '');
-    atsign = !atsign.startsWith('@') ? '@' + atsign : atsign;
+    atsign = !atsign.startsWith('@') ? '@$atsign' : atsign;
     return atsign;
   }
 
