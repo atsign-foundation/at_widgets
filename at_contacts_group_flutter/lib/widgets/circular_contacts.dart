@@ -190,7 +190,7 @@ class _CircularContactsState extends State<CircularContacts> {
                     triggerMode: TooltipTriggerMode.tap,
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                        color: AllColors().ORANGE,
+                        color: AllColors().GREY,
                         borderRadius: BorderRadius.circular(2.toWidth)),
                     textStyle: TextStyle(color: AllColors().WHITE),
                     message:
@@ -220,7 +220,7 @@ class _CircularContactsState extends State<CircularContacts> {
                       ),
                       SizedBox(height: 10.toHeight),
                       SizedBox(
-                        width: 80.toWidth,
+                        width: 60.toWidth,
                         child: Text(
                           (widget.groupContact?.contact?.atSign ??
                               widget.groupContact?.group?.groupName)!,
