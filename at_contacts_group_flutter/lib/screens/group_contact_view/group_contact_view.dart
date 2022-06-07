@@ -100,7 +100,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   }
 
   List<AtContact> selectedList = [];
-  bool toggleList = false;
+  bool toggleList = true;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -248,15 +248,6 @@ class _GroupContactViewState extends State<GroupContactView> {
                     Icons.view_module,
                     color: ColorConstants.greyText,
                   )),
-                  Switch(
-                      value: toggleList,
-                      activeColor: ColorConstants.fadedGreyBackground,
-                      activeTrackColor: Colors.black,
-                      onChanged: (s) {
-                        setState(() {
-                          toggleList = !toggleList;
-                        });
-                      }),
                   Container(
                     // ignore: prefer_const_constructors
                     child:
@@ -375,10 +366,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                   ),
                                 ],
                               ),
-                              toggleList
-                                  ? contactListBuilder(contactsForAlphabet)
-                                  : gridViewContactList(
-                                      contactsForAlphabet, context)
+                              contactListBuilder(contactsForAlphabet)
                             ],
                           );
                         },
