@@ -103,28 +103,36 @@ class _AtOnboardingActivateScreenState
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
+
+      final result = await AtOnboardingOTPScreen.push(
+        context: context,
+        atSign: atsign ?? (widget.atSign ?? ''),
+        hideReferences: false,
+      );
+
+      if (result != null) {
+        String? secret = result.secret?.split(':').last ?? '';
+        _processSharedSecret(atsign: result.atSign, secret: secret);
+      } else {
+        if (!mounted) return;
+        Navigator.pop(context, AtOnboardingResult.cancelled());
+      }
     } else {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
       await showErrorDialog(errorMessage);
     }
-    final result = await AtOnboardingOTPScreen.push(
-        context: context,
-        atSign: atsign ?? (widget.atSign ?? ''),
-        hideReferences: false);
-    if (result != null) {
-      String? secret = result.secret?.split(':').last ?? '';
-      _processSharedSecret(atsign: result.atSign, secret: secret);
-    } else {
-      if (!mounted) return;
-      Navigator.pop(context, AtOnboardingResult.cancelled());
-    }
   }
 
   Future<void> showErrorDialog(String? errorMessage) async {
     return AtOnboardingDialog.showError(
-        context: context, message: errorMessage ?? '');
+      context: context,
+      message: errorMessage ?? '',
+      onCancel: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   void _showReferenceWebview() {
