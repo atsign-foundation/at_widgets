@@ -55,9 +55,6 @@ class AtOnboardingPrimaryButton extends AtOnboardingButton {
       width: width,
       child: TextButton(
         onPressed: isLoading ? null : onPressed,
-        child: Container(
-          child: isLoading ? const AtSyncIndicator(color: Colors.white) : child,
-        ),
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
                 backgroundColor ?? themeData.primaryColor),
@@ -67,6 +64,9 @@ class AtOnboardingPrimaryButton extends AtOnboardingButton {
                     borderRadius: BorderRadius.circular(borderRadius ?? 4),
                     side: BorderSide(
                         color: borderColor ?? themeData.primaryColor)))),
+        child: Container(
+          child: isLoading ? const AtSyncIndicator(color: Colors.white) : child,
+        ),
       ),
     );
   }
@@ -103,11 +103,6 @@ class AtOnboardingSecondaryButton extends AtOnboardingButton {
       width: width,
       child: TextButton(
         onPressed: isLoading ? null : onPressed,
-        child: Container(
-          child: isLoading
-              ? AtSyncIndicator(color: themeData.primaryColor)
-              : child,
-        ),
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
                 backgroundColor ?? Colors.transparent),
@@ -118,6 +113,11 @@ class AtOnboardingSecondaryButton extends AtOnboardingButton {
                     borderRadius: BorderRadius.circular(borderRadius ?? 4),
                     side: BorderSide(
                         color: borderColor ?? themeData.primaryColor)))),
+        child: Container(
+          child: isLoading
+              ? AtSyncIndicator(color: themeData.primaryColor)
+              : child,
+        ),
       ),
     );
   }

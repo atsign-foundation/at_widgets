@@ -195,7 +195,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
     setState(() {});
 
     String? result = await validatePerson(
-        widget.atSign, widget.email!, _pinCodeController.text, context);
+        widget.atSign, widget.email!, _pinCodeController.text);
 
     isVerifing = false;
     setState(() {});
@@ -292,8 +292,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
     });
   }
 
-  Future<String?> validatePerson(
-      String atsign, String email, String? otp, BuildContext context,
+  Future<String?> validatePerson(String atsign, String email, String? otp,
       {bool isConfirmation = false}) async {
     dynamic data;
     String? cramSecret;
@@ -313,6 +312,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         atsigns.addAll(List<String>.from(responseData['atsigns']));
 
         if (responseData['newAtsign'] == null) {
+          if (!mounted) return null;
           final value = await Navigator.push(
               context,
               MaterialPageRoute<String?>(
@@ -321,6 +321,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                         message: responseData['message'],
                       )));
           if (value != null) {
+            if (!mounted) return null;
             Navigator.pop(
                 context, AtOnboardingOTPResult(atSign: value, secret: null));
           }
@@ -328,6 +329,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         }
         //displays list of atsign along with newAtsign
         else {
+          if (!mounted) return null;
           final value = await Navigator.push(
               context,
               MaterialPageRoute<String?>(
@@ -336,12 +338,12 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                         newAtsign: responseData['newAtsign']!,
                       )));
           if (value == responseData['newAtsign']) {
-            cramSecret = await validatePerson(
-                value as String, email, otp, context,
+            cramSecret = await validatePerson(value as String, email, otp,
                 isConfirmation: true);
             return cramSecret;
           } else {
             if (value != null) {
+              if (!mounted) return null;
               Navigator.pop(
                   context, AtOnboardingOTPResult(atSign: value, secret: null));
             }

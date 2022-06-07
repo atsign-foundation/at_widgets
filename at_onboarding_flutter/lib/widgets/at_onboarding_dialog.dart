@@ -40,7 +40,7 @@ class AtOnboardingDialog extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AtOnboardingDialogState createState() => _AtOnboardingDialogState();
+  State<AtOnboardingDialog> createState() => _AtOnboardingDialogState();
 }
 
 class _AtOnboardingDialogState extends State<AtOnboardingDialog> {
