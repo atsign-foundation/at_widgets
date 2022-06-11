@@ -71,6 +71,7 @@ class AtSyncUI {
   bool _showSwitchAtsignButton = true;
   AtClientPreference? atClientPreference;
   Function? onboardSuccessCallback;
+  Function? onAtsignDelete;
 
   ///Config
   AtSyncUIStyle _style = AtSyncUIStyle.cupertino;
@@ -92,11 +93,13 @@ class AtSyncUI {
     bool showSwitchAtsignButton, {
     AtClientPreference? atClientPreference,
     Function? onboardSuccessCallback,
+    Function? onAtsignDelete,
   }) {
     _showSwitchAtsignButton = showSwitchAtsignButton;
 
     this.atClientPreference = atClientPreference;
     this.onboardSuccessCallback = onboardSuccessCallback;
+    this.onAtsignDelete = onAtsignDelete;
   }
 
   /// Provide default theme for UI (dialog/snackBar ...) using in the app
@@ -229,26 +232,60 @@ class AtSyncUI {
                       ),
                     ),
                   showSwitchAtsignButton
-                      ? TextButton(
-                          onPressed: () {
-                            if (atClientPreference != null &&
-                                onboardSuccessCallback != null) {
-                              hideDialog();
-                              SwitchAtsignService().switchAtsign(
-                                  atClientPreference: atClientPreference!,
-                                  onboardSuccessCallback:
-                                      onboardSuccessCallback!);
+                      ? FutureBuilder(
+                          future: KeychainUtil.getAtsignList(),
+                          builder: ((context, snapshot) {
+                            var _atSignList = snapshot.data;
+                            if (_atSignList == null) {
+                              return const SizedBox();
                             }
-                          },
-                          child: const Text(
-                            'Switch Atsign',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        )
-                      : const SizedBox()
+                            return Column(
+                              children: [
+                                (_atSignList as List).length > 1
+                                    ? TextButton(
+                                        onPressed: () {
+                                          if (atClientPreference != null &&
+                                              onboardSuccessCallback != null) {
+                                            hideDialog();
+                                            SwitchAtsignService().switchAtsign(
+                                                atClientPreference:
+                                                    atClientPreference!,
+                                                onboardSuccessCallback:
+                                                    onboardSuccessCallback!);
+                                          }
+                                        },
+                                        child: const Text(
+                                          'Switch Atsign',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                                onAtsignDelete != null
+                                    ? TextButton(
+                                        onPressed: () {
+                                          hideDialog();
+                                          var _currentAtsign =
+                                              AtClientManager.getInstance()
+                                                  .atClient
+                                                  .getCurrentAtSign();
+                                          onAtsignDelete!(_currentAtsign);
+                                        },
+                                        child: const Text(
+                                          'Delete current Atsign',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox()
+                              ],
+                            );
+                          }))
+                      : const SizedBox(),
                 ],
               ),
             ),

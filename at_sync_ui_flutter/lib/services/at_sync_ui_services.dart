@@ -38,6 +38,7 @@ class AtSyncUIService {
     bool showSwitchAtsignButton = true,
     AtClientPreference? atClientPreference,
     Function? onboardSuccessCallback,
+    Function? onAtsignDelete,
   }) {
     this.onSuccessCallback = onSuccessCallback;
     this.onErrorCallback = onErrorCallback;
@@ -47,6 +48,7 @@ class AtSyncUIService {
       showSwitchAtsignButton,
       atClientPreference: atClientPreference,
       onboardSuccessCallback: onboardSuccessCallback,
+      onAtsignDelete: onAtsignDelete,
     );
 
     if (style != null) {
