@@ -35,10 +35,19 @@ class AtSyncUIService {
     Color? primaryColor,
     Color? backgroundColor,
     Color? labelColor,
+    bool showSwitchAtsignButton = true,
+    AtClientPreference? atClientPreference,
+    Function? onboardSuccessCallback,
   }) {
     this.onSuccessCallback = onSuccessCallback;
     this.onErrorCallback = onErrorCallback;
+
     AtSyncUI.instance.setAppNavigatorKey(appNavigator);
+    AtSyncUI.instance.setSwitchAtsignButtonMode(
+      showSwitchAtsignButton,
+      atClientPreference: atClientPreference,
+      onboardSuccessCallback: onboardSuccessCallback,
+    );
 
     if (style != null) {
       atSyncUIStyle = style;

@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_sync_ui_flutter/services/switch_atsign.dart';
 import 'package:flutter/material.dart';
 
 import 'at_sync_cupertino.dart' as cupertino;
@@ -56,7 +58,7 @@ class AtSyncUIController {
 class AtSyncUI {
   AtSyncUI._();
 
-  GlobalKey<NavigatorState>? _appNavigatorKey;
+  GlobalKey<NavigatorState>? appNavigatorKey;
 
   static final AtSyncUI _instance = AtSyncUI._();
 
@@ -65,6 +67,10 @@ class AtSyncUI {
   AtSyncUIController? _syncUIController;
 
   AtSyncUIController? get syncUIController => _syncUIController;
+
+  bool _showSwitchAtsignButton = true;
+  AtClientPreference? atClientPreference;
+  Function? onboardSuccessCallback;
 
   ///Config
   AtSyncUIStyle _style = AtSyncUIStyle.cupertino;
@@ -79,7 +85,18 @@ class AtSyncUI {
 
   /// It set [GlobalKey<NavigatorState>] to get [OverlayState] which use to add  [OverlayEntry]
   void setAppNavigatorKey(GlobalKey<NavigatorState>? appNavigator) {
-    _appNavigatorKey = appNavigator;
+    appNavigatorKey = appNavigator;
+  }
+
+  void setSwitchAtsignButtonMode(
+    bool showSwitchAtsignButton, {
+    AtClientPreference? atClientPreference,
+    Function? onboardSuccessCallback,
+  }) {
+    _showSwitchAtsignButton = showSwitchAtsignButton;
+
+    this.atClientPreference = atClientPreference;
+    this.onboardSuccessCallback = onboardSuccessCallback;
   }
 
   /// Provide default theme for UI (dialog/snackBar ...) using in the app
@@ -112,9 +129,8 @@ class AtSyncUI {
 
   /// Show dialog UI
   void showDialog({String? message}) {
-    assert(
-        _appNavigatorKey != null, "Must set appNavigator before show dialog");
-    assert(_appNavigatorKey!.currentState?.overlay != null,
+    assert(appNavigatorKey != null, "Must set appNavigator before show dialog");
+    assert(appNavigatorKey!.currentState?.overlay != null,
         "Cannot get current context");
     if (dialogOverlayEntry != null) {
       hideDialog();
@@ -125,8 +141,9 @@ class AtSyncUI {
       labelColor: _labelColor,
       style: _style,
       message: message,
+      showSwitchAtsignButton: _showSwitchAtsignButton,
     );
-    _appNavigatorKey?.currentState?.overlay?.insert(dialogOverlayEntry!);
+    appNavigatorKey?.currentState?.overlay?.insert(dialogOverlayEntry!);
   }
 
   /// Hide dialog UI
@@ -137,9 +154,8 @@ class AtSyncUI {
 
   /// Show SnackBar UI
   void showSnackBar({String? message}) {
-    assert(
-        _appNavigatorKey != null, "Must set appNavigator before show dialog");
-    assert(_appNavigatorKey!.currentState?.overlay != null,
+    assert(appNavigatorKey != null, "Must set appNavigator before show dialog");
+    assert(appNavigatorKey!.currentState?.overlay != null,
         "Cannot get current context");
 
     if (snackBarOverlayEntry != null) {
@@ -152,7 +168,7 @@ class AtSyncUI {
       style: _style,
       message: message,
     );
-    _appNavigatorKey?.currentState?.overlay?.insert(snackBarOverlayEntry!);
+    appNavigatorKey?.currentState?.overlay?.insert(snackBarOverlayEntry!);
   }
 
   /// Hide SnackBar UI
@@ -164,12 +180,13 @@ class AtSyncUI {
   /// Build dialog OverlayEntry
   /// Display fullscreen with 50% opacity and can't interact
   /// [AtSyncIndicator] place in center of screen
-  static OverlayEntry _buildDialogOverlayEntry({
+  OverlayEntry _buildDialogOverlayEntry({
     Color? primaryColors,
     Color? backgroundColor,
     Color? labelColor,
     AtSyncUIStyle? style,
     String? message,
+    required bool showSwitchAtsignButton,
   }) {
     return OverlayEntry(builder: (context) {
       // You can return any widget you like here
@@ -211,6 +228,27 @@ class AtSyncUI {
                         ),
                       ),
                     ),
+                  showSwitchAtsignButton
+                      ? TextButton(
+                          onPressed: () {
+                            if (atClientPreference != null &&
+                                onboardSuccessCallback != null) {
+                              hideDialog();
+                              SwitchAtsignService().switchAtsign(
+                                  atClientPreference: atClientPreference!,
+                                  onboardSuccessCallback:
+                                      onboardSuccessCallback!);
+                            }
+                          },
+                          child: const Text(
+                            'Switch Atsign',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        )
+                      : const SizedBox()
                 ],
               ),
             ),
