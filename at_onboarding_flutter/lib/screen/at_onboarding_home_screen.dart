@@ -241,6 +241,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
       String? path = await _desktopKeyPicker();
       if (path == null) {
+        setState(() {
+          loading = false;
+        });
         return;
       }
 
