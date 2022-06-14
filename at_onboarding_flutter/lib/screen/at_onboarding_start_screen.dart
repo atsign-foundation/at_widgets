@@ -4,6 +4,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding.dart';
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
@@ -57,9 +58,27 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
       if (e == OnboardingStatus.ATSIGN_NOT_FOUND ||
           e == OnboardingStatus.PRIVATE_KEY_NOT_FOUND) {
         if (!mounted) return;
+
+        final haveAnAtsign = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return const AtOnboardingIntroScreen();
+            },
+          ),
+        );
+        if (haveAnAtsign is! bool) {
+          if (!mounted) return;
+          Navigator.pop(context, AtOnboardingResult.cancelled());
+          return;
+        }
+
         final result = await await Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
-          return AtOnboardingHomeScreen(config: widget.config);
+          return AtOnboardingHomeScreen(
+            config: widget.config,
+            haveAnAtsign: haveAnAtsign,
+          );
         }));
         if (!mounted) return;
         Navigator.pop(context, result);

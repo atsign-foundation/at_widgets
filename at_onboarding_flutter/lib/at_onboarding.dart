@@ -1,6 +1,7 @@
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_start_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
@@ -32,11 +33,14 @@ class AtOnboarding {
       if ((atsign ?? '').trim().isNotEmpty) {
         await changePrimaryAtsign(atsign: atsign!);
       }
+
       //Check if existing an atsign => return onboard success
       final result = await showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (_) => AtOnboardingStartScreen(config: config),
+        builder: (_) => AtOnboardingStartScreen(
+          config: config,
+        ),
       );
       if (result is AtOnboardingResult) {
         return result;
@@ -44,11 +48,32 @@ class AtOnboarding {
         return AtOnboardingResult.cancelled();
       }
     } else {
+      final haveAnAtsign = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return const AtOnboardingIntroScreen();
+          },
+        ),
+      );
+
+      if (haveAnAtsign is! bool) {
+        return AtOnboardingResult.cancelled();
+      }
+
       //Navigate user to screen to add new atsign
-      final result = await Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) {
-        return AtOnboardingHomeScreen(config: config);
-      }));
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return AtOnboardingHomeScreen(
+              config: config,
+              haveAnAtsign: haveAnAtsign,
+            );
+          },
+        ),
+      );
+
       if (result is AtOnboardingResult) {
         //Update primary atsign after onboard success
         if (result.status == AtOnboardingResultStatus.success &&

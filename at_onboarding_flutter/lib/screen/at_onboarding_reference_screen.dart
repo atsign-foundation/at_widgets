@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -35,6 +37,11 @@ class AtOnboardingReferenceScreen extends StatefulWidget {
 class _AtOnboardingReferenceScreenState
     extends State<AtOnboardingReferenceScreen> {
   late bool isLoading;
+  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {
+    Factory(() => EagerGestureRecognizer())
+  };
+  WebViewController? _myController;
+  final UniqueKey _key = UniqueKey();
 
   @override
   void initState() {
@@ -64,8 +71,13 @@ class _AtOnboardingReferenceScreenState
       body: Stack(
         children: <Widget>[
           WebView(
+            key: _key,
             initialUrl: widget.url,
             javascriptMode: JavascriptMode.unrestricted,
+            gestureRecognizers: gestureRecognizers,
+            onWebViewCreated: (controller) {
+              _myController = controller;
+            },
             onPageFinished: (String value) {
               setState(() {
                 isLoading = false;

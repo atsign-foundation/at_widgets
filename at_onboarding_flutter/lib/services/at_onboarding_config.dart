@@ -1,3 +1,4 @@
+import 'package:at_onboarding_flutter/services/at_onboarding_tutorial_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -42,6 +43,8 @@ class AtOnboardingConfig {
   final RootEnvironment rootEnvironment;
   final AtSignLogger logger = AtSignLogger('At Onboarding Flutter');
 
+  final TutorialDisplay tutorialDisplay;
+
   AtOnboardingConfig({
     required this.atClientPreference,
     required this.rootEnvironment,
@@ -49,5 +52,6 @@ class AtOnboardingConfig {
     this.appAPIKey,
     this.hideReferences = false,
     this.hideQrScan = false,
+    this.tutorialDisplay = TutorialDisplay.normal,
   });
 }

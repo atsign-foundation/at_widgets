@@ -53,7 +53,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Setting up your account',
+            AtOnboardingStrings.onboardingTitle,
             style: TextStyle(
               color: Platform.isIOS || Platform.isAndroid
                   ? Theme.of(context).brightness == Brightness.light

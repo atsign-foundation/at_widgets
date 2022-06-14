@@ -33,13 +33,15 @@ class AtOnboardingOTPScreen extends StatefulWidget {
     required bool hideReferences,
   }) {
     return Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => AtOnboardingOTPScreen(
-                  atSign: atSign,
-                  email: email,
-                  hideReferences: hideReferences,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (_) => AtOnboardingOTPScreen(
+          atSign: atSign,
+          email: email,
+          hideReferences: hideReferences,
+        ),
+      ),
+    );
   }
 
   final String atSign;
@@ -67,6 +69,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
   bool isResendingCode = false;
 
   String limitExceeded = 'limitExceeded';
+  bool hasOTPError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +78,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Setting up your account',
+            AtOnboardingStrings.onboardingTitle,
             style: TextStyle(
               color: Platform.isIOS || Platform.isAndroid
                   ? Theme.of(context).brightness == Brightness.light
@@ -124,9 +127,13 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   textStyle: const TextStyle(
                       fontSize: 24, fontWeight: FontWeight.bold),
                   pinTheme: PinTheme(
-                    selectedColor: Theme.of(context).primaryColor,
-                    inactiveColor: Colors.grey[500],
-                    activeColor: Theme.of(context).primaryColor,
+                    selectedColor: hasOTPError
+                        ? Colors.red
+                        : Theme.of(context).primaryColor,
+                    activeColor: hasOTPError
+                        ? Colors.red
+                        : Theme.of(context).primaryColor,
+                    inactiveColor: hasOTPError ? Colors.red : Colors.grey[500],
                     shape: PinCodeFieldShape.box,
                     borderRadius: BorderRadius.circular(5),
                     fieldHeight: 48,
@@ -141,7 +148,11 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   inputFormatters: <TextInputFormatter>[
                     AtOnboardingInputFormatter(),
                   ],
-                  onChanged: (String value) {},
+                  onChanged: (String value) {
+                    setState(() {
+                      hasOTPError = false;
+                    });
+                  },
                 ),
                 Text(
                   'A verification code has been sent to ${widget.email ?? 'your registered email.'}',
@@ -175,6 +186,29 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   onPressed: _onResendPressed,
                   child: const Text('Resend Code'),
                 ),
+                const SizedBox(height: 20),
+                RichText(
+                    text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "Note:",
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                            fontSize: AtOnboardingDimens.fontSmall,
+                            height: 1.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    TextSpan(
+                      text: """ If you didn't receive our email:
+  - Confirm that your atSign was entered correctly.
+  - Check your spam or junk email folder.""",
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                            fontSize: AtOnboardingDimens.fontSmall,
+                            height: 1.5,
+                          ),
+                    ),
+                  ],
+                )),
               ],
             ),
           ),
@@ -213,23 +247,44 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
       isVerifing = false;
       setState(() {});
       if (!mounted) return;
-      Navigator.pop(context,
-          AtOnboardingOTPResult(atSign: widget.atSign, secret: secret));
+      if (secret.isNotEmpty) {
+        Navigator.pop(
+          context,
+          AtOnboardingOTPResult(
+            atSign: widget.atSign,
+            secret: secret,
+          ),
+        );
+      } else {
+        setState(() {
+          hasOTPError = true;
+        });
+      }
       return;
-    }
-    isVerifing = true;
-    setState(() {});
+    } else {
+      isVerifing = true;
+      setState(() {});
 
-    String? result = await validatePerson(
-        widget.atSign, widget.email!, _pinCodeController.text);
+      String? result = await validatePerson(
+          widget.atSign, widget.email!, _pinCodeController.text);
 
-    isVerifing = false;
-    setState(() {});
-    if (result != null && result != limitExceeded) {
-      List<String> params = result.split(':');
-      if (!mounted) return;
-      Navigator.pop(
-          context, AtOnboardingOTPResult(atSign: params[0], secret: params[1]));
+      isVerifing = false;
+      setState(() {});
+      if (result != null && result != limitExceeded) {
+        List<String> params = result.split(':');
+        if (!mounted) return;
+        Navigator.pop(
+          context,
+          AtOnboardingOTPResult(
+            atSign: params[0],
+            secret: params[1],
+          ),
+        );
+      } else {
+        setState(() {
+          hasOTPError = true;
+        });
+      }
     }
   }
 
@@ -250,13 +305,27 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         cramSecret = data['cramkey'];
       } else {
         String errorMessage = data['message'];
-        await showErrorDialog(errorMessage);
+        if (!mounted) return '';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(errorMessage),
+          ),
+        );
+        // await showErrorDialog(errorMessage);
       }
     } else {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      await showErrorDialog(errorMessage);
+      if (!mounted) return '';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(errorMessage),
+        ),
+      );
+      // await showErrorDialog(errorMessage);
     }
     return cramSecret ?? '';
   }
@@ -284,12 +353,26 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
   ///With new account
   void _onResendPressed() async {
     if ((widget.email ?? '').isEmpty) {
-      loginWithAtsign(widget.atSign, context);
+      setState(() {
+        isResendingCode = true;
+        hasOTPError = false;
+      });
+
+      final result = await loginWithAtsign(widget.atSign, context);
+
+      if (result) {
+        _pinCodeController.text = '';
+      }
+
+      setState(() {
+        isResendingCode = false;
+      });
       return;
     }
 
     setState(() {
       isResendingCode = true;
+      hasOTPError = false;
     });
     // String atsign;
     dynamic response =
@@ -379,14 +462,28 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         cramSecret = data['cramkey'];
       } else {
         String? errorMessage = data['message'];
-        await showErrorDialog(errorMessage);
+        if (!mounted) return null;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(errorMessage ?? ''),
+          ),
+        );
+        // await showErrorDialog(errorMessage);
       }
       // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
       String? errorMessage = data['message'];
-      await showErrorDialog(errorMessage);
+      if (!mounted) return null;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(errorMessage ?? ''),
+        ),
+      );
+      // await showErrorDialog(errorMessage);
     }
     return cramSecret;
   }

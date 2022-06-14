@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_backup_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
@@ -30,6 +31,10 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
   void initState() {
     super.initState();
     atsign = OnboardingService.getInstance().currentAtsign;
+
+    AtOnboardingBackupService.instance.setRemindBackup(remind: true);
+    AtOnboardingBackupService.instance
+        .setBackupOpenedTime(dateTime: DateTime.now());
   }
 
   GlobalKey globalKey = GlobalKey();
@@ -54,7 +59,12 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
                 : null,
           ),
         ),
-        leading: Container(),
+        leading: IconButton(
+          icon: const Icon(Icons.close_rounded),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -105,7 +115,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
                 height: 48,
                 borderRadius: 24,
                 child: Text(
-                  AtOnboardingStrings.saveButtonTitle,
+                  AtOnboardingStrings.onboardingBackupNow,
                   style: TextStyle(
                     color: Platform.isIOS || Platform.isAndroid
                         ? Theme.of(context).brightness == Brightness.light
@@ -115,6 +125,8 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
                   ),
                 ),
                 onPressed: () {
+                  AtOnboardingBackupService.instance
+                      .setRemindBackup(remind: false);
                   BackupKeyWidget(atsign: atsign ?? '')
                       .showBackupDialog(context);
                 },
@@ -128,13 +140,21 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               child: AtOnboardingSecondaryButton(
                 height: 48,
                 borderRadius: 24,
-                onPressed: Navigator.of(context).pop,
-                child: const Text(AtOnboardingStrings.continueButtonTitle),
+                onPressed: _handleRemindLatter,
+                child: const Text(AtOnboardingStrings.onboardingRemindLatter),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _handleRemindLatter() {
+    Navigator.pop(context);
+    AtOnboardingBackupService.instance.setRemindBackup(remind: true);
+    AtOnboardingBackupService.instance.setBackupOpenedTime(
+      dateTime: DateTime.now(),
     );
   }
 }

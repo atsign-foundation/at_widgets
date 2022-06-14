@@ -67,4 +67,9 @@ class AtOnboardingStrings {
 
   static const String _basepath = 'assets/images';
   static const String backupZip = '$_basepath/backup_key.png';
+
+  static const String onboardingTitle = 'Setting up your atSign';
+  static const String onboardingBackupNow = 'Backup Now';
+  static const String onboardingRemindLatter = 'Remind Me Later';
+
 }
