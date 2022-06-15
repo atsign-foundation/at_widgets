@@ -100,7 +100,6 @@ class _GroupContactViewState extends State<GroupContactView> {
   }
 
   List<AtContact> selectedList = [];
-  bool toggleList = true;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -240,24 +239,6 @@ class _GroupContactViewState extends State<GroupContactView> {
                     : HorizontalCircularList(
                         onContactsTap: widget.onContactsTap)
                 : Container(),
-            Container(
-              padding: EdgeInsets.only(right: 20.toWidth),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Icon(
-                    Icons.view_module,
-                    color: ColorConstants.greyText,
-                  ),
-                  Container(
-                    // ignore: prefer_const_constructors
-                    child:
-                        Icon(Icons.view_list, color: ColorConstants.greyText),
-                  ),
-                  const Icon(Icons.view_list, color: ColorConstants.greyText),
-                ],
-              ),
-            ),
             StreamBuilder<List<GroupContactsModel?>>(
                 stream: _groupService.allContactsStream,
                 initialData: _groupService.allContacts,

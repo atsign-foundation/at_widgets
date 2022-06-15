@@ -191,7 +191,7 @@ class _CircularContactsState extends State<CircularContacts> {
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
                         color: AllColors().GREY,
-                        borderRadius: BorderRadius.circular(2.toWidth)),
+                        borderRadius: BorderRadius.circular(8)),
                     textStyle: TextStyle(color: AllColors().WHITE),
                     message:
                         '${widget.groupContact?.contact?.tags != null && widget.groupContact?.contact?.tags!['name'] != null ? widget.groupContact?.contact?.tags!['name'] : (widget.groupContact?.contact?.atSign?.substring(1) ?? widget.groupContact?.group?.groupName?.substring(0))!}\n${(widget.groupContact?.contact?.atSign ?? widget.groupContact?.group?.groupName)!}',
