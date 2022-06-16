@@ -1,3 +1,7 @@
+## 4.0.6
+- **FIX**: Removed toggle option from contact screen
+- **CHORE**: Updated package dependencies
+
 ## 4.0.5
 - **FIX**: Lint Fixes according to flutter 3.0
 
