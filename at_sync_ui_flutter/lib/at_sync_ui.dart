@@ -84,6 +84,9 @@ class AtSyncUI {
   OverlayEntry? dialogOverlayEntry;
   OverlayEntry? snackBarOverlayEntry;
 
+  /// Confirmation overlay
+  OverlayEntry? _confirmationOverlayEntry;
+
   /// It set [GlobalKey<NavigatorState>] to get [OverlayState] which use to add  [OverlayEntry]
   void setAppNavigatorKey(GlobalKey<NavigatorState>? appNavigator) {
     appNavigatorKey = appNavigator;
@@ -266,12 +269,30 @@ class AtSyncUI {
                                 onAtsignDelete != null
                                     ? TextButton(
                                         onPressed: () {
-                                          hideDialog();
-                                          var _currentAtsign =
-                                              AtClientManager.getInstance()
-                                                  .atClient
-                                                  .getCurrentAtSign();
-                                          onAtsignDelete!(_currentAtsign);
+                                          _confirmationOverlayEntry =
+                                              _buildConfirmationOverlayEntry(
+                                            onYesTap: () {
+                                              hideDialog();
+
+                                              _confirmationOverlayEntry
+                                                  ?.remove();
+                                              var _currentAtsign =
+                                                  AtClientManager.getInstance()
+                                                      .atClient
+                                                      .getCurrentAtSign();
+                                              onAtsignDelete!(_currentAtsign);
+                                            },
+                                            onNoTap: () {
+                                              _confirmationOverlayEntry
+                                                  ?.remove();
+                                            },
+                                            backgroundColor: backgroundColor,
+                                            labelColor: labelColor,
+                                          );
+
+                                          appNavigatorKey?.currentState?.overlay
+                                              ?.insert(
+                                                  _confirmationOverlayEntry!);
                                         },
                                         child: const Text(
                                           'Delete current Atsign',
@@ -322,6 +343,76 @@ class AtSyncUI {
             labelColor,
             style,
             message,
+          ),
+        ),
+      );
+    });
+  }
+
+  /// Build confirmation OverlayEntry
+  OverlayEntry _buildConfirmationOverlayEntry({
+    required Function onYesTap,
+    required Function onNoTap,
+    Color? backgroundColor,
+    Color? labelColor,
+  }) {
+    return OverlayEntry(builder: (context) {
+      return Positioned.fill(
+        child: Container(
+          color: Colors.black.withOpacity(0.5),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: backgroundColor,
+              ),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 10, bottom: 0),
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: Text(
+                      'Are you sure you want to delete this atsign ?',
+                      style: TextStyle(
+                        color: labelColor,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        onYesTap();
+                      },
+                      child: const Text(
+                        'Yes',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        onNoTap();
+                      },
+                      child: const Text(
+                        'No',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ]),
+            ),
           ),
         ),
       );
