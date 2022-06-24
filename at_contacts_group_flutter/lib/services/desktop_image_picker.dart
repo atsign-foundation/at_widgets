@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 // ignore: import_of_legacy_library_into_null_safe
+import 'package:at_contacts_group_flutter/services/navigation_service.dart';
+import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:file_selector/file_selector.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_compression/image_compression.dart';
 
 Future<Uint8List?> desktopImagePicker() async {
@@ -31,6 +32,12 @@ Future<Uint8List?> desktopImagePicker() async {
             jpgQuality: 50,
             pngCompression: PngCompression.defaultCompression,
             outputType: OutputType.jpg)));
+
+    if (output.sizeInBytes > 100000) {
+      CustomToast().show('image size cannot exceed 100 kb',
+          NavService.groupPckgLeftHalfNavKey.currentContext!);
+      return null;
+    }
 
     return output.rawBytes;
   } catch (e) {
