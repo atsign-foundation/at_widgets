@@ -147,7 +147,7 @@ class _GroupEditState extends State<GroupEdit> {
         child: Stack(
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 (groupPicture != null)
                     ? Image.memory(
@@ -197,9 +197,16 @@ class _GroupEditState extends State<GroupEdit> {
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: 27.toWidth, vertical: 2.toHeight),
-                  child: Text(
-                    'Group Name',
-                    style: CustomTextStyles().grey16,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Group Name',
+                          style: CustomTextStyles().grey16,
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
