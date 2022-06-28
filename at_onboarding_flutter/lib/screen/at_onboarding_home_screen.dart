@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zxing2/qrcode.dart';
 import 'package:image/image.dart' as img;
 
@@ -742,10 +743,18 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   }
 
   void _showReferenceWebview() {
-    AtOnboardingReferenceScreen.push(
-      context: context,
-      title: AtOnboardingStrings.faqTitle,
-      url: AtOnboardingStrings.faqUrl,
-    );
+    if (Platform.isAndroid || Platform.isIOS) {
+      AtOnboardingReferenceScreen.push(
+        context: context,
+        title: AtOnboardingStrings.faqTitle,
+        url: AtOnboardingStrings.faqUrl,
+      );
+    } else {
+      launchUrl(
+        Uri.parse(
+          AtOnboardingStrings.faqUrl,
+        ),
+      );
+    }
   }
 }
