@@ -1,3 +1,6 @@
+## 4.0.7
+- **FIX**: Fixed buffer size limit issue while creating groups
+
 ## 4.0.6
 - **FIX**: Removed toggle option from contact screen
 - **CHORE**: Updated package dependencies
