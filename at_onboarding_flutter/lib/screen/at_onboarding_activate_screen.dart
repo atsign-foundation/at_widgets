@@ -143,10 +143,14 @@ class _AtOnboardingActivateScreenState
     );
   }
 
-  Future<dynamic> _processSharedSecret(
-      {required String atsign, required String secret}) async {
+  Future<dynamic> _processSharedSecret({
+    required String atsign,
+    required String secret,
+  }) async {
     dynamic authResponse;
     try {
+      atsign = atsign.startsWith('@') ? atsign : '@$atsign';
+
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
         await _showAlertDialog(
@@ -157,7 +161,7 @@ class _AtOnboardingActivateScreenState
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         await AtOnboardingBackupScreen.push(context: context);
-        if(!mounted) return;
+        if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else {
         //Todo:
