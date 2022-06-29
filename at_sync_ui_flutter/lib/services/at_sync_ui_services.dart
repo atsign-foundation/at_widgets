@@ -1,5 +1,7 @@
 // ignore_for_file: implementation_imports, prefer_typing_uninitialized_variables
 
+import 'dart:async';
+
 import 'package:at_client/at_client.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,15 @@ class AtSyncUIService {
   AtSyncUIStyle atSyncUIStyle = AtSyncUIStyle.cupertino;
   AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.dialog;
   bool showTextWhileSyncing = true;
+
+  final StreamController _atSyncUIListenerController =
+      StreamController<AtSyncUIStatus>.broadcast();
+  
+  /// [atSyncUIListener] can be used to listen to sync status changes
+  Stream<AtSyncUIStatus> get atSyncUIListener =>
+      _atSyncUIListenerController.stream as Stream<AtSyncUIStatus>;
+  StreamSink<AtSyncUIStatus> get _atSyncUIListenerSink =>
+      _atSyncUIListenerController.sink as StreamSink<AtSyncUIStatus>;
 
   /// [appNavigator] is used for navigation purpose
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
@@ -71,6 +82,9 @@ class AtSyncUIService {
       this.atSyncUIOverlay = atSyncUIOverlay;
     }
 
+    /// change status to syncing
+    _atSyncUIListenerSink.add(AtSyncUIStatus.syncing);
+
     _show(atSyncUIOverlay: atSyncUIOverlay);
     syncService.sync(onDone: _onSuccessCallback);
   }
@@ -80,10 +94,16 @@ class AtSyncUIService {
 
     if ((syncStatus.syncStatus == SyncStatus.failure) &&
         (onErrorCallback != null)) {
+      /// change status to failed
+      _atSyncUIListenerSink.add(AtSyncUIStatus.failed);
+
       onErrorCallback!(syncStatus);
     }
 
     if (onSuccessCallback != null) {
+      /// change status to completed
+      _atSyncUIListenerSink.add(AtSyncUIStatus.completed);
+
       onSuccessCallback!(syncStatus);
     }
   }
@@ -110,3 +130,6 @@ class AtSyncUIService {
     AtSyncUI.instance.hideSnackBar();
   }
 }
+
+///Enum to represent the sync status for AtSyncUIFlutter
+enum AtSyncUIStatus { syncing, completed, failed }
