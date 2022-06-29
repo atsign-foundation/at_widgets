@@ -63,7 +63,7 @@ class SDKService {
   ///Resets [atsigns] list from device storage.
   Future<void> resetAtsigns(List<String> atsigns) async {
     for (String atsign in atsigns) {
-      await _keyChainManager.resetAtSignFromKeychain(atsign);
+      await _keyChainManager.deleteAtSignFromKeychain(atsign);
       atClientServiceMap!.remove(atsign);
       monitorConnectionMap!.remove(atsign);
     }

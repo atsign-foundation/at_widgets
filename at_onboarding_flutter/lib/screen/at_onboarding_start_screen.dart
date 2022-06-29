@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../at_onboarding.dart';
 import '../services/at_onboarding_config.dart';
+import 'at_onboarding_home_screen.dart';
 
 class AtOnboardingStartScreen extends StatefulWidget {
   final AtOnboardingConfig config;
@@ -29,22 +30,22 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
   }
 
   void _init() async {
-    final OnboardingService onboardingService =
-        OnboardingService.getInstance();
+    final OnboardingService onboardingService = OnboardingService.getInstance();
     onboardingService.setAtClientPreference = widget.config.atClientPreference;
     try {
       final result = await onboardingService.onboard();
       debugPrint("AtOnboardingInitScreen: result - $result");
       if (!mounted) return;
-      Navigator.pop(context, AtOnboardingResult.success(atsign: onboardingService.currentAtsign!));
+      Navigator.pop(context,
+          AtOnboardingResult.success(atsign: onboardingService.currentAtsign!));
     } catch (e) {
       debugPrint("AtOnboardingInitScreen: error - $e");
       if (e == OnboardingStatus.ATSIGN_NOT_FOUND ||
           e == OnboardingStatus.PRIVATE_KEY_NOT_FOUND) {
-        final result = await AtOnboarding.start(
-          context: context,
-          config: widget.config,
-        );
+        final result = await await Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return AtOnboardingHomeScreen(config: widget.config);
+        }));
         if (!mounted) return;
         Navigator.pop(context, result);
       } else if (e == OnboardingStatus.ACTIVATE) {
