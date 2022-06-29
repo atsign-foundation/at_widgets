@@ -115,7 +115,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         setState(() {
                           isLoading = true;
                         });
-                        final result = await AtOnboarding.start(
+                        final result = await AtOnboarding.onboard(
                           context: context,
                           config: AtOnboardingConfig(
                             atClientPreference: atClientPreferenceLocal,
@@ -123,6 +123,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                             rootEnvironment: AtEnv.rootEnvironment,
                             appAPIKey: AtEnv.appApiKey,
                           ),
+                          isSwitchingAtsign: true,
                         );
                         switch (result.status) {
                           case AtOnboardingResultStatus.success:
