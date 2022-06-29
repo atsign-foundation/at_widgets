@@ -72,7 +72,7 @@ class AtOnboarding {
         .changePrimaryAtsign(atsign: atsign);
   }
 
-  static Future<AtOnboardingResult> reset({
+  static Future<AtOnboardingResetResult> reset({
     required BuildContext context,
     required AtOnboardingConfig config,
   }) async {
@@ -80,10 +80,10 @@ class AtOnboarding {
         MaterialPageRoute(builder: (BuildContext context) {
       return AtOnboardingResetScreen(config: config);
     }));
-    if (result is AtOnboardingResult) {
+    if (result is AtOnboardingResetResult) {
       return result;
     } else {
-      return AtOnboardingResult.cancelled();
+      return AtOnboardingResetResult.canceled;
     }
   }
 }
