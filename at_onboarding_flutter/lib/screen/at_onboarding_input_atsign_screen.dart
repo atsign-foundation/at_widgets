@@ -62,7 +62,7 @@ class _AtOnboardingInputAtSignScreenState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Text(
-                'Activate @sign',
+                'Activate atSign',
                 style: TextStyle(
                   fontSize: AtOnboardingDimens.fontLarge,
                   fontWeight: FontWeight.bold,
@@ -73,7 +73,7 @@ class _AtOnboardingInputAtSignScreenState
                 enabled: true,
                 validator: (String? value) {
                   if (value == null || value == '') {
-                    return '@sign cannot be empty';
+                    return 'atSign cannot be empty';
                   }
                   return null;
                 },

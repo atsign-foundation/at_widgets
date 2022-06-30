@@ -465,12 +465,12 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 ),
                 const SizedBox(height: 5),
                 const Text(
-                  'Upload your backup key file from stored location which was generated during the pairing process of your @sign.',
+                  'Upload your backup key file from stored location which was generated during the pairing process of your atSign.',
                   style: TextStyle(fontSize: AtOnboardingDimens.fontSmall),
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  'Need an @sign?',
+                  'Need an atSign?',
                   style: TextStyle(
                     fontSize: AtOnboardingDimens.fontLarge,
                     fontWeight: FontWeight.bold,
@@ -487,7 +487,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Text(
-                          'Generate Free @sign',
+                          'Generate Free atSign',
                           style:
                               TextStyle(fontSize: AtOnboardingDimens.fontLarge),
                         ),
@@ -546,7 +546,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 const SizedBox(height: 20),
                 if (!widget.hideQrScan)
                   const Text(
-                    'Activate an @sign?',
+                    'Activate an atSign?',
                     style: TextStyle(
                       fontSize: AtOnboardingDimens.fontLarge,
                       fontWeight: FontWeight.bold,
@@ -564,7 +564,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Text(
-                          'Activate @sign',
+                          'Activate atSign',
                           style:
                               TextStyle(fontSize: AtOnboardingDimens.fontLarge),
                         ),

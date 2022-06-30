@@ -66,13 +66,13 @@ class AtOnboardingErrorToString {
   }
 
   String pairedAtsign(String? atsign) =>
-      '$atsign was already paired with this device. First delete/reset this @sign from device to add.';
+      '$atsign was already paired with this device. First delete/reset this atSign from device to add.';
 
   String atsignMismatch(String? givenAtsign, {bool isQr = false}) {
     if (isQr) {
-      return '@sign mismatches. Please provide the QRcode of $givenAtsign to pair.';
+      return 'atSign mismatches. Please provide the QRcode of $givenAtsign to pair.';
     } else {
-      return '@sign mismatches. Please provide the backup key file of $givenAtsign to pair.';
+      return 'atSign mismatches. Please provide the backup key file of $givenAtsign to pair.';
     }
   }
 }
