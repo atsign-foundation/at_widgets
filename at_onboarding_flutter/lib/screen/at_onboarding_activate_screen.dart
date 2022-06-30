@@ -79,7 +79,7 @@ class _AtOnboardingActivateScreenState
               children: const [
                 AtSyncIndicator(),
                 SizedBox(height: 10),
-                Text('Please wait while fetching @sign status'),
+                Text('Please wait while fetching atSign status'),
               ],
             ),
           ),

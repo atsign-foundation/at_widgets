@@ -71,7 +71,7 @@ class _AtOnboardingAccountsScreenState
                 children: <Widget>[
                   Text(
                     widget.message ??
-                        'You already have some existing atsigns. Please select an @sign or else continue with the new one.',
+                        'You already have some existing atsigns. Please select an atSign or else continue with the new one.',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: AtOnboardingDimens.fontNormal,

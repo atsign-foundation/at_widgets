@@ -91,7 +91,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   focusNode: _focusNode,
                   validator: (String? value) {
                     if (value == null || value == '') {
-                      return '@sign cannot be empty';
+                      return 'atSign cannot be empty';
                     }
                     return null;
                   },
