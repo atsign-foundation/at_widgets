@@ -165,7 +165,7 @@ Future<bool> unfollowAtSign(String atSign)async {
 }
 ```
 
-### Remove a atSign from following list
+### Remove an atSign from following list
 
 To remove an atSign from following list, call the following method and pass
 the atSign to remove:
