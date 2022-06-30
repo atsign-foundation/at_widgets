@@ -58,9 +58,7 @@ class _SecondScreenState extends State<SecondScreen> {
         title: const Text('Second Screen'),
       ),
       body: Center(
-        child: ListView(
-          // mainAxisSize: MainAxisSize.min,
-          padding: const EdgeInsets.all(20),
+        child: Column(
           children: [
             Container(
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -97,6 +95,25 @@ class _SecondScreenState extends State<SecondScreen> {
                     MaterialPageRoute(builder: (context) => const UIOptions()));
               },
               child: const Text('See all UI options'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Current State: '),
+                StreamBuilder(
+                  stream: AtSyncUIService().atSyncUIListener,
+                  builder: ((context, snapshot) {
+                    if (snapshot.data != null){
+                      switch(snapshot.data){
+                        case AtSyncUIStatus.completed: return _circleUI(Colors.green);
+                        case AtSyncUIStatus.syncing: return _circleUI(Colors.yellow);
+                        case AtSyncUIStatus.failed: return _circleUI(Colors.red);
+                        case AtSyncUIStatus.notStarted: return _circleUI(Colors.grey);
+                      }
+                    }
+                    return _circleUI(Colors.grey);
+                })),
+              ],
             ),
           ],
         ),
@@ -135,5 +152,16 @@ class _SecondScreenState extends State<SecondScreen> {
             fontWeight: FontWeight.normal),
       ),
     ));
+  }
+
+  Widget _circleUI(Color _color){
+    return Container(
+      height: 20,
+      width: 20,
+      decoration: BoxDecoration(
+        color: _color,
+        borderRadius: BorderRadius.circular(20),
+      ),
+    );
   }
 }

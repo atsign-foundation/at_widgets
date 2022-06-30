@@ -51,6 +51,9 @@ class AtSyncUIService {
     this.onErrorCallback = onErrorCallback;
     AtSyncUI.instance.setAppNavigatorKey(appNavigator);
 
+    /// change status to notStarted
+    _atSyncUIListenerSink.add(AtSyncUIStatus.notStarted);
+
     if (style != null) {
       atSyncUIStyle = style;
     }
@@ -132,4 +135,4 @@ class AtSyncUIService {
 }
 
 ///Enum to represent the sync status for AtSyncUIFlutter
-enum AtSyncUIStatus { syncing, completed, failed }
+enum AtSyncUIStatus { syncing, completed, failed, notStarted }
