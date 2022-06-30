@@ -7,6 +7,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
 import 'package:at_onboarding_flutter/screens/private_key_qrcode_generator.dart';
 import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
+import 'package:at_onboarding_flutter/services/backend_service.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
@@ -816,6 +817,26 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         });
         break;
       case AtSignStatus.unavailable:
+        dynamic response = await _freeAtsignService.validatePerson(
+            atsign,
+            BackendService.getInstance().getEmail!,
+            BackendService.getInstance().getOtp,
+            confirmation: true);
+
+        var data = response.body;
+        data = jsonDecode(data);
+
+        if (response.statusCode == 200) {
+          data = response.body;
+          data = jsonDecode(data);
+
+          if (data['status'] != 'error') {
+            var cramSecret = data['cramkey'];
+            _processSharedSecret(atsign, cramSecret);
+          }
+        }
+        break;
+
       case AtSignStatus.notFound:
         await _showAlertDialog(Strings.atsignNotFound,
             getClose: true, onClose: _getAtsignForm);
