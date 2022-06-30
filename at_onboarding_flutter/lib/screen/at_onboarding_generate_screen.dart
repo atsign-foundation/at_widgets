@@ -70,7 +70,7 @@ class _AtOnboardingGenerateScreenState
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text(
-                  'Free @sign',
+                  'Free atSign',
                   style: TextStyle(
                     fontSize: AtOnboardingDimens.fontLarge,
                     fontWeight: FontWeight.bold,
@@ -81,7 +81,7 @@ class _AtOnboardingGenerateScreenState
                   enabled: false,
                   validator: (String? value) {
                     if (value == null || value == '') {
-                      return '@sign cannot be empty';
+                      return 'atSign cannot be empty';
                     }
                     return null;
                   },

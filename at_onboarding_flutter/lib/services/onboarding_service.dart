@@ -109,7 +109,7 @@ class OnboardingService {
     _isPkam = false;
     atsign = formatAtSign(atsign);
     if (atsign == null) {
-      throw '@sign cannot be null';
+      throw 'atSign cannot be null';
     }
     Completer<dynamic> c = Completer<dynamic>();
     try {

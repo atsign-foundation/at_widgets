@@ -38,7 +38,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
   @override
   Widget build(BuildContext context) {
     if (atsign == null) {
-      return const Text('An @sign is required.');
+      return const Text('An atSign is required.');
     }
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
