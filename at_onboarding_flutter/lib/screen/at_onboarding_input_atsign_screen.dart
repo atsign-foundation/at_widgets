@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'at_onboarding_reference_screen.dart';
 
@@ -118,11 +121,19 @@ class _AtOnboardingInputAtSignScreenState
   }
 
   void _showReferenceWebview() {
-    AtOnboardingReferenceScreen.push(
-      context: context,
-      title: AtOnboardingStrings.faqTitle,
-      url: AtOnboardingStrings.faqUrl,
-    );
+    if (Platform.isAndroid || Platform.isIOS) {
+      AtOnboardingReferenceScreen.push(
+        context: context,
+        title: AtOnboardingStrings.faqTitle,
+        url: AtOnboardingStrings.faqUrl,
+      );
+    } else {
+      launchUrl(
+        Uri.parse(
+          AtOnboardingStrings.faqUrl,
+        ),
+      );
+    }
   }
 
   void _activateAtSign() async {

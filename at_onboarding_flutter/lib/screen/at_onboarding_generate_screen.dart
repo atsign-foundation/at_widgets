@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
@@ -7,10 +8,10 @@ import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'at_onboarding_pair_screen.dart';
 import 'at_onboarding_reference_screen.dart';
-
 
 class AtOnboardingGenerateScreen extends StatefulWidget {
   final Function({required String atSign, required String secret})?
@@ -178,17 +179,26 @@ class _AtOnboardingGenerateScreenState
   }
 
   Future<void> showErrorDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
+    String? messageString =
+        AtOnboardingErrorToString().getErrorMessage(errorMessage);
     return AtOnboardingDialog.showError(
         context: context, message: messageString);
   }
 
   void _showReferenceWebview() {
-    AtOnboardingReferenceScreen.push(
-      context: context,
-      title: AtOnboardingStrings.faqTitle,
-      url: AtOnboardingStrings.faqUrl,
-    );
+    if (Platform.isAndroid || Platform.isIOS) {
+      AtOnboardingReferenceScreen.push(
+        context: context,
+        title: AtOnboardingStrings.faqTitle,
+        url: AtOnboardingStrings.faqUrl,
+      );
+    } else {
+      launchUrl(
+        Uri.parse(
+          AtOnboardingStrings.faqUrl,
+        ),
+      );
+    }
   }
 
   void _showPairScreen() async {

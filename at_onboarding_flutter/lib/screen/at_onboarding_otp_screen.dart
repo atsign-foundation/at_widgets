@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_input_formatter.dart';
@@ -171,11 +172,19 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
   }
 
   void _showReferenceWebview() {
-    AtOnboardingReferenceScreen.push(
-      context: context,
-      title: AtOnboardingStrings.faqTitle,
-      url: AtOnboardingStrings.faqUrl,
-    );
+    if (Platform.isAndroid || Platform.isIOS) {
+      AtOnboardingReferenceScreen.push(
+        context: context,
+        title: AtOnboardingStrings.faqTitle,
+        url: AtOnboardingStrings.faqUrl,
+      );
+    } else {
+      launchUrl(
+        Uri.parse(
+          AtOnboardingStrings.faqUrl,
+        ),
+      );
+    }
   }
 
   void _onVerifyPressed() async {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
@@ -157,10 +158,19 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
   }
 
   void _showReferenceWebview() {
-    AtOnboardingReferenceScreen.push(
+    if (Platform.isAndroid || Platform.isIOS) {
+      AtOnboardingReferenceScreen.push(
         context: context,
+        title: AtOnboardingStrings.faqTitle,
         url: AtOnboardingStrings.faqUrl,
-        title: AtOnboardingStrings.faqTitle);
+      );
+    } else {
+      launchUrl(
+        Uri.parse(
+          AtOnboardingStrings.faqUrl,
+        ),
+      );
+    }
   }
 
   void _onSendCodePressed() async {
