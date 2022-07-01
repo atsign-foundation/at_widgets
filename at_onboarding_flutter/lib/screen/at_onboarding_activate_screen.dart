@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
@@ -9,6 +10,7 @@ import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../at_onboarding_result.dart';
 import 'at_onboarding_backup_screen.dart';
@@ -136,11 +138,19 @@ class _AtOnboardingActivateScreenState
   }
 
   void _showReferenceWebview() {
-    AtOnboardingReferenceScreen.push(
-      context: context,
-      title: AtOnboardingStrings.faqTitle,
-      url: AtOnboardingStrings.faqUrl,
-    );
+    if (Platform.isAndroid || Platform.isIOS) {
+      AtOnboardingReferenceScreen.push(
+        context: context,
+        title: AtOnboardingStrings.faqTitle,
+        url: AtOnboardingStrings.faqUrl,
+      );
+    } else {
+      launchUrl(
+        Uri.parse(
+          AtOnboardingStrings.faqUrl,
+        ),
+      );
+    }
   }
 
   Future<dynamic> _processSharedSecret({
