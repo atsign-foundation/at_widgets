@@ -163,8 +163,16 @@ class _AtOnboardingActivateScreenState
         await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
+      } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
+        await _showAlertDialog(
+          AtOnboardingStrings.atsignNotFound,
+        );
+      } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
+        await _showAlertDialog(
+          AtOnboardingStrings.atsignNull,
+        );
       } else {
-        //Todo:
+        await showErrorDialog('Response Time out');
       }
     } catch (e) {
       if (e == AtOnboardingResponseStatus.authFailed) {
