@@ -353,7 +353,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           jsonData: contents, decryptKey: aesKey);
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
-        await AtOnboardingBackupScreen.push(context: context);
+        //Don't show backup key for case user upload backup key
+        // await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign!));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
