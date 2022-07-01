@@ -1109,7 +1109,7 @@ class _CustomDialogState extends State<CustomDialog> {
       String atsign, String email, String? otp, BuildContext context,
       {bool isConfirmation = false}) async {
     BackendService.getInstance().setEmail = email;
-    BackendService.getInstance().setOtp = otp!;
+    BackendService.getInstance().setOtp = otp;
 
     dynamic data;
     String? cramSecret;

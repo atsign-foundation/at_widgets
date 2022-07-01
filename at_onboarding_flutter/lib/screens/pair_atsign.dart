@@ -749,7 +749,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     AtSignStatus? atsignStatus =
         await OnboardingService.getInstance().checkAtsignStatus(atsign: atsign);
     _pairingAtsign = OnboardingService.getInstance().formatAtSign(atsign);
-    _atsignStatus = atsignStatus ?? AtSignStatus.error;
+    AtSignStatus _atsignStatus = atsignStatus ?? AtSignStatus.error;
+
     switch (_atsignStatus) {
       case AtSignStatus.teapot:
         setState(() {
@@ -774,7 +775,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             builder: (_) => WillPopScope(
               onWillPop: () async {
                 int ct = 0;
-                Navigator.of(context).popUntil((_) => ct++ >= 2);
+                Navigator.of(context).popUntil((_) {
+                  return ct++ >= 2;
+                });
                 return true;
               },
               child: CustomDialog(
@@ -832,7 +835,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
           if (data['status'] != 'error') {
             var cramSecret = data['cramkey'];
-            _processSharedSecret(atsign, cramSecret);
+            await _processSharedSecret(
+                cramSecret.split(':')[0], cramSecret.split(':')[1],
+                isScanner: false);
           }
         }
         break;

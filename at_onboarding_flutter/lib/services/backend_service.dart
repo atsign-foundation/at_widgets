@@ -13,7 +13,7 @@ class BackendService {
     _email = email;
   }
 
-  set setOtp(String otp) {
+  set setOtp(String? otp) {
     _otp = otp;
   }
 
