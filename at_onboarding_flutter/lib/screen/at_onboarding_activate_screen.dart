@@ -93,7 +93,7 @@ class _AtOnboardingActivateScreenState
   //It will validate the person with atsign, email and the OTP.
   //If the validation is successful, it will return a cram secret for the user to login
   void loginWithAtsignAfterReset(BuildContext context) async {
-    String? atsign = _onboardingService.currentAtsign;
+    String? atsign = widget.atSign ?? _onboardingService.currentAtsign;
     atsign ??= await _onboardingService.getAtSign();
     if (atsign != null) {
       atsign = atsign.split('@').last;
