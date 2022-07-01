@@ -356,8 +356,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign!));
+      } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
+        await _showAlertDialog(
+          AtOnboardingStrings.atsignNotFound,
+        );
+      } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
+        await _showAlertDialog(
+          AtOnboardingStrings.atsignNull,
+        );
       } else {
-        //Todo:
+        await showErrorDialog('Response Time out');
       }
     } catch (e) {
       _inprogressDialog.close();
@@ -662,8 +670,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
+      } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
+        await _showAlertDialog(
+          AtOnboardingStrings.atsignNotFound,
+        );
+      } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
+        await _showAlertDialog(
+          AtOnboardingStrings.atsignNull,
+        );
       } else {
-        //Todo:
+        await showErrorDialog('Response Time out');
       }
     } catch (e) {
       _inprogressDialog.close();
