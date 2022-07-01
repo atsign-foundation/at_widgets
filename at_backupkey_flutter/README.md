@@ -1,12 +1,12 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 [![pub package](https://img.shields.io/pub/v/at_backupkey_flutter)](https://pub.dev/packages/at_backupkey_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 ## Overview
-The at_backupkey_flutter package provides the functionality to take backup of secret keys of an onboarded @‎sign.
+The at_backupkey_flutter package provides the functionality to take backup of secret keys of an onboarded atSign.
 
 This open source package is written in Dart, supports Flutter and follows the
-@‎platform's decentralized, edge computing model with the following features: 
+atPlatform's decentralized, edge computing model with the following features: 
 - Cryptographic control of data access through personal data stores
 - No application backend needed
 - End to end encryption where only the data owner has the keys
@@ -32,7 +32,7 @@ Instructions on how to manually add this package to you project can be found on 
 
 ## How it works
 
-Secret keys are generated for an @‎sign during onboarding flow of @‎protocol. This package helps to add those keys in '.atKeys' file. This file can then be saved in the local filesystem or iCloud/Gdrive.
+Secret keys are generated for an atSign during onboarding flow of atProtocol. This package helps to add those keys in '.atKeys' file. This file can then be saved in the local filesystem or iCloud/Gdrive.
 
 ## Setup
 The following platform specific setups are required:
