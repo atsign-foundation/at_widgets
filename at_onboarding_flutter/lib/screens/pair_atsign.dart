@@ -112,6 +112,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   Future<dynamic> _processSharedSecret(String atsign, String secret,
       {bool isScanner = false}) async {
+    //// delay of 5 seconds is added to wait till atsign is moved from unavailable state to teapot state.
+    await Future.delayed(const Duration(seconds: 5), () {});
     dynamic authResponse;
     try {
       setState(() {
@@ -125,8 +127,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         await _showAlertDialog(CustomStrings().pairedAtsign(atsign));
         return;
       }
+
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
+
       if (authResponse == ResponseStatus.authSuccess) {
         if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
             widget.onboardStatus == OnboardingStatus.RESTORE) {
