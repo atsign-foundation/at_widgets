@@ -7,6 +7,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
 import 'package:at_onboarding_flutter/screens/private_key_qrcode_generator.dart';
 import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
+import 'package:at_onboarding_flutter/services/backend_service.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
@@ -111,6 +112,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
 
   Future<dynamic> _processSharedSecret(String atsign, String secret,
       {bool isScanner = false}) async {
+    //// delay of 5 seconds is added to wait till atsign is moved from unavailable state to teapot state.
+    await Future.delayed(const Duration(seconds: 5), () {});
     dynamic authResponse;
     try {
       setState(() {
@@ -124,8 +127,10 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         await _showAlertDialog(CustomStrings().pairedAtsign(atsign));
         return;
       }
+
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
+
       if (authResponse == ResponseStatus.authSuccess) {
         if (widget.onboardStatus == OnboardingStatus.ACTIVATE ||
             widget.onboardStatus == OnboardingStatus.RESTORE) {
@@ -748,7 +753,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
     AtSignStatus? atsignStatus =
         await OnboardingService.getInstance().checkAtsignStatus(atsign: atsign);
     _pairingAtsign = OnboardingService.getInstance().formatAtSign(atsign);
-    _atsignStatus = atsignStatus ?? AtSignStatus.error;
+    AtSignStatus _atsignStatus = atsignStatus ?? AtSignStatus.error;
+
     switch (_atsignStatus) {
       case AtSignStatus.teapot:
         setState(() {
@@ -773,7 +779,9 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
             builder: (_) => WillPopScope(
               onWillPop: () async {
                 int ct = 0;
-                Navigator.of(context).popUntil((_) => ct++ >= 2);
+                Navigator.of(context).popUntil((_) {
+                  return ct++ >= 2;
+                });
                 return true;
               },
               child: CustomDialog(
@@ -816,6 +824,28 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         });
         break;
       case AtSignStatus.unavailable:
+        dynamic response = await _freeAtsignService.validatePerson(
+            atsign,
+            BackendService.getInstance().getEmail!,
+            BackendService.getInstance().getOtp,
+            confirmation: true);
+
+        var data = response.body;
+        data = jsonDecode(data);
+
+        if (response.statusCode == 200) {
+          data = response.body;
+          data = jsonDecode(data);
+
+          if (data['status'] != 'error') {
+            var cramSecret = data['cramkey'];
+            await _processSharedSecret(
+                cramSecret.split(':')[0], cramSecret.split(':')[1],
+                isScanner: false);
+          }
+        }
+        break;
+
       case AtSignStatus.notFound:
         await _showAlertDialog(Strings.atsignNotFound,
             getClose: true, onClose: _getAtsignForm);
