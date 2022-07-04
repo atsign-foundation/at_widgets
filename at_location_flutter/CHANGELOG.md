@@ -1,3 +1,6 @@
+## 3.1.6
+- **CHORE**: Applied shouldDecrypt for decryption
+
 ## 3.1.5
 - **CHORE**: Updated dependencies
 
