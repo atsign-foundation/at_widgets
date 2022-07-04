@@ -824,6 +824,8 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         });
         break;
       case AtSignStatus.unavailable:
+        //// if email is available, we have to move atsign from unavailable to teapot state
+        /// else atsign is not available/exists.
         if (BackendService.getInstance().getEmail != null) {
           dynamic response = await _freeAtsignService.validatePerson(
               atsign,
