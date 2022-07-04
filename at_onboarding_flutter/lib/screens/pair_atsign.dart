@@ -824,27 +824,38 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
         });
         break;
       case AtSignStatus.unavailable:
-        dynamic response = await _freeAtsignService.validatePerson(
-            atsign,
-            BackendService.getInstance().getEmail!,
-            BackendService.getInstance().getOtp,
-            confirmation: true);
+        if (BackendService.getInstance().getEmail != null) {
+          dynamic response = await _freeAtsignService.validatePerson(
+              atsign,
+              BackendService.getInstance().getEmail!,
+              BackendService.getInstance().getOtp,
+              confirmation: true);
 
-        var data = response.body;
-        data = jsonDecode(data);
-
-        if (response.statusCode == 200) {
-          data = response.body;
+          var data = response.body;
           data = jsonDecode(data);
 
-          if (data['status'] != 'error') {
-            var cramSecret = data['cramkey'];
-            await _processSharedSecret(
-                cramSecret.split(':')[0], cramSecret.split(':')[1],
-                isScanner: false);
+          if (response.statusCode == 200) {
+            data = response.body;
+            data = jsonDecode(data);
+
+            if (data['status'] != 'error') {
+              var cramSecret = data['cramkey'];
+              await _processSharedSecret(
+                  cramSecret.split(':')[0], cramSecret.split(':')[1],
+                  isScanner: false);
+            }
           }
+
+          break;
+        } else {
+          await _showAlertDialog(Strings.atsignNotFound,
+              getClose: true, onClose: _getAtsignForm);
+          setState(() {
+            loading = false;
+            _loadingMessage = null;
+          });
+          break;
         }
-        break;
 
       case AtSignStatus.notFound:
         await _showAlertDialog(Strings.atsignNotFound,

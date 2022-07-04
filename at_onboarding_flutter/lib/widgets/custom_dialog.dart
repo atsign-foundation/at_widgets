@@ -518,6 +518,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                           if (_formKey.currentState!
                                               .validate()) {
                                             Navigator.pop(context);
+                                            //// resetting paired email
+                                            BackendService.getInstance()
+                                                .setEmail = null;
+                                            BackendService.getInstance()
+                                                .setOtp = null;
+
                                             widget.onSubmit!(_atsignController
                                                 .text
                                                 .toLowerCase());
