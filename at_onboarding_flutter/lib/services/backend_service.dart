@@ -9,7 +9,7 @@ class BackendService {
   String? _email;
   String? _otp;
 
-  set setEmail(String email) {
+  set setEmail(String? email) {
     _email = email;
   }
 
