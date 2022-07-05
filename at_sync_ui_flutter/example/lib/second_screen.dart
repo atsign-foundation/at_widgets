@@ -91,6 +91,14 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
+                await AtSyncUIService().sync(
+                  atSyncUIOverlay: AtSyncUIOverlay.none,
+                );
+              },
+              child: const Text('Sync with no UI'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const UIOptions()));
               },

@@ -112,6 +112,10 @@ class AtSyncUIService {
   }
 
   void _show({AtSyncUIOverlay? atSyncUIOverlay}) {
+    if ((atSyncUIOverlay ?? this.atSyncUIOverlay) == AtSyncUIOverlay.none) {
+      return;
+    }
+
     if ((atSyncUIOverlay ?? this.atSyncUIOverlay) == AtSyncUIOverlay.dialog) {
       AtSyncUI.instance.showDialog(
         message: showTextWhileSyncing ? 'Sync in progress' : null,
@@ -125,6 +129,10 @@ class AtSyncUIService {
   }
 
   void _hide() {
+    if (atSyncUIOverlay == AtSyncUIOverlay.none) {
+      return;
+    }
+
     if (atSyncUIOverlay == AtSyncUIOverlay.dialog) {
       AtSyncUI.instance.hideDialog();
       return;
