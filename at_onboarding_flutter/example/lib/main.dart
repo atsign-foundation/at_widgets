@@ -124,20 +124,21 @@ class _MyAppState extends State<MyApp> {
                         );
                         switch (result.status) {
                           case AtOnboardingResultStatus.success:
+                            final atsign = result.atsign;
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const HomeScreen()));
                             break;
                           case AtOnboardingResultStatus.error:
-                            // TODO: Handle this case.
+                            // TODO: handle onboard failure
                             break;
                           case AtOnboardingResultStatus.cancel:
-                            // TODO: Handle this case.
+                            // TODO: handle user canceled onboard
                             break;
                         }
                       },
-                      child: const Text('Onboard an @sign - 2'),
+                      child: const Text('Onboard an @sign'),
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(
