@@ -1,7 +1,9 @@
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
+import 'package:example/custom_sync_widget.dart';
 import 'package:example/ui_options.dart';
 import 'package:flutter/material.dart';
+
 import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
@@ -108,23 +110,35 @@ class _SecondScreenState extends State<SecondScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Current State: '),
-                StreamBuilder(
+                StreamBuilder<AtSyncUIStatus>(
                   stream: AtSyncUIService().atSyncUIListener,
-                  builder: ((context, snapshot) {
-                    if (snapshot.data != null){
-                      switch(snapshot.data){
-                        case AtSyncUIStatus.completed: return _circleUI(Colors.green);
-                        case AtSyncUIStatus.syncing: return _circleUI(Colors.yellow);
-                        case AtSyncUIStatus.failed: return _circleUI(Colors.red);
-                        case AtSyncUIStatus.notStarted: return _circleUI(Colors.grey);
-                      }
-                    }
-                    return _circleUI(Colors.grey);
-                })),
+                  builder: ((context, snapshot) => CustomSyncIndicator(
+                        uiStatus: snapshot.data!,
+                        size: 50,
+                        child: const ClipOval(
+                          child: Image(
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                            gaplessPlayback: true,
+                            image: NetworkImage(
+                                'https://source.unsplash.com/random'),
+                          ),
+                        ),
+                      )),
+                ),
               ],
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await AtSyncUIService().sync(
+            atSyncUIOverlay: AtSyncUIOverlay.none,
+          );
+        },
+        child: const Icon(Icons.sync),
       ),
     );
   }
@@ -160,16 +174,5 @@ class _SecondScreenState extends State<SecondScreen> {
             fontWeight: FontWeight.normal),
       ),
     ));
-  }
-
-  Widget _circleUI(Color _color){
-    return Container(
-      height: 20,
-      width: 20,
-      decoration: BoxDecoration(
-        color: _color,
-        borderRadius: BorderRadius.circular(20),
-      ),
-    );
   }
 }
