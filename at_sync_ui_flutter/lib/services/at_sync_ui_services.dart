@@ -78,7 +78,7 @@ class AtSyncUIService {
 
   /// calls sync and shows selected UI
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
-  Future<void> sync({AtSyncUIOverlay? atSyncUIOverlay}) async {
+  void sync({AtSyncUIOverlay? atSyncUIOverlay}) {
     assert(syncService != null, "AtSyncUIService not initialised");
 
     if (atSyncUIOverlay != null) {
@@ -92,7 +92,7 @@ class AtSyncUIService {
     syncService.sync(onDone: _onSuccessCallback);
   }
 
-  Future<void> _onSuccessCallback(SyncResult syncStatus) async {
+  void _onSuccessCallback(SyncResult syncStatus) {
     _hide();
 
     if ((syncStatus.syncStatus == SyncStatus.failure) &&
