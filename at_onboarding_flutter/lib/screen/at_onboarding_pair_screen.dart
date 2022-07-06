@@ -306,7 +306,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
             ?.call(atSign: result2.atSign, secret: result2.secret ?? '');
       } else {
         if (!mounted) return;
-        Navigator.pop(context, AtOnboardingResult.cancelled());
+        Navigator.pop(context);
       }
     }
   }
