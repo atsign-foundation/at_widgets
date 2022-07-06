@@ -631,7 +631,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         builder: (_) => AtOnboardingGenerateScreen(
           onGenerateSuccess: (
               {required String atSign, required String secret}) {
-            _processSharedSecret(atSign, secret);
+            String cramSecret = secret.split(':').last;
+            String atsign = atSign.startsWith('@') ? atSign : '@$atSign';
+            _processSharedSecret(atsign, cramSecret);
           },
         ),
       ),
@@ -664,6 +666,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
+      await Future.delayed(const Duration(seconds: 10));
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
       _inprogressDialog.close();

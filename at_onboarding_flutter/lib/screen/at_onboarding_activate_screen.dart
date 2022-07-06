@@ -167,7 +167,7 @@ class _AtOnboardingActivateScreenState
             AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 10));
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
