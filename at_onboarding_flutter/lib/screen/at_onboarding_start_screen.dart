@@ -67,7 +67,13 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
         if (!mounted) return;
         Navigator.pop(context, result);
       } else {
-        Navigator.pop(context, AtOnboardingResult.error());
+        if (!mounted) return;
+        Navigator.pop(
+          context,
+          AtOnboardingResult.error(
+            message: "$e",
+          ),
+        );
       }
     }
   }
