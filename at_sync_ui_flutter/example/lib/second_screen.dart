@@ -71,13 +71,13 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await AtSyncUIService().sync();
+                AtSyncUIService().sync();
               },
               child: const Text('Default Sync'),
             ),
             ElevatedButton(
               onPressed: () async {
-                await AtSyncUIService().sync(
+                AtSyncUIService().sync(
                   atSyncUIOverlay: AtSyncUIOverlay.dialog,
                 );
               },
@@ -85,7 +85,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await AtSyncUIService().sync(
+                AtSyncUIService().sync(
                   atSyncUIOverlay: AtSyncUIOverlay.snackbar,
                 );
               },
@@ -93,7 +93,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await AtSyncUIService().sync(
+                AtSyncUIService().sync(
                   atSyncUIOverlay: AtSyncUIOverlay.none,
                 );
               },
@@ -101,7 +101,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                Navigator.push(context,
+                await Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const UIOptions()));
               },
               child: const Text('See all UI options'),
@@ -134,7 +134,7 @@ class _SecondScreenState extends State<SecondScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await AtSyncUIService().sync(
+          AtSyncUIService().sync(
             atSyncUIOverlay: AtSyncUIOverlay.none,
           );
         },

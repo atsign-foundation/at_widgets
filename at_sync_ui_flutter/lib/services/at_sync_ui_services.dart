@@ -17,7 +17,7 @@ class AtSyncUIService {
   Function? onSuccessCallback, onErrorCallback;
   var syncService;
   AtSyncUIStyle atSyncUIStyle = AtSyncUIStyle.cupertino;
-  AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.dialog;
+  AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none;
   bool showTextWhileSyncing = true;
 
   final StreamController _atSyncUIListenerController =
@@ -78,12 +78,8 @@ class AtSyncUIService {
 
   /// calls sync and shows selected UI
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
-  Future<void> sync({AtSyncUIOverlay? atSyncUIOverlay}) async {
-    assert(syncService != null, "AtSyncUIService not initialised");
-
-    if (atSyncUIOverlay != null) {
+  void sync({AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none}) {
       this.atSyncUIOverlay = atSyncUIOverlay;
-    }
 
     /// change status to syncing
     _atSyncUIListenerSink.add(AtSyncUIStatus.syncing);
@@ -92,7 +88,7 @@ class AtSyncUIService {
     syncService.sync(onDone: _onSuccessCallback);
   }
 
-  Future<void> _onSuccessCallback(SyncResult syncStatus) async {
+  void _onSuccessCallback(SyncResult syncStatus) {
     _hide();
 
     if ((syncStatus.syncStatus == SyncStatus.failure) &&
