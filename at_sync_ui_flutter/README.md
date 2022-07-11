@@ -81,6 +81,12 @@ To call sync and show selected UI:
     );
 ```
 
+To use listener; can be used to listen to sync status changes:
+
+```dart
+    AtSyncUIService().atSyncUIListener
+```
+
 ### Plugin description
 This plugin provides the following material and cuppertino widgets:
 - AtSyncButton
