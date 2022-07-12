@@ -57,7 +57,7 @@ class Strings {
       'Please wait while fetching @sign status';
 
   static String backupFileName(String atsign) {
-    return atsign + '_encrypt_keys.atKeys';
+    return '${atsign}_encrypt_keys.atKeys';
   }
 
   static const String faqTitle = 'FAQ';

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -331,13 +333,13 @@ class _PairAtsignWidgetState extends State<PairAtsignWidget> {
                 file.name.contains('_private_key.png')) {
               List<int> bytes = file.content as List<int>;
               String path = (await path_provider.getTemporaryDirectory()).path;
-              File file1 = await File(path + 'test').create();
+              File file1 = await File('${path}test').create();
               file1.writeAsBytesSync(bytes);
               String result = await FlutterQrReader.imgScan(file1.path);
               List<String> params = result.replaceAll('"', '').split(':');
               atsign = params[0];
               aesKey = params[1];
-              await File(path + 'test').delete();
+              await File('${path}test').delete();
               //read scan QRcode and extract atsign,aeskey
             }
           }

@@ -92,7 +92,7 @@ class _AtsignListScreenState extends State<AtsignListScreen> {
                     child: ListView.builder(
                       itemCount: widget.atsigns.length,
                       itemBuilder: (BuildContext context, int index) {
-                        String currentItem = '@' + widget.atsigns[index];
+                        String currentItem = '@${widget.atsigns[index]}';
                         bool isExist = pairedAtsignsList!.contains(currentItem);
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 2.0.toFont),

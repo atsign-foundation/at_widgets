@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 /// Common error dialog to show the error to user

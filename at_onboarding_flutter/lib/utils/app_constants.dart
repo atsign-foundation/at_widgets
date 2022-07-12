@@ -40,7 +40,7 @@ class AppConstants {
   }
 
   static String? _apiKey;
-  static String setApiKey(String _key) => _apiKey = _key;
+  static String setApiKey(String key) => _apiKey = key;
   static String? get apiKey => _apiKey;
 }
 
