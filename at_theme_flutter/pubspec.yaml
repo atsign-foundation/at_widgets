@@ -17,11 +17,18 @@ dependencies:
   at_common_flutter: ^2.0.8
   at_commons: ^3.0.3
   fluttertoast: ^8.0.8
+  at_utils: ^3.0.10
+
 
 
 dev_dependencies:
+  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+
+dependency_overrides: 
+  flutter_lints: ^2.0.1
+  lints: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

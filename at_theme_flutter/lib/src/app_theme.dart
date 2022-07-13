@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:at_utils/at_utils.dart';
 import 'package:flutter/material.dart';
 
 import 'color_constants.dart';
@@ -21,13 +22,16 @@ class AppTheme {
   /// A color that typically appears behind scrollable content.
   final Color backgroundColor;
 
+  static final AtSignLogger _logger = AtSignLogger('AppTheme');
+
   /// Create a ColorScheme instance.
-  const AppTheme({
+  AppTheme({
     required this.brightness,
     required this.primaryColor,
     required this.secondaryColor,
     required this.backgroundColor,
   });
+
 
   factory AppTheme.from({
     Brightness brightness = Brightness.light,
@@ -52,7 +56,7 @@ class AppTheme {
     Color? backgroundColor,
     Brightness? brightness,
   }) {
-    return new AppTheme(
+    return AppTheme(
       primaryColor: primaryColor ?? this.primaryColor,
       secondaryColor: secondaryColor ?? this.secondaryColor,
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -98,16 +102,16 @@ class AppTheme {
             : Brightness.light,
         primaryColor: jsonMap['primaryColor'] != null
             ? Color(int.parse(jsonMap['primaryColor']))
-            : Color(0xFF6EBCB7),
+            : const Color(0xFF6EBCB7),
         secondaryColor: jsonMap['secondaryColor'] != null
             ? Color(int.parse(jsonMap['secondaryColor']))
-            : Color(0xFF6EBCB7),
+            : const Color(0xFF6EBCB7),
         backgroundColor: jsonMap['backgroundColor'] != null
             ? Color(int.parse(jsonMap['backgroundColor']))
             : Colors.white,
       );
     } catch (e) {
-      print('error in decode theme data: ${e.toString()}');
+      _logger.severe('error in decode theme data: ${e.toString()}');
       return AppTheme.from(
           secondaryColor: ColorConstants.secondary,
           backgroundColor: ColorConstants.backgroundDark);

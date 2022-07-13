@@ -1,14 +1,16 @@
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
 import 'package:at_theme_flutter/utils/constants.dart';
+import 'package:at_utils/at_utils.dart';
 
 class ThemeService {
   ThemeService._();
   static final ThemeService _instance = ThemeService._();
   factory ThemeService() => _instance;
+
+  final _logger = AtSignLogger('ThemeService');
 
   String? rootDomain;
   int? rootPort;
@@ -28,7 +30,7 @@ class ThemeService {
           .put(atKey, themeData.encoded());
       return result;
     } catch (e) {
-      print('error in updating theme data: ${e.toString()}');
+      _logger.severe('error in updating theme data: ${e.toString()}');
       return false;
     }
   }
@@ -45,7 +47,7 @@ class ThemeService {
       AppTheme? themeData = AppTheme.decode(jsonDecode(atValue.value));
       return themeData;
     } catch (e) {
-      print('error in getThemeData : ${e.toString()}');
+      _logger.severe('error in getThemeData : ${e.toString()}');
     }
     return null;
   }
