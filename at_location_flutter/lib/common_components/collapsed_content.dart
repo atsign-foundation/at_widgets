@@ -62,11 +62,11 @@ class _CollapsedContentState extends State<CollapsedContent> {
   Widget build(BuildContext context) {
     if (!widget.userListenerKeyword!.atsignCreator!.contains('@')) {
       widget.userListenerKeyword!.atsignCreator =
-          '@' + widget.userListenerKeyword!.atsignCreator!;
+          '@${widget.userListenerKeyword!.atsignCreator!}';
     }
 
     if (!widget.currentAtSign!.contains('@')) {
-      widget.currentAtSign = '@' + widget.currentAtSign!;
+      widget.currentAtSign = '@${widget.currentAtSign!}';
     }
 
     var amICreator =
@@ -139,7 +139,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                           amICreator
                               ? AllText().PER_NOT_SHARING_LOC
                               : locationAvailable
-                                  ? (AllText().SHARING_LOCATION + ' $time')
+                                  ? ('${AllText().SHARING_LOCATION} $time')
                                   : (AllText().LOC_SHARING_TURNED_OFF),
                           style: ((amICreator) || locationAvailable)
                               ? CustomTextStyles().grey12
@@ -147,7 +147,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
                         ),
                         amICreator
                             ? Text(
-                                AllText().SHARING_MY_LOC + ' $time',
+                                '${AllText().SHARING_MY_LOC} $time',
                                 style: CustomTextStyles().black12,
                               )
                             : const SizedBox()
@@ -317,8 +317,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
   // ignore: always_declare_return_types
   removePerson() async {
     await confirmationDialog(
-        AllText().DO_YOU_WANT_TO_REMOVE +
-            ' ${widget.userListenerKeyword!.receiver}?',
+        '${AllText().DO_YOU_WANT_TO_REMOVE} ${widget.userListenerKeyword!.receiver}?',
         onYesPressed: _onRemovePersonYesPressed);
   }
 

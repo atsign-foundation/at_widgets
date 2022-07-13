@@ -1,5 +1,4 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
@@ -109,10 +108,10 @@ AtKey getAtKey(String regexKey) {
 /// returns true if [atsign1] & [atsign2] are same
 bool compareAtSign(String atsign1, String atsign2) {
   if (atsign1[0] != '@') {
-    atsign1 = '@' + atsign1;
+    atsign1 = '@$atsign1';
   }
   if (atsign2[0] != '@') {
-    atsign2 = '@' + atsign2;
+    atsign2 = '@$atsign2';
   }
 
   return atsign1.toLowerCase() == atsign2.toLowerCase() ? true : false;

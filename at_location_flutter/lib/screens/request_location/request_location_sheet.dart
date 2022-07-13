@@ -57,7 +57,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
             initialValue: textField ?? '',
             value: (str) {
               if (!str.contains('@')) {
-                str = '@' + str;
+                str = '@$str';
               }
               textField = str;
             },
@@ -126,7 +126,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     if (atSign == null) {
       return false;
     } else if (!atSign.contains('@')) {
-      atSign = '@' + atSign;
+      atSign = '@$atSign';
     }
     var checkPresence = await AtLookupImpl.findSecondary(
         atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
