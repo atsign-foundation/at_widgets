@@ -163,11 +163,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 // margin: EdgeInsets.only(right: 20),
                 child: (showTrailingIcon)
                     ? MaterialButton(
-                        child: trailingIcon,
                         padding: EdgeInsets.zero,
                         onPressed: () {
                           onTrailingIconPressed?.call();
                         },
+                        child: trailingIcon,
                       )
                     : Container())
       ],
