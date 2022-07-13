@@ -11,7 +11,6 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_events_flutter/utils/constants.dart';
-import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';

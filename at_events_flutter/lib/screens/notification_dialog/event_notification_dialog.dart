@@ -115,8 +115,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                      '${widget.eventData!.atsignCreator} ' +
-                          AllText().SHARE_EVENT_DES,
+                      '${widget.eventData!.atsignCreator} ${AllText().SHARE_EVENT_DES}',
                       style: CustomTextStyles().grey16,
                       textAlign: TextAlign.center),
                   const SizedBox(height: 30),
@@ -183,10 +182,8 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                   widget.eventData != null
                       ? Text(
                           (widget.eventData!.group!.members!.length == 1)
-                              ? '${widget.eventData!.group!.members!.length} ' +
-                                  AllText().PER_INVITED
-                              : '${widget.eventData!.group!.members!.length} ' +
-                                  AllText().PEP_INVITED,
+                              ? '${widget.eventData!.group!.members!.length} ${AllText().PER_INVITED}'
+                              : '${widget.eventData!.group!.members!.length} ${AllText().PEP_INVITED}',
                           style: CustomTextStyles().grey14)
                       : const SizedBox(),
                   SizedBox(height: widget.eventData != null ? 10.toHeight : 0),
