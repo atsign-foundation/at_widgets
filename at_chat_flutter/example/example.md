@@ -1,8 +1,8 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 # at_chat_flutter example
 
-The at_chat_flutter package is designed to make it easy to add a chat feature between @‎signs to any flutter app built on the @‎platform.
+The at_chat_flutter package is designed to make it easy to add a chat feature between atSigns to any flutter app built on the atPlatform.
 
 ### Give it a try
 This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_chat_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.
@@ -26,7 +26,7 @@ For more details head over to [at_app Flags](https://pub.dev/packages/at_app#exe
 
 ## How it works
 
-Like most applications built for the  @‎platform, we start with the [at_onboarding_flutter](https://pub.dev/packages/at_onboarding_flutter) widget which handles secure management of secret keys for an atsign as cryptographically secure 
+Like most applications built for the atPlatform, we start with the [at_onboarding_flutter](https://pub.dev/packages/at_onboarding_flutter) widget which handles secure management of secret keys for an atsign as cryptographically secure 
 replacement for usernames and passwords.
 
 After onboarding, the second screen will have the app functionality.

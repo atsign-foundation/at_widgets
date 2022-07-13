@@ -1,4 +1,4 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 [![pub package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter) [![pub points](https://badges.bar/at_follows_flutter/pub%20points)](https://pub.dev/packages/at_follows_flutter/score) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
@@ -7,7 +7,7 @@
 ### Introduction
 
 A Flutter plugin that provides a basic social "follows" functionality for
-@‎signs. This plugin provides a list of followers and following for @‎signs
+atSigns. This plugin provides a list of followers and following for atSigns
 with the option to unfollow them. 
 
 ## Features
@@ -20,10 +20,10 @@ following.
 
 ## Get Started
 
-To get a basic overview of the @protocol and it's packages. Please visit
+To get a basic overview of the atProtocol and it's packages. Please visit
 the [atsign docs](https://atsign.dev/docs/overview/).
 
-> To use this package you must be have a basic setup of the @platform/at_app.
+> To use this package you must be have a basic setup of the atPlatform/at_app.
 Go here to [get started](https://atsign.dev/docs/get-started/setup-your-env/).
 
 
@@ -57,7 +57,7 @@ Add the following permission string to info.plist:
 
 ```xml
 <key>NSCameraUsageDescription</key>
-<string>The camera is used to scan QR code to pair your device with your @‎sign</string>
+<string>The camera is used to scan QR code to pair your device with your atSign</string>
 ```
 Also, update the Podfile with the following lines of code:
 
@@ -99,18 +99,18 @@ end
 
 ### Plugin description
 
-Supports for single @‎sign follows feature. This plugin provides two screens:
+Supports for single atSign follows feature. This plugin provides two screens:
 
-1. **Follows screen** - Displays all the @‎signs that are being followed and
-followers of the given @‎sign. Unfollow button will remove the particular
-@‎sign from following whereas follow button adds the @‎sign to following list.
+1. **Follows screen** - Displays all the atSigns that are being followed and
+followers of the given atSign. Unfollow button will remove the particular
+atSign from following whereas follow button adds the atSign to following list.
 
-2. **Add @‎sign to follow** - Scan the QR code of an @‎sign or type the @‎sign
+2. **Add atSign to follow** - Scan the QR code of an atSign or type the atSign
 to follow.
 
 ### Sample usage
 
-The plugin takes AtClientService instance to show the follows list of an @‎sign. 
+The plugin takes AtClientService instance to show the follows list of an atSign. 
 
 ```
 TextButton(
@@ -129,51 +129,51 @@ TextButton(
 
 ##### Plugin parameters
 
-1. `atClientserviceInstance` - to perform further actions for the given @‎sign.
+1. `atClientserviceInstance` - to perform further actions for the given atSign.
 2. `appColor` - applies to plugin screens to match the app's theme.
 (This should be bright color as it takes white font over that. Defaults to
 orange).
-3. `followerAtsignTitle` - follower @‎sign received from app's notification
-4. `followAtsignTitle` - @‎sign followed from webapp.
+3. `followerAtsignTitle` - follower atSign received from app's notification
+4. `followAtsignTitle` - atSign followed from webapp.
 
-### Follow an @‎sign
+### Follow an atSign
 
-To follow an @‎sign, call the following method:
+To follow an atSign, call the following method:
 
 ```dart
 /// Get the AtFollowServices instance
 AtFollowServices atFollowServices = AtFollowServices();
 Future<bool> followAtSign(String atSign)async {
   /// ... YOUR CODE ... ///
-  /// Call the follow() method to follow an @‎sign
+  /// Call the follow() method to follow an atSign
   bool isFollowed = await atFollowServices.follow(atSign);
   return isFollowed;
 }
 ```
 
-### Unfollow an @‎sign
+### Unfollow an atSign
 
-To unfollow an @‎sign, call the following method and pass the @‎sign to
+To unfollow an atSign, call the following method and pass the atSign to
 unfollow:
 
 ```dart
 Future<bool> unfollowAtSign(String atSign)async {
   /// ... YOUR CODE ... ///
-  /// Call the unfollow() method to unfollow an @‎sign
+  /// Call the unfollow() method to unfollow an atSign
   bool isUnfollowed = await atFollowServices.unfollow(atSign);
   return isUnfollowed;
 }
 ```
 
-### Remove a @‎sign from following list
+### Remove an atSign from following list
 
-To remove an @‎sign from following list, call the following method and pass
-the @‎sign to remove:
+To remove an atSign from following list, call the following method and pass
+the atSign to remove:
 
 ```dart
 Future<bool> removeFollower(String atSign)async {
   /// ... YOUR CODE ... ///
-  /// Call the removeFollower() method to remove an @‎sign from following list
+  /// Call the removeFollower() method to remove an atSign from following list
   bool isRemoved = await atFollowServices.removeFollower(atSign);
   return isRemoved;
 }

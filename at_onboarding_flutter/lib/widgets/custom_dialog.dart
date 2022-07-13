@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/screens/atsign_list_screen.dart';
 import 'package:at_onboarding_flutter/screens/web_view_screen.dart';
+import 'package:at_onboarding_flutter/services/backend_service.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/app_constants.dart';
@@ -518,6 +519,12 @@ class _CustomDialogState extends State<CustomDialog> {
                                           if (_formKey.currentState!
                                               .validate()) {
                                             Navigator.pop(context);
+                                            //// resetting paired email
+                                            BackendService.getInstance()
+                                                .setEmail = null;
+                                            BackendService.getInstance()
+                                                .setOtp = null;
+
                                             widget.onSubmit!(_atsignController
                                                 .text
                                                 .toLowerCase());
@@ -1108,6 +1115,9 @@ class _CustomDialogState extends State<CustomDialog> {
   Future<String?> validatePerson(
       String atsign, String email, String? otp, BuildContext context,
       {bool isConfirmation = false}) async {
+    BackendService.getInstance().setEmail = email;
+    BackendService.getInstance().setOtp = otp;
+
     dynamic data;
     String? cramSecret;
     List<String> atsigns = <String>[];
@@ -1144,6 +1154,21 @@ class _CustomDialogState extends State<CustomDialog> {
               cramSecret = await validatePerson(value, email, otp, context,
                   isConfirmation: true);
               return cramSecret;
+            } else if (value != null) {
+              AtStatusImpl atStatusImpl =
+                  AtStatusImpl(rootUrl: AppConstants.serverDomain);
+              AtStatus status = await atStatusImpl.get(value);
+
+              /// if atsign is not yet activated, it will be activated.
+              if (status.atSignStatus == AtSignStatus.unavailable &&
+                  status.serverLocation == null &&
+                  status.serverStatus == ServerStatus.unavailable) {
+                cramSecret = await validatePerson(value, email, otp, context,
+                    isConfirmation: true);
+              } else {
+                Navigator.pop(context);
+                widget.onSubmit!(value);
+              }
             } else {
               if (value != null) {
                 Navigator.pop(context);
