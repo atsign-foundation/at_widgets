@@ -5,5 +5,7 @@ analyzer:
 
 linter:
   rules:
-    - camel_case_types
-    - unnecessary_statements
+    camel_case_types: true
+    unnecessary_statements: true
+    library_private_types_in_public_api: false
+    no_leading_underscores_for_local_identifiers: false

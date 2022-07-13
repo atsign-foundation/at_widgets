@@ -100,20 +100,24 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
             },
           );
         } else if (result != null) {
-          if (result.runtimeType == AlreadyExistsException) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
-          } else if (result.runtimeType == InvalidAtSignException) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(result.message)));
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+          if(mounted){
+            if (result.runtimeType == AlreadyExistsException) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
+            } else if (result.runtimeType == InvalidAtSignException) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(result.message)));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+            }
           }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
-        }
+          if(mounted){
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+            }
+          }
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(TextConstants().EMPTY_NAME)));

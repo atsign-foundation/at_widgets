@@ -1,4 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
