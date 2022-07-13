@@ -90,10 +90,10 @@ class AtSyncButton extends StatelessWidget {
         children: [
           Visibility(
             visible: !isLoading,
-            child: child ?? Container(),
             maintainSize: true,
             maintainAnimation: true,
             maintainState: true,
+            child: child ?? Container(),
           ),
           Visibility(
             visible: isLoading,
@@ -175,7 +175,7 @@ class AtSyncText extends StatelessWidget {
           color: indicatorColor,
         ),
         Text(
-          ((value ?? 0) * 100).toInt().toString() + '%',
+          '${((value ?? 0) * 100).toInt()}%',
           style: textStyle,
         ),
         Container(
@@ -289,11 +289,11 @@ class AtSyncDialog {
                   Visibility(
                     visible: _progress.value != null,
                     child: Align(
+                      alignment: Alignment.bottomRight,
                       child: Text(
                         '${((_progress.value ?? 0) * 100).toInt()}%',
                         style: valueStyle ?? const TextStyle(),
                       ),
-                      alignment: Alignment.bottomRight,
                     ),
                   ),
                 ],
