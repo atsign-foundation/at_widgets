@@ -9,7 +9,7 @@ import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
-import 'package:at_contacts_group_flutter/widgets/desktop_image_picker.dart';
+import 'package:at_contacts_group_flutter/services/desktop_image_picker.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_person_vertical_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/remove_trusted_contact_dialog.dart';
 import 'package:flutter/material.dart';
@@ -232,6 +232,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                                         widget.currentIndex);
 
                                             if (result is AtGroup) {
+                                              // ignore: todo
                                               // TODO: Doubt
                                               widget.group = _group;
                                               ScaffoldMessenger.of(context)
@@ -416,6 +417,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
         isDesktop: true, expandIndex: widget.currentIndex);
 
     if (result is AtGroup) {
+      // ignore: todo
       // TODO: Doubt
       widget.group = _group;
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

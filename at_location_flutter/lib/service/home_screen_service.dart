@@ -207,6 +207,7 @@ LocationSharingFor? getLocationSharingForCreator(
       }
     }
   }
+  return null;
 }
 
 String? getTitle(LocationNotificationModel locationNotificationModel) {

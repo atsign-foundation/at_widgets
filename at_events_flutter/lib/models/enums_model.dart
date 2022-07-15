@@ -1,14 +1,15 @@
 // ignore_for_file: constant_identifier_names
 
+// ignore: camel_case_types
 enum LOC_START_TIME_ENUM { TWO_HOURS, SIXTY_MIN, THIRTY_MIN }
+
+// ignore: camel_case_types
 enum LOC_END_TIME_ENUM { TEN_MIN, AFTER_EVERY_ONE_REACHED, AT_EOD }
 
-// ignore: missing_return
 DateTime? startTimeEnumToTimeOfDay(String startTimeEnum, DateTime? startTime) {
   // ignore: unnecessary_null_comparison
   if (startTimeEnum == null ||
-      // ignore: prefer_is_empty
-      startTimeEnum.trim().length == 0 ||
+      startTimeEnum.trim().isEmpty ||
       startTime == null) {
     return startTime;
   }
@@ -22,9 +23,9 @@ DateTime? startTimeEnumToTimeOfDay(String startTimeEnum, DateTime? startTime) {
     case 'LOC_START_TIME_ENUM.THIRTY_MIN':
       return startTime.subtract(const Duration(minutes: 30));
   }
+  return null;
 }
 
-// ignore: missing_return
 DateTime? endTimeEnumToTimeOfDay(String endTimeEnum, DateTime? endTime) {
   // ignore: unnecessary_null_comparison
   if (endTimeEnum == null ||
@@ -45,4 +46,6 @@ DateTime? endTimeEnumToTimeOfDay(String endTimeEnum, DateTime? endTime) {
       var addDuration = nextDay.difference(endTime);
       return endTime.add(addDuration);
   }
+
+  return null;
 }

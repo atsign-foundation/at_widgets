@@ -1,3 +1,9 @@
+## 1.0.4
+- **FEAT**: Added atSyncUIListener, to listen to sync status changes
+
+## 1.0.3
+- **FIX**: Lint Fixes according to flutter 3.0
+
 ## 1.0.2
 - **CHORE**: Updated dependencies
 - **DOCS**: Updated documentation

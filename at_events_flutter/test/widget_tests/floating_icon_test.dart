@@ -16,7 +16,7 @@ void main() {
   /// Functional test cases for Floating Icon Widget
   group('Floating Icon Widget Tests:', () {
     // Test Case to Check Floating Icon is displayed
-    final floatingIcon = FloatingIcon();
+    const floatingIcon = FloatingIcon();
     testWidgets("Floating Icon is displayed", (WidgetTester tester) async {
       await tester
           .pumpWidget(_wrapWidgetWithMaterialApp(floatingIcon: floatingIcon));

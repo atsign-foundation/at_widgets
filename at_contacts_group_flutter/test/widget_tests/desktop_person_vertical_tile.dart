@@ -7,22 +7,23 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget desktopPersonVerticalTile}) {
+  Widget _wrapWidgetWithMaterialApp(
+      {required Widget desktopPersonVerticalTile}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
-      return desktopPersonVerticalTile ;
+      return desktopPersonVerticalTile;
     }));
   }
 
   /// Enable desktop mode before testing this widget.
   /// Functional test cases for desktop person vertical tile
   group('Desktop person vertical tile widget Test', () {
-    final desktopPersonVerticalTile = DesktopCustomPersonVerticalTile();
+    const desktopPersonVerticalTile = DesktopCustomPersonVerticalTile();
     // Test Case to check  is desktop person vertical tile displayed or not
     testWidgets('Test Case to check desktop person vertical tile is displayed',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
-          desktopPersonVerticalTile: desktopPersonVerticalTile ));
+          desktopPersonVerticalTile: desktopPersonVerticalTile));
       expect(find.byType(DesktopCustomPersonVerticalTile), findsOneWidget);
     });
   });

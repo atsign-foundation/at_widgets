@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_location_flutter/common_components/floating_icon.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,7 @@ void main() {
     // Test case to identify Floating icon is used in screen or not
     testWidgets("Test case to identify Floating icon is used in screen or not",
         (WidgetTester tester) async {
-      final floatingIcon = FloatingIcon();
+      const floatingIcon = FloatingIcon();
       await tester
           .pumpWidget(_wrapWidgetWithMaterialApp(floatingIcon: floatingIcon));
 
@@ -29,7 +31,7 @@ void main() {
     testWidgets(
         "Test case to identify Floating icon bg color and icon color is given",
         (WidgetTester tester) async {
-      final floatingIcon = FloatingIcon(
+      const floatingIcon = FloatingIcon(
         bgColor: Colors.white,
         iconColor: Colors.blue,
       );
@@ -42,7 +44,7 @@ void main() {
     // Test case to identify Floating icon widget icon is given
     testWidgets("Test case to identify Floating icon widget icon is given",
         (WidgetTester tester) async {
-      final floatingIcon = FloatingIcon(
+      const floatingIcon = FloatingIcon(
         icon: Icons.add,
       );
       await tester
@@ -55,7 +57,7 @@ void main() {
         (WidgetTester tester) async {
       final floatingIcon = FloatingIcon(
         onPressed: () {
-          print('OnPress is given an action');
+          log('OnPress is given an action');
         },
       );
       await tester

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:at_common_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,11 @@ final StreamController<ThemeMode> updateThemeMode =
     StreamController<ThemeMode>.broadcast();
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -22,20 +24,18 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           theme: ThemeData(
             brightness: Brightness.light,
-            primaryColor: Color(0xFFf04924),
-            accentColor: Color(0xFF03DAC6),
+            primaryColor: const Color(0xFFf04924),
             backgroundColor: Colors.white,
           ),
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             fontFamily: 'RobotoSlab',
-            primaryColor: Color(0xFFF05E3E),
-            accentColor: Color(0xFF018786),
+            primaryColor: const Color(0xFFF05E3E),
             backgroundColor: Colors.black,
           ),
           themeMode: snapshot.data,
           title: 'Example App',
-          home: MyHomePage(title: 'Example App Home Page'),
+          home: const MyHomePage(title: 'Example App Home Page'),
         );
       },
     );
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, this.title}) : super(key: key);
+  const MyHomePage({Key? key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
               : Colors.white,
         ),
         onTrailingIconPressed: () {
-          print('Trailing icon of appbar pressed');
+          log('Trailing icon of appbar pressed');
         },
         showTrailingIcon: true,
         trailingIcon: Center(
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Theme.of(context).brightness == Brightness.light
                   ? Icons.dark_mode_outlined
                   : Icons.light_mode_outlined,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ),
@@ -129,37 +129,37 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 20.0),
-            Text('Custom AppBar ☝️'),
-            Divider(
+            const SizedBox(height: 20.0),
+            const Text('Custom AppBar ☝️'),
+            const Divider(
               color: Color(0xFFBEC0C8),
               height: 30,
               thickness: 2,
             ),
-            Text('Custom Input field:'),
+            const Text('Custom Input field:'),
             CustomInputField(
               icon: Icons.emoji_emotions_outlined,
               width: 200.0,
               initialValue: "initial value",
               value: (String val) {
-                print('Current value of input field: $val');
+                log('Current value of input field: $val');
               },
               inputFieldColor: Theme.of(context).brightness == Brightness.light
                   ? Colors.black.withOpacity(0.2)
                   : Colors.white.withOpacity(0.2),
             ),
-            Divider(
+            const Divider(
               color: Color(0xFFBEC0C8),
               height: 30,
               thickness: 2,
             ),
-            Text('Custom Button:'),
+            const Text('Custom Button:'),
             CustomButton(
               height: 50.0,
               width: 200.0,
               buttonText: 'Add',
               onPressed: () {
-                print('Custom button pressed');
+                log('Custom button pressed');
               },
               buttonColor: Theme.of(context).brightness == Brightness.light
                   ? Colors.black

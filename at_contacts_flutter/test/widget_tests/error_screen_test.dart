@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/widgets/error_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,7 @@ void main() {
     final errorScreen = ErrorScreen(
       msg: 'Error',
       onPressed: () {
-        print('OnPress is given an action');
+        log('OnPress is given an action');
       },
     );
     // Test case to identify Error Screen is used in screen or not

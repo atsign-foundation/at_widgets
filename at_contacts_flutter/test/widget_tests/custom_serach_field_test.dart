@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/widgets/custom_search_field.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ void main() {
     testWidgets("Contacts search field widget is used and shown on screen",
         (WidgetTester tester) async {
       final contactsSearchField = ContactSearchField('Contacts', (v) {
-        print(v);
+        log(v);
       });
       await tester.pumpWidget(
           _wrapWidgetWithMaterialApp(contactsSearchField: contactsSearchField));

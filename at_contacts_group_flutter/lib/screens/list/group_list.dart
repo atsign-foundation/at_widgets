@@ -105,12 +105,10 @@ class _GroupListState extends State<GroupList> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
-                            // ignore: prefer_const_constructors
-                            child: Icon(
+                        const Icon(
                           Icons.view_module,
                           color: ColorConstants.greyText,
-                        )),
+                        ),
                         Switch(
                             value: toggleList,
                             activeColor: Colors.white,
@@ -121,11 +119,8 @@ class _GroupListState extends State<GroupList> {
                                 toggleList = !toggleList;
                               });
                             }),
-                        Container(
-                          // ignore: prefer_const_constructors
-                          child: Icon(Icons.view_list,
-                              color: ColorConstants.greyText),
-                        ),
+                        const Icon(Icons.view_list,
+                            color: ColorConstants.greyText),
                       ],
                     ),
                   ),
@@ -164,16 +159,17 @@ class _GroupListState extends State<GroupList> {
                                             padding: const EdgeInsets.all(8.0),
                                             child: InkWell(
                                               onLongPress: () {
-                                                showMyDialog(context,
+                                                showDeleteGroupDialog(context,
                                                     snapshot.data![index]);
                                               },
                                               onTap: () async {
-                                                WidgetsBinding.instance!
+                                                WidgetsBinding.instance
                                                     .addPostFrameCallback(
                                                         (_) async {
                                                   GroupService()
                                                       .groupViewSink
-                                                      .add(snapshot.data![index]);
+                                                      .add(snapshot
+                                                          .data![index]);
                                                 });
 
                                                 await Navigator.push(
@@ -182,15 +178,16 @@ class _GroupListState extends State<GroupList> {
                                                       builder: (context) =>
                                                           GroupView(
                                                               group: snapshot
-                                                                  .data![index])),
+                                                                      .data![
+                                                                  index])),
                                                 );
                                               },
                                               child: CustomPersonHorizontalTile(
                                                 image: (snapshot.data![index]
                                                             .groupPicture !=
                                                         null)
-                                                    ? snapshot
-                                                        .data![index].groupPicture
+                                                    ? snapshot.data![index]
+                                                        .groupPicture
                                                     : null,
                                                 title: snapshot.data![index]
                                                         .displayName ??
@@ -204,7 +201,7 @@ class _GroupListState extends State<GroupList> {
                                       )
                                     : GridView.builder(
                                         physics:
-                                            AlwaysScrollableScrollPhysics(),
+                                            const AlwaysScrollableScrollPhysics(),
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                                 crossAxisCount: SizeConfig()
@@ -221,11 +218,11 @@ class _GroupListState extends State<GroupList> {
                                         itemBuilder: (context, index) {
                                           return InkWell(
                                             onLongPress: () {
-                                              showMyDialog(context,
+                                              showDeleteGroupDialog(context,
                                                   snapshot.data![index]);
                                             },
                                             onTap: () async {
-                                              WidgetsBinding.instance!
+                                              WidgetsBinding.instance
                                                   .addPostFrameCallback(
                                                       (_) async {
                                                 GroupService()
@@ -274,7 +271,11 @@ class _GroupListState extends State<GroupList> {
   }
 }
 
-Future<void> showMyDialog(BuildContext context, AtGroup group) async {
+Future<void> showDeleteGroupDialog(
+  BuildContext context,
+  AtGroup group, {
+  String? heading,
+}) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: true,
@@ -286,7 +287,7 @@ Future<void> showMyDialog(BuildContext context, AtGroup group) async {
       }
       return ConfirmationDialog(
         title: '${group.displayName}',
-        heading: 'Are you sure you want to delete this group?',
+        heading: heading ?? 'Are you sure you want to delete this group?',
         onYesPressed: () async {
           var result = await GroupService().deleteGroup(group);
 

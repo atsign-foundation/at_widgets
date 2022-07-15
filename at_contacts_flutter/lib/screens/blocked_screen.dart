@@ -28,7 +28,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
   @override
   void initState() {
     _contactService = ContactService();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var _result = await _contactService.fetchBlockContactList();
       if (_result == null) {
         if (mounted) {
@@ -76,12 +76,10 @@ class _BlockedScreenState extends State<BlockedScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Container(
-                                    // ignore: prefer_const_constructors
-                                    child: Icon(
+                                const Icon(
                                   Icons.view_module,
                                   color: ColorConstants.greyText,
-                                )),
+                                ),
                                 Switch(
                                     value: toggleList,
                                     activeColor: Colors.white,
@@ -92,11 +90,8 @@ class _BlockedScreenState extends State<BlockedScreen> {
                                         toggleList = !toggleList;
                                       });
                                     }),
-                                Container(
-                                  // ignore: prefer_const_constructors
-                                  child: Icon(Icons.view_list,
-                                      color: ColorConstants.greyText),
-                                ),
+                                const Icon(Icons.view_list,
+                                    color: ColorConstants.greyText),
                               ],
                             ),
                           ),
@@ -143,7 +138,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                                       )
                                     : GridView.builder(
                                         physics:
-                                            AlwaysScrollableScrollPhysics(),
+                                            const AlwaysScrollableScrollPhysics(),
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                                 crossAxisCount: SizeConfig()

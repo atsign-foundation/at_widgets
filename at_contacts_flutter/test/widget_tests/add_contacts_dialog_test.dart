@@ -18,7 +18,7 @@ void main() {
     // Test case to identify Add contacts dialog is used in screen or not
     testWidgets("Add contacts dialog widget is used and shown on screen",
         (WidgetTester tester) async {
-      final addContactsDialog = AddContactDialog();
+      const addContactsDialog = AddContactDialog();
       await tester.pumpWidget(
           _wrapWidgetWithMaterialApp(addContactsDialog: addContactsDialog));
 

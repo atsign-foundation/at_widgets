@@ -96,7 +96,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
         showToast: showToast,
         notificationID: widget.notificationID,
         refreshAt: widget.refreshAt);
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       LocationService().mapInitialized();
       LocationService().notifyListeners();
     });

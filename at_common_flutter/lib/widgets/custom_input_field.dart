@@ -1,4 +1,3 @@
-import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_common_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -54,6 +53,7 @@ class CustomInputField extends StatelessWidget {
   TextEditingController textController = TextEditingController();
 
   CustomInputField({
+    Key? key,
     this.hintText = '',
     this.height = 50,
     this.width = 300,
@@ -76,14 +76,13 @@ class CustomInputField extends StatelessWidget {
       fontSize: 15,
       fontWeight: FontWeight.normal,
     ),
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     textController = TextEditingController.fromValue(TextEditingValue(
-        text: initialValue != null ? initialValue : '',
-        selection: TextSelection.collapsed(
-            offset: initialValue != null ? initialValue.length : -1)));
+        text: initialValue,
+        selection: TextSelection.collapsed(offset: initialValue.length)));
     return Container(
       width: width,
       height: height,
@@ -91,10 +90,10 @@ class CustomInputField extends StatelessWidget {
         color: inputFieldColor ?? ColorConstants.inputFieldGrey,
         borderRadius: BorderRadius.circular(5),
       ),
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Row(
         children: <Widget>[
-          prefix != null ? prefix! : SizedBox(),
+          prefix != null ? prefix! : const SizedBox(),
           Expanded(
             child: TextField(
               readOnly: isReadOnly,
@@ -126,7 +125,7 @@ class CustomInputField extends StatelessWidget {
                     color: iconColor ?? ColorConstants.darkGrey,
                   ),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );

@@ -16,11 +16,10 @@ void main() {
   /// Functional test cases for Custom Heading Widget
   group('Custom Heading Widget Tests:', () {
     // Test Case to Check Custom Heading is displayed
-    final customHeading = CustomHeading();
-    testWidgets("Custom Heading is displayed",
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(customHeading: customHeading));
+    const customHeading = CustomHeading();
+    testWidgets("Custom Heading is displayed", (WidgetTester tester) async {
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(customHeading: customHeading));
       expect(find.byType(CustomHeading), findsOneWidget);
     });
   });

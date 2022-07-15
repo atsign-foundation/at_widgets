@@ -19,6 +19,8 @@ class AllColors {
   // ignore: non_constant_identifier_names
   Color ORANGE = const Color(0xFFFC7A30);
   // ignore: non_constant_identifier_names
+  Color LIGHT_ORANGE = const Color.fromARGB(175, 242, 163, 117);
+  // ignore: non_constant_identifier_names
   Color PURPLE = const Color(0xFFD9D9FF);
   // ignore: non_constant_identifier_names
   Color LIGHT_BLUE = const Color(0xFFCFFFFF);

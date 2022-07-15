@@ -1,3 +1,6 @@
+## 3.0.6
+- **FIX**: Lint Fixes according to flutter 3.0
+
 ## 3.0.5
 - **DOCS**: Updated documentation
 

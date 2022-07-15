@@ -11,6 +11,8 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
+// ignore: implementation_imports
+import 'package:at_client/src/service/notification_service.dart';
 
 import 'event_key_stream_service.dart';
 import 'package:at_utils/at_logger.dart';
@@ -118,10 +120,10 @@ class EventService {
       );
       atKey.sharedWith = jsonEncode(allAtsignList);
 
-      await atClientManager.atClient.notifyAll(
+      await notifyAll(
         atKey,
         eventData,
-        OperationEnum.update,
+        allAtsignList,
       );
 
       EventKeyStreamService()
@@ -168,10 +170,10 @@ class EventService {
       atKey.sharedWith = jsonEncode(
           [...selectedContactsAtSigns]); //adding event members in atkey
 
-      await atClientManager.atClient.notifyAll(
+      await notifyAll(
         atKey,
         notification,
-        OperationEnum.update,
+        [...selectedContactsAtSigns],
       );
 
       /// Dont need to sync as notifyAll is called
@@ -460,5 +462,15 @@ class EventService {
     }
     var checkPresence = await AtLookupImpl.findSecondary(receiver, root, 64);
     return checkPresence != null;
+  }
+
+  Future<void> notifyAll(
+      AtKey atkey, String value, List<String?> atsigns) async {
+    for (var element in atsigns) {
+      atkey.sharedWith = element;
+      await atClientManager.notificationService.notify(
+        NotificationParams.forUpdate(atkey, value: value),
+      );
+    }
   }
 }

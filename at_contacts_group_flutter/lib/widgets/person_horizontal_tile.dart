@@ -45,6 +45,9 @@ class CustomPersonHorizontalTile extends StatelessWidget {
                     ),
                   )
                 : ContactInitial(
+                    size: SizeConfig().isTablet(context)
+                        ? 28.toWidth
+                        : 45.toWidth,
                     initials: title ?? ' ',
                     minSize: 40.0,
                     maxSize: 40.0,

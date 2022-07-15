@@ -100,7 +100,6 @@ class _GroupContactViewState extends State<GroupContactView> {
   }
 
   List<AtContact> selectedList = [];
-  bool toggleList = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -139,7 +138,10 @@ class _GroupContactViewState extends State<GroupContactView> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            if (!widget.isDesktop) {
+              Navigator.pop(context);
+            }
+
             if (widget.onBackArrowTap != null) {
               widget.onBackArrowTap!(_groupService.selectedGroupContacts);
             }
@@ -237,34 +239,6 @@ class _GroupContactViewState extends State<GroupContactView> {
                     : HorizontalCircularList(
                         onContactsTap: widget.onContactsTap)
                 : Container(),
-            Container(
-              padding: EdgeInsets.only(right: 20.toWidth),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                      // ignore: prefer_const_constructors
-                      child: Icon(
-                    Icons.view_module,
-                    color: ColorConstants.greyText,
-                  )),
-                  Switch(
-                      value: toggleList,
-                      activeColor: ColorConstants.fadedGreyBackground,
-                      activeTrackColor: Colors.black,
-                      onChanged: (s) {
-                        setState(() {
-                          toggleList = !toggleList;
-                        });
-                      }),
-                  Container(
-                    // ignore: prefer_const_constructors
-                    child:
-                        Icon(Icons.view_list, color: ColorConstants.greyText),
-                  ),
-                ],
-              ),
-            ),
             StreamBuilder<List<GroupContactsModel?>>(
                 stream: _groupService.allContactsStream,
                 initialData: _groupService.allContacts,
@@ -375,10 +349,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                                   ),
                                 ],
                               ),
-                              toggleList
-                                  ? contactListBuilder(contactsForAlphabet)
-                                  : gridViewContactList(
-                                      contactsForAlphabet, context)
+                              contactListBuilder(contactsForAlphabet)
                             ],
                           );
                         },

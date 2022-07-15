@@ -4,6 +4,7 @@ import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
+// ignore: todo
 /// TODO:
 /// Duplicate GlobalKey detected in widget tree as we now have
 /// select contacts on right side and left side we have empty widget

@@ -1,8 +1,8 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 # at_login_flutter
 
-A flutter plugin project for adding zero trust logins using the @protocol.
+A flutter plugin project for adding zero trust logins using the atProtocol.
 
 ## Getting Started
 
@@ -100,20 +100,20 @@ from a website displaying a QR code that contains a login request.
 This plugin provides two screens:
 
 #### AtLogin screen
-Your app needs a paired @sign in order to use AtLogin. The at_onboarding widget can be used to set 
-up your app with an @sign that can be used to login with your application. 
+Your app needs a paired atSign in order to use AtLogin. The at_onboarding widget can be used to set 
+up your app with an atSign that can be used to login with your application. 
 
 1. Capture the AtLogin request:
    
    The user can scan a QR code using the camera to capture the AtLogin request.  
 
 2. Approve or reject the request:
-   A dialog is presented that shows the request details and asks the @sign owner to approve or 
+   A dialog is presented that shows the request details and asks the atSign owner to approve or 
    reject it.
    
 3. Complete the login process
    If approved, AtLogin will publish a cryptograhic proof that the website can lookup which will 
-   verify that the @sign login is valid.
+   verify that the atSign login is valid.
 
 #### AtLoginDashboard screen
 The AtLoginDashboard can be used to display the history of AtLogin requests (approved or rejected). 

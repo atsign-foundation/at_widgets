@@ -19,34 +19,36 @@ void main() {
 
   /// Functional test cases for Custom reset button
   group('Custom reset button Tests:', () {
-    final customResetButton = CustomResetButton(buttonText: 'Click Here',
+    const customResetButton = CustomResetButton(
+      buttonText: 'Click Here',
       height: 30.0,
-      width: 100.0,);
+      width: 100.0,
+    );
     // Test case to check Custom reset button is is displayed
     testWidgets('Custom reset button is used', (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(customResetButton: customResetButton));
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(customResetButton: customResetButton));
       expect(find.byType(CustomResetButton), findsOneWidget);
     });
     // Test case to Custom reset button title is given
     testWidgets('Test case to check Custom reset button title is given',
         (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(customResetButton: customResetButton));
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(customResetButton: customResetButton));
       expect(customResetButton.buttonText, 'Click Here');
     });
     // Test case to Custom reset button height is given
     testWidgets('Test case to check Custom reset button height is given',
         (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(customResetButton: customResetButton));
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(customResetButton: customResetButton));
       expect(customResetButton.height, 30.0);
     });
     // Test case to Custom reset button width is given
     testWidgets('Test case to check Custom reset button width is given',
         (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(customResetButton: customResetButton));
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(customResetButton: customResetButton));
       expect(customResetButton.width, 100.0);
     });
   });

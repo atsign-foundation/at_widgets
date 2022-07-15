@@ -86,6 +86,7 @@ Future<bool?> sendRequestLocationNotification(String atsign) async {
 /// deletes the location notification of the logged in atsign being shared with [locationNotificationModel].receiver
 Future<bool> deleteLocationData(
     LocationNotificationModel locationNotificationModel) async {
+  // ignore: todo
   // TODO: verify receiver
   var result = await SendLocationNotification()
       .sendNull([locationNotificationModel.receiver!]);
@@ -158,6 +159,7 @@ LocationInfo? getMyLocationInfo(LocationNotificationModel _event) {
           isAccepted: _locationSharingFor.isAccepted);
     }
   }
+  return null;
 }
 
 /// will return details of others booleans for this [LocationNotificationModel]
@@ -179,5 +181,6 @@ LocationInfo? getOtherMemberLocationInfo(String _id, String _atsign) {
         isExited: _locationSharingFor.isExited,
         isAccepted: _locationSharingFor.isAccepted);
   }
+  return null;
   // }
 }

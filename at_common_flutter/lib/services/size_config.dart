@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class SizeConfig {
   SizeConfig._();
 
-  static SizeConfig _instance = SizeConfig._();
+  static final SizeConfig _instance = SizeConfig._();
 
   factory SizeConfig() => _instance;
   late MediaQueryData _mediaQueryData;
@@ -115,9 +115,9 @@ class SizeConfig {
 
 /// A shorthand usage of the functions defined in [SizeConfig].
 extension SizeUtils on num {
-  double get toWidth => SizeConfig().getWidthRatio(this.toDouble());
+  double get toWidth => SizeConfig().getWidthRatio(toDouble());
 
-  double get toHeight => SizeConfig().getHeightRatio(this.toDouble());
+  double get toHeight => SizeConfig().getHeightRatio(toDouble());
 
-  double get toFont => SizeConfig().getFontRatio(this.toDouble());
+  double get toFont => SizeConfig().getFontRatio(toDouble());
 }
