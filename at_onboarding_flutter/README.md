@@ -174,6 +174,17 @@ TextButton(
     child: Text('Onboard my @sign'),
   );
 ```
+
+### Steps to generate API key :
+
+1. Open URL https://my.atsign.com/login
+2. Login with valid credentials
+3. Click on My atSign on the dashboard
+4. Click on atSign for which you want to generate an API key
+5. Click on the manage button
+6. Click on Advance settings
+7. Click on "Generate New API key"
+
 ## Open source usage and contributions
 
 This is open source code, so feel free to use it as is, suggest changes
