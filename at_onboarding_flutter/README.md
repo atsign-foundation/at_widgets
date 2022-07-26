@@ -36,7 +36,7 @@ The example code contained there demonstrates the onboarding flow of an @‎sign
 git clone https://github.com/atsign-foundation/at_widgets
 ```
 
-### 3. Manually add the package to a project
+### 2. Manually add the package to a project
 
 Instructions on how to manually add this package to you project can be found
 on pub.dev [here](https://pub.dev/packages/at_onboarding_flutter/install).
@@ -132,9 +132,16 @@ and add the following key:
 ```
 </details>
 
+### 3. Migration guide
+<details>
+  <summary>From 4.x.x to 5.x.x</summary>
+
+1. Replace `Onboarding(...)` with `AtOnboarding.onboard(...)`
+2. Move all config params (`domain`, `atClientPreference`, `rootEnviroment`, ...) into `AtOnboardingConfig(...)`
+3. The `nextScreen` and `fistTimeAuthNextScreen` has been removed and should be using `AtOnboardingResult` to determine which screen will be opened
+</details>
 
 ## Usage
-
 
 | Parameters              | Description                                                                                                                      |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
