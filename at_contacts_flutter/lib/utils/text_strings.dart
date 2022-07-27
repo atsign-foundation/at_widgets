@@ -16,10 +16,10 @@ class TextStrings {
   String delete = 'Delete';
   String block = 'Block';
   String unblock = 'Unblock';
-  String emptyBlockedList = 'No blocked @signs';
+  String emptyBlockedList = 'No blocked atSigns';
   String blockContact = 'Block Contact';
   String unblockContact = 'Unblock Contact';
-  String blockedContacts = 'Blocked @signs';
+  String blockedContacts = 'Blocked atSigns';
   String addContactHeading =
       'Are you sure you want to add the user to your contact list?';
   String yes = 'Yes';
