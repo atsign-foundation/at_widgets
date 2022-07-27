@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  at_file_saver
+  file_saver
   file_selector_windows
   permission_handler_windows
   url_launcher_windows
