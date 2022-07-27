@@ -1,20 +1,20 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 [![pub package](https://img.shields.io/pub/v/at_invitation_flutter)](https://pub.dev/packages/at_invitation_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 ## Overview
 
 The at_invitation_flutter package is for Flutter developers who want to share
-data and invite contacts using SMS or email to the @platform.
+data and invite contacts using SMS or email to the atPlatform.
 
 
 This open source package is written in Dart, supports Flutter and follows the
-@‎platform's decentralized, edge computing model with the following features: 
+atPlatform's decentralized, edge computing model with the following features: 
 - Cryptographic control of data access through personal data stores
 - No application backend needed
 - End to end encryption where only the data owner has the keys
 - Private and surveillance free connectivity
-- Ability to send an invite to people not on the apps built on @‎platform
+- Ability to send an invite to people not on the apps built on atPlatform
 
 We call giving people control of access to their data “flipping the internet”
 and you can learn more about how it works by reading this
