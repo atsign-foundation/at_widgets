@@ -57,6 +57,8 @@ class _CustomListTileState extends State<CustomListTile> {
         _logger.severe('Error in image: $e');
       }
 
+      print("top one");
+
       contactImage = image != null
           ? CustomCircleAvatar(
               byteImage: image,
@@ -66,6 +68,7 @@ class _CustomListTileState extends State<CustomListTile> {
               initials: widget.contact!.atSign!,
             );
     } else {
+      print("bottom one");
       contactImage = ContactInitial(
         initials: widget.contact!.atSign!,
       );
@@ -102,8 +105,10 @@ class _CustomListTileState extends State<CustomListTile> {
                   }
                   isSelected = !isSelected;
                 });
-
-                widget.selectedList!(widget.contactService!.selectedContacts);
+                if (widget.asSingleSelectionTile) {
+                  widget.selectedList!(widget.contactService!.selectedContacts);
+                }
+                // print("pressed this!!!");
               } else {
                 if (widget.onTap != null) {
                   widget.onTap!();

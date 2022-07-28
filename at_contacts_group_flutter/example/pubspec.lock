@@ -112,7 +112,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.0.6"
+    version: "4.0.7"
   at_lookup:
     dependency: transitive
     description:
@@ -478,6 +478,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.0"
+  image_compression:
+    dependency: transitive
+    description:
+      name: image_compression
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   internet_connection_checker:
     dependency: transitive
     description:
