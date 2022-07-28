@@ -19,6 +19,7 @@ class AtOnboardingConstants {
   static int responseTimeLimit = 30;
   static String contactAddress = 'support@atsign.com';
   static String activateAtSign = '/api/activateAtSign';
+  static double tutorialVersion = 1.0;
 
   //Button titles
 

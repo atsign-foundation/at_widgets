@@ -3,9 +3,11 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/database/share_preferences_helper.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
@@ -18,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zxing2/qrcode.dart';
 import 'package:image/image.dart' as img;
@@ -75,11 +78,192 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
   late AtSyncDialog _inprogressDialog;
 
+  ///tutorial
+  late TutorialCoachMark tutorialCoachMark;
+  List<TargetFocus> targets = <TargetFocus>[];
+
+  GlobalKey keyUploadAtSign = GlobalKey();
+  GlobalKey keyGenerateAtSign = GlobalKey();
+  GlobalKey keyUploadQRCode = GlobalKey();
+  GlobalKey keyActivateAtSign = GlobalKey();
+
   @override
   void initState() {
     _inprogressDialog = AtSyncDialog(context: context);
     checkPermissions();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _init();
+    super.didChangeDependencies();
+  }
+
+  void _init() async {
+    final version = await SharedPreferencesHelper.getTutorialVersion();
+
+    if (version < AtOnboardingConstants.tutorialVersion) {
+      initTargets();
+      await Future.delayed(const Duration(milliseconds: 300), showTutorial);
+      SharedPreferencesHelper.setTutorialVersion(
+        AtOnboardingConstants.tutorialVersion,
+      );
+    }
+  }
+
+  void showTutorial() {
+    ThemeData themeData = Theme.of(context);
+    tutorialCoachMark = TutorialCoachMark(
+      context,
+      targets: targets,
+      colorShadow: const Color(0xff424242),
+      pulseEnable: false,
+      skipWidget: Container(
+        height: 44,
+        padding: const EdgeInsets.fromLTRB(16, 11, 16, 4),
+        decoration: BoxDecoration(
+          color: themeData.primaryColor,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: const Text(
+          "SKIP",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: () {
+        print("finish");
+      },
+      onClickTarget: (target) {
+        print('onClickTarget: $target');
+      },
+      onClickOverlay: (target) {
+        print('onClickOverlay: $target');
+      },
+      onSkip: () {
+        print("skip");
+      },
+    )..show();
+  }
+
+  void initTargets() {
+    targets.clear();
+    targets.add(
+      TargetFocus(
+        identify: "keyUploadAtSign",
+        keyTarget: keyUploadAtSign,
+        alignSkip: Alignment.bottomRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return const Center(
+                child: Text(
+                  "Tap to upload your key file if you have atSign",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: AtOnboardingDimens.fontLarge,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+        shape: ShapeLightFocus.RRect,
+        radius: 8.0,
+        paddingFocus: 8.0,
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "keyGenerateAtSign",
+        keyTarget: keyGenerateAtSign,
+        alignSkip: Alignment.bottomRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return const Center(
+                child: Text(
+                  "Tap to create an new atSign",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: AtOnboardingDimens.fontLarge,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+        shape: ShapeLightFocus.RRect,
+        radius: 8.0,
+        paddingFocus: 8.0,
+      ),
+    );
+    targets.add(
+      TargetFocus(
+        identify: "keyUploadQRCode",
+        keyTarget: keyUploadQRCode,
+        alignSkip: Alignment.bottomRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return const Center(
+                child: Text(
+                  "Tap to upload image QR code",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: AtOnboardingDimens.fontLarge,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+        shape: ShapeLightFocus.RRect,
+        radius: 8.0,
+        paddingFocus: 8.0,
+      ),
+    );
+    targets.add(
+      TargetFocus(
+        identify: "keyActivateAtSign",
+        keyTarget: keyActivateAtSign,
+        alignSkip: Alignment.bottomRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return const Center(
+                child: Text(
+                  "Tap to active account if your atSign is locked",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: AtOnboardingDimens.fontLarge,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+        shape: ShapeLightFocus.RRect,
+        radius: 8.0,
+        paddingFocus: 8.0,
+      ),
+    );
   }
 
   Future<void> checkPermissions() async {
@@ -448,6 +632,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 ),
                 const SizedBox(height: 5),
                 AtOnboardingPrimaryButton(
+                  key: keyUploadAtSign,
                   height: 48,
                   borderRadius: 24,
                   onPressed: (Platform.isMacOS ||
@@ -487,6 +672,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 ),
                 const SizedBox(height: 5),
                 AtOnboardingSecondaryButton(
+                    key: keyGenerateAtSign,
                     height: 48,
                     borderRadius: 24,
                     onPressed: () async {
@@ -534,6 +720,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                           ),
                         )
                       : AtOnboardingSecondaryButton(
+                          key: keyUploadQRCode,
                           height: 48,
                           borderRadius: 24,
                           isLoading: _uploadingQRCode,
@@ -564,6 +751,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 if (!widget.hideQrScan) const SizedBox(height: 5),
                 if (!widget.hideQrScan)
                   AtOnboardingSecondaryButton(
+                    key: keyActivateAtSign,
                     height: 48,
                     borderRadius: 24,
                     onPressed: () async {
