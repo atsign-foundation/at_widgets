@@ -1,4 +1,4 @@
-<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
 [![pub package](https://img.shields.io/pub/v/at_onboarding_flutter)](https://pub.dev/packages/at_onboarding_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
@@ -9,13 +9,13 @@ for authenticating an atsign as cryptographically secure replacement for
 usernames and passwords.
 
 This open source package is written in Dart, supports Flutter and follows
-the atPlatform's decentralized, edge computing model with the following
+the @‎platform's decentralized, edge computing model with the following
 features:
 
 - Takes away the difficulty in implementing atsign authentication.
 - Generate and Supports free atsigns.
-- Supports multiple atSign onboarding.
-- Flexibility of either pair atSign with QRCode or Atkey file.
+- Supports multiple @‎sign onboarding.
+- Flexibility of either pair @‎sign with QRCode or Atkey file.
 - Reset/Sign out button.
 
 We call giving people control of access to their data “flipping the internet”
@@ -30,7 +30,7 @@ There are two options to get started using this package.
 
 Feel free to fork a copy the source from the
 [GitHub repo](https://github.com/atsign-foundation/at_widgets).
-The example code contained there demonstrates the onboarding flow of an atSign.
+The example code contained there demonstrates the onboarding flow of an @‎sign.
 
 ```sh
 git clone https://github.com/atsign-foundation/at_widgets
@@ -75,7 +75,7 @@ Add the following permission string to info.plist
 
 ```
   <key>NSCameraUsageDescription</key>
-  <string>The camera is used to scan QR code to pair your device with your atSign</string>
+  <string>The camera is used to scan QR code to pair your device with your @sign</string>
 ```
 
 Also, update the Podfile with the following lines of code:
@@ -140,7 +140,7 @@ and add the following key:
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | domain                  | Domain can differ based on the environment you are using.Default the plugin connects to 'root.atsign.org' to perform onboarding. |
 | atClientPreference      | The atClientPreference to continue with the onboarding.                                                                          |
-| onboard                 | Function returns atClientServiceMap on successful onboarding along with onboarded atSign.                                         |
+| onboard                 | Function returns atClientServiceMap on successful onboarding along with onboarded @sign.                                         |
 | logo                    | This widget display in the left side of appbar if nothing given then displays nothing..                                          |
 | appcolor                | The color of the screens to match with the app's aesthetics. the default value is black.                                         |
 | nextScreen              | After successful onboarding will gets redirected to this screen if it is not null.                                               |
@@ -175,7 +175,7 @@ TextButton(
       // appAPIKey: YOUR_API_KEY_HERE
     )
   },
-  child: Text('Onboard my atSign'))
+  child: Text('Onboard my @sign'))
 ```
 ## Open source usage and contributions
 

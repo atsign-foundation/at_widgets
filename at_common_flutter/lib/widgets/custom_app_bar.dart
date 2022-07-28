@@ -94,7 +94,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   icon: Icon(
                     Icons.arrow_back,
                     color: ColorConstants.fontPrimary,
-                    size: 15.toFont,
+                    size: 25.toFont,
                   ),
                   onPressed: () {
                     if (!isDesktop) {

@@ -1,6 +1,3 @@
-## 4.0.3
-- **FIX**: Replaced file_saver dependency with fork [at_file_saver](https://pub.dev/packages/at_file_saver)
-
 ## 4.0.2
 - **FIX**: Lint Fixes according to flutter 3.0
 

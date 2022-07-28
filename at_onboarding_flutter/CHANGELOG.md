@@ -1,6 +1,3 @@
-## 4.0.4
-- **FIX**: Bug fixes in atSign activation process
-
 ## 4.0.3
 - **FIX**: Lint Fixes according to flutter 3.0
 

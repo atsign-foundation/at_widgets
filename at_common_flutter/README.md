@@ -1,11 +1,11 @@
-<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
 [![pub package](https://img.shields.io/pub/v/at_common_flutter)](https://pub.dev/packages/at_common_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 ## Overview
-The at_common_flutter package provides custom widgets for development of other packages and apps built on atPlatform.
+The at_common_flutter package provides custom widgets for development of other packages and apps built on @‎platform.
 
-The atPlatform's decentralized, edge computing model has the following features: 
+The @‎platform's decentralized, edge computing model has the following features: 
 - Cryptographic control of data access through personal data stores
 - No application backend needed
 - End to end encryption where only the data owner has the keys
