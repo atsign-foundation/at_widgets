@@ -134,13 +134,7 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ContactsScreen(
-                    asSelectionScreen: true,
-                    asSingleSelectionScreen: false,
-                    selectedList: (s) async {
-                      print("this is running now!!");
-                    },
-                  ),
+                  builder: (BuildContext context) => const ContactsScreen(),
                 ));
               },
               child: const Text('Show contacts'),
