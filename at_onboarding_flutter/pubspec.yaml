@@ -37,7 +37,7 @@ dependencies:
 
   at_backupkey_flutter: ^4.0.2
   at_client: ^3.0.15
-  at_client_mobile: ^3.1.11
+  at_client_mobile: ^3.2.0
   at_commons: ^3.0.9
   at_server_status: ^1.0.3
   at_utils: ^3.0.6
@@ -50,11 +50,6 @@ dev_dependencies:
 
 dependency_overrides:
   lints: ^2.0.0
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      ref: bugfix/keychain-store-key
-      path: at_client_mobile
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
