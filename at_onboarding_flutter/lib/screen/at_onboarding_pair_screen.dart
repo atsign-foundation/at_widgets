@@ -119,6 +119,11 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey[500]!,
+                      ),
+                    ),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: AtOnboardingDimens.paddingSmall),
                   ),
