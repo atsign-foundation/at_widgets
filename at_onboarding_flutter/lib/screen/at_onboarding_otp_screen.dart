@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:at_onboarding_flutter/screen/at_onboarding_accounts_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
+import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_input_formatter.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -11,10 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'at_onboarding_accounts_screen.dart';
-import '../services/free_atsign_service.dart';
-import 'at_onboarding_reference_screen.dart';
 
 class AtOnboardingOTPResult {
   String atSign;
