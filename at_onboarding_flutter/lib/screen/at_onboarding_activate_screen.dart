@@ -2,6 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/at_onboarding_result.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_backup_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_otp_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
+import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
@@ -11,12 +16,6 @@ import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../at_onboarding_result.dart';
-import 'at_onboarding_backup_screen.dart';
-import 'at_onboarding_otp_screen.dart';
-import '../services/free_atsign_service.dart';
-import 'at_onboarding_reference_screen.dart';
 
 class AtOnboardingActivateScreen extends StatefulWidget {
   ///will hide webpage references.
@@ -167,6 +166,8 @@ class _AtOnboardingActivateScreenState
             AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
+
+      //Delay 10s for waiting for ServerStatus change to teapot when activating an atsign
       await Future.delayed(const Duration(seconds: 10));
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
@@ -183,15 +184,15 @@ class _AtOnboardingActivateScreenState
           AtOnboardingStrings.atsignNull,
         );
       } else {
-        await showErrorDialog('Response Time out');
+        await showErrorDialog('Your session expired');
       }
     } catch (e) {
       if (e == AtOnboardingResponseStatus.authFailed) {
-        await _showAlertDialog(e, title: 'Auth Failed');
+        await _showAlertDialog(e, title: 'Authentication Failed');
       } else if (e == AtOnboardingResponseStatus.serverNotReached) {
-        await _processSharedSecret(atsign: atsign, secret: secret);
+        await _showAlertDialog(e, title: 'Server not found');
       } else if (e == AtOnboardingResponseStatus.timeOut) {
-        await _showAlertDialog(e, title: 'Response Time out');
+        await _showAlertDialog(e, title: 'Your session expired');
       }
     }
     return authResponse;

@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'at_onboarding_reference_screen.dart';
 
 class AtOnboardingInputAtSignScreen extends StatefulWidget {
   static Future<String?> push({
@@ -30,11 +29,6 @@ class AtOnboardingInputAtSignScreen extends StatefulWidget {
 class _AtOnboardingInputAtSignScreenState
     extends State<AtOnboardingInputAtSignScreen> {
   final TextEditingController _atsignController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

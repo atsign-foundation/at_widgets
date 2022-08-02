@@ -1,13 +1,12 @@
+import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_start_screen.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
-
-import 'at_onboarding_result.dart';
-import 'screen/at_onboarding_home_screen.dart';
-import 'services/at_onboarding_config.dart';
-import 'screen/at_onboarding_start_screen.dart';
 
 class AtOnboarding {
   /// Using this function to get onboard atsing.
@@ -95,7 +94,7 @@ class AtOnboarding {
     if (result is AtOnboardingResetResult) {
       return result;
     } else {
-      return AtOnboardingResetResult.canceled;
+      return AtOnboardingResetResult.cancelled;
     }
   }
 }

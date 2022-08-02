@@ -1,3 +1,5 @@
+import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
+import 'package:at_onboarding_flutter/services/sdk_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -5,11 +7,8 @@ import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/material.dart';
 
-import '../services/at_onboarding_config.dart';
-import '../services/sdk_service.dart';
-
 enum AtOnboardingResetResult {
-  canceled,
+  cancelled,
   success,
 }
 
@@ -55,19 +54,10 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),
             onPressed: () {
-              Navigator.of(context).pop(AtOnboardingResetResult.canceled);
+              Navigator.of(context).pop(AtOnboardingResetResult.cancelled);
             },
           ),
         ),
-        // title: Column(
-        //   mainAxisSize: MainAxisSize.min,
-        //   children: const <Widget>[
-        //     Text(Strings.resetDescription,
-        //         textAlign: TextAlign.center,
-        //         style: TextStyle(fontSize: AtOnboardingDimens.fontLarge)),
-        //     Divider()
-        //   ],
-        // ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

@@ -1,13 +1,27 @@
+import 'dart:io';
+
+/// The status of onboard's result
+///
+/// Values include: success, error, cancel
+///
 enum AtOnboardingResultStatus {
   success, //Authenticate success
   error, //Authenticate error
   cancel, //User canceled
 }
 
+/// The result returned after onboard
 class AtOnboardingResult {
+  /// Status of result
   AtOnboardingResultStatus status;
+
+  /// The message returned when onboard failed
   String? message;
+
+  /// The error code returned when onboard failed
   String? errorCode;
+
+  /// The atSign returned when onboard successfully
   String? atsign;
 
   AtOnboardingResult._({
@@ -17,6 +31,10 @@ class AtOnboardingResult {
     this.atsign,
   });
 
+  /// Create instance with success status
+  ///
+  /// [atsign] The name of atSign
+  ///
   factory AtOnboardingResult.success({
     required String atsign,
   }) {
@@ -26,6 +44,12 @@ class AtOnboardingResult {
     );
   }
 
+  /// Create instance with error status
+  ///
+  /// [message] The message returned when onboard failed
+  ///
+  /// [errorCode] The error code returned when onboard failed
+  ///
   factory AtOnboardingResult.error({
     String? message,
     String? errorCode,
@@ -37,6 +61,7 @@ class AtOnboardingResult {
     );
   }
 
+  /// Create instance with cancel status
   factory AtOnboardingResult.cancelled() {
     return AtOnboardingResult._(
       status: AtOnboardingResultStatus.cancel,

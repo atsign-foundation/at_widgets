@@ -131,10 +131,14 @@ class _MyAppState extends State<MyApp> {
                                     builder: (_) => const HomeScreen()));
                             break;
                           case AtOnboardingResultStatus.error:
-                            // TODO: handle onboard failure
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('An error has occurred'),
+                              ),
+                            );
                             break;
                           case AtOnboardingResultStatus.cancel:
-                            // TODO: handle user canceled onboard
                             break;
                         }
                       },

@@ -1,15 +1,14 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/at_onboarding.dart';
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
+import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
-
-import '../at_onboarding.dart';
-import '../services/at_onboarding_config.dart';
-import '../widgets/at_onboarding_dialog.dart';
-import 'at_onboarding_home_screen.dart';
 
 class AtOnboardingStartScreen extends StatefulWidget {
   final AtOnboardingConfig config;

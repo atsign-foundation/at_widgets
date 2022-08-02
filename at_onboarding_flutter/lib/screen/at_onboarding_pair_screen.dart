@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:at_onboarding_flutter/screen/at_onboarding_otp_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -10,10 +12,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../at_onboarding_result.dart';
-import 'at_onboarding_otp_screen.dart';
-import 'at_onboarding_reference_screen.dart';
 
 class AtOnboardingPairScreen extends StatefulWidget {
   final String atSign;
@@ -191,7 +189,14 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       if (status) {
         _showOTPScreen();
       } else {
-        //Todo:
+        AtOnboardingDialog.showError(
+          context: context,
+          title: "Failed to send OTP!",
+          message: "Please try again.",
+          onCancel: () {
+            Navigator.pop(context);
+          },
+        );
       }
     }
   }

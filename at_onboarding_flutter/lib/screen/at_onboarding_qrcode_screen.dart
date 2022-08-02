@@ -116,6 +116,7 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
       List<String> values = (qrCode ?? '').split(':');
       if (values.length == 2) {
         controller?.pauseCamera();
+        //It's issue from camera library so we need to add a delay to waiting for pause camera
         await Future.delayed(const Duration(milliseconds: 400));
         if (!mounted) return;
         Navigator.pop(
