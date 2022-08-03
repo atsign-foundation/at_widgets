@@ -34,7 +34,8 @@ class FreeAtsignService {
     }
     Map<String, String?> data = <String, String?>{'atsign': atsign};
 
-    String path = AtOnboardingConstants.apiPath + AtOnboardingConstants.authWithAtsign;
+    String path =
+        AtOnboardingConstants.apiPath + AtOnboardingConstants.authWithAtsign;
 
     dynamic response = await postRequest(path, data);
 
@@ -48,7 +49,8 @@ class FreeAtsignService {
     if (!initialized) {
       _init();
     }
-    String path = AtOnboardingConstants.apiPath + AtOnboardingConstants.validationWithAtsign;
+    String path = AtOnboardingConstants.apiPath +
+        AtOnboardingConstants.validationWithAtsign;
     Map<String, String?> data = <String, String?>{
       'atsign': atsign,
       'otp': verificationCode
@@ -87,7 +89,8 @@ class FreeAtsignService {
       _init();
     }
     Map<String, String?> data;
-    String path = AtOnboardingConstants.apiPath + AtOnboardingConstants.registerPerson;
+    String path =
+        AtOnboardingConstants.apiPath + AtOnboardingConstants.registerPerson;
     if (oldEmail != null) {
       data = <String, String?>{
         'email': email,
@@ -110,7 +113,8 @@ class FreeAtsignService {
       _init();
     }
     Map<String, String?> data;
-    String path = AtOnboardingConstants.apiPath + AtOnboardingConstants.validatePerson;
+    String path =
+        AtOnboardingConstants.apiPath + AtOnboardingConstants.validatePerson;
     data = <String, String?>{
       'email': email,
       'atsign': atsign,

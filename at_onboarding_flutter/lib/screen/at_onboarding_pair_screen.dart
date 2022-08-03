@@ -253,8 +253,9 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
                           String url = 'https://my.atsign.com';
-                          if (!widget.hideReferences && await canLaunch(url)) {
-                            await launch(url);
+                          if (!widget.hideReferences &&
+                              await canLaunchUrl(Uri.parse(url))) {
+                            await launchUrl(Uri.parse(url));
                           }
                         }),
                   const TextSpan(

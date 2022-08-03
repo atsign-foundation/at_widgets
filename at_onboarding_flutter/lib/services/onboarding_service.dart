@@ -141,8 +141,9 @@ class OnboardingService {
       if (e == AtOnboardingResponseStatus.timeOut) {
         c.completeError(e);
       } else {
-        c.completeError(
-            e.runtimeType == OnboardingStatus ? e : AtOnboardingResponseStatus.authFailed);
+        c.completeError(e.runtimeType == OnboardingStatus
+            ? e
+            : AtOnboardingResponseStatus.authFailed);
       }
     }
     return c.future;
@@ -200,9 +201,8 @@ class OnboardingService {
 
   /// returns the list of all onboarded atsigns
   Future<List<String>> getAtsignList() async {
-    List<String>? atSignsList =
+    List<String> atSignsList =
         await _keyChainManager.getAtSignListFromKeychain();
-    atSignsList == null ? atSignsList = <String>[] : atSignsList = atSignsList;
     return atSignsList;
   }
 
