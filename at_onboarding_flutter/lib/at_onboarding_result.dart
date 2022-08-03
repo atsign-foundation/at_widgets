@@ -1,5 +1,3 @@
-import 'dart:io';
-
 /// The status of onboard's result
 ///
 /// Values include: success, error, cancel

@@ -124,7 +124,6 @@ class _MyAppState extends State<MyApp> {
                         );
                         switch (result.status) {
                           case AtOnboardingResultStatus.success:
-                            final atsign = result.atsign;
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

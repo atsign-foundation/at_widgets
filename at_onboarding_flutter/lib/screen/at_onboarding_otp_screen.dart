@@ -234,7 +234,6 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         String errorMessage = data['message'];
         await showErrorDialog(errorMessage);
       }
-      // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
@@ -386,7 +385,6 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
       data = response.body;
       data = jsonDecode(data);
       status = true;
-      // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
@@ -427,8 +425,9 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
                           String url = 'https://my.atsign.com';
-                          if (!widget.hideReferences && await canLaunch(url)) {
-                            await launch(url);
+                          if (!widget.hideReferences &&
+                              await canLaunchUrl(Uri.parse(url))) {
+                            await launchUrl(Uri.parse(url));
                           }
                         }),
                   const TextSpan(

@@ -58,11 +58,11 @@ class _AtOnboardingWebviewScreenState extends State<AtOnboardingWebviewScreen> {
           ),
           isLoading
               ? Center(
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  ColorConstants.appColor,
-                )),
-          )
+                  child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                    ColorConstants.appColor,
+                  )),
+                )
               : const SizedBox()
         ],
       ),
