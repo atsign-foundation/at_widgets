@@ -349,6 +349,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         await showErrorDialog(AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
+
+      _onboardingService.setAtClientPreference = widget.config.atClientPreference;
+
       authResponse = await _onboardingService.authenticate(atsign,
           jsonData: contents, decryptKey: aesKey);
       _inprogressDialog.close();

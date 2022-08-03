@@ -51,6 +51,11 @@ class AtOnboarding {
         return AtOnboardingHomeScreen(config: config);
       }));
       if (result is AtOnboardingResult) {
+        //Update primary atsign after onboard success
+        if (result.status == AtOnboardingResultStatus.success &&
+            result.atsign != null) {
+          await changePrimaryAtsign(atsign: result.atsign!);
+        }
         return result;
       } else {
         return AtOnboardingResult.cancelled();
