@@ -51,7 +51,7 @@ class AtEventNotificationListener {
     if (!monitorStarted) {
       AtClientManager.getInstance()
           .notificationService
-          .subscribe(shouldDecrypt: true)
+          .subscribe()
           .listen((notification) {
         _notificationCallback(notification);
       });
@@ -90,8 +90,20 @@ class AtEventNotificationListener {
       return;
     }
 
-    var decryptedMessage = value;
-    
+    var decryptedMessage = await atClientManager.atClient.encryptionService!
+        .decrypt(value ?? '', fromAtSign)
+        .catchError((e) {
+      /// only show failure for createevent keys
+      if (notificationKey.contains('createevent')) {
+        AtLocationNotificationListener().showToast(
+          'Decryption failed for Event notification received from $fromAtSign with $e',
+          navKey!.currentContext!,
+          isError: true,
+        );
+      }
+
+      _logger.severe('error in decrypting in events package listener: $e');
+    });
     _logger.finer('decrypted message:$decryptedMessage');
 
     if (decryptedMessage == null || decryptedMessage == '') {

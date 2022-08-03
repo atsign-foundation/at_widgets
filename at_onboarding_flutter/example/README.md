@@ -1,10 +1,10 @@
-<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
 
 ## at_onboarding_flutter example
-The at_onboarding_flutter package is designed to make it easy to add onboarding flow to a flutter app on atPlatform with the following features:
-- Supports Generate free atSign.
-- Supports multiple atSign onboarding.
-- Flexibility of either pairing an atSign with a QRCode or an Atkey file.
+The at_onboarding_flutter package is designed to make it easy to add onboarding flow to a flutter app on @‎platform with the following features:
+- Supports Generate free @‎sign.
+- Supports multiple @‎sign onboarding.
+- Flexibility of either pairing an @‎sign with a QRCode or an Atkey file.
 - Dark mode
 - Reset/Sign out button.
 
@@ -24,7 +24,7 @@ Notes:
 
 ## How it works
 
-at_onboarding_flutter widget handles secure management of secret keys for an atSign as cryptographically secure replacement for usernames and passwords.
+at_onboarding_flutter widget handles secure management of secret keys for an @‎sign as cryptographically secure replacement for usernames and passwords.
 
 The package provides the UI widgets required for the onboarding flow collectively in a single call, `Onboarding()`.
 

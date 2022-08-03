@@ -61,7 +61,7 @@ class AtLocationNotificationListener {
     if (!monitorStarted) {
       AtClientManager.getInstance()
           .notificationService
-          .subscribe(shouldDecrypt: true)
+          .subscribe()
           .listen((monitorNotification) {
         _notificationCallback(monitorNotification);
       });
@@ -134,8 +134,25 @@ class AtLocationNotificationListener {
       }
     }
 
-    var decryptedMessage = value;
-    
+    var decryptedMessage = await atClientInstance!.encryptionService!
+        .decrypt(value ?? '', fromAtSign)
+        // ignore: return_of_invalid_type_from_catch_error
+        .catchError((e) {
+      /// only show failure for sharelocation/requestlocation keys
+      if ((notificationKey.contains(MixedConstants.SHARE_LOCATION)) ||
+          (notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) ||
+          (notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
+        showToast(
+          'Decryption failed for ${getKeyType(notificationKey)} notification received from $fromAtSign with $e',
+          navKey.currentContext!,
+          isError: true,
+        );
+      }
+
+      _logger.severe(
+          'fromAtSign: $fromAtSign, ${notification.from}, ${notification.to}');
+      _logger.severe('error in decrypting in location package listener: $e');
+    });
 
     if (decryptedMessage == null || decryptedMessage == '') {
       return;

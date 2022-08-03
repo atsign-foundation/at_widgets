@@ -1,7 +1,5 @@
 // ignore_for_file: implementation_imports, prefer_typing_uninitialized_variables
 
-import 'dart:async';
-
 import 'package:at_client/at_client.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:flutter/material.dart';
@@ -17,17 +15,8 @@ class AtSyncUIService {
   Function? onSuccessCallback, onErrorCallback;
   var syncService;
   AtSyncUIStyle atSyncUIStyle = AtSyncUIStyle.cupertino;
-  AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none;
+  AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.dialog;
   bool showTextWhileSyncing = true;
-
-  final StreamController _atSyncUIListenerController =
-      StreamController<AtSyncUIStatus>.broadcast();
-  
-  /// [atSyncUIListener] can be used to listen to sync status changes
-  Stream<AtSyncUIStatus> get atSyncUIListener =>
-      _atSyncUIListenerController.stream as Stream<AtSyncUIStatus>;
-  StreamSink<AtSyncUIStatus> get _atSyncUIListenerSink =>
-      _atSyncUIListenerController.sink as StreamSink<AtSyncUIStatus>;
 
   /// [appNavigator] is used for navigation purpose
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
@@ -50,9 +39,6 @@ class AtSyncUIService {
     this.onSuccessCallback = onSuccessCallback;
     this.onErrorCallback = onErrorCallback;
     AtSyncUI.instance.setAppNavigatorKey(appNavigator);
-
-    /// change status to notStarted
-    _atSyncUIListenerSink.add(AtSyncUIStatus.notStarted);
 
     if (style != null) {
       atSyncUIStyle = style;
@@ -78,40 +64,31 @@ class AtSyncUIService {
 
   /// calls sync and shows selected UI
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
-  void sync({AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none}) {
-      this.atSyncUIOverlay = atSyncUIOverlay;
+  Future<void> sync({AtSyncUIOverlay? atSyncUIOverlay}) async {
+    assert(syncService != null, "AtSyncUIService not initialised");
 
-    /// change status to syncing
-    _atSyncUIListenerSink.add(AtSyncUIStatus.syncing);
+    if (atSyncUIOverlay != null) {
+      this.atSyncUIOverlay = atSyncUIOverlay;
+    }
 
     _show(atSyncUIOverlay: atSyncUIOverlay);
     syncService.sync(onDone: _onSuccessCallback);
   }
 
-  void _onSuccessCallback(SyncResult syncStatus) {
+  Future<void> _onSuccessCallback(SyncResult syncStatus) async {
     _hide();
 
     if ((syncStatus.syncStatus == SyncStatus.failure) &&
         (onErrorCallback != null)) {
-      /// change status to failed
-      _atSyncUIListenerSink.add(AtSyncUIStatus.failed);
-
       onErrorCallback!(syncStatus);
     }
 
     if (onSuccessCallback != null) {
-      /// change status to completed
-      _atSyncUIListenerSink.add(AtSyncUIStatus.completed);
-
       onSuccessCallback!(syncStatus);
     }
   }
 
   void _show({AtSyncUIOverlay? atSyncUIOverlay}) {
-    if ((atSyncUIOverlay ?? this.atSyncUIOverlay) == AtSyncUIOverlay.none) {
-      return;
-    }
-
     if ((atSyncUIOverlay ?? this.atSyncUIOverlay) == AtSyncUIOverlay.dialog) {
       AtSyncUI.instance.showDialog(
         message: showTextWhileSyncing ? 'Sync in progress' : null,
@@ -125,10 +102,6 @@ class AtSyncUIService {
   }
 
   void _hide() {
-    if (atSyncUIOverlay == AtSyncUIOverlay.none) {
-      return;
-    }
-
     if (atSyncUIOverlay == AtSyncUIOverlay.dialog) {
       AtSyncUI.instance.hideDialog();
       return;
@@ -137,6 +110,3 @@ class AtSyncUIService {
     AtSyncUI.instance.hideSnackBar();
   }
 }
-
-///Enum to represent the sync status for AtSyncUIFlutter
-enum AtSyncUIStatus { syncing, completed, failed, notStarted }
