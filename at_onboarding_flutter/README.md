@@ -36,7 +36,7 @@ The example code contained there demonstrates the onboarding flow of an @‎sign
 git clone https://github.com/atsign-foundation/at_widgets
 ```
 
-### 3. Manually add the package to a project
+### 2. Manually add the package to a project
 
 Instructions on how to manually add this package to you project can be found
 on pub.dev [here](https://pub.dev/packages/at_onboarding_flutter/install).
@@ -132,51 +132,66 @@ and add the following key:
 ```
 </details>
 
+### 3. Migration guide
+<details>
+  <summary>From 4.x.x to 5.x.x</summary>
+
+1. Replace `Onboarding(...)` with `AtOnboarding.onboard(...)`
+2. Move all config params (`domain`, `atClientPreference`, `rootEnviroment`, ...) into `AtOnboardingConfig(...)`
+3. The `nextScreen` and `fistTimeAuthNextScreen` has been removed and should be using `AtOnboardingResult` to determine which screen will be opened
+</details>
 
 ## Usage
-
 
 | Parameters              | Description                                                                                                                      |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | domain                  | Domain can differ based on the environment you are using.Default the plugin connects to 'root.atsign.org' to perform onboarding. |
 | atClientPreference      | The atClientPreference to continue with the onboarding.                                                                          |
-| onboard                 | Function returns atClientServiceMap on successful onboarding along with onboarded @sign.                                         |
-| logo                    | This widget display in the left side of appbar if nothing given then displays nothing..                                          |
-| appcolor                | The color of the screens to match with the app's aesthetics. the default value is black.                                         |
-| nextScreen              | After successful onboarding will gets redirected to this screen if it is not null.                                               |
-| firstTimeAuthNextScreen | After first time succesful onboarding it will get redirected to this screen if not null else it will redirects to nextScreen.    |
 | rootEnvironment         | Permission to access the device's location is allowed even when the App is running in the background.                            |
 | appAPIKey               | API authentication key for getting free atsigns.                                                                                 |
+| isSwitchingAtsign       | Param specifies whether this action is switching atsign or not. Default is false                                                 |
+| atsign                  | The atsign name when change the primary atsign. Default is null                                                                  |
 
 
 ```dart
 TextButton(
-  color: Colors.black12,
-  onPressed: () async {
-    Onboarding(
-      context: context,
-      // This domain parameter is optional.
-      domain: AppConstants.rootDomain,
-      logo: Icon(Icons.ac_unit),
-      atClientPreference: atClientPrefernce,
-      appColor: Color.fromARGB(255, 240, 94, 62),
-      onboard: (atClientServiceMap, atsign) {
-      //assign this atClientServiceMap in the app.
-      },
-      onError: (error) {
-       //handle the error
-      },
-      nextScreen: DashBoard(),
-      fistTimeAuthNextScreen: Details(),
-      // rootEnviroment is a required parameter for setting the environment 
-      // for the onboarding flow.
-      rootEnviroment: RootEnviroment.Staging,
-      // API Key is mandatory for production environment.
-      // appAPIKey: YOUR_API_KEY_HERE
-    )
-  },
-  child: Text('Onboard my @sign'))
+    onPressed: () async {
+      final result = await AtOnboarding.onboard(
+        context: context,
+        config: AtOnboardingConfig(
+          atClientPreference: atClientPreference,
+          domain: AtEnv.rootDomain,
+          rootEnvironment: AtEnv.rootEnvironment,
+          appAPIKey: AtEnv.appApiKey,
+        ),
+      );
+      switch (result.status) {
+        case AtOnboardingResultStatus.success:
+          final atsign = result.atsign;
+          // TODO: handle onboard successfully
+          break;
+        case AtOnboardingResultStatus.error:
+          // TODO: handle onboard failure
+          break;
+        case AtOnboardingResultStatus.cancel:
+          // TODO: handle user canceled onboard
+          break;
+      }
+    },
+    child: Text('Onboard my @sign'),
+  );
 ```
+
+### Steps to generate API key :
+
+1. Open URL https://my.atsign.com/login
+2. Login with valid credentials
+3. Click on My atSign on the dashboard
+4. Click on atSign for which you want to generate an API key
+5. Click on the manage button
+6. Click on Advance settings
+7. Click on "Generate New API key"
+
 ## Open source usage and contributions
 
 This is open source code, so feel free to use it as is, suggest changes

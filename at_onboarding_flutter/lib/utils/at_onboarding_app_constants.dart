@@ -1,6 +1,6 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 
-class AppConstants {
+class AtOnboardingConstants {
   static String _rootDomain = 'root.atsign.org';
   static dynamic contentType = 'application/json';
   static String getFreeAtsign = 'get-free-atsign';
@@ -18,12 +18,9 @@ class AppConstants {
   static String backupZipExtension = '_atKeys.zip';
   static int responseTimeLimit = 30;
   static String contactAddress = 'support@atsign.com';
+  static String activateAtSign = '/api/activateAtSign';
 
   //Button titles
-  static const String closeButton = 'Close';
-  static const String submitButton = 'Submit';
-  static const String cancelButton = 'Cancel';
-  static const String removeButton = 'Remove';
 
   static String get serverDomain => _rootDomain;
   static RootEnvironment rootEnvironment = RootEnvironment.Staging;
@@ -40,7 +37,7 @@ class AppConstants {
   }
 
   static String? _apiKey;
-  static String setApiKey(String _key) => _apiKey = _key;
+  static String setApiKey(String key) => _apiKey = key;
   static String? get apiKey => _apiKey;
 }
 
@@ -48,7 +45,7 @@ extension CustomMessages on OnboardingStatus {
   String get message {
     switch (this) {
       case (OnboardingStatus.ACTIVATE):
-        return 'Your atsign got reactivated. Please activate with the new QRCode available on ${AppConstants.serverDomain} website.';
+        return 'Your atsign got reactivated. Please activate with the new QRCode available on ${AtOnboardingConstants.serverDomain} website.';
       case (OnboardingStatus.ENCRYPTION_PRIVATE_KEY_NOT_FOUND):
       case (OnboardingStatus.ENCRYPTION_PUBLIC_KEY_NOT_FOUND):
       case (OnboardingStatus.PKAM_PRIVATE_KEY_NOT_FOUND):
@@ -95,13 +92,13 @@ extension Value on RootEnvironment {
   String? get apikey {
     switch (this) {
       case RootEnvironment.Staging:
-        return AppConstants.deviceapikey;
+        return AtOnboardingConstants.deviceapikey;
       case RootEnvironment.Production:
-        return AppConstants.apiKey;
+        return AtOnboardingConstants.apiKey;
       case RootEnvironment.Testing:
-        return AppConstants.deviceapikey;
+        return AtOnboardingConstants.deviceapikey;
       default:
-        return AppConstants.deviceapikey;
+        return AtOnboardingConstants.deviceapikey;
     }
   }
 
