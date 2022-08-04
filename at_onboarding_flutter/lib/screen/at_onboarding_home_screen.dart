@@ -604,6 +604,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           builder: (_) => AtOnboardingActivateScreen(
             hideReferences: true,
             atSign: result!,
+            config: widget.config,
           ),
         ),
       );
@@ -669,9 +670,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
-      
       //Delay 10s for waiting for ServerStatus change to teapot when activating an atsign
       await Future.delayed(const Duration(seconds: 10));
+      _onboardingService.setAtClientPreference =
+          widget.config.atClientPreference;
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
       _inprogressDialog.close();

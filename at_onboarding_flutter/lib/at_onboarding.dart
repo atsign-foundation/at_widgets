@@ -64,11 +64,13 @@ class AtOnboarding {
 
   static Future<AtOnboardingResult> activateAccount({
     required BuildContext context,
+    required AtOnboardingConfig config,
   }) async {
     final result = await Navigator.push(context,
         MaterialPageRoute(builder: (BuildContext context) {
-      return const AtOnboardingActivateScreen(
+      return AtOnboardingActivateScreen(
         hideReferences: false,
+        config: config,
       );
     }));
     if (result is AtOnboardingResult) {

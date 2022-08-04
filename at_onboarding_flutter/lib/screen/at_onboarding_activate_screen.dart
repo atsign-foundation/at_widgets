@@ -6,6 +6,7 @@ import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_backup_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_otp_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
@@ -21,11 +22,13 @@ class AtOnboardingActivateScreen extends StatefulWidget {
   ///will hide webpage references.
   final bool hideReferences;
   final String? atSign;
+  final AtOnboardingConfig config;
 
   const AtOnboardingActivateScreen({
     Key? key,
     required this.hideReferences,
     this.atSign,
+    required this.config,
   }) : super(key: key);
 
   @override
@@ -169,6 +172,8 @@ class _AtOnboardingActivateScreenState
 
       //Delay 10s for waiting for ServerStatus change to teapot when activating an atsign
       await Future.delayed(const Duration(seconds: 10));
+      _onboardingService.setAtClientPreference =
+          widget.config.atClientPreference;
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
