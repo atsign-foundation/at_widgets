@@ -52,7 +52,7 @@ class _SecondScreenState extends State<SecondScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              'Enter the @sign to delete as a contact',
+              'Enter the atSign to delete as a contact',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -68,7 +68,7 @@ class _SecondScreenState extends State<SecondScreen> {
               },
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: '@sign',
+                labelText: 'atSign',
               ),
             ),
             const SizedBox(height: 10),

@@ -13,6 +13,7 @@ enum AtSyncUIStyle {
 enum AtSyncUIOverlay {
   dialog,
   snackbar,
+  none,
 }
 
 AtSyncUIStyle _kDefaultStyle = AtSyncUIStyle.cupertino;

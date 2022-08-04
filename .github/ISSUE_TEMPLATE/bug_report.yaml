@@ -30,6 +30,8 @@ body:
       label: On what platforms did you experience the issue?
       multiple: true
       options:
+        - Android
+        - iOS
         - Windows
         - MacOS
         - Linux

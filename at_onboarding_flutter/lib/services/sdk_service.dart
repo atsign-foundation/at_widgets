@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 
 class SDKService {
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
@@ -63,7 +62,7 @@ class SDKService {
   ///Resets [atsigns] list from device storage.
   Future<void> resetAtsigns(List<String> atsigns) async {
     for (String atsign in atsigns) {
-      await _keyChainManager.resetAtSignFromKeychain(atsign);
+      await _keyChainManager.deleteAtSignFromKeychain(atsign);
       atClientServiceMap!.remove(atsign);
       monitorConnectionMap!.remove(atsign);
     }
@@ -85,7 +84,7 @@ class SDKService {
   ///[atsign] must be non-null.
   String formatAtSign(String atsign) {
     atsign = atsign.trim().toLowerCase().replaceAll(' ', '');
-    atsign = !atsign.startsWith('@') ? '@' + atsign : atsign;
+    atsign = !atsign.startsWith('@') ? '@$atsign' : atsign;
     return atsign;
   }
 }

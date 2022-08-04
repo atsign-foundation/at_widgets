@@ -1,7 +1,7 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 ## at_notify_flutter example
-The at_notify_flutter package is designed to make it easy to add notifications in @protocol apps.
+The at_notify_flutter package is designed to make it easy to add notifications in atProtocol apps.
 
 ### Give it a try
 This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_notify_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.
@@ -18,7 +18,7 @@ Notes:
 
 ## How it works
 
-Like most applications built for the  @‎platform, we start with the [at_onboarding_flutter](https://pub.dev/packages/at_onboarding_flutter) widget which handles secure management of secret keys for an atsign as cryptographically secure replacement for usernames and passwords.
+Like most applications built for the atPlatform, we start with the [at_onboarding_flutter](https://pub.dev/packages/at_onboarding_flutter) widget which handles secure management of secret keys for an atsign as cryptographically secure replacement for usernames and passwords.
 
 We use the `Onboarding()` widget in our `main.dart` and navigate to our `second_screen.dart` after successfully onboarding.
 
@@ -35,7 +35,7 @@ The `at_notify_flutter` package has to be initialised.
 ```
 
 The `second_screen.dart` consists of the following functions:
- - @atsign - Type in the receiver atsign.
+ - atsign - Type in the receiver atsign.
  - Enter message - Type in the message.
  - Notify Text - Send the typed in message to the atsign. If you want to use this functionality then call `notifyText()` with the required parameters.
  - Get past notifications - Navigate to a new screen, to see past notifications of the selected number of days. If you want to use this functionality then navigate to the `NotifyScreen()` screen.
