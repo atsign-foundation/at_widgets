@@ -10,8 +10,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:share_plus/share_plus.dart';
 import 'package:at_utils/at_logger.dart';
-import 'package:file_saver/file_saver.dart';
+import 'package:at_file_saver/at_file_saver.dart';
 import 'package:file_selector/file_selector.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class BackupKeyWidget extends StatelessWidget {
   final AtSignLogger _logger = AtSignLogger('BackUp Key Widget');
@@ -130,48 +131,106 @@ class BackupKeyWidget extends StatelessWidget {
 
   showBackupDialog(BuildContext context) {
     SizeConfig().init(context);
+    GlobalKey _one = GlobalKey();
+    BuildContext? myContext;
     showDialog(
         context: context,
         builder: (BuildContext ctxt) {
-          return AlertDialog(
-            title: const Center(
-              child: Text(
-                Strings.backUpKeysTitle,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  Strings.backUpKeysDescription,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20.toHeight),
-                Row(
+          return ShowCaseWidget(builder: Builder(builder: (context) {
+            myContext = context;
+            return Dialog(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextButton(
-                        child: const Text(Strings.backButtonTitle,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        onPressed: () async {
-                          var result = await _onBackup(context);
-                          Navigator.pop(ctxt);
-                          if (result == false) {
-                            _showAlertDialog(context);
-                          }
-                        }),
-                    const Spacer(),
-                    TextButton(
-                        child: const Text(Strings.cancelButtonTitle,
-                            style: TextStyle()),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        })
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: Showcase(
+                              key: _one,
+                              description:
+                                  '''Each atSign has a unique key used to verify ownership and encrypt your data. You will get this key when you first activate your atSign, and you will need it to pair your atSign with other devices and all atPlatform apps.
+                                  
+PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE A BACKUP OR RESET THEM.''',
+                              shapeBorder: const CircleBorder(),
+                              disableAnimation: true,
+                              radius:
+                                  const BorderRadius.all(Radius.circular(40)),
+                              showArrow: false,
+                              overlayPadding: const EdgeInsets.all(5),
+                              blurValue: 2,
+                              child: Text(
+                                Strings.backUpKeysTitle,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.toFont,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            ShowCaseWidget.of(myContext!).startShowCase([_one]);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(50)),
+                            margin: const EdgeInsets.all(0),
+                            height: 20,
+                            width: 20,
+                            child: const Icon(
+                              Icons.question_mark,
+                              size: 15,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          Strings.backUpKeysDescription,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 20.toHeight),
+                        Row(
+                          children: [
+                            TextButton(
+                                child: const Text(Strings.backButtonTitle,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                onPressed: () async {
+                                  var result = await _onBackup(context);
+                                  Navigator.pop(ctxt);
+                                  if (result == false) {
+                                    _showAlertDialog(context);
+                                  }
+                                }),
+                            const Spacer(),
+                            TextButton(
+                                child: const Text(Strings.cancelButtonTitle,
+                                    style: TextStyle()),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                })
+                          ],
+                        )
+                      ],
+                    ),
                   ],
-                )
-              ],
-            ),
-          );
+                ),
+              ),
+            );
+          }));
         });
   }
 

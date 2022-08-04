@@ -1,8 +1,8 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 # at_common_flutter example
 
-In this example app we demo at_common_flutter - A Flutter package to provide common widgets used by other @‎platform Flutter packages.
+In this example app we demo at_common_flutter - A Flutter package to provide common widgets used by other atPlatform Flutter packages.
 
 ### Give it a try
 This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_common_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.

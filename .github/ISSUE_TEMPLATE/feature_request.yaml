@@ -31,6 +31,8 @@ body:
       label: On what platforms do you want to add enhancement?
       multiple: true
       options:
+        - Android
+        - iOS
         - Windows
         - MacOS
         - Linux

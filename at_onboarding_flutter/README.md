@@ -1,4 +1,4 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 [![pub package](https://img.shields.io/pub/v/at_onboarding_flutter)](https://pub.dev/packages/at_onboarding_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
@@ -9,13 +9,13 @@ for authenticating an atsign as cryptographically secure replacement for
 usernames and passwords.
 
 This open source package is written in Dart, supports Flutter and follows
-the @‎platform's decentralized, edge computing model with the following
+the atPlatform's decentralized, edge computing model with the following
 features:
 
 - Takes away the difficulty in implementing atsign authentication.
 - Generate and Supports free atsigns.
-- Supports multiple @‎sign onboarding.
-- Flexibility of either pair @‎sign with QRCode or Atkey file.
+- Supports multiple atSign onboarding.
+- Flexibility of either pair atSign with QRCode or Atkey file.
 - Reset/Sign out button.
 
 We call giving people control of access to their data “flipping the internet”
@@ -30,7 +30,7 @@ There are two options to get started using this package.
 
 Feel free to fork a copy the source from the
 [GitHub repo](https://github.com/atsign-foundation/at_widgets).
-The example code contained there demonstrates the onboarding flow of an @‎sign.
+The example code contained there demonstrates the onboarding flow of an atSign.
 
 ```sh
 git clone https://github.com/atsign-foundation/at_widgets
@@ -75,7 +75,7 @@ Add the following permission string to info.plist
 
 ```
   <key>NSCameraUsageDescription</key>
-  <string>The camera is used to scan QR code to pair your device with your @sign</string>
+  <string>The camera is used to scan QR code to pair your device with your atSign</string>
 ```
 
 Also, update the Podfile with the following lines of code:
@@ -147,6 +147,11 @@ and add the following key:
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | domain                  | Domain can differ based on the environment you are using.Default the plugin connects to 'root.atsign.org' to perform onboarding. |
 | atClientPreference      | The atClientPreference to continue with the onboarding.                                                                          |
+| onboard                 | Function returns atClientServiceMap on successful onboarding along with onboarded atSign.                                         |
+| logo                    | This widget display in the left side of appbar if nothing given then displays nothing..                                          |
+| appcolor                | The color of the screens to match with the app's aesthetics. the default value is black.                                         |
+| nextScreen              | After successful onboarding will gets redirected to this screen if it is not null.                                               |
+| firstTimeAuthNextScreen | After first time succesful onboarding it will get redirected to this screen if not null else it will redirects to nextScreen.    |
 | rootEnvironment         | Permission to access the device's location is allowed even when the App is running in the background.                            |
 | appAPIKey               | API authentication key for getting free atsigns.                                                                                 |
 | isSwitchingAtsign       | Param specifies whether this action is switching atsign or not. Default is false                                                 |
@@ -155,31 +160,31 @@ and add the following key:
 
 ```dart
 TextButton(
-    onPressed: () async {
-      final result = await AtOnboarding.onboard(
-        context: context,
-        config: AtOnboardingConfig(
-          atClientPreference: atClientPreference,
-          domain: AtEnv.rootDomain,
-          rootEnvironment: AtEnv.rootEnvironment,
-          appAPIKey: AtEnv.appApiKey,
-        ),
-      );
-      switch (result.status) {
-        case AtOnboardingResultStatus.success:
-          final atsign = result.atsign;
-          // TODO: handle onboard successfully
-          break;
-        case AtOnboardingResultStatus.error:
-          // TODO: handle onboard failure
-          break;
-        case AtOnboardingResultStatus.cancel:
-          // TODO: handle user canceled onboard
-          break;
-      }
-    },
-    child: Text('Onboard my @sign'),
-  );
+  color: Colors.black12,
+  onPressed: () async {
+    Onboarding(
+      context: context,
+      // This domain parameter is optional.
+      domain: AppConstants.rootDomain,
+      logo: Icon(Icons.ac_unit),
+      atClientPreference: atClientPrefernce,
+      appColor: Color.fromARGB(255, 240, 94, 62),
+      onboard: (atClientServiceMap, atsign) {
+      //assign this atClientServiceMap in the app.
+      },
+      onError: (error) {
+       //handle the error
+      },
+      nextScreen: DashBoard(),
+      fistTimeAuthNextScreen: Details(),
+      // rootEnviroment is a required parameter for setting the environment 
+      // for the onboarding flow.
+      rootEnviroment: RootEnviroment.Staging,
+      // API Key is mandatory for production environment.
+      // appAPIKey: YOUR_API_KEY_HERE
+    )
+  },
+  child: Text('Onboard my atSign'))
 ```
 
 ### Steps to generate API key :
