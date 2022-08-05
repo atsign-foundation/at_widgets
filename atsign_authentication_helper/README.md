@@ -1,11 +1,11 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 # PACKAGE DEPRECATED
 ### Please do not use this package for lack of multiple atsign support. Use [at_onboarding_flutter](https://pub.dev/packages/at_onboarding_flutter) instead.
 
 # atsign_authentication_helper
 
-A flutter plugin project to cover the onboarding flow of @protocol.
+A flutter plugin project to cover the onboarding flow of atProtocol.
 
 ## Getting Started
 
@@ -48,7 +48,7 @@ Add the following permission string to info.plist
 
 ```
   <key>NSCameraUsageDescription</key>
-  <string>The camera is used to scan QR code to pair your device with your @sign</string>
+  <string>The camera is used to scan QR code to pair your device with your atSign</string>
 ```
 
 Also, update the Podfile with the following lines of code:

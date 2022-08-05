@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/utils/app_constants.dart';
-import 'package:at_onboarding_flutter/utils/response_status.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +76,17 @@ class OnboardingService {
     return _keyChainManager.getAtSign();
   }
 
+  ///
+  Future<bool?> isUsingSharedStorage() async {
+    final result = await _keyChainManager.isUsingSharedStorage();
+    return result;
+  }
+
+  ///Call this function before start onboarding
+  Future<void> initialSetup({required bool usingSharedStorage}) async {
+    await _keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
+  }
+
   /// Returns `true` if authentication is successful for the existing atsign in device.
   Future<bool> onboard() async {
     AtClientService atClientServiceInstance =
@@ -98,14 +109,14 @@ class OnboardingService {
     _isPkam = false;
     atsign = formatAtSign(atsign);
     if (atsign == null) {
-      throw '@sign cannot be null';
+      throw 'atSign cannot be null';
     }
     Completer<dynamic> c = Completer<dynamic>();
     try {
       serverStatus = await _checkAtSignServerStatus(atsign);
       if (serverStatus != ServerStatus.teapot &&
           serverStatus != ServerStatus.activated) {
-        c.complete(ResponseStatus.serverNotReached);
+        c.complete(AtOnboardingResponseStatus.serverNotReached);
         if (cramSecret == null) {
           _isPkam = true;
         }
@@ -122,16 +133,17 @@ class OnboardingService {
       if (isAuthenticated) {
         _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
-        c.complete(ResponseStatus.authSuccess);
+        c.complete(AtOnboardingResponseStatus.authSuccess);
         await _sync(_atsign);
       }
     } catch (e) {
       _logger.severe('error in authenticating =>  ${e.toString()}');
-      if (e == ResponseStatus.timeOut) {
+      if (e == AtOnboardingResponseStatus.timeOut) {
         c.completeError(e);
       } else {
-        c.completeError(
-            e.runtimeType == OnboardingStatus ? e : ResponseStatus.authFailed);
+        c.completeError(e.runtimeType == OnboardingStatus
+            ? e
+            : AtOnboardingResponseStatus.authFailed);
       }
     }
     return c.future;
@@ -177,8 +189,8 @@ class OnboardingService {
     atsign = formatAtSign(atsign);
     List<String> atSignsList = await getAtsignList();
     ServerStatus? status = await _checkAtSignServerStatus(atsign!).timeout(
-        Duration(seconds: AppConstants.responseTimeLimit),
-        onTimeout: () => throw ResponseStatus.timeOut);
+        Duration(seconds: AtOnboardingConstants.responseTimeLimit),
+        onTimeout: () => throw AtOnboardingResponseStatus.timeOut);
     bool isExist =
         atSignsList.isNotEmpty ? atSignsList.contains(atsign) : false;
     if (status == ServerStatus.teapot) {
@@ -189,15 +201,14 @@ class OnboardingService {
 
   /// returns the list of all onboarded atsigns
   Future<List<String>> getAtsignList() async {
-    List<String>? atSignsList =
+    List<String> atSignsList =
         await _keyChainManager.getAtSignListFromKeychain();
-    atSignsList == null ? atSignsList = <String>[] : atSignsList = atSignsList;
     return atSignsList;
   }
 
   Future<ServerStatus?> _checkAtSignServerStatus(String atsign) async {
     AtStatusImpl atStatusImpl =
-        AtStatusImpl(rootUrl: AppConstants.serverDomain);
+        AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
     AtStatus status = await atStatusImpl.get(atsign);
     return status.serverStatus;
   }
@@ -210,9 +221,18 @@ class OnboardingService {
     }
     atsign = formatAtSign(atsign);
     AtStatusImpl atStatusImpl =
-        AtStatusImpl(rootUrl: AppConstants.serverDomain);
+        AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
     AtStatus status = await atStatusImpl.get(atsign!);
     return status.status();
+  }
+
+  /// Function to make the atsign passed as primary
+  Future<bool> changePrimaryAtsign({required String atsign}) async {
+    final result = await _keyChainManager.makeAtSignPrimary(atsign);
+    if (result == true) {
+      setAtsign = atsign;
+    }
+    return result;
   }
 
   /// sync call to get data from secondary

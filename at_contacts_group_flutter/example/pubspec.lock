@@ -70,14 +70,14 @@ packages:
       name: at_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.25"
+    version: "3.0.26"
   at_client_mobile:
     dependency: transitive
     description:
       name: at_client_mobile
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.16"
+    version: "3.1.17"
   at_common_flutter:
     dependency: transitive
     description:
@@ -91,14 +91,14 @@ packages:
       name: at_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.16"
+    version: "3.0.17"
   at_contact:
     dependency: transitive
     description:
       name: at_contact
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.5"
+    version: "3.0.6"
   at_contacts_flutter:
     dependency: transitive
     description:
@@ -112,14 +112,14 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.0.7"
+    version: "4.0.6"
   at_lookup:
     dependency: transitive
     description:
       name: at_lookup
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.24"
+    version: "3.0.25"
   at_onboarding_flutter:
     dependency: transitive
     description:
@@ -133,7 +133,7 @@ packages:
       name: at_persistence_secondary_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.25"
+    version: "3.0.27"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -161,7 +161,7 @@ packages:
       name: at_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.9"
+    version: "3.0.10"
   biometric_storage:
     dependency: transitive
     description:
