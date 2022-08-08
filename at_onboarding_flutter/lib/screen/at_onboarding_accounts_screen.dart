@@ -48,7 +48,7 @@ class _AtOnboardingAccountsScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select @signs'),
+        title: const Text('Select atSigns'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

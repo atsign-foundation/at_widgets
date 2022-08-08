@@ -29,7 +29,7 @@ class AllText {
   // Request Location Sheet
   String CANCEL = 'Cancel';
   String REQUEST_FROM = 'Request From';
-  String TYPE_AT_SIGN = 'Type @sign ';
+  String TYPE_AT_SIGN = 'Type atSign ';
   String REQUEST = 'Request';
   String AT_SIGN_NOT_VALID = 'Atsign not valid';
   String REQUEST_LOCATION_SENT = 'Request Location sent';

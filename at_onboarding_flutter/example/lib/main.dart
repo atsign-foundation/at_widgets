@@ -141,7 +141,7 @@ class _MyAppState extends State<MyApp> {
                             break;
                         }
                       },
-                      child: const Text('Onboard an @sign'),
+                      child: const Text('Onboard an atSign'),
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(
@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.switch_account),
-            tooltip: 'Switch @sign',
+            tooltip: 'Switch atSign',
             onPressed: () async {
               var atSignList = await KeychainUtil.getAtsignList();
               await showModalBottomSheet(
@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             /// Use the AtClientManager instance to get the current atsign
             Text(
-                'Current @sign: ${atClientManager.atClient.getCurrentAtSign()}'),
+                'Current atSign: ${atClientManager.atClient.getCurrentAtSign()}'),
           ],
         ),
       ),
