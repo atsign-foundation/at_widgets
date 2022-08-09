@@ -1,4 +1,5 @@
 import 'package:at_chat_flutter/at_chat_flutter.dart';
+import 'package:at_chat_flutter/utils/chat_theme.dart';
 import 'package:flutter/material.dart';
 
 class ThirdScreen extends StatefulWidget {
@@ -38,6 +39,9 @@ class _ThirdScreenState extends State<ThirdScreen> {
         incomingMessageColor: Colors.blue[100]!,
         outgoingMessageColor: Colors.green[100]!,
         isScreen: true,
+        theme: Theme.of(context).brightness == Brightness.light
+            ? const DefaultChatTheme()
+            : const DarkChatTheme(),
       ),
     );
   }

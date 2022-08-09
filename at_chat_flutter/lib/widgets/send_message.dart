@@ -9,6 +9,7 @@ class SendMessage extends StatefulWidget {
   final Color? mediaButtonColor;
   final String? hintText;
   final VoidCallback? onMediaPressed;
+  final Color backgroundColor;
 
   const SendMessage({
     Key? key,
@@ -18,7 +19,9 @@ class SendMessage extends StatefulWidget {
     this.sendButtonColor,
     this.hintText,
     this.onMediaPressed,
+    this.backgroundColor = Colors.grey,
   }) : super(key: key);
+
   @override
   _SendMessageState createState() => _SendMessageState();
 }
@@ -45,8 +48,9 @@ class _SendMessageState extends State<SendMessage> {
     return Container(
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.toHeight),
-          color: Colors.grey[200]),
+        borderRadius: BorderRadius.circular(10.toHeight),
+        color: widget.backgroundColor,
+      ),
       child: Row(
         children: [
           IconButton(

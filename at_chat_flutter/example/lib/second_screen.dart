@@ -1,7 +1,8 @@
 import 'package:at_chat_flutter/at_chat_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-
+import 'package:at_chat_flutter_example/main.dart';
+import 'package:at_chat_flutter/utils/chat_theme.dart';
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'third_screen.dart';
 
@@ -38,7 +39,24 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: const Text('Second Screen')),
+      appBar: AppBar(
+        title: const Text('Second Screen'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              updateThemeMode.sink.add(
+                  Theme.of(context).brightness == Brightness.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light);
+            },
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.light
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+            ),
+          )
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -80,17 +98,22 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 50.0,
-            ),
             showOptions
                 ? Column(
                     children: [
-                      const SizedBox(height: 20.0),
                       TextButton(
                         onPressed: () {
-                          scaffoldKey!.currentState!
-                              .showBottomSheet((context) => const ChatScreen());
+                          scaffoldKey!.currentState!.showBottomSheet(
+                            (context) => ChatScreen(
+                              theme: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? const DefaultChatTheme()
+                                  : DarkChatTheme(
+                                      backgroundColor: Theme.of(context)
+                                          .scaffoldBackgroundColor,
+                                    ),
+                            ),
+                          );
                         },
                         child: const Text(
                           'Open chat in bottom sheet',
@@ -128,14 +151,19 @@ class _SecondScreenState extends State<SecondScreen> {
                             showAtsignErrorDialog(context);
                           }
                         },
-                        child: const Text(
-                          'Chat options',
-                          style: TextStyle(color: Colors.black),
+                        child: const SizedBox(
+                          height: 40,
+                          child: Text(
+                            'Chat options',
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10.0),
                     ],
                   ),
+            const SizedBox(
+              height: 50.0,
+            ),
             const Divider(
               thickness: 2,
               height: 20,
@@ -189,7 +217,8 @@ class _SecondScreenState extends State<SecondScreen> {
             const SizedBox(height: 10),
             TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Theme.of(context).accentColor),
               ),
               onPressed: () {
                 setGroupToChatWith(context);

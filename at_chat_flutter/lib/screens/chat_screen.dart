@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:at_chat_flutter/widgets/incoming_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/outgoing_message_bubble.dart';
 import 'package:at_chat_flutter/widgets/send_message.dart';
+import 'package:at_chat_flutter/utils/chat_theme.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
@@ -38,6 +39,10 @@ class ChatScreen extends StatefulWidget {
   /// [hintText] specifies the hint text to be displayed in the input box.
   final String? hintText;
 
+  /// Chat theme. Extend [ChatTheme] class to create your own theme or use
+  /// existing one, like the [DefaultChatTheme].
+  final ChatTheme theme;
+
   const ChatScreen(
       {Key? key,
       this.height,
@@ -47,7 +52,8 @@ class ChatScreen extends StatefulWidget {
       this.senderAvatarColor = CustomColors.defaultColor,
       this.receiverAvatarColor = CustomColors.defaultColor,
       this.title = 'Messages',
-      this.hintText})
+      this.hintText,
+      this.theme = const DefaultChatTheme()})
       : super(key: key);
 
   @override
@@ -81,23 +87,25 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return ClipRRect(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(10.toHeight),
-        topRight: Radius.circular(10.toHeight),
-      ),
+      borderRadius: widget.isScreen
+          ? BorderRadius.zero
+          : BorderRadius.only(
+              topLeft: Radius.circular(10.toHeight),
+              topRight: Radius.circular(10.toHeight),
+            ),
       child: Container(
         height: widget.height ?? SizeConfig().screenHeight * 0.8,
         margin: widget.isScreen
             ? const EdgeInsets.all(0.0)
             : const EdgeInsets.only(top: 10.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.toHeight),
-            topRight: Radius.circular(10.toHeight),
-          ),
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.black87
-              : Colors.white,
+          borderRadius: widget.isScreen
+              ? null
+              : BorderRadius.only(
+                  topLeft: Radius.circular(10.toHeight),
+                  topRight: Radius.circular(10.toHeight),
+                ),
+          color: widget.theme.backgroundColor,
           boxShadow: const [
             BoxShadow(
               color: Colors.grey,
@@ -114,17 +122,17 @@ class _ChatScreenState extends State<ChatScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          height: AppBar().preferredSize.height,
+                          alignment: Alignment.centerLeft,
                           child: Text(
                             widget.title,
-                            style: const TextStyle(
-                                color: Colors.black, fontSize: 14),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(16.0),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
@@ -167,6 +175,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                               message: snapshot.data![index],
                                               color:
                                                   widget.incomingMessageColor,
+                                              messageTextStyle: widget
+                                                  .theme.incomingTextStyle,
                                               avatarColor:
                                                   widget.senderAvatarColor,
                                             )
@@ -187,6 +197,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                               message: snapshot.data![index],
                                               color:
                                                   widget.outgoingMessageColor,
+                                              messageTextStyle: widget
+                                                  .theme.outgoingTextStyle,
                                               avatarColor:
                                                   widget.receiverAvatarColor,
                                             ),
@@ -214,6 +226,7 @@ class _ChatScreenState extends State<ChatScreen> {
         }
       },
       onMediaPressed: showImagePicker,
+      backgroundColor: widget.theme.inputBackgroundColor,
     );
   }
 

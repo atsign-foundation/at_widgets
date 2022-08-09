@@ -14,13 +14,16 @@ class OutgoingMessageBubble extends StatefulWidget {
   final Color color;
   final Color avatarColor;
   final Function(String?) deleteCallback;
+  final TextStyle messageTextStyle;
 
-  const OutgoingMessageBubble(this.deleteCallback,
-      {Key? key,
-      this.message,
-      this.color = CustomColors.outgoingMessageColor,
-      this.avatarColor = CustomColors.defaultColor})
-      : super(key: key);
+  const OutgoingMessageBubble(
+    this.deleteCallback, {
+    Key? key,
+    this.message,
+    this.color = CustomColors.outgoingMessageColor,
+    this.avatarColor = CustomColors.defaultColor,
+    this.messageTextStyle = const TextStyle(),
+  }) : super(key: key);
 
   @override
   _OutgoingMessageBubbleState createState() => _OutgoingMessageBubbleState();
@@ -83,6 +86,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
       return Text(
         widget.message?.message ?? ' ',
         textAlign: TextAlign.right,
+        style: widget.messageTextStyle,
       );
     }
   }
