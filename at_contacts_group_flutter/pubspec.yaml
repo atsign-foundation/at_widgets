@@ -28,24 +28,19 @@ dependencies:
   file_selector: ^0.8.4+1
   file_selector_macos: ^0.8.2
 
-  at_client_mobile: ^3.1.17
-  at_commons: ^3.0.17
+  at_client_mobile: ^3.2.1
+  at_commons: ^3.0.22
   at_common_flutter: ^2.0.8
   at_contacts_flutter: ^4.0.5
   at_contact: ^3.0.6
   at_utils: ^3.0.10
   
 dev_dependencies:
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
 
-dependency_overrides: 
-  flutter_lints: ^2.0.1
-  lints: ^2.0.0
 
-# dependency_overrides:
-#   plugin_platform_interface: ^2.0.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

@@ -15,9 +15,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  at_client_mobile: ^3.1.11
-  at_client: ^3.0.15
-  at_commons: ^3.0.9
+  at_client_mobile: ^3.2.1
+  at_client: ^3.0.33
+  at_commons: ^3.0.22
   at_common_flutter: ^2.0.8
   flutter_local_notifications: ^9.4.0
 
@@ -26,9 +26,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-dependency_overrides: 
-  flutter_lints: ^2.0.1
-  lints: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
