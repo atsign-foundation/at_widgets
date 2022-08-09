@@ -14,7 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  fluttertoast: ^8.0.9
   file_picker: ^4.5.1
   emoji_picker_flutter: ^1.2.1
   flutter_slidable: ^0.6.0

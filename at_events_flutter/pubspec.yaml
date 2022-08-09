@@ -14,7 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
   latlong2: ^0.8.1
-  fluttertoast: ^8.0.9
   sliding_up_panel: ^2.0.0+1
   geolocator: ^8.2.1
   

@@ -16,7 +16,6 @@ dependencies:
   at_client_mobile: ^3.2.1
   at_common_flutter: ^2.0.8
   at_commons: ^3.0.22
-  fluttertoast: ^8.0.8
   at_utils: ^3.0.10
 
 
