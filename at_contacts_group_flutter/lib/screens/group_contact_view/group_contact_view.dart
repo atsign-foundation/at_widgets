@@ -129,9 +129,11 @@ class _GroupContactViewState extends State<GroupContactView> {
                   height: 0,
                 ),
       appBar: CustomAppBar(
+        appBarColor: Theme.of(context).primaryColor,
         isDesktop: widget.isDesktop,
         showTitle: true,
         titleText: 'Contacts',
+        titleTextStyle: const TextStyle().copyWith(fontSize: 18),
         leadingIcon: IconButton(
           icon: const Icon(
             Icons.arrow_back,

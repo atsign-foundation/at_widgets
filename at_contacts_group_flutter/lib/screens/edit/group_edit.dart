@@ -84,6 +84,7 @@ class _GroupEditState extends State<GroupEdit> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CustomAppBar(
+        appBarColor: Theme.of(context).primaryColor,
         showLeadingIcon: true,
         leadingIcon: Center(
           child: Container(
@@ -110,7 +111,7 @@ class _GroupEditState extends State<GroupEdit> {
                 style: TextStyle(
                   color: Theme.of(context).brightness == Brightness.light
                       ? AllColors().Black
-                      : AllColors().Black,
+                      : AllColors().WHITE,
                   fontSize: 14.toFont,
                   fontWeight: FontWeight.normal,
                 ),
@@ -215,7 +216,9 @@ class _GroupEditState extends State<GroupEdit> {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: AllColors().INPUT_FIELD_COLOR,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),

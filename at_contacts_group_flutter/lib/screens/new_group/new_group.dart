@@ -120,19 +120,18 @@ class _NewGroupState extends State<NewGroup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).brightness == Brightness.light
-          ? AllColors().WHITE
-          : AllColors().Black,
       bottomSheet: GroupBottomSheet(
         onPressed: createGroup,
         message: '${selectedContacts!.length} Contacts Selected',
         buttontext: 'Done',
       ),
-      appBar: const CustomAppBar(
-          titleText: 'New Group',
-          showTitle: true,
-          showBackButton: true,
-          showLeadingIcon: true),
+      appBar: CustomAppBar(
+        appBarColor: Theme.of(context).primaryColor,
+        titleText: 'New Group',
+        showTitle: true,
+        showBackButton: true,
+        showLeadingIcon: true,
+      ),
       body: SafeArea(
         child: Column(
           children: <Widget>[

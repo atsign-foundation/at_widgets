@@ -44,9 +44,6 @@ class _GroupViewState extends State<GroupView> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: Theme.of(context).brightness == Brightness.light
-          ? AllColors().WHITE
-          : AllColors().Black,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
@@ -189,12 +186,12 @@ class _GroupViewState extends State<GroupView> {
                       horizontal: 15.toWidth, vertical: 10.toHeight),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? AllColors().WHITE
-                        : AllColors().Black,
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     boxShadow: [
                       BoxShadow(
-                        color: AllColors().DARK_GREY,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black.withOpacity(0.4)
+                            : Colors.white.withOpacity(0.4),
                         blurRadius: 10.0,
                         spreadRadius: 1.0,
                         offset: const Offset(0.0, 0.0),
@@ -227,16 +224,14 @@ class _GroupViewState extends State<GroupView> {
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                           // softWrap: false,
-                                          style: TextStyle(
-                                            color: AllColors().GREY,
-                                            fontSize: 16.toFont,
-                                            fontWeight: FontWeight.normal,
-                                          ),
+                                          style: const TextStyle()
+                                              .copyWith(fontSize: 16.toFont),
                                         ),
                                       ),
                                       Text(
                                         '${groupData.members!.length} members',
-                                        style: CustomTextStyles().grey14,
+                                        style: const TextStyle()
+                                            .copyWith(fontSize: 14.toFont),
                                       ),
                                     ],
                                   );
@@ -366,8 +361,8 @@ class _GroupViewState extends State<GroupView> {
                 await GroupService().deletGroupMembers([contact], widget.group);
             if (result is bool && result) {
               Navigator.of(context).pop();
-              CustomToast()
-                  .show("${contact.atSign ?? ''} deleted successfully!", context);
+              CustomToast().show(
+                  "${contact.atSign ?? ''} deleted successfully!", context);
               if (contacts.isEmpty) {
                 showDeleteGroupDialog(
                   context,

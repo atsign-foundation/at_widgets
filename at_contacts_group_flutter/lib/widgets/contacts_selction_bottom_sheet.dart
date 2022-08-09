@@ -46,8 +46,8 @@ class _ContactSelectionBottomSheetState
               padding: EdgeInsets.symmetric(horizontal: 20.toWidth),
               height: 70.toHeight,
               decoration: const BoxDecoration(
-                  color: Color(0xffF7F7FF),
-                  boxShadow: [BoxShadow(color: Colors.grey)]),
+                 color: Colors.grey,
+                  boxShadow: [BoxShadow(color: Colors.black12)]),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -56,7 +56,10 @@ class _ContactSelectionBottomSheetState
                       (_groupService.length != 25)
                           ? '${_groupService.length} Contacts Selected'
                           : '25 of 25 Contact Selected',
-                      style: CustomTextStyles.primaryMedium14,
+                       style: const TextStyle().copyWith(
+                        fontSize: 14.toFont,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   CustomButton(

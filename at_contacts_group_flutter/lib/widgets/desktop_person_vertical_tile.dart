@@ -117,7 +117,7 @@ class _DesktopCustomPersonVerticalTileState
           contactName != null
               ? Text(
                   contactName!,
-                  style: CustomTextStyles().grey16,
+                  style: const TextStyle().copyWith(fontSize: 16.toFont),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -129,7 +129,7 @@ class _DesktopCustomPersonVerticalTileState
                   width: 120,
                   child: Text(
                     widget.subTitle!,
-                    style: CustomTextStyles().grey16,
+                    style: const TextStyle().copyWith(fontSize: 14.toFont),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,

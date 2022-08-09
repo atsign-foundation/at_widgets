@@ -68,7 +68,7 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
               child: title != null
                   ? Text(
                       title!,
-                      style: CustomTextStyles.blackBold(),
+                      style: const TextStyle().copyWith(fontSize: 16.toFont),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     )
@@ -78,7 +78,7 @@ class DesktopCustomPersonHorizontalTile extends StatelessWidget {
             subTitle != null
                 ? Text(
                     subTitle!,
-                    style: CustomTextStyles().grey16,
+                    style: const TextStyle().copyWith(fontSize: 14.toFont),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   )

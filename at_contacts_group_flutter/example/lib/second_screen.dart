@@ -2,6 +2,7 @@ import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
+import 'package:at_contacts_group_flutter_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 
@@ -34,6 +35,21 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Second Screen'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              updateThemeMode.sink.add(
+                  Theme.of(context).brightness == Brightness.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light);
+            },
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.light
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+            ),
+          )
+        ],
       ),
       body: Center(
         child: Column(

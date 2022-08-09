@@ -58,10 +58,8 @@ class _GroupListState extends State<GroupList> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: Theme.of(context).brightness == Brightness.light
-          ? AllColors().WHITE
-          : AllColors().Black,
       appBar: CustomAppBar(
+        appBarColor: Theme.of(context).primaryColor,
         showBackButton: true,
         showLeadingIcon: true,
         showTitle: true,
