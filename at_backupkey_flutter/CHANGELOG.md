@@ -1,3 +1,6 @@
+## 4.0.4:
+- **FEAT**: Added help text
+
 ## 4.0.3
 - **FIX**: Replaced file_saver dependency with fork [at_file_saver](https://pub.dev/packages/at_file_saver)
 
