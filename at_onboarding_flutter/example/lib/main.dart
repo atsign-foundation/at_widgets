@@ -41,21 +41,6 @@ class _MyAppState extends State<MyApp> {
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
 
-  // final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
-  bool? _usingSharedStore;
-
-  @override
-  void initState() {
-    super.initState();
-    _initialSettup();
-  }
-
-  void _initialSettup() async {
-    _usingSharedStore =
-        await KeyChainManager.getInstance().isUsingSharedStorage();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ThemeMode>(
@@ -160,26 +145,6 @@ class _MyAppState extends State<MyApp> {
                       },
                       child: const Text('Reset'),
                     ),
-                    const SizedBox(height: 10),
-                    if (_usingSharedStore != null)
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (_usingSharedStore == true) {
-                            await KeyChainManager.getInstance()
-                                .disableUsingSharedStorage();
-                          } else {
-                            await KeyChainManager.getInstance()
-                                .enableUsingSharedStorage();
-                          }
-                          _usingSharedStore =
-                              await KeyChainManager.getInstance()
-                                  .isUsingSharedStorage();
-                          setState(() {});
-                        },
-                        child: Text(_usingSharedStore == true
-                            ? 'Disable using shared storage'
-                            : 'Enable use shared storage'),
-                      ),
                   ],
                 ),
               ),
