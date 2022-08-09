@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_events_flutter/common_components/concurrent_event_request_dialog.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -12,7 +11,6 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 // ignore: implementation_imports
-import 'package:at_client/src/service/notification_service.dart';
 
 import 'event_key_stream_service.dart';
 import 'package:at_utils/at_logger.dart';
@@ -458,7 +456,7 @@ class EventService {
     if (receiver == null) {
       return false;
     } else if (!receiver.contains('@')) {
-      receiver = '@' + receiver;
+      receiver = '@$receiver';
     }
     var checkPresence = await AtLookupImpl.findSecondary(receiver, root, 64);
     return checkPresence != null;

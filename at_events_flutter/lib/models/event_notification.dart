@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, unnecessary_statements
 
 import 'dart:convert';
 import 'package:at_contact/at_contact.dart';

@@ -43,7 +43,7 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
   if (EventKeyStreamService().atClientManager == null || atSign == null) {
     return contactDetails;
   } else if (!atSign.contains('@')) {
-    atSign = '@' + atSign;
+    atSign = '@$atSign';
   }
   var metadata = Metadata();
   metadata.isPublic = true;

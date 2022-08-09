@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -353,6 +355,7 @@ class _GroupEditState extends State<GroupEdit> {
                             widget.group);
 
                         GroupService().showLoaderSink.add(false);
+                        if(!mounted) return;
                         if (result is bool && result) {
                           return;
                         } else if (result == null) {

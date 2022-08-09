@@ -1,83 +1,78 @@
 import 'dart:async';
-
-import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
+    show AtOnboardingConfig, AtOnboardingResultStatus, BackupKeyWidget;
 
-enum OnboardingState {
-  initial,
-  success,
-  error,
+// import 'package:at_utils/at_logger.dart' show AtSignLogger;
+import 'package:path_provider/path_provider.dart'
+    show getApplicationSupportDirectory;
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
+import 'package:at_onboarding_flutter/at_onboarding.dart';
+
+Future<void> main() async {
+  await AtEnv.load();
+  runApp(const MyApp());
 }
 
-void main() {
-  runApp(const MyApp());
+Future<AtClientPreference> loadAtClientPreference() async {
+  var dir = await getApplicationSupportDirectory();
+  return AtClientPreference()
+    ..rootDomain = AtEnv.rootDomain
+    ..namespace = AtEnv.appNamespace
+    ..hiveStoragePath = dir.path
+    ..commitLogPath = dir.path
+    ..isLocalStoreRequired = true;
 }
 
 final StreamController<ThemeMode> updateThemeMode =
     StreamController<ThemeMode>.broadcast();
 
 class MyApp extends StatefulWidget {
-  static const appKey = Key('myapp');
-  const MyApp({Key key = appKey}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  OnboardingState onboardingState = OnboardingState.initial;
-  late Map<String?, AtClientService>? atClientServiceMap;
-  String? atsign;
-  final String rootDomain = 'root.atsign.org';
+  // * load the AtClientPreference in the background
+  Future<AtClientPreference> futurePreference = loadAtClientPreference();
+  AtClientPreference? atClientPreference;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<AtClientPreference> getAtClientPreference() async {
-    final appDocumentDirectory =
-        await path_provider.getApplicationSupportDirectory();
-    String path = appDocumentDirectory.path;
-    var _atClientPreference = AtClientPreference()
-      ..isLocalStoreRequired = true
-      ..commitLogPath = path
-      ..namespace = 'backupkeys'
-      ..rootDomain = rootDomain
-      ..hiveStoragePath = path;
-    return _atClientPreference;
-  }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ThemeMode>(
       stream: updateThemeMode.stream,
       initialData: ThemeMode.light,
-      builder: (context, snapshot) {
-        final themeMode = snapshot.data;
+      builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
+        ThemeMode themeMode = snapshot.data ?? ThemeMode.light;
         return MaterialApp(
+          // * The onboarding screen (first screen)
           theme: ThemeData().copyWith(
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
-            colorScheme:
-                ThemeData().colorScheme.copyWith(secondary: Colors.black),
+            colorScheme: ThemeData.light().colorScheme.copyWith(
+                  primary: const Color(0xFFf4533d),
+                ),
             backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
           ),
           darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
             primaryColor: Colors.blue,
-            colorScheme:
-                ThemeData().colorScheme.copyWith(secondary: Colors.white),
+            colorScheme: ThemeData.dark().colorScheme.copyWith(
+                  primary: Colors.blue,
+                ),
             backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
           ),
           themeMode: themeMode,
           home: Scaffold(
             appBar: AppBar(
-              title: const Text('Plugin example app'),
-              actions: [
+              title: const Text('MyApp'),
+              actions: <Widget>[
                 IconButton(
                   onPressed: () {
                     updateThemeMode.sink.add(themeMode == ThemeMode.light
@@ -89,85 +84,120 @@ class _MyAppState extends State<MyApp> {
                         ? Icons.dark_mode_outlined
                         : Icons.light_mode_outlined,
                   ),
-                ),
+                )
               ],
             ),
             body: Builder(
-              builder: (context) => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (onboardingState == OnboardingState.initial)
-                    Center(
-                      child: TextButton(
-                        onPressed: () async {
-                          var _atClientPreference =
-                              await getAtClientPreference();
-                          Onboarding(
-                            context: context,
-                            domain: rootDomain,
-                            rootEnvironment: RootEnvironment.Staging,
-                            appColor: const Color.fromARGB(255, 240, 94, 62),
-                            atClientPreference: _atClientPreference,
-                            onboard: (map, atsign) {
-                              atClientServiceMap = map;
-                              this.atsign = atsign;
-                              onboardingState = OnboardingState.success;
-                              setState(() {});
-                            },
-                            onError: (error) {
-                              onboardingState = OnboardingState.error;
-                              setState(() {});
-                            },
-                          );
-                        },
-                        child: const Text('Onboard my @sign'),
-                      ),
-                    ),
-                  if (onboardingState == OnboardingState.error ||
-                      onboardingState == OnboardingState.success)
-                    Center(
-                      child: TextButton(
-                        onPressed: () async {
-                          await KeyChainManager.getInstance()
-                              .clearKeychainEntries();
-                          atsign = null;
-                          atClientServiceMap = null;
-                          onboardingState = OnboardingState.initial;
-                          setState(() {});
-                        },
-                        child: const Text('Clear onboarded @sign'),
-                      ),
-                    ),
-                  if (onboardingState == OnboardingState.success)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 32),
-                        const Text('Default button:'),
-                        BackupKeyWidget(atsign: atsign ?? ''),
-                        const SizedBox(height: 16),
-                        const Text('Custom button:'),
-                        ElevatedButton.icon(
-                          icon: const Icon(
-                            Icons.file_copy,
-                            color: Colors.white,
+              builder: (context) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        var preference = await futurePreference;
+                        setState(() {
+                          atClientPreference = preference;
+                        });
+                        final result = await AtOnboarding.onboard(
+                          context: context,
+                          config: AtOnboardingConfig(
+                            atClientPreference: atClientPreference!,
+                            domain: AtEnv.rootDomain,
+                            rootEnvironment: AtEnv.rootEnvironment,
+                            appAPIKey: AtEnv.appApiKey,
                           ),
-                          label: const Text('Backup your key'),
-                          onPressed: () async {
-                            BackupKeyWidget(atsign: atsign ?? '')
-                                .showBackupDialog(context);
-                          },
-                        ),
-                      ],
-                    )
-                ],
+                        );
+                        switch (result.status) {
+                          case AtOnboardingResultStatus.success:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const HomeScreen()));
+                            break;
+                          case AtOnboardingResultStatus.error:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('An error has occurred'),
+                              ),
+                            );
+                            break;
+                          case AtOnboardingResultStatus.cancel:
+                            break;
+                        }
+                      },
+                      child: const Text('Onboard an @sign'),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        var preference = await futurePreference;
+                        atClientPreference = preference;
+                        AtOnboarding.reset(
+                          context: context,
+                          config: AtOnboardingConfig(
+                            atClientPreference: atClientPreference!,
+                            domain: AtEnv.rootDomain,
+                            rootEnvironment: AtEnv.rootEnvironment,
+                            appAPIKey: AtEnv.appApiKey,
+                          ),
+                        );
+                      },
+                      child: const Text('Reset'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+//* The next screen after onboarding (second screen)
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  Widget build(BuildContext context) {
+    /// Get the AtClientManager instance
+    var atClientManager = AtClientManager.getInstance();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Dashboard'),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const Text(
+                'Successfully onboarded and navigated to FirstAppScreen'),
+
+            /// Use the AtClientManager instance to get the current atsign
+            Text(
+                'Current @sign: ${atClientManager.atClient.getCurrentAtSign()}'),
+          
+            ElevatedButton.icon(
+              icon: const Icon(
+                Icons.file_copy,
+                color: Colors.white,
+              ),
+              label: const Text('Backup your key'),
+              onPressed: () async {
+                BackupKeyWidget(atsign: atClientManager.atClient.getCurrentAtSign() ?? '')
+                    .showBackupDialog(context);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

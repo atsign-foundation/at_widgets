@@ -29,8 +29,8 @@ class _BlockedScreenState extends State<BlockedScreen> {
   void initState() {
     _contactService = ContactService();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      var _result = await _contactService.fetchBlockContactList();
-      if (_result == null) {
+      var result = await _contactService.fetchBlockContactList();
+      if (result == null) {
         if (mounted) {
           setState(() {
             errorOcurred = true;

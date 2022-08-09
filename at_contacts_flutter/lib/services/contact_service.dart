@@ -5,7 +5,6 @@ import 'dart:typed_data';
 
 import 'package:at_client/at_client.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
@@ -361,7 +360,7 @@ class ContactService {
 
       return false;
     } else if (atSign[0] != '@') {
-      atSign = '@' + atSign;
+      atSign = '@$atSign';
     }
     atSign = atSign.toLowerCase().trim();
 
@@ -464,7 +463,7 @@ class ContactService {
     if (atSign == null) {
       return false;
     } else if (!atSign.contains('@')) {
-      atSign = '@' + atSign;
+      atSign = '@$atSign';
     }
     try {
       var checkPresence =
@@ -483,7 +482,7 @@ class ContactService {
     if (atClientManager.atClient.getCurrentAtSign() == null || atSign == null) {
       return contactDetails;
     } else if (!atSign.contains('@')) {
-      atSign = '@' + atSign;
+      atSign = '@$atSign';
     }
     var metadata = Metadata();
     metadata.isPublic = true;
@@ -522,7 +521,7 @@ class ContactService {
       }
 
       // construct name
-      var name = ((firstname ?? '') + ' ' + (lastname ?? '')).trim();
+      var name = ('${firstname ?? ''} ${lastname ?? ''}').trim();
       if (name.isEmpty) {
         name = atSign.substring(1);
       }
@@ -602,10 +601,10 @@ class ContactService {
   /// returns true if [atsign1] & [atsign2] are same
   bool compareAtSign(String atsign1, String atsign2) {
     if (atsign1[0] != '@') {
-      atsign1 = '@' + atsign1;
+      atsign1 = '@$atsign1';
     }
     if (atsign2[0] != '@') {
-      atsign2 = '@' + atsign2;
+      atsign2 = '@$atsign2';
     }
 
     return atsign1.toLowerCase() == atsign2.toLowerCase() ? true : false;

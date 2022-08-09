@@ -18,12 +18,12 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   geolocator: ^8.2.1
   
-  at_commons: ^3.0.18
-  at_client_mobile: ^3.1.18
+  at_commons: ^3.0.22
+  at_client_mobile: ^3.2.1
   at_contact: ^3.0.7
   at_lookup: ^3.0.26
   at_utils: ^3.0.10
-  at_client: ^3.0.28
+  at_client: ^3.0.33
 
   at_contacts_group_flutter: ^4.0.7
   # at_chat_flutter: ^2.0.2
@@ -32,9 +32,10 @@ dependencies:
   at_common_flutter: ^2.0.8
 
 dev_dependencies:
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

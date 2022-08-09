@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';

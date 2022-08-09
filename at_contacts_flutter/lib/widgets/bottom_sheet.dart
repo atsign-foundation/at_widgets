@@ -20,10 +20,10 @@ class CustomBottomSheet extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    var _contactServive = ContactService();
+    var contactServive = ContactService();
     return StreamBuilder<List<AtContact?>>(
-      stream: _contactServive.selectedContactStream,
-      initialData: _contactServive.selectedContacts,
+      stream: contactServive.selectedContactStream,
+      initialData: contactServive.selectedContacts,
       builder: (context, snapshot) => (snapshot.data!.isEmpty)
           ? Container(
               height: 0,
@@ -60,7 +60,7 @@ class CustomBottomSheet extends StatelessWidget {
                     onPressed: () {
                       onPressed!();
                       selectedList!(snapshot.data);
-                      _contactServive.selectedContacts = [];
+                      contactServive.selectedContacts = [];
                     },
                   )
                 ],

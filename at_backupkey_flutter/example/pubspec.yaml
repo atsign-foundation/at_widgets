@@ -13,7 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  at_onboarding_flutter: ^4.0.0
+  at_onboarding_flutter: 
+    path: ../../at_onboarding_flutter
 
   # When depending on this package from a real application you should use:
   #   at_backupkey_flutter: ^x.y.z
@@ -21,6 +22,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
+  at_app_flutter: ^5.0.0+1
 
 dev_dependencies:
   flutter_test:
@@ -33,12 +35,16 @@ dependency_overrides:
   file_selector_windows: ^0.8.2
   permission_handler: ^9.2.0
   file_selector_macos: ^0.8.2
+  at_onboarding_flutter: 
+    path: ../../at_onboarding_flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - .env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

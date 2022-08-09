@@ -38,10 +38,10 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
   void initState() {
     _contactService = ContactService();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      List<AtContact>? _result, _result2;
+      List<AtContact>? result, result2;
       if (widget.isBlockedScreen) {
-        _result2 = await _contactService!.fetchBlockContactList();
-        if (_result2 == null) {
+        result2 = await _contactService!.fetchBlockContactList();
+        if (result2 == null) {
           if (mounted) {
             setState(() {
               errorOcurred = true;
@@ -49,8 +49,8 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
           }
         }
       } else {
-        _result = await _contactService!.fetchContacts();
-        if (_result == null) {
+        result = await _contactService!.fetchContacts();
+        if (result == null) {
           if (mounted) {
             setState(() {
               errorOcurred = true;

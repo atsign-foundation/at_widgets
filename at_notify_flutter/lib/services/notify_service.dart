@@ -7,13 +7,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:at_client/at_client.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_notify_flutter/models/notify_model.dart';
 import 'package:at_notify_flutter/utils/notify_utils.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-// ignore: implementation_imports
-import 'package:at_client/src/service/notification_service.dart';
 
 class NotifyService {
   NotifyService._();
@@ -203,7 +199,7 @@ class NotifyService {
       String sendToAtSign, Notify notify, NotifyEnum notifyType,
       {int noOfDays = 30}) async {
     if (!sendToAtSign.contains('@')) {
-      sendToAtSign = '@' + sendToAtSign;
+      sendToAtSign = '@$sendToAtSign';
     }
     var metadata = Metadata();
     metadata.ttr = -1;
