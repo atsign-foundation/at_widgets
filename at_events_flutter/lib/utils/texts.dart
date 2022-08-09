@@ -80,7 +80,7 @@ class AllText {
   String ADD_VENUE = 'Add Venue';
   String TITLE_OF_THE_EVENT = 'Title of the event';
   String TITLE = 'Title';
-  String SELECT_AT_SIGN_FROM_CONTACT = 'Select @sign from contacts';
+  String SELECT_AT_SIGN_FROM_CONTACT = 'Select atSign from contacts';
   String SEND = 'Send To';
   String CREATE_EVENT = 'Create an event';
 
