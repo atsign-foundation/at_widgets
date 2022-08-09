@@ -1,8 +1,10 @@
 import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:at_contacts_flutter_example/main.dart';
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -104,6 +106,21 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Second Screen'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              updateThemeMode.sink.add(
+                  Theme.of(context).brightness == Brightness.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light);
+            },
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.light
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+            ),
+          )
+        ],
       ),
       body: Center(
         child: Column(
@@ -133,18 +150,38 @@ class _SecondScreenState extends State<SecondScreen> {
             ElevatedButton(
               onPressed: () {
                 // any logic
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const ContactsScreen(),
-                ));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => ContactsScreen(
+                      theme: Theme.of(context).brightness == Brightness.light
+                          ? const DefaultContactTheme()
+                          : DarkContactTheme(
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              primaryColor: Theme.of(context).primaryColor,
+                            ),
+                    ),
+                  ),
+                );
               },
               child: const Text('Show contacts'),
             ),
             ElevatedButton(
               onPressed: () {
                 // any logic
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const BlockedScreen(),
-                ));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => BlockedScreen(
+                      theme: Theme.of(context).brightness == Brightness.light
+                          ? const DefaultContactTheme()
+                          : DarkContactTheme(
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              primaryColor: Theme.of(context).primaryColor,
+                            ),
+                    ),
+                  ),
+                );
               },
               child: const Text('Show blocked contacts'),
             ),

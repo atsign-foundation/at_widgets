@@ -5,6 +5,7 @@
 import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
@@ -17,9 +18,15 @@ import 'package:flutter/material.dart';
 class BlockedUserCard extends StatefulWidget {
   final AtContact? blockeduser;
   final Function? unblockAtsign;
+  final ContactTheme theme;
 
-  const BlockedUserCard({Key? key, this.blockeduser, this.unblockAtsign})
-      : super(key: key);
+  const BlockedUserCard({
+    Key? key,
+    this.blockeduser,
+    this.unblockAtsign,
+    this.theme = const DefaultContactTheme(),
+  }) : super(key: key);
+
   @override
   _BlockedUserCardState createState() => _BlockedUserCardState();
 }
@@ -47,18 +54,20 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
 
       contactImage = image != null
           ? CustomCircleAvatar(
-              size: SizeConfig().isTablet(context)? 32: 45,
+              size: SizeConfig().isTablet(context) ? 32 : 45,
               byteImage: image,
               nonAsset: true,
             )
           : ContactInitial(
-              size: SizeConfig().isTablet(context)? 32: 45,
+              size: SizeConfig().isTablet(context) ? 32 : 45,
               initials: widget.blockeduser!.atSign!,
+              theme: widget.theme,
             );
     } else {
       contactImage = ContactInitial(
-        size: SizeConfig().isTablet(context)? 32: 45,
+        size: SizeConfig().isTablet(context) ? 32 : 45,
         initials: widget.blockeduser!.atSign!,
+        theme: widget.theme,
       );
     }
     return ListTile(
@@ -70,11 +79,11 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
           children: [
             Text(
               widget.blockeduser!.atSign!.substring(1).toString(),
-              style: CustomTextStyles.primaryRegular16,
+              style: widget.theme.contactTitleTextStyle,
             ),
             Text(
               widget.blockeduser!.atSign.toString(),
-              style: CustomTextStyles.secondaryRegular12,
+              style: widget.theme.contactTitleTextStyle,
             ),
           ],
         ),

@@ -5,6 +5,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
 import 'package:at_contacts_flutter/widgets/bottom_sheet.dart';
@@ -31,18 +32,21 @@ class ContactsScreen extends StatefulWidget {
 
   /// to show already selected contacts.
   final List<AtContact>? selectedContactsHistory;
+  final ContactTheme theme;
 
-  const ContactsScreen(
-      {Key? key,
-      this.selectedList,
-      @Deprecated('context is no longer required and will be removed in upcoming version')
-          this.context,
-      this.asSelectionScreen = false,
-      this.asSingleSelectionScreen = false,
-      this.saveGroup,
-      this.onSendIconPressed,
-      this.selectedContactsHistory})
-      : super(key: key);
+  const ContactsScreen({
+    Key? key,
+    this.selectedList,
+    @Deprecated('context is no longer required and will be removed in upcoming version')
+        this.context,
+    this.asSelectionScreen = false,
+    this.asSingleSelectionScreen = false,
+    this.saveGroup,
+    this.onSendIconPressed,
+    this.selectedContactsHistory,
+    this.theme = const DefaultContactTheme(),
+  }) : super(key: key);
+
   @override
   _ContactsScreenState createState() => _ContactsScreenState();
 }
@@ -65,6 +69,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   /// List of selected contacts
   List<AtContact?> selectedList = [];
+
   @override
   void initState() {
     _contactService = ContactService();
@@ -92,6 +97,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      backgroundColor: widget.theme.backgroundColor,
       bottomSheet: (widget.asSelectionScreen)
           ? (widget.asSingleSelectionScreen)
               ? Container(height: 0)
@@ -115,21 +121,38 @@ class _ContactsScreenState extends State<ContactsScreen> {
               height: 0,
             ),
       appBar: CustomAppBar(
+        appBarColor: widget.theme.primaryColor,
         showBackButton: true,
         showTitle: true,
         showLeadingIcon: true,
         titleText: TextStrings().contacts,
-        onLeadingIconPressed: () {
-          setState(() {
-            if (widget.asSelectionScreen) {
-              ContactService().clearAtSigns();
-              selectedList = [];
-              if (widget.selectedList != null) {
+        leadingIcon: IconButton(
+          onPressed: () {
+            setState(() {
+              if (widget.asSelectionScreen) {
+                ContactService().clearAtSigns();
+                selectedList = [];
                 widget.selectedList!(selectedList);
               }
-            }
-          });
-        },
+            });
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: widget.theme.appbarIconColor,
+          ),
+        ),
+        // onLeadingIconPressed: () {
+        //   setState(() {
+        //     if (widget.asSelectionScreen) {
+        //       ContactService().clearAtSigns();
+        //       selectedList = [];
+        //       if (widget.selectedList != null) {
+        //         widget.selectedList!(selectedList);
+        //       }
+        //     }
+        //   });
+        // },
         onTrailingIconPressed: () {
           showDialog(
             context: context,
@@ -141,10 +164,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 widget.asSelectionScreen == false
             ? true
             : false,
-        trailingIcon: const Center(
+        trailingIcon: Center(
           child: Icon(
             Icons.add,
-            color: ColorConstants.fontPrimary,
+            color: widget.theme.appbarIconColor,
           ),
         ),
       ),
@@ -161,15 +184,18 @@ class _ContactsScreenState extends State<ContactsScreen> {
                     (text) => setState(() {
                       searchText = text;
                     }),
+                    theme: widget.theme,
                   ),
                   SizedBox(
                     height: 15.toHeight,
                   ),
                   (widget.asSelectionScreen)
                       ? (widget.asSingleSelectionScreen)
-                          ? Container()
-                          : const HorizontalCircularList()
-                      : Container(),
+                          ? const SizedBox()
+                          : HorizontalCircularList(
+                              theme: widget.theme,
+                            )
+                      : const SizedBox(),
                   Expanded(
                       child: StreamBuilder<List<BaseContact?>>(
                     stream: _contactService.contactStream,
@@ -238,17 +264,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                     children: [
                                       Text(
                                         currentChar,
-                                        style: TextStyle(
-                                          color: ColorConstants.blueText,
-                                          fontSize: 16.toFont,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: widget.theme.headerTextStyle,
                                       ),
                                       SizedBox(width: 4.toWidth),
                                       Expanded(
                                         child: Divider(
-                                          color: ColorConstants.dividerColor
-                                              .withOpacity(0.2),
+                                          color: widget.theme.dividerColor,
                                           height: 1.toHeight,
                                         ),
                                       ),
@@ -315,6 +336,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   }
                 },
                 onTrailingPressed: widget.onSendIconPressed,
+                theme: widget.theme,
               ),
             ),
           );

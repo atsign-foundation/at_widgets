@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
 import 'package:at_utils/at_logger.dart';
@@ -15,9 +16,15 @@ class CircularContacts extends StatelessWidget {
   final Function? onCrossPressed;
 
   final AtContact? contact;
+  final ContactTheme theme;
 
-  const CircularContacts({Key? key, this.onCrossPressed, this.contact})
-      : super(key: key);
+  const CircularContacts({
+    Key? key,
+    this.onCrossPressed,
+    this.contact,
+    this.theme = const DefaultContactTheme(),
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final AtSignLogger _logger = AtSignLogger('Circular Contacts');
@@ -49,6 +56,7 @@ class CircularContacts extends StatelessWidget {
                       )
                     : ContactInitial(
                         initials: contact!.atSign!,
+                        theme: theme,
                       ),
               ),
               Positioned(

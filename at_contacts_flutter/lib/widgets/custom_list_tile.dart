@@ -8,7 +8,7 @@
 import 'dart:typed_data';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
-import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter/utils/images.dart';
 import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_flutter/widgets/custom_circle_avatar.dart';
@@ -24,17 +24,19 @@ class CustomListTile extends StatefulWidget {
   final AtContact? contact;
   final ContactService? contactService;
   final ValueChanged<List<AtContact?>?>? selectedList;
+  final ContactTheme theme;
 
-  const CustomListTile(
-      {Key? key,
-      this.onTap,
-      this.onTrailingPressed,
-      this.asSelectionTile = false,
-      this.asSingleSelectionTile = false,
-      this.contact,
-      this.contactService,
-      this.selectedList})
-      : super(key: key);
+  const CustomListTile({
+    Key? key,
+    this.onTap,
+    this.onTrailingPressed,
+    this.asSelectionTile = false,
+    this.asSingleSelectionTile = false,
+    this.contact,
+    this.contactService,
+    this.selectedList,
+    this.theme = const DefaultContactTheme(),
+  }) : super(key: key);
 
   @override
   _CustomListTileState createState() => _CustomListTileState();
@@ -61,9 +63,11 @@ class _CustomListTileState extends State<CustomListTile> {
           ? CustomCircleAvatar(
               byteImage: image,
               nonAsset: true,
+        theme: widget.theme,
             )
           : ContactInitial(
               initials: widget.contact!.atSign!,
+        theme: widget.theme,
             );
     } else {
       contactImage = ContactInitial(
@@ -115,22 +119,14 @@ class _CustomListTileState extends State<CustomListTile> {
                       widget.contact!.tags!['name'] != null
                   ? widget.contact!.tags!['name']
                   : widget.contact!.atSign!.substring(1),
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 14.toFont,
-                fontWeight: FontWeight.normal,
-              ),
+              style: widget.theme.contactTitleTextStyle,
             ),
             subtitle: Text(
               (widget.contact!.tags != null &&
                       widget.contact!.tags!['nickname'] != null
                   ? '${widget.contact!.tags!['nickname']} (${widget.contact!.atSign!})'
                   : widget.contact!.atSign!),
-              style: TextStyle(
-                color: ColorConstants.fadedText,
-                fontSize: 14.toFont,
-                fontWeight: FontWeight.normal,
-              ),
+              style: widget.theme.contactSubtitleTextStyle,
             ),
             leading: Container(
                 height: 40.toHeight,

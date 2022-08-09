@@ -3,6 +3,7 @@ import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_flutter/widgets/blocked_user_card.dart';
 import 'package:at_contacts_flutter/widgets/circular_contacts.dart';
@@ -13,7 +14,12 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 /// Screen exposed to see blocked contacts and unblock them
 class BlockedScreen extends StatefulWidget {
-  const BlockedScreen({Key? key}) : super(key: key);
+  final ContactTheme theme;
+
+  const BlockedScreen({
+    Key? key,
+    this.theme = const DefaultContactTheme(),
+  }) : super(key: key);
 
   @override
   _BlockedScreenState createState() => _BlockedScreenState();
@@ -25,6 +31,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
 
   /// Boolean indicator of unblock action
   bool unblockingAtsign = false;
+
   @override
   void initState() {
     _contactService = ContactService();
@@ -45,16 +52,27 @@ class _BlockedScreenState extends State<BlockedScreen> {
   /// boolean flag to indicate if blocking flow is in progress
   bool isBlocking = false;
   bool toggleList = false;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: ColorConstants.scaffoldColor,
+      backgroundColor: widget.theme.backgroundColor,
       appBar: CustomAppBar(
         showBackButton: true,
         showTitle: true,
         showLeadingIcon: true,
+        leadingIcon: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: widget.theme.appbarIconColor,
+          ),
+        ),
         titleText: TextStrings().blockedContacts,
+        appBarColor: widget.theme.primaryColor,
       ),
       body: errorOcurred
           ? const ErrorScreen()
@@ -126,14 +144,15 @@ class _BlockedScreenState extends State<BlockedScreen> {
                                         ),
                                         itemBuilder: (context, index) {
                                           return BlockedUserCard(
-                                              blockeduser: snapshot
-                                                  .data?[index]?.contact,
-                                              unblockAtsign: () async {
-                                                await unblockAtsign(snapshot
-                                                        .data?[index]
-                                                        ?.contact ??
-                                                    AtContact());
-                                              });
+                                            blockeduser:
+                                                snapshot.data?[index]?.contact,
+                                            unblockAtsign: () async {
+                                              await unblockAtsign(snapshot
+                                                      .data?[index]?.contact ??
+                                                  AtContact());
+                                            },
+                                            theme: widget.theme,
+                                          );
                                         },
                                       )
                                     : GridView.builder(

@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -15,14 +16,18 @@ class ContactInitial extends StatelessWidget {
   /// Index in the list of atsigns
   final int? index;
 
-  ContactInitial(
-      {Key? key,
-      this.size = 40,
-      required this.initials,
-      this.index,
-      this.maxSize,
-      this.minSize})
-      : super(key: key);
+  final ContactTheme theme;
+
+  ContactInitial({
+    Key? key,
+    this.size = 40,
+    required this.initials,
+    this.index,
+    this.maxSize,
+    this.minSize,
+    this.theme = const DefaultContactTheme(),
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     if (initials[0] == '@') {
@@ -36,6 +41,7 @@ class ContactInitial extends StatelessWidget {
       decoration: BoxDecoration(
         color: ContactInitialsColors.getColor(initials),
         borderRadius: BorderRadius.circular((size.toFont)),
+        border: Border.all(color: theme.avatarBorderColor, width: 2),
       ),
       child: Center(
         child: Text(

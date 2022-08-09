@@ -5,6 +5,7 @@
 /// @param [byteImage] to display the image from the netwok
 
 import 'dart:typed_data';
+import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:at_common_flutter/services/size_config.dart';
@@ -22,13 +23,17 @@ class CustomCircleAvatar extends StatelessWidget {
   /// Image data
   final Uint8List? byteImage;
 
+  final ContactTheme theme;
+
   const CustomCircleAvatar({
     Key? key,
     this.image,
     this.size = 50,
     this.nonAsset = false,
     this.byteImage,
+    this.theme = const DefaultContactTheme(),
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,6 +41,7 @@ class CustomCircleAvatar extends StatelessWidget {
       width: size.toFont,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(size.toWidth),
+        border: Border.all(color: theme.avatarBorderColor, width: 2),
       ),
       child: CircleAvatar(
         radius: (size - 5).toFont,
