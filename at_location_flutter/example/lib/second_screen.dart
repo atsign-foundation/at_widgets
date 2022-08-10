@@ -57,6 +57,21 @@ class _SecondScreenState extends State<SecondScreen> {
       key: scaffoldKey,
       appBar: AppBar(
         title: const Text('Second Screen'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              updateThemeMode.sink.add(
+                  Theme.of(context).brightness == Brightness.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light);
+            },
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.light
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+            ),
+          )
+        ],
       ),
       body: Center(
         child: ListView(

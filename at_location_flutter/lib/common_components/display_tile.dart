@@ -113,7 +113,7 @@ class _DisplayTileState extends State<DisplayTile> {
                 children: [
                   Text(
                     name ?? widget.title!,
-                    style: CustomTextStyles().black14,
+                    style: const TextStyle().copyWith(fontSize: 14.toFont),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

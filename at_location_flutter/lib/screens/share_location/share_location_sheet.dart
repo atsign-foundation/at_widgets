@@ -33,6 +33,13 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     return Container(
       height: SizeConfig().screenHeight * 0.5,
       padding: const EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+        ),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,20 +47,32 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AllText().SHARE_LOCATION, style: CustomTextStyles().black18),
+              Text(
+                AllText().SHARE_LOCATION,
+                style: const TextStyle().copyWith(
+                  fontSize: 18.toFont,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               PopButton(label: AllText().CANCEL)
             ],
           ),
           const SizedBox(
             height: 25,
           ),
-          Text(AllText().SHARE_WITH, style: CustomTextStyles().greyLabel14),
+          Text(
+            AllText().SHARE_WITH,
+            style: const TextStyle().copyWith(fontSize: 14),
+          ),
           const SizedBox(height: 10),
           CustomInputField(
             width: 330.toWidth,
             height: 50,
             hintText: AllText().TYPE_AT_SIGN,
             initialValue: textField ?? '',
+            inputFieldColor: Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.2)
+                : Colors.white.withOpacity(0.2),
             value: (str) {
               if (!str.contains('@')) {
                 str = '@' + str;
@@ -66,11 +85,13 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
           const SizedBox(height: 25),
           Text(
             AllText().DURATION,
-            style: CustomTextStyles().greyLabel14,
+            style: const TextStyle().copyWith(fontSize: 14),
           ),
           const SizedBox(height: 10),
           Container(
-            color: AllColors().INPUT_GREY_BACKGROUND,
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.2)
+                : Colors.white.withOpacity(0.2),
             width: 330.toWidth,
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: DropdownButton(
@@ -78,7 +99,9 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               icon: const Icon(Icons.keyboard_arrow_down),
               underline: const SizedBox(),
               elevation: 0,
-              dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
+              dropdownColor: Theme.of(context).brightness == Brightness.light
+                  ? AllColors().INPUT_GREY_BACKGROUND
+                  : AllColors().LIGHT_INPUT_GREY_BACKGROUND,
               value: selectedOption,
               hint: Text(AllText().OCCURS_ON),
               items: [

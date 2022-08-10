@@ -33,6 +33,13 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     return Container(
       height: SizeConfig().screenHeight * 0.4,
       padding: const EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+        ),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,21 +47,32 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AllText().REQUEST_LOCATION,
-                  style: CustomTextStyles().black18),
+              Text(
+                AllText().REQUEST_LOCATION,
+                style: const TextStyle().copyWith(
+                  fontSize: 18.toFont,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               PopButton(label: AllText().CANCEL)
             ],
           ),
           const SizedBox(
             height: 25,
           ),
-          Text(AllText().REQUEST_FROM, style: CustomTextStyles().greyLabel14),
+          Text(
+            AllText().REQUEST_FROM,
+            style: const TextStyle().copyWith(fontSize: 14.toFont),
+          ),
           const SizedBox(height: 10),
           CustomInputField(
             width: 330.toWidth,
             height: 50,
             hintText: AllText().TYPE_AT_SIGN,
             initialValue: textField ?? '',
+            inputFieldColor: Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.2)
+                : Colors.white.withOpacity(0.2),
             value: (str) {
               if (!str.contains('@')) {
                 str = '@' + str;
@@ -71,7 +89,13 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
                 : CustomButton(
                     buttonText: AllText().REQUEST,
                     onPressed: onRequestTap,
-                    fontColor: AllColors().WHITE,
+                    buttonColor:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
+                    fontColor: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Colors.black,
                     width: 164,
                     height: 48,
                   ),

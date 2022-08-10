@@ -37,7 +37,7 @@ class Tasks extends StatelessWidget {
             Flexible(
               child: Text(
                 task,
-                style: CustomTextStyles().black12,
+                style: const TextStyle().copyWith(fontSize: 12),
                 textAlign: TextAlign.center,
               ),
             )

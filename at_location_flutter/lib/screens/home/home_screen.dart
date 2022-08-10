@@ -70,90 +70,99 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-        body: SafeArea(
-      child: Stack(
-        children: [
-          (myLatLng != null)
-              ? showLocation(UniqueKey(), mapController, location: myLatLng)
-              : showLocation(
-                  UniqueKey(),
-                  mapController,
-                ),
-          Positioned(
-            top: 30,
-            right: 0,
-            child: FloatingIcon(
-              icon: Icons.location_off,
-              isTopLeft: false,
-              onPressed: () =>
-                  SendLocationNotification().deleteAllLocationKey(),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            (myLatLng != null)
+                ? showLocation(UniqueKey(), mapController, location: myLatLng)
+                : showLocation(
+                    UniqueKey(),
+                    mapController,
+                  ),
+            Positioned(
+              top: 20 + MediaQuery.of(context).padding.top,
+              right: 0,
+              child: FloatingIcon(
+                icon: Icons.location_off,
+                bgColor: Theme.of(context).scaffoldBackgroundColor,
+                iconColor: Colors.grey,
+                isTopLeft: false,
+                onPressed: () =>
+                    SendLocationNotification().deleteAllLocationKey(),
+              ),
             ),
-          ),
-          widget.showList
-              ? Positioned(bottom: 264.toHeight, child: header())
-              : const SizedBox(),
-          widget.showList
-              ? StreamBuilder(
-                  stream: KeyStreamService().atNotificationsStream,
-                  builder: (context,
-                      AsyncSnapshot<List<KeyLocationModel>> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      if (snapshot.hasError) {
-                        return SlidingUpPanel(
+            widget.showList
+                ? Positioned(bottom: 264.toHeight, child: header())
+                : const SizedBox(),
+            widget.showList
+                ? StreamBuilder(
+                    stream: KeyStreamService().atNotificationsStream,
+                    builder: (context,
+                        AsyncSnapshot<List<KeyLocationModel>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        if (snapshot.hasError) {
+                          return SlidingUpPanel(
+                              controller: pc,
+                              minHeight: 267.toHeight,
+                              maxHeight: 530.toHeight,
+                              panelBuilder: (scrollController) =>
+                                  collapsedContent(
+                                      false,
+                                      scrollController,
+                                      emptyWidget(
+                                          AllText().SOMETHING_WENT_WRONG)));
+                        } else {
+                          return SlidingUpPanel(
                             controller: pc,
                             minHeight: 267.toHeight,
                             maxHeight: 530.toHeight,
-                            panelBuilder: (scrollController) =>
-                                collapsedContent(
-                                    false,
+                            panelBuilder: (scrollController) {
+                              if (snapshot.data!.isNotEmpty) {
+                                return collapsedContent(
+                                  false,
+                                  scrollController,
+                                  getListView(
+                                    snapshot.data!,
                                     scrollController,
-                                    emptyWidget(
-                                        AllText().SOMETHING_WENT_WRONG)));
+                                  ),
+                                );
+                              } else {
+                                return collapsedContent(false, scrollController,
+                                    emptyWidget(AllText().NO_DATA_FOUND));
+                              }
+                            },
+                          );
+                        }
                       } else {
                         return SlidingUpPanel(
                           controller: pc,
                           minHeight: 267.toHeight,
                           maxHeight: 530.toHeight,
                           panelBuilder: (scrollController) {
-                            if (snapshot.data!.isNotEmpty) {
+                            if (KeyStreamService()
+                                .allLocationNotifications
+                                .isNotEmpty) {
                               return collapsedContent(
-                                  false,
-                                  scrollController,
-                                  getListView(
-                                      snapshot.data!, scrollController));
-                            } else {
-                              return collapsedContent(false, scrollController,
-                                  emptyWidget(AllText().NO_DATA_FOUND));
-                            }
-                          },
-                        );
-                      }
-                    } else {
-                      return SlidingUpPanel(
-                        controller: pc,
-                        minHeight: 267.toHeight,
-                        maxHeight: 530.toHeight,
-                        panelBuilder: (scrollController) {
-                          if (KeyStreamService()
-                              .allLocationNotifications
-                              .isNotEmpty) {
-                            return collapsedContent(
                                 false,
                                 scrollController,
                                 getListView(
-                                    KeyStreamService().allLocationNotifications,
-                                    scrollController));
-                          }
-                          return collapsedContent(false, scrollController,
-                              emptyWidget(AllText().NO_DATA_FOUND));
-                        },
-                      );
-                    }
-                  })
-              : const SizedBox(),
-        ],
+                                  KeyStreamService().allLocationNotifications,
+                                  scrollController,
+                                ),
+                              );
+                            }
+                            return collapsedContent(false, scrollController,
+                                emptyWidget(AllText().NO_DATA_FOUND));
+                          },
+                        );
+                      }
+                    },
+                  )
+                : const SizedBox(),
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   Widget collapsedContent(

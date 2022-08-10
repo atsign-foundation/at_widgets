@@ -93,7 +93,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                     children: <Widget>[
                       Text(
                         widget.text!,
-                        style: CustomTextStyles().grey16,
+                        style: const TextStyle().copyWith(fontSize: 16),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 30),
@@ -125,7 +125,14 @@ class _LocationPromptState extends State<LocationPrompt> {
                                     .pop();
                               },
                               buttonText: widget.yesText ?? AllText().YES + '!',
-                              fontColor: Colors.white,
+                              buttonColor: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                              fontColor: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.white
+                                  : Colors.black,
                               width: 164.toWidth,
                               height: 48.toHeight,
                             ),
@@ -143,7 +150,10 @@ class _LocationPromptState extends State<LocationPrompt> {
                         },
                         buttonText: widget.noText ?? AllText().NO + '!',
                         buttonColor: Colors.white,
-                        fontColor: Colors.black,
+                        fontColor: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.white
+                                  : Colors.black,
                         width: 164.toWidth,
                         height: 48.toHeight,
                       )
