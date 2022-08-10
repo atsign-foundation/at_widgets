@@ -1,3 +1,7 @@
+## 4.0.8
+- **FEAT**: Updated text
+- **CHORE**: Updated dependency
+
 ## 4.0.7
 - **FIX**: Fixed buffer size limit issue while creating groups
 
