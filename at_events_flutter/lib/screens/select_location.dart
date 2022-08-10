@@ -56,6 +56,7 @@ class _SelectLocationState extends State<SelectLocation> {
         child: Container(
           height: SizeConfig().screenHeight * 0.8,
           padding: EdgeInsets.fromLTRB(28.toWidth, 20.toHeight, 17.toWidth, 0),
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -66,6 +67,10 @@ class _SelectLocationState extends State<SelectLocation> {
                       hintText: AllText().SEARCH_AN_AREA_STREET_NAME,
                       height: 50.toHeight,
                       initialValue: inputText,
+                      inputFieldColor:
+                          Theme.of(context).brightness == Brightness.light
+                              ? Colors.black.withOpacity(0.2)
+                              : Colors.white.withOpacity(0.2),
                       onSubmitted: (String str) async {
                         setState(() {
                           isLoader = true;
@@ -166,7 +171,8 @@ class _SelectLocationState extends State<SelectLocation> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(AllText().NEAR_ME,
-                                  style: CustomTextStyles().greyLabel14),
+                                  style:
+                                      const TextStyle().copyWith(fontSize: 14)),
                               (!_isLocationServiceEnabled)
                                   ? Flexible(
                                       child: Text(
@@ -206,11 +212,15 @@ class _SelectLocationState extends State<SelectLocation> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AllText().CURRENT_LOCATION,
-                        style: CustomTextStyles().greyLabel14),
+                    Text(
+                      AllText().CURRENT_LOCATION,
+                      style: const TextStyle().copyWith(fontSize: 14),
+                    ),
                     SizedBox(height: 5.toHeight),
-                    Text(AllText().USING_GPS,
-                        style: CustomTextStyles().greyLabel12),
+                    Text(
+                      AllText().USING_GPS,
+                      style: const TextStyle().copyWith(fontSize: 12),
+                    ),
                   ],
                 ),
               ),

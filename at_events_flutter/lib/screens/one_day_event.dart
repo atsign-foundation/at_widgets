@@ -35,6 +35,7 @@ class _OneDayEventState extends State<OneDayEvent> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
       padding: const EdgeInsets.all(25),
       child: SingleChildScrollView(
         child: Container(
@@ -50,8 +51,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                         heading: AllText().ONE_DAY_EVENT,
                         action: AllText().CANCEL),
                     const SizedBox(height: 25),
-                    Text(AllText().SELECT_DATE,
-                        style: CustomTextStyles().greyLabel14),
+                    Text(
+                      AllText().SELECT_DATE,
+                      style: const TextStyle().copyWith(fontSize: 14),
+                    ),
                     SizedBox(height: 6.toHeight),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -62,6 +65,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                           isReadOnly: true,
                           hintText: AllText().SELECT_START_DATE,
                           icon: Icons.date_range,
+                          inputFieldColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.2)
+                                  : Colors.white.withOpacity(0.2),
                           initialValue: (eventData.event!.date != null)
                               ? dateToString(eventData.event!.date!)
                               : '',
@@ -96,6 +103,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                           height: 50.toHeight,
                           isReadOnly: true,
                           hintText: AllText().SELECT_END_DATE,
+                          inputFieldColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.2)
+                                  : Colors.white.withOpacity(0.2),
                           icon: Icons.date_range,
                           initialValue: (eventData.event!.endDate != null)
                               ? dateToString(eventData.event!.endDate!)
@@ -128,7 +139,7 @@ class _OneDayEventState extends State<OneDayEvent> {
                     ),
                     const SizedBox(height: 25),
                     Text(AllText().SELECT_TIME,
-                        style: CustomTextStyles().greyLabel14),
+                        style: const TextStyle().copyWith(fontSize: 14)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -141,6 +152,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                           initialValue: eventData.event!.startTime != null
                               ? timeOfDayToString(eventData.event!.startTime!)
                               : '',
+                          inputFieldColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.2)
+                                  : Colors.white.withOpacity(0.2),
                           onTap: () async {
                             final timePicked = await showTimePicker(
                                 context: context,
@@ -176,6 +191,10 @@ class _OneDayEventState extends State<OneDayEvent> {
                             initialValue: eventData.event!.endTime != null
                                 ? timeOfDayToString(eventData.event!.endTime!)
                                 : '',
+                            inputFieldColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black.withOpacity(0.2)
+                                    : Colors.white.withOpacity(0.2),
                             onTap: () async {
                               final timePicked = await showTimePicker(
                                   context: context,

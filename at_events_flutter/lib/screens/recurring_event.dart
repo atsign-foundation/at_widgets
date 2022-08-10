@@ -48,15 +48,20 @@ class _RecurringEventState extends State<RecurringEvent> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
       height: SizeConfig().screenHeight * 0.8,
       padding: const EdgeInsets.all(25),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            CustomHeading(heading: AllText().RECURRING_EVENT, action: AllText().CANCEL),
+            CustomHeading(
+                heading: AllText().RECURRING_EVENT, action: AllText().CANCEL),
             const SizedBox(height: 25),
-            Text(AllText().REPEAT_EVERY, style: CustomTextStyles().greyLabel14),
+            Text(
+              AllText().REPEAT_EVERY,
+              style: const TextStyle().copyWith(fontSize: 14),
+            ),
             SizedBox(height: 6.toHeight),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,6 +74,10 @@ class _RecurringEventState extends State<RecurringEvent> {
                   initialValue: eventData!.event!.repeatDuration != null
                       ? eventData!.event!.repeatDuration.toString()
                       : '',
+                  inputFieldColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.2),
                   value: (val) {
                     if (val.trim().isNotEmpty) {
                       var repeatCycle = int.parse(val);
@@ -79,7 +88,9 @@ class _RecurringEventState extends State<RecurringEvent> {
                   },
                 ),
                 Container(
-                  color: AllColors().INPUT_GREY_BACKGROUND,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black.withOpacity(0.2)
+                      : Colors.white.withOpacity(0.2),
                   width: 155.toWidth,
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: DropdownButton(
@@ -87,7 +98,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                     icon: const Icon(Icons.keyboard_arrow_down),
                     underline: const SizedBox(),
                     elevation: 0,
-                    dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
+                    dropdownColor: Theme.of(context).scaffoldBackgroundColor,
                     value: (eventData!.event!.repeatCycle != null)
                         ? eventData!.event!.repeatCycle == RepeatCycle.WEEK
                             ? AllText().WEEK
@@ -122,11 +133,14 @@ class _RecurringEventState extends State<RecurringEvent> {
               ],
             ),
             SizedBox(height: 25.toHeight),
-            Text(AllText().OCCURS_ON, style: CustomTextStyles().greyLabel14),
+            Text(AllText().OCCURS_ON,
+                style: const TextStyle().copyWith(fontSize: 14)),
             SizedBox(height: 6.toHeight),
             isRepeatEveryWeek
                 ? Container(
-                    color: AllColors().INPUT_GREY_BACKGROUND,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black.withOpacity(0.2)
+                        : Colors.white.withOpacity(0.2),
                     width: 350.toWidth,
                     padding: const EdgeInsets.only(left: 10, right: 10),
                     child: DropdownButton(
@@ -134,7 +148,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                       icon: const Icon(Icons.keyboard_arrow_down),
                       underline: const SizedBox(),
                       elevation: 0,
-                      dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
+                      dropdownColor: Theme.of(context).scaffoldBackgroundColor,
                       value: eventData!.event!.occursOn != null
                           ? getWeekString(eventData!.event!.occursOn)
                           : null,
@@ -165,6 +179,10 @@ class _RecurringEventState extends State<RecurringEvent> {
                     initialValue: eventData!.event!.date != null
                         ? dateToString(eventData!.event!.date!)
                         : '',
+                    inputFieldColor:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.black.withOpacity(0.2)
+                            : Colors.white.withOpacity(0.2),
                     onTap: () async {
                       final datePicked = await showDatePicker(
                         context: context,
@@ -183,7 +201,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                     value: (val) {},
                   ),
             SizedBox(height: 25.toHeight),
-            Text(AllText().SELECT_TIME, style: CustomTextStyles().greyLabel14),
+            Text(AllText().SELECT_TIME,
+                style: const TextStyle().copyWith(fontSize: 14)),
             SizedBox(height: 6.toHeight),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,6 +216,10 @@ class _RecurringEventState extends State<RecurringEvent> {
                   initialValue: eventData!.event!.startTime != null
                       ? timeOfDayToString(eventData!.event!.startTime!)
                       : '',
+                  inputFieldColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.2),
                   onTap: () async {
                     final timePicked = await showTimePicker(
                         context: context,
@@ -231,6 +254,10 @@ class _RecurringEventState extends State<RecurringEvent> {
                   initialValue: eventData!.event!.endTime != null
                       ? timeOfDayToString(eventData!.event!.endTime!)
                       : '',
+                  inputFieldColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.2),
                   onTap: () async {
                     final timePicked = await showTimePicker(
                         context: context,
@@ -240,7 +267,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                         initialEntryMode: TimePickerEntryMode.input);
 
                     if (eventData!.event!.endDate == null) {
-                      CustomToast().show(AllText().SELECT_START_TIME_FIRST, context,
+                      CustomToast().show(
+                          AllText().SELECT_START_TIME_FIRST, context,
                           isError: true);
                       return;
                     }
@@ -259,12 +287,14 @@ class _RecurringEventState extends State<RecurringEvent> {
               ],
             ),
             SizedBox(height: 25.toHeight),
-            Text(AllText().ENDS_ON, style: CustomTextStyles().greyLabel14),
+            Text(AllText().ENDS_ON,
+                style: const TextStyle().copyWith(fontSize: 14)),
             SizedBox(height: 25.toHeight),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(AllText().NEVER, style: CustomTextStyles().greyLabel12),
+                Text(AllText().NEVER,
+                    style: const TextStyle().copyWith(fontSize: 12)),
                 Radio(
                   groupValue: eventData!.event!.endsOn,
                   toggleable: true,
@@ -280,7 +310,10 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(AllText().ON, style: CustomTextStyles().greyLabel12),
+                Text(
+                  AllText().ON,
+                  style: const TextStyle().copyWith(fontSize: 12),
+                ),
                 Radio(
                   groupValue: eventData!.event!.endsOn,
                   toggleable: true,
@@ -303,6 +336,9 @@ class _RecurringEventState extends State<RecurringEvent> {
               initialValue: (eventData!.event!.endEventOnDate != null)
                   ? dateToString(eventData!.event!.endEventOnDate!)
                   : '',
+              inputFieldColor: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.white.withOpacity(0.2),
               onTap: () async {
                 final datePicked = await showDatePicker(
                   context: context,
@@ -323,7 +359,10 @@ class _RecurringEventState extends State<RecurringEvent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(AllText().AFTER, style: CustomTextStyles().greyLabel12),
+                Text(
+                  AllText().AFTER,
+                  style: const TextStyle().copyWith(fontSize: 12),
+                ),
                 Radio(
                   groupValue: eventData!.event!.endsOn,
                   toggleable: true,
@@ -345,6 +384,9 @@ class _RecurringEventState extends State<RecurringEvent> {
               initialValue: eventData!.event!.endEventAfterOccurance != null
                   ? eventData!.event!.endEventAfterOccurance.toString()
                   : '',
+              inputFieldColor: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.white.withOpacity(0.2),
               value: (val) {
                 if (val.trim().isNotEmpty) {
                   var occurance = int.parse(val);

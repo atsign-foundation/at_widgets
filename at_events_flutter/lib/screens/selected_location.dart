@@ -41,12 +41,14 @@ class _SelectedLocationState extends State<SelectedLocation> {
           children: <Widget>[
             showLocation(UniqueKey(), null, location: widget.point),
             Positioned(
-              top: 0,
+              top: MediaQuery.of(context).padding.top,
               left: 0,
               child: FloatingIcon(
-                bgColor: AllColors().WHITE,
+                bgColor: Theme.of(context).scaffoldBackgroundColor,
                 icon: Icons.arrow_back,
-                iconColor: AllColors().Black,
+                iconColor: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
                 isTopLeft: true,
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -57,7 +59,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
               bottom: 0,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [
                     BoxShadow(
@@ -114,6 +116,10 @@ class _SelectedLocationState extends State<SelectedLocation> {
                                     .venue!
                                     .label ??
                                 '',
+                            inputFieldColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black.withOpacity(0.2)
+                                    : Colors.white.withOpacity(0.2),
                             value: (String val) {
                               EventService()
                                   .eventNotificationModel!

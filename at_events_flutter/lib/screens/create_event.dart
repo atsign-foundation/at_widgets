@@ -111,9 +111,11 @@ class _CreateEventState extends State<CreateEvent> {
                                         },
                                       ),
                                       const SizedBox(height: 25),
-                                      Text(AllText().SEND,
-                                          style:
-                                              CustomTextStyles().greyLabel14),
+                                      Text(
+                                        AllText().SEND,
+                                        style: const TextStyle()
+                                            .copyWith(fontSize: 14),
+                                      ),
                                       SizedBox(height: 6.toHeight),
                                       CustomInputField(
                                         width: SizeConfig().screenWidth * 0.95,
@@ -122,6 +124,11 @@ class _CreateEventState extends State<CreateEvent> {
                                         hintText: AllText()
                                             .SELECT_AT_SIGN_FROM_CONTACT,
                                         icon: Icons.contacts_rounded,
+                                        inputFieldColor:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.light
+                                                ? Colors.black.withOpacity(0.2)
+                                                : Colors.white.withOpacity(0.2),
                                         onTap: () {
                                           Navigator.push(
                                             context,
@@ -172,13 +179,19 @@ class _CreateEventState extends State<CreateEvent> {
                                           : const SizedBox(),
                                       Text(
                                         AllText().TITLE,
-                                        style: CustomTextStyles().greyLabel14,
+                                        style: const TextStyle()
+                                            .copyWith(fontSize: 14),
                                       ),
                                       SizedBox(height: 6.toHeight),
                                       CustomInputField(
                                         width: SizeConfig().screenWidth * 0.95,
                                         height: 50.toHeight,
                                         hintText: AllText().TITLE_OF_THE_EVENT,
+                                        inputFieldColor:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.light
+                                                ? Colors.black.withOpacity(0.2)
+                                                : Colors.white.withOpacity(0.2),
                                         initialValue: eventData.title != null
                                             ? EventService()
                                                 .eventNotificationModel!
@@ -192,8 +205,8 @@ class _CreateEventState extends State<CreateEvent> {
                                       ),
                                       const SizedBox(height: 25),
                                       Text(AllText().ADD_VENUE,
-                                          style:
-                                              CustomTextStyles().greyLabel14),
+                                          style: const TextStyle()
+                                              .copyWith(fontSize: 14)),
                                       SizedBox(height: 6.toHeight),
                                       CustomInputField(
                                         width: SizeConfig().screenWidth * 0.95,
@@ -201,6 +214,11 @@ class _CreateEventState extends State<CreateEvent> {
                                         isReadOnly: true,
                                         hintText: AllText()
                                             .START_TYPING_OR_SEL_FRM_MAP,
+                                        inputFieldColor:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.light
+                                                ? Colors.black.withOpacity(0.2)
+                                                : Colors.white.withOpacity(0.2),
                                         initialValue:
                                             eventData.venue!.label != null
                                                 ? eventData.venue!.label!
@@ -229,8 +247,8 @@ class _CreateEventState extends State<CreateEvent> {
                                               },
                                               child: Text(
                                                   AllText().SELECT_TIMES,
-                                                  style: CustomTextStyles()
-                                                      .greyLabel14),
+                                                  style: const TextStyle()
+                                                      .copyWith(fontSize: 14)),
                                             ),
                                           ),
                                           Checkbox(
@@ -302,8 +320,8 @@ class _CreateEventState extends State<CreateEvent> {
 
                                                   ///
                                                   // 'Event on ${dateToString(eventData.event.date)} (${timeOfDayToString(eventData.event.startTime)}- ${timeOfDayToString(eventData.event.endTime)})',
-                                                  style: CustomTextStyles()
-                                                      .greyLabel12,
+                                                  style: const TextStyle()
+                                                      .copyWith(fontSize: 12),
                                                 )
                                               : const SizedBox()
                                           : const SizedBox(),

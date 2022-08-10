@@ -54,7 +54,24 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: const Text('Second Screen')),
+      appBar: AppBar(
+        title: const Text('Second Screen'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              updateThemeMode.sink.add(
+                  Theme.of(context).brightness == Brightness.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light);
+            },
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.light
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+            ),
+          )
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -80,8 +97,9 @@ class _SecondScreenState extends State<SecondScreen> {
             },
             child: const SizedBox(
               height: 40,
-              child:
-                  Text('Create event', style: TextStyle(color: Colors.black)),
+              child: Text(
+                'Create event',
+              ),
             ),
           ),
           const SizedBox(
