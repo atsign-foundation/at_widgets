@@ -1,3 +1,4 @@
+import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:flutter/material.dart';
 
 class ColorConstants {
@@ -47,5 +48,6 @@ class ColorConstants {
     borderColor = _isDarkTheme ? Colors.grey[700] : Colors.grey[300];
     fillColor = borderColor;
     brightness = _isDarkTheme ? Brightness.dark : Brightness.light;
+    CustomTextStyles.refresh();
   }
 }

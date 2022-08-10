@@ -464,7 +464,7 @@ class ConnectionsService {
         notification.to == _sdkService.atsign &&
         notification.key.contains(AppConstants.containsFollowing)) {
       await updateFollowers(notification);
-      await NotificationService().showNotification(notification);
+      // await NotificationService().showNotification(notification);
     } else if (notification.operation == Operation.delete &&
         notification.to == _sdkService.atsign &&
         notification.key.contains(AppConstants.containsFollowing)) {

@@ -24,9 +24,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      brightness: ColorConstants.brightness,
+      //brightness: ColorConstants.brightness,
       elevation: 0,
-      backgroundColor: ColorConstants.backgroundColor,
+      //backgroundColor: ColorConstants.backgroundColor,
       leading: null,
       automaticallyImplyLeading: false,
       actions: [
@@ -71,8 +71,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             },
             child: Padding(
               padding: EdgeInsets.only(right: 12.0.toFont),
-              child: Icon(Icons.person_add,
-                  color: ColorConstants.dark, size: 25.toFont),
+              child: Icon(Icons.person_add, size: 25.toFont),
             ),
           ),
         if (!showQr)
@@ -86,8 +85,10 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             fit: FlexFit.loose,
             flex: 2,
             child: GestureDetector(
-                child: Text(Strings.BackButton,
-                    style: CustomTextStyles.fontR14dark),
+                child: Text(
+                  Strings.BackButton,
+                  style: TextStyle().copyWith(fontSize: 14.toFont),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                 }),
@@ -101,7 +102,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                   child: Text(
                     this.title ?? Strings.Title,
                     maxLines: 3,
-                    style: CustomTextStyles.fontBold18primary,
+                    style: TextStyle().copyWith(fontSize: 18.toFont),
                     textAlign: TextAlign.center,
                   ),
                 ))

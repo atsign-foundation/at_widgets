@@ -22,6 +22,8 @@ class SizeConfig {
   late double refHeight;
   late double refWidth;
 
+  bool isReady = false;
+
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
@@ -54,6 +56,8 @@ class SizeConfig {
       safeBlockHorizontal = (screenWidth! - _safeAreaHorizontal) / 120;
       safeBlockVertical = (screenHeight - _safeAreaVertical) / 120;
     }
+
+    isReady = true;
   }
 
   double getWidthRatio(double val) {

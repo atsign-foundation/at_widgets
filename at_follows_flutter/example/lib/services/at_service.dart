@@ -34,7 +34,7 @@ class AtService {
       ..commitLogPath = path
       ..cramSecret = cramSecret
       ..namespace = AppConstants.appNamespace
-      ..rootDomain = 'root.atsign.wtf'
+      ..rootDomain = AppConstants.rootDomain
       ..hiveStoragePath = path;
     return _atClientPreference;
   }
@@ -83,7 +83,10 @@ class AtService {
     _atsign = await getAtSign();
     String? privateKey = await getPrivateKey(_atsign!);
     // ignore: await_only_futures
-    await atClientInstance!.startMonitor(privateKey!, (response) {
+    if (privateKey == null) {
+      return false;
+    }
+    await atClientInstance!.startMonitor(privateKey, (response) {
       acceptStream(response);
     });
     print("Monitor started");
