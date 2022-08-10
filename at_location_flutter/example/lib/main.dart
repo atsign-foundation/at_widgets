@@ -49,6 +49,7 @@ class _MyAppState extends State<MyApp> {
       builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
         ThemeMode themeMode = snapshot.data ?? ThemeMode.light;
         return MaterialApp(
+          navigatorKey: NavService.navKey,
           // * The onboarding screen (first screen)
           theme: ThemeData().copyWith(
             brightness: Brightness.light,
@@ -126,7 +127,7 @@ class _MyAppState extends State<MyApp> {
                             break;
                         }
                       },
-                      child: const Text('Onboard an @sign'),
+                      child: const Text('Onboard an atSign'),
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(

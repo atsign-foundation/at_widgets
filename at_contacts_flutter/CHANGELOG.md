@@ -1,3 +1,7 @@
+## 4.0.6
+- **FEAT**: Updated text
+- **FIX**: Corrected single selection bug
+
 ## 4.0.5
 - **FIX**: Lint Fixes according to flutter 3.0
 
