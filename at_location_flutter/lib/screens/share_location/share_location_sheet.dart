@@ -75,7 +75,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
                 : Colors.white.withOpacity(0.2),
             value: (str) {
               if (!str.contains('@')) {
-                str = '@' + str;
+                str = '@$str';
               }
               textField = str;
             },
@@ -196,7 +196,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     if (atSign == null) {
       return false;
     } else if (!atSign.contains('@')) {
-      atSign = '@' + atSign;
+      atSign = '@$atSign';
     }
     var checkPresence = await AtLookupImpl.findSecondary(
         atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);

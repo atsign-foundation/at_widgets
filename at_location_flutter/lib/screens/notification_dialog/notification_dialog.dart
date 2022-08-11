@@ -80,8 +80,8 @@ class _NotificationDialogState extends State<NotificationDialog> {
           children: <Widget>[
             Text(
                 ((!widget.locationData!.isRequest)
-                    ? '${widget.userName} ' + AllText().ACCEPT_SHARE_LOCATION
-                    : '${widget.userName} ' + AllText().SHARE_YOUR_LOCATION),
+                    ? '${widget.userName} ${AllText().ACCEPT_SHARE_LOCATION}'
+                    : '${widget.userName} ${AllText().SHARE_YOUR_LOCATION}'),
                 style: CustomTextStyles().grey16,
                 textAlign: TextAlign.center),
             const SizedBox(height: 30),

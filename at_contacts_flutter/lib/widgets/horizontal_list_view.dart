@@ -18,10 +18,10 @@ class HorizontalCircularList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _contactService = ContactService();
+    var contactService = ContactService();
     return StreamBuilder<List<AtContact?>>(
-        initialData: _contactService.selectedContacts,
-        stream: _contactService.selectedContactStream,
+        initialData: contactService.selectedContacts,
+        stream: contactService.selectedContactStream,
         builder: (context, snapshot) {
           var selectedContacts = snapshot.data!;
           return SizedBox(
@@ -33,7 +33,7 @@ class HorizontalCircularList extends StatelessWidget {
                 return CircularContacts(
                   contact: selectedContacts[index],
                   onCrossPressed: () {
-                    _contactService
+                    contactService
                         .removeSelectedAtSign(selectedContacts[index]);
                   },
                   theme: theme,

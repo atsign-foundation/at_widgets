@@ -98,7 +98,7 @@ class _SecondScreenState extends State<SecondScreen> {
               padding: const EdgeInsets.all(20),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Type an @sign',
+                  hintText: 'Type an atSign',
                   enabledBorder: InputBorder.none,
                   border: InputBorder.none,
                   hintStyle: TextStyle(color: Colors.grey[400]),

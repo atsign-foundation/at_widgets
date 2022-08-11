@@ -17,7 +17,7 @@ void main() {
   /// Functional test cases for Theme Mode Card Widget
   group('Theme Mode Card Widget Tests:', () {
     // Test Case to Check Theme Mode Card is displayed
-    final themeModeCard = ThemeModeCard(
+    const themeModeCard = ThemeModeCard(
         primaryColor: Colors.purple,
         brightness: Brightness.light,
         isSelected: true);

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:typed_data';
 
 // ignore: import_of_legacy_library_into_null_safe
@@ -265,19 +267,21 @@ class _GroupViewState extends State<GroupView> {
                                     ], widget.group);
 
                                     GroupService().showLoaderSink.add(false);
-                                    if (result == null) {
-                                      CustomToast().show(
-                                          TextConstants().SERVICE_ERROR,
-                                          context);
-                                    } else if (result is bool && result) {
-                                      // CustomToast().show(
-                                      //     TextConstants().MEMBER_ADDED,
-                                      //     context);
+                                    if(mounted){
+                                      if (result == null) {
+                                        CustomToast().show(
+                                            TextConstants().SERVICE_ERROR,
+                                            context);
+                                      } else if (result is bool && result) {
+                                        // CustomToast().show(
+                                        //     TextConstants().MEMBER_ADDED,
+                                        //     context);
 
-                                    } else {
-                                      CustomToast().show(
-                                          TextConstants().SERVICE_ERROR,
-                                          context);
+                                      } else {
+                                        CustomToast().show(
+                                            TextConstants().SERVICE_ERROR,
+                                            context);
+                                      }
                                     }
                                   }
                                 },

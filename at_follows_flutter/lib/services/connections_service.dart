@@ -10,7 +10,7 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_client/at_client.dart';
 
-import 'notification_service.dart';
+import 'notification_service.dart' as follows_notification_service;
 
 class ConnectionsService {
   static final ConnectionsService _singleton = ConnectionsService._internal();
@@ -464,7 +464,8 @@ class ConnectionsService {
         notification.to == _sdkService.atsign &&
         notification.key.contains(AppConstants.containsFollowing)) {
       await updateFollowers(notification);
-      // await NotificationService().showNotification(notification);
+      await follows_notification_service.NotificationService()
+          .showNotification(notification);
     } else if (notification.operation == Operation.delete &&
         notification.to == _sdkService.atsign &&
         notification.key.contains(AppConstants.containsFollowing)) {

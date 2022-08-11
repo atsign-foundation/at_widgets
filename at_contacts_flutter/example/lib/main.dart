@@ -3,15 +3,10 @@ import 'package:at_contacts_flutter_example/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show Onboarding;
-import 'package:at_utils/at_logger.dart' show AtSignLogger;
+    show AtOnboarding, AtOnboardingConfig, AtOnboardingResultStatus;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
-import 'package:flutter_keychain/flutter_keychain.dart';
-
-final StreamController<ThemeMode> updateThemeMode =
-    StreamController<ThemeMode>.broadcast();
 
 Future<void> main() async {
   await AtEnv.load();
@@ -30,6 +25,9 @@ Future<AtClientPreference> loadAtClientPreference() async {
       // TODO set the rest of your AtClientPreference here
       ;
 }
+
+final StreamController<ThemeMode> updateThemeMode =
+    StreamController<ThemeMode>.broadcast();
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -51,30 +49,36 @@ class _MyAppState extends State<MyApp> {
     return StreamBuilder<ThemeMode>(
       stream: updateThemeMode.stream,
       initialData: ThemeMode.light,
-      builder: (context, snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
+        ThemeMode themeMode = snapshot.data ?? ThemeMode.light;
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
+          theme: ThemeData().copyWith(
             brightness: Brightness.light,
-            primaryColor: const Color(0xFF6200EE),
-            accentColor: const Color(0xFF03DAC6),
+            primaryColor: const Color(0xFFf4533d),
+            colorScheme: ThemeData.light().colorScheme.copyWith(
+                  primary: const Color(0xFFf4533d),
+                ),
             backgroundColor: Colors.white,
+            scaffoldBackgroundColor: Colors.white,
           ),
-          darkTheme: ThemeData(
+          darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
-            fontFamily: 'RobotoSlab',
-            primaryColor: const Color(0xFF3700B3),
-            accentColor: const Color(0xFF018786),
-            backgroundColor: Colors.black,
+            primaryColor: Colors.blue,
+            colorScheme: ThemeData.dark().colorScheme.copyWith(
+                  primary: Colors.blue,
+                ),
+            backgroundColor: Colors.grey[850],
+            scaffoldBackgroundColor: Colors.grey[850],
           ),
-          themeMode: snapshot.data,
+          themeMode: themeMode,
           home: Scaffold(
             appBar: AppBar(
-              title: const Text('Plugin example app'),
+              title: const Text('MyApp'),
               actions: <Widget>[
                 IconButton(
                   onPressed: () {
-                    updateThemeMode.sink.add(snapshot.data == ThemeMode.light
+                    updateThemeMode.sink.add(themeMode == ThemeMode.light
                         ? ThemeMode.dark
                         : ThemeMode.light);
                   },
@@ -87,87 +91,65 @@ class _MyAppState extends State<MyApp> {
               ],
             ),
             body: Builder(
-              builder: (context) => Column(
-                children: [
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Container(
-                      padding: const EdgeInsets.all(10.0),
-                      child: const Center(
-                        child: Text(
-                            'A client service should create an atClient instance and call onboard method before navigating to QR scanner screen',
-                            textAlign: TextAlign.center),
-                      )),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Center(
-                    child: ElevatedButton(
+              builder: (context) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
                       onPressed: () async {
                         var preference = await futurePreference;
                         setState(() {
                           atClientPreference = preference;
                         });
-                        Onboarding(
+                        final result = await AtOnboarding.onboard(
                           context: context,
-                          atClientPreference: atClientPreference!,
-                          domain: AtEnv.rootDomain,
-                          rootEnvironment: AtEnv.rootEnvironment,
-                          appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                          onboard: (Map<String?, AtClientService> value,
-                              String? atsign) async {
-                            atClientService = value[atsign];
-                            await Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SecondScreen(),
+                          config: AtOnboardingConfig(
+                            atClientPreference: atClientPreference!,
+                            domain: AtEnv.rootDomain,
+                            rootEnvironment: AtEnv.rootEnvironment,
+                            appAPIKey: AtEnv.appApiKey,
+                          ),
+                        );
+                        switch (result.status) {
+                          case AtOnboardingResultStatus.success:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const SecondScreen()));
+                            break;
+                          case AtOnboardingResultStatus.error:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('An error has occurred'),
                               ),
                             );
-                          },
-                          onError: (error) async {
-                            _logger.severe('Onboarding throws $error error');
-                            await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: const Text('Something went wrong'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('ok'))
-                                    ],
-                                  );
-                                });
-                          },
+                            break;
+                          case AtOnboardingResultStatus.cancel:
+                            break;
+                        }
+                      },
+                      child: const Text('Onboard an @sign'),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        var preference = await futurePreference;
+                        atClientPreference = preference;
+                        AtOnboarding.reset(
+                          context: context,
+                          config: AtOnboardingConfig(
+                            atClientPreference: atClientPreference!,
+                            domain: AtEnv.rootDomain,
+                            rootEnvironment: AtEnv.rootEnvironment,
+                            appAPIKey: AtEnv.appApiKey,
+                          ),
                         );
                       },
-                      child: const Text('Start onboarding'),
+                      child: const Text('Reset'),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Center(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.black12),
-                      ),
-                      onPressed: () {
-                        FlutterKeychain.remove(key: '@atsign');
-                      },
-                      child: const Text(
-                        'Clear paired atsigns',
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

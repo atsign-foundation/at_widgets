@@ -43,7 +43,7 @@ class AllColors {
 class ContactInitialsColors {
   static Color getColor(String atsign) {
     if (atsign.length == 1) {
-      atsign = atsign + ' ';
+      atsign = '$atsign ';
     }
     switch (atsign[1].toUpperCase()) {
       case 'A':

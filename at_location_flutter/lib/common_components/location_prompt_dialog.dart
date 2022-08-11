@@ -124,7 +124,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                                         .currentContext!)
                                     .pop();
                               },
-                              buttonText: widget.yesText ?? AllText().YES + '!',
+                              buttonText: widget.yesText ?? '${AllText().YES}!',
                               buttonColor: Theme.of(context).brightness ==
                                       Brightness.light
                                   ? Colors.black
@@ -148,7 +148,7 @@ class _LocationPromptState extends State<LocationPrompt> {
                           }
                           Navigator.of(context).pop();
                         },
-                        buttonText: widget.noText ?? AllText().NO + '!',
+                        buttonText: widget.noText ?? '${AllText().NO}!',
                         buttonColor: Colors.white,
                         fontColor: Theme.of(context).brightness ==
                                       Brightness.light

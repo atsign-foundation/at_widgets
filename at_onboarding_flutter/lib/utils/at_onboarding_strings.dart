@@ -46,7 +46,7 @@ class AtOnboardingStrings {
   static const String resetButton = 'Reset';
   static const String resetDescription =
       'This will remove the selected atSign and its details from this app only.';
-  static const String noAtsignToReset = 'No @signs are paired to reset. ';
+  static const String noAtsignToReset = 'No atSigns are paired to reset. ';
   static const String resetErrorText =
       'Please select atleast one atSign to reset';
   static const String resetWarningText =

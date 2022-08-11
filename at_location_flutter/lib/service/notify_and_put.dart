@@ -1,7 +1,5 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 // ignore: implementation_imports
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_utils/at_logger.dart';
 
 class NotifyAndPut {
@@ -18,11 +16,11 @@ class NotifyAndPut {
       atKey = removeNamespaceFromKey(atKey);
 
       if (!atKey.sharedBy!.contains('@')) {
-        atKey.sharedBy = '@' + atKey.sharedBy!;
+        atKey.sharedBy = '@${atKey.sharedBy!}';
       }
 
       if (!atKey.sharedWith!.contains('@')) {
-        atKey.sharedWith = '@' + atKey.sharedWith!;
+        atKey.sharedWith = '@${atKey.sharedWith!}';
       }
 
       var result =
@@ -59,17 +57,15 @@ class NotifyAndPut {
   AtKey removeNamespaceFromKey(AtKey atKey) {
     if (AtClientManager.getInstance().atClient.getPreferences()!.namespace !=
         null) {
-      if (atKey.key!.contains('.' +
-          AtClientManager.getInstance()
+      if (atKey.key!.contains('.${AtClientManager.getInstance()
               .atClient
               .getPreferences()!
-              .namespace!)) {
+              .namespace!}')) {
         atKey.key = atKey.key!.replaceAll(
-            ('.' +
-                AtClientManager.getInstance()
+            ('.${AtClientManager.getInstance()
                     .atClient
                     .getPreferences()!
-                    .namespace!),
+                    .namespace!}'),
             '');
       }
     }
@@ -80,8 +76,8 @@ class NotifyAndPut {
   String removeNamespaceFromString(String _id) {
     var _namespace =
         AtClientManager.getInstance().atClient.getPreferences()!.namespace;
-    if ((_namespace != null) && (_id.contains('.' + _namespace))) {
-      _id = _id.replaceAll(('.' + _namespace), '');
+    if ((_namespace != null) && (_id.contains('.$_namespace'))) {
+      _id = _id.replaceAll(('.$_namespace'), '');
     }
 
     return _id;

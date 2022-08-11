@@ -106,8 +106,9 @@ class _CustomListTileState extends State<CustomListTile> {
                   }
                   isSelected = !isSelected;
                 });
-
-                widget.selectedList!(widget.contactService!.selectedContacts);
+                if (widget.asSingleSelectionTile) {
+                  widget.selectedList!(widget.contactService!.selectedContacts);
+                }
               } else {
                 if (widget.onTap != null) {
                   widget.onTap!();
@@ -146,8 +147,12 @@ class _CustomListTileState extends State<CustomListTile> {
                     },
               icon: (widget.asSelectionTile)
                   ? (isSelected)
-                      ? const Icon(Icons.close)
-                      : const Icon(Icons.add)
+                      ? const Icon(
+                          Icons.cancel_rounded,
+                          size: 26.0,
+                          color: Colors.red,
+                        )
+                      : const Icon(Icons.add, size: 24.0, color: Colors.green)
                   : Image.asset(
                       ImageConstants.sendIcon,
                       width: 21.toWidth,

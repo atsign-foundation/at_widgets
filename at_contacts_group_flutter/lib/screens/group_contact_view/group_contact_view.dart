@@ -557,8 +557,10 @@ class _GroupContactViewState extends State<GroupContactView> {
     });
 
     if (_res && closeBottomSheet) {
-      /// to close bottomsheet
-      Navigator.pop(context);
+      if(mounted){
+        /// to close bottomsheet
+        Navigator.pop(context);
+      } 
     }
   }
 
@@ -590,8 +592,10 @@ class _GroupContactViewState extends State<GroupContactView> {
     });
 
     if (_res && closeBottomSheet) {
-      /// to close bottomsheet
-      Navigator.pop(context);
+      if(mounted){
+        /// to close bottomsheet
+        Navigator.pop(context);
+      } 
     }
   }
 

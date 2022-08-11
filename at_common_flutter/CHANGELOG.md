@@ -1,3 +1,7 @@
+## 2.0.9
+- **FIX**: Minor UI updates
+- **CHORE**: Updated dependency
+
 ## 2.0.8
 - **FIX**: Lint Fixes according to flutter 3.0
 

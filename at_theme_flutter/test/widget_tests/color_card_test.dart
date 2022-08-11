@@ -17,7 +17,7 @@ void main() {
   /// Functional test cases for Color Card Widget
   group('Color Card Widget Tests:', () {
     // Test Case to Check Color Card is displayed
-    final colorCard = ColorCard(color: Colors.orange, isSelected: true);
+    const colorCard = ColorCard(color: Colors.orange, isSelected: true);
     testWidgets("Color Card is displayed", (WidgetTester tester) async {
       await tester.pumpWidget(
           _wrapWidgetWithMaterialApp(colorCard: colorCard));

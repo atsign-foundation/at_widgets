@@ -74,8 +74,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
   void initState() {
     _contactService = ContactService();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      var _result = await _contactService.fetchContacts();
-      if (_result == null) {
+      var result = await _contactService.fetchContacts();
+      if (result == null) {
         if (mounted) {
           setState(() {
             errorOcurred = true;
@@ -212,16 +212,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             child: Text(TextStrings().noContacts),
                           );
                         } else {
-                          var _filteredList = <BaseContact?>[];
+                          var filteredList = <BaseContact?>[];
                           for (var c in snapshot.data!) {
                             if (c!.contact!.atSign!
                                 .toUpperCase()
                                 .contains(searchText.toUpperCase())) {
-                              _filteredList.add(c);
+                              filteredList.add(c);
                             }
                           }
 
-                          if (_filteredList.isEmpty) {
+                          if (filteredList.isEmpty) {
                             return Center(
                               child: Text(TextStrings().noContactsFound),
                             );
@@ -239,7 +239,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                       .toUpperCase();
                               if (alphabetIndex == 26) {
                                 currentChar = 'Others';
-                                for (var c in _filteredList) {
+                                for (var c in filteredList) {
                                   if (!RegExp(r'^[a-z]+$').hasMatch(
                                     c!.contact!.atSign![1].toLowerCase(),
                                   )) {
@@ -247,7 +247,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                   }
                                 }
                               } else {
-                                for (var c in _filteredList) {
+                                for (var c in filteredList) {
                                   if (c!.contact!.atSign![1].toUpperCase() ==
                                       currentChar) {
                                     contactsForAlphabet.add(c.contact!);

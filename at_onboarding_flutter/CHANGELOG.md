@@ -1,3 +1,7 @@
+## 5.0.0
+- **FEAT**: Updated UI flow
+- **FEAT**: Updated Keychain data structure dependency
+
 ## 4.0.4
 - **FIX**: Bug fixes in atSign activation process
 

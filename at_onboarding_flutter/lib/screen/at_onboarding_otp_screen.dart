@@ -288,7 +288,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
       // if (errorMessage.contains('Invalid Email')) {
       //   oldEmail = email;
       // }
-      if (errorMessage.contains('maximum number of free @signs')) {
+      if (errorMessage.contains('maximum number of free atSigns')) {
         await showlimitDialog();
       } else {
         await showErrorDialog(errorMessage);
@@ -392,7 +392,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
       if (errorMessage.contains('Invalid Email')) {
         oldEmail = email;
       }
-      if (errorMessage.contains('maximum number of free @signs')) {
+      if (errorMessage.contains('maximum number of free atSigns')) {
         await showlimitDialog();
       } else {
         await showErrorDialog(errorMessage);
@@ -413,7 +413,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                     style: TextStyle(
                         color: Colors.black, fontSize: 16, letterSpacing: 0.5),
                     text:
-                        'Oops! You already have the maximum number of free @signs. Please login to ',
+                        'Oops! You already have the maximum number of free atSigns. Please login to ',
                   ),
                   TextSpan(
                       text: 'https://my.atsign.com',
@@ -431,7 +431,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                           }
                         }),
                   const TextSpan(
-                    text: '  to select one of your existing @signs.',
+                    text: '  to select one of your existing atSigns.',
                     style: TextStyle(
                         color: Colors.black, fontSize: 16, letterSpacing: 0.5),
                   ),
