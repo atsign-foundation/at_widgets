@@ -1,3 +1,7 @@
+## 3.1.8
+- **FEAT**: Updated text
+- **CHORE**: Updated dependency
+
 ## 3.1.7
 - **CHORE**: Applied shouldDecrypt for decryption
 
