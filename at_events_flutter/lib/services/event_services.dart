@@ -165,13 +165,15 @@ class EventService {
         notification,
       ); // creating a key and saving it for creator without adding any receiver atsign
 
-      atKey.sharedWith = jsonEncode(
-          [...selectedContactsAtSigns]); //adding event members in atkey
+      /// throwing an error (doesnt start with @), 
+      /// might lead to functional bug (so, leaving it here)
+      // atKey.sharedWith = jsonEncode(
+      //     [...selectedContactsAtSigns]); //adding event members in atkey
 
       await notifyAll(
         atKey,
         notification,
-        [...selectedContactsAtSigns],
+        selectedContactsAtSigns,
       );
 
       /// Dont need to sync as notifyAll is called
@@ -466,9 +468,13 @@ class EventService {
       AtKey atkey, String value, List<String?> atsigns) async {
     for (var element in atsigns) {
       atkey.sharedWith = element;
-      await atClientManager.notificationService.notify(
-        NotificationParams.forUpdate(atkey, value: value),
-      );
+      try{
+        await atClientManager.notificationService.notify(
+          NotificationParams.forUpdate(atkey, value: value),
+        );
+      }catch(e){
+        _logger.severe('error in SendEventNotification to $element: $e');
+      }
     }
   }
 }
