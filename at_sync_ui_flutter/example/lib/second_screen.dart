@@ -113,7 +113,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 StreamBuilder<AtSyncUIStatus>(
                   stream: AtSyncUIService().atSyncUIListener,
                   builder: ((context, snapshot) => CustomSyncIndicator(
-                        uiStatus: snapshot.data!,
+                        uiStatus: snapshot.data ?? AtSyncUIStatus.notStarted,
                         size: 50,
                         child: const ClipOval(
                           child: Image(

@@ -39,6 +39,12 @@ dependencies:
   at_sync_ui_flutter:
     path: ../
 
+dependency_overrides:
+  at_onboarding_flutter: ^5.0.0
+  # as at_onboarding_flutter is also using at_sync_ui_flutter
+  at_sync_ui_flutter:
+    path: ../
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
