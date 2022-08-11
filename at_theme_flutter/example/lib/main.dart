@@ -1,19 +1,17 @@
 import 'dart:async';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show Onboarding;
+    show AtOnboarding, AtOnboardingConfig, AtOnboardingResultStatus;
 import 'package:at_theme_flutter/at_theme_flutter.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_utils/at_logger.dart' show AtSignLogger;
-import 'package:flutter_keychain/flutter_keychain.dart';
-
 import 'src/pages/profile_page.dart';
 
 final StreamController<AppTheme> appThemeController =
     StreamController<AppTheme>.broadcast();
+
 Future<void> main() async {
   await AtEnv.load();
   runApp(const MyApp());
@@ -41,8 +39,6 @@ class _MyAppState extends State<MyApp> {
   AtClientPreference? atClientPreference;
   AtClientService? atClientService;
 
-  final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<AppTheme>(
@@ -56,24 +52,12 @@ class _MyAppState extends State<MyApp> {
                 // * The onboarding screen (first screen)
                 home: Scaffold(
                     appBar: AppBar(
-                      title: const Text('Plugin example app'),
+                      title: const Text('at_theme_flutter example app'),
                     ),
                     body: Builder(
                       builder: (context) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Container(
-                              padding: const EdgeInsets.all(10.0),
-                              child: const Center(
-                                child: Text(
-                                    'A client service should create an atClient instance and call onboard method before navigating to QR scanner screen',
-                                    textAlign: TextAlign.center),
-                              )),
-                          const SizedBox(
-                            height: 25,
-                          ),
                           Center(
                             child: ElevatedButton(
                               onPressed: () async {
@@ -81,60 +65,58 @@ class _MyAppState extends State<MyApp> {
                                 setState(() {
                                   atClientPreference = preference;
                                 });
-                                Onboarding(
+
+                                final result = await AtOnboarding.onboard(
                                   context: context,
-                                  atClientPreference: atClientPreference!,
-                                  domain: AtEnv.rootDomain,
-                                  rootEnvironment: AtEnv.rootEnvironment,
-                                  appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                                  onboard: (Map<String?, AtClientService> value,
-                                      String? atsign) async {
-                                    atClientService = value[atsign];
-                                    await Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const ProfilePage()));
-                                  },
-                                  onError: (error) async {
-                                    _logger.severe(
-                                        'Onboarding throws $error error');
-                                    await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            content: const Text(
-                                                'Something went wrong'),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text('ok'))
-                                            ],
-                                          );
-                                        });
-                                  },
+                                  config: AtOnboardingConfig(
+                                    atClientPreference: atClientPreference!,
+                                    domain: AtEnv.rootDomain,
+                                    rootEnvironment: AtEnv.rootEnvironment,
+                                    appAPIKey: AtEnv.appApiKey,
+                                  ),
                                 );
+                                switch (result.status) {
+                                  case AtOnboardingResultStatus.success:
+                                    await Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ProfilePage()));
+                                    break;
+                                  case AtOnboardingResultStatus.error:
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        backgroundColor: Colors.red,
+                                        content: Text('An error has occurred'),
+                                      ),
+                                    );
+                                    break;
+                                  case AtOnboardingResultStatus.cancel:
+                                    break;
+                                }
                               },
-                              child: const Text('Start onboarding'),
+                              child: const Text('Onboard an atSign'),
                             ),
                           ),
                           const SizedBox(
                             height: 25,
                           ),
-                          Center(
-                              child: TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.black12),
-                                  ),
-                                  onPressed: () {
-                                    FlutterKeychain.remove(key: '@atsign');
-                                  },
-                                  child: const Text('Clear paired atsigns',
-                                      style: TextStyle(color: Colors.black)))),
+                          ElevatedButton(
+                            onPressed: () async {
+                              var preference = await futurePreference;
+                              atClientPreference = preference;
+                              AtOnboarding.reset(
+                                context: context,
+                                config: AtOnboardingConfig(
+                                  atClientPreference: atClientPreference!,
+                                  domain: AtEnv.rootDomain,
+                                  rootEnvironment: AtEnv.rootEnvironment,
+                                  appAPIKey: AtEnv.appApiKey,
+                                ),
+                              );
+                            },
+                            child: const Text('Reset'),
+                          ),
                         ],
                       ),
                     )),

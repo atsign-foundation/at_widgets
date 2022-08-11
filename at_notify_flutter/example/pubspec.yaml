@@ -39,6 +39,10 @@ dependencies:
     path: ../
   at_onboarding_flutter: ^4.0.3
 
+
+dependency_overrides:
+  at_onboarding_flutter: ^5.0.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
