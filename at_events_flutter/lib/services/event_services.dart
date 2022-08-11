@@ -116,7 +116,10 @@ class EventService {
         atKey,
         eventData,
       );
-      atKey.sharedWith = jsonEncode(allAtsignList);
+
+      /// throwing an error (doesnt start with @), 
+      /// might lead to functional bug (so, leaving it here)
+      // atKey.sharedWith = jsonEncode(allAtsignList);
 
       await notifyAll(
         atKey,
