@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:at_events_flutter_example/second_screen.dart';
+import 'package:at_onboarding_flutter/at_onboarding.dart';
+import 'package:at_onboarding_flutter/at_onboarding_result.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
@@ -33,6 +36,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -100,41 +104,35 @@ class _MyAppState extends State<MyApp> {
                             setState(() {
                               atClientPreference = preference;
                             });
-                            Onboarding(
+                            final result = await AtOnboarding.onboard(
                               context: context,
-                              atClientPreference: atClientPreference!,
-                              domain: AtEnv.rootDomain,
-                              rootEnvironment: AtEnv.rootEnvironment,
-                              appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                              onboard: (Map<String?, AtClientService> value,
-                                  String? atsign) async {
-                                atClientService = value[atsign];
-                                await Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const SecondScreen()));
-                              },
-                              onError: (error) async {
-                                _logger
-                                    .severe('Onboarding throws $error error');
-                                await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        content:
-                                            const Text('Something went wrong'),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text('ok'))
-                                        ],
-                                      );
-                                    });
-                              },
+                              config: AtOnboardingConfig(
+                                atClientPreference: atClientPreference!,
+                                domain: AtEnv.rootDomain,
+                                rootEnvironment: AtEnv.rootEnvironment,
+                                appAPIKey: AtEnv.appApiKey,
+                              ),
                             );
+                            switch (result.status) {
+                              case AtOnboardingResultStatus.success:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const SecondScreen(),
+                                  ),
+                                );
+                                break;
+                              case AtOnboardingResultStatus.error:
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text('An error has occurred'),
+                                  ),
+                                );
+                                break;
+                              case AtOnboardingResultStatus.cancel:
+                                break;
+                            }
                           },
                           child: const Text('Start onboarding'),
                         ),
@@ -143,11 +141,7 @@ class _MyAppState extends State<MyApp> {
                         height: 25,
                       ),
                       Center(
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.black12),
-                          ),
+                        child: ElevatedButton(
                           onPressed: () async {
                             var _atsignsList =
                                 await KeychainUtil.getAtsignList();
@@ -161,8 +155,9 @@ class _MyAppState extends State<MyApp> {
                                     content:
                                         Text('Cleared all paired atsigns')));
                           },
-                          child: const Text('Clear paired atsigns',
-                              style: TextStyle(color: Colors.black)),
+                          child: const Text(
+                            'Clear paired atsigns',
+                          ),
                         ),
                       ),
                     ],

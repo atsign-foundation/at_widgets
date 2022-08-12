@@ -82,7 +82,12 @@ class _SecondScreenState extends State<SecondScreen> {
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
                 'Welcome $activeAtSign!',
-                style: const TextStyle(fontSize: 20),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+                ),
               ),
             ),
             ElevatedButton(
@@ -172,10 +177,15 @@ class _SecondScreenState extends State<SecondScreen> {
             const SizedBox(
               height: 30,
             ),
-            const Center(
+            Center(
               child: Text(
                 'Notifications:',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+                ),
               ),
             ),
             const SizedBox(
@@ -193,7 +203,15 @@ class _SecondScreenState extends State<SecondScreen> {
                       } else {
                         return (snapshot.data?.isNotEmpty ?? false)
                             ? renderNotifications(snapshot.data!)
-                            : const Text('No Data');
+                            : Text(
+                                'No Data',
+                                style: TextStyle(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.black
+                                      : Colors.white,
+                                ),
+                              );
                       }
                     } else {
                       if (KeyStreamService()
@@ -202,7 +220,15 @@ class _SecondScreenState extends State<SecondScreen> {
                         return renderNotifications(
                             KeyStreamService().allLocationNotifications);
                       }
-                      return const Text('No Data');
+                      return Text(
+                        'No Data',
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                        ),
+                      );
                     }
                   }),
             )

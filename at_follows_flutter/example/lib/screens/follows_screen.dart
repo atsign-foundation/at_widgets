@@ -28,33 +28,39 @@ class _NextScreen extends State<NextScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Next Screen'),
-          actions: [
-            // if (_atsign != null)
-          ],
-        ),
-        body: Builder(builder: (context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Next Screen'),
+      ),
+      body: Builder(
+        builder: (context) {
           return Padding(
             padding: EdgeInsets.all(16.0),
             child: Center(
               child: TextButton(
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Connections(
-                                atClientserviceInstance:
-                                    atService.atClientServiceInstance!,
-                                appColor: Colors.blue)));
-                  },
-                  child: Text(AppStrings.nextscreen)),
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Connections(
+                        atClientserviceInstance:
+                        atService.atClientServiceInstance!,
+                      ),
+                    ),
+                  );
+                },
+                child: Text(
+                  AppStrings.nextscreen,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white,
+                  ),
+                ),
+              ),
             ),
           );
-        }),
+        },
       ),
     );
   }

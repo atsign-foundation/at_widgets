@@ -137,6 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
               thickness: 2,
             ),
             const Text('Custom Input field:'),
+            const SizedBox(height: 16),
             CustomInputField(
               icon: Icons.emoji_emotions_outlined,
               width: 200.0,
@@ -147,13 +148,17 @@ class _MyHomePageState extends State<MyHomePage> {
               inputFieldColor: Theme.of(context).brightness == Brightness.light
                   ? Colors.black.withOpacity(0.2)
                   : Colors.white.withOpacity(0.2),
+              iconColor: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
             ),
             const Divider(
               color: Color(0xFFBEC0C8),
-              height: 30,
+              height: 48,
               thickness: 2,
             ),
             const Text('Custom Button:'),
+            const SizedBox(height: 16),
             CustomButton(
               height: 50.0,
               width: 200.0,

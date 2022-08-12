@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:at_follows_flutter/utils/color_constants.dart';
 import 'package:at_follows_flutter_example/screens/follows_screen.dart';
+import 'package:at_onboarding_flutter/at_onboarding.dart';
+import 'package:at_onboarding_flutter/at_onboarding_result.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
@@ -77,9 +80,11 @@ class _MyAppState extends State<MyApp> {
                 actions: [
                   IconButton(
                     onPressed: () {
-                      updateThemeMode.sink.add(themeMode == ThemeMode.light
-                          ? ThemeMode.dark
-                          : ThemeMode.light);
+                      updateThemeMode.sink.add(
+                        themeMode == ThemeMode.light
+                            ? ThemeMode.dark
+                            : ThemeMode.light,
+                      );
                     },
                     icon: Icon(
                       Theme.of(context).brightness == Brightness.light
@@ -102,49 +107,33 @@ class _MyAppState extends State<MyApp> {
                           setState(() {
                             atClientPreference = preference;
                           });
-                          Onboarding(
+                          final result = await AtOnboarding.onboard(
                             context: context,
-                            atClientPreference: atClientPreference!,
-                            domain: AtEnv.rootDomain,
-                            rootEnvironment: AtEnv.rootEnvironment,
-                            appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                            onboard: (Map<String?, AtClientService> value,
-                                String? atsign) async {
-                              atClientService = value[atsign];
-                              AtService.getInstance().atClientServiceInstance =
-                                  value[atsign];
-
-                              await AtClientManager.getInstance()
-                                  .setCurrentAtSign(
-                                atsign!,
-                                atClientPreference!.namespace!,
-                                atClientPreference!,
-                              );
-
-                              await Navigator.pushReplacement(
+                            config: AtOnboardingConfig(
+                              atClientPreference: atClientPreference!,
+                              domain: AtEnv.rootDomain,
+                              rootEnvironment: AtEnv.rootEnvironment,
+                              appAPIKey: AtEnv.appApiKey,
+                            ),
+                          );
+                          switch (result.status) {
+                            case AtOnboardingResultStatus.success:
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NextScreen()));
-                            },
-                            onError: (error) async {
-                              _logger.severe('Onboarding throws $error error');
-                              await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      content:
-                                          const Text('Something went wrong'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('ok'))
-                                      ],
-                                    );
-                                  });
-                            },
-                          );
+                                      builder: (_) => NextScreen()));
+                              break;
+                            case AtOnboardingResultStatus.error:
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('An error has occurred'),
+                                ),
+                              );
+                              break;
+                            case AtOnboardingResultStatus.cancel:
+                              break;
+                          }
                         },
                         child: const Text('Start onboarding'),
                       ),
@@ -153,26 +142,22 @@ class _MyAppState extends State<MyApp> {
                       height: 25,
                     ),
                     Center(
-                        child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.black12),
-                            ),
-                            onPressed: () async {
-                              var _atsignsList =
-                                  await KeychainUtil.getAtsignList();
-                              for (String atsign in (_atsignsList ?? [])) {
-                                await KeychainUtil.resetAtSignFromKeychain(
-                                    atsign);
-                              }
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          var _atsignsList = await KeychainUtil.getAtsignList();
+                          for (String atsign in (_atsignsList ?? [])) {
+                            await KeychainUtil.resetAtSignFromKeychain(atsign);
+                          }
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Cleared all paired atsigns')));
-                            },
-                            child: const Text('Clear paired atsigns',
-                                style: TextStyle(color: Colors.black)))),
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Cleared all paired atsigns')));
+                        },
+                        child: const Text(
+                          'Clear paired atsigns',
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               )),

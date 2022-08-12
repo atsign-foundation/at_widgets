@@ -177,13 +177,33 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: Column(
           children: [
-            const Text(
-                'Successfully onboarded and navigated to FirstAppScreen'),
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              'Successfully onboarded and navigated to FirstAppScreen',
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
 
             /// Use the AtClientManager instance to get the current atsign
             Text(
-                'Current @sign: ${atClientManager.atClient.getCurrentAtSign()}'),
-          
+              'Current @sign: ${atClientManager.atClient.getCurrentAtSign()}',
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
             ElevatedButton.icon(
               icon: const Icon(
                 Icons.file_copy,
@@ -191,7 +211,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               label: const Text('Backup your key'),
               onPressed: () async {
-                BackupKeyWidget(atsign: atClientManager.atClient.getCurrentAtSign() ?? '')
+                BackupKeyWidget(
+                        atsign:
+                            atClientManager.atClient.getCurrentAtSign() ?? '')
                     .showBackupDialog(context);
               },
             ),

@@ -4,7 +4,7 @@ import 'package:at_chat_flutter_example/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show Onboarding;
+    show AtOnboarding, AtOnboardingConfig, AtOnboardingResultStatus, Onboarding;
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
@@ -54,15 +54,15 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: Brightness.light,
-            primaryColor: Color(0xFF6200EE),
-            accentColor: Color(0xFF03DAC6),
+            primaryColor: const Color(0xFF6200EE),
+            accentColor: const Color(0xFF03DAC6),
             backgroundColor: Colors.white,
           ),
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             fontFamily: 'RobotoSlab',
-            primaryColor: Color(0xFF3700B3),
-            accentColor: Color(0xFF018786),
+            primaryColor: const Color(0xFF3700B3),
+            accentColor: const Color(0xFF018786),
             backgroundColor: Colors.black,
           ),
           themeMode: themeMode,
@@ -109,39 +109,33 @@ class _MyAppState extends State<MyApp> {
                         setState(() {
                           atClientPreference = preference;
                         });
-                        Onboarding(
+                        final result = await AtOnboarding.onboard(
                           context: context,
-                          atClientPreference: atClientPreference!,
-                          domain: AtEnv.rootDomain,
-                          rootEnvironment: AtEnv.rootEnvironment,
-                          appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                          onboard: (Map<String?, AtClientService> value,
-                              String? atsign) async {
-                            atClientService = value[atsign];
-                            await Navigator.pushReplacement(
+                          config: AtOnboardingConfig(
+                            atClientPreference: atClientPreference!,
+                            domain: AtEnv.rootDomain,
+                            rootEnvironment: AtEnv.rootEnvironment,
+                            appAPIKey: AtEnv.appApiKey,
+                          ),
+                        );
+                        switch (result.status) {
+                          case AtOnboardingResultStatus.success:
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SecondScreen()));
-                          },
-                          onError: (error) async {
-                            _logger.severe('Onboarding throws $error error');
-                            await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: const Text('Something went wrong'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('ok'))
-                                    ],
-                                  );
-                                });
-                          },
-                        );
+                                    builder: (_) => const SecondScreen()));
+                            break;
+                          case AtOnboardingResultStatus.error:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('An error has occurred'),
+                              ),
+                            );
+                            break;
+                          case AtOnboardingResultStatus.cancel:
+                            break;
+                        }
                       },
                       child: const Text('Start onboarding'),
                     ),
