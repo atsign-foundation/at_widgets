@@ -46,7 +46,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var _contactService = ContactService();
+    var contactService = ContactService();
     var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
     return SizedBox(
       height: 140.toHeight * deviceTextFactor,
@@ -71,7 +71,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
           ),
           content: ConstrainedBox(
             constraints: BoxConstraints(
-                maxHeight: (_contactService.getAtSignError == '')
+                maxHeight: (contactService.getAtSignError == '')
                     ? 325.toHeight
                     : 370.toHeight * deviceTextFactor),
             child: Column(
@@ -99,18 +99,18 @@ class _AddContactDialogState extends State<AddContactDialog> {
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-                (_contactService.getAtSignError == '')
+                (contactService.getAtSignError == '')
                     ? Container()
                     : SizedBox(
                         height: 10.toHeight,
                       ),
-                (_contactService.getAtSignError == '')
+                (contactService.getAtSignError == '')
                     ? Container()
                     : Row(
                         children: [
                           Expanded(
                             child: Text(
-                              _contactService.getAtSignError,
+                              contactService.getAtSignError,
                               style: const TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.normal,
@@ -152,7 +152,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               setState(() {
                                 isLoading = true;
                               });
-                              var response = await _contactService.addAtSign(
+                              var response = await contactService.addAtSign(
                                 atSign: atsignName,
                                 nickName: nickName,
                               );
@@ -160,9 +160,10 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               setState(() {
                                 isLoading = false;
                               });
-                              if (_contactService.checkAtSign != null &&
-                                  _contactService.checkAtSign! &&
+                              if (contactService.checkAtSign != null &&
+                                  contactService.checkAtSign! &&
                                   response) {
+                                if(!mounted) return;
                                 Navigator.pop(context);
                               }
                             },
@@ -187,7 +188,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                       height: 50.toHeight * deviceTextFactor,
                       buttonText: contactStrings.TextStrings().buttonCancel,
                       onPressed: () {
-                        _contactService.getAtSignError = '';
+                        contactService.getAtSignError = '';
                         Navigator.pop(context);
                       },
                       buttonColor: Colors.white,

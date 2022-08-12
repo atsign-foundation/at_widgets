@@ -17,20 +17,6 @@ class ColorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: Visibility(
-        visible: isSelected,
-        child: Center(
-          child: Container(
-            height: 30.toHeight,
-            width: 30.toHeight,
-            child: Icon(Icons.check_rounded, color: color),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(15.toHeight)),
-            ),
-          ),
-        ),
-      ),
       style: ButtonStyle(
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -38,6 +24,20 @@ class ColorCard extends StatelessWidget {
           ),
         ),
         backgroundColor: MaterialStateProperty.all(color),
+      ),
+      child: Visibility(
+        visible: isSelected,
+        child: Center(
+          child: Container(
+            height: 30.toHeight,
+            width: 30.toHeight,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15.toHeight)),
+            ),
+            child: Icon(Icons.check_rounded, color: color),
+          ),
+        ),
       ),
     );
   }

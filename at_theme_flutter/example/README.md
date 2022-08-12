@@ -1,8 +1,8 @@
-<img width=250px src="https://atsign.dev/assets/img/@platform_logo_grey.svg?sanitize=true">
+<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
 ## at_theme_flutter example
 
-The at_theme_flutter package is designed to make it easy to add theme selection in Flutter apps on @‎platform.
+The at_theme_flutter package is designed to make it easy to add theme selection in Flutter apps on atPlatform.
 
 ### Give it a try
 This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_theme_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.
@@ -18,7 +18,7 @@ Notes:
 2. Use ```at_app.bat``` for Windows
 
 ## How it works
-Like most applications built for the  @‎platform, we start with the [at_onboarding_flutter](https://pub.dev/packages/at_onboarding_flutter) widget which handles secure management of secret keys for an atsign as cryptographically secure replacement for usernames and passwords.
+Like most applications built for the atPlatform, we start with the [at_onboarding_flutter](https://pub.dev/packages/at_onboarding_flutter) widget which handles secure management of secret keys for an atsign as cryptographically secure replacement for usernames and passwords.
 
 After onboarding, the app can give the option to select and switch theme either as a menu item or configuration setting.
 

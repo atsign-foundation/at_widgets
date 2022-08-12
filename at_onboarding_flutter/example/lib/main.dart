@@ -41,21 +41,6 @@ class _MyAppState extends State<MyApp> {
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
 
-  // final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
-  bool? _usingSharedStore;
-
-  @override
-  void initState() {
-    super.initState();
-    _initialSettup();
-  }
-
-  void _initialSettup() async {
-    _usingSharedStore =
-        await KeyChainManager.getInstance().isUsingSharedStorage();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ThemeMode>(
@@ -141,7 +126,7 @@ class _MyAppState extends State<MyApp> {
                             break;
                         }
                       },
-                      child: const Text('Onboard an @sign'),
+                      child: const Text('Onboard an atSign'),
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(
@@ -160,26 +145,6 @@ class _MyAppState extends State<MyApp> {
                       },
                       child: const Text('Reset'),
                     ),
-                    const SizedBox(height: 10),
-                    if (_usingSharedStore != null)
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (_usingSharedStore == true) {
-                            await KeyChainManager.getInstance()
-                                .disableUsingSharedStorage();
-                          } else {
-                            await KeyChainManager.getInstance()
-                                .enableUsingSharedStorage();
-                          }
-                          _usingSharedStore =
-                              await KeyChainManager.getInstance()
-                                  .isUsingSharedStorage();
-                          setState(() {});
-                        },
-                        child: Text(_usingSharedStore == true
-                            ? 'Disable using shared storage'
-                            : 'Enable use shared storage'),
-                      ),
                   ],
                 ),
               ),
@@ -211,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.switch_account),
-            tooltip: 'Switch @sign',
+            tooltip: 'Switch atSign',
             onPressed: () async {
               var atSignList = await KeychainUtil.getAtsignList();
               await showModalBottomSheet(
@@ -233,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             /// Use the AtClientManager instance to get the current atsign
             Text(
-                'Current @sign: ${atClientManager.atClient.getCurrentAtSign()}'),
+                'Current atSign: ${atClientManager.atClient.getCurrentAtSign()}'),
           ],
         ),
       ),

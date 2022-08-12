@@ -48,13 +48,13 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
           elevation: 0,
         ),
         body: Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "Theme",
-                style: TextStyle()
+                style: const TextStyle()
                     .copyWith(fontWeight: FontWeight.bold, fontSize: 15.toFont),
               ),
               Row(
@@ -76,7 +76,7 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                       },
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Expanded(
                     flex: 1,
                     child: ThemeModeCard(
@@ -95,13 +95,14 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               Text(
                 "Colour",
-                style: TextStyle()
+                style: const TextStyle()
                     .copyWith(fontWeight: FontWeight.bold, fontSize: 15.toFont),
               ),
               Expanded(
+                // ignore: avoid_unnecessary_containers
                 child: Container(
                   child: GridView.count(
                     crossAxisCount: 4,
@@ -136,9 +137,13 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                       onPressed: () {
                         widget.onPreviewPressed?.call(_appTheme);
                       },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            _appTheme.primaryColor),
+                      ),
                       child: Container(
                         width: 80.toWidth,
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Center(
                           child: Text(
                             "Preview",
@@ -147,19 +152,19 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                           ),
                         ),
                       ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            _appTheme.primaryColor),
-                      ),
                     ),
                   ElevatedButton(
                     onPressed: applyTheme,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          _appTheme.primaryColor),
+                    ),
                     child: Container(
                       width: 80.toWidth,
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Center(
                         child: isLoader
-                            ? SizedBox(
+                            ? const SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(
@@ -171,10 +176,6 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                                     color: Colors.white, fontSize: 15.toFont),
                               ),
                       ),
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          _appTheme.primaryColor),
                     ),
                   ),
                 ],

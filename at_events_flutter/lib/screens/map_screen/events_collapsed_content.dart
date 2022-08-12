@@ -104,7 +104,6 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                                     isUpdate: true,
                                     eventData: eventListenerKeyword,
                                     onEventSaved: (event) {
-                                      setState(() {});
                                     },
                                   ),
                                   SizeConfig().screenHeight * 0.9,
@@ -148,17 +147,12 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                   ),
                   const Divider(),
                   DisplayTile(
-                    title: '${eventListenerKeyword.atsignCreator} ' +
-                        AllText().AND +
-                        ' ${eventListenerKeyword.group!.members!.length} ' +
-                        AllText().MORE,
+                    title: '${eventListenerKeyword.atsignCreator} ${AllText().AND} ${eventListenerKeyword.group!.members!.length} ${AllText().MORE}',
                     atsignCreator: eventListenerKeyword.atsignCreator,
                     semiTitle: (eventListenerKeyword.group!.members!.length ==
                             1)
-                        ? '${eventListenerKeyword.group!.members!.length} ' +
-                            AllText().PERSON
-                        : '${eventListenerKeyword.group!.members!.length} ' +
-                            AllText().PEOPLE,
+                        ? '${eventListenerKeyword.group!.members!.length} ${AllText().PERSON}'
+                        : '${eventListenerKeyword.group!.members!.length} ${AllText().PEOPLE}',
                     number: eventListenerKeyword.group!.members!.length,
                     subTitle:
                         '${AllText().SHARE_MY_LOCATION_FROM} ${timeOfDayToString(eventListenerKeyword.event!.startTime!)} ${AllText().ON} ${dateToString(eventListenerKeyword.event!.date!)}',

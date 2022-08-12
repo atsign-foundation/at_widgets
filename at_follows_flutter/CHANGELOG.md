@@ -1,3 +1,6 @@
+## 3.0.7
+- **FIX**: Solved dependency conflict
+
 ## 3.0.6
 - **FIX**: Fixed getting details of following/follower list
 - **FIX**: Fixed QR Scanner not working.

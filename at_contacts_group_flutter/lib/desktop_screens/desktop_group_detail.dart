@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:typed_data';
 
 import 'package:at_common_flutter/services/size_config.dart';
@@ -9,7 +11,7 @@ import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
-import 'package:at_contacts_group_flutter/widgets/desktop_image_picker.dart';
+import 'package:at_contacts_group_flutter/services/desktop_image_picker.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_person_vertical_tile.dart';
 import 'package:at_contacts_group_flutter/widgets/remove_trusted_contact_dialog.dart';
 import 'package:flutter/material.dart';
@@ -235,25 +237,32 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                               // ignore: todo
                                               // TODO: Doubt
                                               widget.group = _group;
-                                              ScaffoldMessenger.of(context)
+                                              if(mounted) {
+                                                ScaffoldMessenger.of(context)
                                                   .showSnackBar(const SnackBar(
                                                       content: Text(
                                                           'Name updated')));
+                                              }
                                             } else if (result == null) {
                                               textController!.text =
                                                   widget.group.groupName!;
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          TextConstants()
-                                                              .SERVICE_ERROR)));
+                                                if(mounted){
+                                                  ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        TextConstants()
+                                                            .SERVICE_ERROR)));
+                                                }
                                             } else {
                                               textController!.text =
                                                   widget.group.groupName!;
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
+                                                  if(mounted){
+                                                    ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                        content: Text(
                                                           result.toString())));
+                                                  }
+                                              
                                             }
                                           }
 

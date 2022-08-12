@@ -218,6 +218,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
           onYesPressed: () async {
             var result = await GroupService().deleteGroup(group);
 
+            if(!mounted) return;
             if (result != null && result) {
               Navigator.of(context).pop();
             } else {

@@ -20,14 +20,14 @@ class CircularContacts extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final AtSignLogger _logger = AtSignLogger('Circular Contacts');
+    final AtSignLogger logger = AtSignLogger('Circular Contacts');
     Uint8List? image;
     if (contact!.tags != null && contact!.tags!['image'] != null) {
       try {
         List<int> intList = contact!.tags!['image'].cast<int>();
         image = Uint8List.fromList(intList);
       } catch (e) {
-        _logger.severe('Error in image: $e');
+        logger.severe('Error in image: $e');
       }
     }
     return Container(

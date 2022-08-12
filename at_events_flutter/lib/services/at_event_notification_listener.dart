@@ -11,7 +11,6 @@ import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/screens/notification_dialog/event_notification_dialog.dart';
 import 'package:at_events_flutter/services/event_key_stream_service.dart';
 import 'package:at_events_flutter/utils/constants.dart';
-import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
@@ -52,7 +51,7 @@ class AtEventNotificationListener {
     if (!monitorStarted) {
       AtClientManager.getInstance()
           .notificationService
-          .subscribe()
+          .subscribe(shouldDecrypt: true)
           .listen((notification) {
         _notificationCallback(notification);
       });
@@ -91,20 +90,8 @@ class AtEventNotificationListener {
       return;
     }
 
-    var decryptedMessage = await atClientManager.atClient.encryptionService!
-        .decrypt(value ?? '', fromAtSign)
-        .catchError((e) {
-      /// only show failure for createevent keys
-      if (notificationKey.contains('createevent')) {
-        AtLocationNotificationListener().showToast(
-          'Decryption failed for Event notification received from $fromAtSign with $e',
-          navKey!.currentContext!,
-          isError: true,
-        );
-      }
-
-      _logger.severe('error in decrypting in events package listener: $e');
-    });
+    var decryptedMessage = value;
+    
     _logger.finer('decrypted message:$decryptedMessage');
 
     if (decryptedMessage == null || decryptedMessage == '') {

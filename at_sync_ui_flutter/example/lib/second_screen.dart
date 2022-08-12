@@ -1,7 +1,9 @@
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
+import 'package:example/custom_sync_widget.dart';
 import 'package:example/ui_options.dart';
 import 'package:flutter/material.dart';
+
 import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
@@ -58,9 +60,7 @@ class _SecondScreenState extends State<SecondScreen> {
         title: const Text('Second Screen'),
       ),
       body: Center(
-        child: ListView(
-          // mainAxisSize: MainAxisSize.min,
-          padding: const EdgeInsets.all(20),
+        child: Column(
           children: [
             Container(
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -71,13 +71,13 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await AtSyncUIService().sync();
+                AtSyncUIService().sync();
               },
               child: const Text('Default Sync'),
             ),
             ElevatedButton(
               onPressed: () async {
-                await AtSyncUIService().sync(
+                AtSyncUIService().sync(
                   atSyncUIOverlay: AtSyncUIOverlay.dialog,
                 );
               },
@@ -85,7 +85,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await AtSyncUIService().sync(
+                AtSyncUIService().sync(
                   atSyncUIOverlay: AtSyncUIOverlay.snackbar,
                 );
               },
@@ -93,13 +93,52 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                Navigator.push(context,
+                AtSyncUIService().sync(
+                  atSyncUIOverlay: AtSyncUIOverlay.none,
+                );
+              },
+              child: const Text('Sync with no UI'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const UIOptions()));
               },
               child: const Text('See all UI options'),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Current State: '),
+                StreamBuilder<AtSyncUIStatus>(
+                  stream: AtSyncUIService().atSyncUIListener,
+                  builder: ((context, snapshot) => CustomSyncIndicator(
+                        uiStatus: snapshot.data ?? AtSyncUIStatus.notStarted,
+                        size: 50,
+                        child: const ClipOval(
+                          child: Image(
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                            gaplessPlayback: true,
+                            image: NetworkImage(
+                                'https://source.unsplash.com/random'),
+                          ),
+                        ),
+                      )),
+                ),
+              ],
+            ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          AtSyncUIService().sync(
+            atSyncUIOverlay: AtSyncUIOverlay.none,
+          );
+        },
+        child: const Icon(Icons.sync),
       ),
     );
   }

@@ -77,7 +77,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                       fontSize: 15.toFont,
                       fontWeight: FontWeight.normal,
                     ),
-                    hintText: '\tEnter @sign',
+                    hintText: '\tEnter atSign',
                   ),
                   style: TextStyle(
                     fontSize: 15.toFont,
@@ -128,6 +128,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               if (_contactService.checkAtSign != null &&
                                   _contactService.checkAtSign! &&
                                   response) {
+                                if(!mounted) return;
                                 Navigator.pop(context);
                               }
                             },

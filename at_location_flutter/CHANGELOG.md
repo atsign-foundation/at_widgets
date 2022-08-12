@@ -1,3 +1,13 @@
+## 3.1.7
+- **FEAT**: Updated text
+- **CHORE**: Updated dependency
+
+## 3.1.6
+- **CHORE**: Applied shouldDecrypt for decryption
+
+## 3.1.5
+- **CHORE**: Updated dependencies
+
 ## 3.1.4
 - **FIX**: Lint Fixes according to flutter 3.0
 

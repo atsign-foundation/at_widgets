@@ -35,11 +35,11 @@ class _MapScreenState extends State<MapScreen> {
 
     if (!widget.userListenerKeyword!.atsignCreator!.contains('@')) {
       widget.userListenerKeyword!.atsignCreator =
-          '@' + widget.userListenerKeyword!.atsignCreator!;
+          '@${widget.userListenerKeyword!.atsignCreator!}';
     }
 
     if (!widget.currentAtSign!.contains('@')) {
-      widget.currentAtSign = '@' + widget.currentAtSign!;
+      widget.currentAtSign = '@${widget.currentAtSign!}';
     }
 
     // getAtSignAndInitializeChat();

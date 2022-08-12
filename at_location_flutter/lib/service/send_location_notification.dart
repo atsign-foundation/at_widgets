@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/location_data_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
@@ -512,11 +511,11 @@ class SendLocationNotification {
 
   AtKey newAtKey(int ttr, String key, String sharedWith, {int? ttl}) {
     if (sharedWith[0] != '@') {
-      sharedWith = '@' + sharedWith;
+      sharedWith = '@$sharedWith';
     }
 
     String sharedBy = (atClient!.getCurrentAtSign()![0] != '@')
-        ? ('@' + atClient!.getCurrentAtSign()!)
+        ? ('@${atClient!.getCurrentAtSign()!}')
         : atClient!.getCurrentAtSign()!;
     var atKey = AtKey()
       ..metadata = Metadata()

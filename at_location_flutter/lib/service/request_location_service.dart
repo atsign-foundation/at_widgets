@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/location_prompt_dialog.dart';
@@ -416,7 +415,7 @@ class RequestLocationService {
     /// remove notification
     key.sharedWith = locationNotificationModel.atsignCreator;
     if (!key.sharedWith!.contains('@')) {
-      key.sharedWith = '@' + key.sharedWith!;
+      key.sharedWith = '@${key.sharedWith!}';
     }
     var resultForNotification =
         await AtClientManager.getInstance().atClient.delete(

@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_events_flutter/common_components/concurrent_event_request_dialog.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
@@ -12,7 +11,6 @@ import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 // ignore: implementation_imports
-import 'package:at_client/src/service/notification_service.dart';
 
 import 'event_key_stream_service.dart';
 import 'package:at_utils/at_logger.dart';
@@ -118,7 +116,10 @@ class EventService {
         atKey,
         eventData,
       );
-      atKey.sharedWith = jsonEncode(allAtsignList);
+
+      /// throwing an error (doesnt start with @), 
+      /// might lead to functional bug (so, leaving it here)
+      // atKey.sharedWith = jsonEncode(allAtsignList);
 
       await notifyAll(
         atKey,
@@ -167,13 +168,15 @@ class EventService {
         notification,
       ); // creating a key and saving it for creator without adding any receiver atsign
 
-      atKey.sharedWith = jsonEncode(
-          [...selectedContactsAtSigns]); //adding event members in atkey
+      /// throwing an error (doesnt start with @), 
+      /// might lead to functional bug (so, leaving it here)
+      // atKey.sharedWith = jsonEncode(
+      //     [...selectedContactsAtSigns]); //adding event members in atkey
 
       await notifyAll(
         atKey,
         notification,
-        [...selectedContactsAtSigns],
+        selectedContactsAtSigns,
       );
 
       /// Dont need to sync as notifyAll is called
@@ -458,7 +461,7 @@ class EventService {
     if (receiver == null) {
       return false;
     } else if (!receiver.contains('@')) {
-      receiver = '@' + receiver;
+      receiver = '@$receiver';
     }
     var checkPresence = await AtLookupImpl.findSecondary(receiver, root, 64);
     return checkPresence != null;
@@ -468,9 +471,13 @@ class EventService {
       AtKey atkey, String value, List<String?> atsigns) async {
     for (var element in atsigns) {
       atkey.sharedWith = element;
-      await atClientManager.notificationService.notify(
-        NotificationParams.forUpdate(atkey, value: value),
-      );
+      try{
+        await atClientManager.notificationService.notify(
+          NotificationParams.forUpdate(atkey, value: value),
+        );
+      }catch(e){
+        _logger.severe('error in SendEventNotification to $element: $e');
+      }
     }
   }
 }

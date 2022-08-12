@@ -11,7 +11,7 @@ import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
-import 'package:at_contacts_group_flutter/widgets/desktop_image_picker.dart';
+import 'package:at_contacts_group_flutter/services/desktop_image_picker.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_person_vertical_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -100,20 +100,24 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
             },
           );
         } else if (result != null) {
-          if (result.runtimeType == AlreadyExistsException) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
-          } else if (result.runtimeType == InvalidAtSignException) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(result.message)));
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+          if(mounted){
+            if (result.runtimeType == AlreadyExistsException) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
+            } else if (result.runtimeType == InvalidAtSignException) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(result.message)));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+            }
           }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
-        }
+          if(mounted){
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+            }
+          }
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(TextConstants().EMPTY_NAME)));

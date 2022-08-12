@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -147,7 +149,7 @@ class _GroupEditState extends State<GroupEdit> {
         child: Stack(
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 (groupPicture != null)
                     ? Image.memory(
@@ -197,9 +199,16 @@ class _GroupEditState extends State<GroupEdit> {
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: 27.toWidth, vertical: 2.toHeight),
-                  child: Text(
-                    'Group Name',
-                    style: CustomTextStyles().grey16,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Group Name',
+                          style: CustomTextStyles().grey16,
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -346,6 +355,7 @@ class _GroupEditState extends State<GroupEdit> {
                             widget.group);
 
                         GroupService().showLoaderSink.add(false);
+                        if(!mounted) return;
                         if (result is bool && result) {
                           return;
                         } else if (result == null) {

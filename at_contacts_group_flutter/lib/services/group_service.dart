@@ -1,4 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
@@ -148,6 +150,8 @@ class GroupService {
 
   /// Function to create a group
   Future<dynamic> createGroup(AtGroup atGroup) async {
+    atGroup = removeImageFromAtGroupMembers(atGroup);
+
     try {
       var group = await atContactImpl.createGroup(atGroup);
       if (group is AtGroup) {
@@ -241,6 +245,12 @@ class GroupService {
   /// Function to add members to a group
   Future<dynamic> addGroupMembers(
       List<AtContact?> contacts, AtGroup group) async {
+    for (var i = 0; i < contacts.length; i++) {
+      if (contacts[i]!.tags != null && contacts[i]!.tags!['image'] != null) {
+        contacts[i]!.tags!['image'] = null;
+      }
+    }
+
     try {
       var result = await atContactImpl.addMembers(Set.from(contacts), group);
       await updateGroupStreams(group, expandGroup: true);
@@ -253,6 +263,7 @@ class GroupService {
 
   /// Function to update group details
   Future<dynamic> updateGroup(AtGroup group, {int? expandIndex}) async {
+    group = removeImageFromAtGroupMembers(group);
     try {
       var updatedGroup = await atContactImpl.updateGroup(group);
       if (updatedGroup is AtGroup) {
@@ -290,6 +301,7 @@ class GroupService {
 
   Future<dynamic> updateGroupData(AtGroup group, BuildContext context,
       {bool isDesktop = false, int? expandIndex}) async {
+    group = removeImageFromAtGroupMembers(group);
     try {
       var result = await updateGroup(group, expandIndex: expandIndex);
       if (isDesktop) {
@@ -457,6 +469,17 @@ class GroupService {
     } catch (e) {
       selectedContactsSink.add([]);
     }
+  }
+
+  AtGroup removeImageFromAtGroupMembers(AtGroup atGroup) {
+    for (var i = 0; i < atGroup.members!.length; i++) {
+      if (atGroup.members!.elementAt(i).tags != null &&
+          atGroup.members!.elementAt(i).tags!['image'] != null) {
+        atGroup.members!.elementAt(i).tags!['image'] = null;
+      }
+    }
+
+    return atGroup;
   }
 
   /// Function to reset all data related to groups
