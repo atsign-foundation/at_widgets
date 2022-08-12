@@ -38,8 +38,8 @@ class MyCharts extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: RangePointerGauge(
-          minValue: 50,
-          maxValue: 100,
+          minValue: 200,
+          maxValue: 1000,
           pointerColor: Colors.blue,
           animate: true,
         ),

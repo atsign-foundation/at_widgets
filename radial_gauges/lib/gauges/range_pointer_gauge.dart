@@ -41,19 +41,22 @@ class _RangePointerGaugeState extends State<RangePointerGauge>
   @override
   void initState() {
     super.initState();
-    double sweepAngle = Utils.degreesToRadians(Utils.minValueToSweepAngle(
-        minValue: widget.minValue, maxValue: widget.maxValue));
+    double sweepAngleRadian = Utils.minValueToSweepAngleRadian(
+        minValue: widget.minValue, maxValue: widget.maxValue);
 
     double upperBound = Utils.degreesToRadians(360);
 
     animationController = AnimationController(
         duration: Duration(seconds: widget.animate ? 1 : 0),
         vsync: this,
-        upperBound: sweepAngle);
+        upperBound: upperBound);
 
-    animation = Tween<double>(begin: Utils.degreesToRadians(0), end: sweepAngle)
-        .animate(animationController)
+    animation = Tween<double>().animate(animationController)
       ..addListener(() {
+        if (animationController.value == sweepAngleRadian) {
+          animationController.stop();
+        }
+
         setState(() {});
       });
 
@@ -68,17 +71,21 @@ class _RangePointerGaugeState extends State<RangePointerGauge>
 
   @override
   Widget build(BuildContext context) {
-    // animationController.value = Utils.degreesToRadians(
-    //     Utils.minValueToSweepAngle(
-    //         minValue: widget.minValue, maxValue: widget.maxValue));
+    if (animationController.value !=
+        Utils.minValueToSweepAngleRadian(
+            minValue: widget.minValue, maxValue: widget.maxValue)) {
+      animationController.animateTo(
+          Utils.minValueToSweepAngleRadian(
+              minValue: widget.minValue, maxValue: widget.maxValue),
+          duration: Duration(seconds: widget.animate ? 1 : 0));
+    }
+
     return RotatedBox(
       quarterTurns: 3,
       child: CustomPaint(
         painter: RangePointerGaugePainter(
           sweepAngle: animationController.value,
           pointerColor: widget.pointerColor,
-          animate: widget.animate,
-          setState: setState,
         ),
         child: SizedBox(
           height: 200,
@@ -101,17 +108,12 @@ class RangePointerGaugePainter extends CustomPainter {
   RangePointerGaugePainter({
     required this.sweepAngle,
     required this.pointerColor,
-    required this.animate,
-    required this.setState,
     Key? key,
   });
   final double sweepAngle;
 
   final Color pointerColor;
 
-  final bool animate;
-
-  final Function setState;
   @override
   void paint(Canvas canvas, Size size) {
     // Circle
@@ -133,11 +135,10 @@ class RangePointerGaugePainter extends CustomPainter {
 
     var arcRect = Rect.fromCircle(center: center, radius: radius);
     final startAngle = Utils.degreesToRadians(1);
-    // setState(sweepAngle);
 
     canvas.drawArc(arcRect, startAngle, sweepAngle, false, arcPaint);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => animate;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
