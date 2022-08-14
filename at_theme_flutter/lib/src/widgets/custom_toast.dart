@@ -13,6 +13,7 @@ class CustomToast {
           Color? textColor,
           double? toastWidth,
           double fontSize = 12,
+          double gravity = 10.0,
           int duration = 3,
           bool isError = false,
           bool isSuccess = false}) =>
@@ -31,7 +32,7 @@ class CustomToast {
           margin: toastWidth != null
               ? null
               : EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.2),
+                  horizontal: MediaQuery.of(context).size.width * 0.2, vertical: gravity),
           backgroundColor: isError
               ? Colors.red
               : (isSuccess
