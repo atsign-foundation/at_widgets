@@ -5,16 +5,21 @@ class Utils {
     return (degrees * math.pi) / 180;
   }
 
-  static double minValueToSweepAngle(
-      {required double minValue, required double maxValue}) {
+  static double minValueToSweepAngle({
+    required double minValue,
+    required double maxValue,
+    required double maxDegrees,
+  }) {
     final ratio = minValue / maxValue;
-    return ratio * 360;
+    return ratio * maxDegrees;
   }
 
   static double minValueToSweepAngleRadian(
-      {required double minValue, required double maxValue}) {
-    return degreesToRadians(
-        Utils.minValueToSweepAngle(minValue: minValue, maxValue: maxValue));
+      {required double minValue,
+      required double maxValue,
+      double maxDegrees = 360}) {
+    return degreesToRadians(Utils.minValueToSweepAngle(
+        minValue: minValue, maxValue: maxValue, maxDegrees: maxDegrees));
   }
 
   // static   double valueToDecimalPlaces(double value) {

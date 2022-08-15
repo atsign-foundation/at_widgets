@@ -10,6 +10,7 @@ class RangePointerGauge extends StatefulWidget {
     required this.maxValue,
     this.pointerColor = Colors.blue,
     this.decimalPlaces = 0,
+    this.animate = true,
     Key? key,
   }) : super(key: key);
 
@@ -25,6 +26,9 @@ class RangePointerGauge extends StatefulWidget {
   /// Controls how much decimal places will be shown for the [minValue] and [maxValue].
   final int decimalPlaces;
 
+  /// Toggle on and off animation.
+  final bool animate;
+
   @override
   State<RangePointerGauge> createState() => _RangePointerGaugeState();
 }
@@ -37,18 +41,25 @@ class _RangePointerGaugeState extends State<RangePointerGauge>
   @override
   void initState() {
     super.initState();
-    double sweepAngle = Utils.degreesToRadians(Utils.minValueToSweepAngle(
-        minValue: widget.minValue, maxValue: widget.maxValue));
+    double sweepAngleRadian = Utils.minValueToSweepAngleRadian(
+        minValue: widget.minValue, maxValue: widget.maxValue);
+
+    double upperBound = Utils.degreesToRadians(360);
+
     animationController = AnimationController(
-        duration: const Duration(seconds: 1),
+        duration: Duration(seconds: widget.animate ? 1 : 0),
         vsync: this,
-        animationBehavior: AnimationBehavior.preserve,
-        upperBound: sweepAngle);
-    animation = Tween<double>(begin: Utils.degreesToRadians(0), end: sweepAngle)
-        .animate(animationController)
+        upperBound: upperBound);
+
+    animation = Tween<double>().animate(animationController)
       ..addListener(() {
+        if (animationController.value == sweepAngleRadian) {
+          animationController.stop();
+        }
+
         setState(() {});
       });
+
     animationController.forward();
   }
 
@@ -60,12 +71,22 @@ class _RangePointerGaugeState extends State<RangePointerGauge>
 
   @override
   Widget build(BuildContext context) {
+    if (animationController.value !=
+        Utils.minValueToSweepAngleRadian(
+            minValue: widget.minValue, maxValue: widget.maxValue)) {
+      animationController.animateTo(
+          Utils.minValueToSweepAngleRadian(
+              minValue: widget.minValue, maxValue: widget.maxValue),
+          duration: Duration(seconds: widget.animate ? 1 : 0));
+    }
+
     return RotatedBox(
       quarterTurns: 3,
       child: CustomPaint(
         painter: RangePointerGaugePainter(
-            sweepAngle: animationController.value,
-            pointerColor: widget.pointerColor),
+          sweepAngle: animationController.value,
+          pointerColor: widget.pointerColor,
+        ),
         child: SizedBox(
           height: 200,
           width: 200,
@@ -92,6 +113,7 @@ class RangePointerGaugePainter extends CustomPainter {
   final double sweepAngle;
 
   final Color pointerColor;
+
   @override
   void paint(Canvas canvas, Size size) {
     // Circle

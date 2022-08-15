@@ -1,4 +1,6 @@
-import 'gauges/range_pointer_gauge.dart';
+import 'package:radial_gauges/radial_gauges/text_annotation_gauge.dart';
+
+import 'radial_gauges/range_pointer_gauge.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -37,9 +39,11 @@ class MyCharts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: RangePointerGauge(
-          minValue: 200,
-          maxValue: 1000,
+        child: TextAnnotationGauge(
+          minValue: 0,
+          maxValue: 240,
+          actualValue: 142,
+          label: 'Km/h',
           pointerColor: Colors.blue,
           animate: true,
         ),
