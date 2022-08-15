@@ -45,10 +45,10 @@ class MyCharts extends StatelessWidget {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: RangePointerGauge(actualValue: 50, maxValue: 100),
-            // ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RangePointerGauge(actualValue: 50, maxValue: 100),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextAnnotationGauge(

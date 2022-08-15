@@ -84,23 +84,18 @@ class _RangePointerGaugeState extends State<RangePointerGauge>
           duration: Duration(seconds: widget.animate ? 1 : 0));
     }
 
-    return RotatedBox(
-      quarterTurns: 3,
-      child: CustomPaint(
-        painter: RangePointerGaugePainter(
-          sweepAngle: animationController.value,
-          pointerColor: widget.pointerColor,
-        ),
-        child: SizedBox(
-          height: 200,
-          width: 200,
-          child: Center(
-            child: RotatedBox(
-                quarterTurns: 1,
-                child: Text(
-                  '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)}',
-                  style: const TextStyle(fontStyle: FontStyle.italic),
-                )),
+    return CustomPaint(
+      painter: RangePointerGaugePainter(
+        sweepAngle: animationController.value,
+        pointerColor: widget.pointerColor,
+      ),
+      child: SizedBox(
+        height: 200,
+        width: 200,
+        child: Center(
+          child: Text(
+            '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)}',
+            style: const TextStyle(fontStyle: FontStyle.italic),
           ),
         ),
       ),
@@ -138,7 +133,7 @@ class RangePointerGaugePainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     var arcRect = Rect.fromCircle(center: center, radius: radius);
-    final startAngle = Utils.degreesToRadians(1);
+    final startAngle = Utils.degreesToRadians(-90);
 
     canvas.drawArc(arcRect, startAngle, sweepAngle, false, arcPaint);
   }
