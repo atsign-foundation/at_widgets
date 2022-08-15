@@ -52,8 +52,8 @@ class _TextAnnotationGaugeState extends State<TextAnnotationGauge>
   @override
   void initState() {
     super.initState();
-    double sweepAngleRadian = Utils.minValueToSweepAngleRadian(
-        minValue: widget.actualValue,
+    double sweepAngleRadian = Utils.actualValueToSweepAngleRadian(
+        actualValue: widget.actualValue,
         maxValue: widget.maxValue,
         maxDegrees: 300);
 
@@ -85,13 +85,13 @@ class _TextAnnotationGaugeState extends State<TextAnnotationGauge>
   @override
   Widget build(BuildContext context) {
     if (animationController.value !=
-        Utils.minValueToSweepAngleRadian(
-            minValue: widget.actualValue,
+        Utils.actualValueToSweepAngleRadian(
+            actualValue: widget.actualValue,
             maxValue: widget.maxValue,
             maxDegrees: 300)) {
       animationController.animateTo(
-          Utils.minValueToSweepAngleRadian(
-              minValue: widget.actualValue,
+          Utils.actualValueToSweepAngleRadian(
+              actualValue: widget.actualValue,
               maxValue: widget.maxValue,
               maxDegrees: 300),
           duration: Duration(seconds: widget.animate ? 1 : 0));
@@ -110,7 +110,11 @@ class _TextAnnotationGaugeState extends State<TextAnnotationGauge>
         child: Center(
           child: ListTile(
             title: Text(
-              widget.actualValue.toStringAsFixed(widget.decimalPlaces),
+              Utils.sweepAngleRadianToActualValue(
+                      sweepAngle: animationController.value,
+                      maxValue: widget.maxValue,
+                      maxDegrees: 300)
+                  .toStringAsFixed(widget.decimalPlaces),
               textAlign: TextAlign.center,
             ),
             subtitle: Text(

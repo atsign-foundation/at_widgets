@@ -1,25 +1,54 @@
 import 'dart:math' as math;
 
 class Utils {
+  /// Convert [degrees] to radians.
   static double degreesToRadians(double degrees) {
     return (degrees * math.pi) / 180;
   }
 
-  static double minValueToSweepAngle({
-    required double minValue,
+  /// Convert [radians] to degrees.
+  static double radiansToDegrees(double radians) {
+    return (radians * 180) / math.pi;
+  }
+
+  /// Convert the [actualValue] to sweepAngle.
+  static double actualValueToSweepAngle({
+    required double actualValue,
     required double maxValue,
     required double maxDegrees,
   }) {
-    final ratio = minValue / maxValue;
+    final ratio = actualValue / maxValue;
     return ratio * maxDegrees;
   }
 
-  static double minValueToSweepAngleRadian(
-      {required double minValue,
+  /// Convert [actualValue] to sweepAngleRadian.
+  static double actualValueToSweepAngleRadian(
+      {required double actualValue,
       required double maxValue,
       double maxDegrees = 360}) {
-    return degreesToRadians(Utils.minValueToSweepAngle(
-        minValue: minValue, maxValue: maxValue, maxDegrees: maxDegrees));
+    return degreesToRadians(Utils.actualValueToSweepAngle(
+        actualValue: actualValue, maxValue: maxValue, maxDegrees: maxDegrees));
+  }
+
+  /// Convert the [sweepAngle] to ActualValue.
+  static double sweepAngleToActualValue({
+    required double sweepAngle,
+    required double maxValue,
+    required double maxDegrees,
+  }) {
+    final ratio = sweepAngle / maxDegrees;
+    return ratio * maxValue;
+  }
+
+  /// Convert sweepAngleRadian to [sweepAngle].
+  static double sweepAngleRadianToActualValue(
+      {required double sweepAngle,
+      required double maxValue,
+      double maxDegrees = 360}) {
+    // return Utils.sweepAngleToActualValue(
+    //     sweepAngle: sweepAngle, maxValue: maxValue, maxDegrees: maxDegrees);
+    return radiansToDegrees(Utils.sweepAngleToActualValue(
+        sweepAngle: sweepAngle, maxValue: maxValue, maxDegrees: maxDegrees));
   }
 
   // static   double valueToDecimalPlaces(double value) {

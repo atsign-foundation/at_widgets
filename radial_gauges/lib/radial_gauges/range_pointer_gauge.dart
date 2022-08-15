@@ -4,26 +4,30 @@ import 'package:radial_gauges/utils/utils.dart';
 class RangePointerGauge extends StatefulWidget {
   /// Creates a Range Pointer Gauge.
   ///
-  /// The [minValue] and [maxValue] must not be null.
+  /// The [actualValue] and [maxValue] must not be null.
   RangePointerGauge({
-    required this.minValue,
+    required this.actualValue,
     required this.maxValue,
+    this.minValue = 0,
     this.pointerColor = Colors.blue,
     this.decimalPlaces = 0,
     this.animate = true,
     Key? key,
   }) : super(key: key);
 
-  /// Sets the minimum value of the gauge.
-  double minValue;
+  /// Sets the actual value of the gauge.
+  double actualValue;
 
   /// Sets the maximum value of the gauge.
   double maxValue;
 
+  /// Sets the minimum value of the gauge.
+  double minValue;
+
   /// Sets the pointer color of the gauge.
   final Color pointerColor;
 
-  /// Controls how much decimal places will be shown for the [minValue] and [maxValue].
+  /// Controls how much decimal places will be shown for the [actualValue] and [maxValue].
   final int decimalPlaces;
 
   /// Toggle on and off animation.
@@ -41,8 +45,8 @@ class _RangePointerGaugeState extends State<RangePointerGauge>
   @override
   void initState() {
     super.initState();
-    double sweepAngleRadian = Utils.minValueToSweepAngleRadian(
-        minValue: widget.minValue, maxValue: widget.maxValue);
+    double sweepAngleRadian = Utils.actualValueToSweepAngleRadian(
+        actualValue: widget.actualValue, maxValue: widget.maxValue);
 
     double upperBound = Utils.degreesToRadians(360);
 
@@ -72,11 +76,11 @@ class _RangePointerGaugeState extends State<RangePointerGauge>
   @override
   Widget build(BuildContext context) {
     if (animationController.value !=
-        Utils.minValueToSweepAngleRadian(
-            minValue: widget.minValue, maxValue: widget.maxValue)) {
+        Utils.actualValueToSweepAngleRadian(
+            actualValue: widget.actualValue, maxValue: widget.maxValue)) {
       animationController.animateTo(
-          Utils.minValueToSweepAngleRadian(
-              minValue: widget.minValue, maxValue: widget.maxValue),
+          Utils.actualValueToSweepAngleRadian(
+              actualValue: widget.actualValue, maxValue: widget.maxValue),
           duration: Duration(seconds: widget.animate ? 1 : 0));
     }
 
@@ -94,7 +98,7 @@ class _RangePointerGaugeState extends State<RangePointerGauge>
             child: RotatedBox(
                 quarterTurns: 1,
                 child: Text(
-                  '${widget.minValue.toStringAsFixed(widget.decimalPlaces)} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)}',
+                  '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)}',
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 )),
           ),

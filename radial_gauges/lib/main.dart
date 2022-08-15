@@ -39,13 +39,28 @@ class MyCharts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: TextAnnotationGauge(
-          minValue: 0,
-          maxValue: 240,
-          actualValue: 142,
-          label: 'Km/h',
-          pointerColor: Colors.blue,
-          animate: true,
+        child: GridView.count(
+          crossAxisCount: 2,
+          padding: const EdgeInsets.all(20),
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          children: [
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: RangePointerGauge(actualValue: 50, maxValue: 100),
+            // ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextAnnotationGauge(
+                minValue: 0,
+                maxValue: 240,
+                actualValue: 142,
+                label: 'Km/h',
+                pointerColor: Colors.blue,
+                animate: true,
+              ),
+            )
+          ],
         ),
       ),
     );
