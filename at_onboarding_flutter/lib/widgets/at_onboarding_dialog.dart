@@ -50,6 +50,9 @@ class _AtOnboardingDialogState extends State<AtOnboardingDialog> {
       title: Text(widget.title),
       content: Text(widget.message),
       actions: widget.actions,
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.white
+          : Colors.black,
     );
   }
 }

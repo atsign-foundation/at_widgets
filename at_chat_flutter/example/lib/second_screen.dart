@@ -115,9 +115,14 @@ class _SecondScreenState extends State<SecondScreen> {
                             ),
                           );
                         },
-                        child: const Text(
+                        child: Text(
                           'Open chat in bottom sheet',
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10.0),
@@ -128,9 +133,14 @@ class _SecondScreenState extends State<SecondScreen> {
                               MaterialPageRoute(
                                   builder: (context) => const ThirdScreen()));
                         },
-                        child: const Text(
+                        child: Text(
                           'Navigate to chat screen',
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10.0),
@@ -263,26 +273,26 @@ class _SecondScreenState extends State<SecondScreen> {
 
   void showAtsignErrorDialog(BuildContext context) {
     showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: const [Text('Some details are missing!')],
-            ),
-            content: const Text('Please enter all fields'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Close',
-                  style: TextStyle(color: Colors.black),
-                ),
-              )
-            ],
-          );
-        });
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: const [Text('Some details are missing!')],
+          ),
+          content: const Text('Please enter all fields'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Close',
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
 }

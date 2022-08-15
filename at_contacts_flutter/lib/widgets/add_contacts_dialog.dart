@@ -53,6 +53,9 @@ class _AddContactDialogState extends State<AddContactDialog> {
       width: 100.toWidth,
       child: SingleChildScrollView(
         child: AlertDialog(
+          backgroundColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.white
+              : Colors.grey,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.toWidth)),
           titlePadding: EdgeInsets.only(
@@ -88,7 +91,9 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   decoration: InputDecoration(
                     prefixText: '@',
                     prefixStyle: TextStyle(
-                      color: Colors.grey,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.grey
+                          : Colors.black,
                       fontSize: 15.toFont,
                       fontWeight: FontWeight.normal,
                     ),
@@ -163,7 +168,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               if (contactService.checkAtSign != null &&
                                   contactService.checkAtSign! &&
                                   response) {
-                                if(!mounted) return;
+                                if (!mounted) return;
                                 Navigator.pop(context);
                               }
                             },
@@ -191,8 +196,14 @@ class _AddContactDialogState extends State<AddContactDialog> {
                         contactService.getAtSignError = '';
                         Navigator.pop(context);
                       },
-                      buttonColor: Colors.white,
-                      fontColor: Colors.black,
+                      buttonColor:
+                          Theme.of(context).brightness == Brightness.light
+                              ? Colors.black
+                              : Colors.white,
+                      fontColor:
+                          Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black,
                     )
                   ],
                 ),

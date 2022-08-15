@@ -47,19 +47,19 @@ class GroupContactView extends StatefulWidget {
   /// to show already selected contacts.
   final List<GroupContactsModel>? contactSelectedHistory;
 
-  GroupContactView(
-      {Key? key,
-      this.showContacts = false,
-      this.showGroups = false,
-      this.singleSelection = false,
-      this.asSelectionScreen = true,
-      this.selectedList,
-      this.isDesktop = false,
-      this.onBackArrowTap,
-      this.onDoneTap,
-      this.contactSelectedHistory,
-      this.onContactsTap})
+  GroupContactView({Key? key,
+    this.showContacts = false,
+    this.showGroups = false,
+    this.singleSelection = false,
+    this.asSelectionScreen = true,
+    this.selectedList,
+    this.isDesktop = false,
+    this.onBackArrowTap,
+    this.onDoneTap,
+    this.contactSelectedHistory,
+    this.onContactsTap})
       : super(key: key);
+
   @override
   _GroupContactViewState createState() => _GroupContactViewState();
 }
@@ -100,36 +100,39 @@ class _GroupContactViewState extends State<GroupContactView> {
   }
 
   List<AtContact> selectedList = [];
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
       bottomSheet: (widget.singleSelection)
           ? Container(
-              height: 0,
-            )
+        height: 0,
+      )
           : (widget.asSelectionScreen)
-              ? ContactSelectionBottomSheet(
-                  onPressed: () {
-                    if (widget.isDesktop) {
-                      widget.onDoneTap!();
-                      _groupService.selectedGroupContacts = [];
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  },
-                  selectedList: (s) {
-                    if (widget.selectedList != null) {
-                      widget.selectedList!(s);
-                    }
-                  },
-                  isDesktop: widget.isDesktop,
-                )
-              : Container(
-                  height: 0,
-                ),
+          ? ContactSelectionBottomSheet(
+        onPressed: () {
+          if (widget.isDesktop) {
+            widget.onDoneTap!();
+            _groupService.selectedGroupContacts = [];
+          } else {
+            Navigator.pop(context);
+          }
+        },
+        selectedList: (s) {
+          if (widget.selectedList != null) {
+            widget.selectedList!(s);
+          }
+        },
+        isDesktop: widget.isDesktop,
+      )
+          : Container(
+        height: 0,
+      ),
       appBar: CustomAppBar(
-        appBarColor: Theme.of(context).primaryColor,
+        appBarColor: Theme
+            .of(context)
+            .primaryColor,
         isDesktop: widget.isDesktop,
         showTitle: true,
         titleText: 'Contacts',
@@ -256,8 +259,16 @@ class _GroupContactViewState extends State<GroupContactView> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            TextStrings().noContacts,
-                            style: CustomTextStyles.primaryBold16,
+                              TextStrings().noContacts,
+                              style: TextStyle().copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Theme
+                                    .of(context)
+                                    .brightness == Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                              )
                           ),
                           const SizedBox(height: 20.0),
                           CustomButton(

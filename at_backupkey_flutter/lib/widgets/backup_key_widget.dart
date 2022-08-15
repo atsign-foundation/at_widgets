@@ -139,6 +139,9 @@ class BackupKeyWidget extends StatelessWidget {
           return ShowCaseWidget(builder: Builder(builder: (context) {
             myContext = context;
             return Dialog(
+              backgroundColor: Theme.of(context).brightness == Brightness.light
+                  ? Colors.white
+                  : Colors.black,
               child: Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(
@@ -154,6 +157,15 @@ class BackupKeyWidget extends StatelessWidget {
                                   '''Each atSign has a unique key used to verify ownership and encrypt your data. You will get this key when you first activate your atSign, and you will need it to pair your atSign with other devices and all atPlatform apps.
                                   
 PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE A BACKUP OR RESET THEM.''',
+                              textColor: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                              showcaseBackgroundColor:
+                                  Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.white
+                                      : Colors.black,
                               shapeBorder: const CircleBorder(),
                               disableAnimation: true,
                               radius:
@@ -166,6 +178,10 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16.toFont,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.black
+                                      : Colors.white,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -197,8 +213,14 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
+                        Text(
                           Strings.backUpKeysDescription,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 20.toHeight),

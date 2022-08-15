@@ -3,6 +3,7 @@ import 'package:at_chat_flutter/widgets/bottom_sheet_dialog.dart';
 import 'package:at_chat_flutter/widgets/button_widget.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 enum ConfirmTypes { approve, cancel }
 
@@ -66,7 +67,12 @@ Future<dynamic> showConfirmDialog(
               Text(
                 body ?? 'Do you want to delete this?',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.black, fontSize: 14),
+                style: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+                  fontSize: 14,
+                ),
               ),
             ],
           ),

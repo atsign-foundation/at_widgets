@@ -47,6 +47,8 @@ dependencies:
 
 dependency_overrides:
   at_onboarding_flutter: ^5.0.0
+  at_contacts_flutter:
+    path: ../../at_contacts_flutter
   
 dev_dependencies:
   flutter_test:

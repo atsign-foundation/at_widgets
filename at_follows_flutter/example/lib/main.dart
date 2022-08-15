@@ -119,9 +119,11 @@ class _MyAppState extends State<MyApp> {
                           switch (result.status) {
                             case AtOnboardingResultStatus.success:
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => NextScreen()));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => NextScreen(),
+                                ),
+                              );
                               break;
                             case AtOnboardingResultStatus.error:
                               ScaffoldMessenger.of(context).showSnackBar(

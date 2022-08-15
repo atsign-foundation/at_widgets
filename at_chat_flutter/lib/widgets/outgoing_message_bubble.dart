@@ -45,7 +45,7 @@ class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(30.toHeight),
+            padding: EdgeInsets.all(16.toHeight),
             decoration: BoxDecoration(
               color: widget.color,
               borderRadius: BorderRadius.circular(10.toWidth),

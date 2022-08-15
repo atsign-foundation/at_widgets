@@ -5,6 +5,7 @@ import 'package:at_contacts_group_flutter/screens/group_contact_view/group_conta
 import 'package:at_contacts_group_flutter_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:../../at_contacts_flutter/utils/contact_theme.dart';
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -58,33 +59,43 @@ class _SecondScreenState extends State<SecondScreen> {
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
                 'Welcome $activeAtSign!',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
                 ),
               ),
             ),
             ElevatedButton(
               onPressed: () {
                 // any logic
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ContactsScreen(
-                    selectedList: (s) {},
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => ContactsScreen(
+                      theme: Theme.of(context).brightness == Brightness.light
+                          ? const DefaultContactTheme()
+                          : const DarkContactTheme(),
+                      selectedList: (s) {},
+                    ),
                   ),
-                ));
+                );
               },
               child: const Text('Show contacts'),
             ),
             ElevatedButton(
               onPressed: () {
                 // any logic
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => GroupContactView(
-                      showContacts: true,
-                      showGroups: true,
-                      asSelectionScreen: true,
-                      selectedList: (List<GroupContactsModel?> s) {}),
-                ));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => GroupContactView(
+                        showContacts: true,
+                        showGroups: true,
+                        asSelectionScreen: true,
+                        selectedList: (List<GroupContactsModel?> s) {}),
+                  ),
+                );
               },
               child: const Text('Show Group view contacts'),
             ),
@@ -92,7 +103,11 @@ class _SecondScreenState extends State<SecondScreen> {
               onPressed: () {
                 // any logic
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const BlockedScreen(),
+                  builder: (BuildContext context) => BlockedScreen(
+                    theme: Theme.of(context).brightness == Brightness.light
+                        ? const DefaultContactTheme()
+                        : const DarkContactTheme(),
+                  ),
                 ));
               },
               child: const Text('Show blocked contacts'),

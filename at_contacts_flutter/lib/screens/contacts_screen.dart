@@ -121,7 +121,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
               height: 0,
             ),
       appBar: CustomAppBar(
-        appBarColor: widget.theme.primaryColor,
+        appBarColor: Theme.of(context).primaryColor,
         showBackButton: true,
         showTitle: true,
         showLeadingIcon: true,
@@ -209,7 +209,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
                       } else {
                         if ((snapshot.data == null || snapshot.data!.isEmpty)) {
                           return Center(
-                            child: Text(TextStrings().noContacts),
+                            child: Text(
+                              TextStrings().noContacts,
+                              style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                              ),
+                            ),
                           );
                         } else {
                           var filteredList = <BaseContact?>[];

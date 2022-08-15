@@ -38,6 +38,9 @@ class _AddContactDialogState extends State<AddContactDialog> {
       width: 100.toWidth,
       child: SingleChildScrollView(
         child: AlertDialog(
+          backgroundColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.white
+              : Colors.grey,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.toWidth)),
           titlePadding: EdgeInsets.only(

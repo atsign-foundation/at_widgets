@@ -39,6 +39,9 @@ class _SecondScreenState extends State<SecondScreen> {
     await showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
+        backgroundColor: Theme.of(context).brightness == Brightness.light
+            ? Colors.white
+            : Colors.grey,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -47,7 +50,7 @@ class _SecondScreenState extends State<SecondScreen> {
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w900,
-            color: Colors.black,
+            // color: Colors.black,
           ),
         ),
         content: Column(
@@ -58,7 +61,7 @@ class _SecondScreenState extends State<SecondScreen> {
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: Colors.black,
+                // color: Colors.black,
               ),
             ),
             const SizedBox(height: 10),
@@ -69,8 +72,8 @@ class _SecondScreenState extends State<SecondScreen> {
                 });
               },
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'atSign',
+                // border: OutlineInputBorder(),
+                hintText: 'atSign',
               ),
             ),
             const SizedBox(height: 10),
@@ -87,11 +90,10 @@ class _SecondScreenState extends State<SecondScreen> {
               pickedAtSign = '';
               Navigator.pop(context);
             },
-            child: Text(
+            child: const Text(
               'Delete',
               style: TextStyle(
                 fontWeight: FontWeight.w900,
-                color: Colors.blue[400],
               ),
             ),
           ),

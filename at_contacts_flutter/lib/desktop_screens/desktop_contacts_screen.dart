@@ -192,8 +192,16 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                                   if (_filteredList.isEmpty &&
                                       searchText.trim().isNotEmpty &&
                                       index == itemCount - 1) {
-                                    return const Center(
-                                      child: Text('No Contacts found'),
+                                    return Center(
+                                      child: Text(
+                                        'No Contacts found',
+                                        style: TextStyle(
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.light
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
                                     );
                                   }
 
@@ -212,8 +220,16 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                               },
                             );
                           } else {
-                            return const Center(
-                              child: Text('No contacts found'),
+                            return Center(
+                              child: Text(
+                                'No contacts found',
+                                style: TextStyle(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
                             );
                           }
                         } else {
@@ -276,8 +292,16 @@ class _DesktopContactsScreenState extends State<DesktopContactsScreen> {
                                 if (_filteredList.isEmpty &&
                                     searchText.trim().isNotEmpty &&
                                     index == itemCount - 1) {
-                                  return const Center(
-                                    child: Text('No Contacts found'),
+                                  return Center(
+                                    child: Text(
+                                      'No Contacts found',
+                                      style: TextStyle(
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.light
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
                                   );
                                 }
 

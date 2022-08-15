@@ -34,6 +34,10 @@ dependencies:
   at_contacts_flutter: ^4.0.6
   at_contact: ^3.0.7
   at_utils: ^3.0.10
+
+dependency_overrides:
+  at_contacts_flutter:
+    path: ../at_contacts_flutter
   
 dev_dependencies:
   flutter_lints: ^2.0.1
