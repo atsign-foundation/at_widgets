@@ -1,3 +1,4 @@
+import 'package:radial_gauges/radial_gauges/custom_scale_gauge.dart';
 import 'package:radial_gauges/radial_gauges/image_annotation_gauge.dart';
 import 'package:radial_gauges/radial_gauges/text_annotation_gauge.dart';
 
@@ -66,7 +67,8 @@ class MyCharts extends StatelessWidget {
               maxValue: 100,
               image: Icon(Icons.cloud),
               unit: 'F',
-            )
+            ),
+            CustomScaleGauge(maxValue: 150, actualValue: 55)
           ],
         ),
       ),
