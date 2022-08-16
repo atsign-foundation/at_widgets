@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:radial_gauges/utils/utils.dart';
 
-class RangePointerGauge extends StatefulWidget {
+class ImageAnnotationGauge extends StatefulWidget {
   /// Creates a Range Pointer Gauge.
   ///
   /// The [actualValue] and [maxValue] must not be null.
-  RangePointerGauge({
+  ImageAnnotationGauge({
     required this.actualValue,
     required this.maxValue,
+    this.unit,
+    this.image,
     this.minValue = 0,
     this.pointerColor = Colors.blue,
     this.decimalPlaces = 0,
@@ -20,6 +22,11 @@ class RangePointerGauge extends StatefulWidget {
 
   /// Sets the maximum value of the gauge.
   double maxValue;
+
+  /// Sets the unit of the [actualValue]
+  String? unit;
+
+  Widget? image;
 
   /// Sets the minimum value of the gauge.
   double minValue;
@@ -34,10 +41,10 @@ class RangePointerGauge extends StatefulWidget {
   final bool animate;
 
   @override
-  State<RangePointerGauge> createState() => _RangePointerGaugeState();
+  State<ImageAnnotationGauge> createState() => _ImageAnnotationGaugeState();
 }
 
-class _RangePointerGaugeState extends State<RangePointerGauge>
+class _ImageAnnotationGaugeState extends State<ImageAnnotationGauge>
     with SingleTickerProviderStateMixin {
   late Animation<double> animation;
   late AnimationController animationController;
@@ -89,17 +96,18 @@ class _RangePointerGaugeState extends State<RangePointerGauge>
         sweepAngle: animationController.value,
         pointerColor: widget.pointerColor,
       ),
-      child: SizedBox(
-        height: 200,
-        width: 200,
-        child: Center(
-          child: Text(
-            '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)}',
-            style: const TextStyle(fontStyle: FontStyle.italic),
-            textAlign: TextAlign.center,
-          ),
+      child: Center(
+          child: ListTile(
+        title: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: 50, maxWidth: 50),
+          child: widget.image,
         ),
-      ),
+        subtitle: Text(
+          '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
+          style: const TextStyle(fontStyle: FontStyle.italic),
+          textAlign: TextAlign.center,
+        ),
+      )),
     );
   }
 }

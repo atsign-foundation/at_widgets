@@ -1,3 +1,4 @@
+import 'package:radial_gauges/radial_gauges/image_annotation_gauge.dart';
 import 'package:radial_gauges/radial_gauges/text_annotation_gauge.dart';
 
 import 'radial_gauges/range_pointer_gauge.dart';
@@ -59,6 +60,12 @@ class MyCharts extends StatelessWidget {
                 pointerColor: Colors.blue,
                 animate: true,
               ),
+            ),
+            ImageAnnotationGauge(
+              actualValue: 73,
+              maxValue: 100,
+              image: Icon(Icons.cloud),
+              unit: 'F',
             )
           ],
         ),
