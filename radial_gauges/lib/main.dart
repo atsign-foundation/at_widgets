@@ -62,13 +62,19 @@ class MyCharts extends StatelessWidget {
                 animate: true,
               ),
             ),
-            ImageAnnotationGauge(
-              actualValue: 73,
-              maxValue: 100,
-              image: Icon(Icons.cloud),
-              unit: 'F',
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ImageAnnotationGauge(
+                actualValue: 73,
+                maxValue: 100,
+                image: Icon(Icons.cloud),
+                unit: 'F',
+              ),
             ),
-            CustomScaleGauge(maxValue: 150, actualValue: 55)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomScaleGauge(maxValue: 150, actualValue: 50),
+            )
           ],
         ),
       ),

@@ -123,13 +123,13 @@ class RangePointerGaugePainter extends CustomPainter {
   final String maxValue;
   final double actualValue;
 
-  dynamic getScale() {
-    List<double> scaleLabel = [];
-    final double interval = double.parse(maxValue) / 9;
-    for (var i = 0; i < 9; i++) {
-      scaleLabel.add((i * interval).roundToDouble());
-      print(scaleLabel);
+  List<double> getScale(double divider) {
+    List<double> scale = [];
+    final double interval = double.parse(maxValue) / (divider - 1);
+    for (var i = 0; i < divider; i++) {
+      scale.add((i * interval).roundToDouble());
     }
+    return scale;
   }
 
   @override
@@ -139,7 +139,7 @@ class RangePointerGaugePainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width * 1 / 2;
     var arcRect = Rect.fromCircle(center: center, radius: radius);
-    getScale();
+
     // Background Arc
     final backgroundArcPaint = Paint()
       ..color = Colors.black12
@@ -164,33 +164,45 @@ class RangePointerGaugePainter extends CustomPainter {
       ..strokeWidth = 5
       ..style = PaintingStyle.fill;
 
-    var needle = Path();
-    needle.moveTo(size.width / 2, size.height / 2);
-    needle.relativeLineTo(10, 0);
-    needle.lineTo((center.dx) + (radius - 15) * cos(pi / 1.5 + sweepAngle),
-        (center.dx) + (radius - 15) * sin(pi / 1.5 + sweepAngle));
-    needle.lineTo((center.dx) + radius * cos(pi / 1.5 + sweepAngle),
-        (center.dx) + radius * sin(pi / 1.5 + sweepAngle));
+    var needleEndPointOffset = Offset(
+      (center.dx) + (radius - 15) * cos(pi / 1.5 + sweepAngle),
+      (center.dx) + (radius - 15) * sin(pi / 1.5 + sweepAngle),
+    );
 
-    needle.close();
+    canvas.drawLine(center, needleEndPointOffset, needlePaint);
+    canvas.drawCircle(center, 5, needlePaint);
 
-    canvas.drawPath(needle, needlePaint);
+    // paint scale increments
+    for (var value in getScale(10)) {
+      final TextPainter valueTextPainter = TextPainter(
+          text: TextSpan(
+            style: const TextStyle(color: Colors.black, fontSize: 10),
+            text: value.toStringAsFixed(0),
+          ),
+          textDirection: TextDirection.ltr)
+        ..layout(
+          minWidth: size.width / 2,
+          maxWidth: size.width / 2,
+        );
+      // get sweep angle for every value
+      var scaleSweepAngle = Utils.actualValueToSweepAngleRadian(
+          actualValue: value,
+          maxValue: double.parse(maxValue),
+          maxDegrees: 300);
+      // apply sweep angle to arc angle formula
+      var scaleOffset = Offset(
+          (center.dx) + (radius - 25) * cos(pi / 1.5 + scaleSweepAngle),
+          (center.dx) + (radius - 25) * sin(pi / 1.5 + scaleSweepAngle));
+      // adjust formula to be below arc
 
-    final TextPainter maxValueTextPainter = TextPainter(
-        text: TextSpan(
-          style: const TextStyle(color: Colors.black),
-          text: maxValue,
-        ),
-        textDirection: TextDirection.ltr)
-      ..layout(
-        minWidth: size.width / 2,
-        maxWidth: size.width / 2,
-      );
+      // return offset of value
 
-    final minValueOffset = Offset(size.width / 4, size.height / 1);
-    final maxValueOffset = Offset(size.width / 1.5, size.height / 1);
+      // paint value to canvas
 
-    maxValueTextPainter.paint(canvas, maxValueOffset);
+      final maxValueOffset = Offset(size.width / 1.5, size.height / 1);
+
+      valueTextPainter.paint(canvas, scaleOffset);
+    }
   }
 
   @override
