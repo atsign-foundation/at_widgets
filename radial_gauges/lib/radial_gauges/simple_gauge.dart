@@ -45,6 +45,7 @@ class SimpleGauge extends StatefulWidget {
   /// Toggle on and off animation.
   final bool isAnimate;
 
+  /// Sets a duration to control the speed of the animation.
   final Duration? duration;
 
   @override
