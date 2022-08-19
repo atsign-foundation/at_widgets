@@ -27,7 +27,6 @@ dependencies:
   geolocator: ^8.2.1
   sliding_up_panel: ^2.0.0+1
   http: ^0.13.4
-  fluttertoast: ^8.0.9
 
   # at_chat_flutter: ^2.0.2
   at_client_mobile: ^3.2.2

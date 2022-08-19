@@ -63,8 +63,6 @@ class _NewGroupState extends State<NewGroup> {
 
   // ignore: always_declare_return_types
   createGroup() async {
-    var isKeyboardOpen =
-        MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     groupName = textController.text;
     // ignore: unnecessary_null_comparison
     if (groupName != null) {
@@ -89,33 +87,25 @@ class _NewGroupState extends State<NewGroup> {
 
         var result = await GroupService().createGroup(group);
 
-        isKeyboardOpen =
-            MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
-
         if (result is AtGroup) {
           Navigator.of(context).pop();
         } else if (result != null) {
           if (result.runtimeType == AlreadyExistsException) {
-            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context,
-                gravity: isKeyboardOpen ? 2 : 0);
+            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context);
           } else if (result.runtimeType == InvalidAtSignException) {
             CustomToast()
-                .show(result.message, context, gravity: isKeyboardOpen ? 2 : 0);
+                .show(result.message, context);
           } else {
-            CustomToast().show(TextConstants().SERVICE_ERROR, context,
-                gravity: isKeyboardOpen ? 2 : 0);
+            CustomToast().show(TextConstants().SERVICE_ERROR, context);
           }
         } else {
-          CustomToast().show(TextConstants().SERVICE_ERROR, context,
-              gravity: isKeyboardOpen ? 2 : 0);
+          CustomToast().show(TextConstants().SERVICE_ERROR, context);
         }
       } else {
-        CustomToast().show(TextConstants().EMPTY_NAME, context,
-            gravity: isKeyboardOpen ? 2 : 0);
+        CustomToast().show(TextConstants().EMPTY_NAME, context);
       }
     } else {
-      CustomToast().show(TextConstants().EMPTY_NAME, context,
-          gravity: isKeyboardOpen ? 2 : 0);
+      CustomToast().show(TextConstants().EMPTY_NAME, context);
     }
   }
 

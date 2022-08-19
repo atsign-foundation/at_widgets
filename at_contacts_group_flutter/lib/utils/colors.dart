@@ -50,4 +50,8 @@ class AllColors {
   Color LIGHT_GREY_LABEL = const Color(0xFFB3B6BE);
   // ignore: non_constant_identifier_names
   Color Orange = const Color(0xffF05E3F);
+    // ignore: non_constant_identifier_names
+  Color RED = const Color(0xFFe34040);
+  // ignore: non_constant_identifier_names
+  Color GREEN = Colors.green;
 }

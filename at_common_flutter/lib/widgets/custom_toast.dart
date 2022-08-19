@@ -1,15 +1,11 @@
+
 import 'dart:io';
 
-import 'package:at_events_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomToast {
-  CustomToast._();
-  static final CustomToast _instance = CustomToast._();
-  factory CustomToast() => _instance;
-
   /// pass [isError] true to have a red bg, [isSuccess] true to have a green bg.
-  void show(String message, BuildContext? context,
+  static void show(String message, BuildContext? context,
           {Color? bgColor,
           Color? textColor,
           double? toastWidth,
@@ -17,9 +13,11 @@ class CustomToast {
           int duration = 3,
           double gravity = 10.0,
           bool isError = false,
-          bool isSuccess = false}) =>
-      ScaffoldMessenger.of(context!).showSnackBar(
-        SnackBar(
+          bool isSuccess = false}) {
+            assert(!(isError && isSuccess), 'Both isError and isSuccess cannot be true');
+            assert(gravity >= 0, 'gravity cannot be less than 0');            
+              ScaffoldMessenger.of(context!).showSnackBar(
+                  SnackBar(
           content: Text(
             message,
             textAlign: TextAlign.center,
@@ -35,16 +33,17 @@ class CustomToast {
               : EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.2, vertical: gravity),
           backgroundColor: isError
-              ? AllColors().RED
+              ? Colors.red
               : (isSuccess
-                  ? AllColors().GREEN
-                  : (bgColor ?? AllColors().ORANGE)),
+                  ? Colors.green
+                  : (bgColor ?? const Color(0xA9FFFFFF))),
           padding: const EdgeInsets.all(10),
           width: toastWidth,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
               borderRadius:
                   BorderRadius.circular(Platform.isAndroid ? 50 : 10)),
-        ),
-      );
+                  ),
+                );
+            }
 }
