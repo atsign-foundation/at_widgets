@@ -1,35 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:radial_gauges/utils/utils.dart';
 
-class ImageAnnotationGauge extends StatefulWidget {
+class SimpleGauge extends StatefulWidget {
   /// Creates a Range Pointer Gauge.
   ///
   /// The [actualValue] and [maxValue] must not be null.
-  ImageAnnotationGauge({
+  const SimpleGauge({
     required this.actualValue,
     required this.maxValue,
     this.unit,
-    this.image,
+    this.icon,
     this.minValue = 0,
     this.pointerColor = Colors.blue,
     this.decimalPlaces = 0,
-    this.animate = true,
+    this.isAnimate = true,
+    this.duration,
     Key? key,
-  }) : super(key: key);
+  })  : assert(actualValue <= maxValue,
+            'actualValue must be less than or equal to maxValue'),
+        super(key: key);
 
   /// Sets the actual value of the gauge.
-  double actualValue;
+  final double actualValue;
 
   /// Sets the maximum value of the gauge.
-  double maxValue;
+  final double maxValue;
 
-  /// Sets the unit of the [actualValue]
-  String? unit;
+  /// Sets the unit of the [actualValue]. If no [icon] is selected this value will be ignored.
+  final String? unit;
 
-  Widget? image;
+  /// Sets the icon in the center of the gauge.
+  /// Typically an [Icon] widget.
+  final Widget? icon;
 
   /// Sets the minimum value of the gauge.
-  double minValue;
+  final double minValue;
 
   /// Sets the pointer color of the gauge.
   final Color pointerColor;
@@ -38,13 +43,15 @@ class ImageAnnotationGauge extends StatefulWidget {
   final int decimalPlaces;
 
   /// Toggle on and off animation.
-  final bool animate;
+  final bool isAnimate;
+
+  final Duration? duration;
 
   @override
-  State<ImageAnnotationGauge> createState() => _ImageAnnotationGaugeState();
+  State<SimpleGauge> createState() => _SimpleGaugeState();
 }
 
-class _ImageAnnotationGaugeState extends State<ImageAnnotationGauge>
+class _SimpleGaugeState extends State<SimpleGauge>
     with SingleTickerProviderStateMixin {
   late Animation<double> animation;
   late AnimationController animationController;
@@ -52,15 +59,18 @@ class _ImageAnnotationGaugeState extends State<ImageAnnotationGauge>
   @override
   void initState() {
     super.initState();
+
     double sweepAngleRadian = Utils.actualValueToSweepAngleRadian(
         actualValue: widget.actualValue, maxValue: widget.maxValue);
 
     double upperBound = Utils.degreesToRadians(360);
 
     animationController = AnimationController(
-        duration: Duration(seconds: widget.animate ? 1 : 0),
-        vsync: this,
-        upperBound: upperBound);
+      duration: Utils.getDuration(
+          isAnimate: widget.isAnimate, userDuration: widget.duration),
+      vsync: this,
+      upperBound: upperBound,
+    );
 
     animation = Tween<double>().animate(animationController)
       ..addListener(() {
@@ -88,32 +98,36 @@ class _ImageAnnotationGaugeState extends State<ImageAnnotationGauge>
       animationController.animateTo(
           Utils.actualValueToSweepAngleRadian(
               actualValue: widget.actualValue, maxValue: widget.maxValue),
-          duration: Duration(seconds: widget.animate ? 1 : 0));
+          duration: Utils.getDuration(
+              isAnimate: widget.isAnimate, userDuration: widget.duration));
     }
-
     return CustomPaint(
-      painter: RangePointerGaugePainter(
+      painter: SimpleGaugePainter(
         sweepAngle: animationController.value,
         pointerColor: widget.pointerColor,
       ),
       child: Center(
           child: ListTile(
-        title: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: 50, maxWidth: 50),
-          child: widget.image,
-        ),
-        subtitle: Text(
-          '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
-          style: const TextStyle(fontStyle: FontStyle.italic),
-          textAlign: TextAlign.center,
-        ),
+        title: widget.icon ??
+            Text(
+              '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
+              style: const TextStyle(fontStyle: FontStyle.italic),
+              textAlign: TextAlign.center,
+            ),
+        subtitle: widget.icon != null
+            ? Text(
+                '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
+                style: const TextStyle(fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+              )
+            : null,
       )),
     );
   }
 }
 
-class RangePointerGaugePainter extends CustomPainter {
-  RangePointerGaugePainter({
+class SimpleGaugePainter extends CustomPainter {
+  SimpleGaugePainter({
     required this.sweepAngle,
     required this.pointerColor,
     Key? key,

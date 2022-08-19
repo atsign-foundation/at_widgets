@@ -1,9 +1,5 @@
-import 'package:radial_gauges/radial_gauges/custom_scale_gauge.dart';
-import 'package:radial_gauges/radial_gauges/image_annotation_gauge.dart';
-import 'package:radial_gauges/radial_gauges/text_annotation_gauge.dart';
-
-import 'radial_gauges/range_pointer_gauge.dart';
 import 'package:flutter/material.dart';
+import 'package:radial_gauges/radial_gauges/radial_gauges.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,35 +42,17 @@ class MyCharts extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
-          children: [
+          children: const [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RangePointerGauge(actualValue: 50, maxValue: 100),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextAnnotationGauge(
-                minValue: 0,
-                maxValue: 240,
-                actualValue: 142,
-                label: 'Km/h',
-                pointerColor: Colors.blue,
-                animate: true,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ImageAnnotationGauge(
-                actualValue: 73,
+              padding: EdgeInsets.all(8.0),
+              child: SimpleGauge(
+                actualValue: 50,
                 maxValue: 100,
-                image: Icon(Icons.cloud),
-                unit: 'F',
+                icon: Icon(Icons.water),
+                unit: 'L',
+                isAnimate: true,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CustomScaleGauge(maxValue: 150, actualValue: 50),
-            )
           ],
         ),
       ),

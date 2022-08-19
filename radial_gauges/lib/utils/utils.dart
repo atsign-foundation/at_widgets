@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:radial_gauges/utils/constants.dart';
+
 class Utils {
   /// Convert [degrees] to radians.
   static double degreesToRadians(double degrees) {
@@ -55,4 +57,13 @@ class Utils {
   //   num mod = math.pow(10.0, widget.decimalPlaces);
   //   return ((value * mod).round().toDouble() / mod);
   // }
+
+  static Duration getDuration(
+      {required bool isAnimate, required Duration? userDuration}) {
+    if (isAnimate) {
+      return userDuration ?? kDefaultAnimationDuration;
+    } else {
+      return kNoAnimationDuration;
+    }
+  }
 }
