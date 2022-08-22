@@ -1,10 +1,12 @@
 // ignore_for_file: implementation_imports, prefer_typing_uninitialized_variables
 
 import 'dart:async';
-
+import 'package:at_client/src/service/sync_service.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
+import 'package:at_sync_ui_flutter/services/sync_progress_listener.dart';
 import 'package:flutter/material.dart';
+import 'package:at_client/src/listener/sync_progress_listener.dart';
 
 class AtSyncUIService {
   static final AtSyncUIService _singleton = AtSyncUIService._internal();
@@ -14,15 +16,16 @@ class AtSyncUIService {
     return _singleton;
   }
 
-  Function? onSuccessCallback, onErrorCallback;
-  var syncService;
+  Function? onSuccessCallback, onErrorCallback, syncProgressCallback;
+  late SyncService syncService;
+  late AtSyncProgressListener atSyncListener;
   AtSyncUIStyle atSyncUIStyle = AtSyncUIStyle.cupertino;
   AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none;
   bool showTextWhileSyncing = true;
 
   final StreamController _atSyncUIListenerController =
       StreamController<AtSyncUIStatus>.broadcast();
-  
+
   /// [atSyncUIListener] can be used to listen to sync status changes
   Stream<AtSyncUIStatus> get atSyncUIListener =>
       _atSyncUIListenerController.stream as Stream<AtSyncUIStatus>;
@@ -43,12 +46,14 @@ class AtSyncUIService {
     bool? showTextWhileSyncing,
     Function? onSuccessCallback,
     Function? onErrorCallback,
+    Function? syncProgressCallback,
     Color? primaryColor,
     Color? backgroundColor,
     Color? labelColor,
   }) {
     this.onSuccessCallback = onSuccessCallback;
     this.onErrorCallback = onErrorCallback;
+    this.syncProgressCallback = syncProgressCallback;
     AtSyncUI.instance.setAppNavigatorKey(appNavigator);
 
     /// change status to notStarted
@@ -73,18 +78,21 @@ class AtSyncUIService {
     AtSyncUI.instance.setupController(controller: _atSyncUIController);
 
     syncService = AtClientManager.getInstance().syncService;
+    atSyncListener = AtSyncProgressListener();
+    syncService.addProgressListener(atSyncListener);
     syncService.setOnDone(_onSuccessCallback);
   }
 
   /// calls sync and shows selected UI
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
   void sync({AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none}) {
-      this.atSyncUIOverlay = atSyncUIOverlay;
+    this.atSyncUIOverlay = atSyncUIOverlay;
 
     /// change status to syncing
     _atSyncUIListenerSink.add(AtSyncUIStatus.syncing);
 
     _show(atSyncUIOverlay: atSyncUIOverlay);
+
     syncService.sync(onDone: _onSuccessCallback);
   }
 
