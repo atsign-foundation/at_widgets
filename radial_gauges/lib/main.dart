@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:radial_gauges/radial_gauges/radial_gauges.dart';
+
+import 'radial_gauges/radial_gauges.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,8 +50,13 @@ class MyCharts extends StatelessWidget {
                 actualValue: 50,
                 maxValue: 100,
                 icon: Icon(Icons.water),
-                unit: 'L',
-                isAnimate: true,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: ScaleGauge(
+                maxValue: 240,
+                actualValue: 200,
               ),
             ),
           ],

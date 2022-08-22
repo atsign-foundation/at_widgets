@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:radial_gauges/utils/utils.dart';
 
 class SimpleGauge extends StatefulWidget {
-  /// Creates a Range Pointer Gauge.
+  /// Creates a simple Gauge.
   ///
   /// The [actualValue] and [maxValue] must not be null.
   const SimpleGauge({

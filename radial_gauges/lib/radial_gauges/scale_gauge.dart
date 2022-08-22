@@ -1,50 +1,59 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:radial_gauges/utils/utils.dart';
 
-class CustomScaleGauge extends StatefulWidget {
-  /// Creates a Range Pointer Gauge.
+class ScaleGauge extends StatefulWidget {
+  /// Creates a scale Gauge.
   ///
   /// The [minValue] and [maxValue] must not be null.
-  CustomScaleGauge({
+  const ScaleGauge({
     this.minValue = 0,
     required this.maxValue,
     required this.actualValue,
     this.label = '',
-    this.pointerColor = Colors.blue,
+    this.arcColor = Colors.blue,
+    this.needleColor = Colors.blue,
     this.decimalPlaces = 0,
-    this.animate = true,
+    this.isAnimate = true,
+    this.duration,
     Key? key,
-  }) : super(key: key);
+  })  : assert(actualValue <= maxValue,
+            'actualValue must be less than or equal to maxValue'),
+        super(key: key);
 
   /// Sets the minimum value of the gauge.
-  double minValue;
+  final double minValue;
 
-  /// Sets the maximum value of the gauge.
-  double maxValue;
+  /// Sets the max value of the gauge.
+  final double maxValue;
 
-  /// Sets the pointer value of the gauge.
-  double actualValue;
+  /// Sets the actual value of the gauge.
+  final double actualValue;
 
   /// Set the label of the gauge.
-  String label;
+  final String label;
 
-  /// Sets the pointer color of the gauge.
-  final Color pointerColor;
+  /// Sets the arc color of the gauge.
+  final Color arcColor;
+
+  /// Sets the needle color of the gauge
+  final Color needleColor;
 
   /// Controls how much decimal places will be shown for the [minValue],[maxValue] and [actualValue].
   final int decimalPlaces;
 
   /// Toggle on and off animation.
-  final bool animate;
+  final bool isAnimate;
+
+  /// Sets a duration to control the speed of the animation.
+  final Duration? duration;
 
   @override
-  State<CustomScaleGauge> createState() => _CustomScaleGaugeState();
+  State<ScaleGauge> createState() => _ScaleGaugeState();
 }
 
-class _CustomScaleGaugeState extends State<CustomScaleGauge>
+class _ScaleGaugeState extends State<ScaleGauge>
     with SingleTickerProviderStateMixin {
   late Animation<double> animation;
   late AnimationController animationController;
@@ -60,7 +69,8 @@ class _CustomScaleGaugeState extends State<CustomScaleGauge>
     double upperBound = Utils.degreesToRadians(300);
 
     animationController = AnimationController(
-        duration: Duration(seconds: widget.animate ? 1 : 0),
+        duration: Utils.getDuration(
+            isAnimate: widget.isAnimate, userDuration: widget.duration),
         vsync: this,
         upperBound: upperBound);
 
@@ -94,13 +104,15 @@ class _CustomScaleGaugeState extends State<CustomScaleGauge>
               actualValue: widget.actualValue,
               maxValue: widget.maxValue,
               maxDegrees: 300),
-          duration: Duration(seconds: widget.animate ? 1 : 0));
+          duration: Utils.getDuration(
+              isAnimate: widget.isAnimate, userDuration: widget.duration));
     }
 
     return CustomPaint(
       painter: RangePointerGaugePainter(
           sweepAngle: animationController.value,
-          pointerColor: widget.pointerColor,
+          pointerColor: widget.arcColor,
+          needleColor: widget.needleColor,
           maxValue: widget.maxValue.toStringAsFixed(widget.decimalPlaces),
           minValue: widget.minValue.toStringAsFixed(widget.decimalPlaces),
           actualValue: widget.actualValue),
@@ -115,6 +127,7 @@ class RangePointerGaugePainter extends CustomPainter {
     required this.minValue,
     required this.maxValue,
     required this.actualValue,
+    required this.needleColor,
     Key? key,
   });
   final double sweepAngle;
@@ -122,6 +135,7 @@ class RangePointerGaugePainter extends CustomPainter {
   final String minValue;
   final String maxValue;
   final double actualValue;
+  final Color needleColor;
 
   List<double> getScale(double divider) {
     List<double> scale = [];
@@ -160,7 +174,7 @@ class RangePointerGaugePainter extends CustomPainter {
 
     // Arc Needle
     var needlePaint = Paint()
-      ..color = Colors.blue
+      ..color = needleColor
       ..strokeWidth = 5
       ..style = PaintingStyle.fill;
 
