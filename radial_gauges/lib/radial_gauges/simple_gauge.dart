@@ -26,7 +26,7 @@ class SimpleGauge extends StatefulWidget {
   /// Sets the maximum value of the gauge.
   final double maxValue;
 
-  /// Sets the unit of the [actualValue]. If no [icon] is selected this value will be ignored.
+  /// Sets the unit of the [actualValue] and [maxValue].
   final String? unit;
 
   /// Sets the icon in the center of the gauge.
