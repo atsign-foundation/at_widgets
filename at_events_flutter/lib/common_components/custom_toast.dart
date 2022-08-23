@@ -9,7 +9,7 @@ class CustomToast {
   factory CustomToast() => _instance;
 
   /// pass [isError] true to have a red bg, [isSuccess] true to have a green bg.
-  void show(String message, BuildContext? context,
+  void show(String message, BuildContext context,
           {Color? bgColor,
           Color? textColor,
           double? toastWidth,
@@ -18,7 +18,7 @@ class CustomToast {
           double gravity = 10.0,
           bool isError = false,
           bool isSuccess = false}) =>
-      ScaffoldMessenger.of(context!).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             message,
