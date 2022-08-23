@@ -28,19 +28,20 @@ class AtOnboardingQRCodeScreen extends StatefulWidget {
 class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
-  QRViewController? controller;
+  QRViewController? _controller;
 
   bool isDetecting = false;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
-  void reassemble() {
+  void reassemble() async {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller!.pauseCamera();
+      await _controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      await _controller!.resumeCamera();
     }
-    controller!.resumeCamera();
   }
 
   @override
@@ -73,37 +74,37 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
     // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
       key: qrKey,
+      cameraFacing: CameraFacing.back,
       onQRViewCreated: _onQRViewCreated,
+      formatsAllowed: const [BarcodeFormat.qrcode],
       overlay: QrScannerOverlayShape(
-          borderColor: Theme.of(context).primaryColor,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
-      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
+        borderColor: Theme.of(context).primaryColor,
+        borderRadius: 10,
+        borderLength: 30,
+        borderWidth: 10,
+        cutOutSize: scanArea,
+      ),
     );
   }
 
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
-      this.controller = controller;
+      _controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
+
+    // call resumeCamera function
+    if (Platform.isAndroid) {
+      _controller!.resumeCamera();
+    }
+
+    _controller!.scannedDataStream.listen((scanData) {
       onScannedData(scanData.code);
     });
   }
 
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No permission')),
-      );
-    }
-  }
-
   @override
   void dispose() {
-    controller?.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -111,11 +112,12 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
     if (isDetecting) {
       return;
     }
+
     isDetecting = true;
     if ((qrCode ?? '').isNotEmpty) {
       List<String> values = (qrCode ?? '').split(':');
       if (values.length == 2) {
-        controller?.pauseCamera();
+        _controller?.pauseCamera();
         //It's issue from camera library so we need to add a delay to waiting for pause camera
         await Future.delayed(const Duration(milliseconds: 400));
         if (!mounted) return;
@@ -124,10 +126,10 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
           AtOnboardingQRCodeResult(atSign: values[0], secret: values[1]),
         );
       } else {
-        await controller?.pauseCamera();
+        await _controller?.pauseCamera();
         await AtOnboardingDialog.showError(
             context: context, message: 'Invalid QR.');
-        await controller?.resumeCamera();
+        await _controller?.resumeCamera();
       }
     }
     isDetecting = false;
