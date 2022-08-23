@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class CustomToast {
   /// pass [isError] true to have a red bg, [isSuccess] true to have a green bg.
-  static void show(String message, BuildContext? context,
+  static void show(String message, BuildContext context,
           {Color? bgColor,
           Color? textColor,
           double? toastWidth,
@@ -16,7 +16,7 @@ class CustomToast {
           bool isSuccess = false}) {
             assert(!(isError && isSuccess), 'Both isError and isSuccess cannot be true');
             assert(gravity >= 0, 'gravity cannot be less than 0');            
-              ScaffoldMessenger.of(context!).showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
           content: Text(
             message,
