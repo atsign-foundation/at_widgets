@@ -59,11 +59,11 @@ class Utils {
   // }
 
   static Duration getDuration(
-      {required bool isAnimate, required Duration? userDuration}) {
+      {required bool isAnimate, required int userMilliseconds}) {
     if (isAnimate) {
-      return userDuration ?? kDefaultAnimationDuration;
+      return Duration(milliseconds: userMilliseconds);
     } else {
-      return kNoAnimationDuration;
+      return const Duration(milliseconds: kNoAnimationDuration);
     }
   }
 }

@@ -1,2 +1,5 @@
-const kDefaultAnimationDuration = Duration(milliseconds: 1000);
-const kNoAnimationDuration = Duration(milliseconds: 0);
+const kDefaultAnimationDuration = 1000;
+const kNoAnimationDuration = 0;
+
+const double kDefaultRangeGaugeMaxDegree = 300;
+const double kDefaultRangeGaugeStartDegree = 180;

@@ -42,23 +42,83 @@ class MyCharts extends StatelessWidget {
           crossAxisCount: 2,
           padding: const EdgeInsets.all(20),
           crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          children: const [
-            Padding(
+          mainAxisSpacing: 50,
+          children: [
+            const Padding(
               padding: EdgeInsets.all(8.0),
               child: SimpleGauge(
                 actualValue: 50,
                 maxValue: 100,
                 icon: Icon(Icons.water),
+                duration: 500,
               ),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(8.0),
               child: ScaleGauge(
                 maxValue: 240,
-                actualValue: 200,
+                actualValue: 50,
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RangeGauge(
+                maxValue: 200,
+                actualValue: 80,
+                maxDegree: 180,
+                startDegree: 180,
+                ranges: [
+                  Range(
+                    label: 'slow',
+                    lowerLimit: 0,
+                    upperLimit: 25,
+                    backgroundColor: Colors.blue,
+                  ),
+                  Range(
+                    label: 'medium',
+                    lowerLimit: 25,
+                    upperLimit: 50,
+                    backgroundColor: Colors.orange,
+                  ),
+                  Range(
+                    label: 'fast',
+                    lowerLimit: 50,
+                    upperLimit: 75,
+                    backgroundColor: Colors.lightGreen,
+                  ),
+                  Range(
+                    label: 'extra fast',
+                    lowerLimit: 75,
+                    upperLimit: 100,
+                    backgroundColor: Colors.purple,
+                  ),
+                  Range(
+                    label: 'super fast',
+                    lowerLimit: 100,
+                    upperLimit: 125,
+                    backgroundColor: Colors.blue,
+                  ),
+                  Range(
+                    label: 'sonic fast',
+                    lowerLimit: 125,
+                    upperLimit: 150,
+                    backgroundColor: Colors.orange,
+                  ),
+                  Range(
+                    label: 'Mac 1',
+                    lowerLimit: 150,
+                    upperLimit: 175,
+                    backgroundColor: Colors.lightGreen,
+                  ),
+                  Range(
+                    label: 'Mac 2',
+                    lowerLimit: 175,
+                    upperLimit: 200,
+                    backgroundColor: Colors.purple,
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

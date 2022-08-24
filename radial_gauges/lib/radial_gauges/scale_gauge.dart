@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:radial_gauges/utils/constants.dart';
 import 'package:radial_gauges/utils/utils.dart';
 
 class ScaleGauge extends StatefulWidget {
@@ -16,7 +17,7 @@ class ScaleGauge extends StatefulWidget {
     this.needleColor = Colors.blue,
     this.decimalPlaces = 0,
     this.isAnimate = true,
-    this.duration,
+    this.duration = kDefaultAnimationDuration,
     Key? key,
   })  : assert(actualValue <= maxValue,
             'actualValue must be less than or equal to maxValue'),
@@ -46,8 +47,8 @@ class ScaleGauge extends StatefulWidget {
   /// Toggle on and off animation.
   final bool isAnimate;
 
-  /// Sets a duration to control the speed of the animation.
-  final Duration? duration;
+  /// Sets a duration in milliseconds to control the speed of the animation.
+  final int duration;
 
   @override
   State<ScaleGauge> createState() => _ScaleGaugeState();
@@ -70,7 +71,7 @@ class _ScaleGaugeState extends State<ScaleGauge>
 
     animationController = AnimationController(
         duration: Utils.getDuration(
-            isAnimate: widget.isAnimate, userDuration: widget.duration),
+            isAnimate: widget.isAnimate, userMilliseconds: widget.duration),
         vsync: this,
         upperBound: upperBound);
 
@@ -105,7 +106,7 @@ class _ScaleGaugeState extends State<ScaleGauge>
               maxValue: widget.maxValue,
               maxDegrees: 300),
           duration: Utils.getDuration(
-              isAnimate: widget.isAnimate, userDuration: widget.duration));
+              isAnimate: widget.isAnimate, userMilliseconds: widget.duration));
     }
 
     return CustomPaint(

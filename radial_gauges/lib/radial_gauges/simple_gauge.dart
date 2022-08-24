@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:radial_gauges/utils/constants.dart';
 import 'package:radial_gauges/utils/utils.dart';
 
 class SimpleGauge extends StatefulWidget {
@@ -14,7 +15,7 @@ class SimpleGauge extends StatefulWidget {
     this.pointerColor = Colors.blue,
     this.decimalPlaces = 0,
     this.isAnimate = true,
-    this.duration,
+    this.duration = kDefaultAnimationDuration,
     Key? key,
   })  : assert(actualValue <= maxValue,
             'actualValue must be less than or equal to maxValue'),
@@ -45,8 +46,8 @@ class SimpleGauge extends StatefulWidget {
   /// Toggle on and off animation.
   final bool isAnimate;
 
-  /// Sets a duration to control the speed of the animation.
-  final Duration? duration;
+  /// Sets a duration in milliseconds to control the speed of the animation.
+  final int duration;
 
   @override
   State<SimpleGauge> createState() => _SimpleGaugeState();
@@ -68,7 +69,7 @@ class _SimpleGaugeState extends State<SimpleGauge>
 
     animationController = AnimationController(
       duration: Utils.getDuration(
-          isAnimate: widget.isAnimate, userDuration: widget.duration),
+          isAnimate: widget.isAnimate, userMilliseconds: widget.duration),
       vsync: this,
       upperBound: upperBound,
     );
@@ -100,7 +101,7 @@ class _SimpleGaugeState extends State<SimpleGauge>
           Utils.actualValueToSweepAngleRadian(
               actualValue: widget.actualValue, maxValue: widget.maxValue),
           duration: Utils.getDuration(
-              isAnimate: widget.isAnimate, userDuration: widget.duration));
+              isAnimate: widget.isAnimate, userMilliseconds: widget.duration));
     }
     return CustomPaint(
       painter: SimpleGaugePainter(
