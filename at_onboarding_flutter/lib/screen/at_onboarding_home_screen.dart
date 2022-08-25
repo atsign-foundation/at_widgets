@@ -410,10 +410,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       absorbing: loading,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Pair your AtSign',
-            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-          ),
+          title: const Text('Setting up your account'),
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),
             onPressed: () {
@@ -466,7 +463,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       Text(
-                        ' backup key file',
+                        'Upload backup key file',
                         style:
                             TextStyle(fontSize: AtOnboardingDimens.fontLarge),
                       ),
