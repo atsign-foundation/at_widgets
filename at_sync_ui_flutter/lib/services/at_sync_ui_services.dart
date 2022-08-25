@@ -4,11 +4,10 @@ import 'dart:async';
 import 'package:at_client/src/service/sync_service.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
-import 'package:at_sync_ui_flutter/services/sync_progress_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client/src/listener/sync_progress_listener.dart';
 
-class AtSyncUIService {
+class AtSyncUIService extends SyncProgressListener {
   static final AtSyncUIService _singleton = AtSyncUIService._internal();
   AtSyncUIService._internal();
 
@@ -16,9 +15,24 @@ class AtSyncUIService {
     return _singleton;
   }
 
+  @override
+  void onSyncProgressEvent(SyncProgress syncProgress) {
+    if (AtSyncUIService().syncProgressCallback != null) {
+      AtSyncUIService().syncProgressCallback!(syncProgress);
+    }
+
+    if (syncProgress.syncStatus == SyncStatus.success) {
+      _hide();
+      _atSyncUIListenerSink.add(AtSyncUIStatus.completed);
+    }
+
+    if (syncProgress.syncStatus == SyncStatus.failure) {
+      _atSyncUIListenerSink.add(AtSyncUIStatus.failed);
+    }
+  }
+
   Function? onSuccessCallback, onErrorCallback, syncProgressCallback;
   late SyncService syncService;
-  late AtSyncProgressListener atSyncListener;
   AtSyncUIStyle atSyncUIStyle = AtSyncUIStyle.cupertino;
   AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none;
   bool showTextWhileSyncing = true;
@@ -38,6 +52,7 @@ class AtSyncUIService {
   /// [showTextWhileSyncing] should text be shown while syncing
   /// [onSuccessCallback] called after successful sync
   /// [onErrorCallback] called after failure in sync
+  /// [syncProgressCallback] Notifies the registered listener for the [SyncProgress]
   /// [primaryColor],[backgroundColor], [labelColor] will be used while displaying overlay/snackbar.
   void init({
     required GlobalKey<NavigatorState> appNavigator,
@@ -78,8 +93,7 @@ class AtSyncUIService {
     AtSyncUI.instance.setupController(controller: _atSyncUIController);
 
     syncService = AtClientManager.getInstance().syncService;
-    atSyncListener = AtSyncProgressListener();
-    syncService.addProgressListener(atSyncListener);
+    syncService.addProgressListener(this);
     syncService.setOnDone(_onSuccessCallback);
   }
 
@@ -97,20 +111,12 @@ class AtSyncUIService {
   }
 
   void _onSuccessCallback(SyncResult syncStatus) {
-    _hide();
-
     if ((syncStatus.syncStatus == SyncStatus.failure) &&
         (onErrorCallback != null)) {
-      /// change status to failed
-      _atSyncUIListenerSink.add(AtSyncUIStatus.failed);
-
       onErrorCallback!(syncStatus);
     }
 
     if (onSuccessCallback != null) {
-      /// change status to completed
-      _atSyncUIListenerSink.add(AtSyncUIStatus.completed);
-
       onSuccessCallback!(syncStatus);
     }
   }
