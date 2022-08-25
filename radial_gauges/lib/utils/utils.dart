@@ -24,10 +24,11 @@ class Utils {
   }
 
   /// Convert [actualValue] to sweepAngleRadian.
-  static double actualValueToSweepAngleRadian(
-      {required double actualValue,
-      required double maxValue,
-      double maxDegrees = 360}) {
+  static double actualValueToSweepAngleRadian({
+    required double actualValue,
+    required double maxValue,
+    double maxDegrees = 360,
+  }) {
     return degreesToRadians(Utils.actualValueToSweepAngle(
         actualValue: actualValue, maxValue: maxValue, maxDegrees: maxDegrees));
   }

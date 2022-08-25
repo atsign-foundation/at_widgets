@@ -22,7 +22,10 @@ class RangeGauge extends StatefulWidget {
     this.maxDegree = kDefaultRangeGaugeMaxDegree,
     this.startDegree = kDefaultRangeGaugeStartDegree,
     Key? key,
-  }) : super(key: key);
+  })  : assert(actualValue <= maxValue,
+            'actualValue must be less than or equal to maxValue'),
+        assert(startDegree <= 360, 'start'),
+        super(key: key);
 
   /// Sets the minimum value of the gauge.
   final double minValue;
@@ -72,12 +75,13 @@ class _RangeGaugeState extends State<RangeGauge>
   @override
   void initState() {
     super.initState();
+
     double sweepAngleRadian = Utils.actualValueToSweepAngleRadian(
         actualValue: widget.actualValue,
         maxValue: widget.maxValue,
         maxDegrees: widget.maxDegree);
 
-    double upperBound = Utils.degreesToRadians(kDefaultRangeGaugeMaxDegree);
+    double upperBound = Utils.degreesToRadians(widget.maxDegree);
 
     animationController = AnimationController(
         duration: Utils.getDuration(
@@ -109,12 +113,12 @@ class _RangeGaugeState extends State<RangeGauge>
         Utils.actualValueToSweepAngleRadian(
             actualValue: widget.actualValue,
             maxValue: widget.maxValue,
-            maxDegrees: kDefaultRangeGaugeMaxDegree)) {
+            maxDegrees: widget.maxDegree)) {
       animationController.animateTo(
           Utils.actualValueToSweepAngleRadian(
               actualValue: widget.actualValue,
               maxValue: widget.maxValue,
-              maxDegrees: kDefaultRangeGaugeMaxDegree),
+              maxDegrees: widget.maxDegree),
           duration: Utils.getDuration(
               isAnimate: widget.isAnimate,
               userMilliseconds: widget.milliseconds));
@@ -175,15 +179,6 @@ class RangeGaugePainter extends CustomPainter {
   /// Sets the [startDegree] of the gauge
   final double startDegree;
 
-  List<double> getScale(double divider) {
-    List<double> scale = [];
-    final double interval = double.parse(maxValue) / (divider - 1);
-    for (var i = 0; i < divider; i++) {
-      scale.add((i * interval).roundToDouble());
-    }
-    return scale;
-  }
-
   @override
   void paint(Canvas canvas, Size size) {
     const double kDefaultStrokeWidth = 70;
@@ -193,21 +188,14 @@ class RangeGaugePainter extends CustomPainter {
     final radius = size.width * 1 / 2;
     var arcRect = Rect.fromCircle(center: center, radius: radius);
 
-    // Background Arc
-    final backgroundArcPaint = Paint()
-      ..color = Colors.black12
-      ..strokeWidth = 5
-      ..style = PaintingStyle.stroke;
-
-    canvas.drawArc(
-        arcRect, startAngle, backgroundSweepAngle, false, backgroundArcPaint);
-
+    // Create range arc first.
     for (var range in ranges) {
       var rangeArcPaint = Paint()
         ..color = range.backgroundColor
         ..strokeWidth = strokeWidth ?? kDefaultStrokeWidth
         ..strokeCap = StrokeCap.butt
         ..style = PaintingStyle.stroke;
+
       final rangeStartAngle = Utils.actualValueToSweepAngleRadian(
               actualValue: range.lowerLimit,
               maxValue: double.parse(maxValue),
@@ -222,6 +210,7 @@ class RangeGaugePainter extends CustomPainter {
           arcRect, rangeStartAngle, rangeSweepAngle, false, rangeArcPaint);
     }
 
+    // Create range labels
     for (var range in ranges) {
       if (range.label != null) {
         final TextPainter rangeLabelTextPainter = TextPainter(
@@ -242,18 +231,21 @@ class RangeGaugePainter extends CustomPainter {
         // apply sweep angle to arc angle formula
 
         final labelRadian = Utils.actualValueToSweepAngleRadian(
-            actualValue: ((range.lowerLimit + range.upperLimit) / 2),
-            maxValue: double.parse(maxValue),
-            maxDegrees: maxDegree);
+                actualValue: ((range.lowerLimit + range.upperLimit) / 2),
+                maxValue: double.parse(maxValue),
+                maxDegrees: maxDegree) +
+            (startAngle - Utils.degreesToRadians(120));
         final rangeLabelOffset = Offset(
           (center.dx) + (radius) * cos(pi / 1.5 + (labelRadian)),
           (center.dx) + (radius) * sin(pi / 1.5 + (labelRadian)),
         );
-
+        // canvas.rotate(Utils.degreesToRadians(0.1));
         rangeLabelTextPainter.paint(canvas, rangeLabelOffset);
       }
     }
 
+    // canvas.restore();
+    // canvas.save();
     // Arc Needle
     var needlePaint = Paint()
       ..color = pointerColor ?? Colors.black
@@ -261,12 +253,17 @@ class RangeGaugePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill;
     const needleLengthConstraints = 15;
+
+    // The sweepAngle start at 120 degrees from the start of a circle.
+    var adjustedSweepAngle =
+        sweepAngle + (startAngle - Utils.degreesToRadians(120));
     var needleEndPointOffset = Offset(
-      (center.dx) +
-          (radius - needleLengthConstraints) * cos(pi / 1.5 + sweepAngle),
-      (center.dx) +
-          (radius - needleLengthConstraints) * sin(pi / 1.5 + sweepAngle),
-    );
+        (center.dx) +
+            (radius - needleLengthConstraints) *
+                cos(pi / 1.5 + (adjustedSweepAngle)),
+        (center.dx) +
+            (radius - needleLengthConstraints) *
+                sin(pi / 1.5 + (adjustedSweepAngle)));
 
     canvas.drawLine(center, needleEndPointOffset, needlePaint);
     canvas.drawCircle(center, 5, needlePaint);
@@ -292,7 +289,7 @@ class RangeGaugePainter extends CustomPainter {
       );
 
     // apply sweep angle to arc angle formula
-    var actualValueOffset = Offset(size.width / 2, size.height / 1);
+    var actualValueOffset = Offset(size.width / 2, size.height / 1.8);
     // adjust formula to be below arc
 
     // return offset of value

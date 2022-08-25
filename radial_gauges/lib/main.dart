@@ -41,7 +41,7 @@ class MyCharts extends StatelessWidget {
         child: GridView.count(
           crossAxisCount: 2,
           padding: const EdgeInsets.all(20),
-          crossAxisSpacing: 10,
+          crossAxisSpacing: 50,
           mainAxisSpacing: 50,
           children: [
             const Padding(
@@ -64,7 +64,7 @@ class MyCharts extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: RangeGauge(
                 maxValue: 200,
-                actualValue: 80,
+                actualValue: 100,
                 maxDegree: 180,
                 startDegree: 180,
                 ranges: [
@@ -99,19 +99,19 @@ class MyCharts extends StatelessWidget {
                     backgroundColor: Colors.blue,
                   ),
                   Range(
-                    label: 'sonic fast',
+                    label: 'Mac 1',
                     lowerLimit: 125,
                     upperLimit: 150,
                     backgroundColor: Colors.orange,
                   ),
                   Range(
-                    label: 'Mac 1',
+                    label: 'Mac 2',
                     lowerLimit: 150,
                     upperLimit: 175,
                     backgroundColor: Colors.lightGreen,
                   ),
                   Range(
-                    label: 'Mac 2',
+                    label: 'Mac 3',
                     lowerLimit: 175,
                     upperLimit: 200,
                     backgroundColor: Colors.purple,
