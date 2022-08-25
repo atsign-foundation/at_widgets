@@ -1,5 +1,5 @@
 name: at_common_flutter
-description: A Flutter package to provide common widgets used by other @‎platform Flutter packages.
+description: A Flutter package to provide common widgets used by other atPlatform Flutter packages.
 version: 2.0.9
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_common_flutter
