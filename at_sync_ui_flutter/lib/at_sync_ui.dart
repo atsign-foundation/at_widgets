@@ -83,6 +83,8 @@ class AtSyncUI {
     _appNavigatorKey = appNavigator;
   }
 
+  GlobalKey<NavigatorState>? get appNavigatorKey => _appNavigatorKey;
+
   /// Provide default theme for UI (dialog/snackBar ...) using in the app
   void configTheme({
     Color? primaryColor,
@@ -115,8 +117,6 @@ class AtSyncUI {
   void showDialog({String? message}) {
     assert(
         _appNavigatorKey != null, "Must set appNavigator before show dialog");
-    assert(_appNavigatorKey!.currentState?.overlay != null,
-        "Cannot get current context");
     if (dialogOverlayEntry != null) {
       hideDialog();
     }
@@ -140,8 +140,6 @@ class AtSyncUI {
   void showSnackBar({String? message}) {
     assert(
         _appNavigatorKey != null, "Must set appNavigator before show dialog");
-    assert(_appNavigatorKey!.currentState?.overlay != null,
-        "Cannot get current context");
 
     if (snackBarOverlayEntry != null) {
       hideSnackBar();
