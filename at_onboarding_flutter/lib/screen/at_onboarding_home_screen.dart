@@ -466,7 +466,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       Text(
-                        'Upload backup key file',
+                        ' backup key file',
                         style:
                             TextStyle(fontSize: AtOnboardingDimens.fontLarge),
                       ),
