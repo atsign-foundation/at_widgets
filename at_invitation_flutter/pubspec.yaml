@@ -1,5 +1,5 @@
 name: at_invitation_flutter
-description: A Flutter package to invite contacts into apps that use @protocol.
+description: A Flutter package to invite contacts into apps that use atProtocol.
 version: 2.0.0
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_invitation_flutter
