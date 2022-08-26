@@ -84,6 +84,7 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
         borderWidth: 10,
         cutOutSize: scanArea,
       ),
+      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
   }
 
@@ -100,6 +101,14 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
     _controller!.scannedDataStream.listen((scanData) {
       onScannedData(scanData.code);
     });
+  }
+
+  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
+    if (!p) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No permission is given for camera.')),
+      );
+    }
   }
 
   @override
