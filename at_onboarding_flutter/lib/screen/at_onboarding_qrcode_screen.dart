@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class AtOnboardingQRCodeResult {
@@ -31,6 +32,42 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
   QRViewController? _controller;
 
   bool isDetecting = false;
+  bool showQRScanner = false;
+
+  @override
+  void initState() {
+    _initialSetup();
+    super.initState();
+  }
+
+  void _initialSetup() async {
+    PermissionStatus cameraStatus = await Permission.camera.status;
+
+    if (cameraStatus != PermissionStatus.denied) {
+      if (cameraStatus == PermissionStatus.permanentlyDenied) {
+        openAppSettings();
+      } else {
+        setState(() {
+          showQRScanner = true;
+        });
+      }
+    } else {
+      final result = await Permission.camera.request();
+      if (result != PermissionStatus.denied) {
+        if (result == PermissionStatus.permanentlyDenied) {
+          openAppSettings();
+        } else {
+          setState(() {
+            showQRScanner = true;
+          });
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No permission')),
+        );
+      }
+    }
+  }
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -53,13 +90,18 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
           title: const Text('Scan your QR!'),
           actions: const [
             Center(
-                child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: AtSyncIndicator(color: Colors.white),
-            )),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: AtSyncIndicator(color: Colors.white),
+              ),
+            ),
           ],
         ),
-        body: _buildQrView(context),
+        body: showQRScanner
+            ? _buildQrView(context)
+            : Container(
+                color: Colors.black,
+              ),
       ),
     );
   }
@@ -84,7 +126,6 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
         borderWidth: 10,
         cutOutSize: scanArea,
       ),
-      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
   }
 
@@ -101,14 +142,6 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
     _controller!.scannedDataStream.listen((scanData) {
       onScannedData(scanData.code);
     });
-  }
-
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No permission is given for camera.')),
-      );
-    }
   }
 
   @override
