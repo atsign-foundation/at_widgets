@@ -410,7 +410,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       absorbing: loading,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Setting up your account'),
+          title: Text(
+            'Setting up your account',
+            style: TextStyle(
+              color: Platform.isIOS || Platform.isAndroid
+                  ? Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white
+                  : null,
+            ),
+          ),
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),
             onPressed: () {

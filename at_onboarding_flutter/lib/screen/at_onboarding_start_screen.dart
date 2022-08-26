@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding.dart';
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
@@ -97,7 +99,16 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
             children: [
               AtSyncIndicator(color: Theme.of(context).primaryColor),
               const SizedBox(width: AtOnboardingDimens.paddingSmall),
-              const Text('Onboarding'),
+              Text(
+                'Onboarding',
+                style: TextStyle(
+                  color: Platform.isIOS || Platform.isAndroid
+                      ? Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white
+                      : null,
+                ),
+              ),
             ],
           ),
         ),

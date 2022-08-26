@@ -44,7 +44,16 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text(AtOnboardingStrings.saveBackupKeyTitle),
+        title: Text(
+          AtOnboardingStrings.saveBackupKeyTitle,
+          style: TextStyle(
+            color: Platform.isIOS || Platform.isAndroid
+                ? Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white
+                : null,
+          ),
+        ),
         leading: Container(),
         centerTitle: true,
       ),
