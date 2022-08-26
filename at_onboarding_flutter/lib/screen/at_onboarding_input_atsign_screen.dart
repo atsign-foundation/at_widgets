@@ -97,11 +97,16 @@ class _AtOnboardingInputAtSignScreenState
                 onPressed: _activateAtSign,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Text(
                       'Activate',
                       style: TextStyle(
                         fontSize: AtOnboardingDimens.fontLarge,
+                        color: Platform.isIOS || Platform.isAndroid
+                            ? Theme.of(context).brightness == Brightness.light
+                                ? Colors.white
+                                : Colors.black
+                            : null,
                       ),
                     ),
                   ],

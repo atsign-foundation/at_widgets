@@ -461,14 +461,20 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                   isLoading: loading,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         'Upload backup key file',
-                        style:
-                            TextStyle(fontSize: AtOnboardingDimens.fontLarge),
+                        style: TextStyle(
+                          fontSize: AtOnboardingDimens.fontLarge,
+                          color: Platform.isIOS || Platform.isAndroid
+                              ? Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Colors.black
+                              : null,
+                        ),
                       ),
-                      SizedBox(width: 10),
-                      Icon(
+                      const SizedBox(width: 10),
+                      const Icon(
                         Icons.cloud_upload_rounded,
                         // size: 20,
                       )

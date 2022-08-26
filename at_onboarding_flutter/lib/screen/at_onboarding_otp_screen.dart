@@ -146,7 +146,16 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   width: double.infinity,
                   isLoading: isVerifing,
                   onPressed: _onVerifyPressed,
-                  child: const Text('Verify & Login'),
+                  child: Text(
+                    'Verify & Login',
+                    style: TextStyle(
+                      color: Platform.isIOS || Platform.isAndroid
+                          ? Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black
+                          : null,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 AtOnboardingSecondaryButton(

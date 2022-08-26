@@ -142,13 +142,19 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   onPressed: _onSendCodePressed,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         'Send Code',
-                        style:
-                            TextStyle(fontSize: AtOnboardingDimens.fontLarge),
+                        style: TextStyle(
+                          fontSize: AtOnboardingDimens.fontLarge,
+                          color: Platform.isIOS || Platform.isAndroid
+                              ? Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Colors.black
+                              : null,
+                        ),
                       ),
-                      Icon(Icons.arrow_right_alt_rounded)
+                      const Icon(Icons.arrow_right_alt_rounded)
                     ],
                   ),
                 ),
