@@ -61,12 +61,13 @@ class MyCharts extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(left: 20.0),
               child: RangeGauge(
                 maxValue: 200,
                 actualValue: 100,
                 maxDegree: 180,
                 startDegree: 180,
+                isLegend: true,
                 ranges: [
                   Range(
                     label: 'slow',

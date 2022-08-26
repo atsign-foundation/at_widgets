@@ -21,10 +21,11 @@ class RangeGauge extends StatefulWidget {
     this.actualValueTextStyle,
     this.maxDegree = kDefaultRangeGaugeMaxDegree,
     this.startDegree = kDefaultRangeGaugeStartDegree,
+    this.isLegend = false,
     Key? key,
   })  : assert(actualValue <= maxValue,
             'actualValue must be less than or equal to maxValue'),
-        assert(startDegree <= 360, 'start'),
+        assert(startDegree <= 360, 'startDegree must be less than 360'),
         super(key: key);
 
   /// Sets the minimum value of the gauge.
@@ -60,8 +61,11 @@ class RangeGauge extends StatefulWidget {
   /// Sets the [maxDegree] for the gauge.
   final double maxDegree;
 
-  /// Sets the [startDegree] of the gauge
+  /// Sets the [startDegree] of the gauge.
   final double startDegree;
+
+  /// Toggle on and off legend.
+  final bool isLegend;
 
   @override
   State<RangeGauge> createState() => _RangeGaugeState();
@@ -126,18 +130,18 @@ class _RangeGaugeState extends State<RangeGauge>
 
     return CustomPaint(
       painter: RangeGaugePainter(
-        sweepAngle: animationController.value,
-        pointerColor: widget.pointerColor,
-        maxValue: widget.maxValue.toStringAsFixed(widget.decimalPlaces),
-        minValue: widget.minValue.toStringAsFixed(widget.decimalPlaces),
-        ranges: widget.ranges,
-        actualValue: widget.actualValue,
-        decimalPlaces: widget.decimalPlaces,
-        strokeWidth: widget.strokeWidth,
-        actualValueTextStyle: widget.actualValueTextStyle,
-        maxDegree: widget.maxDegree,
-        startDegree: widget.startDegree,
-      ),
+          sweepAngle: animationController.value,
+          pointerColor: widget.pointerColor,
+          maxValue: widget.maxValue.toStringAsFixed(widget.decimalPlaces),
+          minValue: widget.minValue.toStringAsFixed(widget.decimalPlaces),
+          ranges: widget.ranges,
+          actualValue: widget.actualValue,
+          decimalPlaces: widget.decimalPlaces,
+          strokeWidth: widget.strokeWidth,
+          actualValueTextStyle: widget.actualValueTextStyle,
+          maxDegree: widget.maxDegree,
+          startDegree: widget.startDegree,
+          isLegend: widget.isLegend),
     );
   }
 }
@@ -153,6 +157,7 @@ class RangeGaugePainter extends CustomPainter {
     required this.ranges,
     required this.maxDegree,
     required this.startDegree,
+    required this.isLegend,
     this.strokeWidth,
     this.actualValueTextStyle,
     Key? key,
@@ -179,6 +184,9 @@ class RangeGaugePainter extends CustomPainter {
   /// Sets the [startDegree] of the gauge
   final double startDegree;
 
+  /// Toggle on and off legend.
+  final bool isLegend;
+
   @override
   void paint(Canvas canvas, Size size) {
     const double kDefaultStrokeWidth = 70;
@@ -189,8 +197,9 @@ class RangeGaugePainter extends CustomPainter {
     var arcRect = Rect.fromCircle(center: center, radius: radius);
 
     // Create range arc first.
-    for (var range in ranges) {
-      var rangeArcPaint = Paint()
+    double labelHeight = size.height / 2;
+    for (final range in ranges) {
+      final rangeArcPaint = Paint()
         ..color = range.backgroundColor
         ..strokeWidth = strokeWidth ?? kDefaultStrokeWidth
         ..strokeCap = StrokeCap.butt
@@ -208,15 +217,12 @@ class RangeGaugePainter extends CustomPainter {
           maxDegrees: maxDegree);
       canvas.drawArc(
           arcRect, rangeStartAngle, rangeSweepAngle, false, rangeArcPaint);
-    }
 
-    // Create range labels
-    for (var range in ranges) {
-      if (range.label != null) {
+      if (range.label != null && isLegend) {
         final TextPainter rangeLabelTextPainter = TextPainter(
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.start,
             text: TextSpan(
-              style: range.labelTextStyle ??
+              style: range.legendTextStyle ??
                   const TextStyle(
                     color: Colors.black,
                   ),
@@ -228,24 +234,68 @@ class RangeGaugePainter extends CustomPainter {
             maxWidth: size.width / 2,
           );
 
-        // apply sweep angle to arc angle formula
-
-        final labelRadian = Utils.actualValueToSweepAngleRadian(
-                actualValue: ((range.lowerLimit + range.upperLimit) / 2),
-                maxValue: double.parse(maxValue),
-                maxDegrees: maxDegree) +
-            (startAngle - Utils.degreesToRadians(120));
-        final rangeLabelOffset = Offset(
-          (center.dx) + (radius) * cos(pi / 1.5 + (labelRadian)),
-          (center.dx) + (radius) * sin(pi / 1.5 + (labelRadian)),
-        );
-        // canvas.rotate(Utils.degreesToRadians(0.1));
+        final rangeLabelOffset = Offset(size.width / 0.7, labelHeight);
         rangeLabelTextPainter.paint(canvas, rangeLabelOffset);
+
+        final rangeLegendPaint = Paint()
+          ..color = range.backgroundColor
+          ..strokeWidth = 3
+          ..strokeCap = StrokeCap.butt
+          ..style = PaintingStyle.stroke;
+        // increase line height so label and color aligns
+        labelHeight += 10;
+
+        final rangeLineLabelOffsetStart =
+            Offset(size.width / 0.72, labelHeight);
+        final rangeLineLabelOffsetEnd = Offset(size.width / 0.78, labelHeight);
+        if (startDegree >= 180) {
+          labelHeight -= 27;
+        } else {
+          labelHeight += 10;
+        }
+
+        canvas.drawLine(rangeLineLabelOffsetStart, rangeLineLabelOffsetEnd,
+            rangeLegendPaint);
       }
     }
 
-    // canvas.restore();
-    // canvas.save();
+    // Create range labels
+    // for (var range in ranges) {
+    //   if (range.label != null) {
+    //     final TextPainter rangeLabelTextPainter = TextPainter(
+    //         textAlign: TextAlign.left,
+    //         text: TextSpan(
+    //           style: range.labelTextStyle ??
+    //               const TextStyle(
+    //                 color: Colors.black,
+    //               ),
+    //           text: range.label,
+    //         ),
+    //         textDirection: TextDirection.ltr)
+    //       ..layout(
+    //         minWidth: size.width / 2,
+    //         maxWidth: size.width / 2,
+    //       );
+
+    //     // apply sweep angle to arc angle formula
+
+    //     final labelRadian = Utils.actualValueToSweepAngleRadian(
+    //             actualValue: ((range.lowerLimit + range.upperLimit) / 2),
+    //             maxValue: double.parse(maxValue),
+    //             maxDegrees: maxDegree) +
+    //         (startAngle - Utils.degreesToRadians(120));
+    //     final rangeLabelOffset = Offset(
+    //       (center.dx) + (radius) * cos(pi / 1.5 + (labelRadian)),
+    //       (center.dx) + (radius) * sin(pi / 1.5 + (labelRadian)),
+    //     );
+
+    //     final rangeLabelOffset = Offset(size.width / 0.7, labelHeight);
+    //     labelHeight += 16;
+
+    //     rangeLabelTextPainter.paint(canvas, rangeLabelOffset);
+    //   }
+    // }
+
     // Arc Needle
     var needlePaint = Paint()
       ..color = pointerColor ?? Colors.black
@@ -289,7 +339,7 @@ class RangeGaugePainter extends CustomPainter {
       );
 
     // apply sweep angle to arc angle formula
-    var actualValueOffset = Offset(size.width / 2, size.height / 1.8);
+    var actualValueOffset = Offset(size.width / 2.2, size.height / 1.8);
     // adjust formula to be below arc
 
     // return offset of value
@@ -310,7 +360,7 @@ class Range {
       required this.lowerLimit,
       required this.upperLimit,
       required this.backgroundColor,
-      this.labelTextStyle})
+      this.legendTextStyle})
       : assert(lowerLimit <= upperLimit,
             'lowerLimit must be less than or equal to upperLimit');
 
@@ -327,5 +377,5 @@ class Range {
   final Color backgroundColor;
 
   /// Sets the TextStyle for the [label].
-  final TextStyle? labelTextStyle;
+  final TextStyle? legendTextStyle;
 }
