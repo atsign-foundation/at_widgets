@@ -132,9 +132,12 @@ void main() {
     test("compare_atSign", () async {
       var atSign = "@45expected";
       var atSign2 = "@83apedistinct";
+      var atSign3 = "45expected";
 
-      var res = ContactService().compareAtSign(atSign, atSign2);
-      expect(res, false);
+      var res = ContactService().compareAtSign(atSign, atSign3);
+      var res2 = ContactService().compareAtSign(atSign, atSign2);
+      expect(res, true);
+      expect(res2, false);
     });
   });
 }
