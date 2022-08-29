@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -48,7 +50,16 @@ class _AtOnboardingAccountsScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select atSigns'),
+        title: Text(
+          'Select atSigns',
+          style: TextStyle(
+            color: Platform.isIOS || Platform.isAndroid
+                ? Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white
+                : null,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

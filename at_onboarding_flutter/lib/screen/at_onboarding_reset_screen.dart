@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/sdk_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
@@ -50,7 +52,16 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Reset'),
+          title: Text(
+            'Reset',
+            style: TextStyle(
+              color: Platform.isIOS || Platform.isAndroid
+                  ? Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white
+                  : null,
+            ),
+          ),
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),
             onPressed: () {

@@ -44,7 +44,16 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text(AtOnboardingStrings.saveBackupKeyTitle),
+        title: Text(
+          AtOnboardingStrings.saveBackupKeyTitle,
+          style: TextStyle(
+            color: Platform.isIOS || Platform.isAndroid
+                ? Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white
+                : null,
+          ),
+        ),
         leading: Container(),
         centerTitle: true,
       ),
@@ -70,17 +79,23 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
             ),
             Expanded(flex: 1, child: Container()),
             Center(
-                child: Image.asset(
-              AtOnboardingStrings.backupZip,
-              height: Platform.isAndroid || Platform.isIOS
-                  ? MediaQuery.of(context).size.height * 0.3
-                  : 250,
-              width: Platform.isAndroid || Platform.isIOS
-                  ? MediaQuery.of(context).size.height * 0.3
-                  : 250,
-              fit: BoxFit.fill,
-              package: AtOnboardingConstants.package,
-            )),
+              child: Image.asset(
+                AtOnboardingStrings.backupZip,
+                height: Platform.isAndroid || Platform.isIOS
+                    ? MediaQuery.of(context).size.height * 0.3
+                    : 250,
+                width: Platform.isAndroid || Platform.isIOS
+                    ? MediaQuery.of(context).size.height * 0.3
+                    : 250,
+                fit: BoxFit.fill,
+                package: AtOnboardingConstants.package,
+                color: Platform.isIOS || Platform.isAndroid
+                    ? Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white
+                    : null,
+              ),
+            ),
             Expanded(flex: 1, child: Container()),
             Container(
               constraints: const BoxConstraints(
@@ -89,7 +104,16 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
               child: AtOnboardingPrimaryButton(
                 height: 48,
                 borderRadius: 24,
-                child: const Text(AtOnboardingStrings.saveButtonTitle),
+                child: Text(
+                  AtOnboardingStrings.saveButtonTitle,
+                  style: TextStyle(
+                    color: Platform.isIOS || Platform.isAndroid
+                        ? Theme.of(context).brightness == Brightness.light
+                            ? Colors.white
+                            : Colors.black
+                        : null,
+                  ),
+                ),
                 onPressed: () {
                   BackupKeyWidget(atsign: atsign ?? '')
                       .showBackupDialog(context);
