@@ -141,6 +141,7 @@ class BackupKeyWidget extends StatelessWidget {
             return Dialog(
               child: Container(
                 padding: const EdgeInsets.all(20),
+                width: 600,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -165,7 +166,7 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
                                 Strings.backUpKeysTitle,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16.toFont,
+                                  fontSize: 14.toFont,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
