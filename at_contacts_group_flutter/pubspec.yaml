@@ -1,5 +1,5 @@
 name: at_contacts_group_flutter
-description: A Flutter plugin project to provide group functionality with contacts using @‎platform.
+description: A Flutter plugin project to provide group functionality with contacts using atPlatform.
 version: 4.0.8
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_contacts_group_flutter
