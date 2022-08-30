@@ -141,7 +141,7 @@ class BackupKeyWidget extends StatelessWidget {
             return Dialog(
               child: Container(
                 padding: const EdgeInsets.all(20),
-                width: 600,
+                width: (Platform.isMacOS || Platform.isWindows) ? 600 : null,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
