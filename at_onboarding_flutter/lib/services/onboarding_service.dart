@@ -101,7 +101,7 @@ class OnboardingService {
 
   /// Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].
   /// Throws Excpetion if atsign is null.
-  Future<dynamic> authenticate(String? atsign,
+  Future<AtOnboardingResponseStatus> authenticate(String? atsign,
       {String? cramSecret,
       String? jsonData,
       String? decryptKey,
@@ -111,7 +111,8 @@ class OnboardingService {
     if (atsign == null) {
       throw 'atSign cannot be null';
     }
-    Completer<dynamic> c = Completer<dynamic>();
+    Completer<AtOnboardingResponseStatus> c =
+        Completer<AtOnboardingResponseStatus>();
     try {
       serverStatus = await _checkAtSignServerStatus(atsign);
       if (serverStatus != ServerStatus.teapot &&
