@@ -1,3 +1,6 @@
+## 5.0.1
+- **FIX**: Windows onboarding issue resolved
+
 ## 5.0.0
 - **FEAT**: Updated UI flow
 - **FEAT**: Updated Keychain data structure dependency
