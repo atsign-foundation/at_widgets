@@ -1,3 +1,6 @@
+## 5.0.2
+- **CHORE**: Updated dependencies
+
 ## 5.0.1
 - **FIX**: Windows onboarding issue resolved
 
