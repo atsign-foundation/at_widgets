@@ -34,6 +34,7 @@ void main() {
     });
 
     test("compare_contact_list_for_update_for_one_contact", () {
+      ContactService().baseContactList = [];
       var contact = AtContact(atSign: "@83apedistinct");
       ContactService().compareContactListForUpdatedStateForOneContact(contact);
 
@@ -45,6 +46,12 @@ void main() {
 
       when(() => mockAtcontactImpl.update(contact))
           .thenAnswer((invocation) async => true);
+
+      when(() => mockAtcontactImpl.listBlockedContacts())
+          .thenAnswer((invocation) async => [contact]);
+
+      when(() => mockAtcontactImpl.listContacts())
+          .thenAnswer((invocation) async => [AtContact(atSign: '@alice')]);
 
       ContactService().atContactImpl = mockAtcontactImpl;
       var res = await ContactService()
