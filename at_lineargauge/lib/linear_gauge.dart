@@ -18,6 +18,15 @@ class LinearGauge extends StatefulWidget {
   // Minimum number to start
   final double minValue;
 
+  // Low range
+  final double lowRange;
+
+  // Normal range
+  final double normalRange;
+
+  // High range
+  final double highRange;
+
   // The number of division that gauge will be divided into
   final int divisions;
 
@@ -96,6 +105,9 @@ class LinearGauge extends StatefulWidget {
     this.minValue = 0.0,
     required this.divisions,
     required this.subDivisions,
+    this.lowRange = 0.0,
+    this.normalRange = 0.0,
+    this.highRange = 0.0,
   }) : super(key: key) {
     _progressColor = progressColor ?? Colors.deepOrangeAccent;
     _backgroundColor = backgroundColor ?? const Color(0xFFB8C7CB);
@@ -125,8 +137,6 @@ class _LinearGaugeState extends State<LinearGauge>
   final Color primaryColor = const Color(0xFFE9E9E9);
   final Color secondaryColor = const Color(0xFFBCC5C8);
 
-  final double value = 4672;
-
   Widget parentWidgetBasedOnOrientation() {
     return SizedBox(
       width: _wholeContainerWidth,
@@ -142,14 +152,6 @@ class _LinearGaugeState extends State<LinearGauge>
     /// used to display the actual value of at an index
     final double multiplier =
         (widget.maxValue) / (widget.divisions * widget.subDivisions);
-    final double valueWidth =
-        (_wholeContainerWidth / (widget.maxValue) * value);
-
-    /// number of lines that fall behind the value * thickness of one subDivision
-    final double valueWidthAdditionalThickness = ((value /
-                (widget.maxValue / (widget.divisions * widget.subDivisions))) -
-            1) *
-        subDivisionThickness;
 
     return [
       const SizedBox(
@@ -343,7 +345,35 @@ class _LinearGaugeState extends State<LinearGauge>
             ),
           if (_wholeContainerWidth > 0)
             Positioned(
-              bottom: _wholeContainerHeight,
+              bottom: _wholeContainerHeight - 1.5,
+              child: SizedBox(
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      height: 5,
+                      width: widget.lowRange /
+                          (widget.maxValue / _wholeContainerWidth),
+                      color: Colors.redAccent,
+                    ),
+                    Container(
+                      height: 5,
+                      width: (widget.normalRange - widget.lowRange) /
+                          (widget.maxValue / _wholeContainerWidth),
+                      color: Colors.yellowAccent,
+                    ),
+                    Container(
+                      height: 5,
+                      width: (widget.highRange - widget.normalRange) /
+                          (widget.maxValue / _wholeContainerWidth),
+                      color: Colors.greenAccent,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          if (_wholeContainerWidth > 0)
+            Positioned(
+              bottom: _wholeContainerHeight + 5,
               child: SizedBox(
                 child: parentWidgetBasedOnOrientation(),
               ),
