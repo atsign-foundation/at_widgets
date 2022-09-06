@@ -23,9 +23,7 @@ import 'package:at_utils/at_logger.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zxing2/qrcode.dart';
 import 'package:image/image.dart' as img;
@@ -127,7 +125,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       _isContinue = true;
       String? fileContents, aesKey, atsign;
       FilePickerResult? result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true);
+          .pickFiles(type: FileType.any, allowMultiple: false);
       if ((result?.files ?? []).isEmpty) {
         //User cancelled => do nothing
         return;
@@ -137,6 +135,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       });
       for (PlatformFile pickedFile in result?.files ?? <PlatformFile>[]) {
         String? path = pickedFile.path;
+
         if (path == null) {
           throw const FileSystemException(
               'FilePicker.pickFiles returned a null path');
@@ -148,49 +147,15 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           return;
         }
 
-        if (pickedFile.extension == 'zip') {
-          Uint8List bytes = selectedFile.readAsBytesSync();
-          Archive archive = ZipDecoder().decodeBytes(bytes);
-          for (ArchiveFile file in archive) {
-            if (file.name.contains('atKeys')) {
-              fileContents = String.fromCharCodes(file.content);
-            } else if (aesKey == null &&
-                atsign == null &&
-                file.name.contains('_private_key.png')) {
-              List<int> bytes = file.content as List<int>;
-              String path = (await path_provider.getTemporaryDirectory()).path;
-              File file1 = await File('${path}test').create();
-              file1.writeAsBytesSync(bytes);
-              String result = await FlutterQrReader.imgScan(file1.path);
-              List<String> params = result.replaceAll('"', '').split(':');
-              atsign = params[0];
-              aesKey = params[1];
-              await File('${path}test').delete();
-              //read scan QRcode and extract atsign,aeskey
-            }
-          }
-        } else if (pickedFile.name.contains('atKeys')) {
-          fileContents = File(path.toString()).readAsStringSync();
-        } else if (aesKey == null &&
-            atsign == null &&
-            pickedFile.name.contains('_private_key.png')) {
-          //read scan QRcode and extract atsign,aeskey
-          String result = await FlutterQrReader.imgScan(path.toString());
-          List<String> params = result.split(':');
-          atsign = params[0];
-          aesKey = params[1];
+        /// only allow '.atKeys' or '.atkeys' files
+        if(!pickedFile.name.toLowerCase().contains('.atkeys')){
+          setState(() {
+            loading = false;
+          });
+          showErrorDialog('Please select an atKey file');
+          return;
         } else {
-          Uint8List result1 = selectedFile.readAsBytesSync();
-          fileContents = String.fromCharCodes(result1);
-          bool result = _validatePickedFileContents(fileContents);
-          _logger.finer('result after extracting data is......$result');
-          if (!result) {
-            await showErrorDialog(_incorrectKeyFile);
-            setState(() {
-              loading = false;
-            });
-            return;
-          }
+          fileContents = File(path.toString()).readAsStringSync();
         }
       }
       if (aesKey == null && atsign == null && fileContents != null) {
