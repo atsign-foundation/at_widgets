@@ -1,6 +1,5 @@
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_start_screen.dart';
@@ -57,29 +56,12 @@ class AtOnboarding {
         return AtOnboardingResult.cancelled();
       }
     } else {
-      final haveAnAtsign = await Navigator.push(
+      final result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) {
             return AtOnboardingIntroScreen(
               config: config,
-            );
-          },
-        ),
-      );
-
-      if (haveAnAtsign is! bool) {
-        return AtOnboardingResult.cancelled();
-      }
-
-      //Navigate user to screen to add new atsign
-      final result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return AtOnboardingHomeScreen(
-              config: config,
-              haveAnAtsign: haveAnAtsign,
             );
           },
         ),

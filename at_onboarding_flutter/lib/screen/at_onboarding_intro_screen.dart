@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:flutter/material.dart';
 
@@ -82,7 +83,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop(true);
+                    _navigateToHomePage(true);
                   },
                 ),
                 const SizedBox(height: 16),
@@ -93,7 +94,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                     "I don't have an atsign",
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop(false);
+                    _navigateToHomePage(false);
                   },
                 ),
               ],
@@ -102,5 +103,25 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
         ),
       ),
     );
+  }
+
+  void _navigateToHomePage(bool haveAtSign) async {
+    //Navigate user to screen to add new atsign
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return AtOnboardingHomeScreen(
+            config: widget.config,
+            haveAnAtsign: haveAtSign,
+          );
+        },
+      ),
+    );
+
+    if (result != null) {
+      if (!mounted) return;
+      Navigator.pop(context, result);
+    }
   }
 }
