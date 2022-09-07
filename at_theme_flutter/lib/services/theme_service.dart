@@ -16,18 +16,19 @@ class ThemeService {
   int? rootPort;
   String? currentAtsign;
 
+  var atClientManager = AtClientManager.getInstance();
+
   initThemeService(String rootDomainFromApp, int rootPortFromApp) {
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
-    currentAtsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
+    currentAtsign = atClientManager.atClient.getCurrentAtSign();
   }
 
   Future<bool> updateThemeData(AppTheme themeData) async {
     AtKey atKey = getAtkey();
     try {
-      var result = await AtClientManager.getInstance()
-          .atClient
-          .put(atKey, themeData.encoded());
+      var result =
+          await atClientManager.atClient.put(atKey, themeData.encoded());
       return result;
     } catch (e) {
       _logger.severe('error in updating theme data: ${e.toString()}');
@@ -38,7 +39,7 @@ class ThemeService {
   Future<AppTheme?> getThemeData() async {
     try {
       AtKey atKey = getAtkey();
-      var atValue = await AtClientManager.getInstance().atClient.get(atKey);
+      var atValue = await atClientManager.atClient.get(atKey);
 
       if (atValue.value == null && atValue.value == 'null') {
         return null;

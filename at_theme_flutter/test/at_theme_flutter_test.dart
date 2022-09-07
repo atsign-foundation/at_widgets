@@ -6,96 +6,33 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockAtClient extends Mock implements AtClient {}
-
-class MockAtClientManager extends Mock implements AtClientManager {
-  static final MockAtClientManager _singleton = MockAtClientManager._internal();
-
-  MockAtClientManager._internal();
-
-  factory MockAtClientManager.getInstance() {
-    return _singleton;
+class MockAtClient extends Mock implements AtClient {
+  @override
+  Future<bool> put(AtKey key, dynamic value, {bool isDedicated = false}) async {
+    return true;
   }
 }
 
+class MockAtClientManager extends Mock implements AtClientManager {}
+
 void main() async {
-  // MockAtClientManager mockAtClientManager = MockAtClientManager();
-
-  // AtClientManager atClientManager;
-
-  // setUp(() {
-  //   atClientManager = MockAtClientManager();
-  // });
-
-  // var atSign = '@alice';
-  // atClientManager = AtClientManager(atSign);
-  // final preference = AtClientPreference()..syncRegex = '.wavi';
-  // AtClient atClient = await AtClientImpl.create(atSign, 'wavi', preference,
-  //     atClientManager: atClientManager);
+  MockAtClientManager mockAtClientManager = MockAtClientManager();
 
   test("test", () async {
-    // atClientManager.setCurrentAtSign(atSign, ".wavi", preference);
-    // // print(atClient.getCurrentAtSign());
-    // MockAtClientManager().init();
-    // print(MockAtClientManager().getInstance().atClient);
+    var mockAtClient = MockAtClient();
 
-    // when(
-    //   () => mockAtClientManager.atClient.getCurrentAtSign(),
-    // ).thenAnswer(
-    //   (invocation) => "@alice",
-    // );
+    when(() => mockAtClientManager.atClient).thenAnswer((_) => mockAtClient);
 
-    // ThemeService().initThemeService("domain", 69);
+    ThemeService().atClientManager = mockAtClientManager;
 
-    AppTheme theme = AppTheme(
-        brightness: Brightness.dark,
+    var updateThemeDataResult = await ThemeService().updateThemeData(
+      AppTheme(
+        brightness: Brightness.light,
         primaryColor: Colors.red,
-        secondaryColor: Colors.white,
-        backgroundColor: Colors.blue);
-
-    var atSign = '@alice🛠';
-    // final preference = AtClientPreference()..syncRegex = '.wavi';
-    // final atClientManager = await MockAtClientManager.getInstance()
-    //     .setCurrentAtSign(atSign, 'wavi', preference);
-    // var atClient = atClientManager.atClient;
-    // MockAtClientManager.getInstance().
-    // MockAtClientManager.getInstance().atClient.put()
-
-    // when(() => MockAtClientManager.getInstance()
-    //     .atClient
-    //     .put(AtKey()..key = "key", "")).thenAnswer((invocation) async => true);
-
-    // print(MockAtClientManager.getInstance().atClient.getCurrentAtSign());
-    // ThemeService().initThemeService("domain", 69);
-    // var res = await ThemeService().updateThemeData(theme);
-
-    final preference = AtClientPreference()..syncRegex = '.wavi';
-    // final atClientManager = await AtClientManager.getInstance()
-    //     .setCurrentAtSign(atSign, 'wavi', preference);
-    // var atClient = atClientManager.atClient;
-
-    when(() => AtClientManager.getInstance()
-        .atClient
-        .put(AtKey()..key = "key", "")).thenAnswer((invocation) async => true);
-
-    print(AtClientManager.getInstance().atClient.getCurrentAtSign());
-    ThemeService().initThemeService("domain", 69);
-    var res = await ThemeService().updateThemeData(theme);
-    // print(res);
+        secondaryColor: Colors.orange,
+        backgroundColor: Colors.white,
+      ),
+    );
+    expect(updateThemeDataResult, true);
   });
 }
-
-// class MockAtClientManager extends Mock
-//     with MockPlatformInterfaceMixin
-//     implements AtClientManager {
-//   final preference = AtClientPreference()..syncRegex = '.wavi';
-
-//   late AtClient atClient;
-
-//   void init() async {
-//     atClient = await AtClientImpl.create("@alice", "wavi", preference);
-//   }
-
-//   @override
-//   AtClientManager getInstance() => MockAtClientManager();
-// }
