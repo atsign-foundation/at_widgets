@@ -410,7 +410,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       absorbing: loading,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Setting up your account'),
+          title: Text(
+            'Setting up your account',
+            style: TextStyle(
+              color: Platform.isIOS || Platform.isAndroid
+                  ? Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white
+                  : null,
+            ),
+          ),
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),
             onPressed: () {
@@ -461,14 +470,20 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                   isLoading: loading,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         'Upload backup key file',
-                        style:
-                            TextStyle(fontSize: AtOnboardingDimens.fontLarge),
+                        style: TextStyle(
+                          fontSize: AtOnboardingDimens.fontLarge,
+                          color: Platform.isIOS || Platform.isAndroid
+                              ? Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Colors.black
+                              : null,
+                        ),
                       ),
-                      SizedBox(width: 10),
-                      Icon(
+                      const SizedBox(width: 10),
+                      const Icon(
                         Icons.cloud_upload_rounded,
                         // size: 20,
                       )

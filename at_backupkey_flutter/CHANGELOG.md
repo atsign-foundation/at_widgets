@@ -1,3 +1,6 @@
+## 4.0.5:
+- **FIX**: Backup dialog width reduced for desktop platforms
+
 ## 4.0.4:
 - **FEAT**: Added help text
 

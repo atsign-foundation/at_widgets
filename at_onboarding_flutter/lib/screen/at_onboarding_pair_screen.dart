@@ -52,7 +52,16 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       absorbing: isParing,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Setting up your account'),
+          title: Text(
+            'Setting up your account',
+            style: TextStyle(
+              color: Platform.isIOS || Platform.isAndroid
+                  ? Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white
+                  : null,
+            ),
+          ),
           centerTitle: true,
           actions: [
             IconButton(
@@ -142,13 +151,19 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                   onPressed: _onSendCodePressed,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         'Send Code',
-                        style:
-                            TextStyle(fontSize: AtOnboardingDimens.fontLarge),
+                        style: TextStyle(
+                          fontSize: AtOnboardingDimens.fontLarge,
+                          color: Platform.isIOS || Platform.isAndroid
+                              ? Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Colors.black
+                              : null,
+                        ),
                       ),
-                      Icon(Icons.arrow_right_alt_rounded)
+                      const Icon(Icons.arrow_right_alt_rounded)
                     ],
                   ),
                 ),

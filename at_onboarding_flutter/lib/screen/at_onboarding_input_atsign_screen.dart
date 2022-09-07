@@ -34,7 +34,16 @@ class _AtOnboardingInputAtSignScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Setting up your account'),
+        title: Text(
+          'Setting up your account',
+          style: TextStyle(
+            color: Platform.isIOS || Platform.isAndroid
+                ? Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white
+                : null,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: _showReferenceWebview,
@@ -97,11 +106,16 @@ class _AtOnboardingInputAtSignScreenState
                 onPressed: _activateAtSign,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Text(
                       'Activate',
                       style: TextStyle(
                         fontSize: AtOnboardingDimens.fontLarge,
+                        color: Platform.isIOS || Platform.isAndroid
+                            ? Theme.of(context).brightness == Brightness.light
+                                ? Colors.white
+                                : Colors.black
+                            : null,
                       ),
                     ),
                   ],

@@ -6,7 +6,7 @@
 The at_sync_ui_flutter package is for Flutter developers who want to implement the UI indicator for sync process.
 
 This open source package is written in Dart, supports Flutter and follows the
-@‎platform's decentralized, edge computing model with the following features: 
+atPlatform's decentralized, edge computing model with the following features: 
 - Cryptographic control of data access through personal data stores
 - No application backend needed
 - End to end encryption where only the data owner has the keys
