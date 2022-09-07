@@ -44,6 +44,8 @@ dependency_overrides:
     # See https://dart.dev/tools/pub/dependencies#version-constraints
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
+  at_backupkey_flutter:
+    path: ../../../at_widgets/at_backupkey_flutter
 
 dev_dependencies:
   flutter_test:

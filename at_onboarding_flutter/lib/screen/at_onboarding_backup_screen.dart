@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:at_backupkey_flutter/widgets/backup_key_widget.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_backup_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
@@ -10,13 +11,25 @@ import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 
 class AtOnboardingBackupScreen extends StatefulWidget {
-  const AtOnboardingBackupScreen({Key? key}) : super(key: key);
+  final AtOnboardingConfig config;
+
+  const AtOnboardingBackupScreen({
+    Key? key,
+    required this.config,
+  }) : super(key: key);
 
   static Future<void> push({
     required BuildContext context,
+    required AtOnboardingConfig config,
   }) {
-    return Navigator.push(context,
-        MaterialPageRoute(builder: (_) => const AtOnboardingBackupScreen()));
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AtOnboardingBackupScreen(
+          config: config,
+        ),
+      ),
+    );
   }
 
   @override
@@ -26,6 +39,7 @@ class AtOnboardingBackupScreen extends StatefulWidget {
 
 class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
   String? atsign;
+  bool isSaveAtSign = false;
 
   @override
   void initState() {
@@ -42,109 +56,130 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
+          ),
+    );
+
     if (atsign == null) {
       return const Text('An atSign is required.');
     }
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(
-          AtOnboardingStrings.saveBackupKeyTitle,
-          style: TextStyle(
-            color: Platform.isIOS || Platform.isAndroid
-                ? Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white
-                : null,
+    return Theme(
+      data: theme,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text(
+            AtOnboardingStrings.saveBackupKeyTitle,
+            style: TextStyle(
+              color: Platform.isIOS || Platform.isAndroid
+                  ? Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white
+                  : null,
+            ),
           ),
+          leading: IconButton(
+            icon: const Icon(Icons.close_rounded),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          centerTitle: true,
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.close_rounded),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            const SizedBox(height: 10),
-            const Text(
-              AtOnboardingStrings.saveImportantTitle,
-              style: TextStyle(
-                  fontSize: AtOnboardingDimens.fontLarge,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              AtOnboardingStrings.saveBackupDescription,
-              style: TextStyle(fontSize: AtOnboardingDimens.fontNormal),
-              textAlign: TextAlign.center,
-            ),
-            Expanded(flex: 1, child: Container()),
-            Center(
-              child: Image.asset(
-                AtOnboardingStrings.backupZip,
-                height: Platform.isAndroid || Platform.isIOS
-                    ? MediaQuery.of(context).size.height * 0.3
-                    : 250,
-                width: Platform.isAndroid || Platform.isIOS
-                    ? MediaQuery.of(context).size.height * 0.3
-                    : 250,
-                fit: BoxFit.fill,
-                package: AtOnboardingConstants.package,
-                color: Platform.isIOS || Platform.isAndroid
-                    ? Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white
-                    : null,
+        body: Padding(
+          padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const SizedBox(height: 10),
+              const Text(
+                AtOnboardingStrings.saveImportantTitle,
+                style: TextStyle(
+                    fontSize: AtOnboardingDimens.fontLarge,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
               ),
-            ),
-            Expanded(flex: 1, child: Container()),
-            Container(
-              constraints: const BoxConstraints(
-                maxWidth: 400,
+              const SizedBox(height: 10),
+              const Text(
+                AtOnboardingStrings.saveBackupDescription,
+                style: TextStyle(fontSize: AtOnboardingDimens.fontNormal),
+                textAlign: TextAlign.center,
               ),
-              child: AtOnboardingPrimaryButton(
-                height: 48,
-                borderRadius: 24,
-                child: Text(
-                  AtOnboardingStrings.onboardingBackupNow,
-                  style: TextStyle(
-                    color: Platform.isIOS || Platform.isAndroid
-                        ? Theme.of(context).brightness == Brightness.light
-                            ? Colors.white
-                            : Colors.black
-                        : null,
+              Expanded(flex: 1, child: Container()),
+              Center(
+                child: Image.asset(
+                  AtOnboardingStrings.backupZip,
+                  height: Platform.isAndroid || Platform.isIOS
+                      ? MediaQuery.of(context).size.height * 0.3
+                      : 250,
+                  width: Platform.isAndroid || Platform.isIOS
+                      ? MediaQuery.of(context).size.height * 0.3
+                      : 250,
+                  fit: BoxFit.fill,
+                  package: AtOnboardingConstants.package,
+                  color: Platform.isIOS || Platform.isAndroid
+                      ? Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white
+                      : null,
+                ),
+              ),
+              Expanded(flex: 1, child: Container()),
+              Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: AtOnboardingPrimaryButton(
+                  height: 48,
+                  borderRadius: 24,
+                  child: Text(
+                    AtOnboardingStrings.onboardingBackupNow,
+                    style: TextStyle(
+                      color: Platform.isIOS || Platform.isAndroid
+                          ? Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black
+                          : null,
+                    ),
+                  ),
+                  onPressed: () async {
+                    AtOnboardingBackupService.instance
+                        .setRemindBackup(remind: false);
+                    final widget = BackupKeyWidget(atsign: atsign ?? '');
+                    final result = await widget.showBackupDialog(context);
+
+                    if (result == true) {
+                      setState(() {
+                        isSaveAtSign = true;
+                      });
+                    }
+                    print("huhu");
+                  },
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: AtOnboardingSecondaryButton(
+                  height: 48,
+                  borderRadius: 24,
+                  onPressed: _handleRemindLatter,
+                  child: Text(
+                    isSaveAtSign
+                        ? AtOnboardingStrings.continueButtonTitle
+                        : AtOnboardingStrings.onboardingRemindLatter,
                   ),
                 ),
-                onPressed: () {
-                  AtOnboardingBackupService.instance
-                      .setRemindBackup(remind: false);
-                  BackupKeyWidget(atsign: atsign ?? '')
-                      .showBackupDialog(context);
-                },
               ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              constraints: const BoxConstraints(
-                maxWidth: 400,
-              ),
-              child: AtOnboardingSecondaryButton(
-                height: 48,
-                borderRadius: 24,
-                onPressed: _handleRemindLatter,
-                child: const Text(AtOnboardingStrings.onboardingRemindLatter),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -152,9 +187,11 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
 
   void _handleRemindLatter() {
     Navigator.pop(context);
-    AtOnboardingBackupService.instance.setRemindBackup(remind: true);
-    AtOnboardingBackupService.instance.setBackupOpenedTime(
-      dateTime: DateTime.now(),
-    );
+    if (!isSaveAtSign) {
+      AtOnboardingBackupService.instance.setRemindBackup(remind: true);
+      AtOnboardingBackupService.instance.setBackupOpenedTime(
+        dateTime: DateTime.now(),
+      );
+    }
   }
 }

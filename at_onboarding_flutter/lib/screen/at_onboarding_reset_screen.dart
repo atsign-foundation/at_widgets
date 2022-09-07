@@ -50,7 +50,16 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
+          ),
+    );
+
+    return Theme(
+      data: theme,
+      child: Scaffold(
         appBar: AppBar(
           title: Text(
             'Reset',
@@ -79,11 +88,14 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
                   style: TextStyle(fontSize: AtOnboardingDimens.fontNormal)),
             ),
             Expanded(
-                child: atsignsList.isEmpty
-                    ? _buildEmptyWidget()
-                    : _buildAtSignsWidget())
+              child: atsignsList.isEmpty
+                  ? _buildEmptyWidget()
+                  : _buildAtSignsWidget(theme),
+            )
           ],
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildEmptyWidget() {
@@ -99,7 +111,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
     );
   }
 
-  Widget _buildAtSignsWidget() {
+  Widget _buildAtSignsWidget(ThemeData theme) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -115,7 +127,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
             setState(() {});
           },
           value: isSelectAll,
-          activeColor: Theme.of(context).primaryColor,
+          activeColor: theme.primaryColor,
           title: const Text('Select All',
               style: TextStyle(
                 // fontSize: 14,
@@ -138,7 +150,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
                     setState(() {});
                   },
                   value: atsignMap.isNotEmpty ? atsignMap[atsign] : true,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: theme.primaryColor,
                   title: Text(atsign),
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: AtOnboardingDimens.paddingNormal),

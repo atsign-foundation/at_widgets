@@ -6,7 +6,9 @@ import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_theme.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_colors.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
@@ -63,23 +65,32 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return const AtOnboardingIntroScreen();
+              return AtOnboardingIntroScreen(
+                config: widget.config,
+              );
             },
           ),
         );
+
         if (haveAnAtsign is! bool) {
           if (!mounted) return;
           Navigator.pop(context, AtOnboardingResult.cancelled());
           return;
         }
 
-        final result = await await Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return AtOnboardingHomeScreen(
-            config: widget.config,
-            haveAnAtsign: haveAnAtsign,
-          );
-        }));
+        if (!mounted) return;
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return AtOnboardingHomeScreen(
+                config: widget.config,
+                haveAnAtsign: haveAnAtsign,
+              );
+            },
+          ),
+        );
+
         if (!mounted) return;
         Navigator.pop(context, result);
       } else if (e == OnboardingStatus.ACTIVATE) {
@@ -103,32 +114,42 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius:
-                BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AtSyncIndicator(color: Theme.of(context).primaryColor),
-              const SizedBox(width: AtOnboardingDimens.paddingSmall),
-              Text(
-                'Onboarding',
-                style: TextStyle(
-                  color: Platform.isIOS || Platform.isAndroid
-                      ? Theme.of(context).brightness == Brightness.light
-                          ? Colors.black
-                          : Colors.white
-                      : null,
+    );
+
+    return Theme(
+      data: theme,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius:
+                  BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AtSyncIndicator(color: theme.primaryColor),
+                const SizedBox(width: AtOnboardingDimens.paddingSmall),
+                Text(
+                  'Onboarding',
+                  style: TextStyle(
+                    color: Platform.isIOS || Platform.isAndroid
+                        ? Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white
+                        : null,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -129,112 +129,131 @@ class BackupKeyWidget extends StatelessWidget {
         });
   }
 
-  showBackupDialog(BuildContext context) {
+  Future<bool> showBackupDialog(BuildContext context) async {
     SizeConfig().init(context);
     GlobalKey _one = GlobalKey();
     BuildContext? myContext;
-    showDialog(
-        context: context,
-        builder: (BuildContext ctxt) {
-          return ShowCaseWidget(builder: Builder(builder: (context) {
-            myContext = context;
-            return Dialog(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Center(
-                            child: Showcase(
-                              key: _one,
-                              description:
-                                  '''Each atSign has a unique key used to verify ownership and encrypt your data. You will get this key when you first activate your atSign, and you will need it to pair your atSign with other devices and all atPlatform apps.
+
+    final result = await showDialog(
+      context: context,
+      builder: (BuildContext ctxt) {
+        return ShowCaseWidget(
+          builder: Builder(
+            builder: (context) {
+              myContext = context;
+              return Dialog(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Showcase(
+                                key: _one,
+                                description:
+                                    '''Each atSign has a unique key used to verify ownership and encrypt your data. You will get this key when you first activate your atSign, and you will need it to pair your atSign with other devices and all atPlatform apps.
                                   
 PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE A BACKUP OR RESET THEM.''',
-                              shapeBorder: const CircleBorder(),
-                              disableAnimation: true,
-                              radius:
-                                  const BorderRadius.all(Radius.circular(40)),
-                              showArrow: false,
-                              overlayPadding: const EdgeInsets.all(5),
-                              blurValue: 2,
-                              child: Text(
-                                Strings.backUpKeysTitle,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.toFont,
+                                shapeBorder: const CircleBorder(),
+                                disableAnimation: true,
+                                radius:
+                                    const BorderRadius.all(Radius.circular(40)),
+                                showArrow: false,
+                                overlayPadding: const EdgeInsets.all(5),
+                                blurValue: 2,
+                                child: Text(
+                                  Strings.backUpKeysTitle,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.toFont,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            ShowCaseWidget.of(myContext!).startShowCase([_one]);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey.shade400,
-                                borderRadius: BorderRadius.circular(50)),
-                            margin: const EdgeInsets.all(0),
-                            height: 20,
-                            width: 20,
-                            child: const Icon(
-                              Icons.question_mark,
-                              size: 15,
+                          GestureDetector(
+                            onTap: () {
+                              ShowCaseWidget.of(myContext!)
+                                  .startShowCase([_one]);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.shade400,
+                                  borderRadius: BorderRadius.circular(50)),
+                              margin: const EdgeInsets.all(0),
+                              height: 20,
+                              width: 20,
+                              child: const Icon(
+                                Icons.question_mark,
+                                size: 15,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          Strings.backUpKeysDescription,
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 20.toHeight),
-                        Row(
-                          children: [
-                            TextButton(
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            Strings.backUpKeysDescription,
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 20.toHeight),
+                          Row(
+                            children: [
+                              TextButton(
                                 child: const Text(Strings.backButtonTitle,
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 onPressed: () async {
                                   var result = await _onBackup(context);
-                                  Navigator.pop(ctxt);
-                                  if (result == false) {
-                                    _showAlertDialog(context);
+
+                                  if (result == true) {
+                                    Navigator.of(context).pop(true);
+                                  } else {
+                                    if (result == false) {
+                                      _showAlertDialog(context);
+                                    }
+                                    Navigator.pop(ctxt);
                                   }
-                                }),
-                            const Spacer(),
-                            TextButton(
+                                },
+                              ),
+                              const Spacer(),
+                              TextButton(
                                 child: const Text(Strings.cancelButtonTitle,
                                     style: TextStyle()),
                                 onPressed: () {
                                   Navigator.pop(context);
-                                })
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
+                                },
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }));
-        });
+              );
+            },
+          ),
+        );
+      },
+    );
+
+    if (result == true) {
+      return true;
+    }
+    return false;
   }
 
-  _onBackup(BuildContext context) async {
+  Future<bool> _onBackup(BuildContext context) async {
     var _size = MediaQuery.of(context).size;
     try {
       var aesEncryptedKeys = await BackUpKeyService.getEncryptedKeys(atsign);
@@ -252,13 +271,19 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
         final file = XFile(tempFilePath);
         await file.saveTo(path ?? '');
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('File saved successfully')));
+      try {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('File saved successfully')));
+      } catch (e) {
+        return false;
+      }
+      return true;
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
     } on Error catch (err) {
       _logger.severe('BackingUp keys throws $err error');
     }
+    return false;
   }
 
   Future<String> _generateFile(Map<String, String> aesEncryptedKeys) async {

@@ -663,220 +663,228 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
+          ),
+    );
+
     return AbsorbPointer(
       absorbing: loading,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            AtOnboardingStrings.onboardingTitle,
-            style: TextStyle(
-              color: Platform.isIOS || Platform.isAndroid
-                  ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white
-                  : null,
+      child: Theme(
+        data: theme,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              AtOnboardingStrings.onboardingTitle,
+              style: TextStyle(
+                color: Platform.isIOS || Platform.isAndroid
+                    ? Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white
+                    : null,
+              ),
             ),
+            leading: IconButton(
+              icon: const Icon(Icons.close_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: _showReferenceWebview,
+                icon: const Icon(Icons.help),
+              ),
+            ],
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.close_rounded),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: _showReferenceWebview,
-              icon: const Icon(Icons.help),
-            ),
-          ],
-        ),
-        body: Center(
-          child: Container(
-            // width: _dialogWidth,
-            decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
-                borderRadius:
-                    BorderRadius.circular(AtOnboardingDimens.borderRadius)),
-            padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            constraints: const BoxConstraints(
-              maxWidth: 400,
-            ),
-            child: _haveAnAtsign
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const Text(
-                        'Have a backup key file?',
-                        style: TextStyle(
-                          fontSize: AtOnboardingDimens.fontLarge,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      AtOnboardingPrimaryButton(
-                        key: keyUploadAtSign,
-                        height: 48,
-                        borderRadius: 24,
-                        onPressed: (Platform.isMacOS ||
-                                Platform.isLinux ||
-                                Platform.isWindows)
-                            ? _uploadKeyFileForDesktop
-                            : _uploadKeyFile,
-                        isLoading: loading,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Upload backup key file',
-                              style: TextStyle(
-                                fontSize: AtOnboardingDimens.fontLarge,
-                                color: Platform.isIOS || Platform.isAndroid
-                                    ? Theme.of(context).brightness ==
-                                            Brightness.light
-                                        ? Colors.white
-                                        : Colors.black
-                                    : null,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(
-                              Icons.cloud_upload_rounded,
-                              // size: 20,
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        'Upload your backup key file from stored location which was generated during the pairing process of your atSign.',
-                        style:
-                            TextStyle(fontSize: AtOnboardingDimens.fontSmall),
-                      ),
-                      const SizedBox(height: 20),
-                      if (!widget.hideQrScan)
+          body: Center(
+            child: Container(
+              // width: _dialogWidth,
+              decoration: BoxDecoration(
+                  color: theme.primaryColor.withOpacity(0.1),
+                  borderRadius:
+                      BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              constraints: const BoxConstraints(
+                maxWidth: 400,
+              ),
+              child: _haveAnAtsign
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
                         const Text(
-                          'Have a QR Code?',
+                          'Pair an atSign using your atKeys',
                           style: TextStyle(
                             fontSize: AtOnboardingDimens.fontLarge,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      if (!widget.hideQrScan) const SizedBox(height: 5),
-                      if (!widget.hideQrScan)
-                        (Platform.isAndroid || Platform.isIOS)
-                            ? AtOnboardingSecondaryButton(
-                                key: keyUploadQRCode,
-                                height: 48,
-                                borderRadius: 24,
-                                onPressed: () async {
-                                  _showQRCodeScreen(context: context);
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Text(
-                                      'Scan QR code',
-                                      style: TextStyle(
-                                          fontSize:
-                                              AtOnboardingDimens.fontLarge),
-                                    ),
-                                    Icon(Icons.arrow_right_alt_rounded)
-                                  ],
-                                ),
-                              )
-                            : AtOnboardingSecondaryButton(
-                                key: keyUploadQRCode,
-                                height: 48,
-                                borderRadius: 24,
-                                isLoading: _uploadingQRCode,
-                                onPressed: () async {
-                                  _uploadQRFileForDesktop();
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Text(
-                                      'Upload QR code',
-                                      style: TextStyle(
-                                          fontSize:
-                                              AtOnboardingDimens.fontLarge),
-                                    ),
-                                    Icon(Icons.arrow_right_alt_rounded)
-                                  ],
-                                ),
-                              ),
-                      const SizedBox(height: 20),
-                      if (!widget.hideQrScan)
-                        const Text(
-                          'Activate an atSign?',
-                          style: TextStyle(
-                            fontSize: AtOnboardingDimens.fontLarge,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      if (!widget.hideQrScan) const SizedBox(height: 5),
-                      if (!widget.hideQrScan)
-                        AtOnboardingSecondaryButton(
-                          key: keyActivateAtSign,
+                        const SizedBox(height: 5),
+                        AtOnboardingPrimaryButton(
+                          key: keyUploadAtSign,
                           height: 48,
                           borderRadius: 24,
-                          onPressed: () async {
-                            _showActiveScreen(context: context);
-                          },
+                          onPressed: (Platform.isMacOS ||
+                                  Platform.isLinux ||
+                                  Platform.isWindows)
+                              ? _uploadKeyFileForDesktop
+                              : _uploadKeyFile,
+                          isLoading: loading,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Text(
-                                'Activate atSign',
+                                'Upload atKeys',
                                 style: TextStyle(
-                                    fontSize: AtOnboardingDimens.fontLarge),
+                                  fontSize: AtOnboardingDimens.fontLarge,
+                                  color: Platform.isIOS || Platform.isAndroid
+                                      ? Theme.of(context).brightness ==
+                                              Brightness.light
+                                          ? Colors.white
+                                          : Colors.black
+                                      : null,
+                                ),
                               ),
-                              Icon(Icons.arrow_right_alt_rounded)
+                              const SizedBox(width: 10),
+                              const Icon(
+                                Icons.cloud_upload_rounded,
+                                // size: 20,
+                              )
                             ],
                           ),
                         ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              _haveAnAtsign = !_haveAnAtsign;
-                            });
-                            _checkShowTutorial();
-                            hasShowTutorial = true;
-                          },
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          child: Text(
-                            "Create an atSign?",
-                            key: keyCreateAnAtSign,
+                        const SizedBox(height: 5),
+                        const Text(
+                          'Upload your atKey file. This file was generated when you activated and paired your atSign and you were prompted to store it in a secure location.',
+                          style:
+                              TextStyle(fontSize: AtOnboardingDimens.fontSmall),
+                        ),
+                        const SizedBox(height: 20),
+                        if (!widget.hideQrScan)
+                          const Text(
+                            'Have a QR Code?',
                             style: TextStyle(
-                              fontSize: AtOnboardingDimens.fontNormal,
-                              fontWeight: FontWeight.w500,
-                              color: themeData.primaryColor,
+                              fontSize: AtOnboardingDimens.fontLarge,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        if (!widget.hideQrScan) const SizedBox(height: 5),
+                        if (!widget.hideQrScan)
+                          (Platform.isAndroid || Platform.isIOS)
+                              ? AtOnboardingSecondaryButton(
+                                  key: keyUploadQRCode,
+                                  height: 48,
+                                  borderRadius: 24,
+                                  onPressed: () async {
+                                    _showQRCodeScreen(context: context);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        'Scan QR code',
+                                        style: TextStyle(
+                                            fontSize:
+                                                AtOnboardingDimens.fontLarge),
+                                      ),
+                                      Icon(Icons.arrow_right_alt_rounded)
+                                    ],
+                                  ),
+                                )
+                              : AtOnboardingSecondaryButton(
+                                  key: keyUploadQRCode,
+                                  height: 48,
+                                  borderRadius: 24,
+                                  isLoading: _uploadingQRCode,
+                                  onPressed: () async {
+                                    _uploadQRFileForDesktop();
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        'Upload QR code',
+                                        style: TextStyle(
+                                            fontSize:
+                                                AtOnboardingDimens.fontLarge),
+                                      ),
+                                      Icon(Icons.arrow_right_alt_rounded)
+                                    ],
+                                  ),
+                                ),
+                        const SizedBox(height: 20),
+                        if (!widget.hideQrScan)
+                          const Text(
+                            'Activate an atSign?',
+                            style: TextStyle(
+                              fontSize: AtOnboardingDimens.fontLarge,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        if (!widget.hideQrScan) const SizedBox(height: 5),
+                        if (!widget.hideQrScan)
+                          AtOnboardingSecondaryButton(
+                            key: keyActivateAtSign,
+                            height: 48,
+                            borderRadius: 24,
+                            onPressed: () async {
+                              _showActiveScreen(context: context);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  'Activate atSign',
+                                  style: TextStyle(
+                                      fontSize: AtOnboardingDimens.fontLarge),
+                                ),
+                                Icon(Icons.arrow_right_alt_rounded)
+                              ],
+                            ),
+                          ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _haveAnAtsign = !_haveAnAtsign;
+                              });
+                              _checkShowTutorial();
+                              hasShowTutorial = true;
+                            },
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Text(
+                              "Create an atSign?",
+                              key: keyCreateAnAtSign,
+                              style: TextStyle(
+                                fontSize: AtOnboardingDimens.fontNormal,
+                                fontWeight: FontWeight.w500,
+                                color: theme.primaryColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  )
-                : _buildCreateAtSign(),
+                      ],
+                    )
+                  : _buildCreateAtSign(theme),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCreateAtSign() {
-    ThemeData themeData = Theme.of(context);
+  Widget _buildCreateAtSign(ThemeData theme) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -927,7 +935,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
               style: TextStyle(
                 fontSize: AtOnboardingDimens.fontNormal,
                 fontWeight: FontWeight.w500,
-                color: themeData.primaryColor,
+                color: theme.primaryColor,
               ),
             ),
           ),
@@ -944,7 +952,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.w500,
               decoration: TextDecoration.underline,
-              color: themeData.primaryColor,
+              color: theme.primaryColor,
             ),
           ),
         ),
@@ -955,7 +963,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   void _showActiveScreen({
     required BuildContext context,
   }) async {
-    final result = await AtOnboardingInputAtSignScreen.push(context: context);
+    final result = await AtOnboardingInputAtSignScreen.push(
+      context: context,
+      config: widget.config,
+    );
     if ((result ?? '').isNotEmpty) {
       if (!mounted) return;
       final result2 = await Navigator.push(
@@ -999,6 +1010,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             String atsign = atSign.startsWith('@') ? atSign : '@$atSign';
             _processSharedSecret(atsign, cramSecret);
           },
+          config: widget.config,
         ),
       ),
     );
@@ -1010,7 +1022,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const AtOnboardingQRCodeScreen(),
+        builder: (_) => AtOnboardingQRCodeScreen(
+          config: widget.config,
+        ),
       ),
     );
     if (result is AtOnboardingQRCodeResult) {
@@ -1035,7 +1049,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           cramSecret: secret, status: widget.onboardStatus);
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
-        await AtOnboardingBackupScreen.push(context: context);
+        await AtOnboardingBackupScreen.push(
+          context: context,
+          config: widget.config,
+        );
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
@@ -1132,6 +1149,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         context: context,
         title: AtOnboardingStrings.faqTitle,
         url: AtOnboardingStrings.faqUrl,
+        config: widget.config,
       );
     } else {
       launchUrl(

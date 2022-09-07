@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -10,15 +11,23 @@ import 'package:url_launcher/url_launcher.dart';
 class AtOnboardingInputAtSignScreen extends StatefulWidget {
   static Future<String?> push({
     required BuildContext context,
+    required AtOnboardingConfig config,
   }) {
     return Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => const AtOnboardingInputAtSignScreen()));
+      context,
+      MaterialPageRoute(
+        builder: (_) => AtOnboardingInputAtSignScreen(
+          config: config,
+        ),
+      ),
+    );
   }
+
+  final AtOnboardingConfig config;
 
   const AtOnboardingInputAtSignScreen({
     Key? key,
+    required this.config,
   }) : super(key: key);
 
   @override
@@ -32,96 +41,106 @@ class _AtOnboardingInputAtSignScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AtOnboardingStrings.onboardingTitle,
-          style: TextStyle(
-            color: Platform.isIOS || Platform.isAndroid
-                ? Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white
-                : null,
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
           ),
+    );
+
+    return Theme(
+      data: theme,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AtOnboardingStrings.onboardingTitle,
+            style: TextStyle(
+              color: Platform.isIOS || Platform.isAndroid
+                  ? Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white
+                  : null,
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: _showReferenceWebview,
+              icon: const Icon(Icons.help),
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            onPressed: _showReferenceWebview,
-            icon: const Icon(Icons.help),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
-              borderRadius:
-                  BorderRadius.circular(AtOnboardingDimens.borderRadius)),
-          padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-          margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-          constraints: const BoxConstraints(
-            maxWidth: 400,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Activate atSign',
-                style: TextStyle(
-                  fontSize: AtOnboardingDimens.fontLarge,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 5),
-              TextFormField(
-                enabled: true,
-                validator: (String? value) {
-                  if (value == null || value == '') {
-                    return 'atSign cannot be empty';
-                  }
-                  return null;
-                },
-                controller: _atsignController,
-                decoration: InputDecoration(
-                  hintText: AtOnboardingStrings.atsignHintText,
-                  prefix: Text(
-                    '@',
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+        body: Center(
+          child: Container(
+            decoration: BoxDecoration(
+                color: theme.primaryColor.withOpacity(0.1),
+                borderRadius:
+                    BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+            padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+            margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+            constraints: const BoxConstraints(
+              maxWidth: 400,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Activate atSign',
+                  style: TextStyle(
+                    fontSize: AtOnboardingDimens.fontLarge,
+                    fontWeight: FontWeight.bold,
                   ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+                ),
+                const SizedBox(height: 5),
+                TextFormField(
+                  enabled: true,
+                  validator: (String? value) {
+                    if (value == null || value == '') {
+                      return 'atSign cannot be empty';
+                    }
+                    return null;
+                  },
+                  controller: _atsignController,
+                  decoration: InputDecoration(
+                    hintText: AtOnboardingStrings.atsignHintText,
+                    prefix: Text(
+                      '@',
+                      style: TextStyle(color: theme.primaryColor),
                     ),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: AtOnboardingDimens.paddingSmall),
-                ),
-              ),
-              const SizedBox(height: 20),
-              AtOnboardingPrimaryButton(
-                height: 48,
-                borderRadius: 24,
-                onPressed: _activateAtSign,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Activate',
-                      style: TextStyle(
-                        fontSize: AtOnboardingDimens.fontLarge,
-                        color: Platform.isIOS || Platform.isAndroid
-                            ? Theme.of(context).brightness == Brightness.light
-                                ? Colors.white
-                                : Colors.black
-                            : null,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.primaryColor,
                       ),
                     ),
-                  ],
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: AtOnboardingDimens.paddingSmall),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                AtOnboardingPrimaryButton(
+                  height: 48,
+                  borderRadius: 24,
+                  onPressed: _activateAtSign,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Activate',
+                        style: TextStyle(
+                          fontSize: AtOnboardingDimens.fontLarge,
+                          color: Platform.isIOS || Platform.isAndroid
+                              ? Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Colors.black
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -134,6 +153,7 @@ class _AtOnboardingInputAtSignScreenState
         context: context,
         title: AtOnboardingStrings.faqTitle,
         url: AtOnboardingStrings.faqUrl,
+        config: widget.config,
       );
     } else {
       launchUrl(

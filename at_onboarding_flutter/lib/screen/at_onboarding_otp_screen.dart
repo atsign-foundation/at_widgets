@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_accounts_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
@@ -31,6 +32,7 @@ class AtOnboardingOTPScreen extends StatefulWidget {
     required String atSign,
     String? email,
     required bool hideReferences,
+    required AtOnboardingConfig config,
   }) {
     return Navigator.push(
       context,
@@ -39,6 +41,7 @@ class AtOnboardingOTPScreen extends StatefulWidget {
           atSign: atSign,
           email: email,
           hideReferences: hideReferences,
+          config: config,
         ),
       ),
     );
@@ -50,11 +53,14 @@ class AtOnboardingOTPScreen extends StatefulWidget {
   ///will hide webpage references.
   final bool hideReferences;
 
+  final AtOnboardingConfig config;
+
   const AtOnboardingOTPScreen({
     Key? key,
     required this.atSign,
     this.email,
     required this.hideReferences,
+    required this.config,
   }) : super(key: key);
 
   @override
@@ -73,143 +79,152 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
+          ),
+    );
+
     return AbsorbPointer(
       absorbing: isVerifing,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            AtOnboardingStrings.onboardingTitle,
-            style: TextStyle(
-              color: Platform.isIOS || Platform.isAndroid
-                  ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white
-                  : null,
+      child: Theme(
+        data: theme,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              AtOnboardingStrings.onboardingTitle,
+              style: TextStyle(
+                color: Platform.isIOS || Platform.isAndroid
+                    ? Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white
+                    : null,
+              ),
             ),
+            actions: [
+              IconButton(
+                onPressed: _showReferenceWebview,
+                icon: const Icon(Icons.help),
+              ),
+            ],
           ),
-          actions: [
-            IconButton(
-              onPressed: _showReferenceWebview,
-              icon: const Icon(Icons.help),
-            ),
-          ],
-        ),
-        body: Center(
-          child: Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
-                borderRadius:
-                    BorderRadius.circular(AtOnboardingDimens.borderRadius)),
-            padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            constraints: const BoxConstraints(
-              maxWidth: 400,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(
-                  'Enter Verification Code',
-                  style: TextStyle(
-                    fontSize: AtOnboardingDimens.fontLarge,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                PinCodeTextField(
-                  controller: _pinCodeController,
-                  animationType: AnimationType.none,
-                  textCapitalization: TextCapitalization.characters,
-                  appContext: context,
-                  length: 4,
-                  textStyle: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
-                  pinTheme: PinTheme(
-                    selectedColor: hasOTPError
-                        ? Colors.red
-                        : Theme.of(context).primaryColor,
-                    activeColor: hasOTPError
-                        ? Colors.red
-                        : Theme.of(context).primaryColor,
-                    inactiveColor: hasOTPError ? Colors.red : Colors.grey[500],
-                    shape: PinCodeFieldShape.box,
-                    borderRadius: BorderRadius.circular(5),
-                    fieldHeight: 48,
-                    fieldWidth: MediaQuery.of(context).size.width > 400
-                        ? 80
-                        : (MediaQuery.of(context).size.width - 100) / 4,
-                  ),
-                  cursorHeight: 24,
-                  cursorColor: Colors.grey,
-                  // controller: _otpController,
-                  keyboardType: TextInputType.text,
-                  inputFormatters: <TextInputFormatter>[
-                    AtOnboardingInputFormatter(),
-                  ],
-                  onChanged: (String value) {
-                    setState(() {
-                      hasOTPError = false;
-                    });
-                  },
-                ),
-                Text(
-                  'A verification code has been sent to ${widget.email ?? 'your registered email.'}',
-                  style:
-                      const TextStyle(fontSize: AtOnboardingDimens.fontNormal),
-                ),
-                const SizedBox(height: 10),
-                AtOnboardingPrimaryButton(
-                  height: 48,
-                  borderRadius: 24,
-                  width: double.infinity,
-                  isLoading: isVerifing,
-                  onPressed: _onVerifyPressed,
-                  child: Text(
-                    'Verify & Login',
+          body: Center(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: theme.primaryColor.withOpacity(0.1),
+                  borderRadius:
+                      BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              constraints: const BoxConstraints(
+                maxWidth: 400,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    'Enter Verification Code',
                     style: TextStyle(
-                      color: Platform.isIOS || Platform.isAndroid
-                          ? Theme.of(context).brightness == Brightness.light
-                              ? Colors.white
-                              : Colors.black
-                          : null,
+                      fontSize: AtOnboardingDimens.fontLarge,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                AtOnboardingSecondaryButton(
-                  height: 48,
-                  borderRadius: 24,
-                  width: double.infinity,
-                  isLoading: isResendingCode,
-                  onPressed: _onResendPressed,
-                  child: const Text('Resend Code'),
-                ),
-                const SizedBox(height: 20),
-                RichText(
-                    text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: "Note:",
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            fontSize: AtOnboardingDimens.fontSmall,
-                            height: 1.5,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  const SizedBox(height: 5),
+                  PinCodeTextField(
+                    controller: _pinCodeController,
+                    animationType: AnimationType.none,
+                    textCapitalization: TextCapitalization.characters,
+                    appContext: context,
+                    length: 4,
+                    textStyle: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                    pinTheme: PinTheme(
+                      selectedColor:
+                          hasOTPError ? Colors.red : theme.primaryColor,
+                      activeColor:
+                          hasOTPError ? Colors.red : theme.primaryColor,
+                      inactiveColor:
+                          hasOTPError ? Colors.red : Colors.grey[500],
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(5),
+                      fieldHeight: 48,
+                      fieldWidth: MediaQuery.of(context).size.width > 400
+                          ? 80
+                          : (MediaQuery.of(context).size.width - 100) / 4,
                     ),
-                    TextSpan(
-                      text: """ If you didn't receive our email:
+                    cursorHeight: 24,
+                    cursorColor: Colors.grey,
+                    // controller: _otpController,
+                    keyboardType: TextInputType.text,
+                    inputFormatters: <TextInputFormatter>[
+                      AtOnboardingInputFormatter(),
+                    ],
+                    onChanged: (String value) {
+                      setState(() {
+                        hasOTPError = false;
+                      });
+                    },
+                  ),
+                  Text(
+                    'A verification code has been sent to ${widget.email ?? 'your registered email.'}',
+                    style: const TextStyle(
+                        fontSize: AtOnboardingDimens.fontNormal),
+                  ),
+                  const SizedBox(height: 10),
+                  AtOnboardingPrimaryButton(
+                    height: 48,
+                    borderRadius: 24,
+                    width: double.infinity,
+                    isLoading: isVerifing,
+                    onPressed: _onVerifyPressed,
+                    child: Text(
+                      'Verify & Login',
+                      style: TextStyle(
+                        color: Platform.isIOS || Platform.isAndroid
+                            ? Theme.of(context).brightness == Brightness.light
+                                ? Colors.white
+                                : Colors.black
+                            : null,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  AtOnboardingSecondaryButton(
+                    height: 48,
+                    borderRadius: 24,
+                    width: double.infinity,
+                    isLoading: isResendingCode,
+                    onPressed: _onResendPressed,
+                    child: const Text('Resend Code'),
+                  ),
+                  const SizedBox(height: 20),
+                  RichText(
+                      text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: "Note:",
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                              fontSize: AtOnboardingDimens.fontSmall,
+                              height: 1.5,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      TextSpan(
+                        text: """ If you didn't receive our email:
   - Confirm that your atSign was entered correctly.
   - Check your spam or junk email folder.""",
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            fontSize: AtOnboardingDimens.fontSmall,
-                            height: 1.5,
-                          ),
-                    ),
-                  ],
-                )),
-              ],
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                              fontSize: AtOnboardingDimens.fontSmall,
+                              height: 1.5,
+                            ),
+                      ),
+                    ],
+                  )),
+                ],
+              ),
             ),
           ),
         ),
@@ -228,6 +243,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         context: context,
         title: AtOnboardingStrings.faqTitle,
         url: AtOnboardingStrings.faqUrl,
+        config: widget.config,
       );
     } else {
       launchUrl(
@@ -422,12 +438,15 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         if (responseData['newAtsign'] == null) {
           if (!mounted) return null;
           final value = await Navigator.push(
-              context,
-              MaterialPageRoute<String?>(
-                  builder: (_) => AtOnboardingAccountsScreen(
-                        atsigns: atsigns,
-                        message: responseData['message'],
-                      )));
+            context,
+            MaterialPageRoute<String?>(
+              builder: (_) => AtOnboardingAccountsScreen(
+                atsigns: atsigns,
+                message: responseData['message'],
+                config: widget.config,
+              ),
+            ),
+          );
           if (value != null) {
             if (!mounted) return null;
             Navigator.pop(
@@ -439,12 +458,15 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         else {
           if (!mounted) return null;
           final value = await Navigator.push(
-              context,
-              MaterialPageRoute<String?>(
-                  builder: (_) => AtOnboardingAccountsScreen(
-                        atsigns: atsigns,
-                        newAtsign: responseData['newAtsign']!,
-                      )));
+            context,
+            MaterialPageRoute<String?>(
+              builder: (_) => AtOnboardingAccountsScreen(
+                atsigns: atsigns,
+                newAtsign: responseData['newAtsign']!,
+                config: widget.config,
+              ),
+            ),
+          );
           if (value == responseData['newAtsign']) {
             cramSecret = await validatePerson(value as String, email, otp,
                 isConfirmation: true);
@@ -517,53 +539,61 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
   }
 
   Future<AlertDialog?> showlimitDialog() async {
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
+          ),
+    );
+
     return showDialog<AlertDialog>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: RichText(
-              text: TextSpan(
-                children: <InlineSpan>[
-                  const TextSpan(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: RichText(
+            text: TextSpan(
+              children: <InlineSpan>[
+                const TextSpan(
+                  style: TextStyle(
+                      color: Colors.black, fontSize: 16, letterSpacing: 0.5),
+                  text:
+                      'Oops! You already have the maximum number of free atSigns. Please login to ',
+                ),
+                TextSpan(
+                    text: 'https://my.atsign.com',
                     style: TextStyle(
-                        color: Colors.black, fontSize: 16, letterSpacing: 0.5),
-                    text:
-                        'Oops! You already have the maximum number of free atSigns. Please login to ',
-                  ),
-                  TextSpan(
-                      text: 'https://my.atsign.com',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).primaryColor,
-                          letterSpacing: 0.5,
-                          decoration: TextDecoration.underline),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () async {
-                          String url = 'https://my.atsign.com';
-                          if (!widget.hideReferences &&
-                              await canLaunchUrl(Uri.parse(url))) {
-                            await launchUrl(Uri.parse(url));
-                          }
-                        }),
-                  const TextSpan(
-                    text: '  to select one of your existing atSigns.',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: 16, letterSpacing: 0.5),
-                  ),
-                ],
-              ),
+                        fontSize: 16,
+                        color: theme.primaryColor,
+                        letterSpacing: 0.5,
+                        decoration: TextDecoration.underline),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        String url = 'https://my.atsign.com';
+                        if (!widget.hideReferences &&
+                            await canLaunchUrl(Uri.parse(url))) {
+                          await launchUrl(Uri.parse(url));
+                        }
+                      }),
+                const TextSpan(
+                  text: '  to select one of your existing atSigns.',
+                  style: TextStyle(
+                      color: Colors.black, fontSize: 16, letterSpacing: 0.5),
+                ),
+              ],
             ),
-            actions: <Widget>[
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Close',
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                  ))
-            ],
-          );
-        });
+          ),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Close',
+                  style: TextStyle(color: theme.primaryColor),
+                ))
+          ],
+        );
+      },
+    );
   }
 }

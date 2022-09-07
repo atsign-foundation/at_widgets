@@ -1,3 +1,4 @@
+import 'package:at_onboarding_flutter/services/at_onboarding_theme.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_tutorial_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ class AtOnboardingConfig {
 
   ///Default the plugin connects to [root.atsign.org] to perform onboarding.
   final String? domain;
+
+  final OnboardingTheme? theme;
 
   /// API authentication key for getting free atsigns
   final String? appAPIKey;
@@ -50,8 +53,29 @@ class AtOnboardingConfig {
     required this.rootEnvironment,
     this.domain,
     this.appAPIKey,
+    this.theme,
     this.hideReferences = false,
     this.hideQrScan = false,
     this.tutorialDisplay = TutorialDisplay.normal,
   });
+
+  AtOnboardingConfig copyWith({
+    bool? hideReferences,
+    bool? hideQrScan,
+    AtClientPreference? atClientPreference,
+    String? domain,
+    OnboardingTheme? theme,
+    String? appAPIKey,
+    RootEnvironment? rootEnvironment,
+  }) {
+    return AtOnboardingConfig(
+      hideReferences: hideReferences ?? this.hideReferences,
+      hideQrScan: hideQrScan ?? this.hideQrScan,
+      atClientPreference: atClientPreference ?? this.atClientPreference,
+      domain: domain ?? this.domain,
+      theme: theme ?? this.theme,
+      appAPIKey: appAPIKey ?? this.appAPIKey,
+      rootEnvironment: rootEnvironment ?? this.rootEnvironment,
+    );
+  }
 }

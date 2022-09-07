@@ -7,23 +7,27 @@ class AtOnboardingDialog extends StatefulWidget {
     String? title,
     required String message,
     VoidCallback? onCancel,
+    ThemeData? themeData,
   }) async {
     return showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return AtOnboardingDialog(
-            title: title ?? 'Error',
-            message: message,
-            actions: [
-              AtOnboardingSecondaryButton(
-                child: const Text('Close'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  onCancel?.call();
-                },
-              ),
-            ],
+          return Theme(
+            data: themeData ?? Theme.of(context),
+            child: AtOnboardingDialog(
+              title: title ?? 'Error',
+              message: message,
+              actions: [
+                AtOnboardingSecondaryButton(
+                  child: const Text('Close'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    onCancel?.call();
+                  },
+                ),
+              ],
+            ),
           );
         });
   }
