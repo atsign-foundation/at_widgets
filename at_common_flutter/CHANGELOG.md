@@ -1,3 +1,6 @@
+## 2.0.10
+- **CHORE**: Updated readme
+
 ## 2.0.9
 - **FIX**: Minor UI updates
 - **CHORE**: Updated dependency
