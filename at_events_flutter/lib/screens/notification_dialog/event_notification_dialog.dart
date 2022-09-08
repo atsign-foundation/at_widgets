@@ -282,7 +282,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                         .REQ_TO_UPDATE_DATA_SUB,
                                                     AtEventNotificationListener()
                                                         .navKey!
-                                                        .currentContext,
+                                                        .currentContext!,
                                                     isSuccess: true);
                                               } else {
                                                 CustomToast().show(
@@ -290,7 +290,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                                         .SOMETHING_WENT_WRONG_TRY_AGAIN,
                                                     AtEventNotificationListener()
                                                         .navKey!
-                                                        .currentContext,
+                                                        .currentContext!,
                                                     isError: true);
                                               }
 
@@ -331,14 +331,14 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
                                   AllText().REQ_TO_UPDATE_DATA_SUB,
                                   AtEventNotificationListener()
                                       .navKey!
-                                      .currentContext,
+                                      .currentContext!,
                                   isSuccess: true);
                             } else {
                               CustomToast().show(
                                   AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                   AtEventNotificationListener()
                                       .navKey!
-                                      .currentContext,
+                                      .currentContext!,
                                   isError: true);
                             }
 

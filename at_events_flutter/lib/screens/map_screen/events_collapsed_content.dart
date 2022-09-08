@@ -208,7 +208,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                                       : AllText().EVENT_EXITED,
                                   AtEventNotificationListener()
                                       .navKey!
-                                      .currentContext,
+                                      .currentContext!,
                                   isError: true);
                               return;
                             }
@@ -235,14 +235,14 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                                 //     'Request to update data is submitted',
                                 //     AtEventNotificationListener()
                                 //         .navKey!
-                                //         .currentContext,
+                                //         .currentContext!,
                                 //     isSuccess: true);
                               } else {
                                 CustomToast().show(
                                     AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                     AtEventNotificationListener()
                                         .navKey!
-                                        .currentContext,
+                                        .currentContext!,
                                     isError: true);
                               }
                               setState(() {});
@@ -252,7 +252,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                                   AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
                                   AtEventNotificationListener()
                                       .navKey!
-                                      .currentContext,
+                                      .currentContext!,
                                   isError: true);
                               LoadingDialog().hide();
                             }
@@ -270,7 +270,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                               AllText().EVENT_CANCELLED,
                               AtEventNotificationListener()
                                   .navKey!
-                                  .currentContext,
+                                  .currentContext!,
                               isError: true);
                           return;
                         }
@@ -327,7 +327,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       if (result == true) {
       } else {
         CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
-            AtEventNotificationListener().navKey!.currentContext,
+            AtEventNotificationListener().navKey!.currentContext!,
             isError: true);
       }
       setState(() {});
@@ -335,7 +335,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       Navigator.of(AtEventNotificationListener().navKey!.currentContext!).pop();
     } catch (e) {
       CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
-          AtEventNotificationListener().navKey!.currentContext,
+          AtEventNotificationListener().navKey!.currentContext!,
           isError: true);
       LoadingDialog().hide();
     }
@@ -357,7 +357,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       if (result == true) {
       } else {
         CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
-            AtEventNotificationListener().navKey!.currentContext,
+            AtEventNotificationListener().navKey!.currentContext!,
             isError: true);
       }
       setState(() {});
@@ -365,7 +365,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
       Navigator.of(AtEventNotificationListener().navKey!.currentContext!).pop();
     } catch (e) {
       CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN,
-          AtEventNotificationListener().navKey!.currentContext,
+          AtEventNotificationListener().navKey!.currentContext!,
           isError: true);
       LoadingDialog().hide();
     }
