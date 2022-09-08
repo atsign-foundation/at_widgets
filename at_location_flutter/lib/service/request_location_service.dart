@@ -269,7 +269,7 @@ class RequestLocationService {
       return result ?? true;
     } catch (e) {
       CustomToast().show('Something went wrong , please try again.',
-          AtLocationNotificationListener().navKey.currentContext,
+          AtLocationNotificationListener().navKey.currentContext!,
           isError: true);
       _logger.severe('Error in requestLocationAcknowledgment $e');
       return false;
