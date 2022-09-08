@@ -399,6 +399,12 @@ class ContactService {
           print('error to add contact => $e');
         });
 
+        if (result) {
+          if (!cachedContactList.contains(contact)) {
+            cachedContactList.add(contact);
+          }
+        }
+
         print(result);
         allContactsList.add(contact.atSign!);
         contactList.add(contact);
