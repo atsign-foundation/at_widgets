@@ -20,7 +20,7 @@ dependencies:
   flutter_image_compress: ^1.1.0
   image_compression: ^1.0.3
   pedantic: ^1.11.0
-  flutter_toastr: ^1.0.3
+  # flutter_toastr: ^1.0.3
   collection: ^1.15.0
 
   # desktop - dependencies
