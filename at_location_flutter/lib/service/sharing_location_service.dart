@@ -186,18 +186,18 @@ class SharingLocationService {
       _logger.finer('sendLocationNotificationAcknowledgment:$result');
       if (result) {
         CustomToast().show('Request to update data is submitted',
-            AtLocationNotificationListener().navKey.currentContext,
+            AtLocationNotificationListener().navKey.currentContext!,
             isSuccess: true);
         KeyStreamService().updatePendingStatus(locationNotificationModel);
       } else {
         CustomToast().show('Something went wrong , please try again.',
-            AtLocationNotificationListener().navKey.currentContext,
+            AtLocationNotificationListener().navKey.currentContext!,
             isError: true);
       }
       return result;
     } catch (e) {
       CustomToast().show('Something went wrong , please try again.',
-          AtLocationNotificationListener().navKey.currentContext,
+          AtLocationNotificationListener().navKey.currentContext!,
           isError: true);
 
       _logger.severe('sending share awk failed $e');
