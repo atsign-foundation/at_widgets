@@ -61,7 +61,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text(
-                  "This app was build on the @ platform, that @ platform apps require atsigns.",
+                  "This app was build on the @ platform, that @ platform apps require atSigns.",
                   style: TextStyle(
                     fontSize: AtOnboardingDimens.fontLarge,
                     fontWeight: FontWeight.w600,
@@ -73,7 +73,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                   height: 48,
                   borderRadius: 24,
                   child: Text(
-                    'I have an atsign',
+                    'I have an atSign',
                     style: TextStyle(
                       color: Platform.isIOS || Platform.isAndroid
                           ? Theme.of(context).brightness == Brightness.light
@@ -91,7 +91,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                   height: 48,
                   borderRadius: 24,
                   child: const Text(
-                    "I don't have an atsign",
+                    "I don't have an atSign",
                   ),
                   onPressed: () {
                     _navigateToHomePage(false);

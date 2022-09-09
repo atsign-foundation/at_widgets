@@ -946,7 +946,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           splashColor: Colors.transparent,
           onTap: _showReferenceWebview,
           child: Text(
-            'Learn more about atsigns?',
+            'Learn more about atSigns?',
             style: TextStyle(
               fontSize: AtOnboardingDimens.fontNormal,
               fontStyle: FontStyle.italic,
