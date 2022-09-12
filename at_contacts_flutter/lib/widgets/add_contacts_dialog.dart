@@ -129,7 +129,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   },
                   // validator: Validators.validateAdduser,
                   decoration: const InputDecoration(
-                    hintText: 'Enter Nick Name',
+                    hintText: 'Enter Nickname',
                   ),
                   style: TextStyle(
                     fontSize: 15.toFont,
@@ -163,7 +163,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               if (contactService.checkAtSign != null &&
                                   contactService.checkAtSign! &&
                                   response) {
-                                if(!mounted) return;
+                                if (!mounted) return;
                                 Navigator.pop(context);
                               }
                             },

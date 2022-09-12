@@ -127,7 +127,9 @@ class _NewGroupState extends State<NewGroup> {
           : AllColors().Black,
       bottomSheet: GroupBottomSheet(
         onPressed: createGroup,
-        message: '${selectedContacts!.length} Contacts Selected',
+        message: selectedContacts!.length == 1
+            ? '${selectedContacts!.length} Contact Selected'
+            : '${selectedContacts!.length} Contacts Selected',
         buttontext: 'Done',
       ),
       appBar: const CustomAppBar(
