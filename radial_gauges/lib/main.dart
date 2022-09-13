@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:radial_gauges/utils/enums.dart';
 
 import 'radial_gauges/radial_gauges.dart';
 
@@ -49,13 +48,11 @@ class MyCharts extends StatelessWidget {
               icon: Icon(Icons.water),
               duration: 500,
               title: Text('Simple Gauge'),
-              titlePosition: TitlePosition.bottom,
-              size: 200,
             ),
             ScaleGauge(
               maxValue: 240,
               actualValue: 50,
-              size: 200,
+              title: Text('Scale Gauge'),
             ),
             // RangeGauge(
             //   maxValue: 200,

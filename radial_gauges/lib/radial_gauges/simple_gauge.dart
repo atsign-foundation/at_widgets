@@ -60,6 +60,7 @@ class SimpleGauge extends StatefulWidget {
   /// Sets the title of the gauge.
   final Text? title;
 
+  /// Sets the position of the title.
   final TitlePosition titlePosition;
 
   @override
@@ -121,10 +122,12 @@ class _SimpleGaugeState extends State<SimpleGauge>
         children: [
           widget.titlePosition == TitlePosition.top
               ? SizedBox(
-                  height: 40,
+                  height: 20,
                   child: widget.title,
                 )
-              : const SizedBox(),
+              : const SizedBox(
+                  height: 20,
+                ),
           SizedBox(
             height: widget.size,
             width: widget.size,
@@ -156,13 +159,16 @@ class _SimpleGaugeState extends State<SimpleGauge>
             ),
           ),
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           widget.titlePosition == TitlePosition.bottom
               ? SizedBox(
+                  height: 30,
                   child: widget.title,
                 )
-              : const SizedBox()
+              : const SizedBox(
+                  height: 20,
+                )
         ],
       ),
     );

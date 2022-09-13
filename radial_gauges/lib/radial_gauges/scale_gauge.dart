@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:radial_gauges/utils/constants.dart';
 import 'package:radial_gauges/utils/utils.dart';
 
+import '../utils/enums.dart';
+
 class ScaleGauge extends StatefulWidget {
   /// Creates a scale Gauge.
   ///
@@ -13,7 +15,8 @@ class ScaleGauge extends StatefulWidget {
     required this.maxValue,
     required this.actualValue,
     this.size = 200,
-    this.label = '',
+    this.title,
+    this.titlePosition = TitlePosition.top,
     this.arcColor = Colors.blue,
     this.needleColor = Colors.blue,
     this.decimalPlaces = 0,
@@ -34,17 +37,20 @@ class ScaleGauge extends StatefulWidget {
   /// Sets the actual value of the gauge.
   final double actualValue;
 
-  /// Set the label of the gauge.
-  final String label;
+  /// Sets the width and height of the gauge.
+  final double size;
+
+  /// Sets the title of the gauge.
+  final Text? title;
+
+  /// Sets the position of the title.
+  final TitlePosition titlePosition;
 
   /// Sets the arc color of the gauge.
   final Color arcColor;
 
   /// Sets the needle color of the gauge.
   final Color needleColor;
-
-  /// Sets the width and height of the gauge.
-  final double size;
 
   /// Controls how much decimal places will be shown for the [minValue],[maxValue] and [actualValue].
   final int decimalPlaces;
@@ -114,20 +120,47 @@ class _ScaleGaugeState extends State<ScaleGauge>
               isAnimate: widget.isAnimate, userMilliseconds: widget.duration));
     }
 
-    return SizedBox(
-      height: widget.size,
-      width: widget.size,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomPaint(
-          painter: RangePointerGaugePainter(
-              sweepAngle: animationController.value,
-              pointerColor: widget.arcColor,
-              needleColor: widget.needleColor,
-              maxValue: widget.maxValue.toStringAsFixed(widget.decimalPlaces),
-              minValue: widget.minValue.toStringAsFixed(widget.decimalPlaces),
-              actualValue: widget.actualValue),
-        ),
+    return FittedBox(
+      child: Column(
+        children: [
+          widget.titlePosition == TitlePosition.top
+              ? SizedBox(
+                  height: 20,
+                  child: widget.title,
+                )
+              : const SizedBox(
+                  height: 20,
+                ),
+          SizedBox(
+            height: widget.size,
+            width: widget.size,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomPaint(
+                painter: RangePointerGaugePainter(
+                    sweepAngle: animationController.value,
+                    pointerColor: widget.arcColor,
+                    needleColor: widget.needleColor,
+                    maxValue:
+                        widget.maxValue.toStringAsFixed(widget.decimalPlaces),
+                    minValue:
+                        widget.minValue.toStringAsFixed(widget.decimalPlaces),
+                    actualValue: widget.actualValue),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          widget.titlePosition == TitlePosition.bottom
+              ? SizedBox(
+                  height: 30,
+                  child: widget.title,
+                )
+              : const SizedBox(
+                  height: 20,
+                )
+        ],
       ),
     );
   }
