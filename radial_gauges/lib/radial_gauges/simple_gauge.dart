@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:radial_gauges/utils/constants.dart';
+import 'package:radial_gauges/utils/enums.dart';
 import 'package:radial_gauges/utils/utils.dart';
 
 class SimpleGauge extends StatefulWidget {
@@ -9,6 +10,8 @@ class SimpleGauge extends StatefulWidget {
   const SimpleGauge({
     required this.actualValue,
     required this.maxValue,
+    this.title,
+    this.titlePosition = TitlePosition.top,
     this.unit,
     this.icon,
     this.minValue = 0,
@@ -51,8 +54,13 @@ class SimpleGauge extends StatefulWidget {
   /// Sets a duration in milliseconds to control the speed of the animation.
   final int duration;
 
-  /// Sets the height and width of the widget.
+  /// Sets the height and width of the gauge.
   final double size;
+
+  /// Sets the title of the gauge.
+  final Text? title;
+
+  final TitlePosition titlePosition;
 
   @override
   State<SimpleGauge> createState() => _SimpleGaugeState();
@@ -109,35 +117,53 @@ class _SimpleGaugeState extends State<SimpleGauge>
               isAnimate: widget.isAnimate, userMilliseconds: widget.duration));
     }
     return FittedBox(
-      child: SizedBox(
-        height: widget.size,
-        width: widget.size,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomPaint(
-            painter: SimpleGaugePainter(
-              sweepAngle: animationController.value,
-              pointerColor: widget.pointerColor,
-            ),
-            child: Center(
-              child: ListTile(
-                title: widget.icon ??
-                    Text(
-                      '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
-                      style: const TextStyle(fontStyle: FontStyle.italic),
-                      textAlign: TextAlign.center,
-                    ),
-                subtitle: widget.icon != null
-                    ? Text(
-                        '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
-                        style: const TextStyle(fontStyle: FontStyle.italic),
-                        textAlign: TextAlign.center,
-                      )
-                    : null,
+      child: Column(
+        children: [
+          widget.titlePosition == TitlePosition.top
+              ? SizedBox(
+                  height: 40,
+                  child: widget.title,
+                )
+              : const SizedBox(),
+          SizedBox(
+            height: widget.size,
+            width: widget.size,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomPaint(
+                painter: SimpleGaugePainter(
+                  sweepAngle: animationController.value,
+                  pointerColor: widget.pointerColor,
+                ),
+                child: Center(
+                  child: ListTile(
+                    title: widget.icon ??
+                        Text(
+                          '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
+                          style: const TextStyle(fontStyle: FontStyle.italic),
+                          textAlign: TextAlign.center,
+                        ),
+                    subtitle: widget.icon != null
+                        ? Text(
+                            '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
+                            style: const TextStyle(fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
+                          )
+                        : null,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+          const SizedBox(
+            height: 20,
+          ),
+          widget.titlePosition == TitlePosition.bottom
+              ? SizedBox(
+                  child: widget.title,
+                )
+              : const SizedBox()
+        ],
       ),
     );
   }
