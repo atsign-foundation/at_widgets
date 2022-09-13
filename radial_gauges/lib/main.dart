@@ -52,10 +52,11 @@ class MyCharts extends StatelessWidget {
               titlePosition: TitlePosition.bottom,
               size: 200,
             ),
-            // ScaleGauge(
-            //   maxValue: 240,
-            //   actualValue: 50,
-            // ),
+            ScaleGauge(
+              maxValue: 240,
+              actualValue: 50,
+              size: 200,
+            ),
             // RangeGauge(
             //   maxValue: 200,
             //   actualValue: 100,

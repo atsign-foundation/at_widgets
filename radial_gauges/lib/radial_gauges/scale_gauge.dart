@@ -12,6 +12,7 @@ class ScaleGauge extends StatefulWidget {
     this.minValue = 0,
     required this.maxValue,
     required this.actualValue,
+    this.size = 200,
     this.label = '',
     this.arcColor = Colors.blue,
     this.needleColor = Colors.blue,
@@ -21,6 +22,7 @@ class ScaleGauge extends StatefulWidget {
     Key? key,
   })  : assert(actualValue <= maxValue,
             'actualValue must be less than or equal to maxValue'),
+        assert(size >= 140, 'size must be greater than 75'),
         super(key: key);
 
   /// Sets the minimum value of the gauge.
@@ -38,8 +40,11 @@ class ScaleGauge extends StatefulWidget {
   /// Sets the arc color of the gauge.
   final Color arcColor;
 
-  /// Sets the needle color of the gauge
+  /// Sets the needle color of the gauge.
   final Color needleColor;
+
+  /// Sets the width and height of the gauge.
+  final double size;
 
   /// Controls how much decimal places will be shown for the [minValue],[maxValue] and [actualValue].
   final int decimalPlaces;
@@ -109,14 +114,21 @@ class _ScaleGaugeState extends State<ScaleGauge>
               isAnimate: widget.isAnimate, userMilliseconds: widget.duration));
     }
 
-    return CustomPaint(
-      painter: RangePointerGaugePainter(
-          sweepAngle: animationController.value,
-          pointerColor: widget.arcColor,
-          needleColor: widget.needleColor,
-          maxValue: widget.maxValue.toStringAsFixed(widget.decimalPlaces),
-          minValue: widget.minValue.toStringAsFixed(widget.decimalPlaces),
-          actualValue: widget.actualValue),
+    return SizedBox(
+      height: widget.size,
+      width: widget.size,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CustomPaint(
+          painter: RangePointerGaugePainter(
+              sweepAngle: animationController.value,
+              pointerColor: widget.arcColor,
+              needleColor: widget.needleColor,
+              maxValue: widget.maxValue.toStringAsFixed(widget.decimalPlaces),
+              minValue: widget.minValue.toStringAsFixed(widget.decimalPlaces),
+              actualValue: widget.actualValue),
+        ),
+      ),
     );
   }
 }
