@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -37,89 +38,77 @@ class MyCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: GridView.count(
-          crossAxisCount: 2,
-          padding: const EdgeInsets.all(20),
-          crossAxisSpacing: 50,
-          mainAxisSpacing: 50,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: SimpleGauge(
-                actualValue: 50,
-                maxValue: 100,
-                icon: Icon(Icons.water),
-                duration: 500,
-              ),
+      // appBar: AppBar(title: const Text('Radial Gauges')),
+      body: SafeArea(
+        child: Column(
+          children: const [
+            SimpleGauge(
+              actualValue: 75,
+              maxValue: 100,
+              icon: Icon(Icons.water),
+              duration: 500,
             ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: ScaleGauge(
-                maxValue: 240,
-                actualValue: 50,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: RangeGauge(
-                maxValue: 200,
-                actualValue: 100,
-                maxDegree: 180,
-                startDegree: 180,
-                isLegend: true,
-                ranges: [
-                  Range(
-                    label: 'slow',
-                    lowerLimit: 0,
-                    upperLimit: 25,
-                    backgroundColor: Colors.blue,
-                  ),
-                  Range(
-                    label: 'medium',
-                    lowerLimit: 25,
-                    upperLimit: 50,
-                    backgroundColor: Colors.orange,
-                  ),
-                  Range(
-                    label: 'fast',
-                    lowerLimit: 50,
-                    upperLimit: 75,
-                    backgroundColor: Colors.lightGreen,
-                  ),
-                  Range(
-                    label: 'extra fast',
-                    lowerLimit: 75,
-                    upperLimit: 100,
-                    backgroundColor: Colors.purple,
-                  ),
-                  Range(
-                    label: 'super fast',
-                    lowerLimit: 100,
-                    upperLimit: 125,
-                    backgroundColor: Colors.yellow,
-                  ),
-                  Range(
-                    label: 'Mac 1',
-                    lowerLimit: 125,
-                    upperLimit: 150,
-                    backgroundColor: Colors.indigo,
-                  ),
-                  Range(
-                    label: 'Mac 2',
-                    lowerLimit: 150,
-                    upperLimit: 175,
-                    backgroundColor: Colors.pink,
-                  ),
-                  Range(
-                    label: 'Mac 3',
-                    lowerLimit: 175,
-                    upperLimit: 200,
-                    backgroundColor: Colors.teal,
-                  ),
-                ],
-              ),
-            )
+            // ScaleGauge(
+            //   maxValue: 240,
+            //   actualValue: 50,
+            // ),
+            // RangeGauge(
+            //   maxValue: 200,
+            //   actualValue: 100,
+            //   maxDegree: 180,
+            //   startDegree: 180,
+            //   isLegend: true,
+            //   ranges: [
+            //     Range(
+            //       label: 'slow',
+            //       lowerLimit: 0,
+            //       upperLimit: 25,
+            //       backgroundColor: Colors.blue,
+            //     ),
+            //     Range(
+            //       label: 'medium',
+            //       lowerLimit: 25,
+            //       upperLimit: 50,
+            //       backgroundColor: Colors.orange,
+            //     ),
+            //     Range(
+            //       label: 'fast',
+            //       lowerLimit: 50,
+            //       upperLimit: 75,
+            //       backgroundColor: Colors.lightGreen,
+            //     ),
+            //     Range(
+            //       label: 'extra fast',
+            //       lowerLimit: 75,
+            //       upperLimit: 100,
+            //       backgroundColor: Colors.purple,
+            //     ),
+            //     Range(
+            //       label: 'super fast',
+            //       lowerLimit: 100,
+            //       upperLimit: 125,
+            //       backgroundColor: Colors.yellow,
+            //     ),
+            //     Range(
+            //       label: 'Mac 1',
+            //       lowerLimit: 125,
+            //       upperLimit: 150,
+            //       backgroundColor: Colors.indigo,
+            //     ),
+            //     Range(
+            //       label: 'Mac 2',
+            //       lowerLimit: 150,
+            //       upperLimit: 175,
+            //       backgroundColor: Colors.pink,
+            //     ),
+            //     Range(
+            //       label: 'Mac 3',
+            //       lowerLimit: 175,
+            //       upperLimit: 200,
+            //       backgroundColor: Colors.teal,
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),

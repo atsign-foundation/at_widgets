@@ -16,9 +16,11 @@ class SimpleGauge extends StatefulWidget {
     this.decimalPlaces = 0,
     this.isAnimate = true,
     this.duration = kDefaultAnimationDuration,
+    this.size = 200,
     Key? key,
   })  : assert(actualValue <= maxValue,
             'actualValue must be less than or equal to maxValue'),
+        assert(size >= 75, 'size must be greater than 75'),
         super(key: key);
 
   /// Sets the actual value of the gauge.
@@ -48,6 +50,9 @@ class SimpleGauge extends StatefulWidget {
 
   /// Sets a duration in milliseconds to control the speed of the animation.
   final int duration;
+
+  /// Sets the height and width of the widget.
+  final double size;
 
   @override
   State<SimpleGauge> createState() => _SimpleGaugeState();
@@ -103,27 +108,37 @@ class _SimpleGaugeState extends State<SimpleGauge>
           duration: Utils.getDuration(
               isAnimate: widget.isAnimate, userMilliseconds: widget.duration));
     }
-    return CustomPaint(
-      painter: SimpleGaugePainter(
-        sweepAngle: animationController.value,
-        pointerColor: widget.pointerColor,
-      ),
-      child: Center(
-          child: ListTile(
-        title: widget.icon ??
-            Text(
-              '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
-              style: const TextStyle(fontStyle: FontStyle.italic),
-              textAlign: TextAlign.center,
+    return FittedBox(
+      child: SizedBox(
+        height: widget.size,
+        width: widget.size,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomPaint(
+            painter: SimpleGaugePainter(
+              sweepAngle: animationController.value,
+              pointerColor: widget.pointerColor,
             ),
-        subtitle: widget.icon != null
-            ? Text(
-                '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
-                style: const TextStyle(fontStyle: FontStyle.italic),
-                textAlign: TextAlign.center,
-              )
-            : null,
-      )),
+            child: Center(
+              child: ListTile(
+                title: widget.icon ??
+                    Text(
+                      '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
+                      style: const TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                subtitle: widget.icon != null
+                    ? Text(
+                        '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
+                        style: const TextStyle(fontStyle: FontStyle.italic),
+                        textAlign: TextAlign.center,
+                      )
+                    : null,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
