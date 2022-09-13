@@ -41,76 +41,76 @@ class MyCharts extends StatelessWidget {
       // appBar: AppBar(title: const Text('Radial Gauges')),
       body: SafeArea(
         child: Column(
-          children: const [
-            SimpleGauge(
+          children: [
+            const SimpleGauge(
               actualValue: 75,
               maxValue: 100,
               icon: Icon(Icons.water),
               duration: 500,
               title: Text('Simple Gauge'),
             ),
-            ScaleGauge(
+            const ScaleGauge(
               maxValue: 240,
               actualValue: 50,
               title: Text('Scale Gauge'),
             ),
-            // RangeGauge(
-            //   maxValue: 200,
-            //   actualValue: 100,
-            //   maxDegree: 180,
-            //   startDegree: 180,
-            //   isLegend: true,
-            //   ranges: [
-            //     Range(
-            //       label: 'slow',
-            //       lowerLimit: 0,
-            //       upperLimit: 25,
-            //       backgroundColor: Colors.blue,
-            //     ),
-            //     Range(
-            //       label: 'medium',
-            //       lowerLimit: 25,
-            //       upperLimit: 50,
-            //       backgroundColor: Colors.orange,
-            //     ),
-            //     Range(
-            //       label: 'fast',
-            //       lowerLimit: 50,
-            //       upperLimit: 75,
-            //       backgroundColor: Colors.lightGreen,
-            //     ),
-            //     Range(
-            //       label: 'extra fast',
-            //       lowerLimit: 75,
-            //       upperLimit: 100,
-            //       backgroundColor: Colors.purple,
-            //     ),
-            //     Range(
-            //       label: 'super fast',
-            //       lowerLimit: 100,
-            //       upperLimit: 125,
-            //       backgroundColor: Colors.yellow,
-            //     ),
-            //     Range(
-            //       label: 'Mac 1',
-            //       lowerLimit: 125,
-            //       upperLimit: 150,
-            //       backgroundColor: Colors.indigo,
-            //     ),
-            //     Range(
-            //       label: 'Mac 2',
-            //       lowerLimit: 150,
-            //       upperLimit: 175,
-            //       backgroundColor: Colors.pink,
-            //     ),
-            //     Range(
-            //       label: 'Mac 3',
-            //       lowerLimit: 175,
-            //       upperLimit: 200,
-            //       backgroundColor: Colors.teal,
-            //     ),
-            //   ],
-            // )
+            RangeGauge(
+              maxValue: 200,
+              actualValue: 100,
+              maxDegree: 180,
+              startDegree: 180,
+              isLegend: true,
+              ranges: [
+                Range(
+                  label: 'slow',
+                  lowerLimit: 0,
+                  upperLimit: 25,
+                  backgroundColor: Colors.blue,
+                ),
+                Range(
+                  label: 'medium',
+                  lowerLimit: 25,
+                  upperLimit: 50,
+                  backgroundColor: Colors.orange,
+                ),
+                Range(
+                  label: 'fast',
+                  lowerLimit: 50,
+                  upperLimit: 75,
+                  backgroundColor: Colors.lightGreen,
+                ),
+                Range(
+                  label: 'extra fast',
+                  lowerLimit: 75,
+                  upperLimit: 100,
+                  backgroundColor: Colors.purple,
+                ),
+                Range(
+                  label: 'super fast',
+                  lowerLimit: 100,
+                  upperLimit: 125,
+                  backgroundColor: Colors.yellow,
+                ),
+                Range(
+                  label: 'Mac 1',
+                  lowerLimit: 125,
+                  upperLimit: 150,
+                  backgroundColor: Colors.indigo,
+                ),
+                Range(
+                  label: 'Mac 2',
+                  lowerLimit: 150,
+                  upperLimit: 175,
+                  backgroundColor: Colors.pink,
+                ),
+                Range(
+                  label: 'Mac 3',
+                  lowerLimit: 175,
+                  upperLimit: 200,
+                  backgroundColor: Colors.teal,
+                ),
+              ],
+            )
           ],
         ),
       ),

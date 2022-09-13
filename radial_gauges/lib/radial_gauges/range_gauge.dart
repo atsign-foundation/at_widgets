@@ -13,6 +13,7 @@ class RangeGauge extends StatefulWidget {
     required this.maxValue,
     required this.actualValue,
     required this.ranges,
+    this.size = 200,
     this.pointerColor,
     this.decimalPlaces = 0,
     this.isAnimate = true,
@@ -39,6 +40,9 @@ class RangeGauge extends StatefulWidget {
 
   /// Sets the ranges for the gauge.
   final List<Range> ranges;
+
+  /// Sets the height and width of the gauge.
+  final double size;
 
   /// Sets the pointer color of the gauge.
   final Color? pointerColor;
@@ -128,20 +132,29 @@ class _RangeGaugeState extends State<RangeGauge>
               userMilliseconds: widget.milliseconds));
     }
 
-    return CustomPaint(
-      painter: RangeGaugePainter(
-          sweepAngle: animationController.value,
-          pointerColor: widget.pointerColor,
-          maxValue: widget.maxValue.toStringAsFixed(widget.decimalPlaces),
-          minValue: widget.minValue.toStringAsFixed(widget.decimalPlaces),
-          ranges: widget.ranges,
-          actualValue: widget.actualValue,
-          decimalPlaces: widget.decimalPlaces,
-          strokeWidth: widget.strokeWidth,
-          actualValueTextStyle: widget.actualValueTextStyle,
-          maxDegree: widget.maxDegree,
-          startDegree: widget.startDegree,
-          isLegend: widget.isLegend),
+    return FittedBox(
+      child: SizedBox(
+        height: widget.size,
+        width: widget.size,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomPaint(
+            painter: RangeGaugePainter(
+                sweepAngle: animationController.value,
+                pointerColor: widget.pointerColor,
+                maxValue: widget.maxValue.toStringAsFixed(widget.decimalPlaces),
+                minValue: widget.minValue.toStringAsFixed(widget.decimalPlaces),
+                ranges: widget.ranges,
+                actualValue: widget.actualValue,
+                decimalPlaces: widget.decimalPlaces,
+                strokeWidth: widget.strokeWidth,
+                actualValueTextStyle: widget.actualValueTextStyle,
+                maxDegree: widget.maxDegree,
+                startDegree: widget.startDegree,
+                isLegend: widget.isLegend),
+          ),
+        ),
+      ),
     );
   }
 }
