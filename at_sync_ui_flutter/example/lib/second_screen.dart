@@ -23,10 +23,10 @@ class _SecondScreenState extends State<SecondScreen> {
       super.initState();
       activeAtSign = widget.activeAtSign;
       AtSyncUIService().init(
-        appNavigator: NavService.navKey,
-        onSuccessCallback: _onSuccessCallback,
-        onErrorCallback: _onErrorCallback,
-      );
+          appNavigator: NavService.navKey,
+          onSuccessCallback: _onSuccessCallback,
+          onErrorCallback: _onErrorCallback,
+          showRemoveAtsignOption: true);
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         showDialog(

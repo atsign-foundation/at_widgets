@@ -1,7 +1,8 @@
 import 'dart:collection';
 
+import 'package:at_sync_ui_flutter/services/at_sync_ui_services.dart';
 import 'package:flutter/material.dart';
-
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'at_sync_cupertino.dart' as cupertino;
 import 'at_sync_material.dart' as material;
 
@@ -163,7 +164,7 @@ class AtSyncUI {
   /// Build dialog OverlayEntry
   /// Display fullscreen with 50% opacity and can't interact
   /// [AtSyncIndicator] place in center of screen
-  static OverlayEntry _buildDialogOverlayEntry({
+  OverlayEntry _buildDialogOverlayEntry({
     Color? primaryColors,
     Color? backgroundColor,
     Color? labelColor,
@@ -210,6 +211,18 @@ class AtSyncUI {
                         ),
                       ),
                     ),
+                  AtSyncUIService().showRemoveAtsignOption
+                      ? TextButton(
+                          onPressed: _removeAtSignFromKeychain,
+                          child: const Text(
+                            'Remove current atSign',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        )
+                      : const SizedBox()
                 ],
               ),
             ),
@@ -219,90 +232,114 @@ class AtSyncUI {
     });
   }
 
-  /// Build snackBar OverlayEntry
-  /// Display fullscreen with 50% opacity and can't interact
-  /// [AtSyncIndicator] place in bottomCenter of screen
-  static OverlayEntry _buildSnackBarOverlayEntry({
-    Color? primaryColors,
-    Color? backgroundColor,
-    Color? labelColor,
-    AtSyncUIStyle? style,
-    String? message,
-  }) {
-    return OverlayEntry(builder: (context) {
-      // You can return any widget you like here
-      // to be displayed on the Overlay
-      final size = MediaQuery.of(context).size;
-      return Positioned(
-        width: size.width,
-        height: 100,
-        bottom: 0,
-        child: Container(
-          alignment: Alignment.bottomCenter,
-          child: _snackbarUI(
-            context,
-            primaryColors,
-            backgroundColor,
-            labelColor,
-            style,
-            message,
-          ),
-        ),
-      );
-    });
-  }
+  _removeAtSignFromKeychain() async {
+    var res = await KeyChainManager.getInstance().deleteAtSignFromKeychain(
+      AtClientManager.getInstance().atClient.getCurrentAtSign()!,
+    );
 
-  static Widget _snackbarUI(
-    BuildContext context,
-    Color? primaryColors,
-    Color? backgroundColor,
-    Color? labelColor,
-    AtSyncUIStyle? style,
-    String? message,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      margin: EdgeInsets.only(
-        bottom: MediaQuery.of(context).padding.bottom > 0
-            ? MediaQuery.of(context).padding.bottom
-            : 20,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: backgroundColor,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          style == AtSyncUIStyle.cupertino
-              ? cupertino.AtSyncIndicator(
-                  color: primaryColors,
-                  radius: 12,
-                )
-              : material.AtSyncIndicator(
-                  color: primaryColors,
-                  radius: 12,
-                ),
-          if ((message ?? '').isNotEmpty)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width - 68),
-              child: Material(
-                type: MaterialType.transparency,
-                child: Text(
-                  message ?? '',
-                  style: TextStyle(
-                    color: labelColor,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            )
-        ],
+    if (res && AtSyncUIService().onAtSignRemoved != null) {
+      AtSyncUIService().onAtSignRemoved!();
+    } else {
+      ScaffoldMessenger.of(appNavigatorKey!.currentContext!)
+          .showSnackBar(const SnackBar(
+        duration: Duration(seconds: 2),
+        backgroundColor: Color(0xFFe34040),
+        content: Text(
+          'Failed to remove atSign',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              letterSpacing: 0.1,
+              fontWeight: FontWeight.normal),
+        ),
+      ));
+    }
+  }
+}
+
+/// Build snackBar OverlayEntry
+/// Display fullscreen with 50% opacity and can't interact
+/// [AtSyncIndicator] place in bottomCenter of screen
+OverlayEntry _buildSnackBarOverlayEntry({
+  Color? primaryColors,
+  Color? backgroundColor,
+  Color? labelColor,
+  AtSyncUIStyle? style,
+  String? message,
+}) {
+  return OverlayEntry(builder: (context) {
+    // You can return any widget you like here
+    // to be displayed on the Overlay
+    final size = MediaQuery.of(context).size;
+    return Positioned(
+      width: size.width,
+      height: 100,
+      bottom: 0,
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        child: _snackbarUI(
+          context,
+          primaryColors,
+          backgroundColor,
+          labelColor,
+          style,
+          message,
+        ),
       ),
     );
-  }
+  });
+}
+
+Widget _snackbarUI(
+  BuildContext context,
+  Color? primaryColors,
+  Color? backgroundColor,
+  Color? labelColor,
+  AtSyncUIStyle? style,
+  String? message,
+) {
+  return Container(
+    padding: const EdgeInsets.all(8),
+    margin: EdgeInsets.only(
+      bottom: MediaQuery.of(context).padding.bottom > 0
+          ? MediaQuery.of(context).padding.bottom
+          : 20,
+    ),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: backgroundColor,
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        style == AtSyncUIStyle.cupertino
+            ? cupertino.AtSyncIndicator(
+                color: primaryColors,
+                radius: 12,
+              )
+            : material.AtSyncIndicator(
+                color: primaryColors,
+                radius: 12,
+              ),
+        if ((message ?? '').isNotEmpty)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width - 68),
+            child: Material(
+              type: MaterialType.transparency,
+              child: Text(
+                message ?? '',
+                style: TextStyle(
+                  color: labelColor,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          )
+      ],
+    ),
+  );
 }

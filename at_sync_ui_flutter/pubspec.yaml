@@ -14,6 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   at_client: ^3.0.34
+  at_client_mobile: ^3.2.5
 
 
 dev_dependencies:
