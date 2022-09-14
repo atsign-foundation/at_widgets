@@ -55,6 +55,8 @@ class SimpleGauge extends StatefulWidget {
   final int duration;
 
   /// Sets the height and width of the gauge.
+  ///
+  /// If the parent widget has unconstrained height like a [ListView], wrap the gauge in a [SizedBox] to better control it's size
   final double size;
 
   /// Sets the title of the gauge.

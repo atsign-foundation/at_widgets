@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:radial_gauges/utils/constants.dart';
 import 'package:radial_gauges/utils/utils.dart';
 
+import '../utils/enums.dart';
+
 class RangeGauge extends StatefulWidget {
   /// Creates a Range Pointer Gauge.
   ///
@@ -14,11 +16,13 @@ class RangeGauge extends StatefulWidget {
     required this.actualValue,
     required this.ranges,
     this.size = 200,
+    this.title,
+    this.titlePosition = TitlePosition.top,
     this.pointerColor,
     this.decimalPlaces = 0,
     this.isAnimate = true,
     this.milliseconds = kDefaultAnimationDuration,
-    this.strokeWidth,
+    this.strokeWidth = 70,
     this.actualValueTextStyle,
     this.maxDegree = kDefaultRangeGaugeMaxDegree,
     this.startDegree = kDefaultRangeGaugeStartDegree,
@@ -42,7 +46,15 @@ class RangeGauge extends StatefulWidget {
   final List<Range> ranges;
 
   /// Sets the height and width of the gauge.
+  ///
+  /// If the parent widget has unconstrained height like a [ListView], wrap the gauge in a [SizedBox] to better control it's size.
   final double size;
+
+  /// Sets the title of the gauge.
+  final Text? title;
+
+  /// Sets the position of the title.
+  final TitlePosition titlePosition;
 
   /// Sets the pointer color of the gauge.
   final Color? pointerColor;
@@ -57,7 +69,7 @@ class RangeGauge extends StatefulWidget {
   final int milliseconds;
 
   /// Sets the stroke width of the ranges.
-  final double? strokeWidth;
+  final double strokeWidth;
 
   /// Sets the [TextStyle] for the actualValue.
   final TextStyle? actualValueTextStyle;
@@ -133,27 +145,54 @@ class _RangeGaugeState extends State<RangeGauge>
     }
 
     return FittedBox(
-      child: SizedBox(
-        height: widget.size,
-        width: widget.size,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomPaint(
-            painter: RangeGaugePainter(
-                sweepAngle: animationController.value,
-                pointerColor: widget.pointerColor,
-                maxValue: widget.maxValue.toStringAsFixed(widget.decimalPlaces),
-                minValue: widget.minValue.toStringAsFixed(widget.decimalPlaces),
-                ranges: widget.ranges,
-                actualValue: widget.actualValue,
-                decimalPlaces: widget.decimalPlaces,
-                strokeWidth: widget.strokeWidth,
-                actualValueTextStyle: widget.actualValueTextStyle,
-                maxDegree: widget.maxDegree,
-                startDegree: widget.startDegree,
-                isLegend: widget.isLegend),
+      child: Column(
+        children: [
+          widget.titlePosition == TitlePosition.top
+              ? SizedBox(
+                  height: widget.strokeWidth - 10,
+                  child: widget.title,
+                )
+              : const SizedBox(
+                  height: 20,
+                ),
+          SizedBox(
+            height: widget.size,
+            width: widget.size,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomPaint(
+                painter: RangeGaugePainter(
+                    sweepAngle: animationController.value,
+                    pointerColor: widget.pointerColor,
+                    maxValue:
+                        widget.maxValue.toStringAsFixed(widget.decimalPlaces),
+                    minValue:
+                        widget.minValue.toStringAsFixed(widget.decimalPlaces),
+                    ranges: widget.ranges,
+                    actualValue: widget.actualValue,
+                    decimalPlaces: widget.decimalPlaces,
+                    strokeWidth: widget.strokeWidth,
+                    actualValueTextStyle: widget.actualValueTextStyle,
+                    maxDegree: widget.maxDegree,
+                    startDegree: widget.startDegree,
+                    isLegend: widget.isLegend),
+              ),
+            ),
           ),
-        ),
+          SizedBox(
+            height: widget.titlePosition == TitlePosition.bottom
+                ? widget.strokeWidth - 10
+                : 0,
+          ),
+          widget.titlePosition == TitlePosition.bottom
+              ? SizedBox(
+                  height: 30,
+                  child: widget.title,
+                )
+              : const SizedBox(
+                  height: 20,
+                )
+        ],
       ),
     );
   }
@@ -171,7 +210,7 @@ class RangeGaugePainter extends CustomPainter {
     required this.maxDegree,
     required this.startDegree,
     required this.isLegend,
-    this.strokeWidth,
+    required this.strokeWidth,
     this.actualValueTextStyle,
     Key? key,
   });
@@ -186,7 +225,7 @@ class RangeGaugePainter extends CustomPainter {
   List<Range> ranges;
 
   /// Sets the [strokeWidth] of the ranges.
-  final double? strokeWidth;
+  final double strokeWidth;
 
   /// Sets the [TextStyle] for the actualValue.
   final TextStyle? actualValueTextStyle;
@@ -202,7 +241,6 @@ class RangeGaugePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const double kDefaultStrokeWidth = 70;
     final startAngle = Utils.degreesToRadians(startDegree);
     final backgroundSweepAngle = Utils.degreesToRadians(maxDegree);
     final center = Offset(size.width / 2, size.height / 2);
@@ -214,7 +252,7 @@ class RangeGaugePainter extends CustomPainter {
     for (final range in ranges) {
       final rangeArcPaint = Paint()
         ..color = range.backgroundColor
-        ..strokeWidth = strokeWidth ?? kDefaultStrokeWidth
+        ..strokeWidth = strokeWidth
         ..strokeCap = StrokeCap.butt
         ..style = PaintingStyle.stroke;
 
@@ -359,6 +397,8 @@ class RangeGaugePainter extends CustomPainter {
 
     // paint value to canvas
     valueTextPainter.paint(canvas, actualValueOffset);
+
+    // canvas.save();
   }
 
   @override

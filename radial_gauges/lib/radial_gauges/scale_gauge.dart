@@ -38,6 +38,8 @@ class ScaleGauge extends StatefulWidget {
   final double actualValue;
 
   /// Sets the width and height of the gauge.
+  ///
+  /// If the parent widget has unconstrained height like a [ListView], wrap the gauge in a [SizedBox] to better control it's size
   final double size;
 
   /// Sets the title of the gauge.
@@ -121,46 +123,48 @@ class _ScaleGaugeState extends State<ScaleGauge>
     }
 
     return FittedBox(
-      child: Column(
-        children: [
-          widget.titlePosition == TitlePosition.top
-              ? SizedBox(
-                  height: 20,
-                  child: widget.title,
-                )
-              : const SizedBox(
-                  height: 20,
+      child: SizedBox(
+        child: Column(
+          children: [
+            widget.titlePosition == TitlePosition.top
+                ? SizedBox(
+                    height: 20,
+                    child: widget.title,
+                  )
+                : const SizedBox(
+                    height: 20,
+                  ),
+            SizedBox(
+              height: widget.size,
+              width: widget.size,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomPaint(
+                  painter: RangePointerGaugePainter(
+                      sweepAngle: animationController.value,
+                      pointerColor: widget.arcColor,
+                      needleColor: widget.needleColor,
+                      maxValue:
+                          widget.maxValue.toStringAsFixed(widget.decimalPlaces),
+                      minValue:
+                          widget.minValue.toStringAsFixed(widget.decimalPlaces),
+                      actualValue: widget.actualValue),
                 ),
-          SizedBox(
-            height: widget.size,
-            width: widget.size,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CustomPaint(
-                painter: RangePointerGaugePainter(
-                    sweepAngle: animationController.value,
-                    pointerColor: widget.arcColor,
-                    needleColor: widget.needleColor,
-                    maxValue:
-                        widget.maxValue.toStringAsFixed(widget.decimalPlaces),
-                    minValue:
-                        widget.minValue.toStringAsFixed(widget.decimalPlaces),
-                    actualValue: widget.actualValue),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          widget.titlePosition == TitlePosition.bottom
-              ? SizedBox(
-                  height: 30,
-                  child: widget.title,
-                )
-              : const SizedBox(
-                  height: 20,
-                )
-        ],
+            const SizedBox(
+              height: 10,
+            ),
+            widget.titlePosition == TitlePosition.bottom
+                ? SizedBox(
+                    height: 30,
+                    child: widget.title,
+                  )
+                : const SizedBox(
+                    height: 20,
+                  )
+          ],
+        ),
       ),
     );
   }
