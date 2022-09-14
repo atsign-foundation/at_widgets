@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:radial_gauges/utils/constants.dart';
 import 'package:radial_gauges/utils/enums.dart';
@@ -210,6 +212,23 @@ class SimpleGaugePainter extends CustomPainter {
     final startAngle = Utils.degreesToRadians(-90);
 
     canvas.drawArc(arcRect, startAngle, sweepAngle, false, arcPaint);
+
+    // Stroke Cap Circle
+    var strokeCapCirclePaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 5
+      ..style = PaintingStyle.fill;
+
+    var strokeCapCircleOffset = Offset(
+      (center.dx) +
+          radius * cos(pi / 1.5 + sweepAngle + Utils.degreesToRadians(150)),
+      (center.dx) +
+          radius * sin(pi / 1.5 + sweepAngle + Utils.degreesToRadians(150)),
+    );
+    var strokeCapCircleRadius = 3.0;
+
+    canvas.drawCircle(
+        strokeCapCircleOffset, strokeCapCircleRadius, strokeCapCirclePaint);
   }
 
   @override
