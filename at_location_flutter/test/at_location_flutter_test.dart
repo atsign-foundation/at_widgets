@@ -1,3 +1,6 @@
+import 'package:at_location_flutter/location_modal/hybrid_model.dart';
+import 'package:at_location_flutter/service/distance_calculate.dart';
+import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
@@ -34,9 +37,43 @@ void main() {
     expect(res, true);
   });
 
-  test("get_current_position", () async {
-    var res = await getCurrentPosition();
-    expect(res, isA<LatLng>());
+  test("update_my_latlng", () async {
+    LocationService().hybridUsersList = [];
+    var pos = await getMyLocation();
+    LocationService().addCurrentUserMarker = true;
+    var _myData = HybridModel(displayName: "45expected", latLng: pos, eta: '?');
+    LocationService().updateMyLatLng(_myData);
+    expect(LocationService().hybridUsersList.length, 1);
+  });
+
+  test("add_my_details_to_hybrid_users_list", () async {
+    LocationService().hybridUsersList = [];
+    LocationService().addCurrentUserMarker = true;
+    when((() => GeolocatorPlatform.instance.getPositionStream(
+            locationSettings: const LocationSettings(distanceFilter: 10))))
+        .thenAnswer((invocation) => Stream.value(mockPosition));
+    await LocationService().addMyDetailsToHybridUsersList();
+    expect(LocationService().hybridUsersList.length, 1);
+  });
+
+  test("add_center_marker", () async {
+    LocationService().hybridUsersList = [];
+    LocationService().textForCenter = "";
+    var pos = await getMyLocation();
+    LocationService().etaFrom = pos;
+    LocationService().addCentreMarker();
+    expect(LocationService().hybridUsersList.length, 1);
+  });
+
+  test("add_details", () async {
+    var pos = await getMyLocation();
+    var hybridModel =
+        HybridModel(displayName: "45expected", latLng: pos, eta: '?');
+    var hybridModel2 =
+        HybridModel(displayName: "83apedistinct", latLng: pos, eta: '?');
+    LocationService().hybridUsersList = [hybridModel2];
+    await LocationService().addDetails(hybridModel);
+    expect(LocationService().hybridUsersList.length, 1);
   });
 }
 
@@ -55,4 +92,22 @@ class MockGeolocatorPlatform extends Mock
     LocationSettings? locationSettings,
   }) =>
       Future.value(mockPosition);
+
+  @override
+  Stream<Position> getPositionStream({
+    LocationSettings? locationSettings,
+  }) {
+    return super.noSuchMethod(
+      Invocation.method(
+        #getPositionStream,
+        null,
+        <Symbol, Object?>{
+          #desiredAccuracy: locationSettings?.accuracy ?? LocationAccuracy.best,
+          #distanceFilter: locationSettings?.distanceFilter ?? 0,
+          #timeLimit: locationSettings?.timeLimit ?? 0,
+        },
+      ),
+      // returnValue: Stream.value(mockPosition),
+    );
+  }
 }
