@@ -1,3 +1,7 @@
+## 4.0.9
+- **FIX**: Texts fixes
+- **CHORE**: Package description updated
+
 ## 4.0.8
 - **FEAT**: Updated text
 - **CHORE**: Updated dependency
