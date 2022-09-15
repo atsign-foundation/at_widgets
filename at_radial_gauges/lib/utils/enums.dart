@@ -1,0 +1,4 @@
+enum TitlePosition {
+  top,
+  bottom,
+}
