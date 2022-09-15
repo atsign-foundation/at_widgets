@@ -63,11 +63,11 @@ class _CustomListTileState extends State<CustomListTile> {
           ? CustomCircleAvatar(
               byteImage: image,
               nonAsset: true,
-        theme: widget.theme,
+              theme: widget.theme,
             )
           : ContactInitial(
               initials: widget.contact!.atSign!,
-        theme: widget.theme,
+              theme: widget.theme,
             );
     } else {
       contactImage = ContactInitial(
@@ -158,6 +158,9 @@ class _CustomListTileState extends State<CustomListTile> {
                       width: 21.toWidth,
                       height: 18.toHeight,
                       package: 'at_contacts_flutter',
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white,
                     ),
             ),
           );

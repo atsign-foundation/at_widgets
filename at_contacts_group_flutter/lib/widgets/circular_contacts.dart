@@ -212,7 +212,6 @@ class _CircularContactsState extends State<CircularContacts> {
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: AllColors().Black,
                             fontSize: 14.toFont,
                             fontWeight: FontWeight.normal,
                           ),

@@ -66,11 +66,14 @@ class _GroupListState extends State<GroupList> {
         showLeadingIcon: true,
         showTitle: true,
         titleText: 'Groups',
+        titleTextStyle: const TextStyle().copyWith(
+          fontSize: 18.toFont,
+          fontWeight: FontWeight.w700,
+        ),
         showTrailingIcon: showAddGroupIcon,
         trailingIcon: Icon(
           Icons.add,
-          color: AllColors().ORANGE,
-          size: 20.toFont,
+          color: AllColors().WHITE,
         ),
         onTrailingIconPressed: () => Navigator.push(
           context,

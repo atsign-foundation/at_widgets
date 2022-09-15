@@ -9,7 +9,6 @@ import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
-import 'package:flutter_keychain/flutter_keychain.dart';
 
 Future<void> main() async {
   await AtEnv.load();
@@ -43,6 +42,38 @@ class _MyAppState extends State<MyApp> {
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
+  TextTheme getTextTheme(Color primaryTextColor) {
+    final textTheme = TextTheme(
+      headline1: TextStyle(fontSize: 96.0, color: primaryTextColor),
+      headline2: TextStyle(fontSize: 60.0, color: primaryTextColor),
+      headline3: TextStyle(fontSize: 48.0, color: primaryTextColor),
+      headline4: TextStyle(fontSize: 34.0, color: primaryTextColor),
+      headline5: TextStyle(fontSize: 24.0, color: primaryTextColor),
+      headline6: TextStyle(
+        fontSize: 20.0,
+        color: primaryTextColor,
+        fontWeight: FontWeight.w500,
+      ),
+      subtitle1: TextStyle(fontSize: 16.0, color: primaryTextColor),
+      subtitle2: TextStyle(
+        fontSize: 14.0,
+        color: primaryTextColor,
+        fontWeight: FontWeight.w500,
+      ),
+      bodyText1: TextStyle(fontSize: 16.0, color: primaryTextColor),
+      bodyText2: TextStyle(fontSize: 14.0, color: primaryTextColor),
+      button: TextStyle(
+        fontSize: 14.0,
+        color: primaryTextColor,
+        fontWeight: FontWeight.w500,
+      ),
+      caption: TextStyle(fontSize: 12.0, color: primaryTextColor),
+      overline: TextStyle(fontSize: 14.0, color: primaryTextColor),
+    );
+
+    return textTheme;
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ThemeMode>(
@@ -61,6 +92,7 @@ class _MyAppState extends State<MyApp> {
                 ),
             backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
+            textTheme: getTextTheme(Colors.black),
           ),
           darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
@@ -70,6 +102,7 @@ class _MyAppState extends State<MyApp> {
                 ),
             backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
+            textTheme: getTextTheme(Colors.white),
           ),
           themeMode: themeMode,
           home: Scaffold(

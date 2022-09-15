@@ -80,6 +80,9 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
                   : 250,
               fit: BoxFit.fill,
               package: AtOnboardingConstants.package,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
             )),
             Expanded(flex: 1, child: Container()),
             Container(

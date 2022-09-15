@@ -5,6 +5,7 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
+import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_flutter/widgets/blocked_user_card.dart';
 import 'package:at_contacts_flutter/widgets/circular_contacts.dart';
 import 'package:at_contacts_flutter/widgets/error_screen.dart';
@@ -60,7 +61,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
       backgroundColor: widget.theme.backgroundColor,
       appBar: CustomAppBar(
         appBarColor: Theme.of(context).primaryColor,
-        showBackButton: true,
+        showBackButton: false,
         showTitle: true,
         showLeadingIcon: true,
         leadingIcon: IconButton(
@@ -73,6 +74,10 @@ class _BlockedScreenState extends State<BlockedScreen> {
           ),
         ),
         titleText: TextStrings().blockedContacts,
+        titleTextStyle: const TextStyle().copyWith(
+          fontSize: 18.toFont,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       body: errorOcurred
           ? const ErrorScreen()
@@ -175,6 +180,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                                           .blockContactList.length,
                                       itemBuilder: (context, index) {
                                         return CircularContacts(
+                                            theme: widget.theme,
                                             contact:
                                                 snapshot.data?[index]?.contact,
                                             onCrossPressed: () async {

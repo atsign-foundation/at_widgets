@@ -68,6 +68,9 @@ class _LocationPromptState extends State<LocationPrompt> {
     return SizedBox(
       width: SizeConfig().screenWidth * 0.8,
       child: AlertDialog(
+        backgroundColor: Theme.of(context).brightness == Brightness.light
+            ? Colors.white
+            : Colors.black,
         contentPadding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
         content: SingleChildScrollView(
           child: Container(
@@ -93,7 +96,13 @@ class _LocationPromptState extends State<LocationPrompt> {
                     children: <Widget>[
                       Text(
                         widget.text!,
-                        style: const TextStyle().copyWith(fontSize: 16),
+                        style: const TextStyle().copyWith(
+                          fontSize: 16,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 30),
@@ -149,11 +158,14 @@ class _LocationPromptState extends State<LocationPrompt> {
                           Navigator.of(context).pop();
                         },
                         buttonText: widget.noText ?? '${AllText().NO}!',
-                        buttonColor: Colors.white,
-                        fontColor: Theme.of(context).brightness ==
-                                      Brightness.light
-                                  ? Colors.white
-                                  : Colors.black,
+                        buttonColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                        fontColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? Colors.white
+                                : Colors.black,
                         width: 164.toWidth,
                         height: 48.toHeight,
                       )

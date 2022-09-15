@@ -47,17 +47,18 @@ class GroupContactView extends StatefulWidget {
   /// to show already selected contacts.
   final List<GroupContactsModel>? contactSelectedHistory;
 
-  GroupContactView({Key? key,
-    this.showContacts = false,
-    this.showGroups = false,
-    this.singleSelection = false,
-    this.asSelectionScreen = true,
-    this.selectedList,
-    this.isDesktop = false,
-    this.onBackArrowTap,
-    this.onDoneTap,
-    this.contactSelectedHistory,
-    this.onContactsTap})
+  GroupContactView(
+      {Key? key,
+      this.showContacts = false,
+      this.showGroups = false,
+      this.singleSelection = false,
+      this.asSelectionScreen = true,
+      this.selectedList,
+      this.isDesktop = false,
+      this.onBackArrowTap,
+      this.onDoneTap,
+      this.contactSelectedHistory,
+      this.onContactsTap})
       : super(key: key);
 
   @override
@@ -107,40 +108,39 @@ class _GroupContactViewState extends State<GroupContactView> {
     return Scaffold(
       bottomSheet: (widget.singleSelection)
           ? Container(
-        height: 0,
-      )
+              height: 0,
+            )
           : (widget.asSelectionScreen)
-          ? ContactSelectionBottomSheet(
-        onPressed: () {
-          if (widget.isDesktop) {
-            widget.onDoneTap!();
-            _groupService.selectedGroupContacts = [];
-          } else {
-            Navigator.pop(context);
-          }
-        },
-        selectedList: (s) {
-          if (widget.selectedList != null) {
-            widget.selectedList!(s);
-          }
-        },
-        isDesktop: widget.isDesktop,
-      )
-          : Container(
-        height: 0,
-      ),
+              ? ContactSelectionBottomSheet(
+                  onPressed: () {
+                    if (widget.isDesktop) {
+                      widget.onDoneTap!();
+                      _groupService.selectedGroupContacts = [];
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                  selectedList: (s) {
+                    if (widget.selectedList != null) {
+                      widget.selectedList!(s);
+                    }
+                  },
+                  isDesktop: widget.isDesktop,
+                )
+              : Container(
+                  height: 0,
+                ),
       appBar: CustomAppBar(
-        appBarColor: Theme
-            .of(context)
-            .primaryColor,
+        appBarColor: Theme.of(context).primaryColor,
         isDesktop: widget.isDesktop,
         showTitle: true,
         titleText: 'Contacts',
-        titleTextStyle: const TextStyle().copyWith(fontSize: 18),
+        titleTextStyle: const TextStyle().copyWith(
+          fontSize: 18,
+        ),
         leadingIcon: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
           ),
           onPressed: () {
             if (!widget.isDesktop) {
@@ -159,7 +159,7 @@ class _GroupContactViewState extends State<GroupContactView> {
         showTrailingIcon: true,
         trailingIcon: const Icon(
           Icons.add,
-          color: Colors.black,
+          color: Colors.white,
           semanticLabel: 'Add contact',
         ),
         onTrailingIconPressed: () {
@@ -171,7 +171,10 @@ class _GroupContactViewState extends State<GroupContactView> {
       ),
       body: Container(
         padding: EdgeInsets.only(
-            left: 16.toHeight, right: 16.toHeight, bottom: 16.toHeight),
+          left: 16.toHeight,
+          right: 16.toHeight,
+          bottom: 16.toHeight,
+        ),
         height: double.infinity,
         child: ListView(
           children: [
@@ -228,7 +231,7 @@ class _GroupContactViewState extends State<GroupContactView> {
                     ],
                   )
                 : const SizedBox(),
-            SizedBox(height: widget.isDesktop ? 20.toHeight : 0),
+            SizedBox(height: widget.isDesktop ? 20.toHeight : 16),
             ContactSearchField(
               TextStrings().searchContact,
               (text) => setState(() {
@@ -259,16 +262,11 @@ class _GroupContactViewState extends State<GroupContactView> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                              TextStrings().noContacts,
-                              style: TextStyle().copyWith(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Theme
-                                    .of(context)
-                                    .brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                              )
+                            TextStrings().noContacts,
+                            style: TextStyle().copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(height: 20.0),
                           CustomButton(
@@ -568,10 +566,10 @@ class _GroupContactViewState extends State<GroupContactView> {
     });
 
     if (_res && closeBottomSheet) {
-      if(mounted){
+      if (mounted) {
         /// to close bottomsheet
         Navigator.pop(context);
-      } 
+      }
     }
   }
 
@@ -603,10 +601,10 @@ class _GroupContactViewState extends State<GroupContactView> {
     });
 
     if (_res && closeBottomSheet) {
-      if(mounted){
+      if (mounted) {
         /// to close bottomsheet
         Navigator.pop(context);
-      } 
+      }
     }
   }
 

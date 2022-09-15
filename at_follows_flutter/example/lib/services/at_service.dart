@@ -1,9 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_follows_flutter_example/services/notification_service.dart' as follows_notification_service;
+import 'package:at_follows_flutter_example/services/notification_service.dart'
+    as follows_notification_service;
 import 'package:at_follows_flutter_example/utils/app_constants.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_commons/at_commons.dart' as at_commons;
 
@@ -23,6 +28,9 @@ class AtService {
   AtClientImpl? atClientInstance;
   Function? monitorCallBack;
 
+  late AtClient atClient;
+  String? currentAtSign;
+
   set atsign(String atsign) {}
 
   Future<AtClientPreference> getAtClientPreference({String? cramSecret}) async {
@@ -37,6 +45,67 @@ class AtService {
       ..rootDomain = AppConstants.rootDomain
       ..hiveStoragePath = path;
     return _atClientPreference;
+  }
+
+  onboard(
+    BuildContext context, {
+    AtClientPreference? atClientPreference,
+    VoidCallback? onSuccess,
+  }) async {
+    final OnboardingService _onboardingService =
+        OnboardingService.getInstance();
+    atClientServiceMap = _onboardingService.atClientServiceMap;
+
+    var atClientPrefernce;
+    await getAtClientPreference()
+        .then((value) => atClientPrefernce = value)
+        .catchError((e) => print(e));
+    AtOnboardingResult result;
+
+    result = await AtOnboarding.onboard(
+      context: context,
+      config: AtOnboardingConfig(
+        atClientPreference: atClientPrefernce!,
+        domain: AtEnv.rootDomain,
+        rootEnvironment: AtEnv.rootEnvironment,
+        appAPIKey: AtEnv.appApiKey,
+      ),
+    );
+
+    switch (result.status) {
+      case AtOnboardingResultStatus.success:
+        await onSuccessOnboard(atClientServiceMap, result.atsign);
+        onSuccess?.call();
+        break;
+
+      case AtOnboardingResultStatus.error:
+        // TODO: Handle this case.
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('An error has occurred'),
+          ),
+        );
+        break;
+        break;
+      case AtOnboardingResultStatus.cancel:
+        // TODO: Handle this case.
+        break;
+    }
+  }
+
+  onSuccessOnboard(
+    Map<String?, AtClientService> atClientServiceMap,
+    String? onboardedAtsign,
+  ) async {
+    String? atSign = onboardedAtsign;
+    atClient =
+        atClientServiceMap[onboardedAtsign]!.atClientManager.atClient;
+    atClientServiceMap = atClientServiceMap;
+
+    currentAtSign = atSign;
+    KeychainUtil.makeAtSignPrimary(atSign!);
+    atClientServiceInstance = atClientServiceMap[onboardedAtsign]!;
   }
 
   Future<bool> put({String? key, var value}) async {
@@ -96,7 +165,8 @@ class AtService {
   acceptStream(response) async {
     response = response.toString().replaceAll('notification:', '').trim();
     var notification = AtNotification.fromJson(jsonDecode(response));
-    await follows_notification_service.NotificationService().showNotification(notification);
+    await follows_notification_service.NotificationService()
+        .showNotification(notification);
   }
 }
 

@@ -63,7 +63,7 @@ class DefaultContactTheme extends ContactTheme {
     Color accentColor = Colors.brown,
     Color dividerColor = ColorConstants.dividerColor,
     Color avatarBorderColor = const Color(0xfff4533d),
-    Color appbarIconColor = Colors.black,
+    Color appbarIconColor = Colors.white,
     Color searchBackgroundColor = ColorConstants.inputFieldColor,
     TextStyle searchInputTextStyle = const TextStyle(
       fontSize: 16,
@@ -109,7 +109,7 @@ class DarkContactTheme extends ContactTheme {
     Color accentColor = Colors.brown,
     Color dividerColor = ColorConstants.dividerColor,
     Color avatarBorderColor = Colors.white,
-    Color appbarIconColor = Colors.black,
+    Color appbarIconColor = Colors.white,
     Color searchBackgroundColor = const Color(0xFF181818),
     TextStyle searchInputTextStyle = const TextStyle(
       fontSize: 16,

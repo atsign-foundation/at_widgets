@@ -4,8 +4,16 @@ import 'package:at_follows_flutter_example/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:at_follows_flutter_example/utils/app_strings.dart';
+import 'package:at_client_mobile/at_client_mobile.dart'
+    hide NotificationService;
 
 class NextScreen extends StatefulWidget {
+  final AtClientService atClientService;
+
+  NextScreen({
+    required this.atClientService,
+  });
+
   @override
   _NextScreen createState() => _NextScreen();
 }
@@ -43,8 +51,7 @@ class _NextScreen extends State<NextScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Connections(
-                        atClientserviceInstance:
-                        atService.atClientServiceInstance!,
+                        atClientserviceInstance: widget.atClientService,
                       ),
                     ),
                   );

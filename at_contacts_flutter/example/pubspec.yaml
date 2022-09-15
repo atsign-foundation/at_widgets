@@ -40,6 +40,8 @@ dependencies:
 
 dependency_overrides:
   at_onboarding_flutter: ^5.0.0
+  at_common_flutter:
+    path: ../../at_common_flutter
 
 dev_dependencies:
   flutter_test:

@@ -7,6 +7,7 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/contact_theme.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
+import 'package:at_contacts_flutter/utils/text_styles.dart';
 import 'package:at_contacts_flutter/widgets/add_contacts_dialog.dart';
 import 'package:at_contacts_flutter/widgets/bottom_sheet.dart';
 import 'package:at_contacts_flutter/widgets/custom_list_tile.dart';
@@ -122,10 +123,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
             ),
       appBar: CustomAppBar(
         appBarColor: Theme.of(context).primaryColor,
-        showBackButton: true,
+        showBackButton: false,
         showTitle: true,
         showLeadingIcon: true,
         titleText: TextStrings().contacts,
+        titleTextStyle: const TextStyle().copyWith(
+          fontSize: 18.toFont,
+          fontWeight: FontWeight.w700,
+        ),
         leadingIcon: IconButton(
           onPressed: () {
             setState(() {
