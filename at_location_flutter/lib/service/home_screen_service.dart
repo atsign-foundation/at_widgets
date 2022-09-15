@@ -185,7 +185,6 @@ LocationSharingFor? getLocationSharingForCreator(
 
   if (!compareAtSign(locationNotificationModel.atsignCreator!,
       AtLocationNotificationListener().currentAtSign!)) {
-    print("here???");
     if ((MasterLocationService().locationReceivedData[_atsignCreator] !=
             null) &&
         (MasterLocationService()
@@ -199,7 +198,6 @@ LocationSharingFor? getLocationSharingForCreator(
       return _locationSharingFor;
     }
   } else {
-    print("here");
     var _receiver = locationNotificationModel.receiver;
     if (SendLocationNotification().allAtsignsLocationData[_receiver] != null) {
       if (SendLocationNotification()
