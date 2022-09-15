@@ -26,6 +26,8 @@ class ScaleGauge extends StatefulWidget {
   })  : assert(actualValue <= maxValue,
             'actualValue must be less than or equal to maxValue'),
         assert(size >= 140, 'size must be greater than 75'),
+        assert(actualValue >= minValue,
+            'actualValue must be greater than minValue'),
         super(key: key);
 
   /// Sets the minimum value of the gauge.
@@ -78,6 +80,7 @@ class _ScaleGaugeState extends State<ScaleGauge>
     double sweepAngleRadian = Utils.actualValueToSweepAngleRadian(
         actualValue: widget.actualValue,
         maxValue: widget.maxValue,
+        minValue: widget.minValue,
         maxDegrees: 300);
 
     double upperBound = Utils.degreesToRadians(300);
@@ -112,11 +115,13 @@ class _ScaleGaugeState extends State<ScaleGauge>
         Utils.actualValueToSweepAngleRadian(
             actualValue: widget.actualValue,
             maxValue: widget.maxValue,
+            minValue: widget.minValue,
             maxDegrees: 300)) {
       animationController.animateTo(
           Utils.actualValueToSweepAngleRadian(
               actualValue: widget.actualValue,
               maxValue: widget.maxValue,
+              minValue: widget.minValue,
               maxDegrees: 300),
           duration: Utils.getDuration(
               isAnimate: widget.isAnimate, userMilliseconds: widget.duration));
@@ -141,14 +146,14 @@ class _ScaleGaugeState extends State<ScaleGauge>
                 padding: const EdgeInsets.all(8.0),
                 child: CustomPaint(
                   painter: RangePointerGaugePainter(
-                      sweepAngle: animationController.value,
-                      pointerColor: widget.arcColor,
-                      needleColor: widget.needleColor,
-                      maxValue:
-                          widget.maxValue.toStringAsFixed(widget.decimalPlaces),
-                      minValue:
-                          widget.minValue.toStringAsFixed(widget.decimalPlaces),
-                      actualValue: widget.actualValue),
+                    sweepAngle: animationController.value,
+                    pointerColor: widget.arcColor,
+                    needleColor: widget.needleColor,
+                    minValue: widget.minValue,
+                    maxValue: widget.maxValue,
+                    actualValue: widget.actualValue,
+                    decimalPlaces: widget.decimalPlaces,
+                  ),
                 ),
               ),
             ),
@@ -178,21 +183,24 @@ class RangePointerGaugePainter extends CustomPainter {
     required this.maxValue,
     required this.actualValue,
     required this.needleColor,
+    required this.decimalPlaces,
     Key? key,
   });
   final double sweepAngle;
   final Color pointerColor;
-  final String minValue;
-  final String maxValue;
+  final double minValue;
+  final double maxValue;
   final double actualValue;
   final Color needleColor;
+  final int decimalPlaces;
 
   List<double> getScale(double divider) {
     List<double> scale = [];
-    final double interval = double.parse(maxValue) / (divider - 1);
+    final double interval = maxValue / (divider - 1);
     for (var i = 0; i < divider; i++) {
       scale.add((i * interval).roundToDouble());
     }
+    scale.removeWhere((element) => element < minValue);
     return scale;
   }
 
@@ -239,34 +247,72 @@ class RangePointerGaugePainter extends CustomPainter {
     // paint scale increments
     for (var value in getScale(10)) {
       final TextPainter valueTextPainter = TextPainter(
-          text: TextSpan(
-            style: const TextStyle(color: Colors.black, fontSize: 10),
-            text: value.toStringAsFixed(0),
+        text: TextSpan(
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 10,
           ),
-          textDirection: TextDirection.ltr)
-        ..layout(
-          minWidth: size.width / 2,
-          maxWidth: size.width / 2,
-        );
+          text: value.toStringAsFixed(0),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
       // get sweep angle for every value
       var scaleSweepAngle = Utils.actualValueToSweepAngleRadian(
           actualValue: value,
-          maxValue: double.parse(maxValue),
-          maxDegrees: 300);
+          maxValue: maxValue,
+          maxDegrees: 300,
+          minValue: minValue);
       // apply sweep angle to arc angle formula
       var scaleOffset = Offset(
-          (center.dx) + (radius - 25) * cos(pi / 1.5 + scaleSweepAngle),
-          (center.dx) + (radius - 25) * sin(pi / 1.5 + scaleSweepAngle));
+          (center.dx) +
+              (radius - scaleSweepAngle - 20) * cos(pi / 1.5 + scaleSweepAngle),
+          (center.dx) +
+              (radius - scaleSweepAngle - 15) *
+                  sin(pi / 1.5 + scaleSweepAngle));
       // adjust formula to be below arc
 
       // return offset of value
 
       // paint value to canvas
 
-      final maxValueOffset = Offset(size.width / 1.5, size.height / 1);
-
       valueTextPainter.paint(canvas, scaleOffset);
+      // Stroke Cap Circle
+      var strokeCapCirclePaint = Paint()
+        ..color = Colors.white
+        ..strokeWidth = 5
+        ..style = PaintingStyle.fill;
+
+      var strokeCapCircleOffset = Offset(
+        (center.dx) + radius * cos(pi / 1.5 + scaleSweepAngle + 0),
+        (center.dx) + radius * sin(pi / 1.5 + scaleSweepAngle + 0),
+      );
+      var strokeCapCircleRadius = 3.0;
+
+      canvas.drawCircle(
+          strokeCapCircleOffset, strokeCapCircleRadius, strokeCapCirclePaint);
     }
+
+    // If minimum value greater than zero turn off animation.
+    final TextPainter actualValueTextPainter = TextPainter(
+        text: TextSpan(
+          style: const TextStyle(color: Colors.black),
+          text: minValue == 0
+              ? Utils.sweepAngleRadianToActualValue(
+                      sweepAngle: sweepAngle,
+                      maxValue: maxValue,
+                      maxDegrees: 300)
+                  .toStringAsFixed(decimalPlaces)
+              : actualValue.toStringAsFixed(decimalPlaces),
+        ),
+        textDirection: TextDirection.ltr)
+      ..layout(
+        minWidth: size.width / 2,
+        maxWidth: size.width / 2,
+      );
+
+    final actualValueOffset = Offset(size.width / 2.2, size.height / 1.6);
+
+    actualValueTextPainter.paint(canvas, actualValueOffset);
   }
 
   @override

@@ -18,8 +18,9 @@ class Utils {
     required double actualValue,
     required double maxValue,
     required double maxDegrees,
+    double minValue = 0,
   }) {
-    final ratio = actualValue / maxValue;
+    final ratio = (actualValue - minValue) / (maxValue - minValue);
     return ratio * maxDegrees;
   }
 
@@ -27,10 +28,14 @@ class Utils {
   static double actualValueToSweepAngleRadian({
     required double actualValue,
     required double maxValue,
+    double minValue = 0,
     double maxDegrees = 360,
   }) {
     return degreesToRadians(Utils.actualValueToSweepAngle(
-        actualValue: actualValue, maxValue: maxValue, maxDegrees: maxDegrees));
+        actualValue: actualValue,
+        maxValue: maxValue,
+        maxDegrees: maxDegrees,
+        minValue: minValue));
   }
 
   /// Convert the [sweepAngle] to ActualValue.
@@ -43,7 +48,7 @@ class Utils {
     return ratio * maxValue;
   }
 
-  /// Convert sweepAngleRadian to [sweepAngle].
+  /// Convert sweepAngleRadian to [actualValue].
   static double sweepAngleRadianToActualValue(
       {required double sweepAngle,
       required double maxValue,

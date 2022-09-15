@@ -58,13 +58,14 @@ class MyCharts extends StatelessWidget {
             const SizedBox(
               height: 350,
               child: ScaleGauge(
-                maxValue: 240,
-                actualValue: 50,
+                minValue: 0,
+                maxValue: 99,
+                actualValue: 44,
                 title: Text('Scale Gauge'),
               ),
             ),
             SizedBox(
-              height: 300,
+              height: 350,
               child: RangeGauge(
                 maxValue: 200,
                 actualValue: 100,
