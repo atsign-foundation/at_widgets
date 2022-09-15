@@ -1,3 +1,7 @@
+## 4.0.7
+- **FIX**: Image and texts bug fixes
+- **CHORE**: Package description updated
+
 ## 4.0.6
 - **FEAT**: Updated text
 - **FIX**: Corrected single selection bug
