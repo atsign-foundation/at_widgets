@@ -237,32 +237,31 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                               // ignore: todo
                                               // TODO: Doubt
                                               widget.group = _group;
-                                              if(mounted) {
+                                              if (mounted) {
                                                 ScaffoldMessenger.of(context)
-                                                  .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          'Name updated')));
+                                                    .showSnackBar(const SnackBar(
+                                                        content: Text(
+                                                            'Name updated')));
                                               }
                                             } else if (result == null) {
                                               textController!.text =
                                                   widget.group.groupName!;
-                                                if(mounted){
-                                                  ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        TextConstants()
-                                                            .SERVICE_ERROR)));
-                                                }
+                                              if (mounted) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            TextConstants()
+                                                                .SERVICE_ERROR)));
+                                              }
                                             } else {
                                               textController!.text =
                                                   widget.group.groupName!;
-                                                  if(mounted){
-                                                    ScaffoldMessenger.of(context)
-                                                      .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                          result.toString())));
-                                                  }
-                                              
+                                              if (mounted) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(result
+                                                            .toString())));
+                                              }
                                             }
                                           }
 
@@ -319,7 +318,9 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                       ),
                                     ),
                                     Text(
-                                      '${widget.group.members!.length} members',
+                                      widget.group.members!.length == 1
+                                          ? '${widget.group.members!.length} member'
+                                          : '${widget.group.members!.length} members',
                                       style: CustomTextStyles
                                           .desktopPrimaryRegular14,
                                     ),
