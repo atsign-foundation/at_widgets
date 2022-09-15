@@ -1,4 +1,0 @@
-enum TitlePosition {
-  top,
-  bottom,
-}
