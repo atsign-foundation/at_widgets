@@ -80,12 +80,12 @@ String getSubTitle(LocationNotificationModel locationNotificationModel) {
   String time;
   to = locationNotificationModel.to;
   if (to != null) {
-    if(locationNotificationModel.to!.day > DateTime.now().day){
+    if (locationNotificationModel.to!.day > DateTime.now().day) {
       time =
-        'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to!))} tomorrow';
+          'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to!))} tomorrow';
     } else {
-       time =
-        'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to!))} today';
+      time =
+          'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to!))} today';
     }
   } else {
     time = '';
@@ -185,6 +185,7 @@ LocationSharingFor? getLocationSharingForCreator(
 
   if (!compareAtSign(locationNotificationModel.atsignCreator!,
       AtLocationNotificationListener().currentAtSign!)) {
+    print("here???");
     if ((MasterLocationService().locationReceivedData[_atsignCreator] !=
             null) &&
         (MasterLocationService()
@@ -198,6 +199,7 @@ LocationSharingFor? getLocationSharingForCreator(
       return _locationSharingFor;
     }
   } else {
+    print("here");
     var _receiver = locationNotificationModel.receiver;
     if (SendLocationNotification().allAtsignsLocationData[_receiver] != null) {
       if (SendLocationNotification()
