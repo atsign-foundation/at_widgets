@@ -48,7 +48,16 @@ class _AtOnboardingReferenceScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title ?? 'FAQ'),
+        title: Text(
+          widget.title ?? 'FAQ',
+          style: TextStyle(
+            color: Platform.isIOS || Platform.isAndroid
+                ? Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white
+                : null,
+          ),
+        ),
         centerTitle: true,
       ),
       backgroundColor: Colors.white,

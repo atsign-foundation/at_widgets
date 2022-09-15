@@ -6,7 +6,6 @@ import 'package:at_backupkey_flutter/utils/strings.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'at_demo_credentials.dart' as demo_data;
-import 'package:at_commons/at_commons.dart';
 
 void main() {
   String atsign = '@alice🛠';

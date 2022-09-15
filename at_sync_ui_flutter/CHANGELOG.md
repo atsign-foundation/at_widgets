@@ -1,3 +1,7 @@
+## 1.0.6
+- **FEAT**: Sync progress callback added
+- **CHORE**: Package description updated
+
 ## 1.0.5
 - **FEAT**: Updated dependency
 

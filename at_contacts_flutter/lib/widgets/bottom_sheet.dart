@@ -41,7 +41,9 @@ class CustomBottomSheet extends StatelessWidget {
                   Expanded(
                     child: Text(
                       (snapshot.data!.length != 25)
-                          ? '${snapshot.data!.length} Contacts Selected'
+                          ? snapshot.data!.length == 1
+                              ? '${snapshot.data!.length} Contact Selected'
+                              : '${snapshot.data!.length} Contacts Selected'
                           : '25 of 25 Contact Selected',
                       style: CustomTextStyles.primaryMedium14,
                     ),

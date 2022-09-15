@@ -100,10 +100,10 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
             },
           );
         } else if (result != null) {
-          if(mounted){
+          if (mounted) {
             if (result.runtimeType == AlreadyExistsException) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
             } else if (result.runtimeType == InvalidAtSignException) {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(result.message)));
@@ -113,11 +113,11 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
             }
           }
         } else {
-          if(mounted){
-              ScaffoldMessenger.of(context).showSnackBar(
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
-            }
           }
+        }
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(TextConstants().EMPTY_NAME)));
@@ -143,7 +143,9 @@ class _DesktopNewGroupState extends State<DesktopNewGroup> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${selectedContacts!.length} Contacts Selected',
+                  selectedContacts!.length == 1
+                      ? '${selectedContacts!.length} Contact Selected'
+                      : '${selectedContacts!.length} Contacts Selected',
                   style: CustomTextStyles.primaryRegular20,
                 ),
                 CommonButton(

@@ -74,7 +74,16 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
       absorbing: isVerifing,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Setting up your account'),
+          title: Text(
+            'Setting up your account',
+            style: TextStyle(
+              color: Platform.isIOS || Platform.isAndroid
+                  ? Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white
+                  : null,
+            ),
+          ),
           actions: [
             IconButton(
               onPressed: _showReferenceWebview,
@@ -146,7 +155,16 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                   width: double.infinity,
                   isLoading: isVerifing,
                   onPressed: _onVerifyPressed,
-                  child: const Text('Verify & Login'),
+                  child: Text(
+                    'Verify & Login',
+                    style: TextStyle(
+                      color: Platform.isIOS || Platform.isAndroid
+                          ? Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black
+                          : null,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 AtOnboardingSecondaryButton(
