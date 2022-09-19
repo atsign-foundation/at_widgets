@@ -45,3 +45,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# App related
+/lib/radial_gauges/_range_pointer_gauge.dart
+/lib/radial_gauges/_text_annotation_gauge.dart
