@@ -145,7 +145,7 @@ class _ScaleGaugeState extends State<ScaleGauge>
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CustomPaint(
-                  painter: RangePointerGaugePainter(
+                  painter: ScaleGaugeGaugePainter(
                     sweepAngle: animationController.value,
                     pointerColor: widget.arcColor,
                     needleColor: widget.needleColor,
@@ -175,8 +175,8 @@ class _ScaleGaugeState extends State<ScaleGauge>
   }
 }
 
-class RangePointerGaugePainter extends CustomPainter {
-  RangePointerGaugePainter({
+class ScaleGaugeGaugePainter extends CustomPainter {
+  ScaleGaugeGaugePainter({
     required this.sweepAngle,
     required this.pointerColor,
     required this.minValue,
@@ -316,7 +316,7 @@ class RangePointerGaugePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(RangePointerGaugePainter oldDelegate) {
+  bool shouldRepaint(ScaleGaugeGaugePainter oldDelegate) {
     return true;
   }
 }
