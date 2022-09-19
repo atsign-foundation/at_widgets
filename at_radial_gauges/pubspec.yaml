@@ -1,5 +1,5 @@
 name: radial_gauges
-description: A new Flutter project.
+description: The at_radial_gauge library comes with three highly  customizable radial gauges. They are the simple gauge, range gauge and scale gauge. The main parameters are the actual value and maximum value.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
