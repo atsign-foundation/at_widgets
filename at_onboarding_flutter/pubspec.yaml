@@ -19,7 +19,6 @@ dependencies:
   archive: ^3.3.0
   file_picker: ^4.5.1
   qr_code_scanner: ^1.0.0
-  flutter_qr_reader: ^1.0.5
   url_launcher: ^6.1.2
   permission_handler: ^9.2.0
   path_provider: ^2.0.9
