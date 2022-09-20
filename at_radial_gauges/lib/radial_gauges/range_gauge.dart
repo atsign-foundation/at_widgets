@@ -31,6 +31,8 @@ class RangeGauge extends StatefulWidget {
   })  : assert(actualValue <= maxValue,
             'actualValue must be less than or equal to maxValue'),
         assert(startDegree <= 360, 'startDegree must be less than 360'),
+        assert(actualValue >= minValue,
+            'actualValue must be greater than or equal to minValue'),
         super(key: key);
 
   /// Sets the minimum value of the gauge.
@@ -97,6 +99,7 @@ class _RangeGaugeState extends State<RangeGauge>
     super.initState();
 
     double sweepAngleRadian = Utils.actualValueToSweepAngleRadian(
+        minValue: widget.minValue,
         actualValue: widget.actualValue,
         maxValue: widget.maxValue,
         maxDegrees: widget.maxDegree);
@@ -131,11 +134,13 @@ class _RangeGaugeState extends State<RangeGauge>
   Widget build(BuildContext context) {
     if (animationController.value !=
         Utils.actualValueToSweepAngleRadian(
+            minValue: widget.minValue,
             actualValue: widget.actualValue,
             maxValue: widget.maxValue,
             maxDegrees: widget.maxDegree)) {
       animationController.animateTo(
           Utils.actualValueToSweepAngleRadian(
+              minValue: widget.minValue,
               actualValue: widget.actualValue,
               maxValue: widget.maxValue,
               maxDegrees: widget.maxDegree),
@@ -257,12 +262,14 @@ class RangeGaugePainter extends CustomPainter {
         ..style = PaintingStyle.stroke;
 
       final rangeStartAngle = Utils.actualValueToSweepAngleRadian(
+              minValue: 0,
               actualValue: range.lowerLimit,
               maxValue: double.parse(maxValue),
               maxDegrees: maxDegree) +
           startAngle;
       // Because the sweep angle is calculated from 0 the lowerlimit is subtracted from upperlimit to end the sweep angle at the correct degree on the arc.
       final rangeSweepAngle = Utils.actualValueToSweepAngleRadian(
+          minValue: 0,
           actualValue: range.upperLimit - range.lowerLimit,
           maxValue: double.parse(maxValue),
           maxDegrees: maxDegree);
@@ -380,6 +387,7 @@ class RangeGaugePainter extends CustomPainter {
           text: Utils.sweepAngleRadianToActualValue(
                   sweepAngle: sweepAngle,
                   maxValue: double.parse(maxValue),
+                  minValue: double.parse(minValue),
                   maxDegrees: maxDegree)
               .toStringAsFixed(decimalPlaces),
         ),

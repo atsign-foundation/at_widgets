@@ -26,6 +26,8 @@ class SimpleGauge extends StatefulWidget {
   })  : assert(actualValue <= maxValue,
             'actualValue must be less than or equal to maxValue'),
         assert(size >= 75, 'size must be greater than 75'),
+        assert(actualValue >= minValue,
+            'actualValue must be greater than or equal to minValue'),
         super(key: key);
 
   /// Sets the actual value of the gauge.
@@ -81,7 +83,9 @@ class _SimpleGaugeState extends State<SimpleGauge>
     super.initState();
 
     double sweepAngleRadian = Utils.actualValueToSweepAngleRadian(
-        actualValue: widget.actualValue, maxValue: widget.maxValue);
+        minValue: widget.minValue,
+        actualValue: widget.actualValue,
+        maxValue: widget.maxValue);
 
     double upperBound = Utils.degreesToRadians(360);
 
@@ -114,10 +118,14 @@ class _SimpleGaugeState extends State<SimpleGauge>
   Widget build(BuildContext context) {
     if (animationController.value !=
         Utils.actualValueToSweepAngleRadian(
-            actualValue: widget.actualValue, maxValue: widget.maxValue)) {
+            minValue: widget.minValue,
+            actualValue: widget.actualValue,
+            maxValue: widget.maxValue)) {
       animationController.animateTo(
           Utils.actualValueToSweepAngleRadian(
-              actualValue: widget.actualValue, maxValue: widget.maxValue),
+              minValue: widget.minValue,
+              actualValue: widget.actualValue,
+              maxValue: widget.maxValue),
           duration: Utils.getDuration(
               isAnimate: widget.isAnimate, userMilliseconds: widget.duration));
     }
@@ -146,13 +154,13 @@ class _SimpleGaugeState extends State<SimpleGauge>
                   child: ListTile(
                     title: widget.icon ??
                         Text(
-                          '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
+                          '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue, minValue: widget.minValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''} / ${widget.maxValue.toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
                           style: const TextStyle(fontStyle: FontStyle.italic),
                           textAlign: TextAlign.center,
                         ),
                     subtitle: widget.icon != null
                         ? Text(
-                            '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
+                            '${Utils.sweepAngleRadianToActualValue(sweepAngle: animationController.value, maxValue: widget.maxValue, minValue: widget.minValue).toStringAsFixed(widget.decimalPlaces)} ${widget.unit ?? ''}',
                             style: const TextStyle(fontStyle: FontStyle.italic),
                             textAlign: TextAlign.center,
                           )

@@ -46,7 +46,8 @@ class MyCharts extends StatelessWidget {
             const SizedBox(
               height: 350,
               child: SimpleGauge(
-                actualValue: 75,
+                minValue: 0,
+                actualValue: 50,
                 maxValue: 100,
                 icon: Icon(Icons.water),
                 duration: 500,
@@ -60,13 +61,14 @@ class MyCharts extends StatelessWidget {
               child: ScaleGauge(
                 minValue: 0,
                 maxValue: 99,
-                actualValue: 44,
+                actualValue: 50,
                 title: Text('Scale Gauge'),
               ),
             ),
             SizedBox(
               height: 350,
               child: RangeGauge(
+                minValue: 0,
                 maxValue: 200,
                 actualValue: 100,
                 maxDegree: 180,

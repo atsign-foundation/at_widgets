@@ -28,7 +28,7 @@ class Utils {
   static double actualValueToSweepAngleRadian({
     required double actualValue,
     required double maxValue,
-    double minValue = 0,
+    required double minValue,
     double maxDegrees = 360,
   }) {
     return degreesToRadians(Utils.actualValueToSweepAngle(
@@ -39,24 +39,31 @@ class Utils {
   }
 
   /// Convert the [sweepAngle] to ActualValue.
-  static double sweepAngleToActualValue({
-    required double sweepAngle,
-    required double maxValue,
-    required double maxDegrees,
-  }) {
-    final ratio = sweepAngle / maxDegrees;
-    return ratio * maxValue;
+  static double sweepAngleToActualValue(
+      {required double sweepAngle,
+      required double maxValue,
+      required double maxDegrees,
+      required double minValue}) {
+    // final ratio = sweepAngle / maxDegrees;
+    // return ratio * maxValue;
+
+    return radiansToDegrees(sweepAngle) * ((maxValue - minValue) / maxDegrees) +
+        minValue;
   }
 
   /// Convert sweepAngleRadian to [actualValue].
   static double sweepAngleRadianToActualValue(
       {required double sweepAngle,
       required double maxValue,
+      required double minValue,
       double maxDegrees = 360}) {
     // return Utils.sweepAngleToActualValue(
     //     sweepAngle: sweepAngle, maxValue: maxValue, maxDegrees: maxDegrees);
-    return radiansToDegrees(Utils.sweepAngleToActualValue(
-        sweepAngle: sweepAngle, maxValue: maxValue, maxDegrees: maxDegrees));
+    return Utils.sweepAngleToActualValue(
+        sweepAngle: sweepAngle,
+        maxValue: maxValue,
+        maxDegrees: maxDegrees,
+        minValue: minValue);
   }
 
   // static   double valueToDecimalPlaces(double value) {

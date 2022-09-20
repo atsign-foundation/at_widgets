@@ -27,7 +27,7 @@ class ScaleGauge extends StatefulWidget {
             'actualValue must be less than or equal to maxValue'),
         assert(size >= 140, 'size must be greater than 75'),
         assert(actualValue >= minValue,
-            'actualValue must be greater than minValue'),
+            'actualValue must be greater than or equal to minValue'),
         super(key: key);
 
   /// Sets the minimum value of the gauge.
@@ -292,17 +292,15 @@ class ScaleGaugePainter extends CustomPainter {
           strokeCapCircleOffset, strokeCapCircleRadius, strokeCapCirclePaint);
     }
 
-    // If minimum value greater than zero turn off animation.
     final TextPainter actualValueTextPainter = TextPainter(
         text: TextSpan(
           style: const TextStyle(color: Colors.black),
-          text: minValue == 0
-              ? Utils.sweepAngleRadianToActualValue(
-                      sweepAngle: sweepAngle,
-                      maxValue: maxValue,
-                      maxDegrees: 300)
-                  .toStringAsFixed(decimalPlaces)
-              : actualValue.toStringAsFixed(decimalPlaces),
+          text: Utils.sweepAngleRadianToActualValue(
+                  sweepAngle: sweepAngle,
+                  maxValue: maxValue,
+                  minValue: minValue,
+                  maxDegrees: 300)
+              .toStringAsFixed(decimalPlaces),
         ),
         textDirection: TextDirection.ltr)
       ..layout(
