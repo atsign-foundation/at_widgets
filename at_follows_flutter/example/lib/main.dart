@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'package:at_follows_flutter_example/screens/follows_screen.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show Onboarding;
-import 'package:at_utils/at_logger.dart' show AtSignLogger;
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
@@ -30,6 +29,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -39,8 +39,6 @@ class _MyAppState extends State<MyApp> {
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
   AtClientService? atClientService;
-
-  final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
   @override
   Widget build(BuildContext context) {
@@ -64,47 +62,48 @@ class _MyAppState extends State<MyApp> {
                       setState(() {
                         atClientPreference = preference;
                       });
-                      Onboarding(
+                      final result = await AtOnboarding.onboard(
                         context: context,
-                        atClientPreference: atClientPreference!,
-                        domain: AtEnv.rootDomain,
-                        rootEnvironment: AtEnv.rootEnvironment,
-                        appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                        onboard: (Map<String?, AtClientService> value,
-                            String? atsign) async {
-                          atClientService = value[atsign];
+                        config: AtOnboardingConfig(
+                          atClientPreference: atClientPreference!,
+                          domain: AtEnv.rootDomain,
+                          rootEnvironment: AtEnv.rootEnvironment,
+                          appAPIKey: AtEnv.appApiKey,
+                        ),
+                      );
+
+                      switch (result.status) {
+                        case AtOnboardingResultStatus.success:
+
+                          final OnboardingService _onboardingService =
+                              OnboardingService.getInstance();
+                          atClientService = _onboardingService
+                              .atClientServiceMap[result.atsign!];
+
                           AtService.getInstance().atClientServiceInstance =
-                              value[atsign];
+                              _onboardingService
+                                  .atClientServiceMap[result.atsign!];
 
                           await AtClientManager.getInstance().setCurrentAtSign(
-                            atsign!,
+                            result.atsign!,
                             atClientPreference!.namespace!,
                             atClientPreference!,
                           );
 
-                          await Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NextScreen()));
-                        },
-                        onError: (error) async {
-                          _logger.severe('Onboarding throws $error error');
-                          await showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  content: const Text('Something went wrong'),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('ok'))
-                                  ],
-                                );
-                              });
-                        },
-                      );
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => NextScreen()));
+                          break;
+                        case AtOnboardingResultStatus.error:
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text('An error has occurred'),
+                            ),
+                          );
+                          break;
+                        case AtOnboardingResultStatus.cancel:
+                          break;
+                      }
                     },
                     child: const Text('Start onboarding'),
                   ),

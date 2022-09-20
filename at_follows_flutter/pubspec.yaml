@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.1
-  flutter_qr_reader: ^1.0.5
+  qr_code_scanner: ^1.0.1
   permission_handler: ^8.3.0
   flutter_local_notifications: ^9.1.4
   webview_flutter: ^3.0.0
@@ -25,6 +25,12 @@ dependencies:
   at_server_status: ^1.0.3
   at_lookup: ^3.0.9
 
+dependency_overrides:
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk
+      path: at_client_mobile
+      ref: fix_biometric_storage
 
 dev_dependencies:
   flutter_test:

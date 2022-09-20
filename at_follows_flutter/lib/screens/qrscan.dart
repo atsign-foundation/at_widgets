@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:at_follows_flutter/domain/connection_model.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/services/sdk_service.dart';
@@ -8,10 +9,10 @@ import 'package:at_follows_flutter/widgets/custom_appbar.dart';
 import 'package:at_follows_flutter/widgets/custom_button.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QrScan extends StatefulWidget {
   @override
@@ -23,7 +24,10 @@ class _QrScanState extends State<QrScan> {
   bool permissionGrated = false;
   bool loading = false;
   bool _scanCompleted = false;
-  QrReaderViewController? _controller;
+
+  // QrReaderViewController? _controller;
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController? _controller;
   bool _isScan = false;
 
   @override
@@ -80,7 +84,7 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
-  Future<void> onScan(String data, List<Offset> offsets, context) async {
+  Future<void> onScan(String data) async {
     // _controller.stopCamera();
     this.setState(() {
       loading = true;
@@ -133,8 +137,13 @@ class _QrScanState extends State<QrScan> {
                   ),
                   SizedBox(height: 20.toHeight),
                   Center(
-                    child: Builder(
-                      builder: (context) => Container(
+                    child: Builder(builder: (context) {
+                      var scanArea = (MediaQuery.of(context).size.width < 400 ||
+                              MediaQuery.of(context).size.height < 400)
+                          ? 250.0
+                          : 300.0;
+
+                      return Container(
                         alignment: Alignment.center,
                         width: 300.toWidth,
                         height: 350.toHeight,
@@ -143,26 +152,26 @@ class _QrScanState extends State<QrScan> {
                             ? SizedBox()
                             : Stack(
                                 children: [
-                                  QrReaderView(
-                                    width: 300.toWidth,
-                                    height: 350.toHeight,
-                                    callback: (container) async {
-                                      this._controller = container;
-                                      await _controller!
-                                          .startCamera((data, offsets) async {
-                                        if (!_scanCompleted) {
-                                          _controller?.stopCamera();
-                                          _scanCompleted = true;
-
-                                          await onScan(data, offsets, context);
-                                        }
-                                      });
-                                    },
+                                  QRView(
+                                    key: qrKey,
+                                    cameraFacing: CameraFacing.back,
+                                    onQRViewCreated: _onQRViewCreated,
+                                    formatsAllowed: const [
+                                      BarcodeFormat.qrcode
+                                    ],
+                                    overlay: QrScannerOverlayShape(
+                                      borderColor:
+                                          Theme.of(context).primaryColor,
+                                      borderRadius: 10,
+                                      borderLength: 30,
+                                      borderWidth: 10,
+                                      cutOutSize: scanArea,
+                                    ),
                                   ),
                                 ],
                               ),
-                      ),
-                    ),
+                      );
+                    }),
                   ),
                   SizedBox(height: 20.toHeight),
                   Text(
@@ -195,6 +204,25 @@ class _QrScanState extends State<QrScan> {
             ],
           ),
         ));
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    setState(() {
+      _controller = controller;
+    });
+
+    // call resumeCamera function
+    if (Platform.isAndroid) {
+      _controller!.resumeCamera();
+    }
+
+    _controller!.scannedDataStream.listen((scanData) async {
+      if (!_scanCompleted) {
+        _controller?.stopCamera();
+        _scanCompleted = true;
+        onScan(scanData.code ?? '');
+      }
+    });
   }
 
   _getAtsignForm(BuildContext context) {
@@ -280,12 +308,7 @@ class _QrScanState extends State<QrScan> {
                 onPressed: () {
                   Navigator.pop(context);
                   if (isScan) {
-                    _controller!.startCamera((data1, offsets1) {
-                      if (!_scanCompleted) {
-                        onScan(data1, offsets1, context);
-                        _scanCompleted = true;
-                      }
-                    });
+                    _controller?.resumeCamera();
                     setState(() {
                       loading = false;
                       _scanCompleted = false;
