@@ -129,6 +129,7 @@ class _SimpleGaugeState extends State<SimpleGauge>
           duration: Utils.getDuration(
               isAnimate: widget.isAnimate, userMilliseconds: widget.duration));
     }
+
     return FittedBox(
       child: Column(
         children: [
