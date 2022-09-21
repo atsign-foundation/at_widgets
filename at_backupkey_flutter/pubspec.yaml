@@ -7,7 +7,7 @@ issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
 documentation: https://atsign.dev/docs/functional_architecture/libraries/#at_backupkey_flutter
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.20.0"
 
 dependencies:
@@ -18,7 +18,7 @@ dependencies:
   path_provider: ^2.0.9
   at_file_saver: ^0.1.1
   at_utils: ^3.0.10
-  at_client_mobile: ^3.2.4
+  at_client_mobile: ^3.2.6
   showcaseview: ^1.1.5
 
   # desktop - dependencies
@@ -27,12 +27,10 @@ dependencies:
   file_selector_windows: ^0.8.2
   file_selector_linux: ^0.0.2+1
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.1
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
