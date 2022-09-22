@@ -197,7 +197,9 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                     borderRadius: 24,
                     width: double.infinity,
                     isLoading: isResendingCode,
-                    onPressed: _onResendPressed,
+                    onPressed: () {
+                      _onResendPressed(theme);
+                    },
                     child: const Text('Resend Code'),
                   ),
                   const SizedBox(height: 20),
@@ -237,6 +239,30 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         context: context, message: errorMessage ?? '');
   }
 
+  Future<void> _showSuccessDialog(ThemeData theme) {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return Theme(
+          data: theme,
+          child: AtOnboardingDialog(
+            title: 'Notice',
+            message: 'Verification code sent to ${widget.email}',
+            actions: [
+              AtOnboardingSecondaryButton(
+                child: const Text('Close'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _showReferenceWebview() {
     if (Platform.isAndroid || Platform.isIOS) {
       AtOnboardingReferenceScreen.push(
@@ -255,6 +281,15 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
   }
 
   void _onVerifyPressed() async {
+    if (_pinCodeController.text.length < 4) {
+      return AtOnboardingDialog.showError(
+        context: context,
+        title: "Notice",
+        message:
+            "Please enter the 4-character verification code that was sent to your email address",
+      );
+    }
+
     if ((widget.email ?? '').isEmpty) {
       isVerifing = true;
       setState(() {});
@@ -367,7 +402,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
   }
 
   ///With new account
-  void _onResendPressed() async {
+  void _onResendPressed(ThemeData theme) async {
     if ((widget.email ?? '').isEmpty) {
       setState(() {
         isResendingCode = true;
@@ -396,6 +431,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
     if (response.statusCode == 200) {
       //Success
       _pinCodeController.text = '';
+      _showSuccessDialog(theme);
       // status = true;
       // atsign = data['data']['atsign'];
     } else {

@@ -5,6 +5,7 @@ import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
+import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -166,6 +167,14 @@ class _AtOnboardingInputAtSignScreenState
 
   void _activateAtSign() async {
     final String atSign = _atsignController.text;
-    Navigator.pop(context, atSign);
+    if (atSign.isEmpty) {
+      AtOnboardingDialog.showError(
+        context: context,
+        title: "Notice",
+        message: "Please enter the atSign you would like to activate",
+      );
+    } else {
+      Navigator.pop(context, atSign);
+    }
   }
 }

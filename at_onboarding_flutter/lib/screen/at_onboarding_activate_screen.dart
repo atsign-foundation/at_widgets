@@ -152,6 +152,7 @@ class _AtOnboardingActivateScreenState
   Future<void> showErrorDialog(String? errorMessage) async {
     return AtOnboardingDialog.showError(
       context: context,
+      title: "Notice",
       message: errorMessage ?? '',
       onCancel: () {
         Navigator.of(context).pop();

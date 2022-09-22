@@ -212,7 +212,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
 
   void _onSendCodePressed() async {
     _focusNode.unfocus();
-    if (_emailController.text != '') {
+    if (_emailController.text.isNotEmpty) {
       isParing = true;
       setState(() {});
       bool status = false;
@@ -225,13 +225,17 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       } else {
         AtOnboardingDialog.showError(
           context: context,
-          title: "Failed to send OTP!",
-          message: "Please try again.",
+          message: "Please enter a valid email address",
           onCancel: () {
             Navigator.pop(context);
           },
         );
       }
+    } else {
+      return AtOnboardingDialog.showError(
+        context: context,
+        message: 'Enter a valid email address',
+      );
     }
   }
 

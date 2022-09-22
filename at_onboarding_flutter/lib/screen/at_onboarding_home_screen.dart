@@ -72,7 +72,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   String? _pairingAtsign;
 
   final String _incorrectKeyFile =
-      'Unable to fetch the keys from chosen file. Please choose correct file';
+      'Please upload your atKeys. This file should look something like @alice_key.atkeys';
   final String _failedFileProcessing =
       'Failed in processing files. Please try again';
 

@@ -16,7 +16,7 @@ class AtOnboardingDialog extends StatefulWidget {
           return Theme(
             data: themeData ?? Theme.of(context),
             child: AtOnboardingDialog(
-              title: title ?? 'Error',
+              title: title ?? 'Notice',
               message: message,
               actions: [
                 AtOnboardingSecondaryButton(
