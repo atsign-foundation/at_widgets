@@ -102,7 +102,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    'Enter your email',
+                    'Enter your email address',
                     style: TextStyle(
                       fontSize: AtOnboardingDimens.fontLarge,
                       fontWeight: FontWeight.bold,
@@ -152,6 +152,14 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
+                  const Text(
+                    "You will receive a 4-character verification code",
+                    style: TextStyle(
+                      fontSize: AtOnboardingDimens.fontNormal,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
                   const Text(
                     AtOnboardingStrings.emailNote,
                     style: TextStyle(

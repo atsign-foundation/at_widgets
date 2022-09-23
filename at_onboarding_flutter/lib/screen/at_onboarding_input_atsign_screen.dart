@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -10,20 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AtOnboardingInputAtSignScreen extends StatefulWidget {
-  static Future<String?> push({
-    required BuildContext context,
-    required AtOnboardingConfig config,
-  }) {
-    return Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => AtOnboardingInputAtSignScreen(
-          config: config,
-        ),
-      ),
-    );
-  }
-
   final AtOnboardingConfig config;
 
   const AtOnboardingInputAtSignScreen({
@@ -87,13 +74,20 @@ class _AtOnboardingInputAtSignScreenState
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text(
-                  'Activate atSign',
+                  'Activate an atSign',
                   style: TextStyle(
                     fontSize: AtOnboardingDimens.fontLarge,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 2),
+                const Text(
+                  "Enter the atSign you would like to activate",
+                  style: TextStyle(
+                    fontSize: AtOnboardingDimens.fontSmall,
+                  ),
+                ),
+                const SizedBox(height: 8),
                 TextFormField(
                   enabled: true,
                   validator: (String? value) {
@@ -115,7 +109,8 @@ class _AtOnboardingInputAtSignScreenState
                       ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
-                        horizontal: AtOnboardingDimens.paddingSmall),
+                      horizontal: AtOnboardingDimens.paddingSmall,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -174,7 +169,25 @@ class _AtOnboardingInputAtSignScreenState
         message: "Please enter the atSign you would like to activate",
       );
     } else {
-      Navigator.pop(context, atSign);
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => AtOnboardingActivateScreen(
+            hideReferences: true,
+            atSign: atSign,
+            config: widget.config,
+          ),
+        ),
+      );
+
+      if (result is AtOnboardingResult) {
+        if (result.status == AtOnboardingResultStatus.cancel) {
+          return;
+        } else {
+          if (!mounted) return;
+          Navigator.pop(context, result);
+        }
+      }
     }
   }
 }

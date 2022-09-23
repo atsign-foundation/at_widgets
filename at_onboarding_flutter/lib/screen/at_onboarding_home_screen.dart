@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_backup_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_generate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_input_atsign_screen.dart';
@@ -137,16 +136,14 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   void _showTutorial() {
     tutorialCoachMark = TutorialCoachMark(
       targets: _haveAnAtsign ? signInTargets : signUpTargets,
-      // pulseEnable: false,
       skipWidget: const Text(
-        "SKIP",
+        "SKIP TUTORIAL",
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.white,
           fontSize: 18,
           fontWeight: FontWeight.w500,
         ),
-        // ),
       ),
       paddingFocus: 10,
       opacityShadow: 0.8,
@@ -178,7 +175,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             builder: (context, controller) {
               return const Center(
                 child: Text(
-                  "Tap to upload your key file if you have atSign",
+                  "If you have an activated atSign, tap to upload your atKeys",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -236,7 +233,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             builder: (context, controller) {
               return const Center(
                 child: Text(
-                  "Tap to active account if your atSign is locked",
+                  "Tap here to activate your atSign",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -264,7 +261,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             builder: (context, controller) {
               return const Center(
                 child: Text(
-                  "If you haven't atSign, tap to next to create atSign screen",
+                  "If you don't have an atSign, tap here to get one",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -292,7 +289,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             builder: (context, controller) {
               return const Center(
                 child: Text(
-                  "Tap to create a new atSign",
+                  "Tap to generate a new free atSign",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -686,12 +683,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     : null,
               ),
             ),
-            leading: IconButton(
-              icon: const Icon(Icons.close_rounded),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
             centerTitle: true,
             actions: [
               IconButton(
@@ -712,135 +703,101 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
               constraints: const BoxConstraints(
                 maxWidth: 400,
               ),
-              child: _haveAnAtsign
-                  ? Column(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Text(
+                    'Pair an atSign using your atKeys',
+                    style: TextStyle(
+                      fontSize: AtOnboardingDimens.fontLarge,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  AtOnboardingPrimaryButton(
+                    key: keyUploadAtSign,
+                    height: 48,
+                    borderRadius: 24,
+                    onPressed: (Platform.isMacOS ||
+                            Platform.isLinux ||
+                            Platform.isWindows)
+                        ? _uploadKeyFileForDesktop
+                        : _uploadKeyFile,
+                    isLoading: loading,
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const Text(
-                          'Pair an atSign using your atKeys',
+                      children: [
+                        Text(
+                          'Upload atKeys',
                           style: TextStyle(
                             fontSize: AtOnboardingDimens.fontLarge,
-                            fontWeight: FontWeight.bold,
+                            color: Platform.isIOS || Platform.isAndroid
+                                ? Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.white
+                                    : Colors.black
+                                : null,
                           ),
                         ),
-                        const SizedBox(height: 5),
-                        AtOnboardingPrimaryButton(
-                          key: keyUploadAtSign,
-                          height: 48,
-                          borderRadius: 24,
-                          onPressed: (Platform.isMacOS ||
-                                  Platform.isLinux ||
-                                  Platform.isWindows)
-                              ? _uploadKeyFileForDesktop
-                              : _uploadKeyFile,
-                          isLoading: loading,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Upload atKeys',
-                                style: TextStyle(
-                                  fontSize: AtOnboardingDimens.fontLarge,
-                                  color: Platform.isIOS || Platform.isAndroid
-                                      ? Theme.of(context).brightness ==
-                                              Brightness.light
-                                          ? Colors.white
-                                          : Colors.black
-                                      : null,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              const Icon(
-                                Icons.cloud_upload_rounded,
-                                // size: 20,
-                              )
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          'Upload your atKey file. This file was generated when you activated and paired your atSign and you were prompted to store it in a secure location.',
-                          style:
-                              TextStyle(fontSize: AtOnboardingDimens.fontSmall),
-                        ),
-                        const SizedBox(height: 20),
-                        if (!widget.hideQrScan)
-                          const Text(
-                            'Have a QR Code?',
-                            style: TextStyle(
-                              fontSize: AtOnboardingDimens.fontLarge,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        if (!widget.hideQrScan) const SizedBox(height: 5),
-                        if (!widget.hideQrScan)
-                          (Platform.isAndroid || Platform.isIOS)
-                              ? AtOnboardingSecondaryButton(
-                                  key: keyUploadQRCode,
-                                  height: 48,
-                                  borderRadius: 24,
-                                  onPressed: () async {
-                                    _showQRCodeScreen(context: context);
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        'Scan QR code',
-                                        style: TextStyle(
-                                            fontSize:
-                                                AtOnboardingDimens.fontLarge),
-                                      ),
-                                      Icon(Icons.arrow_right_alt_rounded)
-                                    ],
-                                  ),
-                                )
-                              : AtOnboardingSecondaryButton(
-                                  key: keyUploadQRCode,
-                                  height: 48,
-                                  borderRadius: 24,
-                                  isLoading: _uploadingQRCode,
-                                  onPressed: () async {
-                                    _uploadQRFileForDesktop();
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        'Upload QR code',
-                                        style: TextStyle(
-                                            fontSize:
-                                                AtOnboardingDimens.fontLarge),
-                                      ),
-                                      Icon(Icons.arrow_right_alt_rounded)
-                                    ],
-                                  ),
-                                ),
-                        const SizedBox(height: 20),
-                        if (!widget.hideQrScan)
-                          const Text(
-                            'Activate an atSign?',
-                            style: TextStyle(
-                              fontSize: AtOnboardingDimens.fontLarge,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        if (!widget.hideQrScan) const SizedBox(height: 5),
-                        if (!widget.hideQrScan)
-                          AtOnboardingSecondaryButton(
-                            key: keyActivateAtSign,
+                        const SizedBox(width: 10),
+                        const Icon(
+                          Icons.cloud_upload_rounded,
+                          // size: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'Upload your atKey file. This file was generated when you activated and paired your atSign and you were prompted to store it in a secure location.',
+                    style: TextStyle(fontSize: AtOnboardingDimens.fontSmall),
+                  ),
+                  const SizedBox(height: 20),
+                  if (!widget.hideQrScan)
+                    const Text(
+                      'Have a QR Code?',
+                      style: TextStyle(
+                        fontSize: AtOnboardingDimens.fontLarge,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  if (!widget.hideQrScan) const SizedBox(height: 5),
+                  if (!widget.hideQrScan)
+                    (Platform.isAndroid || Platform.isIOS)
+                        ? AtOnboardingSecondaryButton(
+                            key: keyUploadQRCode,
                             height: 48,
                             borderRadius: 24,
                             onPressed: () async {
-                              _showActiveScreen(context: context);
+                              _showQRCodeScreen(context: context);
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: const [
                                 Text(
-                                  'Activate atSign',
+                                  'Scan QR code',
+                                  style: TextStyle(
+                                      fontSize: AtOnboardingDimens.fontLarge),
+                                ),
+                                Icon(Icons.arrow_right_alt_rounded)
+                              ],
+                            ),
+                          )
+                        : AtOnboardingSecondaryButton(
+                            key: keyUploadQRCode,
+                            height: 48,
+                            borderRadius: 24,
+                            isLoading: _uploadingQRCode,
+                            onPressed: () async {
+                              _uploadQRFileForDesktop();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  'Upload QR code',
                                   style: TextStyle(
                                       fontSize: AtOnboardingDimens.fontLarge),
                                 ),
@@ -848,172 +805,110 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                               ],
                             ),
                           ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _haveAnAtsign = !_haveAnAtsign;
-                              });
-                              _checkShowTutorial();
-                              hasShowTutorial = true;
-                            },
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Text(
-                              "Create an atSign?",
-                              key: keyCreateAnAtSign,
-                              style: TextStyle(
-                                fontSize: AtOnboardingDimens.fontNormal,
-                                fontWeight: FontWeight.w500,
-                                color: theme.primaryColor,
-                              ),
+                  const SizedBox(height: 20),
+                  if (!widget.hideQrScan)
+                    const Text(
+                      'Activate an atSign?',
+                      style: TextStyle(
+                        fontSize: AtOnboardingDimens.fontLarge,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  if (!widget.hideQrScan) const SizedBox(height: 5),
+                  if (!widget.hideQrScan)
+                    AtOnboardingSecondaryButton(
+                      key: keyActivateAtSign,
+                      height: 48,
+                      borderRadius: 24,
+                      onPressed: () async {
+                        _showActiveScreen(context: context);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            'Activate atSign',
+                            style: TextStyle(
+                                fontSize: AtOnboardingDimens.fontLarge),
+                          ),
+                          Icon(Icons.arrow_right_alt_rounded)
+                        ],
+                      ),
+                    ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => AtOnboardingGenerateScreen(
+                              onGenerateSuccess: ({
+                                required String atSign,
+                                required String secret,
+                              }) {
+                                String cramSecret = secret.split(':').last;
+                                String atsign = atSign.startsWith('@')
+                                    ? atSign
+                                    : '@$atSign';
+                                _processSharedSecret(atsign, cramSecret);
+                              },
+                              config: widget.config,
                             ),
                           ),
+                        );
+                      },
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      child: Text(
+                        "Don't have an atSign?",
+                        key: keyCreateAnAtSign,
+                        style: TextStyle(
+                          fontSize: AtOnboardingDimens.fontNormal,
+                          fontWeight: FontWeight.w500,
+                          color: theme.primaryColor,
                         ),
-                      ],
-                    )
-                  : _buildCreateAtSign(theme),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildCreateAtSign(ThemeData theme) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        const Text(
-          'Need an atSign?',
-          style: TextStyle(
-            fontSize: AtOnboardingDimens.fontLarge,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 5),
-        AtOnboardingSecondaryButton(
-          key: keyGenerateAtSign,
-          height: 48,
-          borderRadius: 24,
-          onPressed: () async {
-            _showGenerateScreen(context: context);
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'Generate Free atSign',
-                style: TextStyle(fontSize: AtOnboardingDimens.fontLarge),
-              ),
-              Icon(Icons.arrow_right_alt_rounded)
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        Align(
-          alignment: Alignment.centerRight,
-          child: InkWell(
-            onTap: () async {
-              setState(() {
-                _haveAnAtsign = !_haveAnAtsign;
-              });
-              _checkShowTutorial();
-              hasShowTutorial = true;
-            },
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            child: Text(
-              "Have an atSign?",
-              key: keyHaveAnAtSign,
-              style: TextStyle(
-                fontSize: AtOnboardingDimens.fontNormal,
-                fontWeight: FontWeight.w500,
-                color: theme.primaryColor,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 14),
-        InkWell(
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          onTap: _showReferenceWebview,
-          child: Text(
-            'Learn more about atSigns?',
-            style: TextStyle(
-              fontSize: AtOnboardingDimens.fontNormal,
-              fontStyle: FontStyle.italic,
-              fontWeight: FontWeight.w500,
-              decoration: TextDecoration.underline,
-              color: theme.primaryColor,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
   void _showActiveScreen({
     required BuildContext context,
   }) async {
-    final result = await AtOnboardingInputAtSignScreen.push(
-      context: context,
-      config: widget.config,
-    );
-    if ((result ?? '').isNotEmpty) {
-      if (!mounted) return;
-      final result2 = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => AtOnboardingActivateScreen(
-            hideReferences: true,
-            atSign: result!,
-            config: widget.config,
-          ),
-        ),
-      );
-
-      if (result2 is AtOnboardingResult) {
-        switch (result2.status) {
-          case AtOnboardingResultStatus.success:
-            if (!mounted) return;
-            Navigator.of(context).pop(result2);
-            break;
-          case AtOnboardingResultStatus.error:
-            if (!mounted) return;
-            Navigator.pop(context, result2);
-            break;
-          case AtOnboardingResultStatus.cancel:
-            break;
-        }
-      }
-    }
-  }
-
-  void _showGenerateScreen({
-    required BuildContext context,
-  }) async {
-    Navigator.push(
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => AtOnboardingGenerateScreen(
-          onGenerateSuccess: (
-              {required String atSign, required String secret}) {
-            String cramSecret = secret.split(':').last;
-            String atsign = atSign.startsWith('@') ? atSign : '@$atSign';
-            _processSharedSecret(atsign, cramSecret);
-          },
+        builder: (_) => AtOnboardingInputAtSignScreen(
           config: widget.config,
         ),
       ),
     );
+
+    if (result is AtOnboardingResult) {
+      switch (result.status) {
+        case AtOnboardingResultStatus.success:
+          if (!mounted) return;
+          Navigator.of(context).pop(result);
+          break;
+        case AtOnboardingResultStatus.error:
+          if (!mounted) return;
+          Navigator.pop(context, result);
+          break;
+        case AtOnboardingResultStatus.cancel:
+          break;
+      }
+    }
   }
 
   void _showQRCodeScreen({

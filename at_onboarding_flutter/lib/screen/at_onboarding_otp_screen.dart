@@ -216,8 +216,8 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                       ),
                       TextSpan(
                         text: """ If you didn't receive our email:
-  - Confirm that your atSign was entered correctly.
-  - Check your spam or junk email folder.""",
+  - Confirm that your email address was entered correctly.
+  - Check your spam/junk or promotions folder.""",
                         style: Theme.of(context).textTheme.bodyText2?.copyWith(
                               fontSize: AtOnboardingDimens.fontSmall,
                               height: 1.5,

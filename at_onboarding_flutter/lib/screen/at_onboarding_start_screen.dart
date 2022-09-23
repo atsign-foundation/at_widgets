@@ -141,7 +141,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
         builder: (BuildContext context) {
           return AtOnboardingDialog(
             title:
-                'Do you want to share this onboarded atsign with other apps on @platform?',
+                'Do you want to share this onboarded atsign with other apps on atPlatform?',
             message:
                 'This would save you the process to onboard this atsign on other apps again.',
             actions: [

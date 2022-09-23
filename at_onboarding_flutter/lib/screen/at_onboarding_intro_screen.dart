@@ -1,12 +1,15 @@
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_generate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
+import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
+import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/at_onboarding_strings.dart';
-import '../widgets/at_onboarding_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AtOnboardingIntroScreen extends StatefulWidget {
   final AtOnboardingConfig config;
@@ -60,11 +63,30 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  "This app was build on the @ platform, that @ platform apps require atSigns.",
-                  style: TextStyle(
-                    fontSize: AtOnboardingDimens.fontLarge,
-                    fontWeight: FontWeight.w600,
+                RichText(
+                  text: TextSpan(
+                    text:
+                        "This app was built on the atPlatform. All atPlatform apps require an atSign. ",
+                    style: TextStyle(
+                      fontSize: AtOnboardingDimens.fontLarge,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: 'Learn more',
+                        style: TextStyle(
+                          fontSize: AtOnboardingDimens.fontLarge,
+                          fontWeight: FontWeight.w500,
+                          color: theme.primaryColor,
+                          decoration: TextDecoration.underline,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = _showReferenceWebview,
+                      ),
+                    ],
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -106,22 +128,52 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
   }
 
   void _navigateToHomePage(bool haveAtSign) async {
-    //Navigate user to screen to add new atsign
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return AtOnboardingHomeScreen(
+    AtOnboardingResult? result;
+
+    if (!haveAtSign) {
+      result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => AtOnboardingGenerateScreen(
             config: widget.config,
-            haveAnAtsign: haveAtSign,
-          );
-        },
-      ),
-    );
+          ),
+        ),
+      );
+    } else {
+      //Navigate user to screen to add new atsign
+      result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return AtOnboardingHomeScreen(
+              config: widget.config,
+              haveAnAtsign: haveAtSign,
+            );
+          },
+        ),
+      );
+    }
 
     if (result != null) {
       if (!mounted) return;
       Navigator.pop(context, result);
+    }
+  }
+
+  void _showReferenceWebview() {
+    if (Platform.isAndroid || Platform.isIOS) {
+      AtOnboardingReferenceScreen.push(
+        context: context,
+        title: AtOnboardingStrings.faqTitle,
+        url: AtOnboardingStrings.faqUrl,
+        config: widget.config,
+      );
+    } else {
+      launchUrl(
+        Uri.parse(
+          AtOnboardingStrings.faqUrl,
+        ),
+      );
     }
   }
 }
