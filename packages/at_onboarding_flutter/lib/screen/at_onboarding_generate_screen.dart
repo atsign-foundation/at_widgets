@@ -74,7 +74,8 @@ class _AtOnboardingGenerateScreenState
     if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.always) {
       await Future.delayed(const Duration(milliseconds: 300));
       _showTutorial();
-    } else if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.never) {
+    } else if (widget.config.tutorialDisplay ==
+        AtOnboardingTutorialDisplay.never) {
       return;
     } else {
       final result = await AtOnboardingTutorialService.checkShowTutorial();
@@ -440,7 +441,8 @@ class _AtOnboardingGenerateScreenState
     try {
       _inprogressDialog.show(message: 'Processing...');
       await Future.delayed(const Duration(milliseconds: 400));
-      bool isExist = await _onboardingService.isExistingAtsign(verifiedAtSign);
+      bool isExist =
+          await _onboardingService.isExistingAtsign(verifiedAtSign);
 
       if (isExist) {
         _inprogressDialog.close();
@@ -458,10 +460,16 @@ class _AtOnboardingGenerateScreenState
       );
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
-        await AtOnboardingBackupScreen.push(
-          context: context,
-          config: widget.config,
+        if (!mounted) return;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => AtOnboardingBackupScreen(
+              config: widget.config,
+            ),
+          ),
         );
+
         if (!mounted) return;
         Navigator.pop(
             context, AtOnboardingResult.success(atsign: verifiedAtSign));

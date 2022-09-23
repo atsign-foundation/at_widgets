@@ -107,13 +107,15 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.always) {
       await Future.delayed(const Duration(milliseconds: 300));
       _showTutorial();
-    } else if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.never) {
+    } else if (widget.config.tutorialDisplay ==
+        AtOnboardingTutorialDisplay.never) {
       return;
     } else {
       final result = await AtOnboardingTutorialService.checkShowTutorial();
       if (!result) {
         await Future.delayed(const Duration(milliseconds: 300));
-        final result = await AtOnboardingTutorialService.hasShowTutorialSignIn();
+        final result =
+            await AtOnboardingTutorialService.hasShowTutorialSignIn();
         if (!result) {
           _showTutorial();
         }
@@ -553,8 +555,11 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       _onboardingService.setAtClientPreference =
           widget.config.atClientPreference;
 
-      authResponse = await _onboardingService.authenticate(atsign,
-          jsonData: contents, decryptKey: aesKey);
+      authResponse = await _onboardingService.authenticate(
+        atsign,
+        jsonData: contents,
+        decryptKey: aesKey,
+      );
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         //Don't show backup key for case user upload backup key
@@ -929,9 +934,14 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           return;
         }
 
-        await AtOnboardingBackupScreen.push(
-          context: context,
-          config: widget.config,
+        if (!mounted) return;
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => AtOnboardingBackupScreen(
+              config: widget.config,
+            ),
+          ),
         );
 
         if (!mounted) return;

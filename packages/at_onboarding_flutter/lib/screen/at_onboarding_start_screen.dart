@@ -6,6 +6,7 @@ import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
+import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
@@ -27,6 +28,8 @@ class AtOnboardingStartScreen extends StatefulWidget {
 }
 
 class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
+  final OnboardingService _onboardingService = OnboardingService.getInstance();
+
   @override
   void initState() {
     super.initState();
@@ -34,8 +37,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
   }
 
   void _init() async {
-    final OnboardingService onboardingService = OnboardingService.getInstance();
-    await onboardingService.initialSetup(usingSharedStorage: false);
+    await _onboardingService.initialSetup(usingSharedStorage: false);
     // This feature will reopen in future
     // final isUsingSharedStorage = await onboardingService.isUsingSharedStorage();
     // if (isUsingSharedStorage == null) {
@@ -46,13 +48,18 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
     //   await onboardingService.initialSetup(
     //       usingSharedStorage: isUsingSharedStorage);
     // }
-    onboardingService.setAtClientPreference = widget.config.atClientPreference;
+    _onboardingService.setAtClientPreference = widget.config.atClientPreference;
     try {
-      final result = await onboardingService.onboard();
+      final result = await _onboardingService.onboard();
       debugPrint("AtOnboardingInitScreen: result - $result");
+
       if (!mounted) return;
-      Navigator.pop(context,
-          AtOnboardingResult.success(atsign: onboardingService.currentAtsign!));
+      Navigator.pop(
+        context,
+        AtOnboardingResult.success(
+          atsign: _onboardingService.currentAtsign!,
+        ),
+      );
     } catch (e) {
       debugPrint("AtOnboardingInitScreen: error - $e");
       if (e == OnboardingStatus.ATSIGN_NOT_FOUND ||
@@ -72,7 +79,6 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
         if (!mounted) return;
         Navigator.pop(context, result);
       } else if (e == OnboardingStatus.ACTIVATE) {
-        // ignore: use_build_context_synchronously
         final result = await AtOnboarding.activateAccount(
           context: context,
           config: widget.config,
