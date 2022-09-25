@@ -115,7 +115,9 @@ class AtSyncUI {
   }
 
   /// Show dialog UI
-  void showDialog({String? message}) {
+  void showDialog({String? message, 
+    bool showRemoveAtsignOption = false,
+  }) {
     assert(
         _appNavigatorKey != null, "Must set appNavigator before show dialog");
     if (dialogOverlayEntry != null) {
@@ -127,6 +129,7 @@ class AtSyncUI {
       labelColor: _labelColor,
       style: _style,
       message: message,
+      showRemoveAtsignOption: showRemoveAtsignOption,
     );
     _appNavigatorKey?.currentState?.overlay?.insert(dialogOverlayEntry!);
   }
@@ -170,6 +173,7 @@ class AtSyncUI {
     Color? labelColor,
     AtSyncUIStyle? style,
     String? message,
+    bool showRemoveAtsignOption = false,
   }) {
     return OverlayEntry(builder: (context) {
       // You can return any widget you like here
@@ -212,10 +216,25 @@ class AtSyncUI {
                       ),
                     ),
                   AtSyncUIService().showRemoveAtsignOption
+                    && showRemoveAtsignOption ?
+                      const Material(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(0, 8, 0, 0 ),
+                          child: Text('(This data sync seems to be taking longer than expected. Press reset if you would like to remove this atSign and try again, otherwise please wait.)',  style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal,
+                                color: Color.fromARGB(255, 98, 59, 59),
+                              ),
+                            ),
+                        ),
+                      ) 
+                      : const SizedBox(),
+                  AtSyncUIService().showRemoveAtsignOption 
+                    && showRemoveAtsignOption
                       ? TextButton(
                           onPressed: _removeAtSignFromKeychain,
                           child: const Text(
-                            'Remove current atSign',
+                            'Reset',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.normal,
@@ -233,12 +252,34 @@ class AtSyncUI {
   }
 
   _removeAtSignFromKeychain() async {
+    var _currentAtsign = AtClientManager.getInstance().atClient.getCurrentAtSign()!;
     var res = await KeyChainManager.getInstance().deleteAtSignFromKeychain(
-      AtClientManager.getInstance().atClient.getCurrentAtSign()!,
+      _currentAtsign,
     );
 
-    if (res && AtSyncUIService().onAtSignRemoved != null) {
-      AtSyncUIService().onAtSignRemoved!();
+    if (res) {
+      /// to dismiss the dialog/snackbar
+      hideDialog();
+      hideSnackBar();
+
+      ScaffoldMessenger.of(appNavigatorKey!.currentContext!)
+          .showSnackBar(SnackBar(
+        duration: const Duration(seconds: 2),
+        backgroundColor: const Color(0xFFe34040),
+        content: Text(
+          '$_currentAtsign removed',
+          style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              letterSpacing: 0.1,
+              fontWeight: FontWeight.normal),
+        ),
+      ));
+
+      if(AtSyncUIService().onAtSignRemoved != null){
+        AtSyncUIService().onAtSignRemoved!();
+      }
+
     } else {
       ScaffoldMessenger.of(appNavigatorKey!.currentContext!)
           .showSnackBar(const SnackBar(
