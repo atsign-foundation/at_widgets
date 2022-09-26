@@ -61,7 +61,7 @@ Add the following permissions to AndroidManifest.xml
 
 Also, the Android version support in app/build.gradle
 ```
-compileSdkVersion 29
+compileSdkVersion 32
 
 minSdkVersion 24
 targetSdkVersion 29
