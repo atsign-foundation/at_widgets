@@ -96,9 +96,9 @@ class EventService {
       var key = eventNotificationModel!.key!;
       var keyKeyword = key.split('-')[0];
       var atkeyMicrosecondId = key.split('-')[1].split('@')[0];
-      var response = await AtClientManager.getInstance().atClient.getKeys(
-            regex: '$keyKeyword-$atkeyMicrosecondId',
-          );
+      var response = await atClientManager.atClient.getKeys(
+        regex: '$keyKeyword-$atkeyMicrosecondId',
+      );
       if (response.isEmpty) {
         return 'notification key not found';
       }
@@ -117,7 +117,7 @@ class EventService {
         eventData,
       );
 
-      /// throwing an error (doesnt start with @), 
+      /// throwing an error (doesnt start with @),
       /// might lead to functional bug (so, leaving it here)
       // atKey.sharedWith = jsonEncode(allAtsignList);
 
@@ -136,6 +136,7 @@ class EventService {
       }
       return result;
     } catch (e) {
+      print(e);
       return e;
     }
   }
@@ -168,7 +169,7 @@ class EventService {
         notification,
       ); // creating a key and saving it for creator without adding any receiver atsign
 
-      /// throwing an error (doesnt start with @), 
+      /// throwing an error (doesnt start with @),
       /// might lead to functional bug (so, leaving it here)
       // atKey.sharedWith = jsonEncode(
       //     [...selectedContactsAtSigns]); //adding event members in atkey
@@ -471,11 +472,11 @@ class EventService {
       AtKey atkey, String value, List<String?> atsigns) async {
     for (var element in atsigns) {
       atkey.sharedWith = element;
-      try{
+      try {
         await atClientManager.notificationService.notify(
           NotificationParams.forUpdate(atkey, value: value),
         );
-      }catch(e){
+      } catch (e) {
         _logger.severe('error in SendEventNotification to $element: $e');
       }
     }
