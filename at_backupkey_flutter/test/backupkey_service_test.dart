@@ -77,8 +77,8 @@ Future<void> tearDownFunc() async {
 Future<void> setUpFunc(String atsign) async {
   var preference = getAtSignPreference(atsign);
 
-  await AtClientImpl.create(atsign, 'persona', preference);
-  var atClient = AtClientManager.getInstance().atClient;
+  var atClient = await AtClientImpl.create(atsign, 'persona', preference);
+  // var atClient = AtClientManager.getInstance().atClient;
 
   // To setup encryption keys
   await atClient.getLocalSecondary()!.putValue(
@@ -101,9 +101,9 @@ Future<bool> _generateFile(
     return false;
   }
   var directory = Directory('test/backup');
-  String path = directory.path.toString() + '/';
-  final encryptedKeysFile =
-      await File(path + '$atsign${Strings.backupKeyName}').create();
+  String path = '${directory.path.toString()}/';
+  final encryptedKeysFile = await File('$path$atsign${Strings.backupKeyName}')
+      .create(recursive: true);
   var keyString = jsonEncode(aesEncryptedKeys);
   encryptedKeysFile.writeAsStringSync(keyString);
   return true;
