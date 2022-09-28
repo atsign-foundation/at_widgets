@@ -34,7 +34,7 @@ dependencies:
   file_selector_windows: ^0.8.2
   file_selector_linux: ^0.0.2+1
 
-  at_backupkey_flutter: ^4.0.6
+  at_backupkey_flutter: ^4.0.7
   at_client: ^3.0.40
   at_client_mobile: ^3.2.7
   at_commons: ^3.0.25
