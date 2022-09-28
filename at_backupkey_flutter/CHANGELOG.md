@@ -1,3 +1,6 @@
+## 4.0.7:
+- **CHORE**: Updated dependencies.
+
 ## 4.0.6:
 - **FIX**: macOS backup key issue resolved
 
