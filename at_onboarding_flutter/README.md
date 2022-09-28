@@ -182,6 +182,13 @@ TextButton(
   );
 ```
 
+- If your app supports windows platform then add `biometric_storage` in app's dependencies
+
+```
+dependencies:
+ biometric_storage: ^4.1.3
+```
+
 ### Steps to generate API key :
 
 1. Open URL https://my.atsign.com/login

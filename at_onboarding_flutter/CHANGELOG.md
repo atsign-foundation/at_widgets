@@ -1,3 +1,6 @@
+## 5.0.4
+- **CHORE**: Updated dependencies and readme
+
 ## 5.0.3
 - **CHORE**: Updated dependencies,readme and gradle version.
 - **FIX**: Resolved android build issue.
