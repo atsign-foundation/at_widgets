@@ -30,12 +30,12 @@ dependencies:
   fluttertoast: ^8.0.9
 
   # at_chat_flutter: ^2.0.2
-  at_client_mobile: ^3.2.2
+  at_client_mobile: ^3.2.6
   at_lookup: ^3.0.29
   at_commons: ^3.0.22
   at_contact: ^3.0.7
   at_utils: ^3.0.10
-  at_client: ^3.0.33
+  at_client: ^3.0.39
   at_common_flutter: ^2.0.9
   at_contacts_flutter: ^4.0.6
 
