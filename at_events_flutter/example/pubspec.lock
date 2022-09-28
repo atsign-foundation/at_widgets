@@ -49,16 +49,14 @@ packages:
       name: at_app_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0+1"
+    version: "5.0.1"
   at_backupkey_flutter:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
-      path: at_backupkey_flutter
-      ref: fix_flutter_qr_reader
-      resolved-ref: ce984971ea1ba653b5d23334e339311044eba90f
-      url: "https://github.com/atsign-foundation/at_widgets.git"
-    source: git
-    version: "4.0.5"
+      name: at_backupkey_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.6"
   at_base2e15:
     dependency: transitive
     description:
@@ -128,7 +126,7 @@ packages:
       name: at_file_saver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   at_location_flutter:
     dependency: transitive
     description:
@@ -146,12 +144,10 @@ packages:
   at_onboarding_flutter:
     dependency: "direct main"
     description:
-      path: at_onboarding_flutter
-      ref: fix_flutter_qr_reader
-      resolved-ref: ce984971ea1ba653b5d23334e339311044eba90f
-      url: "https://github.com/atsign-foundation/at_widgets.git"
-    source: git
-    version: "5.0.2"
+      name: at_onboarding_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.3"
   at_persistence_secondary_server:
     dependency: transitive
     description:
