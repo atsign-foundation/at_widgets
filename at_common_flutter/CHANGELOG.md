@@ -1,3 +1,6 @@
+## 2.0.11
+- **CHORE**: Updated dependencies and android gradle versions
+
 ## 2.0.10
 - **CHORE**: Updated readme
 
