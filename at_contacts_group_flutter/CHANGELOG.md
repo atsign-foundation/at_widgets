@@ -1,3 +1,6 @@
+## 4.0.10
+- **CHORE**: Updated dependencies and android gradle versions
+
 ## 4.0.9
 - **FIX**: Texts fixes
 - **CHORE**: Package description updated
