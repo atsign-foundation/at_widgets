@@ -1,3 +1,6 @@
+## 1.0.7
+- **CHORE**: Updated dependencies and android gradle versions
+
 ## 1.0.6
 - **FEAT**: Sync progress callback added
 - **CHORE**: Package description updated
