@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_follows_flutter/domain/connection_model.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/services/sdk_service.dart';
@@ -8,7 +10,7 @@ import 'package:at_follows_flutter/widgets/custom_appbar.dart';
 import 'package:at_follows_flutter/widgets/custom_button.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qr_reader/flutter_qr_reader.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
@@ -23,13 +25,24 @@ class _QrScanState extends State<QrScan> {
   bool permissionGrated = false;
   bool loading = false;
   bool _scanCompleted = false;
-  QrReaderViewController? _controller;
+  QRViewController? _controller;
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  Barcode? result;
   bool _isScan = false;
 
   @override
   initState() {
     checkPermissions();
     super.initState();
+  }
+
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      _controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      _controller!.resumeCamera();
+    }
   }
 
   checkPermissions() async {
@@ -80,7 +93,7 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
-  Future<void> onScan(String data, List<Offset> offsets, context) async {
+  Future<void> onScan(String? data, context) async {
     // _controller.stopCamera();
     this.setState(() {
       loading = true;
@@ -143,21 +156,9 @@ class _QrScanState extends State<QrScan> {
                             ? SizedBox()
                             : Stack(
                                 children: [
-                                  QrReaderView(
-                                    width: 300.toWidth,
-                                    height: 350.toHeight,
-                                    callback: (container) async {
-                                      this._controller = container;
-                                      await _controller!
-                                          .startCamera((data, offsets) async {
-                                        if (!_scanCompleted) {
-                                          _controller?.stopCamera();
-                                          _scanCompleted = true;
-
-                                          await onScan(data, offsets, context);
-                                        }
-                                      });
-                                    },
+                                  QRView(
+                                    key: qrKey,
+                                    onQRViewCreated: _onQRViewCreated,
                                   ),
                                 ],
                               ),
@@ -195,6 +196,24 @@ class _QrScanState extends State<QrScan> {
             ],
           ),
         ));
+  }
+
+  void _onQRViewCreated(QRViewController controller) async {
+    this._controller = controller;
+    _controller?.scannedDataStream.listen((scanData) {
+      setState(() {
+        result = scanData;
+      });
+    });
+    if (result != null) {
+      await onScan(result?.code, context);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
   }
 
   _getAtsignForm(BuildContext context) {
@@ -280,12 +299,9 @@ class _QrScanState extends State<QrScan> {
                 onPressed: () {
                   Navigator.pop(context);
                   if (isScan) {
-                    _controller!.startCamera((data1, offsets1) {
-                      if (!_scanCompleted) {
-                        onScan(data1, offsets1, context);
-                        _scanCompleted = true;
-                      }
-                    });
+                    if (!_scanCompleted) {
+                      QRView(key: qrKey, onQRViewCreated: _onQRViewCreated);
+                    }
                     setState(() {
                       loading = false;
                       _scanCompleted = false;

@@ -2,8 +2,7 @@ import 'dart:async';
 import 'package:at_follows_flutter_example/screens/follows_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show Onboarding;
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
@@ -64,31 +63,32 @@ class _MyAppState extends State<MyApp> {
                       setState(() {
                         atClientPreference = preference;
                       });
-                      Onboarding(
+                      final result = await AtOnboarding.onboard(
                         context: context,
-                        atClientPreference: atClientPreference!,
-                        domain: AtEnv.rootDomain,
-                        rootEnvironment: AtEnv.rootEnvironment,
-                        appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                        onboard: (Map<String?, AtClientService> value,
-                            String? atsign) async {
-                          atClientService = value[atsign];
-                          AtService.getInstance().atClientServiceInstance =
-                              value[atsign];
-
+                        config: AtOnboardingConfig(
+                          appAPIKey: '477b-876u-bcez-c42z-6a3d',
+                          atClientPreference: atClientPreference!,
+                          rootEnvironment: AtEnv.rootEnvironment,
+                          domain: AtEnv.rootDomain,
+                        ),
+                      );
+                      switch (result.status) {
+                        case AtOnboardingResultStatus.success:
+                          final atsign = result.atsign;
                           await AtClientManager.getInstance().setCurrentAtSign(
-                            atsign!,
-                            atClientPreference!.namespace!,
-                            atClientPreference!,
-                          );
-
+                              atsign!,
+                              atClientPreference!.namespace!,
+                              atClientPreference!);
                           await Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NextScreen()));
-                        },
-                        onError: (error) async {
-                          _logger.severe('Onboarding throws $error error');
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NextScreen(),
+                            ),
+                          );
+                          break;
+                        case AtOnboardingResultStatus.error:
+                          _logger.severe(
+                              'Onboarding throws ${result.errorCode} error');
                           await showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -103,8 +103,9 @@ class _MyAppState extends State<MyApp> {
                                   ],
                                 );
                               });
-                        },
-                      );
+                          break;
+                        default:
+                      }
                     },
                     child: const Text('Start onboarding'),
                   ),
