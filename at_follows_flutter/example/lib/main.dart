@@ -106,47 +106,6 @@ class _MyAppState extends State<MyApp> {
                           break;
                         default:
                       }
-                      // Onboarding(
-                      //   context: context,
-                      //   atClientPreference: atClientPreference!,
-                      //   domain: AtEnv.rootDomain,
-                      //   rootEnvironment: AtEnv.rootEnvironment,
-                      //   appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                      //   onboard: (Map<String?, AtClientService> value,
-                      //       String? atsign) async {
-                      //     atClientService = value[atsign];
-                      //     AtService.getInstance().atClientServiceInstance =
-                      //         value[atsign];
-
-                      //     await AtClientManager.getInstance().setCurrentAtSign(
-                      //       atsign!,
-                      //       atClientPreference!.namespace!,
-                      //       atClientPreference!,
-                      //     );
-
-                      //     await Navigator.pushReplacement(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => NextScreen()));
-                      //   },
-                      //   onError: (error) async {
-                      //     _logger.severe('Onboarding throws $error error');
-                      // await showDialog(
-                      //     context: context,
-                      //     builder: (BuildContext context) {
-                      //       return AlertDialog(
-                      //         content: const Text('Something went wrong'),
-                      //         actions: [
-                      //           TextButton(
-                      //               onPressed: () {
-                      //                 Navigator.of(context).pop();
-                      //               },
-                      //               child: const Text('ok'))
-                      //         ],
-                      //       );
-                      //     });
-                      //   },
-                      // );
                     },
                     child: const Text('Start onboarding'),
                   ),

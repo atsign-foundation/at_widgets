@@ -10,7 +10,6 @@ import 'package:at_follows_flutter/widgets/custom_appbar.dart';
 import 'package:at_follows_flutter/widgets/custom_button.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:at_utils/at_logger.dart';
@@ -159,19 +158,7 @@ class _QrScanState extends State<QrScan> {
                                 children: [
                                   QRView(
                                     key: qrKey,
-                                    // width: 300.toWidth,
-                                    // height: 350.toHeight,
                                     onQRViewCreated: _onQRViewCreated,
-                                    // this._controller = container;
-                                    // await _controller!
-                                    //     .startCamera((data, offsets) async {
-                                    //   if (!_scanCompleted) {
-                                    //     _controller?.stopCamera();
-                                    //     _scanCompleted = true;
-
-                                    // await onScan(data, offsets, context);
-                                    //   }
-                                    // });
                                   ),
                                 ],
                               ),
@@ -312,12 +299,6 @@ class _QrScanState extends State<QrScan> {
                 onPressed: () {
                   Navigator.pop(context);
                   if (isScan) {
-                    // _controller!.startCamera((data1, offsets1) {
-                    //   if (!_scanCompleted) {
-                    //     onScan(data1, offsets1, context);
-                    //     _scanCompleted = true;
-                    //   }
-                    // });
                     if (!_scanCompleted) {
                       QRView(key: qrKey, onQRViewCreated: _onQRViewCreated);
                     }
