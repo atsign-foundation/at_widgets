@@ -1,3 +1,7 @@
+## 3.1.9
+- **CHORE**: Updated dependencies and android gradle versions
+- **CHORE**: Package description updated
+
 ## 3.1.8
 - **FEAT**: Updated text
 - **CHORE**: Updated dependency
