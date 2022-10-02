@@ -37,11 +37,8 @@ dependencies:
   at_theme_flutter:
     path: ../
   at_app_flutter: ^5.0.0+1
-  at_onboarding_flutter: ^5.0.3
-  at_backupkey_flutter: ^4.0.6
+  at_onboarding_flutter: ^5.0.4
 
-dependency_overrides:
-  biometric_storage: ^4.1.3
 
 dev_dependencies:
   flutter_test:
