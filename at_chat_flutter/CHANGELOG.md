@@ -1,3 +1,7 @@
+## 3.0.7
+- **CHORE**: Updated dependencies and android gradle versions
+- **CHORE**: Package description updated
+
 ## 3.0.6
 - **FIX**: Lint Fixes according to flutter 3.0
 
