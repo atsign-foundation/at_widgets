@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:at_follows_flutter_example/screens/follows_screen.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
@@ -75,6 +76,9 @@ class _MyAppState extends State<MyApp> {
                       switch (result.status) {
                         case AtOnboardingResultStatus.success:
                           final atsign = result.atsign;
+                          atClientService = OnboardingService.getInstance().atClientServiceMap[atsign];
+                          AtService.getInstance().atClientServiceInstance = OnboardingService.getInstance().atClientServiceMap[atsign];
+                          
                           await AtClientManager.getInstance().setCurrentAtSign(
                               atsign!,
                               atClientPreference!.namespace!,
