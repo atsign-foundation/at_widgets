@@ -44,6 +44,10 @@ dependencies:
   at_utils: ^3.0.12
   at_sync_ui_flutter: ^1.0.1
 
+dependency_overrides:
+  at_client_mobile:
+    path: ../../at_client_sdk/at_client_mobile
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

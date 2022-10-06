@@ -39,15 +39,15 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
   void _init() async {
     await _onboardingService.initialSetup(usingSharedStorage: false);
     // This feature will reopen in future
-    // final isUsingSharedStorage = await onboardingService.isUsingSharedStorage();
-    // if (isUsingSharedStorage == null) {
-    //   //No defind yet
-    //   final result = await askUserUseSharedStorage();
-    //   await onboardingService.initialSetup(usingSharedStorage: result);
-    // } else {
-    //   await onboardingService.initialSetup(
-    //       usingSharedStorage: isUsingSharedStorage);
-    // }
+    final isUsingSharedStorage = await _onboardingService.isUsingSharedStorage();
+    if (isUsingSharedStorage == null) {
+      //No defind yet
+      final result = await askUserUseSharedStorage();
+      await _onboardingService.initialSetup(usingSharedStorage: result);
+    } else {
+      await _onboardingService.initialSetup(
+          usingSharedStorage: isUsingSharedStorage);
+    }
     _onboardingService.setAtClientPreference = widget.config.atClientPreference;
     try {
       final result = await _onboardingService.onboard();
