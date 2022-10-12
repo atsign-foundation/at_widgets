@@ -239,4 +239,14 @@ class OnboardingService {
     // ignore: deprecated_member_use
     _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
   }
+
+  Future<bool> enableUsingSharedStorage() async {
+    final result = await _keyChainManager.enableUsingSharedStorage();
+    return result;
+  }
+
+  Future<bool> disableUsingSharedStorage() async {
+    final result = await _keyChainManager.disableUsingSharedStorage();
+    return result;
+  }
 }

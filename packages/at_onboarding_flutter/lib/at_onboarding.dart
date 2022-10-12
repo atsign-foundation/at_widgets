@@ -121,4 +121,16 @@ class AtOnboarding {
       return AtOnboardingResetResult.cancelled;
     }
   }
+
+  Future<bool> enableUsingSharedStorage() async {
+    final result =
+        await OnboardingService.getInstance().enableUsingSharedStorage();
+    return result;
+  }
+
+  Future<bool> disableUsingSharedStorage() async {
+    final result =
+        await OnboardingService.getInstance().disableUsingSharedStorage();
+    return result;
+  }
 }
