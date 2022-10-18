@@ -80,12 +80,12 @@ String getSubTitle(LocationNotificationModel locationNotificationModel) {
   String time;
   to = locationNotificationModel.to;
   if (to != null) {
-    if(locationNotificationModel.to!.day > DateTime.now().day){
+    if (locationNotificationModel.to!.day > DateTime.now().day) {
       time =
-        'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to!))} tomorrow';
+          'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to!))} tomorrow';
     } else {
-       time =
-        'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to!))} today';
+      time =
+          'until ${timeOfDayToString(TimeOfDay.fromDateTime(locationNotificationModel.to!))} today';
     }
   } else {
     time = '';
