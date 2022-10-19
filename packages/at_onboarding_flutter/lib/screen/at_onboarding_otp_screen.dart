@@ -444,60 +444,59 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
     if (response.statusCode == 200) {
       data = response.body;
       data = jsonDecode(data);
-      //check for the atsign list and display them.
-      if (data['data'] != null &&
-          data['data'].length == 2 &&
-          data['status'] != 'error') {
-        dynamic responseData = data['data'];
-        atsigns.addAll(List<String>.from(responseData['atsigns']));
 
-        if (responseData['newAtsign'] == null) {
-          if (!mounted) return null;
-          final value = await Navigator.push(
-            context,
-            MaterialPageRoute<String?>(
-              builder: (_) => AtOnboardingAccountsScreen(
-                atsigns: atsigns,
-                message: responseData['message'],
-                config: widget.config,
-              ),
-            ),
-          );
-          if (value != null) {
+      if (data['status'] != 'error') {
+        if (data['cramkey'] != null) {
+          cramSecret = data['cramkey'];
+        } else {
+          //check for the atsign list and display them.
+          dynamic responseData = data['data'];
+          atsigns.addAll(List<String>.from(responseData['atsigns']));
+          if (responseData['newAtsign'] == null) {
             if (!mounted) return null;
-            Navigator.pop(
-                context, AtOnboardingOTPResult(atSign: value, secret: null));
-          }
-          return null;
-        }
-        //displays list of atsign along with newAtsign
-        else {
-          if (!mounted) return null;
-          final value = await Navigator.push(
-            context,
-            MaterialPageRoute<String?>(
-              builder: (_) => AtOnboardingAccountsScreen(
-                atsigns: atsigns,
-                newAtsign: responseData['newAtsign']!,
-                config: widget.config,
+            final value = await Navigator.push(
+              context,
+              MaterialPageRoute<String?>(
+                builder: (_) => AtOnboardingAccountsScreen(
+                  atsigns: atsigns,
+                  message: data['message'],
+                  config: widget.config,
+                ),
               ),
-            ),
-          );
-          if (value == responseData['newAtsign']) {
-            cramSecret = await validatePerson(value as String, email, otp,
-                isConfirmation: true);
-            return cramSecret;
-          } else {
+            );
             if (value != null) {
               if (!mounted) return null;
               Navigator.pop(
                   context, AtOnboardingOTPResult(atSign: value, secret: null));
             }
             return null;
+          } else {
+            //displays list of atsign along with newAtsign
+            if (!mounted) return null;
+            final value = await Navigator.push(
+              context,
+              MaterialPageRoute<String?>(
+                builder: (_) => AtOnboardingAccountsScreen(
+                  atsigns: atsigns,
+                  newAtsign: responseData['newAtsign']!,
+                  config: widget.config,
+                ),
+              ),
+            );
+            if (value == responseData['newAtsign']) {
+              cramSecret = await validatePerson(value as String, email, otp,
+                  isConfirmation: true);
+              return cramSecret;
+            } else {
+              if (value != null) {
+                if (!mounted) return null;
+                Navigator.pop(context,
+                    AtOnboardingOTPResult(atSign: value, secret: null));
+              }
+              return null;
+            }
           }
         }
-      } else if (data['status'] != 'error') {
-        cramSecret = data['cramkey'];
       } else {
         String? errorMessage = data['message'];
         if (!mounted) return null;
@@ -508,7 +507,6 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
           ),
         );
       }
-      // atsign = data['data']['atsign'];
     } else {
       data = response.body;
       data = jsonDecode(data);
