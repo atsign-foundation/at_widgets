@@ -1,3 +1,6 @@
+## 5.0.5
+- **FIX**: Fixed atSign activation issue
+
 ## 5.0.4
 - **CHORE**: Updated dependencies and readme
 

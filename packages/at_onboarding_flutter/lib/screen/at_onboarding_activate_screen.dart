@@ -14,6 +14,7 @@ import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
+import 'package:at_server_status/at_server_status.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -92,7 +93,7 @@ class _AtOnboardingActivateScreenState
               children: const [
                 AtSyncIndicator(),
                 SizedBox(height: 10),
-                Text('Please wait while fetching atSign status'),
+                Text('please wait while we fetch your atSign status'),
               ],
             ),
           ),
@@ -109,6 +110,18 @@ class _AtOnboardingActivateScreenState
     if (atsign != null) {
       atsign = atsign.split('@').last;
     }
+
+    // check if atSign already activated
+    AtSignStatus? atsignStatus =
+        await OnboardingService.getInstance().checkAtsignStatus(atsign: atsign);
+    if (atsignStatus == AtSignStatus.activated) {
+      bool isPaired = await _onboardingService.isExistingAtsign(atsign);
+      await showErrorDialog(isPaired
+          ? 'This atSign has already been activated and paired with this device'
+          : 'This atSign has already been activated. Please upload your atkeys to pair it with this device');
+      return;
+    }
+
     dynamic data;
 
     dynamic response = await _freeAtsignService
