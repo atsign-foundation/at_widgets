@@ -115,7 +115,10 @@ class _AtOnboardingActivateScreenState
     AtSignStatus? atsignStatus =
         await OnboardingService.getInstance().checkAtsignStatus(atsign: atsign);
     if (atsignStatus == AtSignStatus.activated) {
-      await showErrorDialog('atSign already activated.');
+      bool isPaired = await _onboardingService.isExistingAtsign(atsign);
+      await showErrorDialog(isPaired
+          ? 'This atSign has already been activated and paired with this device'
+          : 'This atSign has already been activated. Please upload your atkeys to pair it with this device');
       return;
     }
 
