@@ -673,15 +673,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: const Text(
               AtOnboardingStrings.onboardingTitle,
-              style: TextStyle(
-                color: Platform.isIOS || Platform.isAndroid
-                    ? Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white
-                    : null,
-              ),
             ),
             centerTitle: true,
             actions: [
@@ -835,9 +828,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                         ],
                       ),
                     ),
-                  const SizedBox(
-                    height: 12,
-                  ),
+                  const SizedBox(height: 20),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: InkWell(
@@ -864,12 +855,13 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       highlightColor: Colors.transparent,
                       splashColor: Colors.transparent,
                       child: Text(
-                        "Don't have an atSign?",
+                        "Get a free atSign",
                         key: keyCreateAnAtSign,
                         style: TextStyle(
                           fontSize: AtOnboardingDimens.fontNormal,
                           fontWeight: FontWeight.w500,
                           color: theme.primaryColor,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),

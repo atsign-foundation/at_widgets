@@ -95,7 +95,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                   height: 48,
                   borderRadius: 24,
                   child: Text(
-                    'I have an atSign',
+                    'Already have an atSign',
                     style: TextStyle(
                       color: Platform.isIOS || Platform.isAndroid
                           ? Theme.of(context).brightness == Brightness.light
@@ -113,7 +113,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                   height: 48,
                   borderRadius: 24,
                   child: const Text(
-                    "I don't have an atSign",
+                    "Get a free atSign",
                   ),
                   onPressed: () {
                     _navigateToHomePage(false);

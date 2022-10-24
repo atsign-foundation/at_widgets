@@ -67,15 +67,8 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: const Text(
               AtOnboardingStrings.onboardingTitle,
-              style: TextStyle(
-                color: Platform.isIOS || Platform.isAndroid
-                    ? Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white
-                    : null,
-              ),
             ),
             centerTitle: true,
             actions: [

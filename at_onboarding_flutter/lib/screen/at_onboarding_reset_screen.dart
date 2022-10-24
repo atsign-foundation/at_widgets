@@ -61,15 +61,8 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
       data: theme,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Reset',
-            style: TextStyle(
-              color: Platform.isIOS || Platform.isAndroid
-                  ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white
-                  : null,
-            ),
           ),
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),

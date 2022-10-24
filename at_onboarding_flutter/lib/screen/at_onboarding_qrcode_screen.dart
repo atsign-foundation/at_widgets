@@ -100,15 +100,8 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: const Text(
               'Scan your QR!',
-              style: TextStyle(
-                color: Platform.isIOS || Platform.isAndroid
-                    ? Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white
-                    : null,
-              ),
             ),
             actions: const [
               Center(

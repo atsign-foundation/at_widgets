@@ -63,15 +63,8 @@ class _AtOnboardingAccountsScreenState
       data: theme,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Select atSigns',
-            style: TextStyle(
-              color: Platform.isIOS || Platform.isAndroid
-                  ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white
-                  : null,
-            ),
           ),
         ),
         body: Padding(

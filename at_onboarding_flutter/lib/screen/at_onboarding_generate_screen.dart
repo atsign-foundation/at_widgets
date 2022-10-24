@@ -70,15 +70,8 @@ class _AtOnboardingGenerateScreenState
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: const Text(
               AtOnboardingStrings.onboardingTitle,
-              style: TextStyle(
-                color: Platform.isIOS || Platform.isAndroid
-                    ? Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white
-                    : null,
-              ),
             ),
             actions: [
               IconButton(
@@ -135,7 +128,7 @@ class _AtOnboardingGenerateScreenState
                           horizontal: AtOnboardingDimens.paddingSmall),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
                   const Text(
                     "Refresh until you see an atSign that you like, then press Pair",
                     style: TextStyle(
@@ -144,6 +137,21 @@ class _AtOnboardingGenerateScreenState
                     ),
                   ),
                   const SizedBox(height: 6),
+                  InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: _showReferenceWebview,
+                    child: const Text(
+                      'Learn more about atSigns',
+                      style: TextStyle(
+                        fontSize: AtOnboardingDimens.fontNormal,
+                        fontStyle: FontStyle.italic,
+                        // fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   AtOnboardingSecondaryButton(
                     height: 48,
                     borderRadius: 24,
@@ -191,7 +199,7 @@ class _AtOnboardingGenerateScreenState
                       ],
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
                   InkWell(
                     onTap: () async {
                       Navigator.of(context).pop();
@@ -204,22 +212,7 @@ class _AtOnboardingGenerateScreenState
                         fontSize: AtOnboardingDimens.fontNormal,
                         fontWeight: FontWeight.w500,
                         color: theme.primaryColor,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: _showReferenceWebview,
-                    child: Text(
-                      'Learn more about atSigns',
-                      style: TextStyle(
-                        fontSize: AtOnboardingDimens.fontNormal,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w500,
                         decoration: TextDecoration.underline,
-                        // color: theme.primaryColor,
                       ),
                     ),
                   ),

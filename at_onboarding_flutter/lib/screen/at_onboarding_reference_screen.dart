@@ -74,13 +74,6 @@ class _AtOnboardingReferenceScreenState
         appBar: AppBar(
           title: Text(
             widget.title ?? 'FAQ',
-            style: TextStyle(
-              color: Platform.isIOS || Platform.isAndroid
-                  ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white
-                  : null,
-            ),
           ),
           centerTitle: true,
         ),
