@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import 'package:at_sync_ui_flutter/services/at_sync_ui_services.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -115,7 +114,8 @@ class AtSyncUI {
   }
 
   /// Show dialog UI
-  void showDialog({String? message, 
+  void showDialog({
+    String? message,
     bool showRemoveAtsignOption = false,
   }) {
     assert(
@@ -215,22 +215,22 @@ class AtSyncUI {
                         ),
                       ),
                     ),
-                  AtSyncUIService().showRemoveAtsignOption
-                    && showRemoveAtsignOption ?
-                      const Material(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 8, 0, 0 ),
-                          child: Text('(This data sync seems to be taking longer than expected. Press reset if you would like to remove this atSign and try again, otherwise please wait.)',  style: TextStyle(
+                  showRemoveAtsignOption
+                      ? const Material(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                            child: Text(
+                              '(This data sync seems to be taking longer than expected. Press reset if you would like to remove this atSign and try again, otherwise please wait.)',
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.normal,
                                 color: Color.fromARGB(255, 98, 59, 59),
                               ),
                             ),
-                        ),
-                      ) 
+                          ),
+                        )
                       : const SizedBox(),
-                  AtSyncUIService().showRemoveAtsignOption 
-                    && showRemoveAtsignOption
+                  showRemoveAtsignOption
                       ? TextButton(
                           onPressed: _removeAtSignFromKeychain,
                           child: const Text(
@@ -252,7 +252,10 @@ class AtSyncUI {
   }
 
   _removeAtSignFromKeychain() async {
-    var _currentAtsign = AtClientManager.getInstance().atClient.getCurrentAtSign()!;
+    AtSyncUIService().cancelTimer();
+
+    var _currentAtsign =
+        AtClientManager.getInstance().atClient.getCurrentAtSign()!;
     var res = await KeyChainManager.getInstance().deleteAtSignFromKeychain(
       _currentAtsign,
     );
@@ -276,10 +279,9 @@ class AtSyncUI {
         ),
       ));
 
-      if(AtSyncUIService().onAtSignRemoved != null){
+      if (AtSyncUIService().onAtSignRemoved != null) {
         AtSyncUIService().onAtSignRemoved!();
       }
-
     } else {
       ScaffoldMessenger.of(appNavigatorKey!.currentContext!)
           .showSnackBar(const SnackBar(
