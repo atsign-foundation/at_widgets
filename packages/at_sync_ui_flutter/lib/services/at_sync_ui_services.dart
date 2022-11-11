@@ -112,6 +112,7 @@ class AtSyncUIService extends SyncProgressListener {
     AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none,
     bool startTimer = true,
   }) {
+    cancelTimer();
     this.atSyncUIOverlay = this.atSyncUIOverlay == AtSyncUIOverlay.none
         ? atSyncUIOverlay
         : this.atSyncUIOverlay;
@@ -122,6 +123,7 @@ class AtSyncUIService extends SyncProgressListener {
     if (startTimer) {
       _removeAtsignTimer = Timer(Duration(seconds: _removeAtsignSeconds), () {
         _hide();
+        cancelTimer();
         _show(
           atSyncUIOverlay: atSyncUIOverlay,
           showRemoveAtsignOption: true,
