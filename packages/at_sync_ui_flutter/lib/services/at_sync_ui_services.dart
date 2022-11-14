@@ -31,11 +31,16 @@ class AtSyncUIService extends SyncProgressListener {
     }
   }
 
-  Function? onSuccessCallback, onErrorCallback, syncProgressCallback;
+  Function? onSuccessCallback,
+      onErrorCallback,
+      syncProgressCallback,
+      onAtSignRemoved;
   late SyncService syncService;
   AtSyncUIStyle atSyncUIStyle = AtSyncUIStyle.cupertino;
   AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none;
-  bool showTextWhileSyncing = true;
+  bool showTextWhileSyncing = true, showRemoveAtsignOption = false;
+  Timer? _removeAtsignTimer;
+  final int _removeAtsignSeconds = 60;
 
   final StreamController _atSyncUIListenerController =
       StreamController<AtSyncUIStatus>.broadcast();
@@ -54,21 +59,24 @@ class AtSyncUIService extends SyncProgressListener {
   /// [onErrorCallback] called after failure in sync
   /// [syncProgressCallback] Notifies the registered listener for the [SyncProgress]
   /// [primaryColor],[backgroundColor], [labelColor] will be used while displaying overlay/snackbar.
-  void init({
-    required GlobalKey<NavigatorState> appNavigator,
-    AtSyncUIOverlay? atSyncUIOverlay,
-    AtSyncUIStyle? style,
-    bool? showTextWhileSyncing,
-    Function? onSuccessCallback,
-    Function? onErrorCallback,
-    Function? syncProgressCallback,
-    Color? primaryColor,
-    Color? backgroundColor,
-    Color? labelColor,
-  }) {
+  /// if [showRemoveAtsignOption] is true, [onAtSignRemoved] will be called if atSign is removed successfully from device
+  void init(
+      {required GlobalKey<NavigatorState> appNavigator,
+      AtSyncUIOverlay? atSyncUIOverlay = AtSyncUIOverlay.dialog,
+      AtSyncUIStyle? style,
+      bool? showTextWhileSyncing,
+      Function? onSuccessCallback,
+      Function? onErrorCallback,
+      Function? syncProgressCallback,
+      Function? onAtSignRemoved,
+      Color? primaryColor,
+      Color? backgroundColor,
+      Color? labelColor,
+      bool showRemoveAtsignOption = false}) {
     this.onSuccessCallback = onSuccessCallback;
     this.onErrorCallback = onErrorCallback;
     this.syncProgressCallback = syncProgressCallback;
+    this.onAtSignRemoved = onAtSignRemoved;
     AtSyncUI.instance.setAppNavigatorKey(appNavigator);
 
     /// change status to notStarted
@@ -81,6 +89,7 @@ class AtSyncUIService extends SyncProgressListener {
       this.atSyncUIOverlay = atSyncUIOverlay;
     }
     this.showTextWhileSyncing = showTextWhileSyncing ?? true;
+    this.showRemoveAtsignOption = showRemoveAtsignOption;
 
     AtSyncUI.instance.configTheme(
       primaryColor: primaryColor,
@@ -99,18 +108,39 @@ class AtSyncUIService extends SyncProgressListener {
 
   /// calls sync and shows selected UI
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
-  void sync({AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none}) {
-    this.atSyncUIOverlay = atSyncUIOverlay;
+  void sync({
+    AtSyncUIOverlay atSyncUIOverlay = AtSyncUIOverlay.none,
+    bool startTimer = true,
+  }) {
+    cancelTimer();
+    this.atSyncUIOverlay = this.atSyncUIOverlay == AtSyncUIOverlay.none
+        ? atSyncUIOverlay
+        : this.atSyncUIOverlay;
 
     /// change status to syncing
     _atSyncUIListenerSink.add(AtSyncUIStatus.syncing);
 
-    _show(atSyncUIOverlay: atSyncUIOverlay);
+    if (startTimer) {
+      _removeAtsignTimer = Timer(Duration(seconds: _removeAtsignSeconds), () {
+        _hide();
+        cancelTimer();
+        _show(
+          atSyncUIOverlay: atSyncUIOverlay,
+          showRemoveAtsignOption: true,
+        );
+      });
+    }
 
-    syncService.sync(onDone: _onSuccessCallback);
+    /// show showRemoveAtsignOption if we are not starting a timer
+    _show(
+      atSyncUIOverlay: atSyncUIOverlay,
+      showRemoveAtsignOption: !startTimer,
+    );
   }
 
   void _onSuccessCallback(SyncResult syncStatus) {
+    cancelTimer();
+
     if ((syncStatus.syncStatus == SyncStatus.failure) &&
         (onErrorCallback != null)) {
       onErrorCallback!(syncStatus);
@@ -121,7 +151,8 @@ class AtSyncUIService extends SyncProgressListener {
     }
   }
 
-  void _show({AtSyncUIOverlay? atSyncUIOverlay}) {
+  void _show(
+      {AtSyncUIOverlay? atSyncUIOverlay, bool showRemoveAtsignOption = false}) {
     if ((atSyncUIOverlay ?? this.atSyncUIOverlay) == AtSyncUIOverlay.none) {
       return;
     }
@@ -129,6 +160,7 @@ class AtSyncUIService extends SyncProgressListener {
     if ((atSyncUIOverlay ?? this.atSyncUIOverlay) == AtSyncUIOverlay.dialog) {
       AtSyncUI.instance.showDialog(
         message: showTextWhileSyncing ? 'Sync in progress' : null,
+        showRemoveAtsignOption: showRemoveAtsignOption,
       );
       return;
     }
@@ -149,6 +181,10 @@ class AtSyncUIService extends SyncProgressListener {
     }
 
     AtSyncUI.instance.hideSnackBar();
+  }
+
+  cancelTimer() {
+    _removeAtsignTimer?.cancel();
   }
 }
 

@@ -25,6 +25,8 @@ void main() {
         onSuccessCallback: () {},
         onErrorCallback: () {},
         syncProgressCallback: () {},
+        onAtSignRemoved: () {},
+        showRemoveAtsignOption: true,
       );
 
       expect(
@@ -50,6 +52,16 @@ void main() {
       expect(
         AtSyncUIService().syncProgressCallback,
         isA<Function>(),
+      );
+
+      expect(
+        AtSyncUIService().onAtSignRemoved,
+        isA<Function>(),
+      );
+
+      expect(
+        AtSyncUIService().showRemoveAtsignOption,
+        true,
       );
     });
 
