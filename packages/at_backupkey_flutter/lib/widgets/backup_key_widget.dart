@@ -247,17 +247,24 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
       }
       String tempFilePath = await _generateFile(aesEncryptedKeys);
       if (Platform.isAndroid || Platform.isIOS) {
-        await Share.shareFiles([tempFilePath],
-            sharePositionOrigin:
-                Rect.fromLTWH(0, 0, _size.width, _size.height / 2));
+        await Share.shareXFiles(
+          [XFile(tempFilePath)],
+          sharePositionOrigin:
+              Rect.fromLTWH(0, 0, _size.width, _size.height / 2),
+        ).then((ShareResult shareResult) {
+          if (shareResult.status == ShareResultStatus.success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('File saved successfully')));
+          }
+        });
       } else {
         final path =
             await getSavePath(suggestedName: '$atsign${Strings.backupKeyName}');
         final file = XFile(tempFilePath);
         await file.saveTo(path ?? '');
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('File saved successfully')));
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('File saved successfully')));
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
     } on Error catch (err) {
