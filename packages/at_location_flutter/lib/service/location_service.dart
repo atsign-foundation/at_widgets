@@ -6,9 +6,9 @@ import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
-import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 import 'at_location_notification_listener.dart';
 import 'distance_calculate.dart';
@@ -32,7 +32,7 @@ class LocationService {
   String? textForCenter;
   bool? calculateETA, addCurrentUserMarker, isMapInitialized = false;
   Function? showToast;
-  StreamSubscription<Position>? myLocationStream;
+  StreamSubscription<LocationData>? myLocationStream;
   DateTime? refreshAt;
   Future<dynamic>? refreshTimer;
   String? uniqueID; // used to differentiate between different calls
@@ -110,9 +110,11 @@ class LocationService {
   }
 
   Future addMyDetailsToHybridUsersList() async {
-    var permission = await Geolocator.checkPermission();
-    if (((permission == LocationPermission.always) ||
-        (permission == LocationPermission.whileInUse))) {
+    var _location = Location();
+    var permission = await _location.hasPermission();
+
+    if (((permission == PermissionStatus.granted) ||
+        (permission == PermissionStatus.grantedLimited))) {
       var _atsign = AtLocationNotificationListener().currentAtSign;
       var mylatlng = await getMyLocation();
       var _image = await MasterLocationService().getImageOfAtsignNew(_atsign);
@@ -122,15 +124,18 @@ class LocationService {
 
       updateMyLatLng(_myData);
 
-      myLocationStream = Geolocator.getPositionStream(
-              locationSettings: const LocationSettings(distanceFilter: 10))
+      await _location.changeSettings(distanceFilter: 10);
+
+      myLocationStream = _location.onLocationChanged
           .listen((myLocation) async {
-        var mylatlng = LatLng(myLocation.latitude, myLocation.longitude);
+        if(myLocation.latitude != null && myLocation.longitude != null){
+          var mylatlng = LatLng(myLocation.latitude!, myLocation.longitude!);
 
-        _myData = HybridModel(
-            displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
+          _myData = HybridModel(
+              displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
 
-        updateMyLatLng(_myData);
+          updateMyLatLng(_myData); 
+        }
       });
     } else {
       // ignore: unnecessary_null_comparison

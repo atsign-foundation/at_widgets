@@ -16,7 +16,7 @@ dependencies:
   latlong2: ^0.8.1
   fluttertoast: ^8.0.9
   sliding_up_panel: ^2.0.0+1
-  geolocator: ^8.2.1
+  location: ^4.2.0
   
   at_commons: ^3.0.26
   at_client_mobile: ^3.2.7
@@ -36,6 +36,10 @@ dev_dependencies:
   mocktail: ^0.3.0
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  at_location_flutter:
+    path: /Users/niteshkumar/Desktop/client_projects/at_widgets/packages/at_location_flutter
 
 
 # For information on the generic Dart part of this file, see the

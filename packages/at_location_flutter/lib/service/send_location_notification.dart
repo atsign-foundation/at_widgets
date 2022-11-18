@@ -11,9 +11,9 @@ import 'package:at_location_flutter/service/at_location_notification_listener.da
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
-import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 // ignore: implementation_imports
 import 'key_stream_service.dart';
 import 'package:at_utils/at_logger.dart';
@@ -31,7 +31,7 @@ class SendLocationNotification {
   factory SendLocationNotification() => _instance;
   Timer? timer;
   final String locationKey = 'location-notify';
-  StreamSubscription<Position>? positionStream;
+  StreamSubscription<LocationData>? positionStream;
   bool masterSwitchState = true;
   Function? locationPromptDialog;
   Map<String, LocationDataModel> allAtsignsLocationData = {};
@@ -379,18 +379,22 @@ class SendLocationNotification {
 
   /// sends 'location-notify' to all [allAtsignsLocationData] on every 100 metre location change.
   void sendLocation() async {
-    var permission = await Geolocator.checkPermission();
+    var _location = Location();
+    var permission = await _location.hasPermission();
 
-    if (((permission == LocationPermission.always) ||
-        (permission == LocationPermission.whileInUse))) {
-      positionStream = Geolocator.getPositionStream(
-              locationSettings: const LocationSettings(distanceFilter: 100))
+    if (((permission == PermissionStatus.granted) ||
+        (permission == PermissionStatus.grantedLimited))) {
+      if (positionStream != null) positionStream!.cancel();
+
+      await _location.changeSettings(distanceFilter: 100);
+
+      positionStream = _location.onLocationChanged
           .listen((myLocation) async {
         //// Enhancement: send location only when myLocation has changed
-        if (masterSwitchState) {
+        if (masterSwitchState && (myLocation.latitude != null && myLocation.longitude != null)) {
           for (var field in allAtsignsLocationData.entries) {
             await prepareLocationDataAndSend(field.key, field.value,
-                LatLng(myLocation.latitude, myLocation.longitude));
+                LatLng(myLocation.latitude!, myLocation.longitude!));
           }
         }
       });

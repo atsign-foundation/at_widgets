@@ -1,7 +1,7 @@
-import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:location/location.dart';
 
 /// Returns current [LatLng] of the device.
 ///
@@ -11,30 +11,13 @@ Future<LatLng?> getMyLocation() async {
   final _logger = AtSignLogger('getMyLocation');
 
   try {
-    bool serviceEnabled;
-    LocationPermission permission;
+    Location location = Location();
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return null;
-    }
+    var _permission = await isLocationServiceEnabled();
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.deniedForever) {
-        return null;
-      }
-
-      if (permission == LocationPermission.denied) {
-        return null;
-      }
-    }
-
-    if ((permission == LocationPermission.always) ||
-        (permission == LocationPermission.whileInUse)) {
-      var position = await Geolocator.getCurrentPosition();
-      return LatLng(position.latitude, position.longitude);
+    if(_permission){
+      var _locationData = await location.getLocation();
+      return LatLng(_locationData.latitude!, _locationData.longitude!);
     }
 
     return null;
@@ -49,39 +32,29 @@ Future<bool> isLocationServiceEnabled() async {
   final _logger = AtSignLogger('isLocationServiceEnabled');
 
   try {
-    bool serviceEnabled;
-    LocationPermission permission;
+    Location location = Location();
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
 
-    if (!serviceEnabled) {
-      return false;
-    }
-
-    permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.deniedForever) {
-      return false;
-    }
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.deniedForever) {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
         return false;
       }
+    }
 
-      if (permission == LocationPermission.denied) {
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
         return false;
       }
     }
 
     return true;
   } catch (e) {
-    if (e is PermissionRequestInProgressException) {
-      _logger.severe('PermissionRequestInProgressException error $e');
-    } else {
-      _logger.severe('$e');
-    }
     return false;
   }
 }
@@ -92,8 +65,8 @@ Future<LatLng?> getCurrentPosition() async {
   final _logger = AtSignLogger('getCurrentPosition');
 
   try {
-    var position = await Geolocator.getCurrentPosition();
-    return LatLng(position.latitude, position.longitude);
+    var _locationData = await Location().getLocation();
+    return LatLng(_locationData.latitude!, _locationData.longitude!);
   } catch (e) {
     _logger.severe('$e');
     return null;

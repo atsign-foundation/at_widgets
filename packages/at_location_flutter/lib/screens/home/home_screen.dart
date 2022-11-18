@@ -17,9 +17,9 @@ import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -50,16 +50,21 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    var permission = await Geolocator.checkPermission();
+    var _location = Location();
+    var permission = await _location.hasPermission();
 
-    if (((permission == LocationPermission.always) ||
-        (permission == LocationPermission.whileInUse))) {
-      Geolocator.getPositionStream(
-              locationSettings: const LocationSettings(distanceFilter: 2))
-          .listen((locationStream) async {
-        setState(() {
-          myLatLng = LatLng(locationStream.latitude, locationStream.longitude);
-        });
+    if (((permission == PermissionStatus.granted) ||
+        (permission == PermissionStatus.grantedLimited))) {
+
+      await _location.changeSettings(distanceFilter: 2);
+      _location.onLocationChanged
+          .listen((myLocation) async {
+        if (myLocation.latitude != null && myLocation.longitude != null) {
+        
+          setState(() {
+            myLatLng = LatLng(myLocation.latitude!, myLocation.longitude!);
+          });
+        }
       });
     }
   }
