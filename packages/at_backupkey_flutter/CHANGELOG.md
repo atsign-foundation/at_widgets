@@ -1,5 +1,8 @@
+## 4.0.8:
+- **FIX**: Fixed success snackbar issue on android and ios
+
 ## 4.0.7:
-- **CHORE**: Updated dependencies.
+- **CHORE**: Updated dependencies
 
 ## 4.0.6:
 - **FIX**: macOS backup key issue resolved
