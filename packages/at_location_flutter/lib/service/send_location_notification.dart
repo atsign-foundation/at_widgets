@@ -380,22 +380,35 @@ class SendLocationNotification {
   /// sends 'location-notify' to all [allAtsignsLocationData] on every 100 metre location change.
   void sendLocation() async {
     var permission = await Geolocator.checkPermission();
-
+    
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
+      LatLng? _lastUpdatedLocation; 
+
       positionStream = Geolocator.getPositionStream(
               locationSettings: const LocationSettings(distanceFilter: 100))
           .listen((myLocation) async {
+        var _newLoc = LatLng(myLocation.latitude, myLocation.longitude);
+
         //// Enhancement: send location only when myLocation has changed
-        if (masterSwitchState) {
+        if (masterSwitchState
+          &&  (_lastUpdatedLocation == null ||
+                  (differenceInMeters(_lastUpdatedLocation!, _newLoc) > 100))
+        ) {
           for (var field in allAtsignsLocationData.entries) {
             await prepareLocationDataAndSend(field.key, field.value,
-                LatLng(myLocation.latitude, myLocation.longitude));
+                _newLoc);
           }
+
+          _lastUpdatedLocation = _newLoc;
         }
       });
     }
   }
+
+  double differenceInMeters(LatLng _previousLoc, LatLng _newLoc){
+    return Geolocator.distanceBetween(_newLoc.latitude, _newLoc.longitude, _previousLoc.latitude, _previousLoc.longitude);
+  } 
 
   Future<void> prepareLocationDataAndSend(String receiver,
       LocationDataModel locationData, LatLng? myLocation) async {

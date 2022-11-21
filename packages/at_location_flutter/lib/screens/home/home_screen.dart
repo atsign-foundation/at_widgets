@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_location_flutter/common_components/bottom_sheet.dart';
 import 'package:at_location_flutter/common_components/display_tile.dart';
@@ -10,6 +12,7 @@ import 'package:at_location_flutter/screens/share_location/share_location_sheet.
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/home_screen_service.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
+import 'package:at_location_flutter/service/location_service.dart';
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:at_location_flutter/service/send_location_notification.dart';
 import 'package:at_location_flutter/show_location.dart';
@@ -40,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // KeyStreamService().init(AtLocationNotificationListener().atClientInstance);
   }
 
+  StreamSubscription<Position>? _positionStream;
+
   void _getMyLocation() async {
     var newMyLatLng = await getMyLocation();
     if (newMyLatLng != null) {
@@ -54,12 +59,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (((permission == LocationPermission.always) ||
         (permission == LocationPermission.whileInUse))) {
-      Geolocator.getPositionStream(
+      if (_positionStream != null) {
+        await _positionStream!.cancel();
+      }
+      
+      LatLng? _lastUpdatedLocation; 
+
+      _positionStream = Geolocator.getPositionStream(
               locationSettings: const LocationSettings(distanceFilter: 2))
           .listen((locationStream) async {
-        setState(() {
-          myLatLng = LatLng(locationStream.latitude, locationStream.longitude);
-        });
+        var _newLoc = LatLng(locationStream.latitude, locationStream.longitude);
+        if (mounted 
+                 &&  (_lastUpdatedLocation == null ||
+                  (LocationService().differenceInMeters(_lastUpdatedLocation, _newLoc) > 2))
+        ) {
+          setState(() {
+            myLatLng = _newLoc;
+          });
+        }
       });
     }
   }

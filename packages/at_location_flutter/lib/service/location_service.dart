@@ -122,15 +122,21 @@ class LocationService {
 
       updateMyLatLng(_myData);
 
+      LatLng? _lastUpdatedLocation; 
+
       myLocationStream = Geolocator.getPositionStream(
               locationSettings: const LocationSettings(distanceFilter: 10))
           .listen((myLocation) async {
-        var mylatlng = LatLng(myLocation.latitude, myLocation.longitude);
+            var mylatlng = LatLng(myLocation.latitude, myLocation.longitude);
 
-        _myData = HybridModel(
-            displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
+            if(_lastUpdatedLocation == null ||
+                  (differenceInMeters(_lastUpdatedLocation, mylatlng) > 10))
+            {
+              _myData = HybridModel(
+                  displayName: _atsign, latLng: mylatlng, eta: '?', image: _image);
 
-        updateMyLatLng(_myData);
+              updateMyLatLng(_myData);
+            }
       });
     } else {
       // ignore: unnecessary_null_comparison
@@ -140,6 +146,10 @@ class LocationService {
             isError: true);
       }
     }
+  }
+
+  double differenceInMeters(LatLng _previousLoc, LatLng _newLoc){
+    return Geolocator.distanceBetween(_newLoc.latitude, _newLoc.longitude, _previousLoc.latitude, _previousLoc.longitude);
   }
 
   void updateMyLatLng(HybridModel _myData) async {
