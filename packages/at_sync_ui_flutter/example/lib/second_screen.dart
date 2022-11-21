@@ -1,9 +1,8 @@
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
-import 'package:example/custom_sync_widget.dart';
-import 'package:example/ui_options.dart';
+import 'package:at_sync_ui_flutter_example/custom_sync_widget.dart';
+import 'package:at_sync_ui_flutter_example/ui_options.dart';
 import 'package:flutter/material.dart';
-
 import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
