@@ -1,3 +1,6 @@
+## 1.0.8
+- **FEAT**: Provides exit option when sync takes longer
+
 ## 1.0.7
 - **CHORE**: Updated dependencies and android gradle versions
 

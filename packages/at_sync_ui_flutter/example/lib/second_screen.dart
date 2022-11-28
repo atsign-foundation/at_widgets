@@ -22,10 +22,12 @@ class _SecondScreenState extends State<SecondScreen> {
       super.initState();
       activeAtSign = widget.activeAtSign;
       AtSyncUIService().init(
-          appNavigator: NavService.navKey,
-          onSuccessCallback: _onSuccessCallback,
-          onErrorCallback: _onErrorCallback,
-          showRemoveAtsignOption: true);
+        appNavigator: NavService.navKey,
+        onSuccessCallback: _onSuccessCallback,
+        onErrorCallback: _onErrorCallback,
+        showRemoveAtsignOption: true,
+        onAtSignRemoved: _onAtSignRemoved,
+      );
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         showDialog(
@@ -50,6 +52,12 @@ class _SecondScreenState extends State<SecondScreen> {
 
   _onErrorCallback(syncStatus) {
     showSnackBar('Sync not successful', isError: true);
+  }
+
+  _onAtSignRemoved() {
+    showSnackBar('atSign removed from keychain', isError: false);
+
+    /// add condition to switch to next atSign or display appropriate message
   }
 
   @override
