@@ -14,15 +14,16 @@ dependencies:
   flutter:
     sdk: flutter
   at_client: ^3.0.40
+  at_client_mobile: ^3.2.7
+  at_common_flutter: ^2.0.10
+
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.1
-  at_common_flutter: ^2.0.10
   mocktail: ^0.3.0
-  at_client_mobile: ^3.2.7
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
