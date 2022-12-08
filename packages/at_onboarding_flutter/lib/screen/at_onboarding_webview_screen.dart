@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:at_backupkey_flutter/utils/color_constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class AtOnboardingWebviewScreen extends StatefulWidget {
@@ -50,6 +52,11 @@ class _AtOnboardingWebviewScreenState extends State<AtOnboardingWebviewScreen> {
           WebView(
             initialUrl: widget.url,
             javascriptMode: JavascriptMode.unrestricted,
+            gestureRecognizers: {
+              Factory<VerticalDragGestureRecognizer>(
+                () => VerticalDragGestureRecognizer()..onUpdate = (_) {},
+              )
+            },
             onPageFinished: (String value) {
               setState(() {
                 isLoading = false;
