@@ -1,6 +1,6 @@
 <img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
-[![pub package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter) [![pub points](https://badges.bar/at_follows_flutter/pub%20points)](https://pub.dev/packages/at_follows_flutter/score) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+[![pub package](https://img.shields.io/pub/v/at_follows_flutter)](https://pub.dev/packages/at_follows_flutter) [![pub points](https://img.shields.io/pub/points/at_follows_flutter?logo=dart)](https://pub.dev/packages/at_follows_flutter/score) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 # at_follows_flutter
 
