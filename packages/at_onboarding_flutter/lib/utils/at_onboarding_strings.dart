@@ -29,7 +29,7 @@ class AtOnboardingStrings {
   static const String saveBackupKeyTitle = 'Save your key';
   static const String saveImportantTitle = 'IMPORTANT!';
   static const String saveBackupDescription =
-      'Please save your key in a secure location (we recommend Google Drive or iCloud Drive). You will need it to sign back in AND use other @platform apps.';
+      'Please save your key in a secure location (we recommend Google Drive or iCloud Drive). You will need it to sign back in AND use other atPlatform apps.';
   static const String saveButtonTitle = 'SAVE';
   static const String declaration = 'Yes I\'ve saved my backupkey file';
   static const String continueButtonTitle = 'CONTINUE';

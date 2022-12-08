@@ -1,6 +1,6 @@
 <img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
 
-[![pub package](https://img.shields.io/pub/v/at_backupkey_flutter)](https://pub.dev/packages/at_backupkey_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=@Platform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=The%20@%20Company&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
+[![pub package](https://img.shields.io/pub/v/at_backupkey_flutter)](https://pub.dev/packages/at_backupkey_flutter) [![](https://img.shields.io/static/v1?label=Backend&message=atPlatform&color=<COLOR>)](https://atsign.dev) [![](https://img.shields.io/static/v1?label=Publisher&message=Atsign&color=F05E3E)](https://atsign.com) [![gitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
 
 ## Overview
 The at_backupkey_flutter package provides the functionality to take backup of secret keys of an onboarded atSign.

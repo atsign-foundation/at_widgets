@@ -1,6 +1,6 @@
 # **at_invitation_widget**
 
-This Flutter package is designed to invite one's contacts who are not on @platform. This can also be used in case the inviter is not aware of the contact's @sign.
+This Flutter package is designed to invite one's contacts who are not on atPlatform. This can also be used in case the inviter is not aware of the contact's atSign.
 
 ### Overview
 This package provides a function called `shareAndinvite` in the app. Using this, a link is generated which can be shared with the invitee via SMS or email. To avoid misuse, a passcode is also sent along with it.
