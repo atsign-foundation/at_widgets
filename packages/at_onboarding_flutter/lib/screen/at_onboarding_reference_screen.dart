@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -66,6 +68,11 @@ class _AtOnboardingReferenceScreenState
           WebView(
             initialUrl: widget.url,
             javascriptMode: JavascriptMode.unrestricted,
+            gestureRecognizers: {
+              Factory<VerticalDragGestureRecognizer>(
+                () => VerticalDragGestureRecognizer()..onUpdate = (_) {},
+              )
+            },
             onPageFinished: (String value) {
               setState(() {
                 isLoading = false;
