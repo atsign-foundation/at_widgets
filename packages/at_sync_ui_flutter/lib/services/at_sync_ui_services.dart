@@ -139,6 +139,7 @@ class AtSyncUIService extends SyncProgressListener {
   }
 
   void _onSuccessCallback(SyncResult syncStatus) {
+    _hide();
     cancelTimer();
 
     if ((syncStatus.syncStatus == SyncStatus.failure) &&
@@ -171,15 +172,7 @@ class AtSyncUIService extends SyncProgressListener {
   }
 
   void _hide() {
-    if (atSyncUIOverlay == AtSyncUIOverlay.none) {
-      return;
-    }
-
-    if (atSyncUIOverlay == AtSyncUIOverlay.dialog) {
-      AtSyncUI.instance.hideDialog();
-      return;
-    }
-
+    AtSyncUI.instance.hideDialog();
     AtSyncUI.instance.hideSnackBar();
   }
 
