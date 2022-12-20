@@ -1,3 +1,6 @@
+## 5.1.0
+- **CHORE**: Updated file_picker and webview_flutter dependencies
+
 ## 5.0.5
 - **FIX**: Fixed atSign activation issue
 
