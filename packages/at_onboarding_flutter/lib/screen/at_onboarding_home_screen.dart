@@ -125,8 +125,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       }
       _isContinue = true;
       String? fileContents, aesKey, atsign;
-      FilePickerResult? result = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true);
+      FilePickerResult? result =
+          await FilePicker.platform.pickFiles(type: FileType.any);
       if ((result?.files ?? []).isEmpty) {
         //User cancelled => do nothing
         return;
