@@ -35,13 +35,29 @@ class AtOnboardingReferenceScreen extends StatefulWidget {
 class _AtOnboardingReferenceScreenState
     extends State<AtOnboardingReferenceScreen> {
   late bool isLoading;
+  late WebViewController webViewController;
 
   @override
   void initState() {
     super.initState();
     // Enable hybrid composition.
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     isLoading = true;
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.white)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+          onWebResourceError: (WebResourceError error) {},
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url ?? ''));
   }
 
   @override
@@ -63,15 +79,8 @@ class _AtOnboardingReferenceScreenState
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
-          WebView(
-            initialUrl: widget.url,
-            javascriptMode: JavascriptMode.unrestricted,
-            onPageFinished: (String value) {
-              setState(() {
-                isLoading = false;
-              });
-            },
-            backgroundColor: Colors.white,
+          WebViewWidget(
+            controller: webViewController,
           ),
           isLoading
               ? const Center(
