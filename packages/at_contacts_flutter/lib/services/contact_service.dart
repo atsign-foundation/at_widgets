@@ -501,10 +501,7 @@ class ContactService {
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientManager.atClient.get(key).catchError((e) {
-        print('error in get ${e.errorCode} ${e.errorMessage}');
-        return AtValue();
-      });
+      var result = await atClientManager.atClient.get(key);
       String? firstname;
       if (result.value != null) {
         firstname = result.value;
@@ -517,10 +514,7 @@ class ContactService {
       key.metadata = metadata;
       // making isPublic true (as get method changes it to false)
       key.key = contactFields[1];
-      result = await atClientManager.atClient.get(key).catchError((e) {
-        print('error in getting last name $e');
-        return AtValue();
-      });
+      result = await atClientManager.atClient.get(key);
       String? lastname;
       if (result.value != null) {
         lastname = result.value;
@@ -532,6 +526,13 @@ class ContactService {
         name = atSign.substring(1);
       }
 
+      contactDetails['name'] = name;
+    } catch (e) {
+      contactDetails['name'] = null;
+      print("error in getting firstname/lastname: $e");
+    }
+
+    try {
       // profile picture
       metadata.isPublic = true;
       metadata.namespaceAware = false;
@@ -541,10 +542,7 @@ class ContactService {
       key.metadata?.isBinary = true;
       key.key = contactFields[2];
       Uint8List? image;
-      result = await atClientManager.atClient.get(key).catchError((e) {
-        print('error in getting image $e');
-        return AtValue();
-      });
+      var result = await atClientManager.atClient.get(key);
 
       if (result.value != null) {
         try {
@@ -555,11 +553,10 @@ class ContactService {
         }
       }
 
-      contactDetails['name'] = name;
       contactDetails['image'] = image;
       contactDetails['nickname'] = nickName != '' ? nickName : null;
     } catch (e) {
-      contactDetails['name'] = null;
+      print("error in getting image: $e");
       contactDetails['image'] = null;
       contactDetails['nickname'] = null;
     }
