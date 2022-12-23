@@ -498,15 +498,21 @@ class ContactService {
     key.metadata = metadata;
     List contactFields = TextStrings().contactFields;
 
+    String? firstname;
+    String? lastname;
+
     try {
       // firstname
       key.key = contactFields[0];
       var result = await atClientManager.atClient.get(key);
-      String? firstname;
       if (result.value != null) {
         firstname = result.value;
       }
+    } catch (e) {
+      print("error in getting firstname: $e");
+    }
 
+    try {
       // lastname
       metadata.isPublic = true;
       metadata.namespaceAware = false;
@@ -514,22 +520,23 @@ class ContactService {
       key.metadata = metadata;
       // making isPublic true (as get method changes it to false)
       key.key = contactFields[1];
-      result = await atClientManager.atClient.get(key);
-      String? lastname;
+      var result = await atClientManager.atClient.get(key);
       if (result.value != null) {
         lastname = result.value;
       }
+    } catch (e) {
+      print("error in getting lastname: $e");
+    }
 
+    if (firstname == null && lastname == null) {
+      contactDetails['name'] = null;
+    } else {
       // construct name
       var name = ('${firstname ?? ''} ${lastname ?? ''}').trim();
       if (name.isEmpty) {
         name = atSign.substring(1);
       }
-
       contactDetails['name'] = name;
-    } catch (e) {
-      contactDetails['name'] = null;
-      print("error in getting firstname/lastname: $e");
     }
 
     try {
