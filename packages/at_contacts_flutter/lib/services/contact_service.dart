@@ -498,18 +498,21 @@ class ContactService {
     key.metadata = metadata;
     List contactFields = TextStrings().contactFields;
 
+    String? firstname;
+    String? lastname;
+
     try {
       // firstname
       key.key = contactFields[0];
-      var result = await atClientManager.atClient.get(key).catchError((e) {
-        print('error in get ${e.errorCode} ${e.errorMessage}');
-        return AtValue();
-      });
-      String? firstname;
+      var result = await atClientManager.atClient.get(key);
       if (result.value != null) {
         firstname = result.value;
       }
+    } catch (e) {
+      print("error in getting firstname: $e");
+    }
 
+    try {
       // lastname
       metadata.isPublic = true;
       metadata.namespaceAware = false;
@@ -517,21 +520,26 @@ class ContactService {
       key.metadata = metadata;
       // making isPublic true (as get method changes it to false)
       key.key = contactFields[1];
-      result = await atClientManager.atClient.get(key).catchError((e) {
-        print('error in getting last name $e');
-        return AtValue();
-      });
-      String? lastname;
+      var result = await atClientManager.atClient.get(key);
       if (result.value != null) {
         lastname = result.value;
       }
+    } catch (e) {
+      print("error in getting lastname: $e");
+    }
 
+    if (firstname == null && lastname == null) {
+      contactDetails['name'] = null;
+    } else {
       // construct name
       var name = ('${firstname ?? ''} ${lastname ?? ''}').trim();
       if (name.isEmpty) {
         name = atSign.substring(1);
       }
+      contactDetails['name'] = name;
+    }
 
+    try {
       // profile picture
       metadata.isPublic = true;
       metadata.namespaceAware = false;
@@ -541,10 +549,7 @@ class ContactService {
       key.metadata?.isBinary = true;
       key.key = contactFields[2];
       Uint8List? image;
-      result = await atClientManager.atClient.get(key).catchError((e) {
-        print('error in getting image $e');
-        return AtValue();
-      });
+      var result = await atClientManager.atClient.get(key);
 
       if (result.value != null) {
         try {
@@ -555,11 +560,10 @@ class ContactService {
         }
       }
 
-      contactDetails['name'] = name;
       contactDetails['image'] = image;
       contactDetails['nickname'] = nickName != '' ? nickName : null;
     } catch (e) {
-      contactDetails['name'] = null;
+      print("error in getting image: $e");
       contactDetails['image'] = null;
       contactDetails['nickname'] = null;
     }
