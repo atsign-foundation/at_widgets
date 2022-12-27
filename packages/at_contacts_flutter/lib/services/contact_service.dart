@@ -561,12 +561,12 @@ class ContactService {
       }
 
       contactDetails['image'] = image;
-      contactDetails['nickname'] = nickName != '' ? nickName : null;
     } catch (e) {
       print("error in getting image: $e");
       contactDetails['image'] = null;
-      contactDetails['nickname'] = null;
     }
+    contactDetails['nickname'] = nickName != '' ? nickName : null;
+
     return contactDetails;
   }
 
