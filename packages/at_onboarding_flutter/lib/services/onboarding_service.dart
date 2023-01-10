@@ -114,7 +114,7 @@ class OnboardingService {
     Completer<AtOnboardingResponseStatus> c =
         Completer<AtOnboardingResponseStatus>();
     try {
-      serverStatus = await _checkAtSignServerStatus(atsign);
+      serverStatus = await checkAtSignServerStatus(atsign);
       if (serverStatus != ServerStatus.teapot &&
           serverStatus != ServerStatus.activated) {
         c.complete(AtOnboardingResponseStatus.serverNotReached);
@@ -189,7 +189,7 @@ class OnboardingService {
     }
     atsign = formatAtSign(atsign);
     List<String> atSignsList = await getAtsignList();
-    ServerStatus? status = await _checkAtSignServerStatus(atsign!).timeout(
+    ServerStatus? status = await checkAtSignServerStatus(atsign!).timeout(
         Duration(seconds: AtOnboardingConstants.responseTimeLimit),
         onTimeout: () => throw AtOnboardingResponseStatus.timeOut);
     bool isExist =
@@ -207,7 +207,7 @@ class OnboardingService {
     return atSignsList;
   }
 
-  Future<ServerStatus?> _checkAtSignServerStatus(String atsign) async {
+  Future<ServerStatus?> checkAtSignServerStatus(String atsign) async {
     AtStatusImpl atStatusImpl =
         AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
     AtStatus status = await atStatusImpl.get(atsign);
