@@ -191,18 +191,20 @@ class _AtOnboardingActivateScreenState
             AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
+      _onboardingService.setAtClientPreference =
+          widget.config.atClientPreference;
 
       atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
-      //Delay for waiting for ServerStatus change to teapot when activating an atsign
       while (atSignStatus != ServerStatus.teapot &&
           atSignStatus != ServerStatus.activated) {
         await Future.delayed(const Duration(seconds: 2));
         atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
         debugPrint("currentAtSignStatus: $atSignStatus");
       }
+
+      //Delay for waiting for ServerStatus change to teapot when activating an atsign
       // await Future.delayed(const Duration(seconds: 10));
-      _onboardingService.setAtClientPreference =
-          widget.config.atClientPreference;
+
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
