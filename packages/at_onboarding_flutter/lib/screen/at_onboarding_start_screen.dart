@@ -143,7 +143,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
             title:
                 'Share this atSign with all your atPlatform apps?',
             message:
-                'You will not be required to re-upload your atKeys when you use @theAstign with other atPlatform apps on this device.',
+                'You will not be required to re-upload your atKeys when you use this atSign with other atPlatform apps on this device.',
             subMessage: '*For this to work, sharing must also be switched on in the other apps',
             actions: [
               AtOnboardingSecondaryButton(
