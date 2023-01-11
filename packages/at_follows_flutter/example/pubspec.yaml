@@ -14,7 +14,7 @@ dependencies:
   path_provider: ^2.0.7
   flutter_local_notifications: ^9.1.4
   at_app_flutter: ^5.0.1
-  at_onboarding_flutter: ^5.0.4
+  at_onboarding_flutter: ^5.0.5
   flutter_keychain: ^2.2.1
 
   at_follows_flutter:
@@ -33,6 +33,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  at_onboarding_flutter:
+    path: ../../at_onboarding_flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
