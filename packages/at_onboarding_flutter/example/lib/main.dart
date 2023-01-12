@@ -1,15 +1,10 @@
 import 'dart:async';
 import 'package:at_onboarding_flutter_example/switch_atsign.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show AtOnboardingConfig, AtOnboardingResultStatus;
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 
-// import 'package:at_utils/at_logger.dart' show AtSignLogger;
-import 'package:path_provider/path_provider.dart'
-    show getApplicationSupportDirectory;
+import 'package:path_provider/path_provider.dart' show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
-import 'package:at_onboarding_flutter/at_onboarding.dart';
 
 Future<void> main() async {
   await AtEnv.load();
