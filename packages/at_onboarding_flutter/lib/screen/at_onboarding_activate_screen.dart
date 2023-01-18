@@ -201,14 +201,27 @@ class _AtOnboardingActivateScreenState
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
 
+      int round = 1;
       atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
       while (atSignStatus != ServerStatus.activated) {
+        if(round > 10){
+          break;
+        }
+
         await Future.delayed(const Duration(seconds: 3));
+        round ++;
         atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
         debugPrint("currentAtSignStatus: $atSignStatus");
       }
 
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
+        if(atSignStatus == ServerStatus.teapot){
+          await _showAlertDialog(
+            AtOnboardingStrings.atsignNull,
+          );
+          return;
+        }
+        
         await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));

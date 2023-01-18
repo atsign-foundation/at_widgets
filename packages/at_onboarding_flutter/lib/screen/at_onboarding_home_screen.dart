@@ -708,15 +708,28 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
 
+      int round = 1;
       atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
       while (atSignStatus != ServerStatus.activated) {
+        if(round > 10){
+          break;
+        }
+
         await Future.delayed(const Duration(seconds: 3));
+        round ++;
         atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
         debugPrint("currentAtSignStatus: $atSignStatus");
       }
 
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
+        if(atSignStatus == ServerStatus.teapot){
+          await _showAlertDialog(
+            AtOnboardingStrings.atsignNull,
+          );
+          return;
+        }
+
         await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
