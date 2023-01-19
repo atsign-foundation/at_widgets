@@ -8,10 +8,13 @@ import 'package:at_client/src/service/sync_service.dart';
 
 class MockSyncService extends Mock implements SyncService {}
 
+class MockAtCLientManager extends Mock implements AtClientManager {}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   GlobalKey<NavigatorState> _key = GlobalKey();
   MockSyncService mockSyncService = MockSyncService();
+  MockAtCLientManager mockAtClientManager = MockAtCLientManager();
 
   group('sync service test', () {
     test('AtSyncUIService init', () {
@@ -67,13 +70,15 @@ void main() {
 
     test('AtSyncUIService sync', () {
       AtSyncUIService().syncService = mockSyncService;
+      AtClientManager.getInstance().syncService = mockSyncService;
+
       AtSyncUIService().init(
-        appNavigator: _key,
-        primaryColor: Colors.red,
-        onSuccessCallback: () {},
-        onErrorCallback: () {},
-        syncProgressCallback: () {},
-      );
+          appNavigator: _key,
+          primaryColor: Colors.red,
+          onSuccessCallback: () {},
+          onErrorCallback: () {},
+          syncProgressCallback: () {},
+          atSyncUIOverlay: AtSyncUIOverlay.snackbar);
 
       AtSyncUIService().atSyncUIListener.listen((AtSyncUIStatus status) {
         expect(
@@ -81,8 +86,6 @@ void main() {
           AtSyncUIStatus.syncing,
         );
       });
-
-      AtSyncUIService().sync(atSyncUIOverlay: AtSyncUIOverlay.snackbar);
 
       expect(
         AtSyncUIService().atSyncUIOverlay,

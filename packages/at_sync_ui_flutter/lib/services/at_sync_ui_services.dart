@@ -75,7 +75,6 @@ class AtSyncUIService extends SyncProgressListener {
     bool showRemoveAtsignOption = false,
     bool startTimer = true,
   }) {
-    removeSyncProgressListener();
     this.onSuccessCallback = onSuccessCallback;
     this.onErrorCallback = onErrorCallback;
     this.syncProgressCallback = syncProgressCallback;
@@ -103,7 +102,6 @@ class AtSyncUIService extends SyncProgressListener {
 
     var _atSyncUIController = AtSyncUIController();
     AtSyncUI.instance.setupController(controller: _atSyncUIController);
-
     syncService = AtClientManager.getInstance().syncService;
     syncService!.addProgressListener(this);
     syncService!.setOnDone(_onSuccessCallback);
@@ -142,18 +140,6 @@ class AtSyncUIService extends SyncProgressListener {
       atSyncUIOverlay: atSyncUIOverlay,
       showRemoveAtsignOption: !startTimer,
     );
-  }
-
-  /// enables listening for sync progress
-  addSyncProgressListener() {
-    syncService?.addProgressListener(this);
-  }
-
-  /// stops listening for sync progress
-  ///
-  /// this should be called before switching atSign
-  removeSyncProgressListener() {
-    syncService?.removeProgressListener(this);
   }
 
   void _onSuccessCallback(SyncResult syncStatus) {
