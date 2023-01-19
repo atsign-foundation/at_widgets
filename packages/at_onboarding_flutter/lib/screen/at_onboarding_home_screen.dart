@@ -705,6 +705,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       _onboardingService.setAtClientPreference =
           widget.config.atClientPreference;
 
+      authResponse = await _onboardingService.authenticate(atsign,
+          cramSecret: secret, status: widget.onboardStatus);
+
       int round = 1;
       atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
       while (atSignStatus != ServerStatus.activated) {
@@ -717,8 +720,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
         debugPrint("currentAtSignStatus: $atSignStatus");
       }
-      authResponse = await _onboardingService.authenticate(atsign,
-          cramSecret: secret, status: widget.onboardStatus);
 
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {

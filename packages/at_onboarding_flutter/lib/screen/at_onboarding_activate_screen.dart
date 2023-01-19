@@ -198,6 +198,9 @@ class _AtOnboardingActivateScreenState
       _onboardingService.setAtClientPreference =
           widget.config.atClientPreference;
 
+      authResponse = await _onboardingService.authenticate(atsign,
+          cramSecret: secret, status: OnboardingStatus.ACTIVATE);
+
       int round = 1;
       atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
       while (atSignStatus != ServerStatus.activated) {
@@ -211,8 +214,7 @@ class _AtOnboardingActivateScreenState
         debugPrint("currentAtSignStatus: $atSignStatus");
       }
 
-      authResponse = await _onboardingService.authenticate(atsign,
-          cramSecret: secret, status: OnboardingStatus.ACTIVATE);
+
 
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         if (atSignStatus == ServerStatus.teapot) {
