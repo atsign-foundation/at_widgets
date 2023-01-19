@@ -1,3 +1,6 @@
+## 1.0.9
+- **FEAT**: Deprecated sync() method and moved it's call to init method.
+
 ## 1.0.8
 - **FEAT**: Provides exit option when sync takes longer
 
