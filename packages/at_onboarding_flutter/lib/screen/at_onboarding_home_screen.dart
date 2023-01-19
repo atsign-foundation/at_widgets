@@ -18,6 +18,7 @@ import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
+import 'package:at_server_status/at_server_status.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:file_picker/file_picker.dart';
@@ -65,7 +66,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   bool _isContinue = true;
   bool _uploadingQRCode = false;
   String? _pairingAtsign;
-
+  ServerStatus? atSignStatus;
   final String _incorrectKeyFile =
       'Unable to fetch the keys from chosen file. Please choose correct file';
   final String _failedFileProcessing =
@@ -697,14 +698,37 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             AtOnboardingErrorToString().pairedAtsign(atsign));
         return;
       }
-      //Delay 10s for waiting for ServerStatus change to teapot when activating an atsign
+
+      //Delay for waiting for ServerStatus change to teapot when activating an atsign
       await Future.delayed(const Duration(seconds: 10));
+
       _onboardingService.setAtClientPreference =
           widget.config.atClientPreference;
+
+      int round = 1;
+      atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
+      while (atSignStatus != ServerStatus.activated) {
+        if (round > 10) {
+          break;
+        }
+
+        await Future.delayed(const Duration(seconds: 3));
+        round++;
+        atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
+        debugPrint("currentAtSignStatus: $atSignStatus");
+      }
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: widget.onboardStatus);
+
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
+        if (atSignStatus == ServerStatus.teapot) {
+          await _showAlertDialog(
+            AtOnboardingStrings.atsignNull,
+          );
+          return;
+        }
+
         await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));

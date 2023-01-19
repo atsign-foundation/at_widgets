@@ -16,6 +16,7 @@ class WebViewScreen extends StatefulWidget {
     required this.url,
     required this.title,
   });
+
   @override
   _WebViewScreenState createState() => _WebViewScreenState();
 }
@@ -23,12 +24,34 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   late bool isLoading;
   var _logger = AtSignLogger('WebView Widget');
+  late WebViewController webViewController;
 
   @override
   void initState() {
     super.initState();
-    // Enable hybrid composition.
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.white)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+          onNavigationRequest: (navReq) async {
+            if (navReq.url.startsWith(AppConstants.appUrl)) {
+              _logger.info('Navigation decision is taken by urlLauncher');
+              await _launchURL(navReq.url);
+              return NavigationDecision.prevent;
+            }
+            _logger.info('Navigation decision is taken by webView');
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url));
+
     isLoading = true;
   }
 
@@ -42,30 +65,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ),
       body: Stack(
         children: [
-          WebView(
-            initialUrl: widget.url,
-            javascriptMode: JavascriptMode.unrestricted,
-            navigationDelegate: (NavigationRequest navReq) async {
-              if (navReq.url.startsWith(AppConstants.appUrl)) {
-                _logger.info('Navigation decision is taken by urlLauncher');
-                await _launchURL(navReq.url);
-                return NavigationDecision.prevent;
-              }
-              _logger.info('Navigation decision is taken by webView');
-              return NavigationDecision.navigate;
-            },
-            onPageFinished: (value) {
-              setState(() {
-                isLoading = false;
-              });
-            },
+          WebViewWidget(
+            controller: webViewController,
           ),
           isLoading
               ? Center(
                   child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color?>(
-                    ColorConstants.activeColor,
-                  )),
+                    valueColor: AlwaysStoppedAnimation<Color?>(
+                      ColorConstants.activeColor,
+                    ),
+                  ),
                 )
               : SizedBox()
         ],

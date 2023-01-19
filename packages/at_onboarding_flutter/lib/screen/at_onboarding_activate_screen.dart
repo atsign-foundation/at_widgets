@@ -43,7 +43,7 @@ class _AtOnboardingActivateScreenState
 
   bool isVerifing = false;
   bool isResendingCode = false;
-
+  ServerStatus? atSignStatus;
   String limitExceeded = 'limitExceeded';
 
   final OnboardingService _onboardingService = OnboardingService.getInstance();
@@ -192,13 +192,36 @@ class _AtOnboardingActivateScreenState
         return;
       }
 
-      //Delay 10s for waiting for ServerStatus change to teapot when activating an atsign
+      //Delay for waiting for ServerStatus change to teapot when activating an atsign
       await Future.delayed(const Duration(seconds: 10));
+
       _onboardingService.setAtClientPreference =
           widget.config.atClientPreference;
+
+      int round = 1;
+      atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
+      while (atSignStatus != ServerStatus.activated) {
+        if (round > 10) {
+          break;
+        }
+
+        await Future.delayed(const Duration(seconds: 3));
+        round++;
+        atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
+        debugPrint("currentAtSignStatus: $atSignStatus");
+      }
+
       authResponse = await _onboardingService.authenticate(atsign,
           cramSecret: secret, status: OnboardingStatus.ACTIVATE);
+
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
+        if (atSignStatus == ServerStatus.teapot) {
+          await _showAlertDialog(
+            AtOnboardingStrings.atsignNull,
+          );
+          return;
+        }
+
         await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
