@@ -1,3 +1,6 @@
+## 1.0.9
+- **REFACTOR**: Deprecated `sync()` method and moved it's implementation to init.
+
 ## 1.0.8
 - **FEAT**: Provides exit option when sync takes longer
 
