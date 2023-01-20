@@ -1,3 +1,7 @@
+## 6.0.1
+- **FIX**: Fixed issue in atSign activation process
+- **CHORE**: Exported at_client_mobile dependency
+
 ## 6.0.0
 - **CHORE**: Updated file_picker and webview_flutter dependency
 
