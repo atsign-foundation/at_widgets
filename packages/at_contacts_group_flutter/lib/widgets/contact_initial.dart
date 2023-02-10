@@ -14,6 +14,8 @@ class ContactInitial extends StatelessWidget {
   /// Index in the list of atsigns
   int? index;
 
+  final double? borderRadius;
+
   ContactInitial({
     Key? key,
     this.size = 40,
@@ -21,7 +23,9 @@ class ContactInitial extends StatelessWidget {
     this.index,
     this.maxSize,
     this.minSize,
+    this.borderRadius,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var encodedInitials = initials.runes;
@@ -36,7 +40,7 @@ class ContactInitial extends StatelessWidget {
       width: size.toFont,
       decoration: BoxDecoration(
         color: ContactInitialsColors.getColor(initials),
-        borderRadius: BorderRadius.circular((size.toFont)),
+        borderRadius: BorderRadius.circular((borderRadius ?? size)),
       ),
       child: Center(
         child: Text(

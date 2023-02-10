@@ -34,6 +34,7 @@ dependencies:
   at_contacts_flutter: ^4.0.8
   at_contact: ^3.0.7
   at_utils: ^3.0.11
+  flutter_svg: ^1.1.5
   
 dev_dependencies:
   flutter_lints: ^2.0.1
@@ -66,6 +67,8 @@ flutter:
 
   # To add assets to your plugin package, add an assets section, like this:
   assets:
+    - assets/vectors/
+    - assets/images/
     - assets/images/empty_group.png
     - assets/images/send.png
     # - images/a_dot_burr.jpeg
