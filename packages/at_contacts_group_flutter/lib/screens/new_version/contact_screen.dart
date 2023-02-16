@@ -73,9 +73,11 @@ class _ListContactScreenState extends State<ListContactScreen> {
                       const EdgeInsets.only(bottom: 15, left: 27, right: 27),
                 )
               : Container(
-                  height: 44,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+                  height: 44.toHeight,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 32.toWidth,
+                    vertical: 18.toHeight,
+                  ),
                   child: TextFormField(
                     controller: searchController,
                     onChanged: (value) {

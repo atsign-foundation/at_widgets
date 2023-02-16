@@ -69,11 +69,12 @@ class _ContactCardWidgetState extends State<ContactCardWidget> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color:
-                widget.isSelected ? const Color(0xFFF07C50) : AllColors().GRAY,
+            color: widget.isSelected
+                ? AllColors().INDICATOR_ORANGE
+                : AllColors().GRAY,
           ),
           color: widget.isSelected
-              ? const Color(0xFFF07C50).withOpacity(0.2)
+              ? AllColors().INDICATOR_ORANGE.withOpacity(0.2)
               : Colors.white,
         ),
         child: Row(

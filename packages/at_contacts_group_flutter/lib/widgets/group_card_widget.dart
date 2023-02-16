@@ -11,6 +11,7 @@ class GroupCardWidget extends StatefulWidget {
   final double size;
   final double borderRadius;
   final Function()? onTap;
+  final bool isSelected;
 
   const GroupCardWidget({
     Key? key,
@@ -18,6 +19,7 @@ class GroupCardWidget extends StatefulWidget {
     this.size = 44,
     this.borderRadius = 10,
     this.onTap,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override
@@ -60,9 +62,13 @@ class _GroupCardWidgetState extends State<GroupCardWidget> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: AllColors().GRAY,
+              color: widget.isSelected
+                  ? AllColors().INDICATOR_ORANGE
+                  : AllColors().GRAY,
             ),
-            color: Colors.white,
+            color: widget.isSelected
+                ? AllColors().INDICATOR_ORANGE.withOpacity(0.2)
+                : Colors.white,
           ),
           child: Row(
             children: <Widget>[
@@ -79,7 +85,7 @@ class _GroupCardWidgetState extends State<GroupCardWidget> {
                         nonAsset: true,
                       )
                     : ContactInitial(
-                  borderRadius: widget.borderRadius,
+                        borderRadius: widget.borderRadius,
                         size: widget.size,
                         initials: groupName,
                       ),
