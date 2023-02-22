@@ -76,5 +76,21 @@ class GroupPreference {
 /// Enum for contact types
 // ignore: constant_identifier_names
 enum ContactsType { CONTACT, GROUP }
+
 // ignore: constant_identifier_names
 enum ContactTabs { RECENT, FAVS, ALL }
+
+enum ContactFilter { all, contacts, groups }
+
+extension ContactFilterExtension on ContactFilter {
+  String get display {
+    switch (this) {
+      case ContactFilter.all:
+        return "All Contacts";
+      case ContactFilter.contacts:
+        return "Contacts";
+      case ContactFilter.groups:
+        return "Groups";
+    }
+  }
+}

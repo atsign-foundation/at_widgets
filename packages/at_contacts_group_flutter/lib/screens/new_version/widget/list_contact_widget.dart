@@ -96,7 +96,7 @@ class _ListContactWidgetState extends State<ListContactWidget> {
               if (!widget.isHiddenAlpha) ...[
                 Padding(
                   padding: const EdgeInsets.only(
-                    left: 18,
+                    left: 9,
                     right: 8,
                     bottom: 10,
                     top: 14,

@@ -1,6 +1,6 @@
+import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_common_flutter/utils/colors.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/at_contacts_flutter.dart';
-import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/screens/new_version/widget/list_contact_widget.dart';
@@ -44,13 +44,17 @@ class ChoiceContactWidget extends StatefulWidget {
 class _ChoiceContactWidgetState extends State<ChoiceContactWidget> {
   late GroupService _groupService;
   late TextEditingController searchController;
+  ContactFilter selectedContactType = ContactFilter.all;
+  bool showContacts = true;
+  bool showGroups = false;
 
   @override
   void initState() {
     _groupService = GroupService();
     searchController = TextEditingController();
     _groupService.fetchGroupsAndContacts();
-
+    showContacts = widget.showContacts;
+    showGroups = widget.showGroups;
     super.initState();
   }
 
@@ -90,7 +94,7 @@ class _ChoiceContactWidgetState extends State<ChoiceContactWidget> {
               contentPadding: const EdgeInsets.only(top: 12, left: 14),
               hintStyle: TextStyle(
                 fontSize: 14.toFont,
-                color: ColorConstants.greyText,
+                color: AllColors().DARK_GRAY,
                 fontWeight: FontWeight.normal,
               ),
               suffixIcon: const Icon(
@@ -107,8 +111,8 @@ class _ChoiceContactWidgetState extends State<ChoiceContactWidget> {
             ),
           ),
         ),
-        /*Padding(
-          padding: const EdgeInsets.only(left: 31),
+        Padding(
+          padding: const EdgeInsets.only(left: 31, bottom: 8),
           child: Text(
             "Filter By",
             style: TextStyle(
@@ -117,7 +121,67 @@ class _ChoiceContactWidgetState extends State<ChoiceContactWidget> {
               color: AllColors().DARK_GRAY,
             ),
           ),
-        ),*/
+        ),
+        Container(
+          height: 38,
+          margin: const EdgeInsets.symmetric(horizontal: 27),
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            scrollDirection: Axis.horizontal,
+            physics: const ClampingScrollPhysics(),
+            itemCount: ContactFilter.values.length,
+            itemBuilder: (context, index) {
+              final type = ContactFilter.values[index];
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    selectedContactType = type;
+                    if (type == ContactFilter.contacts) {
+                      showContacts = true;
+                      showGroups = false;
+                    } else if (type == ContactFilter.groups) {
+                      showContacts = false;
+                      showGroups = true;
+                    } else {
+                      showContacts = true;
+                      showGroups = true;
+                    }
+                  });
+                },
+                child: Container(
+                  margin: EdgeInsets.only(right: 5.toWidth),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.toWidth,
+                    vertical: 8.toHeight,
+                  ),
+                  decoration: BoxDecoration(
+                    color: selectedContactType == type
+                        ? AllColors().INDICATOR_ORANGE.withOpacity(0.2)
+                        : AllColors().GRAY,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: selectedContactType == type
+                          ? AllColors().INDICATOR_ORANGE
+                          : AllColors().DARK_GRAY,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      ContactFilter.values[index].display,
+                      style: TextStyle(
+                        fontSize: 15.toFont,
+                        color: selectedContactType == type
+                            ? AllColors().INDICATOR_ORANGE
+                            : AllColors().DARK_GRAY,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
         Flexible(
           child: StreamBuilder<List<GroupContactsModel?>>(
             stream: _groupService.allContactsStream,
@@ -178,18 +242,20 @@ class _ChoiceContactWidgetState extends State<ChoiceContactWidget> {
   List<GroupContactsModel?> getAllContactList(
       List<GroupContactsModel?> allGroupContactData) {
     var _filteredList = <GroupContactsModel?>[];
+
     for (var c in allGroupContactData) {
-      if (widget.showContacts &&
-          c!.contact != null &&
-          c.contact!.atSign.toString().toUpperCase().contains(
+      if (showContacts &&
+          c?.contact != null &&
+          (c?.contact?.atSign ?? '').toString().toUpperCase().contains(
                 searchController.text.toUpperCase(),
               )) {
         _filteredList.add(c);
       }
-      if (widget.showGroups &&
-          c!.group != null &&
-          c.group!.displayName != null &&
-          c.group!.displayName!.toUpperCase().contains(
+
+      if (showGroups &&
+          c?.group != null &&
+          c?.group?.displayName != null &&
+          (c?.group?.displayName ?? '').toUpperCase().contains(
                 searchController.text.toUpperCase(),
               )) {
         _filteredList.add(c);
