@@ -19,7 +19,5 @@ export './screens/empty_group/empty_group.dart';
 export './models/group_contacts_model.dart';
 export './utils/init_group_service.dart';
 
-export './screens/new_version/contact_screen.dart';
 export './screens/new_group/create_group.dart';
-export './screens/new_version/widget/single_contact_widget.dart';
-export './screens/new_version/widget/choice_contact_widget.dart';
+export './screens/group_contact/group_list_contact.dart';

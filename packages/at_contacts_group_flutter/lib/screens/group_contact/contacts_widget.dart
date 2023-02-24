@@ -6,55 +6,52 @@ import 'package:at_contacts_group_flutter/widgets/contact_card_widget.dart';
 import 'package:at_contacts_group_flutter/widgets/group_card_widget.dart';
 import 'package:flutter/material.dart';
 
-class ListContactWidget extends StatefulWidget {
-  final List<GroupContactsModel?> contacts;
+class ContactsWidget extends StatefulWidget {
   final bool showGroups,
       showContacts,
-      isHiddenAlpha,
-      isMultiChoose,
-      isChoiceMultiTypeContact;
+      isShowAlpha,
+      isSelectMultiContacts,
+      isOnlyShowContactTrusted;
 
-  final String textSearch;
   final Function(AtContact contact)? onTapContact;
   final Function(AtGroup group)? onTapGroup;
-  final Function(List<AtContact> contacts)? chooseContacts;
-  final Function(List<GroupContactsModel> contacts)? choiceMultiTypeContact;
+  final Function(List<GroupContactsModel> contacts)? onSelectContacts;
   final List<GroupContactsModel>? selectedContacts;
-  final List<AtContact>? contactsTrusted;
+  final List<AtContact>? trustedContacts;
+  final List<GroupContactsModel?> contacts;
+  final String searchValue;
   final Function? onRefresh;
   final EdgeInsetsGeometry? padding;
 
-  const ListContactWidget({
+  const ContactsWidget({
     Key? key,
     required this.contacts,
     this.showGroups = false,
     this.showContacts = true,
-    this.textSearch = '',
+    this.isShowAlpha = true,
+    this.isSelectMultiContacts = false,
+    this.isOnlyShowContactTrusted = false,
+    this.searchValue = '',
     this.onTapContact,
-    this.onRefresh,
-    this.isHiddenAlpha = false,
     this.onTapGroup,
-    this.chooseContacts,
-    this.isMultiChoose = false,
-    this.contactsTrusted,
-    this.padding,
-    this.isChoiceMultiTypeContact = false,
-    this.choiceMultiTypeContact,
+    this.onSelectContacts,
+    this.trustedContacts,
     this.selectedContacts,
+    this.onRefresh,
+    this.padding,
   }) : super(key: key);
 
   @override
-  State<ListContactWidget> createState() => _ListContactWidgetState();
+  State<ContactsWidget> createState() => _ContactsWidgetState();
 }
 
-class _ListContactWidgetState extends State<ListContactWidget> {
-  List<AtContact> listContactSelected = [];
-  List<GroupContactsModel> listContactChoice = [];
+class _ContactsWidgetState extends State<ContactsWidget> {
+  List<GroupContactsModel> listContactSelected = [];
 
   @override
   void initState() {
     if ((widget.selectedContacts ?? []).isNotEmpty) {
-      listContactChoice.addAll(widget.selectedContacts!);
+      listContactSelected.addAll(widget.selectedContacts!);
     }
     super.initState();
   }
@@ -73,15 +70,30 @@ class _ListContactWidgetState extends State<ListContactWidget> {
         shrinkWrap: true,
         itemBuilder: (context, alphabetIndex) {
           List<GroupContactsModel?> contactsForAlphabet = [];
+          List<GroupContactsModel> trustedContacts = [];
           var currentChar =
-          String.fromCharCode(alphabetIndex + 65).toUpperCase();
+              String.fromCharCode(alphabetIndex + 65).toUpperCase();
 
           if (alphabetIndex == 26) {
             currentChar = 'Others';
           }
 
+          if (widget.isOnlyShowContactTrusted) {
+            for (var element in (widget.trustedContacts ?? [])) {
+              trustedContacts.add(
+                GroupContactsModel(
+                  contact: element,
+                ),
+              );
+            }
+          }
+
+          final listContact = widget.isOnlyShowContactTrusted
+              ? trustedContacts
+              : widget.contacts;
+
           contactsForAlphabet = getContactsForAlphabets(
-            widget.contacts,
+            listContact,
             currentChar,
             alphabetIndex,
           );
@@ -93,7 +105,7 @@ class _ListContactWidgetState extends State<ListContactWidget> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (!widget.isHiddenAlpha) ...[
+              if (widget.isShowAlpha) ...[
                 Padding(
                   padding: const EdgeInsets.only(
                     left: 9,
@@ -129,7 +141,9 @@ class _ListContactWidgetState extends State<ListContactWidget> {
     );
   }
 
-  Widget contactListBuilder(List<GroupContactsModel?> contactsForAlphabet,) {
+  Widget contactListBuilder(
+    List<GroupContactsModel?> contactsForAlphabet,
+  ) {
     return ListView.builder(
       itemCount: contactsForAlphabet.length,
       padding: widget.padding ?? EdgeInsets.zero,
@@ -139,38 +153,34 @@ class _ListContactWidgetState extends State<ListContactWidget> {
         final contact = contactsForAlphabet[index]!.contact;
         return (contactsForAlphabet[index]!.contact != null)
             ? ContactCardWidget(
-          contact: contact!,
-          isTrusted: _checkTrustedContact(contact),
-          isSelected: widget.isChoiceMultiTypeContact
-              ? _isChoiceContact(
-            contactsForAlphabet[index]!,
-          )
-              : _checkSelectedContact(contact),
-          onTap: () {
-            widget.isChoiceMultiTypeContact
-                ? _onChoiceContacts(
-              contactsForAlphabet[index]!,
-            )
-                : !widget.isMultiChoose
-                ? widget.onTapContact?.call(contact)
-                : _onChooseContact(contact);
-          },
-        )
+                contact: contact!,
+                isTrusted: _checkTrustedContact(contact),
+                isSelected: _checkContactSelected(
+                  contactsForAlphabet[index]!,
+                ),
+                onTap: () {
+                  widget.isSelectMultiContacts
+                      ? _onSelectContact(
+                          contactsForAlphabet[index]!,
+                        )
+                      : widget.onTapContact?.call(contact);
+                },
+              )
             : GroupCardWidget(
-          group: contactsForAlphabet[index]!.group!,
-          isSelected: _isChoiceContact(
-            contactsForAlphabet[index]!,
-          ),
-          onTap: () {
-            widget.isChoiceMultiTypeContact
-                ? _onChoiceContacts(
-              contactsForAlphabet[index]!,
-            )
-                : widget.onTapGroup?.call(
-              contactsForAlphabet[index]!.group!,
-            );
-          },
-        );
+                group: contactsForAlphabet[index]!.group!,
+                isSelected: _checkContactSelected(
+                  contactsForAlphabet[index]!,
+                ),
+                onTap: () {
+                  widget.isSelectMultiContacts
+                      ? _onSelectContact(
+                          contactsForAlphabet[index]!,
+                        )
+                      : widget.onTapGroup?.call(
+                          contactsForAlphabet[index]!.group!,
+                        );
+                },
+              );
       },
     );
   }
@@ -181,18 +191,18 @@ class _ListContactWidgetState extends State<ListContactWidget> {
     var _filteredList = <GroupContactsModel?>[];
     for (var c in allGroupContactData) {
       if (widget.showContacts &&
-          c!.contact != null &&
-          c.contact!.atSign.toString().toUpperCase().contains(
-            widget.textSearch.toUpperCase(),
-          )) {
+          c?.contact != null &&
+          (c?.contact?.atSign ?? '').toString().toUpperCase().contains(
+                widget.searchValue.toUpperCase(),
+              )) {
         _filteredList.add(c);
       }
       if (widget.showGroups &&
-          c!.group != null &&
-          c.group!.displayName != null &&
-          c.group!.displayName!.toUpperCase().contains(
-            widget.textSearch.toUpperCase(),
-          )) {
+          c?.group != null &&
+          c?.group?.displayName != null &&
+          (c?.group?.displayName ?? '').toUpperCase().contains(
+                widget.searchValue.toUpperCase(),
+              )) {
         _filteredList.add(c);
       }
     }
@@ -211,35 +221,40 @@ class _ListContactWidgetState extends State<ListContactWidget> {
     if (alphabetIndex == 26) {
       for (var c in _filteredList) {
         if (widget.showContacts &&
-            c!.contact != null &&
+            c?.contact != null &&
             !RegExp(r'^[a-z]+$').hasMatch(
-              c.contact!.atSign![1].toLowerCase(),
+              (c?.contact?.atSign?[1] ?? '').toLowerCase(),
             )) {
           contactsForAlphabet.add(c);
         }
       }
       for (var c in _filteredList) {
         if (widget.showGroups &&
-            c!.group != null &&
-            !RegExp(r'^[a-z]+$').hasMatch(
-              c.group!.displayName![0].toLowerCase(),
-            )) {
-          contactsForAlphabet.add(c);
+            c?.group != null &&
+            (c?.group?.displayName ?? '').isNotEmpty) {
+          if (!RegExp(r'^[a-z]+$').hasMatch(
+            (c?.group?.displayName?[0] ?? '').toLowerCase(),
+          )) {
+            contactsForAlphabet.add(c);
+          }
         }
       }
     } else {
       for (var c in _filteredList) {
-        if (widget.showContacts &&
-            c!.contact != null &&
-            c.contact?.atSign![1].toUpperCase() == currentChar) {
-          contactsForAlphabet.add(c);
+        if (widget.showContacts && c?.contact != null) {
+          if (c?.contact?.atSign?[1].toUpperCase() == currentChar) {
+            contactsForAlphabet.add(c);
+          }
         }
       }
+
       for (var c in _filteredList) {
         if (widget.showGroups &&
-            c!.group != null &&
-            c.group?.displayName![0].toUpperCase() == currentChar) {
-          contactsForAlphabet.add(c);
+            c?.group != null &&
+            (c?.group?.displayName ?? '').isNotEmpty) {
+          if (c?.group?.displayName?[0].toUpperCase() == currentChar) {
+            contactsForAlphabet.add(c);
+          }
         }
       }
     }
@@ -247,30 +262,14 @@ class _ListContactWidgetState extends State<ListContactWidget> {
     return contactsForAlphabet;
   }
 
-  void _onChooseContact(AtContact contact) {
+  void _onSelectContact(GroupContactsModel contact) {
     if (listContactSelected.isEmpty) {
       listContactSelected.add(contact);
-    } else {
-      if (listContactSelected.contains(contact)) {
-        listContactSelected.remove(contact);
-      } else {
-        listContactSelected.add(contact);
-      }
-    }
-    widget.chooseContacts?.call(
-      listContactSelected,
-    );
-    setState(() {});
-  }
-
-  void _onChoiceContacts(GroupContactsModel contact) {
-    if (listContactChoice.isEmpty) {
-      listContactChoice.add(contact);
     } else {
       bool isAdd = true;
       GroupContactsModel? contactExists;
 
-      for (var element in listContactChoice) {
+      for (var element in listContactSelected) {
         contactExists = element;
         if (contact.contactType == ContactsType.CONTACT) {
           if (contact.contact?.atSign == element.contact?.atSign) {
@@ -286,20 +285,22 @@ class _ListContactWidgetState extends State<ListContactWidget> {
       }
 
       if (!isAdd) {
-        listContactChoice.remove(contactExists);
+        listContactSelected.remove(contactExists);
       } else {
-        listContactChoice.add(contact);
+        listContactSelected.add(contact);
       }
     }
-    widget.choiceMultiTypeContact?.call(
-      listContactChoice,
+
+    widget.onSelectContacts?.call(
+      listContactSelected,
     );
+
     setState(() {});
   }
 
-  bool _isChoiceContact(GroupContactsModel contact) {
+  bool _checkContactSelected(GroupContactsModel contact) {
     bool isSelected = false;
-    for (var element in listContactChoice) {
+    for (var element in listContactSelected) {
       if (contact.contactType == ContactsType.CONTACT) {
         if (contact.contact?.atSign == element.contact?.atSign) {
           isSelected = true;
@@ -314,20 +315,9 @@ class _ListContactWidgetState extends State<ListContactWidget> {
     return isSelected;
   }
 
-  bool _checkSelectedContact(AtContact contact) {
-    bool isSelected = false;
-    for (var element in listContactSelected) {
-      if (contact.atSign == element.atSign) {
-        isSelected = true;
-      }
-    }
-
-    return isSelected;
-  }
-
   bool _checkTrustedContact(AtContact contact) {
     bool isTrusted = false;
-    for (var element in (widget.contactsTrusted ?? [])) {
+    for (var element in (widget.trustedContacts ?? [])) {
       if (contact.atSign == element.atSign) {
         isTrusted = true;
       }

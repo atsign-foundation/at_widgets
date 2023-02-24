@@ -1,52 +1,65 @@
+import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_common_flutter/utils/colors.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/at_contacts_flutter.dart';
-import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
-import 'package:at_contacts_group_flutter/screens/new_version/widget/list_contact_widget.dart';
+import 'package:at_contacts_group_flutter/screens/group_contact/contacts_widget.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/widgets/header_widget.dart';
 import 'package:flutter/material.dart';
 
-class ListContactScreen extends StatefulWidget {
+class GroupListContact extends StatefulWidget {
   final bool showGroups,
       showContacts,
-      isHiddenSearch,
-      isHiddenAlpha,
-      isMultiChoose;
-
+      isShowHeader,
+      isOnlyShowSearchBar,
+      isShowFilterBar,
+      isShowAlpha,
+      isSelectMultiContacts,
+      isOnlyShowContactTrusted;
   final Function(AtContact contact)? onTapContact;
   final Function(AtGroup contact)? onTapGroup;
-  final Function(List<AtContact> contact)? chooseContact;
-  final List<AtContact>? contactsTrusted;
+  final Function(List<GroupContactsModel> contacts)? onSelectContacts;
+  final List<AtContact>? trustedContacts;
+  final List<GroupContactsModel>? selectedContacts;
 
-  const ListContactScreen({
+  const GroupListContact({
     Key? key,
     this.showGroups = false,
     this.showContacts = true,
+    this.isShowHeader = true,
+    this.isOnlyShowSearchBar = true,
+    this.isShowFilterBar = false,
+    this.isShowAlpha = true,
+    this.isSelectMultiContacts = false,
+    this.isOnlyShowContactTrusted = false,
     this.onTapContact,
-    this.isHiddenSearch = false,
-    this.isHiddenAlpha = false,
-    this.isMultiChoose = false,
     this.onTapGroup,
-    this.chooseContact,
-    this.contactsTrusted,
+    this.onSelectContacts,
+    this.trustedContacts,
+    this.selectedContacts,
   }) : super(key: key);
 
   @override
-  State<ListContactScreen> createState() => _ListContactScreenState();
+  State<GroupListContact> createState() => _GroupListContactState();
 }
 
-class _ListContactScreenState extends State<ListContactScreen> {
+class _GroupListContactState extends State<GroupListContact> {
   late GroupService _groupService;
   late TextEditingController searchController;
+
+  ContactFilter selectedContactType = ContactFilter.all;
+  bool showContacts = true;
+  bool showGroups = false;
 
   @override
   void initState() {
     _groupService = GroupService();
     searchController = TextEditingController();
+    showContacts = widget.showContacts;
+    showGroups = widget.showGroups;
     _groupService.fetchGroupsAndContacts();
 
     super.initState();
@@ -57,9 +70,10 @@ class _ListContactScreenState extends State<ListContactScreen> {
     SizeConfig().init(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        if (!widget.isHiddenSearch) ...[
-          widget.showGroups
+        if (widget.isShowHeader) ...[
+          !widget.isOnlyShowSearchBar
               ? HeaderWidget(
                   controller: searchController,
                   onReloadCallback: () {
@@ -101,7 +115,7 @@ class _ListContactScreenState extends State<ListContactScreen> {
                       contentPadding: const EdgeInsets.only(top: 12, left: 14),
                       hintStyle: TextStyle(
                         fontSize: 14.toFont,
-                        color: ColorConstants.greyText,
+                        color: AllColors().DARK_GRAY,
                         fontWeight: FontWeight.normal,
                       ),
                       suffixIcon: const Icon(
@@ -118,6 +132,79 @@ class _ListContactScreenState extends State<ListContactScreen> {
                     ),
                   ),
                 ),
+        ],
+        if (widget.isShowFilterBar) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 31, bottom: 8),
+            child: Text(
+              "Filter By",
+              style: TextStyle(
+                fontSize: 12.toFont,
+                fontWeight: FontWeight.w500,
+                color: AllColors().DARK_GRAY,
+              ),
+            ),
+          ),
+          Container(
+            height: 38,
+            margin: const EdgeInsets.symmetric(horizontal: 27),
+            child: ListView.builder(
+              padding: EdgeInsets.zero,
+              scrollDirection: Axis.horizontal,
+              physics: const ClampingScrollPhysics(),
+              itemCount: ContactFilter.values.length,
+              itemBuilder: (context, index) {
+                final type = ContactFilter.values[index];
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedContactType = type;
+                      if (type == ContactFilter.contacts) {
+                        showContacts = true;
+                        showGroups = false;
+                      } else if (type == ContactFilter.groups) {
+                        showContacts = false;
+                        showGroups = true;
+                      } else {
+                        showContacts = true;
+                        showGroups = true;
+                      }
+                    });
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(right: 5.toWidth),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.toWidth,
+                      vertical: 8.toHeight,
+                    ),
+                    decoration: BoxDecoration(
+                      color: selectedContactType == type
+                          ? AllColors().INDICATOR_ORANGE.withOpacity(0.2)
+                          : AllColors().GRAY,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: selectedContactType == type
+                            ? AllColors().INDICATOR_ORANGE
+                            : AllColors().DARK_GRAY,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        ContactFilter.values[index].display,
+                        style: TextStyle(
+                          fontSize: 15.toFont,
+                          color: selectedContactType == type
+                              ? AllColors().INDICATOR_ORANGE
+                              : AllColors().DARK_GRAY,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
         Flexible(
           child: StreamBuilder<List<GroupContactsModel?>>(
@@ -173,20 +260,23 @@ class _ListContactScreenState extends State<ListContactScreen> {
                 // renders contacts according to the initial alphabet
                 return Scrollbar(
                   radius: const Radius.circular(11),
-                  child: ListContactWidget(
+                  child: ContactsWidget(
                     contacts: _filteredList,
-                    padding: const EdgeInsets.only(left: 24, right: 6),
+                    searchValue: searchController.text,
                     showGroups: widget.showGroups,
                     showContacts: widget.showContacts,
+                    isShowAlpha: widget.isShowAlpha,
+                    isSelectMultiContacts: widget.isSelectMultiContacts,
+                    isOnlyShowContactTrusted: widget.isOnlyShowContactTrusted,
                     onTapContact: widget.onTapContact,
+                    onTapGroup: widget.onTapGroup,
+                    onSelectContacts: widget.onSelectContacts,
                     onRefresh: () async {
                       await _groupService.fetchGroupsAndContacts();
                     },
-                    isHiddenAlpha: widget.isHiddenAlpha,
-                    isMultiChoose: widget.isMultiChoose,
-                    onTapGroup: widget.onTapGroup,
-                    chooseContacts: widget.chooseContact,
-                    contactsTrusted: widget.contactsTrusted,
+                    padding: const EdgeInsets.only(left: 24, right: 6),
+                    selectedContacts: widget.selectedContacts,
+                    trustedContacts: widget.trustedContacts,
                   ),
                 );
               }
@@ -201,21 +291,22 @@ class _ListContactScreenState extends State<ListContactScreen> {
   List<GroupContactsModel?> getAllContactList(
       List<GroupContactsModel?> allGroupContactData) {
     var _filteredList = <GroupContactsModel?>[];
+
     for (var c in allGroupContactData) {
-      if (widget.showContacts &&
-          c!.contact != null &&
-          c.contact!.atSign
-              .toString()
-              .toUpperCase()
-              .contains(searchController.text.toUpperCase())) {
+      if (showContacts &&
+          c?.contact != null &&
+          (c?.contact?.atSign ?? '').toString().toUpperCase().contains(
+                searchController.text.toUpperCase(),
+              )) {
         _filteredList.add(c);
       }
-      if (widget.showGroups &&
-          c!.group != null &&
-          c.group!.displayName != null &&
-          c.group!.displayName!
-              .toUpperCase()
-              .contains(searchController.text.toUpperCase())) {
+
+      if (showGroups &&
+          c?.group != null &&
+          c?.group?.displayName != null &&
+          (c?.group?.displayName ?? '').toUpperCase().contains(
+                searchController.text.toUpperCase(),
+              )) {
         _filteredList.add(c);
       }
     }

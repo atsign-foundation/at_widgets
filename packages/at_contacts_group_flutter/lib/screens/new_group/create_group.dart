@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:at_commons/at_commons.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_group_flutter/screens/new_version/contact_screen.dart';
+import 'package:at_contacts_group_flutter/screens/group_contact/group_list_contact.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/image_picker.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
@@ -150,7 +150,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),
-                                onSubmitted: (value) {},
+                                onChanged: (value) {
+                                  setState(() {});
+                                },
                               ),
                             ),
                           ),
@@ -168,12 +170,15 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             ),
                           ),
                           Flexible(
-                            child: ListContactScreen(
-                              isMultiChoose: true,
-                              contactsTrusted: widget.trustContacts,
-                              chooseContact: (contacts) {
+                            child: GroupListContact(
+                              trustedContacts: widget.trustContacts,
+                              isSelectMultiContacts: true,
+                              onSelectContacts: (contacts) {
                                 setState(() {
-                                  listContact = contacts;
+                                  listContact = [];
+                                  for (var element in contacts) {
+                                    listContact.add(element.contact!);
+                                  }
                                 });
                               },
                             ),
@@ -293,8 +298,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   void createGroup() async {
-    // ignore: unnecessary_null_comparison
-    if (groupNameController.text != null) {
+    if (groupNameController.text.isNotEmpty) {
       setState(() {
         isLoading = true;
       });
