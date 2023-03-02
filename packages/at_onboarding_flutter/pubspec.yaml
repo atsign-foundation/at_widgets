@@ -22,6 +22,7 @@ dependencies:
   url_launcher: ^6.1.2
   permission_handler: ^9.2.0
   path_provider: ^2.0.9
+  path: ^1.8.3
   webview_flutter: ^4.0.0
   http: ^0.13.4
   pin_code_fields: ^7.4.0
@@ -34,12 +35,12 @@ dependencies:
   file_selector_windows: ^0.8.2
   file_selector_linux: ^0.0.2+1
 
-  at_backupkey_flutter: ^4.0.7
-  at_client: ^3.0.41
-  at_client_mobile: ^3.2.7
-  at_commons: ^3.0.25
+  at_backupkey_flutter: ^4.0.8
+  at_client: ^3.0.56
+  at_client_mobile: ^3.2.8
+  at_commons: ^3.0.39
   at_server_status: ^1.0.3
-  at_utils: ^3.0.10
+  at_utils: ^3.0.11
   at_sync_ui_flutter: ^1.0.1
 
 dev_dependencies:
