@@ -241,12 +241,12 @@ class OnboardingService {
   }
 
   Future<bool> enableUsingSharedStorage() async {
-    final result = await _keyChainManager.enableUsingSharedStorage();
+    final result = await keyChainManager.enableUsingSharedStorage();
     return result;
   }
 
   Future<bool> disableUsingSharedStorage() async {
-    final result = await _keyChainManager.disableUsingSharedStorage();
+    final result = await keyChainManager.disableUsingSharedStorage();
     return result;
   }
 }

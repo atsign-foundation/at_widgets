@@ -37,7 +37,6 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
   }
 
   void _init() async {
-    await _onboardingService.initialSetup(usingSharedStorage: false);
     // This feature will reopen in future
     final isUsingSharedStorage = await _onboardingService.isUsingSharedStorage();
     final showPopupShareStorage = widget.config.showPopupSharedStorage;

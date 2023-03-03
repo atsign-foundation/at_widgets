@@ -45,8 +45,12 @@ dependencies:
   at_sync_ui_flutter: ^1.0.1
 
 dependency_overrides:
+  path: 1.8.3
   at_client_mobile:
-    path: ../../at_client_sdk/at_client_mobile
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk
+      path: packages/at_client_mobile
+      ref: trunk
 
 dev_dependencies:
   flutter_test:
