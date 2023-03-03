@@ -38,6 +38,15 @@ Secret keys are generated for an atSign during onboarding flow of atProtocol. Th
 The following platform specific setups are required:
 
 ### Android
+Add android:exported = "true" to activity
+
+```
+<activity
+            android:name=".MainActivity"
+            android:exported="true"
+            ...>
+```
+
 Add the following permissions to AndroidManifest.xml
 
 ```

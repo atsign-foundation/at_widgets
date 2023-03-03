@@ -30,6 +30,7 @@ dev_dependencies:
 
 dependency_overrides:
   file_selector_macos: ^0.8.2
+  ffi: ^2.0.1
   at_backupkey_flutter:
     path: ../
 

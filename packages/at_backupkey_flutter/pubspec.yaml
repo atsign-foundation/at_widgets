@@ -20,7 +20,7 @@ dependencies:
   at_utils: ^3.0.10
   at_client_mobile: ^3.2.7
   showcaseview: ^1.1.5
-
+  device_info_plus: ^8.0.0
   # desktop - dependencies
   file_selector: ^0.8.4+1
   file_selector_macos: ^0.8.2
