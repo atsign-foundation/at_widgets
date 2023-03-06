@@ -88,11 +88,11 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   decoration: InputDecoration(
                     prefixText: '@',
                     prefixStyle: TextStyle(
-                      color: Colors.grey,
+                      color: Colors.black,
                       fontSize: 15.toFont,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.bold,
                     ),
-                    hintText: '\tEnter atSign',
+                    hintText: '\tEnter atsign',
                   ),
                   style: TextStyle(
                     fontSize: 15.toFont,
@@ -129,7 +129,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                   },
                   // validator: Validators.validateAdduser,
                   decoration: const InputDecoration(
-                    hintText: 'Enter Nickname',
+                    hintText: 'Enter nickname',
                   ),
                   style: TextStyle(
                     fontSize: 15.toFont,
