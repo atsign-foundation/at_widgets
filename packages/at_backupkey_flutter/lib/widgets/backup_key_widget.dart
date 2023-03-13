@@ -248,93 +248,87 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
       }
       String tempFilePath = await _generateFile(aesEncryptedKeys);
       if (Platform.isAndroid) {
-        bool isOldAndroidVersion = await checkAndroidVersion();
-        if (!isOldAndroidVersion) {
+        if (Navigator.of(context).canPop()) {
           Navigator.of(context).pop();
-
-          await showDialog(
-            context: context,
-            useRootNavigator: false,
-            builder: (context) {
-              return AlertDialog(
-                contentPadding: EdgeInsets.zero,
-                content: Container(
-                  color: Colors.white,
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () async {
-                          var status = await Permission.storage.status;
-                          if (!status.isGranted) {
-                            await Permission.storage.request();
-                          }
-
-                          String? dir = await getDownloadPath();
-                          if (dir != null) {
-                            String newPath =
-                                "$dir/$atsign${Strings.backupKeyName}";
-                            debugPrint(newPath);
-
-                            try {
-                              if (await File(newPath).exists()) {
-                                Navigator.of(context).pop();
-                                showSnackBar(
-                                    context: context, content: "File exists!");
-                              } else {
-                                final encryptedKeysFile =
-                                    await File(newPath).create();
-                                var keyString = jsonEncode(aesEncryptedKeys);
-                                encryptedKeysFile.writeAsStringSync(keyString);
-                                Navigator.of(context).pop();
-                                showSnackBar(
-                                  context: context,
-                                  content: 'File saved successfully',
-                                );
-                              }
-                            } catch (e) {
-                              debugPrint("$e");
-                            }
-                          }
-                        },
-                        child: Container(
-                          height: 52,
-                          width: double.infinity,
-                          alignment: Alignment.centerLeft,
-                          child: const Text("Download"),
-                        ),
-                      ),
-                      const Divider(height: 1),
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          shareFile(
-                            context: context,
-                            path: tempFilePath,
-                          );
-                        },
-                        child: Container(
-                          height: 52,
-                          width: double.infinity,
-                          alignment: Alignment.centerLeft,
-                          child: const Text("Share"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        } else {
-          shareFile(
-            context: context,
-            path: tempFilePath,
-          );
         }
+
+        await showDialog(
+          context: context,
+          useRootNavigator: false,
+          builder: (context) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                color: Colors.white,
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        var status = await Permission.storage.status;
+                        if (!status.isGranted) {
+                          await Permission.storage.request();
+                        }
+
+                        String? dir = await getDownloadPath();
+                        if (dir != null) {
+                          String newPath =
+                              "$dir/$atsign${Strings.backupKeyName}";
+                          debugPrint(newPath);
+
+                          try {
+                            if (await File(newPath).exists()) {
+                              Navigator.of(context).pop();
+                              showSnackBar(
+                                  context: context, content: "File exists!");
+                            } else {
+                              final encryptedKeysFile =
+                                  await File(newPath).create();
+                              var keyString = jsonEncode(aesEncryptedKeys);
+                              encryptedKeysFile.writeAsStringSync(keyString);
+                              Navigator.of(context).pop();
+                              showSnackBar(
+                                context: context,
+                                content: 'File saved successfully',
+                              );
+                            }
+                          } catch (e) {
+                            debugPrint("$e");
+                          }
+                        }
+                      },
+                      child: Container(
+                        height: 52,
+                        width: double.infinity,
+                        alignment: Alignment.centerLeft,
+                        child: const Text("Download"),
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        shareFile(
+                          context: context,
+                          path: tempFilePath,
+                        );
+                      },
+                      child: Container(
+                        height: 52,
+                        width: double.infinity,
+                        alignment: Alignment.centerLeft,
+                        child: const Text("Share"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
       } else if (Platform.isIOS) {
         shareFile(
           context: context,
@@ -381,19 +375,6 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
           mimeType: MimeType.OTHER);
       return desktopPath;
     }
-  }
-
-  Future<bool> checkAndroidVersion() async {
-    if (Platform.isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      final androidVersion = androidInfo.version.sdkInt;
-      if (androidVersion < 33) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    return true;
   }
 
   void shareFile({
