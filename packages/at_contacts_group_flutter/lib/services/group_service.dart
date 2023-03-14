@@ -11,7 +11,6 @@ import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/yes_no_dialog.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
 
@@ -19,9 +18,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 class GroupService {
   /// Singleton instance of the service
   GroupService._();
-
   static final GroupService _instance = GroupService._();
-
   factory GroupService() => _instance;
 
   /// current atsign
@@ -103,9 +100,7 @@ class GroupService {
 
   // show loader stream
   final _showLoaderStreamController = StreamController<bool>.broadcast();
-
   Stream<bool> get showLoaderStream => _showLoaderStreamController.stream;
-
   StreamSink<bool> get showLoaderSink => _showLoaderStreamController.sink;
 
   String? get currentAtsign => _atsign;
@@ -115,7 +110,6 @@ class GroupService {
   int? expandIndex = 0;
 
   AtSignLogger atSignLogger = AtSignLogger('GroupService');
-
   // ignore: always_declare_return_types
   setSelectedContacts(List<AtContact?>? list) {
     selecteContactList = list ?? [];

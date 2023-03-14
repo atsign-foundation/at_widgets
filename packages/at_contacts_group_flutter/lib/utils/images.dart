@@ -7,6 +7,4 @@ class AllImages {
   String EMPTY_GROUP = 'assets/images/empty_group.png';
   // ignore: non_constant_identifier_names
   String SEND = 'assets/images/send.png';
-  // ignore: non_constant_identifier_names
-  String EMPTY_BOX = 'assets/images/img_empty_box.png';
 }

@@ -50,19 +50,4 @@ class AllColors {
   Color LIGHT_GREY_LABEL = const Color(0xFFB3B6BE);
   // ignore: non_constant_identifier_names
   Color Orange = const Color(0xffF05E3F);
-  // ignore: non_constant_identifier_names
-  Color LIGHT_GRAY = const Color(0xFFD9D9D9);
-  // ignore: non_constant_identifier_names
-  Color GRAY = const Color(0xFFF2F2F2);
-  // ignore: non_constant_identifier_names
-  Color DARK_GRAY = const Color(0xFF939393);
-  // ignore: non_constant_identifier_names
-  Color TEXT_GRAY = const Color(0xFFA4A4A5);
-  // ignore: non_constant_identifier_names
-   Color INDICATOR_ORANGE = const Color(0xFFF07C50);
-  // ignore: non_constant_identifier_names
-  Color YELLOW = const Color(0xFFEAA743);
-  // ignore: non_constant_identifier_names
-  Color BUTTON_GREY = const Color(0xFFC7C7C7);
-
 }
