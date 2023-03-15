@@ -33,6 +33,7 @@ class GroupView extends StatefulWidget {
 
 class _GroupViewState extends State<GroupView> {
   List<AtContact> contacts = [];
+  late NavigatorState _navigator;
 
   @override
   void initState() {
@@ -40,6 +41,12 @@ class _GroupViewState extends State<GroupView> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       GroupService().showLoaderSink.add(false);
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    _navigator = Navigator.of(context);
+    super.didChangeDependencies();
   }
 
   @override
@@ -272,7 +279,7 @@ class _GroupViewState extends State<GroupView> {
                                     ], widget.group);
 
                                     GroupService().showLoaderSink.add(false);
-                                    if(mounted){
+                                    if (mounted) {
                                       if (result == null) {
                                         CustomToast().show(
                                             TextConstants().SERVICE_ERROR,
@@ -370,13 +377,21 @@ class _GroupViewState extends State<GroupView> {
                 await GroupService().deletGroupMembers([contact], widget.group);
             if (result is bool && result) {
               Navigator.of(context).pop();
-              CustomToast()
-                  .show("${contact.atSign ?? ''} deleted successfully!", context);
+              CustomToast().show(
+                  "${contact.atSign ?? ''} deleted successfully!", context);
               if (contacts.isEmpty) {
                 showDeleteGroupDialog(
                   context,
                   widget.group,
                   heading: "Do you want to remove this group?",
+                  onDeleteSuccess: () async {
+                    if (!mounted) return;
+
+                    if (_navigator.canPop()) {
+                      _navigator.pop();
+                      GroupService().fetchGroupsAndContacts();
+                    }
+                  },
                 );
               }
             } else if (result == null) {
