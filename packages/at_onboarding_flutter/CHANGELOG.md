@@ -1,3 +1,6 @@
+## 6.0.3
+- **CHORE**: Upgrade dependencies for at_chops uptake
+
 ## 6.0.2
 - **FIX**: Added assets path in yaml
 
