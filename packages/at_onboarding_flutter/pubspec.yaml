@@ -2,7 +2,7 @@ name: at_onboarding_flutter
 description: A Flutter plugin project for onboarding any atSign in atPlatform
   apps with ease. Provides a QRscanner option and an upload key file option to
   authenticate.
-version: 6.0.1
+version: 6.0.2
 homepage: https://docs.atsign.com/
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_onboarding_flutter
 issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
@@ -36,15 +36,11 @@ dependencies:
 
   at_backupkey_flutter: ^4.0.8
   at_client: ^3.0.56
-  at_client_mobile: ^3.2.8
-  at_commons: ^3.0.39
+  at_client_mobile: ^3.2.9
+  at_commons: ^3.0.43
   at_server_status: ^1.0.3
-  at_utils: ^3.0.11
+  at_utils: ^3.0.12
   at_sync_ui_flutter: ^1.0.1
-
-dependency_overrides:
-  # adding path since flutter_test depends on older version of path
-  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:

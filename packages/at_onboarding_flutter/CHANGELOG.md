@@ -1,3 +1,5 @@
+## 6.0.2
+- **CHORE**: Upgrade dependencies for at_chops uptake
 ## 6.0.1
 - **FIX**: Fixed issue in atSign activation process
 - **CHORE**: Exported at_client_mobile dependency
