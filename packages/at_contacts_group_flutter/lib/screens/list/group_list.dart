@@ -283,6 +283,7 @@ Future<void> showDeleteGroupDialog(
   BuildContext context,
   AtGroup group, {
   String? heading,
+  Function? onDeleteSuccess,
 }) async {
   return showDialog<void>(
     context: context,
@@ -301,6 +302,7 @@ Future<void> showDeleteGroupDialog(
 
           if (result is bool && result) {
             Navigator.of(context).pop();
+            onDeleteSuccess?.call();
           } else {
             CustomToast().show(TextConstants().SERVICE_ERROR, context);
           }

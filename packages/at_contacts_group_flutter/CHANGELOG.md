@@ -1,3 +1,6 @@
+## 4.0.11
+- **CHORE**: Updated dependencies
+
 ## 4.0.10
 - **CHORE**: Updated dependencies and android gradle versions
 
