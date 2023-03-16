@@ -1,3 +1,7 @@
+## 4.0.9
+- **CHORE**: Updated text constants
+- **FIX**: resolved issue while fetching atSign's name and image
+
 ## 4.0.8
 - **CHORE**: Updated dependencies and android gradle versions
 

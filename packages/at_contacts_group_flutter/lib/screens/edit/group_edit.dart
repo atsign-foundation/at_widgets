@@ -55,6 +55,8 @@ class _GroupEditState extends State<GroupEdit> {
 
   bool _updateImage = false;
 
+  late NavigatorState _navigator;
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +81,12 @@ class _GroupEditState extends State<GroupEdit> {
         GroupService().groupViewSink.add(widget.group);
       },
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    _navigator = Navigator.of(context);
+    super.didChangeDependencies();
   }
 
   @override
@@ -295,7 +303,6 @@ class _GroupEditState extends State<GroupEdit> {
                               indicatorColor: Colors.blue,
                               iconColor: Colors.grey,
                               iconColorSelected: Colors.blue,
-                              progressIndicatorColor: Colors.blue,
                               showRecentsTab: true,
                               recentsLimit: 28,
                               noRecents: Text(
@@ -355,7 +362,7 @@ class _GroupEditState extends State<GroupEdit> {
                             widget.group);
 
                         GroupService().showLoaderSink.add(false);
-                        if(!mounted) return;
+                        if (!mounted) return;
                         if (result is bool && result) {
                           return;
                         } else if (result == null) {
@@ -417,6 +424,13 @@ class _GroupEditState extends State<GroupEdit> {
                                 context,
                                 widget.group,
                                 heading: "Do you want to remove this group?",
+                                onDeleteSuccess: () {
+                                  if (_navigator.canPop()) {
+                                    _navigator.pop();
+                                    _navigator.pop();
+                                    GroupService().fetchGroupsAndContacts();
+                                  }
+                                },
                               );
                             }
                           },
@@ -586,6 +600,13 @@ class _GroupEditState extends State<GroupEdit> {
                   context,
                   widget.group,
                   heading: "Do you want to remove this group?",
+                  onDeleteSuccess: () async {
+                    if (_navigator.canPop()) {
+                      _navigator.pop();
+                      _navigator.pop();
+                      GroupService().fetchGroupsAndContacts();
+                    }
+                  },
                 );
               }
             } else if (result == null) {
