@@ -149,6 +149,7 @@ class _AtOnboardingAccountsScreenState
         builder: (_) => AlertDialog(
               content: RichText(
                 text: TextSpan(
+                    // ignore: deprecated_member_use
                     style: Theme.of(context).textTheme.bodyText1,
                     children: <InlineSpan>[
                       const TextSpan(text: 'You have selected  '),

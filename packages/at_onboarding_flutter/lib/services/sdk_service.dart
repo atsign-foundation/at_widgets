@@ -77,6 +77,7 @@ class SDKService {
   }
 
   void sync() {
+    // ignore: deprecated_member_use
     AtClientManager.getInstance().syncService.sync();
   }
 

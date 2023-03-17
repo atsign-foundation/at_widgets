@@ -238,6 +238,7 @@ class OnboardingService {
 
   /// sync call to get data from secondary
   Future<void> _sync(String? atSign) async {
+    // ignore: deprecated_member_use
     _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
   }
 }
