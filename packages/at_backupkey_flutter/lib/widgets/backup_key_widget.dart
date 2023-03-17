@@ -6,6 +6,7 @@ import 'package:at_backupkey_flutter/services/backupkey_service.dart';
 import 'package:at_backupkey_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:share_plus/share_plus.dart';
@@ -131,7 +132,7 @@ class BackupKeyWidget extends StatelessWidget {
 
   showBackupDialog(BuildContext context) {
     SizeConfig().init(context);
-    GlobalKey _one = GlobalKey();
+    GlobalKey key = GlobalKey();
     BuildContext? myContext;
     showDialog(
         context: context,
@@ -153,7 +154,7 @@ class BackupKeyWidget extends StatelessWidget {
                         Expanded(
                           child: Center(
                             child: Showcase(
-                              key: _one,
+                              key: key,
                               description:
                                   '''Each atSign has a unique key used to verify ownership and encrypt your data. You will get this key when you first activate your atSign, and you will need it to pair your atSign with other devices and all atPlatform apps.
                                   
@@ -178,7 +179,7 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
                         ),
                         GestureDetector(
                           onTap: () {
-                            ShowCaseWidget.of(myContext!).startShowCase([_one]);
+                            ShowCaseWidget.of(myContext!).startShowCase([key]);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -239,31 +240,108 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
   }
 
   _onBackup(BuildContext context) async {
-    var _size = MediaQuery.of(context).size;
     try {
       var aesEncryptedKeys = await BackUpKeyService.getEncryptedKeys(atsign);
       if (aesEncryptedKeys.isEmpty) {
         return false;
       }
       String tempFilePath = await _generateFile(aesEncryptedKeys);
-      if (Platform.isAndroid || Platform.isIOS) {
-        await Share.shareXFiles(
-          [XFile(tempFilePath)],
-          sharePositionOrigin:
-              Rect.fromLTWH(0, 0, _size.width, _size.height / 2),
-        ).then((ShareResult shareResult) {
-          if (shareResult.status == ShareResultStatus.success) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('File saved successfully')));
-          }
-        });
+      if (Platform.isAndroid) {
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+
+        await showDialog(
+          context: context,
+          useRootNavigator: false,
+          builder: (context) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                color: Colors.white,
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        var status = await Permission.storage.status;
+                        if (!status.isGranted) {
+                          await Permission.storage.request();
+                        }
+
+                        String? dir = await getDownloadPath();
+                        if (dir != null) {
+                          String newPath =
+                              "$dir/$atsign${Strings.backupKeyName}";
+                          debugPrint(newPath);
+
+                          try {
+                            if (await File(newPath).exists()) {
+                              Navigator.of(context).pop();
+                              showSnackBar(
+                                  context: context, content: "File exists!");
+                            } else {
+                              final encryptedKeysFile =
+                                  await File(newPath).create();
+                              var keyString = jsonEncode(aesEncryptedKeys);
+                              encryptedKeysFile.writeAsStringSync(keyString);
+                              Navigator.of(context).pop();
+                              showSnackBar(
+                                context: context,
+                                content: 'File saved successfully',
+                              );
+                            }
+                          } catch (e) {
+                            debugPrint("$e");
+                          }
+                        }
+                      },
+                      child: Container(
+                        height: 52,
+                        width: double.infinity,
+                        alignment: Alignment.centerLeft,
+                        child: const Text("Download"),
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        shareFile(
+                          context: context,
+                          path: tempFilePath,
+                        );
+                      },
+                      child: Container(
+                        height: 52,
+                        width: double.infinity,
+                        alignment: Alignment.centerLeft,
+                        child: const Text("Share"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      } else if (Platform.isIOS) {
+        shareFile(
+          context: context,
+          path: tempFilePath,
+        );
       } else {
         final path =
             await getSavePath(suggestedName: '$atsign${Strings.backupKeyName}');
         final file = XFile(tempFilePath);
         await file.saveTo(path ?? '');
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('File saved successfully')));
+        showSnackBar(
+          context: context,
+          content: 'File saved successfully',
+        );
       }
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
@@ -296,5 +374,47 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
           mimeType: MimeType.OTHER);
       return desktopPath;
     }
+  }
+
+  void shareFile({
+    required BuildContext context,
+    required String path,
+  }) async {
+    var _size = MediaQuery.of(context).size;
+    await Share.shareXFiles(
+      [XFile(path)],
+      sharePositionOrigin: Rect.fromLTWH(0, 0, _size.width, _size.height / 2),
+    ).then((ShareResult shareResult) {
+      if (shareResult.status == ShareResultStatus.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('File saved successfully')));
+      }
+    });
+  }
+
+  void showSnackBar({
+    required BuildContext context,
+    String content = '',
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          content,
+        ),
+      ),
+    );
+  }
+
+  static Future<String?> getDownloadPath() async {
+    Directory? directory;
+    if (Platform.isIOS) {
+      directory = await getApplicationDocumentsDirectory();
+    } else {
+      directory = Directory('/storage/emulated/0/Download');
+      if (!await directory.exists()) {
+        directory = await getExternalStorageDirectory();
+      }
+    }
+    return directory?.path;
   }
 }
