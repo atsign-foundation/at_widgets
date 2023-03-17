@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:at_backupkey_flutter/services/backupkey_service.dart';
 import 'package:at_backupkey_flutter/utils/strings.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
 import 'package:path_provider/path_provider.dart';
