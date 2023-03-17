@@ -3,7 +3,8 @@ import 'package:at_onboarding_flutter_example/switch_atsign.dart';
 import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 
-import 'package:path_provider/path_provider.dart' show getApplicationSupportDirectory;
+import 'package:path_provider/path_provider.dart'
+    show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 
 Future<void> main() async {
@@ -51,6 +52,7 @@ class _MyAppState extends State<MyApp> {
             colorScheme: ThemeData.light().colorScheme.copyWith(
                   primary: const Color(0xFFf4533d),
                 ),
+            // ignore: deprecated_member_use
             backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
           ),
@@ -60,6 +62,7 @@ class _MyAppState extends State<MyApp> {
             colorScheme: ThemeData.dark().colorScheme.copyWith(
                   primary: Colors.blue,
                 ),
+            // ignore: deprecated_member_use
             backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
           ),

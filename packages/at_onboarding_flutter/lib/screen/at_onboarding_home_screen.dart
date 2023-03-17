@@ -309,9 +309,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
   Future<String?> _desktopQRFilePicker() async {
     try {
-      // ignore: omit_local_variable_types
+      // ignore: omit_local_variable_types, prefer_const_constructors
       XTypeGroup typeGroup = XTypeGroup(
         label: 'images',
+        // ignore: prefer_const_literals_to_create_immutables
         extensions: <String>['png'],
       );
       List<XFile> files =
@@ -329,8 +330,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
   Future<String?> _desktopKeyPicker() async {
     try {
+      // ignore: prefer_const_constructors
       XTypeGroup typeGroup = XTypeGroup(
         label: 'images',
+        // ignore: prefer_const_literals_to_create_immutables
         extensions: <String>['atKeys'],
       );
       List<XFile> files =
@@ -730,6 +733,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           return;
         }
 
+        // ignore: use_build_context_synchronously
         await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));

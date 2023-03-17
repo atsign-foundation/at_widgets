@@ -33,6 +33,7 @@ class AtOnboarding {
         await changePrimaryAtsign(atsign: atsign!);
       }
       //Check if existing an atsign => return onboard success
+      // ignore: use_build_context_synchronously
       final result = await showDialog(
         context: context,
         barrierDismissible: false,

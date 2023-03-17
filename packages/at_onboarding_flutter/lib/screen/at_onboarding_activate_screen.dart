@@ -130,6 +130,7 @@ class _AtOnboardingActivateScreenState
       data = response.body;
       data = jsonDecode(data);
 
+      // ignore: use_build_context_synchronously
       final result = await AtOnboardingOTPScreen.push(
         context: context,
         atSign: atsign ?? (widget.atSign ?? ''),
@@ -214,8 +215,6 @@ class _AtOnboardingActivateScreenState
         debugPrint("currentAtSignStatus: $atSignStatus");
       }
 
-
-
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         if (atSignStatus == ServerStatus.teapot) {
           await _showAlertDialog(
@@ -224,6 +223,7 @@ class _AtOnboardingActivateScreenState
           return;
         }
 
+        // ignore: use_build_context_synchronously
         await AtOnboardingBackupScreen.push(context: context);
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));

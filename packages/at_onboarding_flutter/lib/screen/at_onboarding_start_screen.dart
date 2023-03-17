@@ -64,6 +64,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
         if (!mounted) return;
         Navigator.pop(context, result);
       } else if (e == OnboardingStatus.ACTIVATE) {
+        // ignore: use_build_context_synchronously
         final result = await AtOnboarding.activateAccount(
           context: context,
           config: widget.config,

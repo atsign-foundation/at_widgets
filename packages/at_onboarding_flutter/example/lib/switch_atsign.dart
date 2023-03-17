@@ -1,6 +1,5 @@
 import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
 // import 'package:at_utils/at_logger.dart' show AtSignLogger;
 
 import 'package:flutter/material.dart';
@@ -45,6 +44,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
               child: Container(
                 height: 100,
                 width: screenSize.width,
+                // ignore: deprecated_member_use
                 color: Theme.of(context).backgroundColor,
                 child: Row(
                   children: [
@@ -100,6 +100,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                               ),
                               Text(
                                 widget.atSignList[index],
+                                // ignore: deprecated_member_use
                                 style: Theme.of(context).textTheme.bodyText1,
                               )
                             ],
