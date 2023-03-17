@@ -1,6 +1,3 @@
-## 4.0.10:
-- **FIX**: Backup atKey locally in android
-
 ## 4.0.9:
 - **FEAT**: Added option to download atKey in android. 
 
