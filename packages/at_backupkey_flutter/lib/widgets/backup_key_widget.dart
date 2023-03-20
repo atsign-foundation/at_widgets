@@ -329,10 +329,17 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
           },
         );
       } else if (Platform.isIOS) {
-        shareFile(
-          context: context,
-          path: tempFilePath,
-        );
+        var _size = MediaQuery.of(context).size;
+        await Share.shareXFiles(
+          [XFile(tempFilePath)],
+          sharePositionOrigin:
+              Rect.fromLTWH(0, 0, _size.width, _size.height / 2),
+        ).then((ShareResult shareResult) {
+          if (shareResult.status == ShareResultStatus.success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('File saved successfully')));
+          }
+        });
       } else {
         final path =
             await getSavePath(suggestedName: '$atsign${Strings.backupKeyName}');
