@@ -20,6 +20,9 @@ class AtOnboardingConstants {
   static String contactAddress = 'support@atsign.com';
   static String activateAtSign = '/api/activateAtSign';
 
+  //.atKeys file key name
+  static String atSelfEncryptionKey = 'selfEncryptionKey';
+
   //Button titles
 
   static String get serverDomain => _rootDomain;
