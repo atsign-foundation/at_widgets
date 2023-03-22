@@ -1,3 +1,5 @@
+import 'package:at_onboarding_flutter/services/at_onboarding_theme.dart';
+import 'package:at_onboarding_flutter/services/at_onboarding_tutorial_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -42,6 +44,10 @@ class AtOnboardingConfig {
   final RootEnvironment rootEnvironment;
   final AtSignLogger logger = AtSignLogger('At Onboarding Flutter');
 
+  final OnboardingTheme? theme;
+
+  final TutorialDisplay tutorialDisplay;
+
   AtOnboardingConfig({
     required this.atClientPreference,
     required this.rootEnvironment,
@@ -49,5 +55,29 @@ class AtOnboardingConfig {
     this.appAPIKey,
     this.hideReferences = false,
     this.hideQrScan = false,
+    this.tutorialDisplay = TutorialDisplay.normal,
+    this.theme,
   });
+
+  AtOnboardingConfig copyWith({
+    bool? hideReferences,
+    bool? hideQrScan,
+    AtClientPreference? atClientPreference,
+    String? domain,
+    OnboardingTheme? theme,
+    TutorialDisplay? tutorialDisplay,
+    String? appAPIKey,
+    RootEnvironment? rootEnvironment,
+  }) {
+    return AtOnboardingConfig(
+      hideReferences: hideReferences ?? this.hideReferences,
+      hideQrScan: hideQrScan ?? this.hideQrScan,
+      atClientPreference: atClientPreference ?? this.atClientPreference,
+      domain: domain ?? this.domain,
+      theme: theme ?? this.theme,
+      tutorialDisplay: tutorialDisplay ?? this.tutorialDisplay,
+      appAPIKey: appAPIKey ?? this.appAPIKey,
+      rootEnvironment: rootEnvironment ?? this.rootEnvironment,
+    );
+  }
 }

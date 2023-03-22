@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:at_onboarding_flutter_example/switch_atsign.dart';
 import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-
+import 'package:at_onboarding_flutter/services/at_onboarding_theme.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
@@ -103,6 +103,9 @@ class _MyAppState extends State<MyApp> {
                             domain: AtEnv.rootDomain,
                             rootEnvironment: AtEnv.rootEnvironment,
                             appAPIKey: AtEnv.appApiKey,
+                            theme: OnboardingTheme(
+                              appColor: null,
+                            ),
                           ),
                         );
                         switch (result.status) {

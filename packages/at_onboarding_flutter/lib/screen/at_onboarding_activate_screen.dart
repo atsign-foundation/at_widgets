@@ -58,43 +58,46 @@ class _AtOnboardingActivateScreenState
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
+          ),
+    );
+
     return AbsorbPointer(
       absorbing: isVerifing,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Setting up your account',
-            style: TextStyle(
-              color: Platform.isIOS || Platform.isAndroid
-                  ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white
-                  : null,
+      child: Theme(
+        data: theme,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              AtOnboardingStrings.onboardingTitle,
             ),
+            actions: [
+              IconButton(
+                onPressed: _showReferenceWebview,
+                icon: const Icon(Icons.help),
+              ),
+            ],
           ),
-          actions: [
-            IconButton(
-              onPressed: _showReferenceWebview,
-              icon: const Icon(Icons.help),
-            ),
-          ],
-        ),
-        body: Center(
-          child: Container(
-            padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            constraints: const BoxConstraints(
-              maxWidth: 400,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                AtSyncIndicator(),
-                SizedBox(height: 10),
-                Text('please wait while we fetch your atSign status'),
-              ],
+          body: Center(
+            child: Container(
+              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              constraints: const BoxConstraints(
+                maxWidth: 400,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  AtSyncIndicator(),
+                  SizedBox(height: 10),
+                  Text('Please wait while fetching atSign status'),
+                ],
+              ),
             ),
           ),
         ),
@@ -135,6 +138,7 @@ class _AtOnboardingActivateScreenState
         context: context,
         atSign: atsign ?? (widget.atSign ?? ''),
         hideReferences: false,
+        config: widget.config,
       );
 
       if (result != null) {
@@ -155,6 +159,7 @@ class _AtOnboardingActivateScreenState
   Future<void> showErrorDialog(String? errorMessage) async {
     return AtOnboardingDialog.showError(
       context: context,
+      title: "Notice",
       message: errorMessage ?? '',
       onCancel: () {
         Navigator.of(context).pop();
@@ -168,6 +173,7 @@ class _AtOnboardingActivateScreenState
         context: context,
         title: AtOnboardingStrings.faqTitle,
         url: AtOnboardingStrings.faqUrl,
+        config: widget.config,
       );
     } else {
       launchUrl(
@@ -223,8 +229,11 @@ class _AtOnboardingActivateScreenState
           return;
         }
 
-        // ignore: use_build_context_synchronously
-        await AtOnboardingBackupScreen.push(context: context);
+        await AtOnboardingBackupScreen.push(
+          context: context,
+          config: widget.config,
+        );
+
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
@@ -253,10 +262,19 @@ class _AtOnboardingActivateScreenState
   Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
     String? messageString =
         AtOnboardingErrorToString().getErrorMessage(errorMessage);
+
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
+          ),
+    );
+
     return AtOnboardingDialog.showError(
       context: context,
       title: title,
       message: messageString,
+      themeData: theme,
       onCancel: () {
         Navigator.pop(context);
       },

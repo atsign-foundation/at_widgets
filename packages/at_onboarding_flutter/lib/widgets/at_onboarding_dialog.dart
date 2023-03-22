@@ -7,13 +7,16 @@ class AtOnboardingDialog extends StatefulWidget {
     String? title,
     required String message,
     VoidCallback? onCancel,
+    ThemeData? themeData,
   }) async {
     return showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AtOnboardingDialog(
-            title: title ?? 'Error',
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return Theme(
+          data: themeData ?? Theme.of(context),
+          child: AtOnboardingDialog(
+            title: title ?? 'Notice',
             message: message,
             actions: [
               AtOnboardingSecondaryButton(
@@ -24,8 +27,10 @@ class AtOnboardingDialog extends StatefulWidget {
                 },
               ),
             ],
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   final String title;

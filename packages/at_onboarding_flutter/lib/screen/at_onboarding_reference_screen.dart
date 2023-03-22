@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -9,6 +12,7 @@ class AtOnboardingReferenceScreen extends StatefulWidget {
     required BuildContext context,
     required String? url,
     required String? title,
+    required AtOnboardingConfig config,
   }) {
     Navigator.push(
       context,
@@ -16,6 +20,7 @@ class AtOnboardingReferenceScreen extends StatefulWidget {
         builder: (_) => AtOnboardingReferenceScreen(
           url: url,
           title: title,
+          config: config,
         ),
       ),
     );
@@ -23,9 +28,14 @@ class AtOnboardingReferenceScreen extends StatefulWidget {
 
   final String? url;
   final String? title;
+  final AtOnboardingConfig config;
 
-  const AtOnboardingReferenceScreen({Key? key, this.url, this.title})
-      : super(key: key);
+  const AtOnboardingReferenceScreen({
+    Key? key,
+    this.url,
+    this.title,
+    required this.config,
+  }) : super(key: key);
 
   @override
   State<AtOnboardingReferenceScreen> createState() =>
@@ -35,6 +45,9 @@ class AtOnboardingReferenceScreen extends StatefulWidget {
 class _AtOnboardingReferenceScreenState
     extends State<AtOnboardingReferenceScreen> {
   late bool isLoading;
+  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers = {
+    Factory(() => EagerGestureRecognizer())
+  };
   late WebViewController webViewController;
 
   @override
@@ -62,32 +75,36 @@ class _AtOnboardingReferenceScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.title ?? 'FAQ',
-          style: TextStyle(
-            color: Platform.isIOS || Platform.isAndroid
-                ? Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white
-                : null,
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.appColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.appColor,
           ),
+    );
+
+    return Theme(
+      data: theme,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.title ?? 'FAQ',
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: <Widget>[
-          WebViewWidget(
-            controller: webViewController,
-          ),
-          isLoading
-              ? const Center(
-                  child: AtSyncIndicator(),
-                )
-              : const SizedBox()
-        ],
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: <Widget>[
+            WebViewWidget(
+              controller: webViewController,
+              gestureRecognizers: gestureRecognizers,
+            ),
+            isLoading
+                ? const Center(
+                    child: AtSyncIndicator(),
+                  )
+                : const SizedBox()
+          ],
+        ),
       ),
     );
   }
