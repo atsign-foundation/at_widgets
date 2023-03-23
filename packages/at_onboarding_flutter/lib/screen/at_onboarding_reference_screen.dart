@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/foundation.dart';
@@ -76,9 +74,9 @@ class _AtOnboardingReferenceScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
-      primaryColor: widget.config.theme?.appColor,
+      primaryColor: widget.config.theme?.primaryColor,
       colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: widget.config.theme?.appColor,
+            primary: widget.config.theme?.primaryColor,
           ),
     );
 

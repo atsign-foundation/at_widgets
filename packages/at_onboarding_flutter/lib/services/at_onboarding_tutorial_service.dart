@@ -3,45 +3,45 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const int _tutorialVersion = 2;
 
-enum TutorialDisplay {
-  normal,
-  always,
-  never,
+enum AtOnboardingTutorialDisplay {
+  normal, /// show once
+  always, /// always show tutorial when opening app
+  never, /// never show tutorial when opening app
 }
 
-class TutorialServiceInfo {
+class AtTutorialServiceInfo {
   int versionInfo;
   bool hasShowSignInPage;
-  bool hasshowSignUpPage;
+  bool hasShowSignUpPage;
 
-  TutorialServiceInfo({
+  AtTutorialServiceInfo({
     this.versionInfo = _tutorialVersion,
     this.hasShowSignInPage = false,
-    this.hasshowSignUpPage = false,
+    this.hasShowSignUpPage = false,
   });
 
-  factory TutorialServiceInfo.fromJson(Map<String, dynamic> json) {
-    return TutorialServiceInfo(
+  factory AtTutorialServiceInfo.fromJson(Map<String, dynamic> json) {
+    return AtTutorialServiceInfo(
       versionInfo: json['versionInfo'],
       hasShowSignInPage: json['hasShowSignInPage'],
-      hasshowSignUpPage: json['hasshowSignUpPage'],
+      hasShowSignUpPage: json['hasShowSignUpPage'],
     );
   }
 
   Map<String, dynamic> toJson() => {
     "versionInfo": versionInfo,
     "hasShowSignInPage": hasShowSignInPage,
-    "hasshowSignUpPage": hasshowSignUpPage,
+    "hasShowSignUpPage": hasShowSignUpPage,
   };
 }
 
-class TutorialService {
+class AtOnboardingTutorialService {
   static const _tutorialInfo = 'tutorialInfo';
 
-  static Future<TutorialServiceInfo?> getTutorialInfo() async {
+  static Future<AtTutorialServiceInfo?> getTutorialInfo() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      return TutorialServiceInfo.fromJson(
+      return AtTutorialServiceInfo.fromJson(
         jsonDecode(
           prefs.getString(_tutorialInfo) ?? '',
         ),
@@ -51,7 +51,7 @@ class TutorialService {
     }
   }
 
-  static Future<void> setTutorialInfo(TutorialServiceInfo info) async {
+  static Future<void> setTutorialInfo(AtTutorialServiceInfo info) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     info.versionInfo = _tutorialVersion;
     final data = jsonEncode(info);
@@ -65,19 +65,19 @@ class TutorialService {
 
   static Future<bool> hasShowTutorialSignUp() async {
     final tutorialInfo = await getTutorialInfo();
-    return tutorialInfo?.hasshowSignUpPage ?? false;
+    return tutorialInfo?.hasShowSignUpPage ?? false;
   }
 
   static Future<bool> checkShowTutorial() async {
     final tutorialInfo = await getTutorialInfo();
-    final showPageDone = tutorialInfo?.hasshowSignUpPage != true ||
+    final showPageDone = tutorialInfo?.hasShowSignUpPage != true ||
         tutorialInfo?.hasShowSignInPage != true;
     final checkNewestVersion =
         _tutorialVersion > (tutorialInfo?.versionInfo ?? 0);
 
     if (checkNewestVersion || showPageDone) {
       if (checkNewestVersion) {
-        final tutorialInfo = TutorialServiceInfo();
+        final tutorialInfo = AtTutorialServiceInfo();
         await setTutorialInfo(tutorialInfo);
       }
       return false;

@@ -71,17 +71,17 @@ class _AtOnboardingGenerateScreenState
   }
 
   void _checkShowTutorial() async {
-    if (widget.config.tutorialDisplay == TutorialDisplay.always) {
+    if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.always) {
       await Future.delayed(const Duration(milliseconds: 300));
       _showTutorial();
-    } else if (widget.config.tutorialDisplay == TutorialDisplay.never) {
+    } else if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.never) {
       return;
     } else {
-      final result = await TutorialService.checkShowTutorial();
+      final result = await AtOnboardingTutorialService.checkShowTutorial();
       if (!result) {
         await Future.delayed(const Duration(milliseconds: 300));
 
-        final result = await TutorialService.hasShowTutorialSignUp();
+        final result = await AtOnboardingTutorialService.hasShowTutorialSignUp();
         if (!result) {
           _showTutorial();
         }
@@ -109,12 +109,12 @@ class _AtOnboardingGenerateScreenState
   }
 
   void _endTutorial() async {
-    TutorialServiceInfo? tutorialInfo = await TutorialService.getTutorialInfo();
-    tutorialInfo ??= TutorialServiceInfo();
+    var tutorialInfo = await AtOnboardingTutorialService.getTutorialInfo();
+    tutorialInfo ??= AtTutorialServiceInfo();
 
-    tutorialInfo.hasshowSignUpPage = true;
+    tutorialInfo.hasShowSignUpPage = true;
 
-    TutorialService.setTutorialInfo(tutorialInfo);
+    AtOnboardingTutorialService.setTutorialInfo(tutorialInfo);
   }
 
   void initTargets() {
@@ -178,9 +178,9 @@ class _AtOnboardingGenerateScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
-      primaryColor: widget.config.theme?.appColor,
+      primaryColor: widget.config.theme?.primaryColor,
       colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: widget.config.theme?.appColor,
+            primary: widget.config.theme?.primaryColor,
           ),
     );
 

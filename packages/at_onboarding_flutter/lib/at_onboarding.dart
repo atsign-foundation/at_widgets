@@ -31,7 +31,7 @@ class AtOnboarding {
 
     if (config.theme == null) {
       final defaultConfig = config.copyWith(
-        theme: OnboardingTheme(),
+        theme: AtOnboardingTheme(),
       );
       config = defaultConfig;
     }

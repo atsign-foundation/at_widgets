@@ -56,9 +56,9 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
-      primaryColor: widget.config.theme?.appColor,
+      primaryColor: widget.config.theme?.primaryColor,
       colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: widget.config.theme?.appColor,
+            primary: widget.config.theme?.primaryColor,
           ),
     );
 

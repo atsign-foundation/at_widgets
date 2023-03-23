@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/sdk_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
@@ -51,9 +49,9 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
-      primaryColor: widget.config.theme?.appColor,
+      primaryColor: widget.config.theme?.primaryColor,
       colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: widget.config.theme?.appColor,
+            primary: widget.config.theme?.primaryColor,
           ),
     );
 

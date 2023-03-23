@@ -102,16 +102,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   }
 
   Future<void> _checkShowTutorial() async {
-    if (widget.config.tutorialDisplay == TutorialDisplay.always) {
+    if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.always) {
       await Future.delayed(const Duration(milliseconds: 300));
       _showTutorial();
-    } else if (widget.config.tutorialDisplay == TutorialDisplay.never) {
+    } else if (widget.config.tutorialDisplay == AtOnboardingTutorialDisplay.never) {
       return;
     } else {
-      final result = await TutorialService.checkShowTutorial();
+      final result = await AtOnboardingTutorialService.checkShowTutorial();
       if (!result) {
         await Future.delayed(const Duration(milliseconds: 300));
-        final result = await TutorialService.hasShowTutorialSignIn();
+        final result = await AtOnboardingTutorialService.hasShowTutorialSignIn();
         if (!result) {
           _showTutorial();
         }
@@ -139,11 +139,11 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   }
 
   void _endTutorial() async {
-    var tutorialInfo = await TutorialService.getTutorialInfo();
-    tutorialInfo ??= TutorialServiceInfo();
+    var tutorialInfo = await AtOnboardingTutorialService.getTutorialInfo();
+    tutorialInfo ??= AtTutorialServiceInfo();
     tutorialInfo.hasShowSignInPage = true;
 
-    TutorialService.setTutorialInfo(tutorialInfo);
+    AtOnboardingTutorialService.setTutorialInfo(tutorialInfo);
   }
 
   void initTargets() {
@@ -604,9 +604,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
-      primaryColor: widget.config.theme?.appColor,
+      primaryColor: widget.config.theme?.primaryColor,
       colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: widget.config.theme?.appColor,
+            primary: widget.config.theme?.primaryColor,
           ),
     );
 

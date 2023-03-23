@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-class OnboardingTheme {
-  final Color? appColor;
+class AtOnboardingTheme {
+  ///set primary color for Onboarding
+  final Color? primaryColor;
 
-  OnboardingTheme({
-    this.appColor,
+  AtOnboardingTheme({
+    this.primaryColor,
   });
 }

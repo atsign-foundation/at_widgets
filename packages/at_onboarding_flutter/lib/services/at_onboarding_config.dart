@@ -44,9 +44,9 @@ class AtOnboardingConfig {
   final RootEnvironment rootEnvironment;
   final AtSignLogger logger = AtSignLogger('At Onboarding Flutter');
 
-  final OnboardingTheme? theme;
+  final AtOnboardingTheme? theme;
 
-  final TutorialDisplay tutorialDisplay;
+  final AtOnboardingTutorialDisplay tutorialDisplay;
 
   AtOnboardingConfig({
     required this.atClientPreference,
@@ -55,7 +55,7 @@ class AtOnboardingConfig {
     this.appAPIKey,
     this.hideReferences = false,
     this.hideQrScan = false,
-    this.tutorialDisplay = TutorialDisplay.normal,
+    this.tutorialDisplay = AtOnboardingTutorialDisplay.normal,
     this.theme,
   });
 
@@ -64,8 +64,8 @@ class AtOnboardingConfig {
     bool? hideQrScan,
     AtClientPreference? atClientPreference,
     String? domain,
-    OnboardingTheme? theme,
-    TutorialDisplay? tutorialDisplay,
+    AtOnboardingTheme? theme,
+    AtOnboardingTutorialDisplay? tutorialDisplay,
     String? appAPIKey,
     RootEnvironment? rootEnvironment,
   }) {

@@ -103,8 +103,8 @@ class _MyAppState extends State<MyApp> {
                             domain: AtEnv.rootDomain,
                             rootEnvironment: AtEnv.rootEnvironment,
                             appAPIKey: AtEnv.appApiKey,
-                            theme: OnboardingTheme(
-                              appColor: null,
+                            theme: AtOnboardingTheme(
+                              primaryColor: null,
                             ),
                           ),
                         );
