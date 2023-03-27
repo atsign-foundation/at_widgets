@@ -81,7 +81,6 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
         body: Padding(
           padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               const SizedBox(height: 10),
@@ -110,11 +109,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
                       : 250,
                   fit: BoxFit.fill,
                   package: AtOnboardingConstants.package,
-                  color: Platform.isIOS || Platform.isAndroid
-                      ? Theme.of(context).brightness == Brightness.light
-                          ? Colors.black
-                          : Colors.white
-                      : null,
+                  color: theme.iconTheme.color,
                 ),
               ),
               Expanded(flex: 1, child: Container()),
@@ -125,16 +120,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
                 child: AtOnboardingPrimaryButton(
                   height: 48,
                   borderRadius: 24,
-                  child: Text(
-                    AtOnboardingStrings.saveButtonTitle,
-                    style: TextStyle(
-                      color: Platform.isIOS || Platform.isAndroid
-                          ? Theme.of(context).brightness == Brightness.light
-                              ? Colors.white
-                              : Colors.black
-                          : null,
-                    ),
-                  ),
+                  child: const Text(AtOnboardingStrings.saveButtonTitle),
                   onPressed: () async {
                     AtOnboardingBackupService.instance
                         .setRemindBackup(remind: false);

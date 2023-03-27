@@ -67,11 +67,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                   text: TextSpan(
                     text:
                         "This app was built on the atPlatform. All atPlatform apps require an atSign. ",
-                    style: theme.primaryTextTheme.titleMedium,
-                    /*const TextStyle(
-                      fontSize: AtOnboardingDimens.fontLarge,
-                      fontWeight: FontWeight.w500,
-                    ),*/
+                    style: theme.textTheme.titleMedium,
                     children: <TextSpan>[
                       TextSpan(
                         text: 'Learn more',
