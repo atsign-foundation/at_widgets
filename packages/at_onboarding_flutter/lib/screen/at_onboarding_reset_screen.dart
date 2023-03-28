@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/sdk_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
@@ -50,17 +48,19 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.primaryColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.primaryColor,
+          ),
+    );
+
+    return Theme(
+      data: theme,
+      child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Reset',
-            style: TextStyle(
-              color: Platform.isIOS || Platform.isAndroid
-                  ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white
-                  : null,
-            ),
           ),
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),
@@ -79,11 +79,14 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
                   style: TextStyle(fontSize: AtOnboardingDimens.fontNormal)),
             ),
             Expanded(
-                child: atsignsList.isEmpty
-                    ? _buildEmptyWidget()
-                    : _buildAtSignsWidget())
+              child: atsignsList.isEmpty
+                  ? _buildEmptyWidget()
+                  : _buildAtSignsWidget(theme),
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildEmptyWidget() {
@@ -99,7 +102,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
     );
   }
 
-  Widget _buildAtSignsWidget() {
+  Widget _buildAtSignsWidget(ThemeData theme) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -115,7 +118,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
             setState(() {});
           },
           value: isSelectAll,
-          activeColor: Theme.of(context).primaryColor,
+          activeColor: theme.primaryColor,
           title: const Text('Select All',
               style: TextStyle(
                 // fontSize: 14,
@@ -138,7 +141,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
                     setState(() {});
                   },
                   value: atsignMap.isNotEmpty ? atsignMap[atsign] : true,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: theme.primaryColor,
                   title: Text(atsign),
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: AtOnboardingDimens.paddingNormal),

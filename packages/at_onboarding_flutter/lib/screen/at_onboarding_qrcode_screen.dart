@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,11 @@ class AtOnboardingQRCodeResult {
 }
 
 class AtOnboardingQRCodeScreen extends StatefulWidget {
+  final AtOnboardingConfig config;
+
   const AtOnboardingQRCodeScreen({
     Key? key,
+    required this.config,
   }) : super(key: key);
 
   @override
@@ -84,39 +88,42 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).copyWith(
+      primaryColor: widget.config.theme?.primaryColor,
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: widget.config.theme?.primaryColor,
+          ),
+    );
+
     return AbsorbPointer(
       absorbing: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Scan your QR!',
-            style: TextStyle(
-              color: Platform.isIOS || Platform.isAndroid
-                  ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white
-                  : null,
+      child: Theme(
+        data: theme,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Scan your QR!',
             ),
+            actions: const [
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: AtSyncIndicator(color: Colors.white),
+                ),
+              ),
+            ],
           ),
-          actions: const [
-            Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: AtSyncIndicator(color: Colors.white),
-              ),
-            ),
-          ],
+          body: showQRScanner
+              ? _buildQrView(theme)
+              : Container(
+                  color: Colors.black,
+                ),
         ),
-        body: showQRScanner
-            ? _buildQrView(context)
-            : Container(
-                color: Colors.black,
-              ),
       ),
     );
   }
 
-  Widget _buildQrView(BuildContext context) {
+  Widget _buildQrView(ThemeData theme) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
@@ -130,7 +137,7 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
       onQRViewCreated: _onQRViewCreated,
       formatsAllowed: const [BarcodeFormat.qrcode],
       overlay: QrScannerOverlayShape(
-        borderColor: Theme.of(context).primaryColor,
+        borderColor: theme.primaryColor,
         borderRadius: 10,
         borderLength: 30,
         borderWidth: 10,
@@ -179,7 +186,6 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
         );
       } else {
         await _controller?.pauseCamera();
-        // ignore: use_build_context_synchronously
         await AtOnboardingDialog.showError(
             context: context, message: 'Invalid QR.');
         await _controller?.resumeCamera();
