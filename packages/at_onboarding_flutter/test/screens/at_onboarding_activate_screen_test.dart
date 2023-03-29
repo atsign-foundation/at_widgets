@@ -37,6 +37,9 @@ void main() {
           },
         ),
       ),
+      localizationsDelegates: const [
+        AtOnboardingLocalizations.delegate,
+      ],
     );
   }
 
@@ -118,6 +121,4 @@ void main() {
           findsOneWidget);
     },
   );
-
-
 }

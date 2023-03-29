@@ -1,4 +1,5 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
@@ -9,23 +10,24 @@ class AtOnboardingErrorToString {
     OnboardingService onboardingService = OnboardingService.getInstance();
     switch (error.runtimeType) {
       case AtClientException:
-        return 'Unable to perform this action. Please try again.';
+        return AtOnboardingLocalizations
+            .current.error_unable_to_perform_this_action;
       case UnAuthenticatedException:
-        return 'Unable to authenticate. Please try again.';
+        return AtOnboardingLocalizations.current.error_unable_to_authenticate;
       case NoSuchMethodError:
-        return 'Failed in processing. Please try again.';
+        return AtOnboardingLocalizations.current.error_processing;
       case AtConnectException:
-        return 'Unable to connect server. Please try again later.';
+        return AtOnboardingLocalizations.current.error_unable_to_connect_server;
       case AtIOException:
-        return 'Unable to perform read/write operation. Please try again.';
+        return AtOnboardingLocalizations.current.error_perform_operation;
       case AtServerException:
-        return 'Unable to activate server. Please contact admin.';
+        return AtOnboardingLocalizations.current.error_activate_server;
       case SecondaryNotFoundException:
-        return 'Server is unavailable. Please try again later.';
+        return AtOnboardingLocalizations.current.error_server_unavailable;
       case SecondaryConnectException:
-        return 'Unable to connect. Please check with network connection and try again.';
+        return AtOnboardingLocalizations.current.error_unable_connect;
       case InvalidAtSignException:
-        return 'Invalid atsign is provided. Please contact admin.';
+        return AtOnboardingLocalizations.current.error_invalid_atSign_provided;
       case ServerStatus:
         return _getServerStatusMessage(error);
       case OnboardingStatus:
@@ -33,21 +35,24 @@ class AtOnboardingErrorToString {
       case AtOnboardingResponseStatus:
         if (error == AtOnboardingResponseStatus.authFailed) {
           if (onboardingService.isPkam!) {
-            return 'Please provide valid backupkey file to continue.';
+            return AtOnboardingLocalizations.current.error_provide_backupKey;
           } else {
             return onboardingService.serverStatus == ServerStatus.activated
-                ? 'Please provide a relevant backupkey file to authenticate.'
-                : 'Please provide a valid QRcode to authenticate.';
+                ? AtOnboardingLocalizations
+                    .current.error_provide_relevant_backupKey
+                : AtOnboardingLocalizations.current.error_provide_valid_QRCode;
           }
         } else if (error == AtOnboardingResponseStatus.timeOut) {
-          return 'Server response timed out!\nPlease check your network connection and try again. Contact ${AtOnboardingConstants.contactAddress} if the issue still persists.';
+          return AtOnboardingLocalizations.current
+              .error_server_response_timed_out(
+                  AtOnboardingConstants.contactAddress);
         } else {
           return '';
         }
       case String:
         return error;
       default:
-        return 'Unknown error.';
+        return AtOnboardingLocalizations.current.error_unknown;
     }
   }
 
@@ -55,22 +60,24 @@ class AtOnboardingErrorToString {
     switch (message) {
       case ServerStatus.unavailable:
       case ServerStatus.stopped:
-        return 'Server is unavailable. Please try again later.';
+        return AtOnboardingLocalizations.current.error_server_unavailable;
       case ServerStatus.error:
-        return 'Unable to connect. Please check with network connection and try again.';
+        return AtOnboardingLocalizations.current.error_unable_connect;
       default:
         return '';
     }
   }
 
   String pairedAtsign(String? atsign) =>
-      '$atsign was already paired with this device. First delete/reset this atSign from device to add.';
+      AtOnboardingLocalizations.current.error_atSign_already_paired('$atsign');
 
   String atsignMismatch(String? givenAtsign, {bool isQr = false}) {
     if (isQr) {
-      return 'atSign mismatches. Please provide the QRcode of $givenAtsign to pair.';
+      return AtOnboardingLocalizations.current
+          .atSign_mismatches_need_to_provide_QRCode('$givenAtsign');
     } else {
-      return 'atSign mismatches. Please provide the backup key file of $givenAtsign to pair.';
+      return AtOnboardingLocalizations.current
+          .atSign_mismatches_need_to_provide_backupKey('$givenAtsign');
     }
   }
 }

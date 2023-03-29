@@ -35,6 +35,9 @@ void main() {
           },
         ),
       ),
+      localizationsDelegates: const [
+        AtOnboardingLocalizations.delegate,
+      ],
     );
   }
 

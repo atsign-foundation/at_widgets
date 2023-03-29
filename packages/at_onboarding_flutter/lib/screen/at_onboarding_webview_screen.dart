@@ -1,4 +1,5 @@
 import 'package:at_backupkey_flutter/utils/color_constants.dart';
+import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -49,7 +50,7 @@ class _AtOnboardingWebviewScreenState extends State<AtOnboardingWebviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.title ?? 'FAQ',
+          widget.title ?? AtOnboardingLocalizations.current.title_FAQ,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.normal,
@@ -67,9 +68,10 @@ class _AtOnboardingWebviewScreenState extends State<AtOnboardingWebviewScreen> {
           isLoading
               ? Center(
                   child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                    ColorConstants.appColor,
-                  )),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      ColorConstants.appColor,
+                    ),
+                  ),
                 )
               : const SizedBox()
         ],

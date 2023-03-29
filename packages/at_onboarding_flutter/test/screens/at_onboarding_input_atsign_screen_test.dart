@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_input_atsign_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -33,55 +34,73 @@ void main() {
           },
         ),
       ),
+      localizationsDelegates: const [
+        AtOnboardingLocalizations.delegate,
+      ],
     );
   }
 
-  testWidgets('show InputAtSign Screen', (tester) async {
-    await tester.pumpWidget(_defaultApp());
-    await tester.pumpAndSettle();
+  testWidgets(
+    'show InputAtSign Screen',
+    (tester) async {
+      await tester.pumpWidget(_defaultApp());
+      await tester.pumpAndSettle();
 
-    expect(find.text(AtOnboardingStrings.onboardingTitle,), findsOneWidget);
-  });
-
-  testWidgets("navigate to InputAtSignScreen", (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: Builder(
-            builder: (BuildContext context) {
-              return Scaffold(
-                body: Center(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => AtOnboardingInputAtSignScreen(
-                            config: onboardingDataTest.config,
-                          ),
-                        ),
-                      );
-                    },
-                    child: const Text("Tap Me"),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-
-    await tester.tap(find.text("Tap Me"));
-
-    await tester.pumpAndSettle();
-
-    expect(
+      expect(
         find.text(
-          AtOnboardingStrings.onboardingTitle,
+          AtOnboardingLocalizations.current.title_setting_up_your_atSign,
         ),
-        findsOneWidget);
-  });
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    "navigate to InputAtSignScreen",
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: Builder(
+              builder: (BuildContext context) {
+                return Scaffold(
+                  body: Center(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => AtOnboardingInputAtSignScreen(
+                              config: onboardingDataTest.config,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text("Tap Me"),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          localizationsDelegates: const [
+            AtOnboardingLocalizations.delegate,
+          ],
+        ),
+      );
+
+      await tester.tap(find.text("Tap Me"));
+
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(
+          AtOnboardingLocalizations.current.title_setting_up_your_atSign,
+        ),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('show Reference Webview', (tester) async {
     await tester.pumpWidget(_defaultApp());

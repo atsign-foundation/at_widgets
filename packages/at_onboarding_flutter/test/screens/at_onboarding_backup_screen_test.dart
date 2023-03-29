@@ -1,3 +1,4 @@
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_backup_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -35,6 +36,9 @@ void main() {
           },
         ),
       ),
+      localizationsDelegates: const [
+        AtOnboardingLocalizations.delegate,
+      ],
     );
   }
 
@@ -54,10 +58,11 @@ void main() {
       await tester.pump();
 
       expect(
-          find.text(
-            AtOnboardingStrings.saveBackupDescription,
-          ),
-          findsOneWidget);
+        find.text(
+          AtOnboardingLocalizations.current.title_save_your_key,
+        ),
+        findsOneWidget,
+      );
     },
   );
 }

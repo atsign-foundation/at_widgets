@@ -82,7 +82,8 @@ class _AtOnboardingGenerateScreenState
       if (!result) {
         await Future.delayed(const Duration(milliseconds: 300));
 
-        final result = await AtOnboardingTutorialService.hasShowTutorialSignUp();
+        final result =
+            await AtOnboardingTutorialService.hasShowTutorialSignUp();
         if (!result) {
           _showTutorial();
         }
@@ -93,10 +94,10 @@ class _AtOnboardingGenerateScreenState
   void _showTutorial() {
     tutorialCoachMark = TutorialCoachMark(
       targets: signUpTargets,
-      skipWidget: const Text(
-        "SKIP TUTORIAL",
+      skipWidget: Text(
+        AtOnboardingLocalizations.current.btn_skip_tutorial,
         textAlign: TextAlign.center,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 18,
           fontWeight: FontWeight.w500,
@@ -128,10 +129,10 @@ class _AtOnboardingGenerateScreenState
           TargetContent(
             align: ContentAlign.top,
             builder: (context, controller) {
-              return const Center(
+              return Center(
                 child: Text(
-                  "Tap to generate a new free atSign",
-                  style: TextStyle(
+                  AtOnboardingLocalizations.current.tutorial_generate_atSign,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: AtOnboardingDimens.fontLarge,
@@ -156,10 +157,10 @@ class _AtOnboardingGenerateScreenState
           TargetContent(
             align: ContentAlign.top,
             builder: (context, controller) {
-              return const Center(
+              return Center(
                 child: Text(
-                  "If you have an atSign, Tap to upload atSign key",
-                  style: TextStyle(
+                  AtOnboardingLocalizations.current.tutorial_generate_atSign,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: AtOnboardingDimens.fontLarge,
@@ -191,8 +192,8 @@ class _AtOnboardingGenerateScreenState
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text(
-              AtOnboardingStrings.onboardingTitle,
+            title: Text(
+              AtOnboardingLocalizations.current.title_setting_up_your_atSign,
             ),
             actions: [
               IconButton(
@@ -217,9 +218,9 @@ class _AtOnboardingGenerateScreenState
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Generate a free atSign',
-                    style: TextStyle(
+                  Text(
+                    AtOnboardingLocalizations.current.btn_generate_atSign,
+                    style: const TextStyle(
                       fontSize: AtOnboardingDimens.fontLarge,
                       fontWeight: FontWeight.bold,
                     ),
@@ -229,7 +230,8 @@ class _AtOnboardingGenerateScreenState
                     enabled: false,
                     validator: (String? value) {
                       if ((value ?? '').isEmpty) {
-                        return 'atSign cannot be empty';
+                        return AtOnboardingLocalizations
+                            .current.msg_atSign_cannot_empty;
                       }
                       return null;
                     },
@@ -250,9 +252,9 @@ class _AtOnboardingGenerateScreenState
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Refresh until you see an atSign that you like, then press Pair",
-                    style: TextStyle(
+                  Text(
+                    AtOnboardingLocalizations.current.msg_refresh_atSign,
+                    style: const TextStyle(
                       fontSize: AtOnboardingDimens.fontNormal,
                       // fontStyle: FontStyle.italic,
                     ),
@@ -262,9 +264,9 @@ class _AtOnboardingGenerateScreenState
                     highlightColor: Colors.transparent,
                     splashColor: Colors.transparent,
                     onTap: _showReferenceWebview,
-                    child: const Text(
-                      'Learn more about atSigns',
-                      style: TextStyle(
+                    child: Text(
+                      AtOnboardingLocalizations.current.learn_about_atSign,
+                      style: const TextStyle(
                         fontSize: AtOnboardingDimens.fontNormal,
                         fontStyle: FontStyle.italic,
                         // fontWeight: FontWeight.w500,
@@ -283,15 +285,15 @@ class _AtOnboardingGenerateScreenState
                     isLoading: _isGenerating,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const <Widget>[
+                      children: <Widget>[
                         Center(
                           child: Text(
-                            'Refresh',
-                            style: TextStyle(
+                            AtOnboardingLocalizations.current.btn_refresh,
+                            style: const TextStyle(
                                 fontSize: AtOnboardingDimens.fontLarge),
                           ),
                         ),
-                        Icon(
+                        const Icon(
                           Icons.refresh,
                           size: 20,
                         )
@@ -305,14 +307,16 @@ class _AtOnboardingGenerateScreenState
                     onPressed: _showPairScreen,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          'Pair',
-                          style: TextStyle(
+                          AtOnboardingLocalizations.current.btn_pair,
+                          style: const TextStyle(
                             fontSize: AtOnboardingDimens.fontLarge,
                           ),
                         ),
-                        Icon(Icons.arrow_right_alt_rounded)
+                        const Icon(
+                          Icons.arrow_right_alt_rounded,
+                        )
                       ],
                     ),
                   ),
@@ -337,7 +341,7 @@ class _AtOnboardingGenerateScreenState
                     highlightColor: Colors.transparent,
                     splashColor: Colors.transparent,
                     child: Text(
-                      "Already have an atSign?",
+                      AtOnboardingLocalizations.current.btn_already_have_atSign,
                       key: keyHaveAnAtSign,
                       style: TextStyle(
                         fontSize: AtOnboardingDimens.fontNormal,
@@ -392,7 +396,7 @@ class _AtOnboardingGenerateScreenState
     if (Platform.isAndroid || Platform.isIOS) {
       AtOnboardingReferenceScreen.push(
         context: context,
-        title: AtOnboardingStrings.faqTitle,
+        title: AtOnboardingLocalizations.current.title_FAQ,
         url: AtOnboardingStrings.faqUrl,
         config: widget.config,
       );
@@ -439,7 +443,9 @@ class _AtOnboardingGenerateScreenState
     String verifiedAtSign = atSign.startsWith('@') ? atSign : '@$atSign';
 
     try {
-      _inprogressDialog.show(message: 'Processing...');
+      _inprogressDialog.show(
+        message: AtOnboardingLocalizations.current.processing,
+      );
       await Future.delayed(const Duration(milliseconds: 400));
       bool isExist =
           await _onboardingService.isExistingAtsign(verifiedAtSign);
@@ -475,27 +481,35 @@ class _AtOnboardingGenerateScreenState
             context, AtOnboardingResult.success(atsign: verifiedAtSign));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
         await _showAlertDialog(
-          AtOnboardingStrings.atsignNotFound,
+          AtOnboardingLocalizations.current.msg_atSign_not_registered,
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingStrings.atsignNull,
+          AtOnboardingLocalizations.current.msg_atSign_unreachable,
         );
       } else {
-        await showErrorDialog('Response Time out');
+        await showErrorDialog(
+          AtOnboardingLocalizations.current.msg_response_time_out,
+        );
       }
     } catch (e) {
       _inprogressDialog.close();
       if (e == AtOnboardingResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWith cram secret');
-        await _showAlertDialog(e, title: 'Auth Failed');
+        await _showAlertDialog(
+          e,
+          title: AtOnboardingLocalizations.current.msg_auth_failed,
+        );
       } else if (e == AtOnboardingResponseStatus.serverNotReached) {
         await _processSharedSecret(
           atSign: atSign,
           secret: secret,
         );
       } else if (e == AtOnboardingResponseStatus.timeOut) {
-        await _showAlertDialog(e, title: 'Response Time out');
+        await _showAlertDialog(
+          e,
+          title: AtOnboardingLocalizations.current.msg_response_time_out,
+        );
       }
     }
     return authResponse;

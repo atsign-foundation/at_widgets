@@ -50,7 +50,9 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
     );
 
     if (atsign == null) {
-      return const Text('An atSign is required.');
+      return Text(
+        AtOnboardingLocalizations.current.msg_atSign_required,
+      );
     }
 
     return Theme(
@@ -59,8 +61,8 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
         backgroundColor: theme.scaffoldBackgroundColor,
         key: _scaffoldKey,
         appBar: AppBar(
-          title: const Text(
-            AtOnboardingStrings.saveBackupKeyTitle,
+          title: Text(
+            AtOnboardingLocalizations.current.title_save_your_key,
           ),
           leading: Container(),
           centerTitle: true,
@@ -71,20 +73,25 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               const SizedBox(height: 10),
-              const Text(
-                AtOnboardingStrings.saveImportantTitle,
-                style: TextStyle(
-                    fontSize: AtOnboardingDimens.fontLarge,
-                    fontWeight: FontWeight.bold),
+              Text(
+                AtOnboardingLocalizations.current.title_important,
+                style: const TextStyle(
+                  fontSize: AtOnboardingDimens.fontLarge,
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
-              const Text(
-                AtOnboardingStrings.saveBackupDescription,
-                style: TextStyle(fontSize: AtOnboardingDimens.fontNormal),
+              Text(
+                AtOnboardingLocalizations
+                    .current.msg_save_atKey_in_secure_location,
+                style: const TextStyle(fontSize: AtOnboardingDimens.fontNormal),
                 textAlign: TextAlign.center,
               ),
-              Expanded(flex: 1, child: Container()),
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
               Center(
                 child: Image.asset(
                   AtOnboardingStrings.backupZip,
@@ -107,7 +114,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
                 child: AtOnboardingPrimaryButton(
                   height: 48,
                   borderRadius: 24,
-                  child: const Text(AtOnboardingStrings.saveButtonTitle),
+                  child: Text(AtOnboardingLocalizations.current.btn_save),
                   onPressed: () async {
                     _atOnboardingBackupService.setRemindBackup(remind: false);
                     final widget = BackupKeyWidget(atsign: atsign ?? '');
@@ -132,8 +139,8 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
                   onPressed: _handleRemindLatter,
                   child: Text(
                     isSaveAtSign
-                        ? AtOnboardingStrings.continueButtonTitle
-                        : AtOnboardingStrings.onboardingRemindLatter,
+                        ? AtOnboardingLocalizations.current.btn_continue
+                        : AtOnboardingLocalizations.current.btn_remind_me_later,
                   ),
                 ),
               ),

@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  intl: ^0.17.0
   archive: ^3.3.0
   file_picker: ^5.2.4
   qr_code_scanner: ^1.0.0
@@ -103,3 +104,8 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  enabled: true
+  class_name: AtOnboardingLocalizations
+  arb_dir: lib/localizations/l10n
+  output_dir: lib/localizations/generated

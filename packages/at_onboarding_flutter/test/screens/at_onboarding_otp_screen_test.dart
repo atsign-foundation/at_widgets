@@ -1,3 +1,4 @@
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_otp_screen.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:flutter/material.dart';
@@ -31,17 +32,24 @@ void main() {
           },
         ),
       ),
+      localizationsDelegates: const [
+        AtOnboardingLocalizations.delegate,
+      ],
     );
   }
 
-  testWidgets('show Otp Screen', (tester) async {
-    await tester.pumpWidget(_defaultApp());
-    await tester.pump();
+  testWidgets(
+    'show Otp Screen',
+    (tester) async {
+      await tester.pumpWidget(_defaultApp());
+      await tester.pump();
 
-    expect(
+      expect(
         find.text(
-          AtOnboardingStrings.onboardingTitle,
+          AtOnboardingLocalizations.current.title_setting_up_your_atSign,
         ),
-        findsOneWidget);
-  });
+        findsOneWidget,
+      );
+    },
+  );
 }

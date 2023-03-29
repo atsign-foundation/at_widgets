@@ -1,8 +1,8 @@
+import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/sdk_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/material.dart';
@@ -59,8 +59,8 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
       data: theme,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Reset',
+          title: Text(
+            AtOnboardingLocalizations.current.reset,
           ),
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),
@@ -73,10 +73,16 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              child: const Text(AtOnboardingStrings.resetDescription,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: AtOnboardingDimens.fontNormal)),
+              padding: const EdgeInsets.all(
+                AtOnboardingDimens.paddingNormal,
+              ),
+              child: Text(
+                AtOnboardingLocalizations.current.reset_description,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: AtOnboardingDimens.fontNormal,
+                ),
+              ),
             ),
             Expanded(
               child: atsignsList.isEmpty
@@ -93,10 +99,10 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: const <Widget>[
+      children: <Widget>[
         Text(
-          AtOnboardingStrings.noAtsignToReset,
-          style: TextStyle(fontSize: 15),
+          AtOnboardingLocalizations.current.no_atSigns_paired_to_reset,
+          style: const TextStyle(fontSize: 15),
         ),
       ],
     );
@@ -114,18 +120,19 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
               atsignMap
                   .updateAll((String? key, bool? value1) => value1 = value);
             }
-            // atsignMap[atsign] = value;
             setState(() {});
           },
           value: isSelectAll,
           activeColor: theme.primaryColor,
-          title: const Text('Select All',
-              style: TextStyle(
-                // fontSize: 14,
-                fontWeight: FontWeight.bold,
-              )),
+          title: Text(
+            AtOnboardingLocalizations.current.select_all,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           contentPadding: const EdgeInsets.symmetric(
-              horizontal: AtOnboardingDimens.paddingNormal),
+            horizontal: AtOnboardingDimens.paddingNormal,
+          ),
         ),
         Expanded(
             child: SingleChildScrollView(
@@ -144,7 +151,8 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
                   activeColor: theme.primaryColor,
                   title: Text(atsign),
                   contentPadding: const EdgeInsets.symmetric(
-                      horizontal: AtOnboardingDimens.paddingNormal),
+                    horizontal: AtOnboardingDimens.paddingNormal,
+                  ),
                 )
             ],
           ),
@@ -153,14 +161,18 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
         const SizedBox(
           height: 10,
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: AtOnboardingDimens.paddingNormal),
-          child: Text(AtOnboardingStrings.resetWarningText,
-              style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: AtOnboardingDimens.fontNormal)),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AtOnboardingDimens.paddingNormal,
+          ),
+          child: Text(
+            AtOnboardingLocalizations.current.msg_action_cannot_undone,
+            style: const TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: AtOnboardingDimens.fontNormal,
+            ),
+          ),
         ),
         const SizedBox(
           height: 10,
@@ -179,7 +191,9 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
             height: 48,
             borderRadius: 24,
             onPressed: _onResetPressed,
-            child: const Text(AtOnboardingStrings.removeButton),
+            child: Text(
+              AtOnboardingLocalizations.current.remove,
+            ),
           ),
         )
       ],
@@ -192,7 +206,9 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
     tempAtsignMap.removeWhere((String? key, bool? value) => value == false);
     if (tempAtsignMap.keys.toList().isEmpty) {
       AtOnboardingDialog.showError(
-          context: context, message: AtOnboardingStrings.resetErrorText);
+        context: context,
+        message: AtOnboardingLocalizations.current.select_atSign_to_reset,
+      );
     } else {
       _resetDevice(tempAtsignMap.keys.toList());
     }

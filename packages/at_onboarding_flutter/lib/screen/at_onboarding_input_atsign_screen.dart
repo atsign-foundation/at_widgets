@@ -38,8 +38,8 @@ class _AtOnboardingInputAtSignScreenState
       data: theme,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            AtOnboardingStrings.onboardingTitle,
+          title: Text(
+            AtOnboardingLocalizations.current.title_setting_up_your_atSign,
           ),
           actions: [
             IconButton(
@@ -64,17 +64,18 @@ class _AtOnboardingInputAtSignScreenState
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  'Activate an atSign',
-                  style: TextStyle(
+                Text(
+                  AtOnboardingLocalizations.current.activate_an_atSign,
+                  style: const TextStyle(
                     fontSize: AtOnboardingDimens.fontLarge,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 2),
-                const Text(
-                  "Enter the atSign you would like to activate",
-                  style: TextStyle(
+                Text(
+                  AtOnboardingLocalizations
+                      .current.enter_atSign_need_to_activate,
+                  style: const TextStyle(
                     fontSize: AtOnboardingDimens.fontSmall,
                   ),
                 ),
@@ -83,7 +84,8 @@ class _AtOnboardingInputAtSignScreenState
                   enabled: true,
                   validator: (String? value) {
                     if ((value ?? '').isEmpty) {
-                      return 'atSign cannot be empty';
+                      return AtOnboardingLocalizations
+                          .current.msg_atSign_cannot_empty;
                     }
                     return null;
                   },
@@ -108,10 +110,10 @@ class _AtOnboardingInputAtSignScreenState
                   height: 48,
                   borderRadius: 24,
                   onPressed: _activateAtSign,
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      'Activate',
-                      style: TextStyle(
+                      AtOnboardingLocalizations.current.activate,
+                      style: const TextStyle(
                         fontSize: AtOnboardingDimens.fontLarge,
                       ),
                     ),
@@ -129,7 +131,7 @@ class _AtOnboardingInputAtSignScreenState
     if (Platform.isAndroid || Platform.isIOS) {
       AtOnboardingReferenceScreen.push(
         context: context,
-        title: AtOnboardingStrings.faqTitle,
+        title: AtOnboardingLocalizations.current.title_FAQ,
         url: AtOnboardingStrings.faqUrl,
         config: widget.config,
       );

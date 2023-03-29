@@ -38,7 +38,9 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
       data: theme,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(AtOnboardingStrings.onboardingTitle),
+          title: Text(
+            AtOnboardingLocalizations.current.title_setting_up_your_atSign,
+          ),
           leading: IconButton(
             icon: const Icon(Icons.close_rounded),
             onPressed: () {
@@ -65,12 +67,11 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
               children: [
                 RichText(
                   text: TextSpan(
-                    text:
-                        "This app was built on the atPlatform. All atPlatform apps require an atSign. ",
+                    text: AtOnboardingLocalizations.current.title_intro,
                     style: theme.textTheme.titleMedium,
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'Learn more',
+                        text: AtOnboardingLocalizations.current.learn_more,
                         style: TextStyle(
                           fontSize: AtOnboardingDimens.fontLarge,
                           fontWeight: FontWeight.w500,
@@ -88,8 +89,8 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                 AtOnboardingPrimaryButton(
                   height: 48,
                   borderRadius: 24,
-                  child: const Text(
-                    'Already have an atSign',
+                  child: Text(
+                    AtOnboardingLocalizations.current.already_have_an_atSign,
                   ),
                   onPressed: () {
                     _navigateToHomePage(true);
@@ -99,8 +100,8 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
                 AtOnboardingSecondaryButton(
                   height: 48,
                   borderRadius: 24,
-                  child: const Text(
-                    "Get a free atSign",
+                  child: Text(
+                    AtOnboardingLocalizations.current.get_free_atSign,
                   ),
                   onPressed: () {
                     _navigateToHomePage(false);
@@ -152,7 +153,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
     if (Platform.isAndroid || Platform.isIOS) {
       AtOnboardingReferenceScreen.push(
         context: context,
-        title: AtOnboardingStrings.faqTitle,
+        title: AtOnboardingLocalizations.current.title_FAQ,
         url: AtOnboardingStrings.faqUrl,
         config: widget.config,
       );

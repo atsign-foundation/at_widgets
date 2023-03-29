@@ -1,7 +1,6 @@
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
-import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 
@@ -61,8 +60,8 @@ class _AtOnboardingAccountsScreenState
       data: theme,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Select atSigns',
+          title: Text(
+            AtOnboardingLocalizations.of(context).select_atSign,
           ),
         ),
         body: Padding(
@@ -70,23 +69,26 @@ class _AtOnboardingAccountsScreenState
           child: pairedAtsignsList.isEmpty
               ? Center(
                   child: Column(
-                  children: <Widget>[
-                    CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(theme.primaryColor)),
-                    const Text(
-                      'Loading atsigns',
-                      style: TextStyle(
+                    children: <Widget>[
+                      CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              theme.primaryColor)),
+                      Text(
+                        AtOnboardingLocalizations.of(context).loading_atSigns,
+                        style: const TextStyle(
                           fontSize: AtOnboardingDimens.fontLarge,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ))
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               : Column(
                   children: <Widget>[
                     Text(
                       widget.message ??
-                          'You already have some existing atsigns. Please select an atSign or else continue with the new one.',
+                          AtOnboardingLocalizations.of(context)
+                              .title_select_atSign,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: AtOnboardingDimens.fontNormal,
@@ -131,9 +133,10 @@ class _AtOnboardingAccountsScreenState
                                         lastSelectedIndex = value;
                                       });
                                       _showAlert(
-                                          widget.atsigns[int.parse(
-                                              lastSelectedIndex.toString())],
-                                          context);
+                                        widget.atsigns[int.parse(
+                                            lastSelectedIndex.toString())],
+                                        context,
+                                      );
                                     },
                               value: index,
                               activeColor: theme.primaryColor,
@@ -159,44 +162,52 @@ class _AtOnboardingAccountsScreenState
     );
 
     await showDialog<AlertDialog>(
-        context: context,
-        builder: (_) => Theme(
-              data: theme,
-              child: AlertDialog(
-                content: RichText(
-                  text: TextSpan(
-                      // ignore: deprecated_member_use
-                      style: theme.textTheme.bodyText1,
-                      children: <InlineSpan>[
-                        const TextSpan(text: 'You have selected  '),
-                        TextSpan(
-                            text: '$atsign ',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                        const TextSpan(text: 'to pair with this device')
-                      ]),
+      context: context,
+      builder: (_) => Theme(
+        data: theme,
+        child: AlertDialog(
+          content: RichText(
+            text: TextSpan(
+              style: theme.textTheme.bodyText1,
+              children: <InlineSpan>[
+                TextSpan(
+                  text: AtOnboardingLocalizations.of(context)
+                      .title_pair_atSign_prev,
                 ),
-                actions: <Widget>[
-                  AtOnboardingSecondaryButton(
-                    height: 40,
-                    borderRadius: 20,
-                    onPressed: () => Navigator.pop(_),
-                    child: const Text(
-                      AtOnboardingStrings.cancelButton,
-                    ),
-                  ),
-                  AtOnboardingPrimaryButton(
-                    height: 40,
-                    borderRadius: 20,
-                    onPressed: () {
-                      Navigator.pop(_);
-                      Navigator.pop(context, atsign);
-                    },
-                    child: const Text('Yes, continue'),
-                  )
-                ],
+                TextSpan(
+                    text: ' $atsign ',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(
+                  text: AtOnboardingLocalizations.of(context)
+                      .title_pair_atSign_next,
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            AtOnboardingSecondaryButton(
+              height: 40,
+              borderRadius: 20,
+              onPressed: () => Navigator.pop(_),
+              child: Text(
+                AtOnboardingLocalizations.of(context).btn_cancel,
               ),
-            ));
+            ),
+            AtOnboardingPrimaryButton(
+              height: 40,
+              borderRadius: 20,
+              onPressed: () {
+                Navigator.pop(_);
+                Navigator.pop(context, atsign);
+              },
+              child: Text(
+                AtOnboardingLocalizations.of(context).btn_yes_continue,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
     return null;
   }
 }
