@@ -115,8 +115,7 @@ class _AtOnboardingActivateScreenState
     }
 
     // check if atSign already activated
-    AtSignStatus? atsignStatus =
-        await OnboardingService.getInstance().checkAtsignStatus(atsign: atsign);
+    AtSignStatus? atsignStatus = await _onboardingService.checkAtsignStatus(atsign: atsign);
     if (atsignStatus == AtSignStatus.activated) {
       bool isPaired = await _onboardingService.isExistingAtsign(atsign);
       await showErrorDialog(isPaired
@@ -229,9 +228,14 @@ class _AtOnboardingActivateScreenState
           return;
         }
 
-        await AtOnboardingBackupScreen.push(
-          context: context,
-          config: widget.config,
+        if (!mounted) return;
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => AtOnboardingBackupScreen(
+              config: widget.config,
+            ),
+          ),
         );
 
         if (!mounted) return;

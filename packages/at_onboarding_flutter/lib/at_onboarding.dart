@@ -84,13 +84,17 @@ class AtOnboarding {
     required BuildContext context,
     required AtOnboardingConfig config,
   }) async {
-    final result = await Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) {
-      return AtOnboardingActivateScreen(
-        hideReferences: false,
-        config: config,
-      );
-    }));
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return AtOnboardingActivateScreen(
+            hideReferences: false,
+            config: config,
+          );
+        },
+      ),
+    );
     if (result is AtOnboardingResult) {
       return result;
     } else {

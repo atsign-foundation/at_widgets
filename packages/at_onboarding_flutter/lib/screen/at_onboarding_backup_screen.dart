@@ -17,20 +17,6 @@ class AtOnboardingBackupScreen extends StatefulWidget {
     required this.config,
   }) : super(key: key);
 
-  static Future<void> push({
-    required BuildContext context,
-    required AtOnboardingConfig config,
-  }) {
-    return Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => AtOnboardingBackupScreen(
-          config: config,
-        ),
-      ),
-    );
-  }
-
   @override
   State<AtOnboardingBackupScreen> createState() =>
       _AtOnboardingBackupScreenState();
@@ -39,15 +25,16 @@ class AtOnboardingBackupScreen extends StatefulWidget {
 class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
   String? atsign;
   bool isSaveAtSign = false;
+  final OnboardingService _onboardingService = OnboardingService.getInstance();
+  final _atOnboardingBackupService = AtOnboardingBackupService.instance;
 
   @override
   void initState() {
     super.initState();
-    atsign = OnboardingService.getInstance().currentAtsign;
+    atsign = _onboardingService.currentAtsign;
 
-    AtOnboardingBackupService.instance.setRemindBackup(remind: true);
-    AtOnboardingBackupService.instance
-        .setBackupOpenedTime(dateTime: DateTime.now());
+    _atOnboardingBackupService.setRemindBackup(remind: true);
+    _atOnboardingBackupService.setBackupOpenedTime(dateTime: DateTime.now());
   }
 
   GlobalKey globalKey = GlobalKey();
@@ -122,8 +109,7 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
                   borderRadius: 24,
                   child: const Text(AtOnboardingStrings.saveButtonTitle),
                   onPressed: () async {
-                    AtOnboardingBackupService.instance
-                        .setRemindBackup(remind: false);
+                    _atOnboardingBackupService.setRemindBackup(remind: false);
                     final widget = BackupKeyWidget(atsign: atsign ?? '');
                     final result = await widget.showBackupDialog(context);
 
@@ -161,8 +147,8 @@ class _AtOnboardingBackupScreenState extends State<AtOnboardingBackupScreen> {
   void _handleRemindLatter() {
     Navigator.pop(context);
     if (!isSaveAtSign) {
-      AtOnboardingBackupService.instance.setRemindBackup(remind: true);
-      AtOnboardingBackupService.instance.setBackupOpenedTime(
+      _atOnboardingBackupService.setRemindBackup(remind: true);
+      _atOnboardingBackupService.setBackupOpenedTime(
         dateTime: DateTime.now(),
       );
     }

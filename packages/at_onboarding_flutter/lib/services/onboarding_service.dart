@@ -16,7 +16,8 @@ class OnboardingService {
     return _singleton;
   }
 
-  static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
+  KeyChainManager keyChainManager = KeyChainManager.getInstance();
+  AtStatusImpl atStatusImpl = AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
   final AtSignLogger _logger = AtSignLogger('Onboarding Service');
 
   Map<String?, AtClientService> atClientServiceMap =
@@ -73,18 +74,18 @@ class OnboardingService {
 
   /// Fetches atsign from device keychain.
   Future<String?> getAtSign() async {
-    return _keyChainManager.getAtSign();
+    return keyChainManager.getAtSign();
   }
 
   ///
   Future<bool?> isUsingSharedStorage() async {
-    final result = await _keyChainManager.isUsingSharedStorage();
+    final result = await keyChainManager.isUsingSharedStorage();
     return result;
   }
 
   ///Call this function before start onboarding
   Future<void> initialSetup({required bool usingSharedStorage}) async {
-    await _keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
+    await keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
   }
 
   /// Returns `true` if authentication is successful for the existing atsign in device.
@@ -203,13 +204,12 @@ class OnboardingService {
   /// returns the list of all onboarded atsigns
   Future<List<String>> getAtsignList() async {
     List<String> atSignsList =
-        await _keyChainManager.getAtSignListFromKeychain();
+        await keyChainManager.getAtSignListFromKeychain();
     return atSignsList;
   }
 
   Future<ServerStatus?> checkAtSignServerStatus(String atsign) async {
-    AtStatusImpl atStatusImpl =
-        AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
+
     AtStatus status = await atStatusImpl.get(atsign);
     return status.serverStatus;
   }
@@ -221,15 +221,13 @@ class OnboardingService {
       return null;
     }
     atsign = formatAtSign(atsign);
-    AtStatusImpl atStatusImpl =
-        AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
     AtStatus status = await atStatusImpl.get(atsign!);
     return status.status();
   }
 
   /// Function to make the atsign passed as primary
   Future<bool> changePrimaryAtsign({required String atsign}) async {
-    final result = await _keyChainManager.makeAtSignPrimary(atsign);
+    final result = await keyChainManager.makeAtSignPrimary(atsign);
     if (result == true) {
       setAtsign = atsign;
     }
