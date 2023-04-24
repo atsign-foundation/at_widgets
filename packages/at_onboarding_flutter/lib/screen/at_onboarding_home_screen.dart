@@ -386,7 +386,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             .substring(0, keyData[1].length - 2)
             .split('":"');
         atsign = "@${params[0]}";
-        Map<String, String> keyMap = jsonDecode(fileContents);
+        Map<String, dynamic> keyMap = jsonDecode(fileContents);
         aesKey = keyMap[AtOnboardingConstants.atSelfEncryptionKey];
       }
       if (fileContents == null || (aesKey == null && atsign == null)) {
@@ -462,7 +462,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             .substring(0, keyData[1].length - 2)
             .split('":"');
         atsign = "@${params[0]}";
-        Map<String, String> keyMap = jsonDecode(fileContents);
+        Map<String, dynamic> keyMap = jsonDecode(fileContents);
         aesKey = keyMap[AtOnboardingConstants.atSelfEncryptionKey];
       }
       if (fileContents.isEmpty || (aesKey == null && atsign == null)) {
