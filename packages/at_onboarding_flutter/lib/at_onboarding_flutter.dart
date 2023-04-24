@@ -6,3 +6,4 @@ export './at_onboarding.dart';
 export 'services/at_onboarding_config.dart';
 export 'at_onboarding_result.dart';
 export 'package:at_client_mobile/at_client_mobile.dart';
+export './services/at_onboarding_theme.dart';

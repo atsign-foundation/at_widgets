@@ -92,10 +92,12 @@ class _AtOnboardingActivateScreenState
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  AtSyncIndicator(),
-                  SizedBox(height: 10),
-                  Text('Please wait while fetching atSign status'),
+                children: [
+                  AtSyncIndicator(
+                    color: theme.primaryColor,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('Please wait while fetching atSign status'),
                 ],
               ),
             ),
@@ -115,7 +117,8 @@ class _AtOnboardingActivateScreenState
     }
 
     // check if atSign already activated
-    AtSignStatus? atsignStatus = await _onboardingService.checkAtsignStatus(atsign: atsign);
+    AtSignStatus? atsignStatus =
+        await _onboardingService.checkAtsignStatus(atsign: atsign);
     if (atsignStatus == AtSignStatus.activated) {
       bool isPaired = await _onboardingService.isExistingAtsign(atsign);
       await showErrorDialog(isPaired
