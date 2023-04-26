@@ -41,11 +41,7 @@ dependency_overrides:
   path: 1.8.3
   at_onboarding_flutter:
     path: ../
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk
-      path: packages/at_client_mobile
-      ref: trunk
+  at_client_mobile: ^3.2.9
     # When depending on this package from a real application you should use in the dependencies section here we have used in dev_dependencies section:
     #   at_onboarding_flutter: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints

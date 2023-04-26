@@ -46,11 +46,6 @@ dependencies:
 
 dependency_overrides:
   path: 1.8.3
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk
-      path: packages/at_client_mobile
-      ref: trunk
 
 dev_dependencies:
   flutter_test:
