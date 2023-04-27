@@ -106,6 +106,7 @@ class _MyAppState extends State<MyApp> {
                             theme: AtOnboardingTheme(
                               primaryColor: null,
                             ),
+                            showPopupSharedStorage: true,
                           ),
                         );
                         switch (result.status) {
@@ -225,7 +226,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             ElevatedButton(
               onPressed: () async {
                 _keyChainManager.deleteAllData();
