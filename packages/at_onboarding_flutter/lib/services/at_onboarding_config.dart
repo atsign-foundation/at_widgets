@@ -43,6 +43,7 @@ class AtOnboardingConfig {
   /// API Key is required when you set [rootEnvironment] to production.
   final RootEnvironment rootEnvironment;
   final AtSignLogger logger = AtSignLogger('At Onboarding Flutter');
+  final bool showPopupSharedStorage;
 
   final AtOnboardingTheme? theme;
 
@@ -57,6 +58,7 @@ class AtOnboardingConfig {
     this.hideQrScan = false,
     this.tutorialDisplay = AtOnboardingTutorialDisplay.normal,
     this.theme,
+    this.showPopupSharedStorage = false,
   });
 
   AtOnboardingConfig copyWith({
@@ -68,6 +70,7 @@ class AtOnboardingConfig {
     AtOnboardingTutorialDisplay? tutorialDisplay,
     String? appAPIKey,
     RootEnvironment? rootEnvironment,
+    bool? showPopupSharedStorage,
   }) {
     return AtOnboardingConfig(
       hideReferences: hideReferences ?? this.hideReferences,
@@ -78,6 +81,8 @@ class AtOnboardingConfig {
       tutorialDisplay: tutorialDisplay ?? this.tutorialDisplay,
       appAPIKey: appAPIKey ?? this.appAPIKey,
       rootEnvironment: rootEnvironment ?? this.rootEnvironment,
+      showPopupSharedStorage:
+          showPopupSharedStorage ?? this.showPopupSharedStorage,
     );
   }
 }

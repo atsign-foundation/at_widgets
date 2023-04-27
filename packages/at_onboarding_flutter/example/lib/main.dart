@@ -106,6 +106,7 @@ class _MyAppState extends State<MyApp> {
                             theme: AtOnboardingTheme(
                               primaryColor: null,
                             ),
+                            showPopupSharedStorage: true,
                           ),
                         );
                         switch (result.status) {
@@ -166,6 +167,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
+
   @override
   Widget build(BuildContext context) {
     /// Get the AtClientManager instance
@@ -195,11 +198,43 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             const Text(
-                'Successfully onboarded and navigated to FirstAppScreen'),
+              'Successfully onboarded and navigated to FirstAppScreen',
+            ),
 
             /// Use the AtClientManager instance to get the current atsign
             Text(
-                'Current atSign: ${atClientManager.atClient.getCurrentAtSign()}'),
+              'Current atSign: ${atClientManager.atClient.getCurrentAtSign()}',
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () async {
+                    _keyChainManager.enableUsingSharedStorage();
+                  },
+                  child: const Text('Enable share'),
+                ),
+                const SizedBox(width: 24),
+                ElevatedButton(
+                  onPressed: () async {
+                    _keyChainManager.disableUsingSharedStorage();
+                  },
+                  child: const Text('Disable share'),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                _keyChainManager.deleteAllData();
+              },
+              child: const Text('Delete all data'),
+            ),
           ],
         ),
       ),
