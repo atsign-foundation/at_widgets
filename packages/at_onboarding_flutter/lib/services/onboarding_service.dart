@@ -17,7 +17,8 @@ class OnboardingService {
   }
 
   KeyChainManager keyChainManager = KeyChainManager.getInstance();
-  AtStatusImpl atStatusImpl = AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
+  AtStatusImpl atStatusImpl =
+      AtStatusImpl(rootUrl: AtOnboardingConstants.serverDomain);
   final AtSignLogger _logger = AtSignLogger('Onboarding Service');
 
   Map<String?, AtClientService> atClientServiceMap =
@@ -209,7 +210,6 @@ class OnboardingService {
   }
 
   Future<ServerStatus?> checkAtSignServerStatus(String atsign) async {
-
     AtStatus status = await atStatusImpl.get(atsign);
     return status.serverStatus;
   }
@@ -240,11 +240,14 @@ class OnboardingService {
     _getClientServiceForAtsign(atSign)!.atClientManager.syncService.sync();
   }
 
+  /// enables sharing onboarded atSign with multiple atApps
+  /// it is only supported for macOS, windows platforms.
   Future<bool> enableUsingSharedStorage() async {
     final result = await keyChainManager.enableUsingSharedStorage();
     return result;
   }
 
+  /// disables sharing onboarded atSign with multiple atApps
   Future<bool> disableUsingSharedStorage() async {
     final result = await keyChainManager.disableUsingSharedStorage();
     return result;
