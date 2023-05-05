@@ -10,6 +10,7 @@ import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_lookup/at_lookup.dart';
+import 'package:flutter/material.dart';
 
 /// A service to handle CRUD operation on contacts
 class ContactService {
@@ -131,6 +132,13 @@ class ContactService {
   /// returns null if some error occurred.
   Future<List<AtContact>?> fetchContacts() async {
     try {
+      /// if contact list is already present, we will not fetch them again
+      if (baseContactList.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+          contactSink.add(baseContactList);
+        });
+        return contactList;
+      }
       selectedContacts = [];
       contactList = [];
       allContactsList = [];

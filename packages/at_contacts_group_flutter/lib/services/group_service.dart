@@ -327,6 +327,13 @@ class GroupService {
   // ignore: always_declare_return_types
   fetchGroupsAndContacts({bool isDesktop = false}) async {
     try {
+      /// contacts list is already present, we do not fetch it again.
+      if (allContacts.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          _allContactsStreamController.add(allContacts);
+        });
+        return;
+      }
       allContacts = [];
       listContact = [];
       var contactList = await fetchContacts();
