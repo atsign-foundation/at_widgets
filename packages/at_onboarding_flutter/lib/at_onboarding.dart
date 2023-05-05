@@ -131,7 +131,7 @@ class AtOnboarding {
 
   Future<bool> enableUsingSharedStorage() async {
     if (Platform.isAndroid || Platform.isIOS || Platform.isLinux) {
-      throw Exception('user sharing not supported');
+      throw UnsupportedError('user sharing not supported');
     }
 
     final result =
@@ -141,7 +141,7 @@ class AtOnboarding {
 
   Future<bool> disableUsingSharedStorage() async {
     if (Platform.isAndroid || Platform.isIOS || Platform.isLinux) {
-      throw Exception('user sharing not supported');
+      throw UnsupportedError('user sharing not supported');
     }
 
     final result =
