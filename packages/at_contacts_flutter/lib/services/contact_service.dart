@@ -405,6 +405,7 @@ class ContactService {
         print('details==>${contact.atSign}');
         var result = await atContactImpl.add(contact).catchError((e) {
           print('error to add contact => $e');
+          return false;
         });
 
         if (result) {
@@ -480,9 +481,10 @@ class ContactService {
       atSign = '@$atSign';
     }
     try {
-      var checkPresence =
-          await AtLookupImpl.findSecondary(atSign, rootDomain, rootPort);
-      return checkPresence != null;
+      var secondaryAddress =
+          await CacheableSecondaryAddressFinder(rootDomain, rootPort)
+              .findSecondary(atSign);
+      return secondaryAddress.host != '';
     } catch (e) {
       return false;
     }

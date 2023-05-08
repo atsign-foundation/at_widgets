@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget commonButton}) {
+  Widget wrapWidgetWithMaterialApp({required Widget commonButton}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return Scaffold(
@@ -28,21 +28,21 @@ void main() {
     testWidgets("Common Button widget is used and shown on screen",
         (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(commonButton: commonButton));
+          .pumpWidget(wrapWidgetWithMaterialApp(commonButton: commonButton));
 
       expect(find.byType(CommonButton), findsOneWidget);
     });
     // Test case to check button string is given
     testWidgets("Button text displayed", (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(commonButton: commonButton));
+          .pumpWidget(wrapWidgetWithMaterialApp(commonButton: commonButton));
       expect(find.text('Click'), findsOneWidget);
     });
 
     // Test case to check onTap functionality
     testWidgets("OnPress is given an action", (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(commonButton: commonButton));
+          .pumpWidget(wrapWidgetWithMaterialApp(commonButton: commonButton));
       expect(commonButton.onTap.call(), null);
     });
   });

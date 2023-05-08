@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget addContactsDialog}) {
+  Widget wrapWidgetWithMaterialApp({required Widget addContactsDialog}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return addContactsDialog;
@@ -20,7 +20,7 @@ void main() {
         (WidgetTester tester) async {
       const addContactsDialog = AddContactDialog();
       await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(addContactsDialog: addContactsDialog));
+          wrapWidgetWithMaterialApp(addContactsDialog: addContactsDialog));
 
       expect(find.byType(AddContactDialog), findsOneWidget);
     });
