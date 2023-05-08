@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget contactsSearchField}) {
+  Widget wrapWidgetWithMaterialApp({required Widget contactsSearchField}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return Scaffold(
@@ -28,7 +28,7 @@ void main() {
         log(v);
       });
       await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(contactsSearchField: contactsSearchField));
+          wrapWidgetWithMaterialApp(contactsSearchField: contactsSearchField));
 
       expect(find.byType(ContactSearchField), findsOneWidget);
     });

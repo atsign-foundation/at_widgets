@@ -1,3 +1,6 @@
+## 4.0.10
+- **FIX**: fetching contacts made faster
+
 ## 4.0.9
 - **CHORE**: Updated text constants
 - **FIX**: resolved issue while fetching atSign's name and image

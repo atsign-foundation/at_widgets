@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget horizontalCircularList}) {
+  Widget wrapWidgetWithMaterialApp({required Widget horizontalCircularList}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return Scaffold(
@@ -23,7 +23,7 @@ void main() {
     testWidgets("Horizontal circular list widget is used and shown on screen",
         (WidgetTester tester) async {
       const horizontalCircularList = HorizontalCircularList();
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           horizontalCircularList: horizontalCircularList));
 
       expect(find.byType(HorizontalCircularList), findsOneWidget);
