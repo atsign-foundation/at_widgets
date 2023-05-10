@@ -43,7 +43,9 @@ class AtOnboardingConfig {
   /// API Key is required when you set [rootEnvironment] to production.
   final RootEnvironment rootEnvironment;
   final AtSignLogger logger = AtSignLogger('At Onboarding Flutter');
-  final bool showPopupSharedStorage;
+
+  /// Provides option to choose whether user wants to share onboarded atSign details with other atApps.
+  bool showPopupSharedStorage;
 
   final AtOnboardingTheme? theme;
 
