@@ -17,11 +17,11 @@ dependencies:
   flutter_slidable: ^0.6.0
   
   at_client_mobile: ^3.2.9
-  at_commons: ^3.0.43
-  at_lookup: ^3.0.35
+  at_commons: ^3.0.45
+  at_lookup: ^3.0.36
   at_contact: ^3.0.7
   at_common_flutter: ^2.0.11
-  at_client: ^3.0.56
+  at_client: ^3.0.59
   at_utils: ^3.0.12
 
 dev_dependencies:
