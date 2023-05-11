@@ -13,12 +13,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  at_backupkey_flutter:
-    path: ../
-  at_onboarding_flutter: ^5.0.3
-
   # When depending on this package from a real application you should use:
   #   at_backupkey_flutter: ^x.y.z
+  at_backupkey_flutter:
+    path: ../
+  at_onboarding_flutter: ^6.0.3
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

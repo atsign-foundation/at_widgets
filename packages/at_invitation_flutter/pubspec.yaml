@@ -13,15 +13,42 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  at_commons: ^3.0.5
+  at_utils: ^3.0.5
+  at_lookup: ^3.0.7
   at_client_mobile: ^3.1.5
   at_common_flutter: ^2.0.5
-  at_commons: ^3.0.5
-  at_lookup: ^3.0.7
-  at_utils: ^3.0.5
 
   url_launcher: ^6.0.18
   uuid: ^3.0.5
   pin_code_fields: ^7.3.0
+
+dependency_overrides:
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_commons
+      ref: dart-3
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_utils
+      ref: dart-3
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_lookup
+      ref: dart-3
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: dart-3
+  at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: packages/at_common_flutter
+      ref: dart-3
 
 dev_dependencies:
   flutter_lints: ^1.0.4

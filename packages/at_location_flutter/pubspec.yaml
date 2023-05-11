@@ -30,15 +30,56 @@ dependencies:
   fluttertoast: ^8.0.9
 
   # at_chat_flutter: ^2.0.2
-  at_client_mobile: ^3.2.7
-  at_lookup: ^3.0.31
   at_commons: ^3.0.26
-  at_contact: ^3.0.7
   at_utils: ^3.0.11
+  at_lookup: ^3.0.31
   at_client: ^3.0.40
+  at_client_mobile: ^3.2.7
   at_common_flutter: ^2.0.11
+  at_contact: ^3.0.7
   at_contacts_flutter: ^4.0.8
 
+dependency_overrides:
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_commons
+      ref: dart-3
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_utils
+      ref: dart-3
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_lookup
+      ref: dart-3
+  at_client:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client
+      ref: dart-3
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: dart-3
+  at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: packages/at_common_flutter
+      ref: dart-3
+  at_contact:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_contact
+      ref: dart-3
+  at_contacts_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: packages/at_contacts_flutter
+      ref: dart-3
 
 dev_dependencies:
   flutter_lints: ^2.0.1

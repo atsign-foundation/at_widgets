@@ -36,16 +36,51 @@ dependencies:
   file_selector_windows: ^0.8.2
   file_selector_linux: ^0.0.2+1
 
-  at_backupkey_flutter: ^4.0.8
+  at_commons: ^3.0.43
+  at_utils: ^3.0.12
   at_client: ^3.0.56
   at_client_mobile: ^3.2.9
-  at_commons: ^3.0.43
   at_server_status: ^1.0.3
-  at_utils: ^3.0.12
+  at_backupkey_flutter: ^4.0.8
   at_sync_ui_flutter: ^1.0.1
 
 dependency_overrides:
   path: 1.8.3
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_commons
+      ref: dart-3
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_utils
+      ref: dart-3
+  at_client:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client
+      ref: dart-3
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: dart-3
+  at_server_status:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_server_status
+      ref: dart-3
+  at_backupkey_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: packages/at_backupkey_flutter
+      ref: dart-3
+  at_sync_ui_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: packages/at_sync_ui_flutter
+      ref: dart-3
 
 dev_dependencies:
   flutter_test:

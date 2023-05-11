@@ -13,15 +13,47 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  at_contact: ^3.0.7
-  at_common_flutter: ^2.0.11
   at_commons: ^3.0.26
-  at_client_mobile: ^3.2.7
-  at_client: ^3.0.40
   at_lookup: ^3.0.32
+  at_client: ^3.0.40
+  at_client_mobile: ^3.2.7
+  at_common_flutter: ^2.0.11
+  at_contact: ^3.0.7
 
   #Picker
   file_picker: ^4.3.3
+
+dependency_overrides:
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_commons
+      ref: dart-3
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_lookup
+      ref: dart-3
+  at_client:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client
+      ref: dart-3
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: dart-3
+  at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: packages/at_common_flutter
+      ref: dart-3
+  at_contact:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_contact
+      ref: dart-3
 
 dev_dependencies:
   flutter_lints: ^1.0.4

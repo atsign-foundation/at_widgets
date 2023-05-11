@@ -18,13 +18,49 @@ dependencies:
   webview_flutter: ^4.0.0
   url_launcher: ^6.0.16
   collection: ^1.15.0
-  at_utils: ^3.0.11
+  at_file_saver: ^0.1.2
   at_commons: ^3.0.28
+  at_utils: ^3.0.11
+  at_lookup: ^3.0.32
   at_client: ^3.0.41
   at_client_mobile: ^3.2.7
   at_server_status: ^1.0.3
-  at_lookup: ^3.0.32
-  at_file_saver: ^0.1.2
+
+dependency_overrides:
+  at_file_saver:
+    git:
+      url: https://github.com/atsign-foundation/at_file_saver.git
+      ref: dart-3
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_commons
+      ref: dart-3
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_utils
+      ref: dart-3
+  at_lookup:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_lookup
+      ref: dart-3
+  at_client:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client
+      ref: dart-3
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: dart-3
+  at_server_status:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_server_status
+      ref: dart-3
 
 dev_dependencies:
   flutter_test:

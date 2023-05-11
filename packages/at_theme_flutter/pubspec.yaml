@@ -13,12 +13,33 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  at_commons: ^3.0.26
+  at_utils: ^3.0.11
   at_client_mobile: ^3.2.7
   at_common_flutter: ^2.0.11
-  at_commons: ^3.0.26
   fluttertoast: ^8.0.8
-  at_utils: ^3.0.11
 
+dependency_overrides:
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_commons
+      ref: dart-3
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_utils
+      ref: dart-3
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: dart-3
+  at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: packages/at_common_flutter
+      ref: dart-3
 
 
 dev_dependencies:

@@ -12,17 +12,46 @@ dependencies:
     sdk: flutter
   provider: ^5.0.0
   permission_handler: ^8.1.2
+
+  at_commons: ^3.0.0
+  at_utils: ^3.0.0
   at_client: ^3.0.0
   at_client_mobile: ^3.0.0
-  at_commons: ^3.0.0
   at_server_status: ^1.0.3
-  at_utils: ^3.0.0
+
   file_picker: ^4.0.0
   flutter_local_notifications: ^5.0.0+1
   flutter_qr_reader: ^1.0.5
   http: ^0.13.3
   path_provider: ^2.0.2
   basic_utils: ^3.3.2
+
+dependency_overrides:
+  at_commons:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_commons
+      ref: dart-3
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_utils
+      ref: dart-3
+  at_client:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client
+      ref: dart-3
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: dart-3
+  at_server_status:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_server_status
+      ref: dart-3
 
 dev_dependencies:
   flutter_test:
