@@ -7,7 +7,7 @@ issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
 documentation: https://atsign.dev/docs/functional_architecture/libraries/#at_backupkey_flutter
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
   flutter: ">=1.20.0"
 
 dependencies:
@@ -26,6 +26,22 @@ dependencies:
   file_selector_macos: ^0.8.2
   file_selector_windows: ^0.8.2
   file_selector_linux: ^0.0.2+1
+
+dependency_overrides:
+  at_file_saver:
+    git:
+      url: https://github.com/atsign-foundation/at_file_saver.git
+      ref: dart-3
+  at_utils:
+    git:
+      url: https://github.com/atsign-foundation/at_tools.git
+      path: packages/at_utils
+      ref: dart-3
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: dart-3
 
 dev_dependencies:
   flutter_test:
