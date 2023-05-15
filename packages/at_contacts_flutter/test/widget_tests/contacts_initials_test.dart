@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget contactInitial}) {
+  Widget wrapWidgetWithMaterialApp({required Widget contactInitial}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return Scaffold(
@@ -23,19 +23,17 @@ void main() {
     testWidgets("Contacts Initial widget is used and shown on screen",
         (WidgetTester tester) async {
       final contactInitial = ContactInitial(initials: 'A');
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(contactInitial: contactInitial));
+      await tester.pumpWidget(
+          wrapWidgetWithMaterialApp(contactInitial: contactInitial));
 
       expect(find.byType(ContactInitial), findsOneWidget);
     });
     // Test case to identify contact initial text
-    testWidgets("identify contact initial text",
-        (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(contactInitial: ContactInitial(initials:'@')));
+    testWidgets("identify contact initial text", (WidgetTester tester) async {
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
+          contactInitial: ContactInitial(initials: '@')));
 
       expect(find.text('@'), findsOneWidget);
     });
-
   });
 }

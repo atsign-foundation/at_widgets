@@ -1,3 +1,6 @@
+## 4.0.12
+- **FIX**: fetching contacts made faster.
+
 ## 4.0.11
 - **CHORE**: Updated dependencies
 

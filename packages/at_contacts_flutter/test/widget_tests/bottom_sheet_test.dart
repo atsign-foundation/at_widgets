@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget bottomSheet}) {
+  Widget wrapWidgetWithMaterialApp({required Widget bottomSheet}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return bottomSheet;
@@ -22,8 +22,8 @@ void main() {
           builder: (BuildContext context) {
             return Container();
           });
-      await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(bottomSheet: bottomSheet));
+      await tester
+          .pumpWidget(wrapWidgetWithMaterialApp(bottomSheet: bottomSheet));
 
       expect(find.byType(BottomSheet), findsOneWidget);
     });

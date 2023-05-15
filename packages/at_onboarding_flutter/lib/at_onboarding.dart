@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
@@ -28,6 +30,11 @@ class AtOnboarding {
         (AtOnboardingConstants.rootEnvironment.apikey ?? ''));
     AtOnboardingConstants.rootDomain =
         config.domain ?? AtOnboardingConstants.rootEnvironment.domain;
+
+    /// user sharing is not supported on Android, iOS and Linux.
+    if (Platform.isAndroid || Platform.isIOS || Platform.isLinux) {
+      config.showPopupSharedStorage = false;
+    }
 
     if (config.theme == null) {
       final defaultConfig = config.copyWith(
@@ -120,5 +127,25 @@ class AtOnboarding {
     } else {
       return AtOnboardingResetResult.cancelled;
     }
+  }
+
+  Future<bool> enableUsingSharedStorage() async {
+    if (Platform.isAndroid || Platform.isIOS || Platform.isLinux) {
+      throw UnsupportedError('user sharing not supported');
+    }
+
+    final result =
+        await OnboardingService.getInstance().enableUsingSharedStorage();
+    return result;
+  }
+
+  Future<bool> disableUsingSharedStorage() async {
+    if (Platform.isAndroid || Platform.isIOS || Platform.isLinux) {
+      throw UnsupportedError('user sharing not supported');
+    }
+
+    final result =
+        await OnboardingService.getInstance().disableUsingSharedStorage();
+    return result;
   }
 }

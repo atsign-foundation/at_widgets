@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget addSingleContactDialog}) {
+  Widget wrapWidgetWithMaterialApp({required Widget addSingleContactDialog}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return Container(child: addSingleContactDialog);
@@ -22,7 +22,7 @@ void main() {
       const addSingleContactDialog = AddSingleContact(
         atSignName: '@bluebellrelated86',
       );
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           addSingleContactDialog: addSingleContactDialog));
 
       expect(find.byType(AddSingleContact), findsOneWidget);
@@ -32,7 +32,7 @@ void main() {
       const addSingleContactDialog = AddSingleContact(
         atSignName: '@bluebellrelated86',
       );
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           addSingleContactDialog: addSingleContactDialog));
       expect(find.text('@bluebellrelated86'), findsOneWidget);
     });

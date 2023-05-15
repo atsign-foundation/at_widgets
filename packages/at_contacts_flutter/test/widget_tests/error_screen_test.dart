@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget errorScreen}) {
+  Widget wrapWidgetWithMaterialApp({required Widget errorScreen}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return Scaffold(
@@ -31,21 +31,21 @@ void main() {
     testWidgets("Error Screen widget is used and shown on screen",
         (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(errorScreen: errorScreen));
+          .pumpWidget(wrapWidgetWithMaterialApp(errorScreen: errorScreen));
 
       expect(find.byType(ErrorScreen), findsOneWidget);
     });
     // Test case to identify msg text is given
     testWidgets("identify contact initial text", (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(errorScreen: errorScreen));
+          .pumpWidget(wrapWidgetWithMaterialApp(errorScreen: errorScreen));
 
       expect(find.text('Error'), findsOneWidget);
     });
     // Test case to check onTap functionality
     testWidgets("OnPress is given an action", (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(errorScreen: errorScreen));
+          .pumpWidget(wrapWidgetWithMaterialApp(errorScreen: errorScreen));
       expect(errorScreen.onPressed!.call(), null);
     });
   });
