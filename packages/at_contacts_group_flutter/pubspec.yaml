@@ -28,12 +28,12 @@ dependencies:
   file_selector: ^0.8.4+1
   file_selector_macos: ^0.8.2
 
-  at_client_mobile: ^3.2.7
-  at_commons: ^3.0.26
+  at_client_mobile: ^3.2.9
+  at_commons: ^3.0.45
   at_common_flutter: ^2.0.11
-  at_contacts_flutter: ^4.0.9
+  at_contacts_flutter: ^4.0.10
   at_contact: ^3.0.7
-  at_utils: ^3.0.11
+  at_utils: ^3.0.12
   
 dev_dependencies:
   flutter_lints: ^2.0.1
