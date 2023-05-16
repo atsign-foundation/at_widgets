@@ -38,10 +38,13 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
 
   void _init() async {
     // This feature will reopen in future
-    final isUsingSharedStorage = await _onboardingService.isUsingSharedStorage();
+    final isUsingSharedStorage =
+        await _onboardingService.isUsingSharedStorage();
     final showPopupShareStorage = widget.config.showPopupSharedStorage;
 
-    if (isUsingSharedStorage == null && showPopupShareStorage) {
+    if (isUsingSharedStorage == null &&
+        showPopupShareStorage &&
+        !(Platform.isAndroid || Platform.isIOS || Platform.isLinux)) {
       //No defind yet
       final result = await askUserUseSharedStorage();
       await _onboardingService.initialSetup(usingSharedStorage: result);
@@ -139,11 +142,11 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
         context: context,
         builder: (BuildContext context) {
           return AtOnboardingDialog(
-            title:
-                'Share this atSign with all your atPlatform apps?',
+            title: 'Share this atSign with all your atPlatform apps?',
             message:
                 'You will not be required to re-upload your atKeys when you use this atSign with other atPlatform apps on this device.',
-            subMessage: '*For this to work, sharing must also be switched on in the other apps',
+            subMessage:
+                '*For this to work, sharing must also be switched on in the other apps',
             actions: [
               AtOnboardingSecondaryButton(
                 child: const Text('No'),
