@@ -23,6 +23,7 @@ dependencies:
   pedantic: ^1.11.0
   flutter_toastr: ^1.0.3
   collection: ^1.15.0
+  mocktail: ^0.3.0
 
   # desktop - dependencies
   file_selector: ^0.8.4+1
