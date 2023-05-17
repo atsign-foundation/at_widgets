@@ -21,8 +21,7 @@ class AtOnboardingResetScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AtOnboardingResetScreen> createState() =>
-      _AtOnboardingResetScreenState();
+  State<AtOnboardingResetScreen> createState() => _AtOnboardingResetScreenState();
 }
 
 class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
@@ -75,13 +74,10 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
             Container(
               padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
               child: const Text(AtOnboardingStrings.resetDescription,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: AtOnboardingDimens.fontNormal)),
+                  textAlign: TextAlign.center, style: TextStyle(fontSize: AtOnboardingDimens.fontNormal)),
             ),
             Expanded(
-              child: atsignsList.isEmpty
-                  ? _buildEmptyWidget()
-                  : _buildAtSignsWidget(theme),
+              child: atsignsList.isEmpty ? _buildEmptyWidget() : _buildAtSignsWidget(theme),
             ),
           ],
         ),
@@ -90,10 +86,10 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
   }
 
   Widget _buildEmptyWidget() {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: const <Widget>[
+      children: <Widget>[
         Text(
           AtOnboardingStrings.noAtsignToReset,
           style: TextStyle(fontSize: 15),
@@ -111,8 +107,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
           onChanged: (bool? value) {
             isSelectAll = value!;
             if (atsignMap.isNotEmpty) {
-              atsignMap
-                  .updateAll((String? key, bool? value1) => value1 = value);
+              atsignMap.updateAll((String? key, bool? value1) => value1 = value);
             }
             // atsignMap[atsign] = value;
             setState(() {});
@@ -124,8 +119,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
                 // fontSize: 14,
                 fontWeight: FontWeight.bold,
               )),
-          contentPadding: const EdgeInsets.symmetric(
-              horizontal: AtOnboardingDimens.paddingNormal),
+          contentPadding: const EdgeInsets.symmetric(horizontal: AtOnboardingDimens.paddingNormal),
         ),
         Expanded(
             child: SingleChildScrollView(
@@ -143,8 +137,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
                   value: atsignMap.isNotEmpty ? atsignMap[atsign] : true,
                   activeColor: theme.primaryColor,
                   title: Text(atsign),
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: AtOnboardingDimens.paddingNormal),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: AtOnboardingDimens.paddingNormal),
                 )
             ],
           ),
@@ -154,13 +147,10 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
           height: 10,
         ),
         const Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: AtOnboardingDimens.paddingNormal),
+          padding: EdgeInsets.symmetric(horizontal: AtOnboardingDimens.paddingNormal),
           child: Text(AtOnboardingStrings.resetWarningText,
-              style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: AtOnboardingDimens.fontNormal)),
+              style:
+                  TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: AtOnboardingDimens.fontNormal)),
         ),
         const SizedBox(
           height: 10,
@@ -169,8 +159,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
           padding: EdgeInsets.only(
             left: AtOnboardingDimens.paddingNormal,
             right: AtOnboardingDimens.paddingNormal,
-            bottom: AtOnboardingDimens.paddingNormal +
-                MediaQuery.of(context).padding.bottom,
+            bottom: AtOnboardingDimens.paddingNormal + MediaQuery.of(context).padding.bottom,
           ),
           constraints: const BoxConstraints(
             maxWidth: 400,
@@ -191,8 +180,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
     tempAtsignMap.addAll(atsignMap);
     tempAtsignMap.removeWhere((String? key, bool? value) => value == false);
     if (tempAtsignMap.keys.toList().isEmpty) {
-      AtOnboardingDialog.showError(
-          context: context, message: AtOnboardingStrings.resetErrorText);
+      AtOnboardingDialog.showError(context: context, message: AtOnboardingStrings.resetErrorText);
     } else {
       _resetDevice(tempAtsignMap.keys.toList());
     }
@@ -207,9 +195,7 @@ class _AtOnboardingResetScreenState extends State<AtOnboardingResetScreen> {
   }
 
   Future<void> showErrorDialog(dynamic errorMessage, {String? title}) async {
-    String? messageString =
-        AtOnboardingErrorToString().getErrorMessage(errorMessage);
-    return AtOnboardingDialog.showError(
-        context: context, message: messageString);
+    String? messageString = AtOnboardingErrorToString().getErrorMessage(errorMessage);
+    return AtOnboardingDialog.showError(context: context, message: messageString);
   }
 }

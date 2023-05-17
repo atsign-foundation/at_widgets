@@ -11,10 +11,7 @@ class AtSignBottomSheet extends StatefulWidget {
   final List<String> atSignList;
   final Function? showLoader;
 
-  const AtSignBottomSheet(
-      {Key key = const Key('atsign'),
-      this.atSignList = const [],
-      this.showLoader})
+  const AtSignBottomSheet({Key key = const Key('atsign'), this.atSignList = const [], this.showLoader})
       : super(key: key);
 
   @override
@@ -39,8 +36,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
             onClosing: () {},
             backgroundColor: Colors.transparent,
             builder: (context) => ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               child: Container(
                 height: 100,
                 width: screenSize.width,
@@ -61,15 +57,12 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                     isLoading = true;
                                   });
                                 }
-                                final result =
-                                    await AtOnboarding.changePrimaryAtsign(
-                                        atsign: widget.atSignList[index]);
+                                final result = await AtOnboarding.changePrimaryAtsign(atsign: widget.atSignList[index]);
                                 if (result) {
                                   await AtOnboarding.onboard(
                                     context: context,
                                     config: AtOnboardingConfig(
-                                      atClientPreference:
-                                          atClientPreferenceLocal,
+                                      atClientPreference: atClientPreferenceLocal,
                                       domain: AtEnv.rootDomain,
                                       rootEnvironment: AtEnv.rootEnvironment,
                                       appAPIKey: AtEnv.appApiKey,
@@ -91,8 +84,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                 }
                               },
                         child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, top: 20),
+                          padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
                           child: Column(
                             children: [
                               ContactInitial(
@@ -128,10 +120,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                         );
                         switch (result.status) {
                           case AtOnboardingResultStatus.success:
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const HomeScreen()));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
                             break;
                           case AtOnboardingResultStatus.error:
                             // TODO: Handle this case.
@@ -164,9 +153,9 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
           ),
         ),
         isLoading
-            ? Center(
+            ? const Center(
                 child: Column(
-                  children: const [
+                  children: [
                     Text(
                       'Switching atsign...',
                       style: TextStyle(
@@ -177,9 +166,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(0xFFF05E3E))),
+                    CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF05E3E))),
                   ],
                 ),
               )

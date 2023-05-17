@@ -10,8 +10,7 @@ import '../onboarding_data_test.dart';
 class MockFreeAtsignService extends Mock implements FreeAtsignService {
   @override
   Future getFreeAtsigns() {
-    final Response response =
-        Response('{"data": {"atsign":"@atSignTest"}}', 200);
+    final Response response = Response('{"data": {"atsign":"@atSignTest"}}', 200);
 
     return Future(() => response);
   }

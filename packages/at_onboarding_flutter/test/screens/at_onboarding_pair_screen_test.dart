@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:at_onboarding_flutter/screen/at_onboarding_otp_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_pair_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
@@ -46,7 +45,11 @@ void main() {
     await tester.pumpWidget(_defaultApp());
     await tester.pumpAndSettle();
 
-    expect(find.text(AtOnboardingStrings.onboardingTitle,), findsOneWidget);
+    expect(
+        find.text(
+          AtOnboardingStrings.onboardingTitle,
+        ),
+        findsOneWidget);
   });
 
   testWidgets('show Reference Webview', (tester) async {
