@@ -36,10 +36,13 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
 
   void _init() async {
     // This feature will reopen in future
-    final isUsingSharedStorage = await _onboardingService.isUsingSharedStorage();
+    final isUsingSharedStorage =
+        await _onboardingService.isUsingSharedStorage();
     final showPopupShareStorage = widget.config.showPopupSharedStorage;
 
-    if (isUsingSharedStorage == null && showPopupShareStorage) {
+    if (isUsingSharedStorage == null &&
+        showPopupShareStorage &&
+        !(Platform.isAndroid || Platform.isIOS || Platform.isLinux)) {
       //No defind yet
       final result = await askUserUseSharedStorage();
       await _onboardingService.initialSetup(usingSharedStorage: result);
