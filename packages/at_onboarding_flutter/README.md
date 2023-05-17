@@ -199,6 +199,19 @@ dependencies:
 6. Click on Advance settings
 7. Click on "Generate New API key"
 
+## Language localization
+
+The strings displayed in `at_widgets` are already localized in 2 languages. New languages will be
+supported in the future with minor updates.
+
+Languages supported:
+
+* English ('en')
+* French ('fr')
+
+The `at_widgets` package can be supplied with additional languages in your code by setting
+the `locale` property in `MaterialApp` class to provide custom values.
+
 ## Open source usage and contributions
 
 This is open source code, so feel free to use it as is, suggest changes
