@@ -60,12 +60,14 @@ Add the following permissions to AndroidManifest.xml
 ```
 
 Also, the Android version support in app/build.gradle
+
 ```
 compileSdkVersion 32
 
 minSdkVersion 24
 targetSdkVersion 29
 ```
+
 </details>
 
 <details>
@@ -115,6 +117,7 @@ post_install do |installer|
   end
 end
 ```
+
 </details>
 
 <details>
@@ -130,15 +133,20 @@ and add the following key:
 <key>com.apple.security.files.downloads.read-write</key>
 <true/>
 ```
+
 </details>
 
 ### 3. Migration guide
+
 <details>
   <summary>From 4.x.x to 5.x.x</summary>
 
 1. Replace `Onboarding(...)` with `AtOnboarding.onboard(...)`
-2. Move all config params (`domain`, `atClientPreference`, `rootEnviroment`, ...) into `AtOnboardingConfig(...)`
-3. The `nextScreen` and `fistTimeAuthNextScreen` has been removed and should be using `AtOnboardingResult` to determine which screen will be opened
+2. Move all config params (`domain`, `atClientPreference`, `rootEnviroment`, ...)
+   into `AtOnboardingConfig(...)`
+3. The `nextScreen` and `fistTimeAuthNextScreen` has been removed and should be
+   using `AtOnboardingResult` to determine which screen will be opened
+
 </details>
 
 ## Usage
@@ -152,34 +160,34 @@ and add the following key:
 | isSwitchingAtsign       | Param specifies whether this action is switching atsign or not. Default is false                                                 |
 | atsign                  | The atsign name when change the primary atsign. Default is null                                                                  |
 
-
 ```dart
-TextButton(
-    onPressed: () async {
-      final result = await AtOnboarding.onboard(
-        context: context,
-        config: AtOnboardingConfig(
-          atClientPreference: atClientPreference,
-          domain: AtEnv.rootDomain,
-          rootEnvironment: AtEnv.rootEnvironment,
-          appAPIKey: AtEnv.appApiKey,
-        ),
-      );
-      switch (result.status) {
-        case AtOnboardingResultStatus.success:
-          final atsign = result.atsign;
-          // TODO: handle onboard successfully
-          break;
-        case AtOnboardingResultStatus.error:
-          // TODO: handle onboard failure
-          break;
-        case AtOnboardingResultStatus.cancel:
-          // TODO: handle user canceled onboard
-          break;
-      }
-    },
-    child: Text('Onboard my atSign'),
-  );
+TextButton
+(
+onPressed: () async {
+final result = await AtOnboarding.onboard(
+context: context,
+config: AtOnboardingConfig(
+atClientPreference: atClientPreference,
+domain: AtEnv.rootDomain,
+rootEnvironment: AtEnv.rootEnvironment,
+appAPIKey: AtEnv.appApiKey,
+),
+);
+switch (result.status) {
+case AtOnboardingResultStatus.success:
+final atsign = result.atsign;
+// TODO: handle onboard successfully
+break;
+case AtOnboardingResultStatus.error:
+// TODO: handle onboard failure
+break;
+case AtOnboardingResultStatus.cancel:
+// TODO: handle user canceled onboard
+break;
+}
+},
+child: Text('Onboard my atSign'),
+);
 ```
 
 - If your app supports windows platform then add `biometric_storage` in app's dependencies
@@ -198,6 +206,21 @@ dependencies:
 5. Click on the manage button
 6. Click on Advance settings
 7. Click on "Generate New API key"
+
+## Language localization
+
+The strings displayed in `at_onboarding_flutter` are already localized in 2 languages. New languages
+will be
+supported in the future with minor updates.
+
+Languages supported:
+
+* English ('en')
+* French ('fr')
+
+The `at_onboarding_flutter` package can be supplied with additional languages in your code by
+setting
+the `locale` property in `MaterialApp` class to provide custom values.
 
 ## Open source usage and contributions
 
