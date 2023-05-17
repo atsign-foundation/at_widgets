@@ -85,7 +85,7 @@ class _AtOnboardingReferenceScreenState
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.title ?? 'FAQ',
+            widget.title ?? AtOnboardingLocalizations.current.title_FAQ,
           ),
           centerTitle: true,
         ),

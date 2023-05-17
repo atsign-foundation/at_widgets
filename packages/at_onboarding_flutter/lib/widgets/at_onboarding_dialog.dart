@@ -1,3 +1,4 @@
+import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 
@@ -16,11 +17,13 @@ class AtOnboardingDialog extends StatefulWidget {
         return Theme(
           data: themeData ?? Theme.of(context),
           child: AtOnboardingDialog(
-            title: title ?? 'Notice',
+            title: title ?? AtOnboardingLocalizations.current.notice,
             message: message,
             actions: [
               AtOnboardingSecondaryButton(
-                child: const Text('Close'),
+                child: Text(
+                  AtOnboardingLocalizations.current.btn_close,
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                   onCancel?.call();

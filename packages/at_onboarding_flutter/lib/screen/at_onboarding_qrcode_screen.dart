@@ -68,7 +68,11 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
       } else {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No permission')),
+          SnackBar(
+            content: Text(
+              AtOnboardingLocalizations.current.no_permission,
+            ),
+          ),
         );
       }
     }
@@ -101,8 +105,8 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text(
-              'Scan your QR!',
+            title: Text(
+              AtOnboardingLocalizations.current.scan_your_QR,
             ),
             actions: const [
               Center(
@@ -187,7 +191,9 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
       } else {
         await _controller?.pauseCamera();
         await AtOnboardingDialog.showError(
-            context: context, message: 'Invalid QR.');
+          context: context,
+          message: AtOnboardingLocalizations.current.invalid_QR,
+        );
         await _controller?.resumeCamera();
       }
     }

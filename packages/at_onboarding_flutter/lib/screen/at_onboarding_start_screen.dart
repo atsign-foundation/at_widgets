@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding.dart';
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_home_screen.dart';
+import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
@@ -127,7 +125,9 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
               children: [
                 AtSyncIndicator(color: theme.primaryColor),
                 const SizedBox(width: AtOnboardingDimens.paddingSmall),
-                const Text('Onboarding'),
+                Text(
+                  AtOnboardingLocalizations.current.onboarding,
+                ),
               ],
             ),
           ),
@@ -138,31 +138,33 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
 
   Future<bool> askUserUseSharedStorage() async {
     final result = await showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AtOnboardingDialog(
-            title: 'Share this atSign with all your atPlatform apps?',
-            message:
-                'You will not be required to re-upload your atKeys when you use this atSign with other atPlatform apps on this device.',
-            subMessage:
-                '*For this to work, sharing must also be switched on in the other apps',
-            actions: [
-              AtOnboardingSecondaryButton(
-                child: const Text('No'),
-                onPressed: () {
-                  Navigator.pop(context, false);
-                },
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AtOnboardingDialog(
+          title: AtOnboardingLocalizations.current.title_shared_storage,
+          message: AtOnboardingLocalizations.current.msg_shared_storage,
+          actions: [
+            AtOnboardingSecondaryButton(
+              child: Text(
+                AtOnboardingLocalizations.current.btn_no,
               ),
-              AtOnboardingPrimaryButton(
-                child: const Text('Yes'),
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            AtOnboardingPrimaryButton(
+              child: Text(
+                AtOnboardingLocalizations.current.btn_yes,
               ),
-            ],
-          );
-        });
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+          ],
+        );
+      },
+    );
     if (result is bool) {
       return result;
     }

@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -69,8 +67,8 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text(
-              AtOnboardingStrings.onboardingTitle,
+            title: Text(
+              AtOnboardingLocalizations.current.title_setting_up_your_atSign,
             ),
             centerTitle: true,
             actions: [
@@ -96,9 +94,9 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'Enter your email address',
-                    style: TextStyle(
+                  Text(
+                    AtOnboardingLocalizations.current.enter_your_email_address,
+                    style: const TextStyle(
                       fontSize: AtOnboardingDimens.fontLarge,
                       fontWeight: FontWeight.bold,
                     ),
@@ -109,7 +107,8 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                     focusNode: _focusNode,
                     validator: (String? value) {
                       if ((value ?? '').isEmpty) {
-                        return 'atSign cannot be empty';
+                        return AtOnboardingLocalizations
+                            .current.msg_atSign_cannot_empty;
                       }
                       return null;
                     },
@@ -147,9 +146,9 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    AtOnboardingStrings.emailNote,
-                    style: TextStyle(
+                  Text(
+                    AtOnboardingLocalizations.current.note_pair_content,
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: AtOnboardingDimens.fontNormal,
                     ),
@@ -162,14 +161,14 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                     onPressed: _onSendCodePressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          'Send Code',
-                          style: TextStyle(
+                          AtOnboardingLocalizations.current.send_code,
+                          style: const TextStyle(
                             fontSize: AtOnboardingDimens.fontLarge,
                           ),
                         ),
-                        Icon(Icons.arrow_right_alt_rounded)
+                        const Icon(Icons.arrow_right_alt_rounded)
                       ],
                     ),
                   ),
@@ -186,7 +185,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
     if (Platform.isAndroid || Platform.isIOS) {
       AtOnboardingReferenceScreen.push(
         context: context,
-        title: AtOnboardingStrings.faqTitle,
+        title: AtOnboardingLocalizations.current.title_FAQ,
         url: AtOnboardingStrings.faqUrl,
         config: widget.config,
       );
@@ -214,7 +213,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       } else {
         AtOnboardingDialog.showError(
           context: context,
-          message: "Please enter a valid email address",
+          message: AtOnboardingLocalizations.current.error_please_enter_email,
           onCancel: () {
             Navigator.pop(context);
           },
@@ -223,7 +222,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
     } else {
       return AtOnboardingDialog.showError(
         context: context,
-        message: 'Enter a valid email address',
+        message: AtOnboardingLocalizations.current.error_enter_valid_email,
       );
     }
   }
@@ -271,11 +270,11 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
           content: RichText(
             text: TextSpan(
               children: <InlineSpan>[
-                const TextSpan(
-                  style: TextStyle(
+                TextSpan(
+                  style: const TextStyle(
                       color: Colors.black, fontSize: 16, letterSpacing: 0.5),
                   text:
-                      'Oops! You already have the maximum number of free atSigns. Please login to ',
+                      AtOnboardingLocalizations.current.msg_maximum_atSign_prev,
                 ),
                 TextSpan(
                     text: 'https://my.atsign.com',
@@ -292,23 +291,28 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
                           await launchUrl(Uri.parse(url));
                         }
                       }),
-                const TextSpan(
-                  text: '  to select one of your existing atSigns.',
-                  style: TextStyle(
-                      color: Colors.black, fontSize: 16, letterSpacing: 0.5),
+                TextSpan(
+                  text:
+                      AtOnboardingLocalizations.current.msg_maximum_atSign_next,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Close',
-                  style: TextStyle(color: theme.primaryColor),
-                ))
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                AtOnboardingLocalizations.current.btn_close,
+                style: TextStyle(color: theme.primaryColor),
+              ),
+            )
           ],
         );
       },

@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'package:at_onboarding_flutter_example/switch_atsign.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_theme.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
+import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 
 Future<void> main() async {
   await AtEnv.load();
@@ -37,6 +40,9 @@ class _MyAppState extends State<MyApp> {
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
 
+  bool isChangeLanguage = false;
+  var _currentLocale = Locale('en', '');
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ThemeMode>(
@@ -45,7 +51,6 @@ class _MyAppState extends State<MyApp> {
       builder: (BuildContext context, AsyncSnapshot<ThemeMode> snapshot) {
         ThemeMode themeMode = snapshot.data ?? ThemeMode.light;
         return MaterialApp(
-          // * The onboarding screen (first screen)
           theme: ThemeData().copyWith(
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
@@ -66,6 +71,17 @@ class _MyAppState extends State<MyApp> {
             backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
           ),
+          locale: _currentLocale,
+          localizationsDelegates: const [
+            AtOnboardingLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('fr'),
+            Locale('en'),
+          ],
           themeMode: themeMode,
           home: Scaffold(
             appBar: AppBar(
@@ -147,6 +163,31 @@ class _MyAppState extends State<MyApp> {
                       },
                       child: const Text('Reset'),
                     ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const Text("Change language:"),
+                        const SizedBox(width: 10),
+                        DropdownButton(
+                          onChanged: (value) {
+                            setState(() {
+                              print(value);
+                              value == 'en'
+                                  ? _currentLocale = const Locale('en')
+                                  : _currentLocale = const Locale('fr');
+                            });
+                          },
+                          value: _currentLocale.languageCode,
+                          items: const [
+                            DropdownMenuItem(
+                                child: Text('English'), value: 'en'),
+                            DropdownMenuItem(
+                                child: Text('French'), value: 'fr'),
+                          ],
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),

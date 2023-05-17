@@ -1,3 +1,4 @@
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,6 +29,9 @@ void main() {
           },
         ),
       ),
+      localizationsDelegates: const [
+        AtOnboardingLocalizations.delegate,
+      ],
     );
   }
 
@@ -35,7 +39,6 @@ void main() {
     await tester.pumpWidget(_defaultApp());
     await tester.pumpAndSettle();
 
-    expect(
-        find.text("Reset"), findsOneWidget);
+    expect(find.text("Reset"), findsOneWidget);
   });
 }

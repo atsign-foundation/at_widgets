@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   at_app_flutter: ^5.0.0+1
   at_backupkey_flutter: ^4.0.8
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dependency_overrides:
   path: 1.8.3

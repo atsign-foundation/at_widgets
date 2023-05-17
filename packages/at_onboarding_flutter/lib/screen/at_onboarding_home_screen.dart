@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
+import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_backup_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_generate_screen.dart';
@@ -75,9 +76,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
   ServerStatus? atSignStatus;
   final String _incorrectKeyFile =
-      'Unable to fetch the keys from chosen file. Please choose correct file';
+      AtOnboardingLocalizations.current.msg_cannot_fetch_keys_from_chosen_file;
   final String _failedFileProcessing =
-      'Failed in processing files. Please try again';
+      AtOnboardingLocalizations.current.error_processing_files;
 
   late AtSyncDialog _inprogressDialog;
 
@@ -126,10 +127,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   void _showTutorial() {
     tutorialCoachMark = TutorialCoachMark(
       targets: signInTargets,
-      skipWidget: const Text(
-        "SKIP TUTORIAL",
+      skipWidget: Text(
+        AtOnboardingLocalizations.current.btn_skip_tutorial,
         textAlign: TextAlign.center,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 18,
           fontWeight: FontWeight.w500,
@@ -160,10 +161,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (context, controller) {
-              return const Center(
+              return Center(
                 child: Text(
-                  "If you have an activated atSign, tap to upload your atKeys",
-                  style: TextStyle(
+                  AtOnboardingLocalizations.current.tutorial_upload_your_atKey,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: AtOnboardingDimens.fontLarge,
@@ -191,8 +192,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
               return Center(
                 child: Text(
                   (Platform.isAndroid || Platform.isIOS)
-                      ? "Tap to scan QR code"
-                      : "Tap to upload image QR code",
+                      ? AtOnboardingLocalizations.current.tutorial_scan_QRCode
+                      : AtOnboardingLocalizations
+                          .current.tutorial_upload_image_QRCode,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -218,10 +220,11 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (context, controller) {
-              return const Center(
+              return Center(
                 child: Text(
-                  "Tap here to activate your atSign",
-                  style: TextStyle(
+                  AtOnboardingLocalizations
+                      .current.tutorial_activate_your_atSign,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: AtOnboardingDimens.fontLarge,
@@ -246,10 +249,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (context, controller) {
-              return const Center(
+              return Center(
                 child: Text(
-                  "If you don't have an atSign, tap here to get one",
-                  style: TextStyle(
+                  AtOnboardingLocalizations.current.tutorial_get_atSign,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: AtOnboardingDimens.fontLarge,
@@ -324,7 +327,8 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         String? path = pickedFile.path;
         if (path == null) {
           throw const FileSystemException(
-              'FilePicker.pickFiles returned a null path');
+            'FilePicker.pickFiles returned a null path',
+          );
         }
         File selectedFile = File(path);
         int length = selectedFile.lengthSync();
@@ -542,7 +546,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     assert(aesKey != null || aesKey != '');
     assert(atsign != null || atsign != '');
     assert(contents != '');
-    _inprogressDialog.show(message: 'Processing...');
+    _inprogressDialog.show(
+      message: AtOnboardingLocalizations.current.processing,
+    );
     await Future.delayed(const Duration(milliseconds: 400));
     try {
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
@@ -568,14 +574,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign!));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
         await _showAlertDialog(
-          AtOnboardingStrings.atsignNotFound,
+          AtOnboardingLocalizations.current.msg_atSign_not_registered,
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingStrings.atsignNull,
+          AtOnboardingLocalizations.current.msg_atSign_unreachable,
         );
       } else {
-        await showErrorDialog('Response Time out');
+        await showErrorDialog(
+          AtOnboardingLocalizations.current.msg_response_time_out,
+        );
       }
     } catch (e) {
       _inprogressDialog.close();
@@ -583,9 +591,13 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         await _processAESKey(atsign, aesKey, contents);
       } else if (e == AtOnboardingResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWithAESKey');
-        await showErrorDialog('Auth Failed');
+        await showErrorDialog(
+          AtOnboardingLocalizations.current.msg_auth_failed,
+        );
       } else if (e == AtOnboardingResponseStatus.timeOut) {
-        await showErrorDialog('Response Time out');
+        await showErrorDialog(
+          AtOnboardingLocalizations.current.msg_response_time_out,
+        );
       } else {
         _logger.warning(e);
       }
@@ -625,15 +637,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text(
-              AtOnboardingStrings.onboardingTitle,
+            title: Text(
+              AtOnboardingLocalizations.current.title_setting_up_your_atSign,
             ),
-            /*leading: IconButton(
-              icon: const Icon(Icons.close_rounded),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),*/
             centerTitle: true,
             actions: [
               IconButton(
@@ -659,9 +665,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  const Text(
-                    'Pair an atSign using your atKeys',
-                    style: TextStyle(
+                  Text(
+                    AtOnboardingLocalizations.current.pair_atSign,
+                    style: const TextStyle(
                       fontSize: AtOnboardingDimens.fontLarge,
                       fontWeight: FontWeight.bold,
                     ),
@@ -679,15 +685,15 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     isLoading: loading,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          'Upload atKeys',
-                          style: TextStyle(
+                          AtOnboardingLocalizations.current.upload_atKeys,
+                          style: const TextStyle(
                             fontSize: AtOnboardingDimens.fontLarge,
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Icon(
+                        const SizedBox(width: 10),
+                        const Icon(
                           Icons.cloud_upload_rounded,
                           // size: 20,
                         )
@@ -695,16 +701,18 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  const Text(
-                    'Upload your atKey file. This file was generated when you activated and paired your atSign and you were prompted to store it in a secure location.',
-                    style: TextStyle(fontSize: AtOnboardingDimens.fontSmall),
+                  Text(
+                    AtOnboardingLocalizations.current.sub_upload_atKeys,
+                    style: const TextStyle(
+                      fontSize: AtOnboardingDimens.fontSmall,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   if (!widget.hideQrScan) const SizedBox(height: 5),
                   if (!widget.hideQrScan)
-                    const Text(
-                      'Have a QR Code?',
-                      style: TextStyle(
+                    Text(
+                      AtOnboardingLocalizations.current.have_QRCode,
+                      style: const TextStyle(
                         fontSize: AtOnboardingDimens.fontLarge,
                         fontWeight: FontWeight.bold,
                       ),
@@ -721,13 +729,15 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
-                                  'Scan QR code',
-                                  style: TextStyle(
-                                      fontSize: AtOnboardingDimens.fontLarge),
+                                  AtOnboardingLocalizations
+                                      .current.btn_scan_QRCode,
+                                  style: const TextStyle(
+                                    fontSize: AtOnboardingDimens.fontLarge,
+                                  ),
                                 ),
-                                Icon(Icons.arrow_right_alt_rounded)
+                                const Icon(Icons.arrow_right_alt_rounded)
                               ],
                             ),
                           )
@@ -741,21 +751,23 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
-                                  'Upload QR code',
-                                  style: TextStyle(
+                                  AtOnboardingLocalizations
+                                      .current.btn_upload_QRCode,
+                                  style: const TextStyle(
                                       fontSize: AtOnboardingDimens.fontLarge),
                                 ),
-                                Icon(Icons.arrow_right_alt_rounded)
+                                const Icon(Icons.arrow_right_alt_rounded)
                               ],
                             ),
                           ),
                   const SizedBox(height: 20),
                   if (!widget.hideQrScan)
-                    const Text(
-                      'Activate an atSign?',
-                      style: TextStyle(
+                    Text(
+                      AtOnboardingLocalizations
+                          .current.title_activate_an_atSign,
+                      style: const TextStyle(
                         fontSize: AtOnboardingDimens.fontLarge,
                         fontWeight: FontWeight.bold,
                       ),
@@ -771,13 +783,14 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text(
-                            'Activate atSign',
-                            style: TextStyle(
+                            AtOnboardingLocalizations
+                                .current.btn_activate_atSign,
+                            style: const TextStyle(
                                 fontSize: AtOnboardingDimens.fontLarge),
                           ),
-                          Icon(Icons.arrow_right_alt_rounded)
+                          const Icon(Icons.arrow_right_alt_rounded)
                         ],
                       ),
                     ),
@@ -812,7 +825,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       highlightColor: Colors.transparent,
                       splashColor: Colors.transparent,
                       child: Text(
-                        "Get a free atSign",
+                        AtOnboardingLocalizations.current.get_free_atSign,
                         key: keyCreateAnAtSign,
                         style: TextStyle(
                           fontSize: AtOnboardingDimens.fontNormal,
@@ -893,7 +906,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   Future<dynamic> _processSharedSecret(String atsign, String secret) async {
     dynamic authResponse;
     try {
-      _inprogressDialog.show(message: 'Processing...');
+      _inprogressDialog.show(
+        message: AtOnboardingLocalizations.current.processing,
+      );
       await Future.delayed(const Duration(milliseconds: 400));
       bool isExist = await _onboardingService.isExistingAtsign(atsign);
       if (isExist) {
@@ -929,7 +944,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         if (atSignStatus == ServerStatus.teapot) {
           await _showAlertDialog(
-            AtOnboardingStrings.atsignNull,
+            AtOnboardingLocalizations.current.msg_atSign_unreachable,
           );
           return;
         }
@@ -948,25 +963,33 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
         await _showAlertDialog(
-          AtOnboardingStrings.atsignNotFound,
+          AtOnboardingLocalizations.current.msg_atSign_not_registered,
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingStrings.atsignNull,
+          AtOnboardingLocalizations.current.msg_atSign_unreachable,
         );
       } else {
-        await showErrorDialog('Response Time out');
+        await showErrorDialog(
+          AtOnboardingLocalizations.current.msg_response_time_out,
+        );
       }
     } catch (e) {
       _inprogressDialog.close();
       if (e == AtOnboardingResponseStatus.authFailed) {
         _logger.severe('Error in authenticateWith cram secret');
-        await _showAlertDialog(e, title: 'Auth Failed');
+        await _showAlertDialog(
+          e,
+          title: AtOnboardingLocalizations.current.msg_auth_failed,
+        );
       } else if (e == AtOnboardingResponseStatus.serverNotReached &&
           _isContinue) {
         await _processSharedSecret(atsign, secret);
       } else if (e == AtOnboardingResponseStatus.timeOut) {
-        await _showAlertDialog(e, title: 'Response Time out');
+        await _showAlertDialog(
+          e,
+          title: AtOnboardingLocalizations.current.msg_response_time_out,
+        );
       }
     }
     return authResponse;
@@ -990,7 +1013,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
       int length = selectedFile.lengthSync();
       if (length < 10) {
-        await showErrorDialog('Incorrect QR file');
+        await showErrorDialog(
+          AtOnboardingLocalizations.current.error_incorrect_QRFile,
+        );
         return;
       }
 
@@ -1007,7 +1032,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       aesKey = params[1];
 
       if (aesKey.isEmpty && atsign.isEmpty) {
-        await showErrorDialog('Incorrect QR file');
+        await showErrorDialog(
+          AtOnboardingLocalizations.current.error_incorrect_QRFile,
+        );
         setState(() {
           _uploadingQRCode = false;
         });
@@ -1023,7 +1050,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       setState(() {
         _uploadingQRCode = false;
       });
-      await showErrorDialog('Failed to process file');
+      await showErrorDialog(
+        AtOnboardingLocalizations.current.error_process_file,
+      );
     }
   }
 
@@ -1038,7 +1067,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     if (Platform.isAndroid || Platform.isIOS) {
       AtOnboardingReferenceScreen.push(
         context: context,
-        title: AtOnboardingStrings.faqTitle,
+        title: AtOnboardingLocalizations.current.title_FAQ,
         url: AtOnboardingStrings.faqUrl,
         config: widget.config,
       );

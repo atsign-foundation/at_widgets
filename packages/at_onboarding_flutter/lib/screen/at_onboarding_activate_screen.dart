@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
+import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_backup_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_otp_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
@@ -40,13 +41,10 @@ class AtOnboardingActivateScreen extends StatefulWidget {
 class _AtOnboardingActivateScreenState
     extends State<AtOnboardingActivateScreen> {
   final FreeAtsignService _freeAtsignService = FreeAtsignService();
+  final OnboardingService _onboardingService = OnboardingService.getInstance();
 
   bool isVerifing = false;
-  bool isResendingCode = false;
   ServerStatus? atSignStatus;
-  String limitExceeded = 'limitExceeded';
-
-  final OnboardingService _onboardingService = OnboardingService.getInstance();
 
   @override
   void initState() {
@@ -71,8 +69,9 @@ class _AtOnboardingActivateScreenState
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text(
-              AtOnboardingStrings.onboardingTitle,
+            title: Text(
+              AtOnboardingLocalizations.current
+                  .title_setting_up_your_atSign,
             ),
             actions: [
               IconButton(
@@ -97,7 +96,10 @@ class _AtOnboardingActivateScreenState
                     color: theme.primaryColor,
                   ),
                   const SizedBox(height: 10),
-                  const Text('Please wait while fetching atSign status'),
+                  Text(
+                    AtOnboardingLocalizations.current
+                        .msg_wait_fetching_atSign,
+                  ),
                 ],
               ),
             ),
@@ -121,9 +123,11 @@ class _AtOnboardingActivateScreenState
         await _onboardingService.checkAtsignStatus(atsign: atsign);
     if (atsignStatus == AtSignStatus.activated) {
       bool isPaired = await _onboardingService.isExistingAtsign(atsign);
-      await showErrorDialog(isPaired
-          ? 'This atSign has already been activated and paired with this device'
-          : 'This atSign has already been activated. Please upload your atkeys to pair it with this device');
+      await showErrorDialog(
+        isPaired
+            ? AtOnboardingLocalizations.current.error_atSign_logged
+            : AtOnboardingLocalizations.current.error_atSign_activated,
+      );
       return;
     }
 
@@ -161,7 +165,7 @@ class _AtOnboardingActivateScreenState
   Future<void> showErrorDialog(String? errorMessage) async {
     return AtOnboardingDialog.showError(
       context: context,
-      title: "Notice",
+      title: AtOnboardingLocalizations.current.notice,
       message: errorMessage ?? '',
       onCancel: () {
         Navigator.of(context).pop();
@@ -173,7 +177,7 @@ class _AtOnboardingActivateScreenState
     if (Platform.isAndroid || Platform.isIOS) {
       AtOnboardingReferenceScreen.push(
         context: context,
-        title: AtOnboardingStrings.faqTitle,
+        title: AtOnboardingLocalizations.current.title_FAQ,
         url: AtOnboardingStrings.faqUrl,
         config: widget.config,
       );
@@ -226,7 +230,7 @@ class _AtOnboardingActivateScreenState
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         if (atSignStatus == ServerStatus.teapot) {
           await _showAlertDialog(
-            AtOnboardingStrings.atsignNull,
+            AtOnboardingLocalizations.current.msg_atSign_unreachable,
           );
           return;
         }
@@ -245,22 +249,33 @@ class _AtOnboardingActivateScreenState
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
         await _showAlertDialog(
-          AtOnboardingStrings.atsignNotFound,
+          AtOnboardingLocalizations.current.msg_atSign_not_registered,
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingStrings.atsignNull,
+          AtOnboardingLocalizations.current.msg_atSign_unreachable,
         );
       } else {
-        await showErrorDialog('Your session expired');
+        await showErrorDialog(
+          AtOnboardingLocalizations.current.title_session_expired,
+        );
       }
     } catch (e) {
       if (e == AtOnboardingResponseStatus.authFailed) {
-        await _showAlertDialog(e, title: 'Authentication Failed');
+        await _showAlertDialog(
+          e,
+          title: AtOnboardingLocalizations.current.error_authenticated_failed,
+        );
       } else if (e == AtOnboardingResponseStatus.serverNotReached) {
-        await _showAlertDialog(e, title: 'Server not found');
+        await _showAlertDialog(
+          e,
+          title: AtOnboardingLocalizations.current.error_server_not_found,
+        );
       } else if (e == AtOnboardingResponseStatus.timeOut) {
-        await _showAlertDialog(e, title: 'Your session expired');
+        await _showAlertDialog(
+          e,
+          title: AtOnboardingLocalizations.current.title_session_expired,
+        );
       }
     }
     return authResponse;

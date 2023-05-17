@@ -92,8 +92,8 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         data: theme,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text(
-              AtOnboardingStrings.onboardingTitle,
+            title: Text(
+              AtOnboardingLocalizations.current.title_setting_up_your_atSign,
             ),
             actions: [
               IconButton(
@@ -118,9 +118,9 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Enter Verification Code',
-                    style: TextStyle(
+                  Text(
+                    AtOnboardingLocalizations.current.enter_verification_code,
+                    style: const TextStyle(
                       fontSize: AtOnboardingDimens.fontLarge,
                       fontWeight: FontWeight.bold,
                     ),
@@ -162,9 +162,10 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                     },
                   ),
                   Text(
-                    'A verification code has been sent to ${widget.email ?? 'your registered email.'}',
+                    '${AtOnboardingLocalizations.current.verification_code_has_been_sent_to} ${widget.email ?? AtOnboardingLocalizations.current.your_registered_email}',
                     style: const TextStyle(
-                        fontSize: AtOnboardingDimens.fontNormal),
+                      fontSize: AtOnboardingDimens.fontNormal,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   AtOnboardingPrimaryButton(
@@ -173,8 +174,8 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                     width: double.infinity,
                     isLoading: isVerifing,
                     onPressed: _onVerifyPressed,
-                    child: const Text(
-                      'Verify & Login',
+                    child: Text(
+                      AtOnboardingLocalizations.current.verify_and_login,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -186,14 +187,16 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                     onPressed: () {
                       _onResendPressed(theme);
                     },
-                    child: const Text('Resend Code'),
+                    child: Text(
+                      AtOnboardingLocalizations.current.resend_code,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   RichText(
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
-                          text: "Note:",
+                          text: AtOnboardingLocalizations.current.note,
                           style: theme.textTheme.bodyText2?.copyWith(
                             fontSize: AtOnboardingDimens.fontSmall,
                             height: 1.5,
@@ -201,9 +204,8 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: """ If you didn't receive our email:
-  - Confirm that your email address was entered correctly.
-  - Check your spam/junk or promotions folder.""",
+                          text: AtOnboardingLocalizations
+                              .current.note_otp_content,
                           style: theme.textTheme.bodyText2?.copyWith(
                             fontSize: AtOnboardingDimens.fontSmall,
                             height: 1.5,
@@ -234,11 +236,14 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         return Theme(
           data: theme,
           child: AtOnboardingDialog(
-            title: 'Notice',
-            message: 'Verification code sent to ${widget.email}',
+            title: AtOnboardingLocalizations.current.notice,
+            message:
+                '${AtOnboardingLocalizations.current.verification_code_sent_to} ${widget.email}',
             actions: [
               AtOnboardingSecondaryButton(
-                child: const Text('Close'),
+                child: Text(
+                  AtOnboardingLocalizations.current.btn_close,
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -254,7 +259,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
     if (Platform.isAndroid || Platform.isIOS) {
       AtOnboardingReferenceScreen.push(
         context: context,
-        title: AtOnboardingStrings.faqTitle,
+        title: AtOnboardingLocalizations.current.title_FAQ,
         url: AtOnboardingStrings.faqUrl,
         config: widget.config,
       );
@@ -271,9 +276,8 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
     if (_pinCodeController.text.length < 4) {
       return AtOnboardingDialog.showError(
         context: context,
-        title: "Notice",
-        message:
-            "Please enter the 4-character verification code that was sent to your email address",
+        title: AtOnboardingLocalizations.current.notice,
+        message: AtOnboardingLocalizations.current.enter_code,
       );
     }
 
@@ -567,11 +571,11 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
           content: RichText(
             text: TextSpan(
               children: <InlineSpan>[
-                const TextSpan(
-                  style: TextStyle(
+                TextSpan(
+                  style: const TextStyle(
                       color: Colors.black, fontSize: 16, letterSpacing: 0.5),
                   text:
-                      'Oops! You already have the maximum number of free atSigns. Please login to ',
+                      AtOnboardingLocalizations.current.msg_maximum_atSign_prev,
                 ),
                 TextSpan(
                     text: 'https://my.atsign.com',
@@ -588,9 +592,10 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                           await launchUrl(Uri.parse(url));
                         }
                       }),
-                const TextSpan(
-                  text: '  to select one of your existing atSigns.',
-                  style: TextStyle(
+                TextSpan(
+                  text:
+                      AtOnboardingLocalizations.current.msg_maximum_atSign_next,
+                  style: const TextStyle(
                       color: Colors.black, fontSize: 16, letterSpacing: 0.5),
                 ),
               ],
@@ -598,13 +603,16 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
           ),
           actions: <Widget>[
             TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Close',
-                  style: TextStyle(color: theme.primaryColor),
-                ))
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                AtOnboardingLocalizations.current.btn_close,
+                style: TextStyle(
+                  color: theme.primaryColor,
+                ),
+              ),
+            )
           ],
         );
       },
