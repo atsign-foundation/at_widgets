@@ -5,8 +5,7 @@ import 'package:at_common_flutter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
-final StreamController<ThemeMode> updateThemeMode =
-    StreamController<ThemeMode>.broadcast();
+final StreamController<ThemeMode> updateThemeMode = StreamController<ThemeMode>.broadcast();
 
 void main() {
   runApp(const MyApp());
@@ -23,15 +22,14 @@ class MyApp extends StatelessWidget {
       builder: (context, snapshot) {
         return MaterialApp(
           theme: ThemeData(
-            brightness: Brightness.light,
             primaryColor: const Color(0xFFf04924),
-            backgroundColor: Colors.white,
+            colorScheme: const ColorScheme.light(),
           ),
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             fontFamily: 'RobotoSlab',
             primaryColor: const Color(0xFFF05E3E),
-            backgroundColor: Colors.black,
+            colorScheme: const ColorScheme.dark(),
           ),
           themeMode: snapshot.data,
           title: 'Example App',
@@ -77,16 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
         showTitle: true,
         titleText: widget.title,
         titleTextStyle: CustomTextStyles.primaryBold18.copyWith(
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black
-              : Colors.white,
+          color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
         ),
         showLeadingIcon: true,
         leadingIcon: Icon(
           Icons.home_outlined,
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black
-              : Colors.white,
+          color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
         ),
         onTrailingIconPressed: () {
           log('Trailing icon of appbar pressed');
@@ -95,15 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
         trailingIcon: Center(
           child: IconButton(
             onPressed: () {
-              updateThemeMode.sink.add(
-                  Theme.of(context).brightness == Brightness.light
-                      ? ThemeMode.dark
-                      : ThemeMode.light);
+              updateThemeMode.sink
+                  .add(Theme.of(context).brightness == Brightness.light ? ThemeMode.dark : ThemeMode.light);
             },
             icon: Icon(
-              Theme.of(context).brightness == Brightness.light
-                  ? Icons.dark_mode_outlined
-                  : Icons.light_mode_outlined,
+              Theme.of(context).brightness == Brightness.light ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),
@@ -161,12 +151,8 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 log('Custom button pressed');
               },
-              buttonColor: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black
-                  : Colors.white,
-              fontColor: Theme.of(context).brightness == Brightness.light
-                  ? Colors.white
-                  : Colors.black,
+              buttonColor: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+              fontColor: Theme.of(context).brightness == Brightness.light ? Colors.white : Colors.black,
             ),
           ],
         ),
