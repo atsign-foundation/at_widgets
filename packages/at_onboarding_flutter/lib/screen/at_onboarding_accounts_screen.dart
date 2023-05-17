@@ -61,7 +61,7 @@ class _AtOnboardingAccountsScreenState
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            AtOnboardingLocalizations.of(context).select_atSign,
+            AtOnboardingLocalizations.current.select_atSign,
           ),
         ),
         body: Padding(
@@ -74,7 +74,7 @@ class _AtOnboardingAccountsScreenState
                           valueColor: AlwaysStoppedAnimation<Color>(
                               theme.primaryColor)),
                       Text(
-                        AtOnboardingLocalizations.of(context).loading_atSigns,
+                        AtOnboardingLocalizations.current.loading_atSigns,
                         style: const TextStyle(
                           fontSize: AtOnboardingDimens.fontLarge,
                           fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class _AtOnboardingAccountsScreenState
                   children: <Widget>[
                     Text(
                       widget.message ??
-                          AtOnboardingLocalizations.of(context)
+                          AtOnboardingLocalizations.current
                               .title_select_atSign,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -171,14 +171,14 @@ class _AtOnboardingAccountsScreenState
               style: theme.textTheme.bodyText1,
               children: <InlineSpan>[
                 TextSpan(
-                  text: AtOnboardingLocalizations.of(context)
+                  text: AtOnboardingLocalizations.current
                       .title_pair_atSign_prev,
                 ),
                 TextSpan(
                     text: ' $atsign ',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(
-                  text: AtOnboardingLocalizations.of(context)
+                  text: AtOnboardingLocalizations.current
                       .title_pair_atSign_next,
                 )
               ],
@@ -190,7 +190,7 @@ class _AtOnboardingAccountsScreenState
               borderRadius: 20,
               onPressed: () => Navigator.pop(_),
               child: Text(
-                AtOnboardingLocalizations.of(context).btn_cancel,
+                AtOnboardingLocalizations.current.btn_cancel,
               ),
             ),
             AtOnboardingPrimaryButton(
@@ -201,7 +201,7 @@ class _AtOnboardingAccountsScreenState
                 Navigator.pop(context, atsign);
               },
               child: Text(
-                AtOnboardingLocalizations.of(context).btn_yes_continue,
+                AtOnboardingLocalizations.current.btn_yes_continue,
               ),
             )
           ],
