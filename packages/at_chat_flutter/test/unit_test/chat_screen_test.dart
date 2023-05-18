@@ -9,12 +9,21 @@ import 'package:at_client/src/client/request_options.dart';
 
 class MockAtClient extends Mock implements AtClient {
   @override
-  Future<bool> put(AtKey key, dynamic value, {bool isDedicated = false}) async {
+  Future<bool> put(
+    AtKey key,
+    dynamic value, {
+    bool isDedicated = false,
+    PutRequestOptions? putRequestOptions,
+  }) async {
     return true;
   }
 
   @override
-  Future<bool> delete(AtKey key, {bool isDedicated = false}) async {
+  Future<bool> delete(
+    AtKey key, {
+    bool isDedicated = false,
+    DeleteRequestOptions? deleteRequestOptions,
+  }) async {
     return true;
   }
 
