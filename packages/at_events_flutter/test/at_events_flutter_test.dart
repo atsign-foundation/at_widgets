@@ -1,34 +1,27 @@
-import 'dart:typed_data';
-
 import 'package:at_client/at_client.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
-import 'package:at_events_flutter/services/event_services.dart';
-import 'package:at_client/src/client/request_options.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAtClient extends Mock implements AtClient {
   @override
-  Future<bool> put(AtKey key, dynamic value, {bool isDedicated = false}) async {
+  Future<bool> put(AtKey key, dynamic value, {bool isDedicated = false, PutRequestOptions? putRequestOptions}) async {
     return true;
   }
 
   @override
-  Future<bool> delete(AtKey key, {bool isDedicated = false}) async {
+  Future<bool> delete(AtKey key, {bool isDedicated = false, DeleteRequestOptions? deleteRequestOptions}) async {
     return true;
   }
 
   @override
   Future<List<String>> getKeys(
-      {String? regex,
-      String? sharedBy,
-      String? sharedWith,
-      bool showHiddenKeys = false}) async {
+      {String? regex, String? sharedBy, String? sharedWith, bool showHiddenKeys = false}) async {
     return ["@83apedistinct", "@45expected"];
   }
 
@@ -82,13 +75,15 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel,
+        (message) async {
       return '42';
     });
   });
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (message) => null);
   });
 
   test("create_event", () async {
@@ -111,8 +106,7 @@ void main() {
   test("add_new_group_members", () async {
     EventService().eventNotificationModel = model;
 
-    await EventService()
-        .addNewGroupMembers([AtContact(atSign: "@83apedistinct")]);
+    await EventService().addNewGroupMembers([AtContact(atSign: "@83apedistinct")]);
     expect(EventService().selectedContactsAtSigns.length, 1);
   });
 
@@ -146,8 +140,7 @@ void main() {
   test("get_group_member_contact", () async {
     EventService().eventNotificationModel = model;
 
-    var res = EventService()
-        .getGroupMemberContact(AtContact(atSign: "@83apedistinct"));
+    var res = EventService().getGroupMemberContact(AtContact(atSign: "@83apedistinct"));
     expect(res, isA<AtContact>());
   });
 
@@ -269,8 +262,7 @@ void main() {
     EventKeyStreamService().allEventNotifications = [eventKeyLocationModel];
 
     EventKeyStreamService().updatePendingStatus(model);
-    expect(
-        EventKeyStreamService().allEventNotifications[0].haveResponded, true);
+    expect(EventKeyStreamService().allEventNotifications[0].haveResponded, true);
   });
 
   test("form_at_key", () {
@@ -279,8 +271,8 @@ void main() {
     eventKeyLocationModel.haveResponded = false;
     EventKeyStreamService().allEventNotifications = [eventKeyLocationModel];
 
-    var res = EventKeyStreamService().formAtKey(ATKEY_TYPE_ENUM.CREATEEVENT,
-        "id", "@45expected", "@82apedistinct", model);
+    var res =
+        EventKeyStreamService().formAtKey(ATKEY_TYPE_ENUM.CREATEEVENT, "id", "@45expected", "@82apedistinct", model);
     expect(res, isA<AtKey>());
   });
 

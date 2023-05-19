@@ -76,8 +76,7 @@ class _SelectLocationState extends State<SelectLocation> {
                         } else {
                           currentLocation = await getCurrentPosition();
                           // ignore: await_only_futures
-                          SearchLocationService()
-                              .getAddressLatLng(str, currentLocation);
+                          SearchLocationService().getAddressLatLng(str, currentLocation);
                         }
 
                         setState(() {
@@ -94,13 +93,11 @@ class _SelectLocationState extends State<SelectLocation> {
                         });
                         if (!nearMe) {
                           // ignore: await_only_futures
-                          SearchLocationService()
-                              .getAddressLatLng(inputText, null);
+                          SearchLocationService().getAddressLatLng(inputText, null);
                         } else {
                           currentLocation = await getCurrentPosition();
                           // ignore: await_only_futures
-                          SearchLocationService()
-                              .getAddressLatLng(inputText, currentLocation);
+                          SearchLocationService().getAddressLatLng(inputText, currentLocation);
                         }
                         setState(() {
                           isLoader = false;
@@ -113,8 +110,7 @@ class _SelectLocationState extends State<SelectLocation> {
                     children: [
                       InkWell(
                           onTap: () => Navigator.pop(context),
-                          child: Text(AllText().CANCEL,
-                              style: CustomTextStyles().orange16)),
+                          child: Text(AllText().CANCEL, style: CustomTextStyles().orange16)),
                     ],
                   ),
                 ],
@@ -123,8 +119,7 @@ class _SelectLocationState extends State<SelectLocation> {
               loadingForPermission
                   ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text(AllText().GETTING_LOCATION_PERMISSION,
-                          style: CustomTextStyles().red12),
+                      child: Text(AllText().GETTING_LOCATION_PERMISSION, style: CustomTextStyles().red12),
                     )
                   : Row(
                       children: <Widget>[
@@ -139,14 +134,11 @@ class _SelectLocationState extends State<SelectLocation> {
                             });
 
                             if (!nearMe) {
-                              _isLocationServiceEnabled =
-                                  await isLocationServiceEnabled();
+                              _isLocationServiceEnabled = await isLocationServiceEnabled();
                             }
 
                             if (!_isLocationServiceEnabled) {
-                              CustomToast().show(
-                                  AllText().UNABLE_TO_ACCESS_LOCATION, context,
-                                  isError: true);
+                              CustomToast().show(AllText().UNABLE_TO_ACCESS_LOCATION, context, isError: true);
                               setState(() {
                                 nearMe = false;
                                 loadingForPermission = false;
@@ -165,13 +157,10 @@ class _SelectLocationState extends State<SelectLocation> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(AllText().NEAR_ME,
-                                  style: CustomTextStyles().greyLabel14),
+                              Text(AllText().NEAR_ME, style: CustomTextStyles().greyLabel14),
                               (!_isLocationServiceEnabled)
                                   ? Flexible(
-                                      child: Text(
-                                          AllText()
-                                              .CANNOT_ACCESS_LOCATION_PERMISSION,
+                                      child: Text(AllText().CANNOT_ACCESS_LOCATION_PERMISSION,
                                           maxLines: 4,
                                           overflow: TextOverflow.ellipsis,
                                           style: CustomTextStyles().red12),
@@ -188,9 +177,7 @@ class _SelectLocationState extends State<SelectLocation> {
               InkWell(
                 onTap: () async {
                   if (!_isLocationServiceEnabled) {
-                    CustomToast().show(
-                        AllText().UNABLE_TO_ACCESS_LOCATION, context,
-                        isError: true);
+                    CustomToast().show(AllText().UNABLE_TO_ACCESS_LOCATION, context, isError: true);
                     return;
                   }
                   setState(() {
@@ -206,11 +193,9 @@ class _SelectLocationState extends State<SelectLocation> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AllText().CURRENT_LOCATION,
-                        style: CustomTextStyles().greyLabel14),
+                    Text(AllText().CURRENT_LOCATION, style: CustomTextStyles().greyLabel14),
                     SizedBox(height: 5.toHeight),
-                    Text(AllText().USING_GPS,
-                        style: CustomTextStyles().greyLabel12),
+                    Text(AllText().USING_GPS, style: CustomTextStyles().greyLabel12),
                   ],
                 ),
               ),
@@ -218,12 +203,8 @@ class _SelectLocationState extends State<SelectLocation> {
               const Divider(),
               SizedBox(height: 20.toHeight),
               renderPastVenues(),
-              VenuesServices().venues.isNotEmpty
-                  ? const Divider()
-                  : const SizedBox(),
-              VenuesServices().venues.isNotEmpty
-                  ? SizedBox(height: 20.toHeight)
-                  : const SizedBox(),
+              VenuesServices().venues.isNotEmpty ? const Divider() : const SizedBox(),
+              VenuesServices().venues.isNotEmpty ? SizedBox(height: 20.toHeight) : const SizedBox(),
               isLoader
                   ? const Center(
                       child: CircularProgressIndicator(),
@@ -231,8 +212,7 @@ class _SelectLocationState extends State<SelectLocation> {
                   : const SizedBox(),
               StreamBuilder(
                 stream: SearchLocationService().atLocationStream,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<LocationModal>> snapshot) {
+                builder: (BuildContext context, AsyncSnapshot<List<LocationModal>> snapshot) {
                   return snapshot.connectionState == ConnectionState.waiting
                       ? const SizedBox()
                       : snapshot.hasData
@@ -243,8 +223,8 @@ class _SelectLocationState extends State<SelectLocation> {
                                   child: ListView.separated(
                                     itemCount: snapshot.data!.length,
                                     separatorBuilder: (context, index) {
-                                      return Column(
-                                        children: const [
+                                      return const Column(
+                                        children: [
                                           SizedBox(height: 20),
                                           Divider(),
                                         ],
@@ -254,18 +234,13 @@ class _SelectLocationState extends State<SelectLocation> {
                                       return InkWell(
                                         onTap: () => onLocationSelect(
                                           context,
-                                          LatLng(
-                                              double.parse(
-                                                  snapshot.data![index].lat!),
-                                              double.parse(
-                                                  snapshot.data![index].long!)),
-                                          displayName:
-                                              snapshot.data![index].displayName,
+                                          LatLng(double.parse(snapshot.data![index].lat!),
+                                              double.parse(snapshot.data![index].long!)),
+                                          displayName: snapshot.data![index].displayName,
                                         ),
                                         child: LocationTile(
                                           icon: Icons.location_on,
-                                          title:
-                                              snapshot.data![index].displayName,
+                                          title: snapshot.data![index].displayName,
                                           // subTitle:
                                           //     snapshot.data![index].displayName,
                                         ),
@@ -300,11 +275,8 @@ class _SelectLocationState extends State<SelectLocation> {
               dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
               value: null,
               hint: Text(AllText().PAST_VENUES,
-                  style: TextStyle(
-                      color: AllColors().LIGHT_GREY_LABEL,
-                      fontSize: 15.toFont)),
-              style:
-                  TextStyle(color: AllColors().DARK_GREY, fontSize: 13.toFont),
+                  style: TextStyle(color: AllColors().LIGHT_GREY_LABEL, fontSize: 15.toFont)),
+              style: TextStyle(color: AllColors().DARK_GREY, fontSize: 13.toFont),
               items: VenuesServices()
                   .venues
                   .map((_venue) {
@@ -314,10 +286,7 @@ class _SelectLocationState extends State<SelectLocation> {
                   .map((VenueLatLng option) {
                     return DropdownMenuItem<VenueLatLng>(
                       value: option,
-                      child: Text(option.venue,
-                          style: TextStyle(
-                              color: AllColors().DARK_GREY,
-                              fontSize: 13.toFont)),
+                      child: Text(option.venue, style: TextStyle(color: AllColors().DARK_GREY, fontSize: 13.toFont)),
                     );
                   })
                   .toList(),
@@ -335,8 +304,7 @@ class _SelectLocationState extends State<SelectLocation> {
   }
 }
 
-void onLocationSelect(BuildContext context, LatLng point,
-    {String? displayName, String? label}) {
+void onLocationSelect(BuildContext context, LatLng point, {String? displayName, String? label}) {
   Navigator.push(
       context,
       MaterialPageRoute(

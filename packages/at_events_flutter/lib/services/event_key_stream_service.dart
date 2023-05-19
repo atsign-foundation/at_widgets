@@ -28,14 +28,12 @@ class EventKeyStreamService {
   late AtClientManager atClientManager;
   AtContactsImpl? atContactImpl;
   AtContact? loggedInUserDetails;
-  List<EventKeyLocationModel> allEventNotifications = [],
-      allPastEventNotifications = [];
+  List<EventKeyLocationModel> allEventNotifications = [], allPastEventNotifications = [];
   String? currentAtSign;
   List<AtContact> contactList = [];
 
   // ignore: close_sinks
-  StreamController atNotificationsController =
-      StreamController<List<EventKeyLocationModel>>.broadcast();
+  StreamController atNotificationsController = StreamController<List<EventKeyLocationModel>>.broadcast();
   Stream<List<EventKeyLocationModel>> get atNotificationsStream =>
       atNotificationsController.stream as Stream<List<EventKeyLocationModel>>;
   StreamSink<List<EventKeyLocationModel>> get atNotificationsSink =>
@@ -53,8 +51,7 @@ class EventKeyStreamService {
 
     await VenuesServices().getVenues();
 
-    atNotificationsController =
-        StreamController<List<EventKeyLocationModel>>.broadcast();
+    atNotificationsController = StreamController<List<EventKeyLocationModel>>.broadcast();
     getAllEventNotifications();
 
     loggedInUserDetails = await getAtSignDetails(currentAtSign);
@@ -68,7 +65,7 @@ class EventKeyStreamService {
 
   /// adds all 'createevent' notifications to [atNotificationsSink]
   void getAllEventNotifications() async {
-    AtClientManager.getInstance().syncService.sync();
+    atClientManager.atClient.syncService.sync();
 
     var response = await atClientManager.atClient.getKeys(
       regex: 'createevent-',
@@ -86,8 +83,7 @@ class EventKeyStreamService {
       if (value != null) {
         try {
           if ((value.value != null) && (value.value != 'null')) {
-            var eventNotificationModel =
-                EventNotificationModel.fromJson(jsonDecode(value.value));
+            var eventNotificationModel = EventNotificationModel.fromJson(jsonDecode(value.value));
 
             // ignore: todo
             ///// TODO: Uncomment if any issues with keys
@@ -114,17 +110,12 @@ class EventKeyStreamService {
   /// Removes past notifications and notification where data is null.
   void filterPastEventsFromList() {
     for (var i = 0; i < allEventNotifications.length; i++) {
-      if (allEventNotifications[i]
-              .eventNotificationModel!
-              .event!
-              .endTime!
-              .difference(DateTime.now())
-              .inMinutes <
-          0) allPastEventNotifications.add(allEventNotifications[i]);
+      if (allEventNotifications[i].eventNotificationModel!.event!.endTime!.difference(DateTime.now()).inMinutes < 0) {
+        allPastEventNotifications.add(allEventNotifications[i]);
+      }
     }
 
-    allEventNotifications
-        .removeWhere((element) => allPastEventNotifications.contains(element));
+    allEventNotifications.removeWhere((element) => allPastEventNotifications.contains(element));
   }
 
   /// Updates any received notification with [haveResponded] true, if already responded.
@@ -137,12 +128,9 @@ class EventKeyStreamService {
         if ((member.atSign == currentAtSign) &&
             (member.tags!['isAccepted'] == false) &&
             (member.tags!['isExited'] == false)) {
-          var atkeyMicrosecondId = notification.eventNotificationModel!.key!
-              .split('createevent-')[1]
-              .split('@')[0];
+          var atkeyMicrosecondId = notification.eventNotificationModel!.key!.split('createevent-')[1].split('@')[0];
           var acknowledgedKeyId = 'eventacknowledged-$atkeyMicrosecondId';
-          var allRegexResponses =
-              await atClientManager.atClient.getKeys(regex: acknowledgedKeyId);
+          var allRegexResponses = await atClientManager.atClient.getKeys(regex: acknowledgedKeyId);
           // ignore: unnecessary_null_comparison
           if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
             notification.haveResponded = true;
@@ -162,8 +150,7 @@ class EventKeyStreamService {
   }
 
   /// Adds new [EventKeyLocationModel] data for new received notification
-  Future<dynamic> addDataToList(EventNotificationModel eventNotificationModel,
-      {String? receivedkey}) async {
+  Future<dynamic> addDataToList(EventNotificationModel eventNotificationModel, {String? receivedkey}) async {
     /// so, that we don't add any expired event
     if (isPastNotification(eventNotificationModel)) {
       return;
@@ -172,24 +159,21 @@ class EventKeyStreamService {
     /// with rSDK we can get previous notification, this will restrict us to add one notification twice
     for (var _eventNotification in allEventNotifications) {
       if (_eventNotification.eventNotificationModel != null &&
-          _eventNotification.eventNotificationModel!.key ==
-              eventNotificationModel.key) {
+          _eventNotification.eventNotificationModel!.key == eventNotificationModel.key) {
         return;
       }
     }
 
     var tempEventKeyLocationModel = EventKeyLocationModel();
     tempEventKeyLocationModel.eventNotificationModel = eventNotificationModel;
-    allEventNotifications.insert(0,
-        tempEventKeyLocationModel); // last item to come in would be at the top of the list
+    allEventNotifications.insert(0, tempEventKeyLocationModel); // last item to come in would be at the top of the list
 
     notifyListeners();
 
     /// Add in SendLocation map only if I am creator,
     /// for members, will be added on first action on the event
     if (compareAtSign(eventNotificationModel.atsignCreator!, currentAtSign!)) {
-      await checkLocationSharingForEventData(
-          tempEventKeyLocationModel.eventNotificationModel!);
+      await checkLocationSharingForEventData(tempEventKeyLocationModel.eventNotificationModel!);
     }
 
     return tempEventKeyLocationModel;
@@ -202,23 +186,17 @@ class EventKeyStreamService {
       bool updateLatLng = false,
       bool updateOnlyCreator = false}) async {
     String neweventDataKeyId;
-    neweventDataKeyId = eventData.key!
-        .split('${MixedConstants.CREATE_EVENT}-')[1]
-        .split('@')[0];
+    neweventDataKeyId = eventData.key!.split('${MixedConstants.CREATE_EVENT}-')[1].split('@')[0];
 
     for (var i = 0; i < allEventNotifications.length; i++) {
-      if (allEventNotifications[i]
-          .eventNotificationModel!
-          .key!
-          .contains(neweventDataKeyId)) {
+      if (allEventNotifications[i].eventNotificationModel!.key!.contains(neweventDataKeyId)) {
         /// if we want to update everything
         // allEventNotifications[i].eventNotificationModel = eventData;
 
         /// For events send tags of group members if we have and update only them
         if (updateOnlyCreator) {
           /// So that creator doesnt update group details
-          eventData.group =
-              allEventNotifications[i].eventNotificationModel!.group;
+          eventData.group = allEventNotifications[i].eventNotificationModel!.group;
         }
 
         if ((tags != null) && (tagOfAtsign != null)) {
@@ -239,8 +217,7 @@ class EventKeyStreamService {
           allEventNotifications[i].eventNotificationModel = eventData;
         }
 
-        allEventNotifications[i].eventNotificationModel!.key =
-            allEventNotifications[i].eventNotificationModel!.key;
+        allEventNotifications[i].eventNotificationModel!.key = allEventNotifications[i].eventNotificationModel!.key;
 
         notifyListeners();
 
@@ -258,12 +235,10 @@ class EventKeyStreamService {
 
     for (var _atsign in _allAtsigns) {
       if (SendLocationNotification().allAtsignsLocationData[_atsign] != null) {
-        var _locationSharingForMap =
-            SendLocationNotification().allAtsignsLocationData[_atsign];
+        var _locationSharingForMap = SendLocationNotification().allAtsignsLocationData[_atsign];
         var _fromAndTo = getFromAndToForEvent(eventData);
 
-        var _locFor = _locationSharingForMap!
-            .locationSharingFor[trimAtsignsFromKey(eventData.key!)];
+        var _locFor = _locationSharingForMap!.locationSharingFor[trimAtsignsFromKey(eventData.key!)];
 
         if (_locFor != null) {
           if (_locFor.from != _fromAndTo['from']) {
@@ -292,14 +267,11 @@ class EventKeyStreamService {
       }
 
       /// add if doesn not exist
-      var _newLocationDataModel =
-          eventNotificationToLocationDataModel(eventData, [_atsign])[0];
+      var _newLocationDataModel = eventNotificationToLocationDataModel(eventData, [_atsign])[0];
 
       /// if exists, then get booleans from some already existing data
       for (var _existingAtsign in _allAtsigns) {
-        if ((SendLocationNotification()
-                    .allAtsignsLocationData[_existingAtsign] !=
-                null) &&
+        if ((SendLocationNotification().allAtsignsLocationData[_existingAtsign] != null) &&
             (SendLocationNotification()
                     .allAtsignsLocationData[_existingAtsign]!
                     .locationSharingFor[trimAtsignsFromKey(eventData.key!)] !=
@@ -308,15 +280,10 @@ class EventKeyStreamService {
               .allAtsignsLocationData[_existingAtsign]!
               .locationSharingFor[trimAtsignsFromKey(eventData.key!)];
 
-          _newLocationDataModel
-              .locationSharingFor[trimAtsignsFromKey(eventData.key!)]!
-              .isAccepted = _locFor!.isAccepted;
-          _newLocationDataModel
-              .locationSharingFor[trimAtsignsFromKey(eventData.key!)]!
-              .isExited = _locFor.isExited;
-          _newLocationDataModel
-              .locationSharingFor[trimAtsignsFromKey(eventData.key!)]!
-              .isSharing = _locFor.isSharing;
+          _newLocationDataModel.locationSharingFor[trimAtsignsFromKey(eventData.key!)]!.isAccepted =
+              _locFor!.isAccepted;
+          _newLocationDataModel.locationSharingFor[trimAtsignsFromKey(eventData.key!)]!.isExited = _locFor.isExited;
+          _newLocationDataModel.locationSharingFor[trimAtsignsFromKey(eventData.key!)]!.isSharing = _locFor.isSharing;
 
           break;
         }
@@ -325,34 +292,25 @@ class EventKeyStreamService {
       /// add/append accordingly
       if (SendLocationNotification().allAtsignsLocationData[_atsign] != null) {
         /// if atsigns exists append locationSharingFor
-        SendLocationNotification()
-            .allAtsignsLocationData[_atsign]!
-            .locationSharingFor = {
-          ...SendLocationNotification()
-              .allAtsignsLocationData[_atsign]!
-              .locationSharingFor,
+        SendLocationNotification().allAtsignsLocationData[_atsign]!.locationSharingFor = {
+          ...SendLocationNotification().allAtsignsLocationData[_atsign]!.locationSharingFor,
           ..._newLocationDataModel.locationSharingFor,
         };
       } else {
-        SendLocationNotification().allAtsignsLocationData[_atsign] =
-            _newLocationDataModel;
+        SendLocationNotification().allAtsignsLocationData[_atsign] = _newLocationDataModel;
       }
 
       if (!_atsignsToSend.contains(_atsign)) {
         _atsignsToSend.add(_atsign);
       }
     }
-    await SendLocationNotification()
-        .sendLocationAfterDataUpdate(_atsignsToSend);
+    await SendLocationNotification().sendLocationAfterDataUpdate(_atsignsToSend);
   }
 
   /// if [eventData] is already present in [allEventNotifications].
   bool isEventSharedWithMe(EventNotificationModel eventData) {
     for (var i = 0; i < allEventNotifications.length; i++) {
-      if (allEventNotifications[i]
-          .eventNotificationModel!
-          .key!
-          .contains(eventData.key!)) {
+      if (allEventNotifications[i].eventNotificationModel!.key!.contains(eventData.key!)) {
         return true;
       }
     }
@@ -360,8 +318,7 @@ class EventKeyStreamService {
   }
 
   /// Checks current status of [currentAtSign] in an event and updates [SendLocationNotification] location sending list.
-  Future<void> checkLocationSharingForEventData(
-      EventNotificationModel eventNotificationModel) async {
+  Future<void> checkLocationSharingForEventData(EventNotificationModel eventNotificationModel) async {
     if ((eventNotificationModel.atsignCreator == currentAtSign)) {
       if (eventNotificationModel.isSharing!) {
         // ignore: unawaited_futures
@@ -371,10 +328,8 @@ class EventKeyStreamService {
         for (var member in eventNotificationModel.group!.members!) {
           atsignsToremove.add(member.atSign!);
         }
-        SendLocationNotification().removeMember(
-            eventNotificationModel.key!, atsignsToremove,
-            isAccepted: !eventNotificationModel.isCancelled!,
-            isExited: eventNotificationModel.isCancelled!);
+        SendLocationNotification().removeMember(eventNotificationModel.key!, atsignsToremove,
+            isAccepted: !eventNotificationModel.isCancelled!, isExited: eventNotificationModel.isCancelled!);
       }
     } else {
       await calculateLocationSharingForSingleEvent(eventNotificationModel);
@@ -382,22 +337,16 @@ class EventKeyStreamService {
   }
 
   /// Processes any kind of update in an event and notifies creator/members
-  Future<bool> actionOnEvent(
-      EventNotificationModel event, ATKEY_TYPE_ENUM keyType,
-      {required bool isAccepted,
-      required bool isSharing,
-      required bool isExited,
-      bool? isCancelled}) async {
-    var eventData = EventNotificationModel.fromJson(jsonDecode(
-        EventNotificationModel.convertEventNotificationToJson(event)));
+  Future<bool> actionOnEvent(EventNotificationModel event, ATKEY_TYPE_ENUM keyType,
+      {required bool isAccepted, required bool isSharing, required bool isExited, bool? isCancelled}) async {
+    var eventData =
+        EventNotificationModel.fromJson(jsonDecode(EventNotificationModel.convertEventNotificationToJson(event)));
 
     try {
       if (isCancelled == true) {
-        await updateEventMemberInfo(eventData,
-            isAccepted: false, isExited: true, isSharing: false);
+        await updateEventMemberInfo(eventData, isAccepted: false, isExited: true, isSharing: false);
       } else {
-        await updateEventMemberInfo(eventData,
-            isAccepted: isAccepted, isExited: isExited, isSharing: isSharing);
+        await updateEventMemberInfo(eventData, isAccepted: isAccepted, isExited: isExited, isSharing: isSharing);
       }
 
       notifyListeners();
@@ -413,8 +362,7 @@ class EventKeyStreamService {
   List<String> getAtsignsFromEvent(EventNotificationModel _event) {
     List<String> _allAtsignsInEvent = [];
 
-    if (!compareAtSign(_event.atsignCreator!,
-        AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+    if (!compareAtSign(_event.atsignCreator!, AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
       _allAtsignsInEvent.add(_event.atsignCreator!);
     }
 
@@ -423,8 +371,7 @@ class EventKeyStreamService {
 
       // ignore: avoid_function_literals_in_foreach_calls
       groupMembers.forEach((member) {
-        if (!compareAtSign(member.atSign!,
-            AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+        if (!compareAtSign(member.atSign!, AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
           _allAtsignsInEvent.add(member.atSign!);
         }
       });
@@ -435,58 +382,34 @@ class EventKeyStreamService {
 
   /// updates [SendLocationNotification().allAtsignsLocationData] for the [_event].
   updateEventMemberInfo(EventNotificationModel _event,
-      {required bool isAccepted,
-      required bool isSharing,
-      required bool isExited}) async {
+      {required bool isAccepted, required bool isSharing, required bool isExited}) async {
     String _id = trimAtsignsFromKey(_event.key!);
 
     List<String> _allAtsignsInEvent = getAtsignsFromEvent(_event);
 
     for (var _atsign in _allAtsignsInEvent) {
       if (SendLocationNotification().allAtsignsLocationData[_atsign] != null) {
-        if (SendLocationNotification()
-                .allAtsignsLocationData[_atsign]!
-                .locationSharingFor[_id] !=
-            null) {
-          SendLocationNotification()
-              .allAtsignsLocationData[_atsign]!
-              .locationSharingFor[_id]!
-              .isAccepted = isAccepted;
+        if (SendLocationNotification().allAtsignsLocationData[_atsign]!.locationSharingFor[_id] != null) {
+          SendLocationNotification().allAtsignsLocationData[_atsign]!.locationSharingFor[_id]!.isAccepted = isAccepted;
 
-          SendLocationNotification()
-              .allAtsignsLocationData[_atsign]!
-              .locationSharingFor[_id]!
-              .isSharing = isSharing;
+          SendLocationNotification().allAtsignsLocationData[_atsign]!.locationSharingFor[_id]!.isSharing = isSharing;
 
-          SendLocationNotification()
-              .allAtsignsLocationData[_atsign]!
-              .locationSharingFor[_id]!
-              .isExited = isExited;
+          SendLocationNotification().allAtsignsLocationData[_atsign]!.locationSharingFor[_id]!.isExited = isExited;
         } else {
           var _fromAndTo = getFromAndToForEvent(_event);
-          SendLocationNotification()
-                  .allAtsignsLocationData[_atsign]!
-                  .locationSharingFor[_id] =
-              LocationSharingFor(_fromAndTo['from'], _fromAndTo['to'],
-                  LocationSharingType.Event, isAccepted, isExited, isSharing);
+          SendLocationNotification().allAtsignsLocationData[_atsign]!.locationSharingFor[_id] = LocationSharingFor(
+              _fromAndTo['from'], _fromAndTo['to'], LocationSharingType.Event, isAccepted, isExited, isSharing);
         }
       } else {
         var _fromAndTo = getFromAndToForEvent(_event);
-        SendLocationNotification().allAtsignsLocationData[_atsign] =
-            LocationDataModel({
+        SendLocationNotification().allAtsignsLocationData[_atsign] = LocationDataModel({
           trimAtsignsFromKey(_event.key!): LocationSharingFor(
-              _fromAndTo['from'],
-              _fromAndTo['to'],
-              LocationSharingType.Event,
-              isAccepted,
-              isExited,
-              isSharing),
+              _fromAndTo['from'], _fromAndTo['to'], LocationSharingType.Event, isAccepted, isExited, isSharing),
         }, null, null, DateTime.now(), currentAtSign!, _atsign);
       }
     }
 
-    await SendLocationNotification()
-        .sendLocationAfterDataUpdate(_allAtsignsInEvent);
+    await SendLocationNotification().sendLocationAfterDataUpdate(_allAtsignsInEvent);
   }
 
   /// return from and to for [eventData]
@@ -494,8 +417,7 @@ class EventKeyStreamService {
     DateTime? _from;
     DateTime? _to;
 
-    if (compareAtSign(eventData.atsignCreator!,
-        AtEventNotificationListener().currentAtSign!)) {
+    if (compareAtSign(eventData.atsignCreator!, AtEventNotificationListener().currentAtSign!)) {
       _from = eventData.event!.startTime;
       _to = eventData.event!.endTime;
     } else {
@@ -503,19 +425,14 @@ class EventKeyStreamService {
       // ignore: avoid_function_literals_in_foreach_calls
       eventData.group!.members!.forEach((groupMember) {
         // sending location to other group members
-        if (compareAtSign(groupMember.atSign!,
-            AtEventNotificationListener().currentAtSign!)) {
+        if (compareAtSign(groupMember.atSign!, AtEventNotificationListener().currentAtSign!)) {
           currentGroupMember = groupMember;
         }
       });
 
-      _from = startTimeEnumToTimeOfDay(
-              currentGroupMember.tags!['shareFrom'].toString(),
-              eventData.event!.startTime) ??
+      _from = startTimeEnumToTimeOfDay(currentGroupMember.tags!['shareFrom'].toString(), eventData.event!.startTime) ??
           eventData.event!.startTime;
-      _to = endTimeEnumToTimeOfDay(
-              currentGroupMember.tags!['shareTo'].toString(),
-              eventData.event!.endTime) ??
+      _to = endTimeEnumToTimeOfDay(currentGroupMember.tags!['shareTo'].toString(), eventData.event!.endTime) ??
           eventData.event!.endTime;
     }
 
@@ -528,18 +445,15 @@ class EventKeyStreamService {
   /// updates [haveResponded] property for [notificationModel].
   void updatePendingStatus(EventNotificationModel notificationModel) async {
     for (var i = 0; i < allEventNotifications.length; i++) {
-      if (allEventNotifications[i]
-          .eventNotificationModel!
-          .key!
-          .contains(notificationModel.key!)) {
+      if (allEventNotifications[i].eventNotificationModel!.key!.contains(notificationModel.key!)) {
         allEventNotifications[i].haveResponded = true;
       }
     }
   }
 
   // ignore: missing_return
-  AtKey? formAtKey(ATKEY_TYPE_ENUM keyType, String atkeyMicrosecondId,
-      String? sharedWith, String sharedBy, EventNotificationModel eventData) {
+  AtKey? formAtKey(ATKEY_TYPE_ENUM keyType, String atkeyMicrosecondId, String? sharedWith, String sharedBy,
+      EventNotificationModel eventData) {
     switch (keyType) {
       case ATKEY_TYPE_ENUM.CREATEEVENT:
         AtKey? atKey;
@@ -566,8 +480,7 @@ class EventKeyStreamService {
   }
 
   /// checks if [eventOne] & [eventTwo] have same tags for group members.
-  bool compareEvents(
-      EventNotificationModel eventOne, EventNotificationModel eventTwo) {
+  bool compareEvents(EventNotificationModel eventOne, EventNotificationModel eventTwo) {
     var isDataSame = true;
 
     // ignore: avoid_function_literals_in_foreach_calls
@@ -575,12 +488,9 @@ class EventKeyStreamService {
       // ignore: avoid_function_literals_in_foreach_calls
       eventTwo.group!.members!.forEach((groupTwoMember) {
         if (groupOneMember.atSign == groupTwoMember.atSign) {
-          if (groupOneMember.tags!['isAccepted'] !=
-                  groupTwoMember.tags!['isAccepted'] ||
-              groupOneMember.tags!['isSharing'] !=
-                  groupTwoMember.tags!['isSharing'] ||
-              groupOneMember.tags!['isExited'] !=
-                  groupTwoMember.tags!['isExited'] ||
+          if (groupOneMember.tags!['isAccepted'] != groupTwoMember.tags!['isAccepted'] ||
+              groupOneMember.tags!['isSharing'] != groupTwoMember.tags!['isSharing'] ||
+              groupOneMember.tags!['isExited'] != groupTwoMember.tags!['isExited'] ||
               groupOneMember.tags!['lat'] != groupTwoMember.tags!['lat'] ||
               groupOneMember.tags!['long'] != groupTwoMember.tags!['long']) {
             isDataSame = false;
@@ -623,8 +533,7 @@ class EventKeyStreamService {
 
   /// will calculate [LocationDataModel] for [allEventNotifications] if [listOfEvents] is not provided
   calculateLocationSharingAllEvents(
-      {List<EventKeyLocationModel>? listOfEvents,
-      bool initLocationSharing = false}) async {
+      {List<EventKeyLocationModel>? listOfEvents, bool initLocationSharing = false}) async {
     List<String> atsignToShareLocWith = [];
     List<LocationDataModel> locationToShareWith = [];
 
@@ -634,28 +543,22 @@ class EventKeyStreamService {
         continue;
       }
 
-      var eventNotificationModel =
-          eventKeyLocationModel.eventNotificationModel!;
+      var eventNotificationModel = eventKeyLocationModel.eventNotificationModel!;
 
       /// calculate atsigns to share loc with
       atsignToShareLocWith = [];
 
-      if (!compareAtSign(
-          eventKeyLocationModel.eventNotificationModel!.atsignCreator!,
+      if (!compareAtSign(eventKeyLocationModel.eventNotificationModel!.atsignCreator!,
           AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
-        atsignToShareLocWith
-            .add(eventKeyLocationModel.eventNotificationModel!.atsignCreator!);
+        atsignToShareLocWith.add(eventKeyLocationModel.eventNotificationModel!.atsignCreator!);
       }
 
-      if (eventKeyLocationModel
-          .eventNotificationModel!.group!.members!.isNotEmpty) {
-        Set<AtContact>? groupMembers =
-            eventKeyLocationModel.eventNotificationModel!.group!.members!;
+      if (eventKeyLocationModel.eventNotificationModel!.group!.members!.isNotEmpty) {
+        Set<AtContact>? groupMembers = eventKeyLocationModel.eventNotificationModel!.group!.members!;
 
         // ignore: avoid_function_literals_in_foreach_calls
         groupMembers.forEach((member) {
-          if (!compareAtSign(member.atSign!,
-              AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+          if (!compareAtSign(member.atSign!, AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
             atsignToShareLocWith.add(member.atSign!);
           }
         });
@@ -664,27 +567,22 @@ class EventKeyStreamService {
       // converting event data to locationDataModel
       locationToShareWith = [
         ...locationToShareWith,
-        ...eventNotificationToLocationDataModel(
-            eventKeyLocationModel.eventNotificationModel!, atsignToShareLocWith)
+        ...eventNotificationToLocationDataModel(eventKeyLocationModel.eventNotificationModel!, atsignToShareLocWith)
       ];
     }
 
     if (initLocationSharing) {
       SendLocationNotification().initEventData(locationToShareWith);
     } else {
-      await Future.forEach(locationToShareWith,
-          (LocationDataModel _locationDataModel) async {
+      await Future.forEach(locationToShareWith, (LocationDataModel _locationDataModel) async {
         await SendLocationNotification().addMember(_locationDataModel);
       });
     }
   }
 
   /// will calculate [LocationDataModel] for [eventData]
-  calculateLocationSharingForSingleEvent(
-      EventNotificationModel eventData) async {
-    await calculateLocationSharingAllEvents(listOfEvents: [
-      EventKeyLocationModel(eventNotificationModel: eventData)
-    ]);
+  calculateLocationSharingForSingleEvent(EventNotificationModel eventData) async {
+    await calculateLocationSharingAllEvents(listOfEvents: [EventKeyLocationModel(eventNotificationModel: eventData)]);
   }
 
   /// converts [eventData] to [LocationDataModel] for all [atsignList]
@@ -695,35 +593,24 @@ class EventKeyStreamService {
     late LocationSharingFor locationSharingFor;
 
     /// calculate DateTime from and to
-    if (compareAtSign(eventData.atsignCreator!,
-        AtEventNotificationListener().currentAtSign!)) {
+    if (compareAtSign(eventData.atsignCreator!, AtEventNotificationListener().currentAtSign!)) {
       _from = eventData.event!.startTime;
       _to = eventData.event!.endTime;
-      locationSharingFor = LocationSharingFor(
-          _from,
-          _to,
-          LocationSharingType.Event,
-          !(eventData.isCancelled ?? false),
-          eventData.isCancelled ?? false,
-          eventData.isSharing ?? false);
+      locationSharingFor = LocationSharingFor(_from, _to, LocationSharingType.Event, !(eventData.isCancelled ?? false),
+          eventData.isCancelled ?? false, eventData.isSharing ?? false);
     } else {
       late AtContact currentGroupMember;
       // ignore: avoid_function_literals_in_foreach_calls
       eventData.group!.members!.forEach((groupMember) {
         // sending location to other group members
-        if (compareAtSign(groupMember.atSign!,
-            AtEventNotificationListener().currentAtSign!)) {
+        if (compareAtSign(groupMember.atSign!, AtEventNotificationListener().currentAtSign!)) {
           currentGroupMember = groupMember;
         }
       });
 
-      _from = startTimeEnumToTimeOfDay(
-              currentGroupMember.tags!['shareFrom'].toString(),
-              eventData.event!.startTime) ??
+      _from = startTimeEnumToTimeOfDay(currentGroupMember.tags!['shareFrom'].toString(), eventData.event!.startTime) ??
           eventData.event!.startTime;
-      _to = endTimeEnumToTimeOfDay(
-              currentGroupMember.tags!['shareTo'].toString(),
-              eventData.event!.endTime) ??
+      _to = endTimeEnumToTimeOfDay(currentGroupMember.tags!['shareTo'].toString(), eventData.event!.endTime) ??
           eventData.event!.endTime;
 
       locationSharingFor = LocationSharingFor(
@@ -759,8 +646,7 @@ class EventKeyStreamService {
     return locationToShareWith;
   }
 
-  EventNotificationModel getUpdatedEventData(
-      EventNotificationModel originalEvent, EventNotificationModel ackEvent) {
+  EventNotificationModel getUpdatedEventData(EventNotificationModel originalEvent, EventNotificationModel ackEvent) {
     return originalEvent;
   }
 
@@ -777,20 +663,16 @@ class EventKeyStreamService {
 
     List<String> atsignsToRemove = [];
     allEventNotifications.removeWhere((notification) {
-      if (key.contains(
-          trimAtsignsFromKey(notification.eventNotificationModel!.key!))) {
-        atsignsToRemove =
-            getAtsignsFromEvent(notification.eventNotificationModel!);
+      if (key.contains(trimAtsignsFromKey(notification.eventNotificationModel!.key!))) {
+        atsignsToRemove = getAtsignsFromEvent(notification.eventNotificationModel!);
         _eventNotificationModel = notification.eventNotificationModel;
       }
-      return key.contains(
-          trimAtsignsFromKey(notification.eventNotificationModel!.key!));
+      return key.contains(trimAtsignsFromKey(notification.eventNotificationModel!.key!));
     });
 
     /// remove from past notifications
     allPastEventNotifications.removeWhere((notification) {
-      return key.contains(
-          trimAtsignsFromKey(notification.eventNotificationModel!.key!));
+      return key.contains(trimAtsignsFromKey(notification.eventNotificationModel!.key!));
     });
 
     notifyListeners();
@@ -798,8 +680,8 @@ class EventKeyStreamService {
     if (_eventNotificationModel != null)
     // && (compareAtSign(locationNotificationModel.atsignCreator!, currentAtSign!))
     {
-      SendLocationNotification().removeMember(key, atsignsToRemove,
-          isExited: true, isAccepted: false, isSharing: false);
+      SendLocationNotification()
+          .removeMember(key, atsignsToRemove, isExited: true, isAccepted: false, isSharing: false);
     }
   }
 

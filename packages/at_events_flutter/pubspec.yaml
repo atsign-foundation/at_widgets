@@ -34,27 +34,27 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_tools.git
       path: packages/at_commons
-      ref: dart-3
+      ref: trunk
   at_utils:
     git:
       url: https://github.com/atsign-foundation/at_tools.git
       path: packages/at_utils
-      ref: dart-3
+      ref: trunk
   at_lookup:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: packages/at_lookup
-      ref: dart-3
+      ref: trunk
   at_client:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client
-      ref: dart-3
+      ref: trunk
   at_client_mobile:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client_mobile
-      ref: dart-3
+      ref: trunk
   at_common_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git
@@ -64,7 +64,7 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: packages/at_contact
-      ref: dart-3
+      ref: trunk
   at_contacts_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git
