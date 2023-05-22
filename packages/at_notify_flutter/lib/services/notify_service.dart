@@ -34,8 +34,7 @@ class NotifyService {
   List<Notify> notifies = [];
 
   /// Stream to put the notification object list
-  StreamController<List<Notify>> notifyStreamController =
-      StreamController<List<Notify>>.broadcast();
+  StreamController<List<Notify>> notifyStreamController = StreamController<List<Notify>>.broadcast();
 
   Sink get notifySink => notifyStreamController.sink;
 
@@ -46,21 +45,18 @@ class NotifyService {
   }
 
   /// Initialise function to set the client preference, atsign and root domain
-  void initNotifyService(
-      AtClientPreference atClientPreference,
-      String currentAtSignFromApp,
-      String rootDomainFromApp,
+  void initNotifyService(AtClientPreference atClientPreference, String currentAtSignFromApp, String rootDomainFromApp,
       int rootPortFromApp) async {
     currentAtSign = currentAtSignFromApp;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
     atClientManager = AtClientManager.getInstance();
-    AtClientManager.getInstance().setCurrentAtSign(
-        currentAtSignFromApp, atClientPreference.namespace, atClientPreference);
+    AtClientManager.getInstance()
+        .setCurrentAtSign(currentAtSignFromApp, atClientPreference.namespace, atClientPreference);
     atClient = AtClientManager.getInstance().atClient;
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    atClientManager.notificationService
+    atClientManager.atClient.notificationService
         .subscribe(regex: '.${atClientPreference.namespace}')
         .listen((notification) {
       _notificationCallback(notification);
@@ -74,8 +70,7 @@ class NotifyService {
 
   /// Initialized Notification Settings
   initializePlatformSpecifics() async {
-    var initializationSettingsAndroid =
-        const AndroidInitializationSettings('ic_launcher');
+    var initializationSettingsAndroid = const AndroidInitializationSettings('ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -91,8 +86,8 @@ class NotifyService {
         //     didReceivedLocalNotificationSubject.add(receivedNotification);
       },
     );
-    initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
     await _notificationsPlugin.initialize(
       initializationSettings,
@@ -103,8 +98,7 @@ class NotifyService {
   /// Request Alert, Badge, Sound Permission for IOS
   _requestIOSPermission() {
     _notificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()!
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()!
         .requestPermissions(
           alert: false,
           badge: true,
@@ -135,9 +129,7 @@ class NotifyService {
       var message = atNotification.value ?? '';
       print('notify message => $message $fromAtsign');
       if (message.isNotEmpty && message != 'null') {
-        var decryptedMessage = await atClient.encryptionService!
-            .decrypt(message, fromAtsign)
-            .catchError((e) {
+        var decryptedMessage = await atClient.encryptionService!.decrypt(message, fromAtsign).catchError((e) {
           print('error in decrypting notify $e');
         });
         print('notify decryptedMessage => $decryptedMessage $fromAtsign');
@@ -167,8 +159,7 @@ class NotifyService {
       notifies = [];
       notifySink.add(notifies);
 
-      var notifications =
-          await atClient.notifyList(regex: storageKey, fromDate: _fromDate);
+      var notifications = await atClient.notifyList(regex: storageKey, fromDate: _fromDate);
 
       var _jsonData = (json.decode(notifications.replaceFirst('data:', '')));
 
@@ -178,8 +169,7 @@ class NotifyService {
 
       await Future.forEach(_jsonData, (_data) async {
         var decryptedMessage = await atClient.encryptionService!
-            .decrypt((_data! as Map<String, dynamic>)["value"],
-                (_data as Map<String, dynamic>)['from'])
+            .decrypt((_data! as Map<String, dynamic>)["value"], (_data as Map<String, dynamic>)['from'])
             .catchError((e) {
           print('error in decrypting notify $e');
         });
@@ -195,9 +185,7 @@ class NotifyService {
   }
 
   /// Call Notify in NotificationService, send notify to others
-  Future<bool> sendNotify(
-      String sendToAtSign, Notify notify, NotifyEnum notifyType,
-      {int noOfDays = 30}) async {
+  Future<bool> sendNotify(String sendToAtSign, Notify notify, NotifyEnum notifyType, {int noOfDays = 30}) async {
     if (!sendToAtSign.contains('@')) {
       sendToAtSign = '@$sendToAtSign';
     }
@@ -209,12 +197,11 @@ class NotifyService {
       ..sharedBy = currentAtSign
       ..sharedWith = sendToAtSign
       ..metadata = metadata;
-    var notificationResponse = await atClientManager.notificationService.notify(
+    var notificationResponse = await atClientManager.atClient.notificationService.notify(
       NotificationParams.forUpdate(key, value: notify.toJson()),
     );
 
-    if (notificationResponse.notificationStatusEnum ==
-        NotificationStatusEnum.delivered) {
+    if (notificationResponse.notificationStatusEnum == NotificationStatusEnum.delivered) {
       print(notificationResponse.toString());
     } else {
       print(notificationResponse.atClientException.toString());
@@ -240,8 +227,7 @@ class NotifyService {
     );
     var iosChannelSpecifics = const IOSNotificationDetails();
 
-    var platformChannelSpecifics = NotificationDetails(
-        android: androidChannelSpecifics, iOS: iosChannelSpecifics);
+    var platformChannelSpecifics = NotificationDetails(android: androidChannelSpecifics, iOS: iosChannelSpecifics);
     await _notificationsPlugin.show(
       0,
       atSign,
