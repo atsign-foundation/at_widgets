@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:at_onboarding_flutter/at_onboarding_result.dart';
+import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reset_screen.dart';
@@ -10,6 +11,7 @@ import 'package:at_onboarding_flutter/services/at_onboarding_theme.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
+
 
 class AtOnboarding {
   /// Using this function to get onboard atsing.
@@ -30,6 +32,9 @@ class AtOnboarding {
         (AtOnboardingConstants.rootEnvironment.apikey ?? ''));
     AtOnboardingConstants.rootDomain =
         config.domain ?? AtOnboardingConstants.rootEnvironment.domain;
+
+    /// Initial Setup
+    await _initialSetup(context);
 
     /// user sharing is not supported on Android, iOS and Linux.
     if (Platform.isAndroid || Platform.isIOS || Platform.isLinux) {
@@ -91,6 +96,8 @@ class AtOnboarding {
     required BuildContext context,
     required AtOnboardingConfig config,
   }) async {
+    /// Initial Setup
+    await _initialSetup(context);
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -118,6 +125,9 @@ class AtOnboarding {
     required BuildContext context,
     required AtOnboardingConfig config,
   }) async {
+    /// Initial Setup
+    await _initialSetup(context);
+
     final result = await Navigator.push(context,
         MaterialPageRoute(builder: (BuildContext context) {
       return AtOnboardingResetScreen(config: config);
@@ -147,5 +157,16 @@ class AtOnboarding {
     final result =
         await OnboardingService.getInstance().disableUsingSharedStorage();
     return result;
+  }
+
+  static Future<void> _initialSetup(BuildContext context) async {
+    /// Configure Localization
+    const AppLocalizationDelegate _delegate = AppLocalizationDelegate();
+    final currentLocal = Localizations.localeOf(context);
+    if (_delegate.isSupported(currentLocal)) {
+      _delegate.load(currentLocal);
+    } else {
+      _delegate.load(const Locale.fromSubtags(languageCode: 'en'));
+    }
   }
 }
