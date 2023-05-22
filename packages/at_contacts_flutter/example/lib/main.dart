@@ -41,7 +41,6 @@ class _MyAppState extends State<MyApp> {
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
 
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ThemeMode>(
@@ -56,8 +55,8 @@ class _MyAppState extends State<MyApp> {
             primaryColor: const Color(0xFFf4533d),
             colorScheme: ThemeData.light().colorScheme.copyWith(
                   primary: const Color(0xFFf4533d),
+                  background: Colors.white,
                 ),
-            backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
           ),
           darkTheme: ThemeData().copyWith(
@@ -65,8 +64,8 @@ class _MyAppState extends State<MyApp> {
             primaryColor: Colors.blue,
             colorScheme: ThemeData.dark().colorScheme.copyWith(
                   primary: Colors.blue,
+                  background: Colors.grey[850],
                 ),
-            backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
           ),
           themeMode: themeMode,
