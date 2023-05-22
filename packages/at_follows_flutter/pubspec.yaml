@@ -30,37 +30,37 @@ dependency_overrides:
   at_file_saver:
     git:
       url: https://github.com/atsign-foundation/at_file_saver.git
-      ref: dart-3
+      ref: trunk
   at_commons:
     git:
       url: https://github.com/atsign-foundation/at_tools.git
       path: packages/at_commons
-      ref: dart-3
+      ref: trunk
   at_utils:
     git:
       url: https://github.com/atsign-foundation/at_tools.git
       path: packages/at_utils
-      ref: dart-3
+      ref: trunk
   at_lookup:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: packages/at_lookup
-      ref: dart-3
+      ref: trunk
   at_client:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client
-      ref: dart-3
+      ref: trunk
   at_client_mobile:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client_mobile
-      ref: dart-3
+      ref: trunk
   at_server_status:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: packages/at_server_status
-      ref: dart-3
+      ref: trunk
 
 dev_dependencies:
   flutter_test:

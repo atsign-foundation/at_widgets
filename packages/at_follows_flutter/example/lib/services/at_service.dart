@@ -17,8 +17,7 @@ class AtService {
   }
 
   String? _atsign;
-  Map<String?, AtClientService> atClientServiceMap =
-      <String?, AtClientService>{};
+  Map<String?, AtClientService> atClientServiceMap = <String?, AtClientService>{};
   AtClientService? atClientServiceInstance;
   AtClientImpl? atClientInstance;
   Function? monitorCallBack;
@@ -26,8 +25,7 @@ class AtService {
   set atsign(String atsign) {}
 
   Future<AtClientPreference> getAtClientPreference({String? cramSecret}) async {
-    final appDocumentDirectory =
-        await path_provider.getApplicationSupportDirectory();
+    final appDocumentDirectory = await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
     var _atClientPreference = AtClientPreference()
       ..isLocalStoreRequired = true
@@ -106,14 +104,7 @@ class AtNotification {
   String? operation;
   int? dateTime;
 
-  AtNotification(
-      {this.id,
-      this.from,
-      this.to,
-      this.key,
-      this.value,
-      this.dateTime,
-      this.operation});
+  AtNotification({this.id, this.from, this.to, this.key, this.value, this.dateTime, this.operation});
 
   // AtNotification();
 

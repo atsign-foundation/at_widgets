@@ -1,8 +1,5 @@
 import 'dart:convert';
-
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
@@ -25,24 +22,23 @@ class SDKService {
 
   set setClientService(AtClientService service) {
     this._atsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
-    Strings.rootdomain =
-        AtClientManager.getInstance().atClient.getPreferences()!.rootDomain;
+    Strings.rootdomain = AtClientManager.getInstance().atClient.getPreferences()!.rootDomain;
   }
 
   get atsign => this._atsign;
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await KeychainUtil.getPkamPrivateKey(atsign).timeout(
-        Duration(seconds: AppConstants.responseTimeLimit),
-        onTimeout: () => _onTimeOut());
+    return await KeychainUtil.getPkamPrivateKey(atsign)
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit), onTimeout: () => _onTimeOut());
   }
 
   ///Returns `true` on deleting [atKey].
   Future<bool> delete(AtKey atKey) async {
-    return await AtClientManager.getInstance().atClient.delete(atKey).timeout(
-        Duration(seconds: AppConstants.responseTimeLimit),
-        onTimeout: () => _onTimeOut());
+    return await AtClientManager.getInstance()
+        .atClient
+        .delete(atKey)
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit), onTimeout: () => _onTimeOut());
   }
 
   ///Returns `true` on storing/updating [atKey].
@@ -50,8 +46,7 @@ class SDKService {
     return await AtClientManager.getInstance()
         .atClient
         .put(atKey, value)
-        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
-            onTimeout: () => _onTimeOut());
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit), onTimeout: () => _onTimeOut());
   }
 
   ///Returns list of latest notifications of followers with `update` operation.
@@ -63,21 +58,19 @@ class SDKService {
       fromDateTime = DateTime.parse(fromDate).millisecondsSinceEpoch;
       fromDate = fromDate.split(' ')[0];
     }
-    var response = await AtClientManager.getInstance().atClient.notifyList(
-        regex:
-            ('${AppConstants.containsFollowing}|${AppConstants.containsFollowers}'),
-        fromDate: fromDate);
+    var response = await AtClientManager.getInstance()
+        .atClient
+        .notifyList(regex: ('${AppConstants.containsFollowing}|${AppConstants.containsFollowers}'), fromDate: fromDate);
     response = response.toString().replaceAll('data:', '');
     if (response == 'null') {
       return [];
     }
-    List<AtNotification> notificationList = AtNotification.fromJsonList(
-        List<Map<String, dynamic>>.from(jsonDecode(response)));
+    List<AtNotification> notificationList =
+        AtNotification.fromJsonList(List<Map<String, dynamic>>.from(jsonDecode(response)));
 
+    notificationList.retainWhere((notification) => notification.epochMillis > fromDateTime);
     notificationList
-        .retainWhere((notification) => notification.epochMillis > fromDateTime);
-    notificationList.sort((notification1, notification2) =>
-        notification2.epochMillis.compareTo(notification1.epochMillis));
+        .sort((notification1, notification2) => notification2.epochMillis.compareTo(notification1.epochMillis));
     Set<AtNotification> uniqueNotifications = {};
     Set<String> uniqueKeys = {};
     for (var notification in notificationList) {
@@ -94,8 +87,7 @@ class SDKService {
     var response = await AtClientManager.getInstance()
         .atClient
         .get(atkey)
-        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
-            onTimeout: () => _onTimeOut());
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit), onTimeout: () => _onTimeOut());
     AtFollowsValue val = AtFollowsValue();
     val
       ..metadata = response.metadata
@@ -105,21 +97,18 @@ class SDKService {
   }
 
   ///Returns `true` on notifying [key] with [value], [operation].
-  Future<bool> notify(AtKey key, String value, OperationEnum operation,
-      Function onDone, Function onError) async {
+  Future<bool> notify(AtKey key, String value, OperationEnum operation, Function onDone, Function onError) async {
     var notificationResponse = await AtClientManager.getInstance()
+        .atClient
         .notificationService
         .notify(_getNotificationParams(key, value, operation))
-        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
-            onTimeout: () => _onTimeOut());
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit), onTimeout: () => _onTimeOut());
 
-    return notificationResponse.notificationStatusEnum ==
-        NotificationStatusEnum.delivered;
+    return notificationResponse.notificationStatusEnum == NotificationStatusEnum.delivered;
   }
 
   /// Returns the [NotificationParams] basing on the operation
-  NotificationParams _getNotificationParams(
-      AtKey key, String value, OperationEnum operation) {
+  NotificationParams _getNotificationParams(AtKey key, String value, OperationEnum operation) {
     if (operation == OperationEnum.delete) {
       return NotificationParams.forDelete(key);
     }
@@ -131,8 +120,7 @@ class SDKService {
     var scanKey = await AtClientManager.getInstance()
         .atClient
         .getAtKeys(regex: regex)
-        .timeout(Duration(seconds: AppConstants.responseTimeLimit),
-            onTimeout: () => _onTimeOut());
+        .timeout(Duration(seconds: AppConstants.responseTimeLimit), onTimeout: () => _onTimeOut());
     int index = scanKey.length - 1;
     for (int i = 0; i < scanKey.length; i++) {
       if (scanKey[i].key!.endsWith("self.at_follows") &&
@@ -141,20 +129,15 @@ class SDKService {
         index = i;
       }
     }
-    AtFollowsValue value =
-        scanKey.isNotEmpty ? await this.get(scanKey[index]) : AtFollowsValue();
+    AtFollowsValue value = scanKey.isNotEmpty ? await this.get(scanKey[index]) : AtFollowsValue();
     //scanKey.isNotEmpty ? await this.get(scanKey[0]) : AtFollowsValue();
     //migrates to newnamespace
-    if (scanKey.isNotEmpty &&
-        _isOldKey(scanKey[0].key) &&
-        value.value != null) {
+    if (scanKey.isNotEmpty && _isOldKey(scanKey[0].key) && value.value != null) {
       var newKey = AtKey()..metadata = scanKey[0].metadata;
-      newKey.key = scanKey[0].key!.contains('following')
-          ? AppConstants.followingKey
-          : AppConstants.followersKey;
+      newKey.key = scanKey[0].key!.contains('following') ? AppConstants.followingKey : AppConstants.followersKey;
       await this.put(newKey, value.value);
       value = await this.get(newKey);
-      if (value != null && value.value != null) {
+      if (value.value != null) {
         await this.delete(scanKey[0]);
       }
     }
@@ -170,7 +153,7 @@ class SDKService {
 
   ///Performs sync for current @sign
   sync() async {
-    AtClientManager.getInstance().syncService.sync();
+    AtClientManager.getInstance().atClient.syncService.sync();
   }
 
   ///Throws [ResponseTimeOutException].

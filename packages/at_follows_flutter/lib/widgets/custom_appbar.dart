@@ -5,9 +5,10 @@ import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
+import 'package:flutter/services.dart';
 
 // a class to create custom app bar
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showTitle;
   final bool showQr;
   final bool showNotifications;
@@ -24,7 +25,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      brightness: ColorConstants.brightness,
+      systemOverlayStyle: SystemUiOverlayStyle(statusBarBrightness: ColorConstants.brightness),
       elevation: 0,
       backgroundColor: ColorConstants.backgroundColor,
       leading: null,
@@ -41,19 +42,15 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               child: Stack(
                 children: [
                   Padding(
-                    padding:
-                        EdgeInsets.only(top: 10.0.toFont, right: 10.0.toFont),
-                    child: Icon(Icons.notifications,
-                        color: ColorConstants.primary, size: 28.toFont),
+                    padding: EdgeInsets.only(top: 10.0.toFont, right: 10.0.toFont),
+                    child: Icon(Icons.notifications, color: ColorConstants.primary, size: 28.toFont),
                   ),
                   Positioned(
                     right: 10,
                     top: 10,
                     child: Container(
                         padding: EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(6)),
+                        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(6)),
                         constraints: BoxConstraints(
                           minHeight: 14,
                           minWidth: 14,
@@ -66,19 +63,14 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         if (this.showQr)
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => QrScan()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => QrScan()));
             },
             child: Padding(
               padding: EdgeInsets.only(right: 12.0.toFont),
-              child: Icon(Icons.person_add,
-                  color: ColorConstants.dark, size: 25.toFont),
+              child: Icon(Icons.person_add, color: ColorConstants.dark, size: 25.toFont),
             ),
           ),
-        if (!showQr)
-          Padding(
-              padding: EdgeInsets.only(right: 12.0.toFont),
-              child: SizedBox(width: 25.toFont))
+        if (!showQr) Padding(padding: EdgeInsets.only(right: 12.0.toFont), child: SizedBox(width: 25.toFont))
       ],
       title: Row(
         children: [
@@ -86,8 +78,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             fit: FlexFit.loose,
             flex: 2,
             child: GestureDetector(
-                child: Text(Strings.BackButton,
-                    style: CustomTextStyles.fontR14dark),
+                child: Text(Strings.BackButton, style: CustomTextStyles.fontR14dark),
                 onTap: () {
                   Navigator.pop(context);
                 }),

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/color_constants.dart';
 import 'package:at_follows_flutter/widgets/custom_appbar.dart';
@@ -84,10 +82,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   _launchURL(String url) async {
     // url = Uri.encodeFull(url);
-    if (await canLaunch(url)) {
+    if (await canLaunchUrl(Uri.parse(url))) {
       Navigator.pop(context);
       Navigator.pop(context);
-      await launch(url);
+      await launchUrl(Uri.parse(url));
     } else {
       _logger.severe('unable to launch $url');
     }
