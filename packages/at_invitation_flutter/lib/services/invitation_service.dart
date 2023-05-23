@@ -44,7 +44,7 @@ class InvitationService {
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     if (!hasMonitorStarted) {
-      AtClientManager.getInstance().atClient.notificationService.subscribe().listen((notification) {
+      AtClientManager.getInstance().atClient.notificationService.subscribe(shouldDecrypt: true).listen((notification) {
         _notificationCallback(notification);
       });
       hasMonitorStarted = true;
@@ -58,9 +58,9 @@ class InvitationService {
     return await KeychainUtil.getPrivateKey(atsign) ?? '';
   }
 
-  void _notificationCallback(dynamic notification) async {
-    var notificationKey = notification.key;
-    var fromAtsign = notification.from;
+  void _notificationCallback(AtNotification response) async {
+    var notificationKey = response.key;
+    var fromAtsign = response.from;
 
     // remove from and to atsigns from the notification key
     if (notificationKey.contains(':')) {
@@ -70,15 +70,13 @@ class InvitationService {
     notificationKey.trim();
 
     if (notificationKey.startsWith(invitationKey)) {
-      var message = notification.value;
-      var decryptedMessage =
-          await AtClientManager.getInstance().atClient.encryptionService?.decrypt(message, fromAtsign).catchError((e) {
-        _logger.severe('error in decrypting message ${e.toString()}');
-      });
-      if (notificationKey.startsWith(invitationAckKey)) {
-        _processInviteAcknowledgement(decryptedMessage, fromAtsign);
-      } else {
-        _logger.info('received invited data => $decryptedMessage');
+      var decryptedMessage = response.value;
+      if (decryptedMessage != null) {
+        if (notificationKey.startsWith(invitationAckKey)) {
+          _processInviteAcknowledgement(decryptedMessage, fromAtsign);
+        } else {
+          _logger.info('received invited data => $decryptedMessage');
+        }
       }
     }
   }
