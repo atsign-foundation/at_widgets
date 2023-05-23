@@ -12,7 +12,6 @@ import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
 
-
 class AtOnboarding {
   /// Using this function to get onboard atsing.
   ///
@@ -54,6 +53,7 @@ class AtOnboarding {
       }
 
       //Check if existing an atsign => return onboard success
+      // ignore: use_build_context_synchronously
       final result = await showDialog(
         context: context,
         barrierDismissible: false,

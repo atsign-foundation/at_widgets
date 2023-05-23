@@ -1,3 +1,7 @@
+## 6.1.0
+- **FEAT**: Internationalization support added for French
+- **FIX**: Issue fixed in UI theme
+
 ## 6.0.3
 - **CHORE**: Upgrade dependencies for at_chops uptake
 
