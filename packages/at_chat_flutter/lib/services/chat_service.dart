@@ -80,8 +80,9 @@ class ChatService {
       AtClientManager.getInstance()
           .notificationService
           .subscribe(
-              regex: atClientManager.atClient.getPreferences()!.namespace ?? '')
-          .listen((notification) {
+              regex: atClientManager.atClient.getPreferences()!.namespace ?? '',
+              shouldDecrypt: true)
+          .listen((AtNotification notification) {
         _notificationCallback(notification);
       });
       monitorStarted = true;
@@ -96,12 +97,12 @@ class ChatService {
   }
 
   /// Captures and processes notifications
-  void _notificationCallback(dynamic notification) async {
-    var notificationKey = notification.key;
-    var fromAtsign = notification.from;
+  void _notificationCallback(AtNotification response) async {
+    var notificationKey = response.key;
+    var fromAtsign = response.from;
 
     // ignore notification for image key delete
-    if (notification.operation == 'delete') {
+    if (response.operation == 'delete') {
       return;
     }
     // remove from and to atsigns from the notification key
@@ -118,14 +119,13 @@ class ChatService {
             (notificationKey.startsWith(chatKey + groupChatId!) ||
                 notificationKey.startsWith(chatImageKey + groupChatId!)) &&
             groupChatMembers!.contains(fromAtsign))) {
-      var message = notification.value;
-      var decryptedMessage = await atClientManager.atClient.encryptionService!
-          .decrypt(message, fromAtsign)
-          .catchError((e) {});
-      chatHistoryMessagesOther = json.decode(decryptedMessage) as List;
-      chatHistory =
-          await interleave(chatHistoryMessages, chatHistoryMessagesOther);
-      chatSink.add(chatHistory);
+      var decryptedMessage = response.value;
+      if (decryptedMessage != null) {
+        chatHistoryMessagesOther = json.decode(decryptedMessage) as List;
+        chatHistory =
+            await interleave(chatHistoryMessages, chatHistoryMessagesOther);
+        chatSink.add(chatHistory);
+      }
     }
   }
 
