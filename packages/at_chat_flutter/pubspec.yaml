@@ -15,10 +15,10 @@ dependencies:
     sdk: flutter
   at_contact: ^3.0.7
   at_common_flutter: ^2.0.11
-  at_commons: ^3.0.26
-  at_client_mobile: ^3.2.7
-  at_client: ^3.0.40
-  at_lookup: ^3.0.32
+  at_commons: ^3.0.46
+  at_client_mobile: ^3.2.9
+  at_lookup: ^3.0.36
+  at_client: ^3.0.59
 
   #Picker
   file_picker: ^4.3.3
