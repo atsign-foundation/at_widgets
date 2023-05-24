@@ -65,7 +65,7 @@ class BackupKeyWidget extends StatelessWidget {
         ? GestureDetector(
             onTap: () async {
               var result = await _onBackup(context);
-              if (result == false) {
+              if (result == false && context.mounted) {
                 _showAlertDialog(context);
               }
             },
@@ -215,8 +215,10 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 onPressed: () async {
                                   var result = await _onBackup(context);
-                                  Navigator.pop(ctxt);
-                                  if (result == false) {
+                                  if (context.mounted) {
+                                    Navigator.pop(ctxt);
+                                  }
+                                  if (result == false && context.mounted) {
                                     _showAlertDialog(context);
                                   }
                                 }),
@@ -246,7 +248,7 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
         return false;
       }
       String tempFilePath = await _generateFile(aesEncryptedKeys);
-      if (Platform.isAndroid) {
+      if (Platform.isAndroid && context.mounted) {
         if (Navigator.of(context).canPop()) {
           Navigator.of(context).pop();
         }
@@ -280,19 +282,23 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
 
                           try {
                             if (await File(newPath).exists()) {
-                              Navigator.of(context).pop();
-                              showSnackBar(
-                                  context: context, content: "File exists!");
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                                showSnackBar(
+                                    context: context, content: "File exists!");
+                              }
                             } else {
                               final encryptedKeysFile =
                                   await File(newPath).create();
                               var keyString = jsonEncode(aesEncryptedKeys);
                               encryptedKeysFile.writeAsStringSync(keyString);
-                              Navigator.of(context).pop();
-                              showSnackBar(
-                                context: context,
-                                content: 'File saved successfully',
-                              );
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                                showSnackBar(
+                                  context: context,
+                                  content: 'File saved successfully',
+                                );
+                              }
                             }
                           } catch (e) {
                             debugPrint("$e");
@@ -329,11 +335,11 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
           },
         );
       } else if (Platform.isIOS) {
-        var _size = MediaQuery.of(context).size;
+        var size = MediaQuery.of(context).size;
         await Share.shareXFiles(
           [XFile(tempFilePath)],
           sharePositionOrigin:
-              Rect.fromLTWH(0, 0, _size.width, _size.height / 2),
+              Rect.fromLTWH(0, 0, size.width, size.height / 2),
         ).then((ShareResult shareResult) {
           if (shareResult.status == ShareResultStatus.success) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -345,10 +351,12 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
             await getSavePath(suggestedName: '$atsign${Strings.backupKeyName}');
         final file = XFile(tempFilePath);
         await file.saveTo(path ?? '');
-        showSnackBar(
-          context: context,
-          content: 'File saved successfully',
-        );
+        if (context.mounted) {
+          showSnackBar(
+            context: context,
+            content: 'File saved successfully',
+          );
+        }
       }
     } on Exception catch (ex) {
       _logger.severe('BackingUp keys throws $ex exception');
@@ -387,10 +395,10 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
     required BuildContext context,
     required String path,
   }) async {
-    var _size = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     await Share.shareXFiles(
       [XFile(path)],
-      sharePositionOrigin: Rect.fromLTWH(0, 0, _size.width, _size.height / 2),
+      sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2),
     ).then((ShareResult shareResult) {
       if (shareResult.status == ShareResultStatus.success) {
         ScaffoldMessenger.of(context).showSnackBar(
