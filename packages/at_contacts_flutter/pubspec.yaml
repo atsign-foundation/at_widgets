@@ -7,14 +7,14 @@ issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
 documentation: https://atsign.dev/docs/functional_architecture/libraries/#at_contacts_flutter
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <4.0.0'
   flutter: ">=1.20.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  flutter_slidable: ^0.6.0
+  flutter_slidable: ^3.0.0
   
   at_client_mobile: ^3.2.9
   at_commons: ^3.0.45

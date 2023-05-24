@@ -34,8 +34,9 @@ class ContactsScreen extends StatefulWidget {
   const ContactsScreen(
       {Key? key,
       this.selectedList,
-      @Deprecated('context is no longer required and will be removed in upcoming version')
-          this.context,
+      @Deprecated(
+          'context is no longer required and will be removed in upcoming version')
+      this.context,
       this.asSelectionScreen = false,
       this.asSingleSelectionScreen = false,
       this.saveGroup,
@@ -281,26 +282,31 @@ class _ContactsScreenState extends State<ContactsScreen> {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Slidable(
-              actionPane: const SlidableDrawerActionPane(),
-              actionExtentRatio: 0.25,
-              secondaryActions: <Widget>[
-                IconSlideAction(
-                  caption: TextStrings().block,
-                  color: ColorConstants.inputFieldColor,
-                  icon: Icons.block,
-                  onTap: () async {
-                    blockUnblockContact(contactsForAlphabet[index]!);
-                  },
-                ),
-                IconSlideAction(
-                  caption: TextStrings().delete,
-                  color: Colors.red,
-                  icon: Icons.delete,
-                  onTap: () async {
-                    deleteContact(contactsForAlphabet[index]!);
-                  },
-                ),
-              ],
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    flex: 1,
+                    onPressed: (bc) {
+                      blockUnblockContact(contactsForAlphabet[index]!);
+                    },
+                    backgroundColor: ColorConstants.inputFieldColor,
+                    foregroundColor: Colors.black,
+                    icon: Icons.block,
+                    label: TextStrings().block,
+                  ),
+                  SlidableAction(
+                    flex: 1,
+                    onPressed: (bc) {
+                      deleteContact(contactsForAlphabet[index]!);
+                    },
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: TextStrings().delete,
+                  ),
+                ],
+              ),
               child: CustomListTile(
                 key: UniqueKey(),
                 contactService: _contactService,

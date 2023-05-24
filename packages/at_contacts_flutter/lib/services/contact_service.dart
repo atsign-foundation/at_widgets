@@ -132,7 +132,7 @@ class ContactService {
   /// returns null if some error occurred.
   Future<List<AtContact>?> fetchContacts() async {
     try {
-      /// if contact list is already present, we will not fetch them again
+      /// if contact list is already present, data is not fetched again
       if (baseContactList.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
           contactSink.add(baseContactList);
