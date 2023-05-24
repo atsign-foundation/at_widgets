@@ -131,23 +131,20 @@ class _GroupEditState extends State<GroupEdit> {
         showTrailingIcon: true,
         showTitle: false,
         titleText: '',
-        trailingIcon: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: isLoading
-              ? Center(
-                  child: SizedBox(
-                    width: 20.toHeight,
-                    height: 20.toHeight,
-                    child: const CircularProgressIndicator(),
-                  ),
-                )
-              : Text('Done',
-                  style: TextStyle(
-                    color: AllColors().ORANGE,
-                    fontSize: 15.toFont,
-                    fontWeight: FontWeight.normal,
-                  )),
-        ),
+        trailingIcon: isLoading
+            ? Center(
+                child: SizedBox(
+                  width: 20.toHeight,
+                  height: 20.toHeight,
+                  child: const CircularProgressIndicator(),
+                ),
+              )
+            : Text('Done',
+                style: TextStyle(
+                  color: AllColors().ORANGE,
+                  fontSize: 15.toFont,
+                  fontWeight: FontWeight.normal,
+                )),
         onTrailingIconPressed: () {
           onDone();
         },
