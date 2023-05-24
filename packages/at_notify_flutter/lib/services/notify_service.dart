@@ -61,8 +61,9 @@ class NotifyService {
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
     atClientManager.notificationService
-        .subscribe(regex: '.${atClientPreference.namespace}')
-        .listen((notification) {
+        .subscribe(
+            regex: '.${atClientPreference.namespace}', shouldDecrypt: true)
+        .listen((AtNotification notification) {
       _notificationCallback(notification);
     });
 
@@ -113,7 +114,7 @@ class NotifyService {
   }
 
   /// Listen Notification
-  void _notificationCallback(dynamic notification) async {
+  void _notificationCallback(AtNotification notification) async {
     print('_notificationCallback called in at_notify_flutter');
     AtNotification atNotification = notification;
     var notificationKey = atNotification.key;
@@ -135,11 +136,7 @@ class NotifyService {
       var message = atNotification.value ?? '';
       print('notify message => $message $fromAtsign');
       if (message.isNotEmpty && message != 'null') {
-        var decryptedMessage = await atClient.encryptionService!
-            .decrypt(message, fromAtsign)
-            .catchError((e) {
-          print('error in decrypting notify $e');
-        });
+        var decryptedMessage = notification.value!;
         print('notify decryptedMessage => $decryptedMessage $fromAtsign');
         await showNotification(decryptedMessage, fromAtsign);
       }
@@ -167,28 +164,19 @@ class NotifyService {
       notifies = [];
       notifySink.add(notifies);
 
-      var notifications =
-          await atClient.notifyList(regex: storageKey, fromDate: _fromDate);
+      var notificationsKey = await atClient.getAtKeys(regex: storageKey);
 
-      var _jsonData = (json.decode(notifications.replaceFirst('data:', '')));
-
-      if (_jsonData == null) {
+      if (notificationsKey.isEmpty) {
         return;
       }
 
-      await Future.forEach(_jsonData, (_data) async {
-        var decryptedMessage = await atClient.encryptionService!
-            .decrypt((_data! as Map<String, dynamic>)["value"],
-                (_data as Map<String, dynamic>)['from'])
-            .catchError((e) {
-          print('error in decrypting notify $e');
-        });
-        print('decryptedMessage $decryptedMessage');
+      for (var atKey in notificationsKey) {
+        var _notificationData = await atClient.get(atKey);
+        var _newNotifyObj = Notify.fromJson(_notificationData.value);
 
-        var _newNotifyObj = Notify.fromJson(decryptedMessage);
         notifies.insert(0, _newNotifyObj);
         notifySink.add(notifies);
-      });
+      }
     } catch (error) {
       print('Error in getNotifies -> $error');
     }
