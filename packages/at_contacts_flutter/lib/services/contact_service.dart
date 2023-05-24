@@ -241,7 +241,6 @@ class ContactService {
       contact.blocked = blockAction;
       var res = await atContactImpl.update(contact);
       if (res) {
-        baseContactList = [];
         await fetchBlockContactList();
         await fetchContacts();
         return res;
@@ -260,7 +259,6 @@ class ContactService {
       contact.favourite = !contact.favourite!;
       var res = await atContactImpl.update(contact);
       if (res) {
-        baseContactList = [];
         await fetchBlockContactList();
         await fetchContacts();
         return res;
