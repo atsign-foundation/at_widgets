@@ -121,9 +121,19 @@ class _NotifyScreenState extends State<NotifyScreen>
                                     horizontal: 12.toWidth),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      snapshot.data?[index].message ?? 'Error',
+                                        'Sender: ${snapshot.data?[index].atSign}'),
+                                    const SizedBox(height: 5),
+                                    snapshot.data![index].time != null
+                                        ? Text(
+                                            'Date : ${DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].time!)}',
+                                          )
+                                        : const SizedBox(),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      'Value:  ${snapshot.data?[index].message}',
                                       style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,

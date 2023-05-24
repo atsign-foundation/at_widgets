@@ -15,10 +15,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  at_client_mobile: ^3.2.3+1
-  at_client: ^3.0.35
-  at_commons: ^3.0.24
-  at_common_flutter: ^2.0.9
+  at_client_mobile: ^3.2.9
+  at_client: ^3.0.59
+  at_commons: ^3.0.46
+  at_common_flutter: ^2.0.11
   flutter_local_notifications: ^9.4.0
 
 dev_dependencies:
