@@ -1053,7 +1053,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     var tileSize = getTileSize()!;
     return Bounds(
       bounds.min.unscaleBy(tileSize).floor(),
-      bounds.max.unscaleBy(tileSize).ceil() - const CustomPoint(1, 1),
+      bounds.max.unscaleBy(tileSize).ceil() - CustomPoint(1, 1),
     );
   }
 
