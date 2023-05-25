@@ -7,7 +7,7 @@ issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
 documentation: https://atsign.dev/docs/functional_architecture/libraries/#at_chat_flutter
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
   flutter: ">=1.20.0"
 
 dependencies:
@@ -19,12 +19,14 @@ dependencies:
   at_client_mobile: ^3.2.9
   at_lookup: ^3.0.36
   at_client: ^3.0.59
+  file_picker: ^5.0.0
 
-  #Picker
-  file_picker: ^4.3.3
+dependency_overrides:
+  package_info_plus: ^2.0.0
+
 
 dev_dependencies:
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1
   mocktail: ^0.3.0
   flutter_test:
     sdk: flutter

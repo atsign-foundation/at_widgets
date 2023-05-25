@@ -5,7 +5,6 @@ import 'package:at_chat_flutter/services/chat_service.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:at_client/src/client/request_options.dart';
 
 class MockAtClient extends Mock implements AtClient {
   @override
