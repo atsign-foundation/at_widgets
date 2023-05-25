@@ -9,7 +9,6 @@ import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:at_commons/at_commons.dart';
 import 'package:flutter/material.dart';
 
 /// Service to manage the chat messages for different atsigns
@@ -160,7 +159,9 @@ class ChatService {
         ..sharedWith = chatWithAtSign
         ..metadata = Metadata();
       key.metadata?.ccd = true;
-      var keyValue = await atClientManager.atClient.get(key).catchError((e) {});
+      var keyValue = await atClientManager.atClient.get(key).catchError((e) {
+        return AtValue();
+      });
       // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
         chatHistoryMessages = json.decode((keyValue.value) as String) as List;
@@ -173,7 +174,9 @@ class ChatService {
           (chatWithAtSign != null ? currentAtSign! : ' ').substring(1);
       key.sharedBy = chatWithAtSign;
       key.sharedWith = currentAtSign!;
-      keyValue = await atClientManager.atClient.get(key).catchError((e) {});
+      keyValue = await atClientManager.atClient.get(key).catchError((e) {
+        return AtValue();
+      });
       if (keyValue.value != null) {
         chatHistoryMessagesOther =
             json.decode((keyValue.value) as String) as List;
@@ -398,7 +401,9 @@ class ChatService {
       savedKey = savedKey.substring(6, savedKey.length - 1);
 
       var key = constructKey(savedKey);
-      var keyValue = await atClientManager.atClient.get(key).catchError((e) {});
+      var keyValue = await atClientManager.atClient.get(key).catchError((e) {
+        return AtValue();
+      });
       // ignore: unnecessary_null_comparison
       if (keyValue != null && keyValue.value != null) {
         return keyValue.value;
