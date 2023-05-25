@@ -8,7 +8,7 @@ issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
 documentation: https://atsign.dev/docs/functional_architecture/libraries/
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <4.0.0'
   flutter: ">=1.20.0"
 
 dependencies:
@@ -20,6 +20,9 @@ dependencies:
   at_commons: ^3.0.46
   at_common_flutter: ^2.0.11
   flutter_local_notifications: ^9.4.0
+
+dependency_overrides:
+  package_info_plus: ^2.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.1

@@ -3,7 +3,6 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:at_client/at_client.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
@@ -60,7 +59,7 @@ class NotifyService {
     atClient = AtClientManager.getInstance().atClient;
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    atClientManager.notificationService
+    atClientManager.atClient.notificationService
         .subscribe(
             regex: '.${atClientPreference.namespace}', shouldDecrypt: true)
         .listen((AtNotification notification) {
@@ -197,7 +196,8 @@ class NotifyService {
       ..sharedBy = currentAtSign
       ..sharedWith = sendToAtSign
       ..metadata = metadata;
-    var notificationResponse = await atClientManager.notificationService.notify(
+    var notificationResponse =
+        await atClientManager.atClient.notificationService.notify(
       NotificationParams.forUpdate(key, value: notify.toJson()),
     );
 
