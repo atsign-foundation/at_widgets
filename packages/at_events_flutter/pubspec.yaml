@@ -18,11 +18,11 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   geolocator: ^8.2.1
   
-  at_commons: ^3.0.26
-  at_utils: ^3.0.11
-  at_lookup: ^3.0.32
-  at_client: ^3.0.40
-  at_client_mobile: ^3.2.7
+  at_commons: ^3.0.47
+  at_utils: ^3.0.13
+  at_lookup: ^3.0.36
+  at_client: ^3.0.59
+  at_client_mobile: ^3.2.9
   at_common_flutter: ^2.0.11
   at_contact: ^3.0.7
   at_contacts_flutter: ^4.0.8
@@ -30,56 +30,8 @@ dependencies:
   at_location_flutter: ^3.1.8
 
 dependency_overrides:
-  at_commons:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: packages/at_commons
-      ref: dart-3
-  at_utils:
-    git:
-      url: https://github.com/atsign-foundation/at_tools.git
-      path: packages/at_utils
-      ref: dart-3
-  at_lookup:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: packages/at_lookup
-      ref: dart-3
-  at_client:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client
-      ref: dart-3
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client_mobile
-      ref: dart-3
-  at_common_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: packages/at_common_flutter
-      ref: dart-3
-  at_contact:
-    git:
-      url: https://github.com/atsign-foundation/at_libraries.git
-      path: packages/at_contact
-      ref: dart-3
-  at_contacts_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: packages/at_contacts_flutter
-      ref: dart-3
-  at_contacts_group_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: packages/at_contacts_group_flutter
-      ref: dart-3
-  at_location_flutter:
-    git:
-      url: https://github.com/atsign-foundation/at_widgets.git
-      path: packages/at_location_flutter
-      ref: dart-3
+  package_info_plus: ^2.0.0
+    
 
 dev_dependencies:
   flutter_lints: ^2.0.1

@@ -1,25 +1,23 @@
-import 'dart:typed_data';
-
 import 'package:at_client/at_client.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
-import 'package:at_events_flutter/services/event_services.dart';
-import 'package:at_client/src/client/request_options.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAtClient extends Mock implements AtClient {
   @override
-  Future<bool> put(AtKey key, dynamic value, {bool isDedicated = false}) async {
+  Future<bool> put(AtKey key, dynamic value,
+      {bool isDedicated = false, PutRequestOptions? putRequestOptions}) async {
     return true;
   }
 
   @override
-  Future<bool> delete(AtKey key, {bool isDedicated = false}) async {
+  Future<bool> delete(AtKey key,
+      {bool isDedicated = false, deleteRequestOptions}) async {
     return true;
   }
 
@@ -82,13 +80,15 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (message) async {
       return '42';
     });
   });
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (message) => null);
   });
 
   test("create_event", () async {

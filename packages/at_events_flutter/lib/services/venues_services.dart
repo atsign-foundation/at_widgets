@@ -26,10 +26,9 @@ class VenuesServices {
         ..metadata!.ttr = -1
         ..metadata!.ccd = true
         ..key = venueLatLngKey;
-      var value =
-          await AtClientManager.getInstance().atClient.get(atKey).catchError(
-              // ignore: invalid_return_type_for_catch_error
-              (e) async {
+      var value = await AtClientManager.getInstance().atClient.get(atKey).catchError(
+          // ignore: body_might_complete_normally_catch_error
+          (e) async {
         await _storeVenue(Queue<VenueLatLng>());
       });
 
@@ -63,10 +62,8 @@ class VenuesServices {
       _tempVenues.removeFirst();
     }
 
-    _tempVenues.add(VenueLatLng(_venue,
-        latitude: _latLng.latitude,
-        longitude: _latLng.longitude,
-        displayName: displayName));
+    _tempVenues
+        .add(VenueLatLng(_venue, latitude: _latLng.latitude, longitude: _latLng.longitude, displayName: displayName));
     await _storeVenue(_tempVenues);
   }
 
@@ -132,12 +129,8 @@ class VenueLatLng {
   VenueLatLng.fromJson(Map<String, dynamic> data) {
     venue = data['venue'] ?? '';
     displayName = data['displayName'];
-    latitude = data['latitude'] != 'null' && data['latitude'] != null
-        ? double.parse(data['latitude'])
-        : 0;
-    longitude = data['longitude'] != 'null' && data['longitude'] != null
-        ? double.parse(data['longitude'])
-        : 0;
+    latitude = data['latitude'] != 'null' && data['latitude'] != null ? double.parse(data['latitude']) : 0;
+    longitude = data['longitude'] != 'null' && data['longitude'] != null ? double.parse(data['longitude']) : 0;
   }
 
   Map<String, dynamic> toJson() {

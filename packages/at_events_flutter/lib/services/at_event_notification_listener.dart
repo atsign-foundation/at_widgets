@@ -34,8 +34,7 @@ class AtEventNotificationListener {
     monitorStarted = false;
   }
 
-  void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
-      {Function? newGetAtValueFromMainApp}) {
+  void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain, {Function? newGetAtValueFromMainApp}) {
     atClientManager = AtClientManager.getInstance();
     currentAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
 
@@ -49,10 +48,7 @@ class AtEventNotificationListener {
   /// starts monitor to receive incoming notifications.
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
-      AtClientManager.getInstance()
-          .notificationService
-          .subscribe(shouldDecrypt: true)
-          .listen((notification) {
+      atClientManager.atClient.notificationService.subscribe(shouldDecrypt: true).listen((notification) {
         _notificationCallback(notification);
       });
       monitorStarted = true;
@@ -64,13 +60,11 @@ class AtEventNotificationListener {
   /// filters out the received notification.
   void _notificationCallback(AtNotification notification) async {
     if ((notification.id == '-1') ||
-        compareAtSign(notification.from,
-            AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+        compareAtSign(notification.from, AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
       return;
     }
 
-    _logger.finer(
-        'notification received in events package ===========> $notification');
+    _logger.finer('notification received in events package ===========> $notification');
     var value = notification.value;
     var notificationKey = notification.key;
     var fromAtSign = notification.from;
@@ -78,20 +72,18 @@ class AtEventNotificationListener {
     if ((!notificationKey.contains('createevent')) &&
         (!notificationKey.contains('eventacknowledged')) &&
         (!notificationKey.contains(MixedConstants.EVENT_MEMBER_LOCATION_KEY))) {
-      _logger.finer(
-          'returned from _notificationCallback in events package ===========>');
+      _logger.finer('returned from _notificationCallback in events package ===========>');
       return;
     }
 
     var operation = notification.operation;
-    if ((operation == 'delete') &&
-        notificationKey.toString().toLowerCase().contains('createevent')) {
+    if ((operation == 'delete') && notificationKey.toString().toLowerCase().contains('createevent')) {
       // EventService().removeDeletedEventFromList(notificationKey);
       return;
     }
 
     var decryptedMessage = value;
-    
+
     _logger.finer('decrypted message:$decryptedMessage');
 
     if (decryptedMessage == null || decryptedMessage == '') {
@@ -99,15 +91,13 @@ class AtEventNotificationListener {
     }
 
     if (notificationKey.toString().contains('createevent')) {
-      var eventData =
-          EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
+      var eventData = EventNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if ((eventData.isUpdate != null && eventData.isUpdate == false) ||
           !EventKeyStreamService().isEventSharedWithMe(eventData)) {
         // new event received
         // show dialog
         // add in event list
-        var _result = await EventKeyStreamService()
-            .addDataToList(eventData, receivedkey: notificationKey);
+        var _result = await EventKeyStreamService().addDataToList(eventData, receivedkey: notificationKey);
         if (_result is EventKeyLocationModel) {
           await showMyDialog(eventNotificationModel: eventData);
         }
@@ -127,9 +117,7 @@ class AtEventNotificationListener {
       return;
     }
 
-    if (notificationKey
-        .toString()
-        .contains(MixedConstants.EVENT_MEMBER_LOCATION_KEY)) {
+    if (notificationKey.toString().contains(MixedConstants.EVENT_MEMBER_LOCATION_KEY)) {
       var msg = EventMemberLocation.fromJson(jsonDecode(decryptedMessage));
 
       // EventKeyStreamService().updateLocationData(msg, fromAtSign);
@@ -137,8 +125,7 @@ class AtEventNotificationListener {
     }
   }
 
-  Future<void> showMyDialog(
-      {EventNotificationModel? eventNotificationModel}) async {
+  Future<void> showMyDialog({EventNotificationModel? eventNotificationModel}) async {
     return showDialog<void>(
       context: navKey!.currentContext!,
       barrierDismissible: false,
