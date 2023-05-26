@@ -134,12 +134,23 @@ class ContactService {
   Future<List<AtContact>?> fetchContacts() async {
     try {
       /// if contact list is already present, data is not fetched again
-      if (baseContactList.isNotEmpty &&
-          baseContactList.map((e) => e.contact).toList() == contactList) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-          contactSink.add(baseContactList);
+
+      if (baseContactList.isNotEmpty) {
+        List<AtContact?> baseContacts =
+            baseContactList.map((e) => e.contact).toList();
+        baseContacts.sort((a, b) {
+          int? index = a?.atSign
+              .toString()
+              .substring(1)
+              .compareTo((b?.atSign).toString().substring(1));
+          return index ?? 0;
         });
-        return contactList;
+        if (baseContacts == contactList) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+            contactSink.add(baseContacts);
+          });
+          return contactList;
+        }
       }
       selectedContacts = [];
       contactList = [];
