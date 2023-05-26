@@ -120,6 +120,7 @@ class ContactService {
     atContactImpl = await AtContactsImpl.getInstance(currentAtsign);
     loggedInUserDetails = await getAtSignDetails(currentAtsign);
     cachedContactList = await atContactImpl.listContacts();
+    await fetchContactList();
     await fetchBlockContactList();
   }
 
@@ -133,11 +134,23 @@ class ContactService {
   Future<List<AtContact>?> fetchContacts() async {
     try {
       /// if contact list is already present, data is not fetched again
+
       if (baseContactList.isNotEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-          contactSink.add(baseContactList);
+        List<AtContact?> baseContacts =
+            baseContactList.map((e) => e.contact).toList();
+        baseContacts.sort((a, b) {
+          int? index = a?.atSign
+              .toString()
+              .substring(1)
+              .compareTo((b?.atSign).toString().substring(1));
+          return index ?? 0;
         });
-        return contactList;
+        if (baseContacts == contactList) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+            contactSink.add(baseContacts);
+          });
+          return contactList;
+        }
       }
       selectedContacts = [];
       contactList = [];
