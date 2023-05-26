@@ -120,6 +120,7 @@ class ContactService {
     atContactImpl = await AtContactsImpl.getInstance(currentAtsign);
     loggedInUserDetails = await getAtSignDetails(currentAtsign);
     cachedContactList = await atContactImpl.listContacts();
+    await fetchContactList();
     await fetchBlockContactList();
   }
 
@@ -133,7 +134,8 @@ class ContactService {
   Future<List<AtContact>?> fetchContacts() async {
     try {
       /// if contact list is already present, data is not fetched again
-      if (baseContactList.isNotEmpty) {
+      if (baseContactList.isNotEmpty &&
+          baseContactList.map((e) => e.contact).toList() == contactList) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
           contactSink.add(baseContactList);
         });

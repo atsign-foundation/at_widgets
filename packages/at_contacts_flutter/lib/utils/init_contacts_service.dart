@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 
 /// Function to initialise contacts Service
-void initializeContactsService(
-    {rootDomain = 'root.atsign.org', rootPort = 64}) {
-  ContactService().initContactsService(rootDomain, rootPort);
+Future<void> initializeContactsService(
+    {rootDomain = 'root.atsign.org', rootPort = 64}) async {
+  await ContactService().initContactsService(rootDomain, rootPort);
 }
 
 /// Function call from app to dispose stream controllers used in the package
