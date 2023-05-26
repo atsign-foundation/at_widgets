@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _homeWidget({required Widget home}) {
+  Widget homeWidget({required Widget home}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return home;
@@ -17,7 +17,7 @@ void main() {
 
   group('CustomButton widget Tests', () {
     testWidgets('CustomButton with text', (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: const CustomButton(
         buttonText: 'Enter',
       )));
@@ -27,7 +27,7 @@ void main() {
     });
 
     testWidgets('CustomButton without text', (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(home: const CustomButton()));
+      await tester.pumpWidget(homeWidget(home: const CustomButton()));
       final customButton =
           tester.widget<CustomButton>(find.byType(CustomButton));
       expect(customButton.buttonText, '');
@@ -35,7 +35,7 @@ void main() {
 
     testWidgets('CustomButton with buttonColor and fontColor passed',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: const CustomButton(
         buttonColor: Colors.orange,
         fontColor: Colors.white,
@@ -57,8 +57,8 @@ void main() {
 
     testWidgets('CustomButton with buttonColor and fontColor not passed',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(home: const CustomButton()));
-      await tester.pumpWidget(_homeWidget(home: const CustomButton()));
+      await tester.pumpWidget(homeWidget(home: const CustomButton()));
+      await tester.pumpWidget(homeWidget(home: const CustomButton()));
       final customButton =
           tester.widget<CustomButton>(find.byType(CustomButton));
       expect(customButton.buttonColor, Colors.black);
@@ -66,7 +66,7 @@ void main() {
     });
     testWidgets('CustomButton with buttonColor passed and fontColor not passed',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: const CustomButton(
         buttonColor: Colors.orange,
       )));
@@ -86,7 +86,7 @@ void main() {
     });
     testWidgets('CustomButton with buttonColor not passed and fontColor passed',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: const CustomButton(
         fontColor: Colors.red,
       )));
@@ -105,7 +105,7 @@ void main() {
           findsOneWidget);
     });
     testWidgets('CustomButton with onPressed', (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(home: CustomButton(
+      await tester.pumpWidget(homeWidget(home: CustomButton(
         onPressed: () {
           log('clicked on this button');
         },
@@ -117,7 +117,7 @@ void main() {
 
     testWidgets('CustomButton with onPressed not called',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(home: const CustomButton()));
+      await tester.pumpWidget(homeWidget(home: const CustomButton()));
       final customButton =
           tester.widget<CustomButton>(find.byType(CustomButton));
       await tester.tap(find.byType(CustomButton));
