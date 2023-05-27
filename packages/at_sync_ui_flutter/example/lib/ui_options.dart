@@ -104,9 +104,9 @@ class _MyHomePageState extends State<MyHomePage>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               const SizedBox(height: _kNormalPadding),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
+                children: [
                   Text('Material',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   Text('Cupertino',

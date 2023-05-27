@@ -14,7 +14,6 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   GlobalKey<NavigatorState> _key = GlobalKey();
   MockSyncService mockSyncService = MockSyncService();
-  MockAtCLientManager mockAtClientManager = MockAtCLientManager();
 
   group('sync service test', () {
     test('AtSyncUIService init', () {
