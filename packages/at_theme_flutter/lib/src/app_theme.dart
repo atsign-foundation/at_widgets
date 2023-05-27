@@ -32,7 +32,6 @@ class AppTheme {
     required this.backgroundColor,
   });
 
-
   factory AppTheme.from({
     Brightness brightness = Brightness.light,
     Color primaryColor = ColorConstants.primaryDefault,
@@ -68,12 +67,12 @@ class AppTheme {
     return ThemeData(
       brightness: brightness,
       primaryColor: primaryColor,
-      backgroundColor: backgroundColor,
       scaffoldBackgroundColor: backgroundColor,
       appBarTheme: AppBarTheme(color: primaryColor),
-      colorScheme: ThemeData()
-          .colorScheme
-          .copyWith(secondary: accentColor, brightness: brightness),
+      colorScheme: ThemeData().colorScheme.copyWith(
+          secondary: accentColor,
+          brightness: brightness,
+          background: backgroundColor),
     );
   }
 
