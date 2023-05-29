@@ -46,9 +46,9 @@ class InvitationService {
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     if (!hasMonitorStarted) {
-      AtClientManager.getInstance()
+      AtClientManager.getInstance().atClient
           .notificationService
-          .subscribe()
+          .subscribe(shouldDecrypt: true)
           .listen((notification) {
         _notificationCallback(notification);
       });
@@ -75,14 +75,7 @@ class InvitationService {
     notificationKey.trim();
 
     if (notificationKey.startsWith(invitationKey)) {
-      var message = notification.value;
-      var decryptedMessage = await AtClientManager.getInstance()
-          .atClient
-          .encryptionService
-          ?.decrypt(message, fromAtsign)
-          .catchError((e) {
-        _logger.severe('error in decrypting message ${e.toString()}');
-      });
+      var decryptedMessage = notification.value;
       if (notificationKey.startsWith(invitationAckKey)) {
         _processInviteAcknowledgement(decryptedMessage, fromAtsign);
       } else {
