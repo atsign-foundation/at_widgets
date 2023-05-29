@@ -28,7 +28,7 @@ class VenuesServices {
         ..key = venueLatLngKey;
       var value =
           await AtClientManager.getInstance().atClient.get(atKey).catchError(
-              // ignore: invalid_return_type_for_catch_error
+              // ignore: invalid_return_type_for_catch_error, body_might_complete_normally_catch_error
               (e) async {
         await _storeVenue(Queue<VenueLatLng>());
       });

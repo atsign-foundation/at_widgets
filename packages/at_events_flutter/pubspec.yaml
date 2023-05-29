@@ -31,6 +31,9 @@ dependencies:
   at_location_flutter: ^3.1.8
   at_common_flutter: ^2.0.11
 
+dependency_overrides:
+  package_info_plus: ^3.0.0
+
 dev_dependencies:
   flutter_lints: ^2.0.1
   mocktail: ^0.3.0

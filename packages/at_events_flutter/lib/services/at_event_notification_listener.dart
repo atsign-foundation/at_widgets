@@ -50,6 +50,7 @@ class AtEventNotificationListener {
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
       AtClientManager.getInstance()
+          .atClient
           .notificationService
           .subscribe(shouldDecrypt: true)
           .listen((notification) {
@@ -91,7 +92,7 @@ class AtEventNotificationListener {
     }
 
     var decryptedMessage = value;
-    
+
     _logger.finer('decrypted message:$decryptedMessage');
 
     if (decryptedMessage == null || decryptedMessage == '') {

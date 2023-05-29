@@ -243,8 +243,8 @@ class _SelectLocationState extends State<SelectLocation> {
                                   child: ListView.separated(
                                     itemCount: snapshot.data!.length,
                                     separatorBuilder: (context, index) {
-                                      return Column(
-                                        children: const [
+                                      return const Column(
+                                        children: [
                                           SizedBox(height: 20),
                                           Divider(),
                                         ],

@@ -1,20 +1,16 @@
-import 'dart:typed_data';
-
 import 'package:at_client/at_client.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:at_events_flutter/models/event_notification.dart';
 import 'package:at_events_flutter/services/at_event_notification_listener.dart';
-import 'package:at_events_flutter/services/event_services.dart';
-import 'package:at_client/src/client/request_options.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAtClient extends Mock implements AtClient {
   @override
-  Future<bool> put(AtKey key, dynamic value, {bool isDedicated = false}) async {
+  Future<bool> put(AtKey key, dynamic value,
+      {bool isDedicated = false, putRequestOptions}) async {
     return true;
   }
 
@@ -77,19 +73,13 @@ void main() {
   model.event = event;
   model.title = "title";
 
-  const channel = MethodChannel('at_events_flutter');
+  // const channel = MethodChannel('at_events_flutter');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
-  });
+  setUp(() {});
 
-  tearDown(() {
-    channel.setMockMethodCallHandler(null);
-  });
+  tearDown(() {});
 
   test("create_event", () async {
     EventService().eventNotificationModel = model;
