@@ -35,10 +35,9 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
-  at_onboarding_flutter:
-    path: ../../at_onboarding_flutter
   package_info_plus: ^3.0.0
   win32: ^5.0.2
+  file_picker: ^5.3.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
