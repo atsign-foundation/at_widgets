@@ -5,9 +5,10 @@ import 'package:at_follows_flutter/utils/custom_textstyles.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_follows_flutter/services/size_config.dart';
+import 'package:flutter/services.dart';
 
 // a class to create custom app bar
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showTitle;
   final bool showQr;
   final bool showNotifications;
@@ -24,7 +25,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      brightness: ColorConstants.brightness,
+      systemOverlayStyle:
+          SystemUiOverlayStyle(statusBarBrightness: ColorConstants.brightness),
       elevation: 0,
       backgroundColor: ColorConstants.backgroundColor,
       leading: null,
