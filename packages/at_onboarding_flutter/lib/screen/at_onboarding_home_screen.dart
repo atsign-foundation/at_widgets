@@ -458,7 +458,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       }
 
       fileContents = File(path).readAsStringSync();
-
+      // ignore: unnecessary_null_comparison
       if (aesKey == null && atsign == null && fileContents.isNotEmpty) {
         List<String> keyData = fileContents.split(',"@');
         List<String> params = keyData[1]
