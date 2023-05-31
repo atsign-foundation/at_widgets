@@ -8,13 +8,13 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _homeWidget({required Widget home}) {
+  Widget homeWidget({required Widget home}) {
     return TestMaterialApp(home: home);
   }
 
   group('CustomAppBar Widget tests', () {
     testWidgets('CustomAppBar with title enabled', (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: const CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: true,
@@ -26,7 +26,7 @@ void main() {
     });
 
     testWidgets('CustomAppBa with title disabled', (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: const CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: false,
@@ -39,7 +39,7 @@ void main() {
     testWidgets('CustomAppBar with leading Icons enabled',
         (WidgetTester tester) async {
       var uniqueKey = const Key('testIcon');
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: true,
@@ -51,7 +51,7 @@ void main() {
       expect(appBar.showLeadingIcon, true);
       expect(find.byKey(uniqueKey), findsOneWidget);
 
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: const CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: true,
@@ -62,7 +62,7 @@ void main() {
 
     testWidgets('CustomAppBar with leading Icons disabled',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: const CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: true,
@@ -75,7 +75,7 @@ void main() {
     testWidgets('CustomAppBar with backbuttons and leading icons enabled',
         (WidgetTester tester) async {
       var uniqueKey = const Key('testIcon');
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: true,
@@ -94,7 +94,7 @@ void main() {
     testWidgets(
         'CustomAppBar with backbuttons enabled and leadingIcons disabled',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: const CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: true,
@@ -107,7 +107,7 @@ void main() {
     testWidgets('CustomAppBar with trailing Icons enabled',
         (WidgetTester tester) async {
       var uniqueKey = const Key('testIcon');
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: true,
@@ -125,7 +125,7 @@ void main() {
     testWidgets('CustomAppBar with trailing Icons disabled',
         (WidgetTester tester) async {
       var uniqueKey = const Key('testIcon');
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: true,
@@ -138,7 +138,7 @@ void main() {
     testWidgets('CustomAppBar with closeOnRight and trailing icons enabled',
         (WidgetTester tester) async {
       var uniqueKey = const Key('testIcon');
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: CustomAppBar(
         titleText: 'Welcome Screen',
         showTitle: true,

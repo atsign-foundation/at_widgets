@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _homeWidget({required Widget home}) {
+  Widget homeWidget({required Widget home}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return Material(child: home);
@@ -17,7 +17,7 @@ void main() {
   group('CustomInputField widget Tests', () {
     testWidgets('CustomInputField with initialValue and passing input',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: CustomInputField(
         initialValue: 'Welcome',
         value: (value) {
@@ -46,7 +46,7 @@ void main() {
 
     testWidgets('CustomInputField with readOnly enabled',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: CustomInputField(
         isReadOnly: true,
         initialValue: 'Welcome',
@@ -62,7 +62,7 @@ void main() {
     });
     testWidgets('CustomInputField with icon data passed',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: CustomInputField(
         isReadOnly: true,
         initialValue: 'Welcome',
@@ -81,7 +81,7 @@ void main() {
 
     testWidgets('CustomInputField with icon data not passed',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_homeWidget(
+      await tester.pumpWidget(homeWidget(
           home: CustomInputField(
         isReadOnly: true,
         initialValue: 'Welcome',

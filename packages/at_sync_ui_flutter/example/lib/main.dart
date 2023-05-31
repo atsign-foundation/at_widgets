@@ -22,6 +22,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
     ..commitLogPath = dir.path
     ..isLocalStoreRequired = true;
 }
+
 final StreamController<ThemeMode> updateThemeMode =
     StreamController<ThemeMode>.broadcast();
 
@@ -36,7 +37,6 @@ class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,8 @@ class _MyAppState extends State<MyApp> {
                             await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => SecondScreen(activeAtSign: result.atsign!)));
+                                    builder: (_) => SecondScreen(
+                                        activeAtSign: result.atsign!)));
                             break;
                           case AtOnboardingResultStatus.error:
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -131,7 +132,7 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         var preference = await futurePreference;
                         atClientPreference = preference;
-                        AtOnboarding.reset(
+                        await AtOnboarding.reset(
                           context: context,
                           config: AtOnboardingConfig(
                             atClientPreference: atClientPreference!,

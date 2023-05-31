@@ -68,7 +68,7 @@ class EventKeyStreamService {
 
   /// adds all 'createevent' notifications to [atNotificationsSink]
   void getAllEventNotifications() async {
-    AtClientManager.getInstance().syncService.sync();
+    AtClientManager.getInstance().atClient.syncService.sync();
 
     var response = await atClientManager.atClient.getKeys(
       regex: 'createevent-',

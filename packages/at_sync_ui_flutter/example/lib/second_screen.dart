@@ -29,15 +29,7 @@ class _SecondScreenState extends State<SecondScreen> {
         onAtSignRemoved: _onAtSignRemoved,
       );
     } catch (e) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return alertDialogContent();
-          },
-        );
-      });
+      //
     }
   }
 

@@ -136,7 +136,6 @@ class EventService {
       }
       return result;
     } catch (e) {
-      print(e);
       return e;
     }
   }
@@ -473,7 +472,7 @@ class EventService {
     for (var element in atsigns) {
       atkey.sharedWith = element;
       try {
-        await atClientManager.notificationService.notify(
+        await atClientManager.atClient.notificationService.notify(
           NotificationParams.forUpdate(atkey, value: value),
         );
       } catch (e) {

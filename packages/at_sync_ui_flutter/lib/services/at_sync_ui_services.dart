@@ -5,7 +5,6 @@ import 'package:at_client/src/service/sync_service.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client/src/listener/sync_progress_listener.dart';
 
 class AtSyncUIService extends SyncProgressListener {
   static final AtSyncUIService _singleton = AtSyncUIService._internal();
