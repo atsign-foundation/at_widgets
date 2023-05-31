@@ -9,7 +9,7 @@ import biometric_storage
 import file_saver
 import file_selector_macos
 import package_info_plus_macos
-import path_provider_macos
+import path_provider_foundation
 import share_plus_macos
 import url_launcher_macos
 

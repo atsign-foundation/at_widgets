@@ -53,8 +53,8 @@ class _MyAppState extends State<MyApp> {
             primaryColor: const Color(0xFFf4533d),
             colorScheme: ThemeData.light().colorScheme.copyWith(
                   primary: const Color(0xFFf4533d),
+                  background: Colors.white,
                 ),
-            backgroundColor: Colors.white,
             scaffoldBackgroundColor: Colors.white,
           ),
           darkTheme: ThemeData().copyWith(
@@ -62,8 +62,8 @@ class _MyAppState extends State<MyApp> {
             primaryColor: Colors.blue,
             colorScheme: ThemeData.dark().colorScheme.copyWith(
                   primary: Colors.blue,
+                  background: Colors.grey[850],
                 ),
-            backgroundColor: Colors.grey[850],
             scaffoldBackgroundColor: Colors.grey[850],
           ),
           themeMode: themeMode,
@@ -131,7 +131,7 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         var preference = await futurePreference;
                         atClientPreference = preference;
-                        AtOnboarding.reset(
+                        await AtOnboarding.reset(
                           context: context,
                           config: AtOnboardingConfig(
                             atClientPreference: atClientPreference!,

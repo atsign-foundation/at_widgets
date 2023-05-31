@@ -5,7 +5,6 @@ import 'package:at_client/src/service/sync_service.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client/src/listener/sync_progress_listener.dart';
 
 class AtSyncUIService extends SyncProgressListener {
   static final AtSyncUIService _singleton = AtSyncUIService._internal();
@@ -102,13 +101,14 @@ class AtSyncUIService extends SyncProgressListener {
 
     var _atSyncUIController = AtSyncUIController();
     AtSyncUI.instance.setupController(controller: _atSyncUIController);
-    syncService = AtClientManager.getInstance().syncService;
+    syncService = AtClientManager.getInstance().atClient.syncService;
     syncService!.addProgressListener(this);
     syncService!.setOnDone(_onSuccessCallback);
 
-    sync(atSyncUIOverlay: atSyncUIOverlay!, startTimer: startTimer);
+    init(appNavigator: appNavigator, atSyncUIOverlay: atSyncUIOverlay!, startTimer: startTimer);
   }
 
+  
   /// calls sync and shows selected UI
   /// [atSyncUIOverlay] decides whether dialog or snackbar to be shown while syncing
   @Deprecated("Only init should be called.")
