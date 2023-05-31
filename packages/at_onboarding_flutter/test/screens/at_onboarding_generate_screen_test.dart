@@ -19,12 +19,10 @@ class MockFreeAtsignService extends Mock implements FreeAtsignService {
 
 void main() {
   late OnboardingDataTest onboardingDataTest;
-  late MockFreeAtsignService mockFreeAtsignService;
 
   setUpAll(() {
     //Runs once before all test cases are executed.
     onboardingDataTest = OnboardingDataTest();
-    mockFreeAtsignService = MockFreeAtsignService();
   });
 
   Widget _defaultApp({

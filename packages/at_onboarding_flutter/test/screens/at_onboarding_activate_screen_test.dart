@@ -1,7 +1,6 @@
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

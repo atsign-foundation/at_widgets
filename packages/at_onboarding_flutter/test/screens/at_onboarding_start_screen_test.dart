@@ -1,4 +1,3 @@
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_start_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
