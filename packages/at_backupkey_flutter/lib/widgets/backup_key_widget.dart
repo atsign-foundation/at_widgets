@@ -64,7 +64,7 @@ class BackupKeyWidget extends StatelessWidget {
     return isButton
         ? GestureDetector(
             onTap: () async {
-              var result = await _onBackup(context);
+              var result = await onBackup(context);
               if (result == false && context.mounted) {
                 _showAlertDialog(context);
               }
@@ -214,7 +214,7 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 onPressed: () async {
-                                  var result = await _onBackup(context);
+                                  var result = await onBackup(context);
                                   if (context.mounted) {
                                     Navigator.pop(ctxt);
                                   }
@@ -241,7 +241,7 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
         });
   }
 
-  _onBackup(BuildContext context) async {
+  onBackup(BuildContext context) async {
     try {
       var aesEncryptedKeys = await BackUpKeyService.getEncryptedKeys(atsign);
       if (aesEncryptedKeys.isEmpty) {
