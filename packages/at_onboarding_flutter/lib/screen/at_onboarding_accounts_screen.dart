@@ -87,8 +87,7 @@ class _AtOnboardingAccountsScreenState
                   children: <Widget>[
                     Text(
                       widget.message ??
-                          AtOnboardingLocalizations.current
-                              .title_select_atSign,
+                          AtOnboardingLocalizations.current.title_select_atSign,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: AtOnboardingDimens.fontNormal,
@@ -168,18 +167,18 @@ class _AtOnboardingAccountsScreenState
         child: AlertDialog(
           content: RichText(
             text: TextSpan(
-              style: theme.textTheme.bodyText1,
+              style: theme.textTheme.bodyLarge,
               children: <InlineSpan>[
                 TextSpan(
-                  text: AtOnboardingLocalizations.current
-                      .title_pair_atSign_prev,
+                  text:
+                      AtOnboardingLocalizations.current.title_pair_atSign_prev,
                 ),
                 TextSpan(
                     text: ' $atsign ',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(
-                  text: AtOnboardingLocalizations.current
-                      .title_pair_atSign_next,
+                  text:
+                      AtOnboardingLocalizations.current.title_pair_atSign_next,
                 )
               ],
             ),

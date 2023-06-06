@@ -197,7 +197,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                       children: <TextSpan>[
                         TextSpan(
                           text: AtOnboardingLocalizations.current.note,
-                          style: theme.textTheme.bodyText2?.copyWith(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontSize: AtOnboardingDimens.fontSmall,
                             height: 1.5,
                             fontWeight: FontWeight.bold,
@@ -206,7 +206,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                         TextSpan(
                           text: AtOnboardingLocalizations
                               .current.note_otp_content,
-                          style: theme.textTheme.bodyText2?.copyWith(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontSize: AtOnboardingDimens.fontSmall,
                             height: 1.5,
                           ),

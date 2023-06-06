@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:at_onboarding_flutter/screen/at_onboarding_generate_screen.dart';
 import 'package:at_onboarding_flutter/services/free_atsign_service.dart';
 import 'package:flutter/material.dart';
