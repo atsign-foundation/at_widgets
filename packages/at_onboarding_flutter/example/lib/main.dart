@@ -169,7 +169,6 @@ class _MyAppState extends State<MyApp> {
                         DropdownButton(
                           onChanged: (value) {
                             setState(() {
-                              // print(value);
                               value == 'en'
                                   ? _currentLocale = const Locale('en')
                                   : _currentLocale = const Locale('fr');

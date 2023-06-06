@@ -68,24 +68,28 @@ class AtOnboarding {
         return AtOnboardingResult.cancelled();
       }
     } else {
-      final result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return AtOnboardingIntroScreen(
-              config: config,
-            );
-          },
-        ),
-      );
+      if (context.mounted) {
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return AtOnboardingIntroScreen(
+                config: config,
+              );
+            },
+          ),
+        );
 
-      if (result is AtOnboardingResult) {
-        //Update primary atsign after onboard success
-        if (result.status == AtOnboardingResultStatus.success &&
-            result.atsign != null) {
-          await changePrimaryAtsign(atsign: result.atsign!);
+        if (result is AtOnboardingResult) {
+          //Update primary atsign after onboard success
+          if (result.status == AtOnboardingResultStatus.success &&
+              result.atsign != null) {
+            await changePrimaryAtsign(atsign: result.atsign!);
+          }
+          return result;
+        } else {
+          return AtOnboardingResult.cancelled();
         }
-        return result;
       } else {
         return AtOnboardingResult.cancelled();
       }
@@ -98,19 +102,23 @@ class AtOnboarding {
   }) async {
     /// Initial Setup
     await _initialSetup(context);
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return AtOnboardingActivateScreen(
-            hideReferences: false,
-            config: config,
-          );
-        },
-      ),
-    );
-    if (result is AtOnboardingResult) {
-      return result;
+    if (context.mounted) {
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return AtOnboardingActivateScreen(
+              hideReferences: false,
+              config: config,
+            );
+          },
+        ),
+      );
+      if (result is AtOnboardingResult) {
+        return result;
+      } else {
+        return AtOnboardingResult.cancelled();
+      }
     } else {
       return AtOnboardingResult.cancelled();
     }
@@ -127,16 +135,18 @@ class AtOnboarding {
   }) async {
     /// Initial Setup
     await _initialSetup(context);
-
-    final result = await Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) {
-      return AtOnboardingResetScreen(config: config);
-    }));
-    if (result is AtOnboardingResetResult) {
-      return result;
-    } else {
-      return AtOnboardingResetResult.cancelled;
+    if (context.mounted) {
+      final result = await Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+        return AtOnboardingResetScreen(config: config);
+      }));
+      if (result is AtOnboardingResetResult) {
+        return result;
+      } else {
+        return AtOnboardingResetResult.cancelled;
+      }
     }
+    return AtOnboardingResetResult.cancelled;
   }
 
   Future<bool> enableUsingSharedStorage() async {

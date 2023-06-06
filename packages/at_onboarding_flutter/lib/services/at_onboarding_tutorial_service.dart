@@ -7,9 +7,11 @@ enum AtOnboardingTutorialDisplay {
   normal,
 
   /// show once
+
   always,
 
   /// always show tutorial when opening app
+
   never,
 
   /// never show tutorial when opening app

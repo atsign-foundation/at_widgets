@@ -1,5 +1,3 @@
-// ignore_for_file: unused_element
-
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +13,7 @@ void main() {
     onboardingDataTest = OnboardingDataTest();
   });
 
+  // ignore: unused_element
   Widget _defaultApp({
     ThemeData? theme,
   }) {

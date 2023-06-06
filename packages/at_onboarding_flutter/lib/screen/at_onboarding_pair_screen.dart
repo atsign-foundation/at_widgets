@@ -211,6 +211,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       if (status) {
         _showOTPScreen();
       } else {
+        if (!mounted) return;
         AtOnboardingDialog.showError(
           context: context,
           message: AtOnboardingLocalizations.current.error_please_enter_email,
@@ -249,6 +250,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       if (errorMessage.contains('maximum number of free atSigns')) {
         await showlimitDialog();
       } else {
+        if (!mounted) return status;
         AtOnboardingDialog.showError(context: context, message: errorMessage);
       }
     }
@@ -346,8 +348,10 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
         data = response.body;
         data = jsonDecode(data);
         String errorMessage = data['message'];
+        if (!mounted) return;
         AtOnboardingDialog.showError(context: context, message: errorMessage);
       }
+      if (!mounted) return;
       final result2 = await AtOnboardingOTPScreen.push(
         context: context,
         atSign: result.atSign,

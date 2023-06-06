@@ -190,6 +190,7 @@ class _AtOnboardingQRCodeScreenState extends State<AtOnboardingQRCodeScreen> {
         );
       } else {
         await _controller?.pauseCamera();
+        if (!mounted) return;
         await AtOnboardingDialog.showError(
           context: context,
           message: AtOnboardingLocalizations.current.invalid_QR,
