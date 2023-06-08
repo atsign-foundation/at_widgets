@@ -4,7 +4,7 @@ version: 0.0.1
 homepage: https://docs.atsign.com/
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
   flutter: ">=1.20.0"
 
 dependencies:
@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   provider: ^5.0.0
   permission_handler: ^8.1.2
-  at_client: ^3.0.0
-  at_client_mobile: ^3.0.0
+  at_client: ^3.0.59
+  at_client_mobile: ^3.2.9
   at_commons: ^3.0.0
   at_server_status: ^1.0.3
   at_utils: ^3.0.0

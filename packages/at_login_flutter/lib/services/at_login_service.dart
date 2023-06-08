@@ -1,13 +1,13 @@
 import 'package:at_login_flutter/domain/at_login_model.dart';
 import 'package:at_login_flutter/exceptions/at_login_exceptions.dart';
 import 'package:at_login_flutter/utils/app_constants.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_login_flutter/utils/strings.dart';
-import 'package:at_utils/at_logger.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_client/at_client.dart';
 import 'dart:core';
 import 'package:at_login_flutter/utils/at_login_utils.dart';
+import 'package:at_client/src/encryption_service/sign_in_public_data.dart';
+import 'package:at_server_status/at_server_status.dart';
+import 'package:at_utils/at_utils.dart';
 import 'package:flutter/material.dart';
 
 class AtLoginService {
@@ -20,7 +20,10 @@ class AtLoginService {
   late String _atSign;
   late Widget _nextScreen;
 
-  var _logger = AtSignLogger('AtLoginService');
+  late AtStatus atStatus;
+  final AtStatusImpl atStatusImpl = AtStatusImpl();
+
+  late AtSignLogger _logger = AtSignLogger('AtLoginService');
 
   // SDKService _sdkService = SDKService();
 
@@ -50,8 +53,7 @@ class AtLoginService {
   }
 
   set nextScreen(Widget? widget) {
-    _nextScreen = widget!;      
-    }
+    _nextScreen = widget!;
   }
 
   Future<bool> setAtsign(String? atSign) async {
@@ -122,7 +124,12 @@ class AtLoginService {
     return await AtLoginUtils().checkSSLCertViaFQDN(fqdn);
   }
 
-  Future<bool> _putLoginProof(AtLoginObj atLoginObj) async {
+  Future<AtSignStatus?> checkAtSignStatus(String atSign) async {
+    atStatus = await atStatusImpl.get(atSign);
+    return atStatus.atSignStatus;
+  }
+
+  Future<bool> putLoginProof(AtLoginObj atLoginObj) async {
     _logger.info('putLoginProof received ${atLoginObj.atsign}');
     bool success = false;
     var paired = await atsignIsPaired(atLoginObj.atsign!);
@@ -132,10 +139,10 @@ class AtLoginService {
           .encryptionService!
           .localSecondary!
           .getEncryptionPrivateKey();
-      var signature = AtClientManager.getInstance()
-          .atClient
-          .encryptionService!
-          .signPublicData(encryptionPrivateKey!, atLoginObj.challenge);
+
+      var signature = await SignInPublicData.signInData(
+          atLoginObj.challenge, encryptionPrivateKey!);
+
       // var rsaKey = RSAPrivateKey.fromString(privateKey!);
       // var sha256signature = rsaKey.createSHA256Signature(
       //     utf8.encode(atLoginObj.challenge!) as Uint8List);
@@ -191,14 +198,4 @@ class AtLoginService {
     if (atSignsList == null) atSignsList = [];
     return atSignsList;
   }
-
-  ///Fetches privatekey for [atsign] from device keychain.
-  // Future<String?> getPrivateKey(String atSign) async {
-  //   _logger.info('getPrivateKey received $atSign! to lookup');
-  //   return await AtClientManager.getInstance()
-  //       .atClient.encryptionService.
-  //       .timeout(
-  //       Duration(seconds: AppConstants.responseTimeLimit),
-  //       onTimeout: () => _onTimeOut());
-  // }
 }

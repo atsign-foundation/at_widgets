@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:at_utils/at_logger.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_app_flutter/at_app_flutter.dart';
 
@@ -20,7 +19,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
         ..hiveStoragePath = dir.path
         ..commitLogPath = dir.path
         ..isLocalStoreRequired = true
-        ..syncStrategy = SyncStrategy.ONDEMAND
+        ..syncStrategy = SyncStrategy.onDemand
       // TODO set the rest of your AtClientPreference here
       ;
 }
@@ -38,8 +37,6 @@ class _MyAppState extends State<MyApp> {
   AtClientService? atClientService;
   AtClientPreference? atClientPreference;
 
-  final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,22 +50,32 @@ class _MyAppState extends State<MyApp> {
             child: TextButton(
               onPressed: () async {
                 atClientPreference = await futurePreference;
-                Onboarding(
+                final result = await AtOnboarding.onboard(
                   context: context,
-                  atClientPreference: atClientPreference!,
-                  domain: AtEnv.rootDomain,
-                  onboard: (value, atsign) {
-                    setState(() {
-                      atClientService = value[atsign]!;
-                    });
-                    _logger.finer('Successfully onboarded $atsign');
-                  },
-                  onError: (error) {
-                    _logger.severe('Onboarding throws $error error');
-                  },
-                  nextScreen: const HomeScreen(),
-                  appAPIKey: AtEnv.appApiKey,
+                  config: AtOnboardingConfig(
+                    atClientPreference: atClientPreference!,
+                    domain: AtEnv.rootDomain,
+                    rootEnvironment: AtEnv.rootEnvironment,
+                    appAPIKey: AtEnv.appApiKey,
+                  ),
                 );
+
+                switch (result.status) {
+                  case AtOnboardingResultStatus.success:
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const HomeScreen()));
+                    break;
+                  case AtOnboardingResultStatus.error:
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text('An error has occurred'),
+                      ),
+                    );
+                    break;
+                  case AtOnboardingResultStatus.cancel:
+                    break;
+                }
               },
               child: const Text(
                 'Onboard an @sign',
@@ -78,18 +85,6 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
-
-      // * The context provider for the app
-      builder: (BuildContext context, Widget? child) {
-        if (atClientService != null && atClientPreference != null) {
-          return AtContext(
-            atClientService: atClientService!,
-            atClientPreference: atClientPreference!,
-            child: child ?? Container(),
-          );
-        }
-        return child ?? Container();
-      },
     );
   }
 }
@@ -102,7 +97,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // * Get the AtContext from build context
     // ! NOTE: Only use this after successfully onboarding the @sign
-    AtContext atContext = AtContext.of(context);
+
+    var currentAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
 
     // * Example Uses
     /// AtClientService atClientService = atContext.atClientService;
@@ -119,7 +115,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             const Text(
                 'Successfully onboarded and navigated to FirstAppScreen'),
-            Text('Current @sign: ${atContext.currentAtSign}'),
+            Text('Current @sign: $currentAtSign'),
           ],
         ),
       ),

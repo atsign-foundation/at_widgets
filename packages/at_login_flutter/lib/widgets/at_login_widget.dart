@@ -140,10 +140,10 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
   void initState() {
     AppConstants.rootDomain = widget.domain;
     // _atLoginService.setLogo = widget.logo;
-    _atLoginService.setNextScreen = widget.nextScreen;
+    _atLoginService.nextScreen = widget.nextScreen;
     // _atLoginService.loginFunc = widget.login;
     // ColorConstants.setAppColor = widget.appColor;
-    _atLoginService.setAtClientPreference = widget.atClientPreference;
+    _atLoginService.atClientPreference = widget.atClientPreference;
     checkPermissions();
     super.initState();
   }
@@ -306,7 +306,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
   }
 
   Future<bool> _saveProof() async {
-    var proofed = await _atLoginService._putLoginProof(_atLoginObj);
+    var proofed = await _atLoginService.putLoginProof(_atLoginObj);
     _logger.info('_saveProof|proofed=$proofed');
     return proofed;
   }
