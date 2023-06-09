@@ -1,0 +1,4 @@
+enum AtOnboardingResetResult {
+  cancelled,
+  success,
+}
