@@ -103,118 +103,120 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
             ],
           ),
           body: Center(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: theme.primaryColor.withOpacity(0.1),
-                  borderRadius:
-                      BorderRadius.circular(AtOnboardingDimens.borderRadius)),
-              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              constraints: const BoxConstraints(
-                maxWidth: 400,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    AtOnboardingLocalizations.current.enter_verification_code,
-                    style: const TextStyle(
-                      fontSize: AtOnboardingDimens.fontLarge,
-                      fontWeight: FontWeight.bold,
+            child: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: theme.primaryColor.withOpacity(0.1),
+                    borderRadius:
+                        BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+                padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      AtOnboardingLocalizations.current.enter_verification_code,
+                      style: const TextStyle(
+                        fontSize: AtOnboardingDimens.fontLarge,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  PinCodeTextField(
-                    controller: _pinCodeController,
-                    animationType: AnimationType.none,
-                    textCapitalization: TextCapitalization.characters,
-                    appContext: context,
-                    length: 4,
-                    textStyle: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
-                    pinTheme: PinTheme(
-                      selectedColor:
-                          hasOTPError ? Colors.red : theme.primaryColor,
-                      activeColor:
-                          hasOTPError ? Colors.red : theme.primaryColor,
-                      inactiveColor:
-                          hasOTPError ? Colors.red : Colors.grey[500],
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(5),
-                      fieldHeight: 48,
-                      fieldWidth: MediaQuery.of(context).size.width > 400
-                          ? 80
-                          : (MediaQuery.of(context).size.width - 100) / 4,
-                    ),
-                    cursorHeight: 24,
-                    cursorColor: Colors.grey,
-                    // controller: _otpController,
-                    keyboardType: TextInputType.text,
-                    inputFormatters: <TextInputFormatter>[
-                      AtOnboardingInputFormatter(),
-                    ],
-                    onChanged: (String value) {
-                      setState(() {
-                        hasOTPError = false;
-                      });
-                    },
-                  ),
-                  Text(
-                    '${AtOnboardingLocalizations.current.verification_code_has_been_sent_to} ${widget.email ?? AtOnboardingLocalizations.current.your_registered_email}',
-                    style: const TextStyle(
-                      fontSize: AtOnboardingDimens.fontNormal,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  AtOnboardingPrimaryButton(
-                    height: 48,
-                    borderRadius: 24,
-                    width: double.infinity,
-                    isLoading: isVerifing,
-                    onPressed: _onVerifyPressed,
-                    child: Text(
-                      AtOnboardingLocalizations.current.verify_and_login,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  AtOnboardingSecondaryButton(
-                    height: 48,
-                    borderRadius: 24,
-                    width: double.infinity,
-                    isLoading: isResendingCode,
-                    onPressed: () {
-                      _onResendPressed(theme);
-                    },
-                    child: Text(
-                      AtOnboardingLocalizations.current.resend_code,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: AtOnboardingLocalizations.current.note,
-                          style: theme.textTheme.bodyText2?.copyWith(
-                            fontSize: AtOnboardingDimens.fontSmall,
-                            height: 1.5,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextSpan(
-                          text: AtOnboardingLocalizations
-                              .current.note_otp_content,
-                          style: theme.textTheme.bodyText2?.copyWith(
-                            fontSize: AtOnboardingDimens.fontSmall,
-                            height: 1.5,
-                          ),
-                        ),
+                    const SizedBox(height: 5),
+                    PinCodeTextField(
+                      controller: _pinCodeController,
+                      animationType: AnimationType.none,
+                      textCapitalization: TextCapitalization.characters,
+                      appContext: context,
+                      length: 4,
+                      textStyle: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                      pinTheme: PinTheme(
+                        selectedColor:
+                            hasOTPError ? Colors.red : theme.primaryColor,
+                        activeColor:
+                            hasOTPError ? Colors.red : theme.primaryColor,
+                        inactiveColor:
+                            hasOTPError ? Colors.red : Colors.grey[500],
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(5),
+                        fieldHeight: 48,
+                        fieldWidth: MediaQuery.of(context).size.width > 400
+                            ? 80
+                            : (MediaQuery.of(context).size.width - 100) / 4,
+                      ),
+                      cursorHeight: 24,
+                      cursorColor: Colors.grey,
+                      // controller: _otpController,
+                      keyboardType: TextInputType.text,
+                      inputFormatters: <TextInputFormatter>[
+                        AtOnboardingInputFormatter(),
                       ],
+                      onChanged: (String value) {
+                        setState(() {
+                          hasOTPError = false;
+                        });
+                      },
                     ),
-                  ),
-                ],
+                    Text(
+                      '${AtOnboardingLocalizations.current.verification_code_has_been_sent_to} ${widget.email ?? AtOnboardingLocalizations.current.your_registered_email}',
+                      style: const TextStyle(
+                        fontSize: AtOnboardingDimens.fontNormal,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    AtOnboardingPrimaryButton(
+                      height: 48,
+                      borderRadius: 24,
+                      width: double.infinity,
+                      isLoading: isVerifing,
+                      onPressed: _onVerifyPressed,
+                      child: Text(
+                        AtOnboardingLocalizations.current.verify_and_login,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    AtOnboardingSecondaryButton(
+                      height: 48,
+                      borderRadius: 24,
+                      width: double.infinity,
+                      isLoading: isResendingCode,
+                      onPressed: () {
+                        _onResendPressed(theme);
+                      },
+                      child: Text(
+                        AtOnboardingLocalizations.current.resend_code,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    RichText(
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: AtOnboardingLocalizations.current.note,
+                            style: theme.textTheme.bodyText2?.copyWith(
+                              fontSize: AtOnboardingDimens.fontSmall,
+                              height: 1.5,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: AtOnboardingLocalizations
+                                .current.note_otp_content,
+                            style: theme.textTheme.bodyText2?.copyWith(
+                              fontSize: AtOnboardingDimens.fontSmall,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
