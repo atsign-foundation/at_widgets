@@ -1,3 +1,7 @@
+## 3.0.8
+- **CHORE**: Updated dependencies
+- **CHORE**: Dart 3 compatible
+
 ## 3.0.7
 - **CHORE**: Updated dependencies and android gradle versions
 - **CHORE**: Package description updated
