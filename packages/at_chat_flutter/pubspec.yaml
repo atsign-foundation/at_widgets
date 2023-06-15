@@ -4,7 +4,7 @@ version: 3.0.8
 homepage: https://docs.atsign.com/
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_chat_flutter
 issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
-documentation: https://atsign.gitbook.io/docs/~
+documentation: https://atsign.dev/docs/functional_architecture/libraries/#at_chat_flutter
 
 environment:
   sdk: ">=2.12.0 <4.0.0"
