@@ -22,12 +22,16 @@ class SizeConfig {
   late double refHeight;
   late double refWidth;
 
-  void init(BuildContext context) {
+  void init(
+    BuildContext context, {
+    double? height,
+    double? width,
+  }) {
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
-    refHeight = 812;
-    refWidth = 375;
+    refHeight = height ?? 812;
+    refWidth = width ?? 375;
 
     deviceTextFactor = _mediaQueryData.textScaleFactor;
 
