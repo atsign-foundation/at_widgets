@@ -807,12 +807,12 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                                 onGenerateSuccess: ({
                                   required String atSign,
                                   required String secret,
-                                }) {
+                                }) async {
                                   String cramSecret = secret.split(':').last;
                                   String atsign = atSign.startsWith('@')
                                       ? atSign
                                       : '@$atSign';
-                                  _processSharedSecret(atsign, cramSecret);
+                                  await _processSharedSecret(atsign, cramSecret);
                                 },
                                 config: widget.config,
                               ),
@@ -901,6 +901,98 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     if (result is AtOnboardingQRCodeResult) {
       _processSharedSecret(result.atSign, result.secret);
     }
+  }
+
+  Future<dynamic> processSharedSecret(String atsign, String secret) async {
+    dynamic authResponse;
+    try {
+      _inprogressDialog.show(
+        message: AtOnboardingLocalizations.current.processing,
+      );
+      await Future.delayed(const Duration(milliseconds: 400));
+      bool isExist = await _onboardingService.isExistingAtsign(atsign);
+      if (isExist) {
+        _inprogressDialog.close();
+        await _showAlertDialog(
+            AtOnboardingErrorToString().pairedAtsign(atsign));
+        return;
+      }
+
+      //Delay for waiting for ServerStatus change to teapot when activating an atsign
+      await Future.delayed(const Duration(seconds: 10));
+
+      _onboardingService.setAtClientPreference =
+          widget.config.atClientPreference;
+
+      authResponse = await _onboardingService.authenticate(atsign,
+          cramSecret: secret, status: widget.onboardStatus);
+
+      int round = 1;
+      atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
+      while (atSignStatus != ServerStatus.activated) {
+        if (round > 10) {
+          break;
+        }
+
+        await Future.delayed(const Duration(seconds: 3));
+        round++;
+        atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
+        debugPrint("currentAtSignStatus: $atSignStatus");
+      }
+
+      _inprogressDialog.close();
+      if (authResponse == AtOnboardingResponseStatus.authSuccess) {
+        if (atSignStatus == ServerStatus.teapot) {
+          await _showAlertDialog(
+            AtOnboardingLocalizations.current.msg_atSign_unreachable,
+          );
+          return;
+        }
+
+        if (!mounted) return;
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => AtOnboardingBackupScreen(
+              config: widget.config,
+            ),
+          ),
+        );
+
+        if (!mounted) return;
+        Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
+      } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
+        await _showAlertDialog(
+          AtOnboardingLocalizations.current.msg_atSign_not_registered,
+        );
+      } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
+        await _showAlertDialog(
+          AtOnboardingLocalizations.current.msg_atSign_unreachable,
+        );
+      } else {
+        await showErrorDialog(
+          AtOnboardingLocalizations.current.msg_response_time_out,
+        );
+      }
+    } catch (e) {
+      _inprogressDialog.close();
+      if (e == AtOnboardingResponseStatus.authFailed) {
+        _logger.severe('Error in authenticateWith cram secret');
+        await _showAlertDialog(
+          e,
+          title: AtOnboardingLocalizations.current.msg_auth_failed,
+        );
+      } else if (e == AtOnboardingResponseStatus.serverNotReached &&
+          _isContinue) {
+        await _processSharedSecret(atsign, secret);
+      } else if (e == AtOnboardingResponseStatus.timeOut) {
+        await _showAlertDialog(
+          e,
+          title: AtOnboardingLocalizations.current.msg_response_time_out,
+        );
+      }
+    }
+    return authResponse;
   }
 
   Future<dynamic> _processSharedSecret(String atsign, String secret) async {
