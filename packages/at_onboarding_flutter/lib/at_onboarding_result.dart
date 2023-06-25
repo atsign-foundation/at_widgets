@@ -8,6 +8,11 @@ enum AtOnboardingResultStatus {
   cancel, //User canceled
 }
 
+enum AtOnboardingResetResult {
+  cancelled,
+  success,
+}
+
 /// The result returned after onboard
 class AtOnboardingResult {
   /// Status of result

@@ -77,6 +77,7 @@ class ChatService {
   Future<bool> startMonitor() async {
     if (!monitorStarted) {
       AtClientManager.getInstance()
+          .atClient
           .notificationService
           .subscribe(
               regex: atClientManager.atClient.getPreferences()!.namespace ?? '',

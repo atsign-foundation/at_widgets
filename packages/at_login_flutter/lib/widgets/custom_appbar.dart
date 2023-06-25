@@ -5,7 +5,7 @@ import 'package:at_login_flutter/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:at_login_flutter/services/size_config.dart';
 
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showTitle;
   final bool showQr;
   final bool showNotifications;
