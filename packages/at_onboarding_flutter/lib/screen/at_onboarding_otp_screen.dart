@@ -192,25 +192,25 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                         AtOnboardingLocalizations.current.resend_code,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: AtOnboardingLocalizations.current.note,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontSize: AtOnboardingDimens.fontSmall,
-                            height: 1.5,
-                            fontWeight: FontWeight.bold,
+                    const SizedBox(height: 20),
+                    RichText(
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: AtOnboardingLocalizations.current.note,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontSize: AtOnboardingDimens.fontSmall,
+                              height: 1.5,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        TextSpan(
-                          text: AtOnboardingLocalizations
-                              .current.note_otp_content,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontSize: AtOnboardingDimens.fontSmall,
-                            height: 1.5,
+                          TextSpan(
+                            text: AtOnboardingLocalizations
+                                .current.note_otp_content,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontSize: AtOnboardingDimens.fontSmall,
+                              height: 1.5,
+                            ),
                           ),
                         ],
                       ),
