@@ -39,6 +39,9 @@ dependencies:
   at_contacts_flutter:
     path: ../
 
+dependency_overrides:
+  ffi: ^2.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
