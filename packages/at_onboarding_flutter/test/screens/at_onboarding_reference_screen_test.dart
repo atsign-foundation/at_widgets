@@ -13,6 +13,7 @@ void main() {
     onboardingDataTest = OnboardingDataTest();
   });
 
+  // ignore: unused_element
   Widget _defaultApp({
     ThemeData? theme,
   }) {

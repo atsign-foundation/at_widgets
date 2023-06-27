@@ -4,9 +4,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 const int _tutorialVersion = 2;
 
 enum AtOnboardingTutorialDisplay {
-  normal, /// show once
-  always, /// always show tutorial when opening app
-  never, /// never show tutorial when opening app
+  normal,
+
+  /// show once
+
+  always,
+
+  /// always show tutorial when opening app
+
+  never,
+
+  /// never show tutorial when opening app
 }
 
 class AtTutorialServiceInfo {
@@ -29,10 +37,10 @@ class AtTutorialServiceInfo {
   }
 
   Map<String, dynamic> toJson() => {
-    "versionInfo": versionInfo,
-    "hasShowSignInPage": hasShowSignInPage,
-    "hasShowSignUpPage": hasShowSignUpPage,
-  };
+        "versionInfo": versionInfo,
+        "hasShowSignInPage": hasShowSignInPage,
+        "hasShowSignUpPage": hasShowSignUpPage,
+      };
 }
 
 class AtOnboardingTutorialService {

@@ -70,8 +70,8 @@ void main() {
 
     testWidgets('Test case to check primary button loading',
         (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(button: secondaryButtonLoading));
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(button: secondaryButtonLoading));
       expect(find.byType(AtSyncIndicator), findsOneWidget);
     });
   });

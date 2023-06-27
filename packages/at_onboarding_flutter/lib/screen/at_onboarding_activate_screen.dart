@@ -70,8 +70,7 @@ class _AtOnboardingActivateScreenState
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              AtOnboardingLocalizations.current
-                  .title_setting_up_your_atSign,
+              AtOnboardingLocalizations.current.title_setting_up_your_atSign,
             ),
             actions: [
               IconButton(
@@ -97,8 +96,7 @@ class _AtOnboardingActivateScreenState
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    AtOnboardingLocalizations.current
-                        .msg_wait_fetching_atSign,
+                    AtOnboardingLocalizations.current.msg_wait_fetching_atSign,
                   ),
                 ],
               ),

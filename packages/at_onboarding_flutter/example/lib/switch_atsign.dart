@@ -164,9 +164,9 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
           ),
         ),
         isLoading
-            ? Center(
+            ? const Center(
                 child: Column(
-                  children: const [
+                  children: [
                     Text(
                       'Switching atsign...',
                       style: TextStyle(
