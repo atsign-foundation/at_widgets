@@ -66,7 +66,7 @@ void main() {
 
     test('to support wavi and persona namespace', () async {
       var firstAtSign = '@bob🛠';
-      var bobClientService = await setUpFunc(firstAtSign);
+      await setUpFunc(firstAtSign);
       var metadata = Metadata()
         ..isPublic = true
         ..namespaceAware = false;
@@ -81,7 +81,7 @@ void main() {
       await AtClientManager.getInstance().atClient.put(bobLastname, 'Geller');
 
       var secondAtSign = '@colin🛠';
-      var colinClientService = await setUpFunc(secondAtSign);
+      await setUpFunc(secondAtSign);
       var metadata1 = Metadata()..isPublic = true;
       var colinFirstname = AtKey()
         ..key = 'firstname'
@@ -171,7 +171,7 @@ void main() {
     test('follow functioanlity with wavi and persona namespace support',
         () async {
       var firstAtSign = '@bob🛠';
-      var bobClientService = await setUpFunc(firstAtSign);
+      await setUpFunc(firstAtSign);
       var metadata = Metadata()
         ..isPublic = true
         ..namespaceAware = false;
@@ -186,7 +186,7 @@ void main() {
       await AtClientManager.getInstance().atClient.put(bobLastname, 'Geller');
 
       var secondAtSign = '@colin🛠';
-      var colinClientService = await setUpFunc(secondAtSign);
+      await setUpFunc(secondAtSign);
       var metadata1 = Metadata()..isPublic = true;
       var colinFirstname = AtKey()
         ..key = 'firstname'
@@ -283,7 +283,6 @@ Future<void> tearDownFunc() async {
 }
 
 Future<AtClientService> setUpFunc(String atsign) async {
-  var preference = getAtSignPreference(atsign);
   final atClientManager = AtClientManager.getInstance();
   AtClientService atClientService = AtClientService();
   final atClient = atClientManager.atClient;

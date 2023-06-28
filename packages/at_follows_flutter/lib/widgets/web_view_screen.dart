@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/color_constants.dart';
