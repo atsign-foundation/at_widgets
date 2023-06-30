@@ -11,11 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.1
+  provider: ^6.0.5
   qr_code_scanner: ^1.0.1
-  permission_handler: ^9.2.0
-  flutter_local_notifications: ^9.1.4
-  webview_flutter: ^4.0.0
+  permission_handler: ^10.3.0
+  flutter_local_notifications: ^14.1.1
+  webview_flutter: ^4.2.2
   url_launcher: ^6.0.16
   collection: ^1.15.0
   at_utils: ^3.0.11
