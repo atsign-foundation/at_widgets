@@ -1,10 +1,12 @@
 import 'dart:convert';
+
 import 'package:at_location_flutter/utils/constants/constants.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 
 import 'api_service.dart';
 
+/// This class will calculate the ETA from [origin] to [destination].
 class DistanceCalculate {
   DistanceCalculate._();
   static final DistanceCalculate _instance = DistanceCalculate._();
