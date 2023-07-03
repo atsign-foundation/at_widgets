@@ -447,8 +447,7 @@ class _AtOnboardingGenerateScreenState
         message: AtOnboardingLocalizations.current.processing,
       );
       await Future.delayed(const Duration(milliseconds: 400));
-      bool isExist =
-          await _onboardingService.isExistingAtsign(verifiedAtSign);
+      bool isExist = await _onboardingService.isExistingAtsign(verifiedAtSign);
 
       if (isExist) {
         _inprogressDialog.close();

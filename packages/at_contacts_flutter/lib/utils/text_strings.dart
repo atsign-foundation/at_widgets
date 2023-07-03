@@ -28,6 +28,7 @@ class TextStrings {
     'firstname.wavi',
     'lastname.wavi',
     'image.wavi',
+    'mytags.wavi',
   ];
   List<String> contactFieldsPersona = [
     'firstname.persona',
