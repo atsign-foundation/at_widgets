@@ -2,14 +2,15 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/pop_button.dart';
-import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
+import 'package:at_location_flutter/service/sharing_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
+/// This Widget is used to share location a with a contact
 class ShareLocationSheet extends StatefulWidget {
   final Function? onTap;
   const ShareLocationSheet({Key? key, this.onTap}) : super(key: key);
@@ -81,12 +82,8 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
               dropdownColor: AllColors().INPUT_GREY_BACKGROUND,
               value: selectedOption,
               hint: Text(AllText().OCCURS_ON),
-              items: [
-                AllText().k30mins,
-                AllText().k2hours,
-                AllText().k24hours,
-                AllText().untilTurnedOff
-              ].map((String option) {
+              items: [AllText().k30mins, AllText().k2hours, AllText().k24hours, AllText().untilTurnedOff]
+                  .map((String option) {
                 return DropdownMenuItem<String>(
                   value: option,
                   child: Text(option),
@@ -138,12 +135,9 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
 
     var minutes = (selectedOption == AllText().k30mins
         ? 30
-        : (selectedOption == AllText().k2hours
-            ? (2 * 60)
-            : (selectedOption == AllText().k24hours ? (24 * 60) : null)));
+        : (selectedOption == AllText().k2hours ? (2 * 60) : (selectedOption == AllText().k24hours ? (24 * 60) : null)));
 
-    var result = await SharingLocationService()
-        .sendShareLocationEvent(textField, false, minutes: minutes);
+    var result = await SharingLocationService().sendShareLocationEvent(textField, false, minutes: minutes);
 
     if (result == null) {
       setState(() {
@@ -154,15 +148,13 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     }
 
     if (result == true) {
-      CustomToast()
-          .show(AllText().SHARE_LOC_REQ_SENT, context, isSuccess: true);
+      CustomToast().show(AllText().SHARE_LOC_REQ_SENT, context, isSuccess: true);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context,
-          isError: true);
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context, isError: true);
       setState(() {
         isLoading = false;
       });
@@ -175,8 +167,7 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     } else if (!atSign.contains('@')) {
       atSign = '@$atSign';
     }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
+    var checkPresence = await AtLookupImpl.findSecondary(atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
     return checkPresence != null;
   }
 }
