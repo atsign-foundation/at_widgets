@@ -1,5 +1,5 @@
-import 'package:at_location_flutter/map_content/flutter_map/src/layer/marker_layer.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
+import 'package:at_location_flutter/map_content/flutter_map/src/layer/marker_layer.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -8,8 +8,12 @@ import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 import 'marker_custom_painter.dart';
 
-Marker buildMarker(HybridModel user,
-    {bool singleMarker = false, Widget? marker}) {
+// describe this function...
+/// Builds a marker for the map
+/// [user] is the user for which the marker is being built
+/// [singleMarker] is a boolean value which is true if the marker is for the current user
+/// [marker] is a widget which is used to build the marker
+Marker buildMarker(HybridModel user, {bool singleMarker = false, Widget? marker}) {
   return Marker(
     anchorPos: AnchorPos.align(AnchorAlign.center),
     height: 75,
@@ -28,9 +32,7 @@ Marker buildMarker(HybridModel user,
                       width: 40,
                       height: 40,
                       child: CustomPaint(
-                        painter: CircleMarkerPainter(
-                            color: AllColors().WHITE,
-                            paintingStyle: PaintingStyle.fill),
+                        painter: CircleMarkerPainter(color: AllColors().WHITE, paintingStyle: PaintingStyle.fill),
                       ),
                     ),
                   ),
@@ -60,8 +62,7 @@ Marker buildMarker(HybridModel user,
                       radius: 15,
                       backgroundColor: AllColors().ORANGE,
                       child: user.image != null
-                          ? CustomCircleAvatar(
-                              byteImage: user.image, nonAsset: true, size: 30)
+                          ? CustomCircleAvatar(byteImage: user.image, nonAsset: true, size: 30)
                           : ContactInitial(
                               initials: user.displayName,
                               size: 30,
