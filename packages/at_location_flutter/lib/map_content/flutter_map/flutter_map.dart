@@ -5,10 +5,10 @@ library flutter_map;
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/widgets.dart';
 import 'package:at_location_flutter/map_content/flutter_map/flutter_map.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/flutter_map_state.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
+import 'package:flutter/widgets.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 
@@ -63,8 +63,7 @@ class FlutterMap extends StatefulWidget {
     MapController? mapController,
     this.returnPositionTapped,
     this.absorbDoubleTapPointer = false,
-  })  : _mapController = mapController as MapControllerImpl? ??
-            MapController() as MapControllerImpl,
+  })  : _mapController = mapController as MapControllerImpl? ?? MapController() as MapControllerImpl,
         super(key: key);
 
   @override
@@ -178,12 +177,9 @@ class MapOptions {
   }) {
     center ??= LatLng(50.5, 30.51);
     _safeAreaZoom = zoom;
-    assert(slideOnBoundaries ||
-        !isOutOfBounds(center)); //You cannot start outside pan boundary
-    assert(!adaptiveBoundaries || screenSize != null,
-        'screenSize must be set in order to enable adaptive boundaries.');
-    assert(!adaptiveBoundaries || controller != null,
-        'controller must be set in order to enable adaptive boundaries.');
+    assert(slideOnBoundaries || !isOutOfBounds(center)); //You cannot start outside pan boundary
+    assert(!adaptiveBoundaries || screenSize != null, 'screenSize must be set in order to enable adaptive boundaries.');
+    assert(!adaptiveBoundaries || controller != null, 'controller must be set in order to enable adaptive boundaries.');
   }
 
   //if there is a pan boundary, do not cross
@@ -194,11 +190,9 @@ class MapOptions {
     if (swPanBoundary != null && nePanBoundary != null) {
       if (center == null) {
         return true;
-      } else if (center.latitude < swPanBoundary!.latitude ||
-          center.latitude > nePanBoundary!.latitude) {
+      } else if (center.latitude < swPanBoundary!.latitude || center.latitude > nePanBoundary!.latitude) {
         return true;
-      } else if (center.longitude < swPanBoundary!.longitude ||
-          center.longitude > nePanBoundary!.longitude) {
+      } else if (center.longitude < swPanBoundary!.longitude || center.longitude > nePanBoundary!.longitude) {
         return true;
       }
     }
@@ -211,8 +205,7 @@ class MapOptions {
     } else {
       return LatLng(
         point!.latitude.clamp(swPanBoundary!.latitude, nePanBoundary!.latitude),
-        point.longitude
-            .clamp(swPanBoundary!.longitude, nePanBoundary!.longitude),
+        point.longitude.clamp(swPanBoundary!.longitude, nePanBoundary!.longitude),
       );
     }
   }
@@ -247,12 +240,16 @@ class MapOptions {
     return screenSize!.width * degreesPerPixel;
   }
 
-  double _calculateScreenHeightInDegrees() =>
-      screenSize!.height * 170.102258 / pow(2, _getControllerZoom() + 8);
+  double _calculateScreenHeightInDegrees() => screenSize!.height * 170.102258 / pow(2, _getControllerZoom() + 8);
 
   double _getControllerZoom() => controller!.ready ? controller!.zoom : zoom;
 }
 
+/// Options for [MapController.fitBounds].
+///
+/// [padding] is the amount of padding in pixels to add to fit bounds.
+/// [maxZoom] is the maximum zoom level to allow when fitting bounds.
+/// [zoom] is the zoom level to use when fitting bounds.
 class FitBoundsOptions {
   final EdgeInsets padding;
   final double maxZoom;
@@ -285,15 +282,10 @@ class _SafeArea {
         isLatitudeBlocked = southWest.latitude > northEast.latitude,
         isLongitudeBlocked = southWest.longitude > northEast.longitude;
 
-  bool contains(point) =>
-      isLatitudeBlocked || isLongitudeBlocked ? false : bounds.contains(point);
+  bool contains(point) => isLatitudeBlocked || isLongitudeBlocked ? false : bounds.contains(point);
 
   LatLng containPoint(LatLng? point, LatLng? fallback) => LatLng(
-        isLatitudeBlocked
-            ? fallback!.latitude
-            : point!.latitude.clamp(bounds.south, bounds.north),
-        isLongitudeBlocked
-            ? fallback!.longitude
-            : point!.longitude.clamp(bounds.west, bounds.east),
+        isLatitudeBlocked ? fallback!.latitude : point!.latitude.clamp(bounds.south, bounds.north),
+        isLongitudeBlocked ? fallback!.longitude : point!.longitude.clamp(bounds.west, bounds.east),
       );
 }
