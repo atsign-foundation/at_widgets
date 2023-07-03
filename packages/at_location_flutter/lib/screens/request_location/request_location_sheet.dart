@@ -2,14 +2,15 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/common_components/pop_button.dart';
-import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
+import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/text_strings.dart';
 import 'package:at_location_flutter/utils/constants/text_styles.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
 
+/// This Widget is used to request location from a contact
 class RequestLocationSheet extends StatefulWidget {
   final Function? onTap;
   const RequestLocationSheet({Key? key, this.onTap}) : super(key: key);
@@ -40,8 +41,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AllText().REQUEST_LOCATION,
-                  style: CustomTextStyles().black18),
+              Text(AllText().REQUEST_LOCATION, style: CustomTextStyles().black18),
               PopButton(label: AllText().CANCEL)
             ],
           ),
@@ -95,8 +95,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
       return;
     }
 
-    var result =
-        await RequestLocationService().sendRequestLocationEvent(textField);
+    var result = await RequestLocationService().sendRequestLocationEvent(textField);
 
     if (result == null) {
       setState(() {
@@ -107,15 +106,13 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     }
 
     if (result == true) {
-      CustomToast()
-          .show(AllText().REQUEST_LOCATION_SENT, context, isSuccess: true);
+      CustomToast().show(AllText().REQUEST_LOCATION_SENT, context, isSuccess: true);
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context,
-          isError: true);
+      CustomToast().show(AllText().SOMETHING_WENT_WRONG_TRY_AGAIN, context, isError: true);
       setState(() {
         isLoading = false;
       });
@@ -128,8 +125,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     } else if (!atSign.contains('@')) {
       atSign = '@$atSign';
     }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
+    var checkPresence = await AtLookupImpl.findSecondary(atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
     return checkPresence != null;
   }
 }
