@@ -12,6 +12,7 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:uuid/uuid.dart';
 import 'package:at_utils/at_logger.dart';
 
+/// Provides methods for inviting contacts
 class InvitationService {
   InvitationService._();
   static final InvitationService _instance = InvitationService._();
@@ -46,7 +47,8 @@ class InvitationService {
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     if (!hasMonitorStarted) {
-      AtClientManager.getInstance().atClient
+      AtClientManager.getInstance()
+          .atClient
           .notificationService
           .subscribe(shouldDecrypt: true)
           .listen((notification) {
@@ -84,6 +86,7 @@ class InvitationService {
     }
   }
 
+  /// Process the invitation acknowledgement
   void _processInviteAcknowledgement(String? data, String? fromAtsign) async {
     if (data != null && fromAtsign != null) {
       MessageShareModel receivedInformation =
@@ -107,11 +110,13 @@ class InvitationService {
             .put(atKey, jsonEncode(sentInformation.message))
             .catchError((e) {
           _logger.severe('Error in sharing saved message => $e');
+          return false;
         });
       }
     }
   }
 
+  /// Invite a contact and create a shared key
   Future<void> shareAndinvite(BuildContext context, String jsonData) async {
     // create a key and save the json data
     var keyID = const Uuid().v4();
@@ -129,6 +134,7 @@ class InvitationService {
         .put(atKey, jsonEncode(messageContent))
         .catchError((e) {
       _logger.severe('Error in saving shared data => $e');
+      return false;
     });
     if (result == true) {
       showDialog(
@@ -144,6 +150,7 @@ class InvitationService {
     }
   }
 
+  /// fetch the invitation data
   Future<void> fetchInviteData(
       BuildContext context, String data, String atsign) async {
     String otp = await showDialog(
@@ -161,6 +168,7 @@ class InvitationService {
         .put(atKey, jsonEncode(messageContent))
         .catchError((e) {
       _logger.severe('Error in saving acknowledge message => $e');
+      return false;
     });
   }
 }

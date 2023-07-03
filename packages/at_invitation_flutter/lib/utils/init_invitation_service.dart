@@ -10,10 +10,12 @@ void initializeInvitationService(
       .initInvitationService(navkey, webPage, rootDomain, rootPort);
 }
 
+/// Invite a contact and create a shared key
 void shareAndInvite(BuildContext context, String jsonData) {
   InvitationService().shareAndinvite(context, jsonData);
 }
 
+/// fetch the invitation data
 fetchInviteData(BuildContext context, String data, String atsign) {
   InvitationService().fetchInviteData(context, data, atsign);
 }
