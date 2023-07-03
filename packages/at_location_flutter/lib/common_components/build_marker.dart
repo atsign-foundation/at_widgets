@@ -8,7 +8,6 @@ import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 import 'marker_custom_painter.dart';
 
-// describe this function...
 /// Builds a marker for the map
 /// [user] is the user for which the marker is being built
 /// [singleMarker] is a boolean value which is true if the marker is for the current user
