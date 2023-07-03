@@ -4,6 +4,12 @@ import 'dart:convert';
 
 import 'package:latlong2/latlong.dart';
 
+/// Model class for the location data.
+/// [locationSharingFor] accepts id as key and [LocationSharingFor] as data.
+/// [lat] and [long] are the latitude and longitude of the location.
+/// [lastUpdatedAt] is the time at which the location was last updated.
+/// [sender] is the atsign of the sender.
+/// [receiver] is the atsign of the receiver.
 class LocationDataModel {
   /// [locationSharingFor] accepts id as key and [LocationSharingFor] as data.
   late Map<String, LocationSharingFor> locationSharingFor;
@@ -13,8 +19,7 @@ class LocationDataModel {
 
   /// Enhancement: add a bool for retry
 
-  LocationDataModel(this.locationSharingFor, this.lat, this.long,
-      this.lastUpdatedAt, this.sender, this.receiver);
+  LocationDataModel(this.locationSharingFor, this.lat, this.long, this.lastUpdatedAt, this.sender, this.receiver);
 
   Map<String, dynamic> toJson() {
     return {
@@ -43,20 +48,15 @@ class LocationDataModel {
       tempLocationSharingFor[key] = locationData;
     });
 
-    lat = data['lat'] != null && data['lat'] != 'null'
-        ? double.parse(data['lat'])
-        : null;
-    long = data['long'] != null && data['long'] != 'null'
-        ? double.parse(data['long'])
-        : null;
+    lat = data['lat'] != null && data['lat'] != 'null' ? double.parse(data['lat']) : null;
+    long = data['long'] != null && data['long'] != 'null' ? double.parse(data['long']) : null;
     lastUpdatedAt = DateTime.parse(data['lastUpdatedAt']).toLocal();
     sender = data['sender'];
     receiver = data['receiver'];
     locationSharingFor = {...tempLocationSharingFor};
   }
 
-  LatLng? get getLatLng =>
-      lat != null && long != null ? LatLng(lat!, long!) : null;
+  LatLng? get getLatLng => lat != null && long != null ? LatLng(lat!, long!) : null;
 
   @override
   String toString() {
@@ -64,25 +64,26 @@ class LocationDataModel {
   }
 }
 
+/// Model class for the location sharing data.
+/// [from] is the time from which the location is shared.
+/// [to] is the time until the location will be shared.
+/// [locationSharingType] is the type of location sharing.
+/// [isAccepted] is true if the location is accepted.
+/// [isExited] is true if the location is exited.
+/// [isSharing] is true if the location is being shared.
 class LocationSharingFor {
   DateTime? from, to;
   late LocationSharingType locationSharingType;
   late bool isAccepted, isExited, isSharing;
 
-  LocationSharingFor(this.from, this.to, this.locationSharingType,
-      this.isAccepted, this.isExited, this.isSharing);
+  LocationSharingFor(this.from, this.to, this.locationSharingType, this.isAccepted, this.isExited, this.isSharing);
 
   LocationSharingFor.fromJson(Map<String, dynamic> data) {
-    from = (data['from'] != null && data['from'] != 'null')
-        ? DateTime.parse(data['from']).toLocal()
-        : null;
-    to = (data['to'] != null && data['to'] != 'null')
-        ? DateTime.parse(data['to']).toLocal()
-        : null;
-    locationSharingType =
-        data['locationSharingType'] == 'LocationSharingType.Event'
-            ? LocationSharingType.Event
-            : LocationSharingType.P2P;
+    from = (data['from'] != null && data['from'] != 'null') ? DateTime.parse(data['from']).toLocal() : null;
+    to = (data['to'] != null && data['to'] != 'null') ? DateTime.parse(data['to']).toLocal() : null;
+    locationSharingType = data['locationSharingType'] == 'LocationSharingType.Event'
+        ? LocationSharingType.Event
+        : LocationSharingType.P2P;
     isAccepted = data['isAccepted'] == 'true' ? true : false;
     isExited = data['isExited'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
@@ -100,4 +101,8 @@ class LocationSharingFor {
   }
 }
 
+// describe the LocationSharingType enum...
+/// Enum for the type of location sharing.
+/// [Event] is for sharing location for an event.
+/// [P2P] is for sharing location for a person.
 enum LocationSharingType { Event, P2P }
