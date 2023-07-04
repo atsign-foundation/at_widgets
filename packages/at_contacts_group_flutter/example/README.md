@@ -9,7 +9,7 @@ The at_contacts_group_flutter is designed to make it easy to add groups to a flu
 
 
 ### Give it a try
-This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_contacts_group_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.
+This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_contacts_group_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.
 
 ```sh
 $ flutter pub global activate at_app 

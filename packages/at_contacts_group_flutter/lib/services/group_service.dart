@@ -329,10 +329,21 @@ class GroupService {
     try {
       /// contacts list is already present, we do not fetch it again.
       if (allContacts.isNotEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          _allContactsStreamController.add(allContacts);
+        listContact.sort((a, b) {
+          int? index = a.atSign
+              .toString()
+              .substring(1)
+              .compareTo((b.atSign).toString().substring(1));
+          return index;
         });
-        return;
+
+        /// If both contacts list are same, no chanbges have been made by the user.
+        if (listContact == ContactService().contactList) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            _allContactsStreamController.add(allContacts);
+          });
+          return;
+        }
       }
       allContacts = [];
       listContact = [];

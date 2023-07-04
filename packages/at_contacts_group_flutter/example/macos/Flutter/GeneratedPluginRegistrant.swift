@@ -10,10 +10,10 @@ import biometric_storage
 import device_info_plus
 import emoji_picker_flutter
 import file_selector_macos
-import package_info_plus_macos
-import path_provider_foundation
+import package_info_plus
+import path_provider_macos
 import share_plus_macos
-import shared_preferences_foundation
+import shared_preferences_macos
 import url_launcher_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
