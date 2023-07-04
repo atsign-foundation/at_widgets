@@ -1237,5 +1237,5 @@ class Coords<T extends num> extends CustomPoint<T> {
   }
 
   @override
-  int get hashCode => hashValues(x.hashCode, y.hashCode, z.hashCode);
+  int get hashCode => Object.hash(x.hashCode, y.hashCode, z.hashCode);
 }
