@@ -8,10 +8,10 @@ import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
+import 'package:at_utils/at_logger.dart';
 
 import 'contact_service.dart';
 import 'send_location_notification.dart';
-import 'package:at_utils/at_logger.dart';
 
 class KeyStreamService {
   KeyStreamService._();
@@ -28,8 +28,7 @@ class KeyStreamService {
   List<AtContact> contactList = [];
 
   // ignore: close_sinks
-  StreamController atNotificationsController =
-      StreamController<List<KeyLocationModel>>.broadcast();
+  StreamController atNotificationsController = StreamController<List<KeyLocationModel>>.broadcast();
   Stream<List<KeyLocationModel>> get atNotificationsStream =>
       atNotificationsController.stream as Stream<List<KeyLocationModel>>;
   StreamSink<List<KeyLocationModel>> get atNotificationsSink =>
@@ -37,16 +36,14 @@ class KeyStreamService {
 
   Function(List<KeyLocationModel>)? streamAlternative;
 
-  void init(AtClient? clientInstance,
-      {Function(List<KeyLocationModel>)? streamAlternative}) async {
+  void init(AtClient? clientInstance, {Function(List<KeyLocationModel>)? streamAlternative}) async {
     loggedInUserDetails = null;
     atClientInstance = clientInstance;
     currentAtSign = atClientInstance!.getCurrentAtSign();
     allLocationNotifications = [];
     this.streamAlternative = streamAlternative;
 
-    atNotificationsController =
-        StreamController<List<KeyLocationModel>>.broadcast();
+    atNotificationsController = StreamController<List<KeyLocationModel>>.broadcast();
     getAllNotifications();
 
     loggedInUserDetails = await getAtSignDetails(currentAtSign);
@@ -60,7 +57,7 @@ class KeyStreamService {
 
   /// adds all share and request location notifications to [atNotificationsSink]
   void getAllNotifications() async {
-    AtClientManager.getInstance().syncService.sync();
+    AtClientManager.getInstance().atClient.syncService.sync();
 
     var allResponse = await atClientInstance!.getKeys(
       regex: 'sharelocation-',
@@ -84,8 +81,7 @@ class KeyStreamService {
       if (value != null) {
         try {
           if ((value.value != null) && (value.value != 'null')) {
-            var locationNotificationModel =
-                LocationNotificationModel.fromJson(jsonDecode(value.value));
+            var locationNotificationModel = LocationNotificationModel.fromJson(jsonDecode(value.value));
             allLocationNotifications.insert(
                 0,
                 KeyLocationModel(
@@ -107,21 +103,15 @@ class KeyStreamService {
 
   /// Updates any received notification with [haveResponded] true, if already responded.
   Future<void> checkForPendingLocations() async {
-    await Future.forEach(allLocationNotifications,
-        (KeyLocationModel notification) async {
-      if (notification.locationNotificationModel!.key!
-          .contains(MixedConstants.SHARE_LOCATION)) {
-        if ((notification.locationNotificationModel!.atsignCreator !=
-                currentAtSign) &&
+    await Future.forEach(allLocationNotifications, (KeyLocationModel notification) async {
+      if (notification.locationNotificationModel!.key!.contains(MixedConstants.SHARE_LOCATION)) {
+        if ((notification.locationNotificationModel!.atsignCreator != currentAtSign) &&
             (!notification.locationNotificationModel!.isAccepted) &&
             (!notification.locationNotificationModel!.isExited)) {
-          var atkeyMicrosecondId = notification.locationNotificationModel!.key!
-              .split('sharelocation-')[1]
-              .split('@')[0];
-          var acknowledgedKeyId =
-              'sharelocationacknowledged-$atkeyMicrosecondId';
-          var allRegexResponses =
-              await atClientInstance!.getKeys(regex: acknowledgedKeyId);
+          var atkeyMicrosecondId =
+              notification.locationNotificationModel!.key!.split('sharelocation-')[1].split('@')[0];
+          var acknowledgedKeyId = 'sharelocationacknowledged-$atkeyMicrosecondId';
+          var allRegexResponses = await atClientInstance!.getKeys(regex: acknowledgedKeyId);
           // ignore: unnecessary_null_comparison
           if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
             notification.haveResponded = true;
@@ -129,19 +119,14 @@ class KeyStreamService {
         }
       }
 
-      if (notification.locationNotificationModel!.key!
-          .contains(MixedConstants.REQUEST_LOCATION)) {
-        if ((notification.locationNotificationModel!.atsignCreator ==
-                currentAtSign) &&
+      if (notification.locationNotificationModel!.key!.contains(MixedConstants.REQUEST_LOCATION)) {
+        if ((notification.locationNotificationModel!.atsignCreator == currentAtSign) &&
             (!notification.locationNotificationModel!.isAccepted) &&
             (!notification.locationNotificationModel!.isExited)) {
-          var atkeyMicrosecondId = notification.locationNotificationModel!.key!
-              .split('requestlocation-')[1]
-              .split('@')[0];
-          var acknowledgedKeyId =
-              'requestlocationacknowledged-$atkeyMicrosecondId';
-          var allRegexResponses =
-              await atClientInstance!.getKeys(regex: acknowledgedKeyId);
+          var atkeyMicrosecondId =
+              notification.locationNotificationModel!.key!.split('requestlocation-')[1].split('@')[0];
+          var acknowledgedKeyId = 'requestlocationacknowledged-$atkeyMicrosecondId';
+          var allRegexResponses = await atClientInstance!.getKeys(regex: acknowledgedKeyId);
           // ignore: unnecessary_null_comparison
           if ((allRegexResponses != null) && (allRegexResponses.isNotEmpty)) {
             notification.haveResponded = true;
@@ -153,10 +138,7 @@ class KeyStreamService {
 
   void updatePendingStatus(LocationNotificationModel notification) {
     for (var i = 0; i < allLocationNotifications.length; i++) {
-      if ((allLocationNotifications[i]
-          .locationNotificationModel!
-          .key!
-          .contains(notification.key!))) {
+      if ((allLocationNotifications[i].locationNotificationModel!.key!.contains(notification.key!))) {
         allLocationNotifications[i].haveResponded = true;
         break;
       }
@@ -176,21 +158,16 @@ class KeyStreamService {
     for (var i = 0; i < dltRequestLocationResponse.length; i++) {
       /// Operate on receied notifications
       if (dltRequestLocationResponse[i].contains('cached')) {
-        var atkeyMicrosecondId = dltRequestLocationResponse[i]
-            .split('deleterequestacklocation-')[1]
-            .split('@')[0];
+        var atkeyMicrosecondId = dltRequestLocationResponse[i].split('deleterequestacklocation-')[1].split('@')[0];
 
         var _index = allLocationNotifications.indexWhere((element) {
-          return (element.locationNotificationModel!.key!
-                  .contains(atkeyMicrosecondId) &&
-              (element.locationNotificationModel!.key!
-                  .contains(MixedConstants.SHARE_LOCATION)));
+          return (element.locationNotificationModel!.key!.contains(atkeyMicrosecondId) &&
+              (element.locationNotificationModel!.key!.contains(MixedConstants.SHARE_LOCATION)));
         });
 
         if (_index == -1) continue;
 
-        await RequestLocationService().deleteKey(
-            allLocationNotifications[_index].locationNotificationModel!);
+        await RequestLocationService().deleteKey(allLocationNotifications[_index].locationNotificationModel!);
       }
     }
   }
@@ -204,23 +181,16 @@ class KeyStreamService {
           (allLocationNotifications[i].locationNotificationModel == null)) {
         tempArray.add(allLocationNotifications[i]);
       } else {
-        if ((allLocationNotifications[i].locationNotificationModel!.to !=
-                null) &&
-            (allLocationNotifications[i]
-                    .locationNotificationModel!
-                    .to!
-                    .difference(DateTime.now())
-                    .inMinutes <
-                0)) tempArray.add(allLocationNotifications[i]);
+        if ((allLocationNotifications[i].locationNotificationModel!.to != null) &&
+            (allLocationNotifications[i].locationNotificationModel!.to!.difference(DateTime.now()).inMinutes < 0))
+          tempArray.add(allLocationNotifications[i]);
       }
     }
-    allLocationNotifications
-        .removeWhere((element) => tempArray.contains(element));
+    allLocationNotifications.removeWhere((element) => tempArray.contains(element));
   }
 
   /// Updates any [KeyLocationModel] data for updated data
-  Future<void> mapUpdatedLocationDataToWidget(
-      LocationNotificationModel locationData,
+  Future<void> mapUpdatedLocationDataToWidget(LocationNotificationModel locationData,
       {bool shouldCheckForTimeChanges = false}) async {
     /// so, that we don't add any expired event
     if (isPastNotification(locationData)) {
@@ -229,21 +199,16 @@ class KeyStreamService {
 
     String newLocationDataKeyId;
     if (locationData.key!.contains(MixedConstants.SHARE_LOCATION)) {
-      newLocationDataKeyId =
-          locationData.key!.split('sharelocation-')[1].split('@')[0];
+      newLocationDataKeyId = locationData.key!.split('sharelocation-')[1].split('@')[0];
     } else {
-      newLocationDataKeyId =
-          locationData.key!.split('requestlocation-')[1].split('@')[0];
+      newLocationDataKeyId = locationData.key!.split('requestlocation-')[1].split('@')[0];
     }
 
     //// If we want to add any such notification that is not in the list, but we get an update
     var _locationDataNotPresent = true;
 
     for (var i = 0; i < allLocationNotifications.length; i++) {
-      if (allLocationNotifications[i]
-          .locationNotificationModel!
-          .key!
-          .contains(newLocationDataKeyId)) {
+      if (allLocationNotifications[i].locationNotificationModel!.key!.contains(newLocationDataKeyId)) {
         allLocationNotifications[i].locationNotificationModel = locationData;
         _locationDataNotPresent = false;
       }
@@ -265,8 +230,7 @@ class KeyStreamService {
           .locationSharingFor[trimAtsignsFromKey(locationData.key!)]!
           .to = locationData.to;
 
-      SendLocationNotification()
-          .sendLocationAfterDataUpdate([locationData.receiver!]);
+      SendLocationNotification().sendLocationAfterDataUpdate([locationData.receiver!]);
 
       return;
     }
@@ -274,22 +238,16 @@ class KeyStreamService {
     // Update location sharing
     if ((locationData.isSharing) && (locationData.isAccepted)) {
       if (locationData.atsignCreator == currentAtSign) {
-        var _tempLocationDataModel = SendLocationNotification()
-            .locationNotificationModelToLocationDataModel(locationData);
+        var _tempLocationDataModel =
+            SendLocationNotification().locationNotificationModelToLocationDataModel(locationData);
 
-        if (SendLocationNotification()
-            .ifLocationDataAlreadyExists(_tempLocationDataModel)) {
-          SendLocationNotification()
-              .allAtsignsLocationData[locationData.receiver!]!
-              .locationSharingFor = {
-            ...SendLocationNotification()
-                .allAtsignsLocationData[locationData.receiver!]!
-                .locationSharingFor,
+        if (SendLocationNotification().ifLocationDataAlreadyExists(_tempLocationDataModel)) {
+          SendLocationNotification().allAtsignsLocationData[locationData.receiver!]!.locationSharingFor = {
+            ...SendLocationNotification().allAtsignsLocationData[locationData.receiver!]!.locationSharingFor,
             ..._tempLocationDataModel.locationSharingFor,
           };
 
-          SendLocationNotification()
-              .sendLocationAfterDataUpdate([locationData.receiver!]);
+          SendLocationNotification().sendLocationAfterDataUpdate([locationData.receiver!]);
         } else {
           SendLocationNotification().addMember(_tempLocationDataModel);
         }
@@ -297,11 +255,8 @@ class KeyStreamService {
     } else {
       if (compareAtSign(locationData.atsignCreator!, currentAtSign!)) {
         //// ifLocationDataAlreadyExists remove
-        SendLocationNotification().removeMember(
-            locationData.key!, [locationData.receiver!],
-            isExited: locationData.isExited,
-            isAccepted: locationData.isAccepted,
-            isSharing: locationData.isSharing);
+        SendLocationNotification().removeMember(locationData.key!, [locationData.receiver!],
+            isExited: locationData.isExited, isAccepted: locationData.isAccepted, isSharing: locationData.isSharing);
         //// Else add it
       }
     }
@@ -320,36 +275,31 @@ class KeyStreamService {
 
     String atsignToDelete = '';
     allLocationNotifications.removeWhere((notification) {
-      if (key.contains(
-          trimAtsignsFromKey(notification.locationNotificationModel!.key!))) {
+      if (key.contains(trimAtsignsFromKey(notification.locationNotificationModel!.key!))) {
         atsignToDelete = notification.locationNotificationModel!.receiver!;
         locationNotificationModel = notification.locationNotificationModel;
       }
-      return key.contains(
-          trimAtsignsFromKey(notification.locationNotificationModel!.key!));
+      return key.contains(trimAtsignsFromKey(notification.locationNotificationModel!.key!));
     });
     notifyListeners();
     // Remove location sharing
     if (locationNotificationModel != null)
     // && (compareAtSign(locationNotificationModel.atsignCreator!, currentAtSign!))
     {
-      SendLocationNotification().removeMember(key, [atsignToDelete],
-          isExited: true, isAccepted: false, isSharing: false);
+      SendLocationNotification()
+          .removeMember(key, [atsignToDelete], isExited: true, isAccepted: false, isSharing: false);
     }
   }
 
   isPastNotification(LocationNotificationModel _locationNotificationModel) {
-    if ((_locationNotificationModel.to != null) &&
-        (_locationNotificationModel.to!.isBefore(DateTime.now()))) {
+    if ((_locationNotificationModel.to != null) && (_locationNotificationModel.to!.isBefore(DateTime.now()))) {
       return true;
     }
     return false;
   }
 
   /// Adds new [KeyLocationModel] data for new received notification
-  Future<dynamic> addDataToList(
-      LocationNotificationModel locationNotificationModel,
-      {String? receivedkey}) async {
+  Future<dynamic> addDataToList(LocationNotificationModel locationNotificationModel, {String? receivedkey}) async {
     /// so, that we don't add any expired event
     if (isPastNotification(locationNotificationModel)) {
       return;
@@ -357,25 +307,21 @@ class KeyStreamService {
 
     /// with rSDK we can get previous notification, this will restrict us to add one notification twice
     for (var _locationNotification in allLocationNotifications) {
-      if (_locationNotification.locationNotificationModel!.key ==
-          locationNotificationModel.key) {
+      if (_locationNotification.locationNotificationModel!.key == locationNotificationModel.key) {
         return;
       }
     }
 
     var tempHyridNotificationModel = KeyLocationModel();
-    tempHyridNotificationModel.locationNotificationModel =
-        locationNotificationModel;
-    allLocationNotifications.insert(0,
-        tempHyridNotificationModel); // last item to come in would be at the top of the list
+    tempHyridNotificationModel.locationNotificationModel = locationNotificationModel;
+    allLocationNotifications.insert(
+        0, tempHyridNotificationModel); // last item to come in would be at the top of the list
 
     if ((tempHyridNotificationModel.locationNotificationModel!.isSharing)) {
-      if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator ==
-          currentAtSign) {
+      if (tempHyridNotificationModel.locationNotificationModel!.atsignCreator == currentAtSign) {
         // ignore: unawaited_futures
         SendLocationNotification().addMember(SendLocationNotification()
-            .locationNotificationModelToLocationDataModel(
-                tempHyridNotificationModel.locationNotificationModel!));
+            .locationNotificationModelToLocationDataModel(tempHyridNotificationModel.locationNotificationModel!));
       }
     }
 
@@ -386,10 +332,9 @@ class KeyStreamService {
 
   Future<dynamic> getAtValue(AtKey key) async {
     try {
-      var atvalue =
-          await AtClientManager.getInstance().atClient.get(key).catchError(
-              // ignore: invalid_return_type_for_catch_error
-              (e) => _logger.severe('error in in key_stream_service get $e'));
+      var atvalue = await AtClientManager.getInstance().atClient.get(key).catchError(
+          // ignore: invalid_return_type_for_catch_error
+          (e) => _logger.severe('error in in key_stream_service get $e'));
       // ignore: unnecessary_null_comparison
       if (atvalue != null) {
         return atvalue;

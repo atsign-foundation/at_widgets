@@ -14,11 +14,11 @@ import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:at_location_flutter/utils/constants/constants.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 
 import 'request_location_service.dart';
 import 'sharing_location_service.dart';
-import 'package:at_utils/at_logger.dart';
 
 /// Starts monitor and listens for notifications related to this package.
 class AtLocationNotificationListener {
@@ -43,8 +43,7 @@ class AtLocationNotificationListener {
   // ignore: non_constant_identifier_names
   String? ROOT_DOMAIN;
 
-  void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
-      bool showDialogBox,
+  void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain, bool showDialogBox,
       {Function? newGetAtValueFromMainApp, bool isEventInUse = false}) {
     this.isEventInUse = isEventInUse;
     atClientInstance = AtClientManager.getInstance().atClient;
@@ -60,6 +59,7 @@ class AtLocationNotificationListener {
   Future<void> startMonitor() async {
     if (!monitorStarted) {
       AtClientManager.getInstance()
+          .atClient
           .notificationService
           .subscribe(shouldDecrypt: true)
           .listen((monitorNotification) {
@@ -77,8 +77,7 @@ class AtLocationNotificationListener {
   /// filters out the received notification.
   void _notificationCallback(AtNotification notification) async {
     if ((notification.id == '-1') ||
-        compareAtSign(notification.from,
-            AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
+        compareAtSign(notification.from, AtClientManager.getInstance().atClient.getCurrentAtSign()!)) {
       return;
     }
 
@@ -95,14 +94,12 @@ class AtLocationNotificationListener {
     }
 
     if ((!notificationKey.contains(locationKey)) &&
-        (!notificationKey
-            .contains(MixedConstants.DELETE_REQUEST_LOCATION_ACK)) &&
+        (!notificationKey.contains(MixedConstants.DELETE_REQUEST_LOCATION_ACK)) &&
         (!notificationKey.contains(MixedConstants.SHARE_LOCATION_ACK)) &&
         (!notificationKey.contains(MixedConstants.SHARE_LOCATION)) &&
         (!notificationKey.contains(MixedConstants.REQUEST_LOCATION_ACK)) &&
         (!notificationKey.contains(MixedConstants.REQUEST_LOCATION))) {
-      _logger.finer(
-          'returned from _notificationCallback in location package ===========>');
+      _logger.finer('returned from _notificationCallback in location package ===========>');
       return;
     }
 
@@ -115,19 +112,13 @@ class AtLocationNotificationListener {
         return;
       }
 
-      if (atKey
-          .toString()
-          .toLowerCase()
-          .contains(MixedConstants.SHARE_LOCATION)) {
+      if (atKey.toString().toLowerCase().contains(MixedConstants.SHARE_LOCATION)) {
         _logger.finer('$notificationKey containing sharelocation deleted');
         KeyStreamService().removeData(atKey.toString());
         return;
       }
 
-      if (atKey
-          .toString()
-          .toLowerCase()
-          .contains(MixedConstants.REQUEST_LOCATION)) {
+      if (atKey.toString().toLowerCase().contains(MixedConstants.REQUEST_LOCATION)) {
         _logger.finer('$notificationKey containing requestlocation deleted');
         KeyStreamService().removeData(atKey.toString());
         return;
@@ -135,18 +126,13 @@ class AtLocationNotificationListener {
     }
 
     var decryptedMessage = value;
-    
 
     if (decryptedMessage == null || decryptedMessage == '') {
       return;
     }
 
-    if (atKey
-        .toString()
-        .toLowerCase()
-        .contains(MixedConstants.DELETE_REQUEST_LOCATION_ACK)) {
-      var msg =
-          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+    if (atKey.toString().toLowerCase().contains(MixedConstants.DELETE_REQUEST_LOCATION_ACK)) {
+      var msg = LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       // ignore: unawaited_futures
       RequestLocationService().deleteKey(msg);
       return;
@@ -158,31 +144,22 @@ class AtLocationNotificationListener {
       return;
     }
 
-    if (atKey
-        .toString()
-        .toLowerCase()
-        .contains(MixedConstants.SHARE_LOCATION_ACK)) {
-      var locationData =
-          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+    if (atKey.toString().toLowerCase().contains(MixedConstants.SHARE_LOCATION_ACK)) {
+      var locationData = LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       // ignore: unawaited_futures
       SharingLocationService().updateWithShareLocationAcknowledge(locationData);
       return;
     }
 
-    if (atKey
-        .toString()
-        .toLowerCase()
-        .contains(MixedConstants.SHARE_LOCATION)) {
-      var locationData =
-          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+    if (atKey.toString().toLowerCase().contains(MixedConstants.SHARE_LOCATION)) {
+      var locationData = LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
         KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
         // if (locationData.rePrompt) {
         //   await showMyDialog(fromAtSign, locationData);
         // }
       } else {
-        var _result = await KeyStreamService()
-            .addDataToList(locationData, receivedkey: notificationKey);
+        var _result = await KeyStreamService().addDataToList(locationData, receivedkey: notificationKey);
         if (_result is KeyLocationModel) {
           showToast('$fromAtSign did a share location', navKey.currentContext!);
         }
@@ -190,24 +167,15 @@ class AtLocationNotificationListener {
       return;
     }
 
-    if (atKey
-        .toString()
-        .toLowerCase()
-        .contains(MixedConstants.REQUEST_LOCATION_ACK)) {
-      var locationData =
-          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+    if (atKey.toString().toLowerCase().contains(MixedConstants.REQUEST_LOCATION_ACK)) {
+      var locationData = LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       // ignore: unawaited_futures
-      RequestLocationService()
-          .updateWithRequestLocationAcknowledge(locationData);
+      RequestLocationService().updateWithRequestLocationAcknowledge(locationData);
       return;
     }
 
-    if (atKey
-        .toString()
-        .toLowerCase()
-        .contains(MixedConstants.REQUEST_LOCATION)) {
-      var locationData =
-          LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
+    if (atKey.toString().toLowerCase().contains(MixedConstants.REQUEST_LOCATION)) {
+      var locationData = LocationNotificationModel.fromJson(jsonDecode(decryptedMessage));
       if (locationData.isAcknowledgment == true) {
         if (!(KeyStreamService().isPastNotification(locationData))) {
           KeyStreamService().mapUpdatedLocationDataToWidget(locationData);
@@ -217,8 +185,7 @@ class AtLocationNotificationListener {
         }
       } else {
         /// if this fails, then all subsequent calls for this locationData will fail
-        var _result = await KeyStreamService()
-            .addDataToList(locationData, receivedkey: notificationKey);
+        var _result = await KeyStreamService().addDataToList(locationData, receivedkey: notificationKey);
         if (_result is KeyLocationModel) {
           await showMyDialog(fromAtSign, locationData);
         }
@@ -227,8 +194,7 @@ class AtLocationNotificationListener {
     }
   }
 
-  Future<void> showMyDialog(
-      String? fromAtSign, LocationNotificationModel locationData) async {
+  Future<void> showMyDialog(String? fromAtSign, LocationNotificationModel locationData) async {
     if (showDialogBox) {
       return showDialog<void>(
         context: navKey.currentContext!,
@@ -244,8 +210,7 @@ class AtLocationNotificationListener {
     }
   }
 
-  showToast(String msg, BuildContext _context,
-      {bool isError = false, bool isSuccess = true}) {
+  showToast(String msg, BuildContext _context, {bool isError = false, bool isSuccess = true}) {
     try {
       ScaffoldMessenger.of(_context).showSnackBar(SnackBar(
         content: Text(msg),
@@ -253,8 +218,7 @@ class AtLocationNotificationListener {
         dismissDirection: DismissDirection.horizontal,
       ));
     } catch (e) {
-      CustomToast().show(msg, navKey.currentContext!,
-          isError: isError, isSuccess: isSuccess);
+      CustomToast().show(msg, navKey.currentContext!, isError: isError, isSuccess: isSuccess);
     }
   }
 

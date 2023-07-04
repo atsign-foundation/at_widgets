@@ -1,3 +1,4 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
@@ -167,7 +168,10 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     } else if (!atSign.contains('@')) {
       atSign = '@$atSign';
     }
-    var checkPresence = await AtLookupImpl.findSecondary(atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
-    return checkPresence != null;
+    var checkPresence =
+        (await CacheableSecondaryAddressFinder(AtLocationNotificationListener().ROOT_DOMAIN!, 64).findSecondary(atSign))
+            .toString();
+    // var checkPresence = await AtLookupImpl.findSecondary(atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
+    return checkPresence.isNotNull;
   }
 }

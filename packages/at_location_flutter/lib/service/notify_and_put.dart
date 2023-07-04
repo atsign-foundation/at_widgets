@@ -8,8 +8,7 @@ class NotifyAndPut {
   factory NotifyAndPut() => _instance;
   final _logger = AtSignLogger('NotifyAndPut');
 
-  Future<bool> notifyAndPut(AtKey atKey, dynamic value,
-      {bool saveDataIfUndelivered = false}) async {
+  Future<bool> notifyAndPut(AtKey atKey, dynamic value, {bool saveDataIfUndelivered = false}) async {
     try {
       /// because .notify and .put will append the namespace
       /// and we dont want atKey.namespace.namespace
@@ -23,19 +22,16 @@ class NotifyAndPut {
         atKey.sharedWith = '@${atKey.sharedWith!}';
       }
 
-      var result =
-          await AtClientManager.getInstance().notificationService.notify(
-                NotificationParams.forUpdate(
-                  atKey,
-                  value: value,
-                ),
-              );
+      var result = await AtClientManager.getInstance().atClient.notificationService.notify(
+            NotificationParams.forUpdate(
+              atKey,
+              value: value,
+            ),
+          );
 
-      _logger.finer(
-          'notifyAndPut result for $atKey - $result ${result.atClientException}');
+      _logger.finer('notifyAndPut result for $atKey - $result ${result.atClientException}');
 
-      if ((saveDataIfUndelivered) ||
-          (result.notificationStatusEnum == NotificationStatusEnum.delivered)) {
+      if ((saveDataIfUndelivered) || (result.notificationStatusEnum == NotificationStatusEnum.delivered)) {
         /// because .notify and .put will append the namespace
         /// and we dont want atKey.namespace.namespace
         atKey = removeNamespaceFromKey(atKey);
@@ -55,18 +51,10 @@ class NotifyAndPut {
   }
 
   AtKey removeNamespaceFromKey(AtKey atKey) {
-    if (AtClientManager.getInstance().atClient.getPreferences()!.namespace !=
-        null) {
-      if (atKey.key!.contains('.${AtClientManager.getInstance()
-              .atClient
-              .getPreferences()!
-              .namespace!}')) {
-        atKey.key = atKey.key!.replaceAll(
-            ('.${AtClientManager.getInstance()
-                    .atClient
-                    .getPreferences()!
-                    .namespace!}'),
-            '');
+    if (AtClientManager.getInstance().atClient.getPreferences()!.namespace != null) {
+      if (atKey.key!.contains('.${AtClientManager.getInstance().atClient.getPreferences()!.namespace!}')) {
+        atKey.key =
+            atKey.key!.replaceAll(('.${AtClientManager.getInstance().atClient.getPreferences()!.namespace!}'), '');
       }
     }
 
@@ -74,8 +62,7 @@ class NotifyAndPut {
   }
 
   String removeNamespaceFromString(String _id) {
-    var _namespace =
-        AtClientManager.getInstance().atClient.getPreferences()!.namespace;
+    var _namespace = AtClientManager.getInstance().atClient.getPreferences()!.namespace;
     if ((_namespace != null) && (_id.contains('.$_namespace'))) {
       _id = _id.replaceAll(('.$_namespace'), '');
     }
