@@ -4,7 +4,7 @@
 The [at_sync_ui_flutter] package is designed to make it easy for displaying status of sync process in atProtocol apps.
 
 ### Give it a try
-This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_sync_ui_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.
+This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_sync_ui_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.
 
 ```sh
 $ flutter pub global activate at_app 

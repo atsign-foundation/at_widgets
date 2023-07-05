@@ -1,3 +1,6 @@
+## 1.0.10
+- **CHORE**: Improved pub score
+
 ## 1.0.9
 - **REFACTOR**: Deprecated `sync()` method and moved it's implementation to init.
 
