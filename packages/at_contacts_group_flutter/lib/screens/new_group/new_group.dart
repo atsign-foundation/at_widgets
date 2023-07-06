@@ -2,6 +2,8 @@
 
 import 'dart:typed_data';
 
+import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_commons/at_commons.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
@@ -11,10 +13,8 @@ import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/widgets/bottom_sheet.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/person_vertical_tile.dart';
-import 'package:flutter/material.dart';
-import 'package:at_common_flutter/at_common_flutter.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/material.dart';
 
 /// This widget provides screen to create a new group
 class NewGroup extends StatefulWidget {
@@ -63,8 +63,7 @@ class _NewGroupState extends State<NewGroup> {
 
   // ignore: always_declare_return_types
   createGroup() async {
-    var isKeyboardOpen =
-        MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
+    var isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     groupName = textController.text;
     // ignore: unnecessary_null_comparison
     if (groupName != null) {
@@ -89,42 +88,33 @@ class _NewGroupState extends State<NewGroup> {
 
         var result = await GroupService().createGroup(group);
 
-        isKeyboardOpen =
-            MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
+        isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
 
         if (result is AtGroup) {
           Navigator.of(context).pop();
         } else if (result != null) {
           if (result.runtimeType == AlreadyExistsException) {
-            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context,
-                gravity: isKeyboardOpen ? 2 : 0);
+            CustomToast().show(TextConstants().GROUP_ALREADY_EXISTS, context, gravity: isKeyboardOpen ? 2 : 0);
           } else if (result.runtimeType == InvalidAtSignException) {
-            CustomToast()
-                .show(result.message, context, gravity: isKeyboardOpen ? 2 : 0);
+            CustomToast().show(result.message, context, gravity: isKeyboardOpen ? 2 : 0);
           } else {
-            CustomToast().show(TextConstants().SERVICE_ERROR, context,
-                gravity: isKeyboardOpen ? 2 : 0);
+            CustomToast().show(TextConstants().SERVICE_ERROR, context, gravity: isKeyboardOpen ? 2 : 0);
           }
         } else {
-          CustomToast().show(TextConstants().SERVICE_ERROR, context,
-              gravity: isKeyboardOpen ? 2 : 0);
+          CustomToast().show(TextConstants().SERVICE_ERROR, context, gravity: isKeyboardOpen ? 2 : 0);
         }
       } else {
-        CustomToast().show(TextConstants().EMPTY_NAME, context,
-            gravity: isKeyboardOpen ? 2 : 0);
+        CustomToast().show(TextConstants().EMPTY_NAME, context, gravity: isKeyboardOpen ? 2 : 0);
       }
     } else {
-      CustomToast().show(TextConstants().EMPTY_NAME, context,
-          gravity: isKeyboardOpen ? 2 : 0);
+      CustomToast().show(TextConstants().EMPTY_NAME, context, gravity: isKeyboardOpen ? 2 : 0);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).brightness == Brightness.light
-          ? AllColors().WHITE
-          : AllColors().Black,
+      backgroundColor: Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
       bottomSheet: GroupBottomSheet(
         onPressed: createGroup,
         message: selectedContacts!.length == 1
@@ -132,11 +122,7 @@ class _NewGroupState extends State<NewGroup> {
             : '${selectedContacts!.length} Contacts Selected',
         buttontext: 'Done',
       ),
-      appBar: const CustomAppBar(
-          titleText: 'New Group',
-          showTitle: true,
-          showBackButton: true,
-          showLeadingIcon: true),
+      appBar: const CustomAppBar(titleText: 'New Group', showTitle: true, showBackButton: true, showLeadingIcon: true),
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -167,8 +153,7 @@ class _NewGroupState extends State<NewGroup> {
                               width: 68.toWidth,
                               height: 68.toWidth,
                               child: CircleAvatar(
-                                backgroundImage:
-                                    Image.memory(selectedImageByteData!).image,
+                                backgroundImage: Image.memory(selectedImageByteData!).image,
                               ),
                             )
                           : Icon(Icons.add, color: AllColors().ORANGE),
@@ -264,8 +249,7 @@ class _NewGroupState extends State<NewGroup> {
                     physics: const ScrollPhysics(),
                     shrinkWrap: true,
                     crossAxisCount: 4,
-                    childAspectRatio: ((SizeConfig().screenWidth * 0.25) /
-                        (SizeConfig().screenHeight * 0.2)),
+                    childAspectRatio: ((SizeConfig().screenWidth * 0.25) / (SizeConfig().screenHeight * 0.2)),
                     children: List.generate(selectedContacts!.length, (index) {
                       return CustomPersonVerticalTile(
                         key: UniqueKey(),
@@ -302,7 +286,7 @@ class _NewGroupState extends State<NewGroup> {
                           indicatorColor: Colors.blue,
                           iconColor: Colors.grey,
                           iconColorSelected: Colors.blue,
-                          showRecentsTab: true,
+                          recentTabBehavior: RecentTabBehavior.RECENT,
                           recentsLimit: 28,
                           noRecents: Text(
                             "No Recents",

@@ -1,7 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:typed_data';
+
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
+import 'package:at_contacts_group_flutter/screens/edit/person_horizontal.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/image_picker.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
@@ -9,12 +13,9 @@ import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
-import 'package:at_contacts_group_flutter/screens/edit/person_horizontal.dart';
 import 'package:at_contacts_group_flutter/widgets/yes_no_dialog.dart';
-import 'package:flutter/material.dart';
-import 'package:at_common_flutter/at_common_flutter.dart';
-import 'dart:typed_data';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/material.dart';
 
 import '../../widgets/error_screen.dart';
 import '../list/group_list.dart';
@@ -118,9 +119,7 @@ class _GroupEditState extends State<GroupEdit> {
               child: Text(
                 'Cancel',
                 style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? AllColors().Black
-                      : AllColors().Black,
+                  color: Theme.of(context).brightness == Brightness.light ? AllColors().Black : AllColors().Black,
                   fontSize: 14.toFont,
                   fontWeight: FontWeight.normal,
                 ),
@@ -202,8 +201,7 @@ class _GroupEditState extends State<GroupEdit> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 27.toWidth, vertical: 2.toHeight),
+                  padding: EdgeInsets.symmetric(horizontal: 27.toWidth, vertical: 2.toHeight),
                   child: Row(
                     children: [
                       Expanded(
@@ -217,8 +215,7 @@ class _GroupEditState extends State<GroupEdit> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 27.toWidth, vertical: 2.toHeight),
+                  padding: EdgeInsets.symmetric(horizontal: 27.toWidth, vertical: 2.toHeight),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -300,7 +297,7 @@ class _GroupEditState extends State<GroupEdit> {
                               indicatorColor: Colors.blue,
                               iconColor: Colors.grey,
                               iconColorSelected: Colors.blue,
-                              showRecentsTab: true,
+                              recentTabBehavior: RecentTabBehavior.RECENT,
                               recentsLimit: 28,
                               noRecents: Text(
                                 "No Recents",
@@ -354,20 +351,17 @@ class _GroupEditState extends State<GroupEdit> {
                       if (GroupService().selecteContactList.isNotEmpty) {
                         GroupService().showLoaderSink.add(true);
 
-                        var result = await GroupService().addGroupMembers(
-                            [...GroupService().selecteContactList],
-                            widget.group);
+                        var result =
+                            await GroupService().addGroupMembers([...GroupService().selecteContactList], widget.group);
 
                         GroupService().showLoaderSink.add(false);
                         if (!mounted) return;
                         if (result is bool && result) {
                           return;
                         } else if (result == null) {
-                          CustomToast()
-                              .show(TextConstants().SERVICE_ERROR, context);
+                          CustomToast().show(TextConstants().SERVICE_ERROR, context);
                         } else {
-                          CustomToast()
-                              .show(TextConstants().SERVICE_ERROR, context);
+                          CustomToast().show(TextConstants().SERVICE_ERROR, context);
                         }
                       }
                     },
@@ -407,15 +401,12 @@ class _GroupEditState extends State<GroupEdit> {
                           context,
                           'Are you sure you want to remove all members from the group?',
                           () async {
-                            var result = await GroupService()
-                                .deletGroupMembers(contacts, widget.group);
+                            var result = await GroupService().deletGroupMembers(contacts, widget.group);
 
                             if (result == null) {
-                              CustomToast()
-                                  .show(TextConstants().SERVICE_ERROR, context);
+                              CustomToast().show(TextConstants().SERVICE_ERROR, context);
                             } else {
-                              CustomToast().show(
-                                  "Deleted all members successfully!", context);
+                              CustomToast().show("Deleted all members successfully!", context);
 
                               showDeleteGroupDialog(
                                 context,
@@ -492,8 +483,7 @@ class _GroupEditState extends State<GroupEdit> {
                           : null,
                       subTitle: groupData.members!.elementAt(index).atSign,
                       onDelete: () async {
-                        await showMyDialog(context,
-                            groupData.members!.elementAt(index), widget.group);
+                        await showMyDialog(context, groupData.members!.elementAt(index), widget.group);
                       },
                     );
                   },
@@ -524,9 +514,7 @@ class _GroupEditState extends State<GroupEdit> {
         return Container(
           height: 119.toHeight,
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.light
-                ? AllColors().WHITE
-                : AllColors().Black,
+            color: Theme.of(context).brightness == Brightness.light ? AllColors().WHITE : AllColors().Black,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(12.0),
               topRight: Radius.circular(12.0),
@@ -575,8 +563,7 @@ class _GroupEditState extends State<GroupEdit> {
     );
   }
 
-  Future<void> showMyDialog(
-      BuildContext context, AtContact contact, AtGroup group) async {
+  Future<void> showMyDialog(BuildContext context, AtContact contact, AtGroup group) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -585,13 +572,11 @@ class _GroupEditState extends State<GroupEdit> {
           title: contact.atSign!,
           heading: 'Are you sure you want to remove from the group?',
           onYesPressed: () async {
-            var result =
-                await GroupService().deletGroupMembers([contact], widget.group);
+            var result = await GroupService().deletGroupMembers([contact], widget.group);
 
             if (result is bool && result) {
               Navigator.of(context).pop();
-              CustomToast().show(
-                  "${contact.atSign ?? ''} deleted successfully!", context);
+              CustomToast().show("${contact.atSign ?? ''} deleted successfully!", context);
               if (contacts.isEmpty) {
                 showDeleteGroupDialog(
                   context,
