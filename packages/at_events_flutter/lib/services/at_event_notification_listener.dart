@@ -34,7 +34,6 @@ class AtEventNotificationListener {
     monitorStarted = false;
   }
 
-  /// initializes initial values and configurations for the package
   void init(GlobalKey<NavigatorState> navKeyFromMainApp, String rootDomain,
       {Function? newGetAtValueFromMainApp}) {
     atClientManager = AtClientManager.getInstance();
@@ -139,7 +138,6 @@ class AtEventNotificationListener {
     }
   }
 
-  /// shows a dialog with event notification details
   Future<void> showMyDialog(
       {EventNotificationModel? eventNotificationModel}) async {
     return showDialog<void>(

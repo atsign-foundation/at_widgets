@@ -17,10 +17,8 @@ import 'package:at_utils/at_logger.dart';
 
 class EventService {
   EventService._();
-
   // ignore: prefer_final_fields
   static EventService _instance = EventService._();
-
   factory EventService() => _instance;
   final _logger = AtSignLogger('EventService');
 
@@ -36,10 +34,8 @@ class EventService {
   // ignore: close_sinks
   final _atEventNotificationController =
       StreamController<EventNotificationModel?>.broadcast();
-
   Stream<EventNotificationModel?> get eventStream =>
       _atEventNotificationController.stream;
-
   StreamSink<EventNotificationModel?> get eventSink =>
       _atEventNotificationController.sink;
 
@@ -214,7 +210,6 @@ class EventService {
   }
 
   // ignore: always_declare_return_types
-  /// adds new contacts and group members to the event notification model
   addNewContactAndGroupMembers(List<GroupContactsModel?> selectedList) {
     if (EventService().eventNotificationModel!.group!.members == null) {
       EventService().eventNotificationModel!.group!.members = {};
@@ -236,7 +231,6 @@ class EventService {
     });
   }
 
-  /// adds a contact to the contact list
   void addContactToList(AtContact _selectedContact) {
     var _containsContact = false;
 
@@ -260,7 +254,6 @@ class EventService {
   }
 
   // ignore: always_declare_return_types
-  /// creates a contact list from the group members
   createContactListFromGroupMembers() {
     selectedContacts = [];
     selectedContactsAtSigns = [];
@@ -271,7 +264,6 @@ class EventService {
     }
   }
 
-  /// creates a new [AtContact] object for a group member based on the provided [atcontact]
   AtContact getGroupMemberContact(AtContact atcontact) {
     var newContact = AtContact(atSign: atcontact.atSign);
     newContact.tags = {};
@@ -286,7 +278,6 @@ class EventService {
   }
 
   // ignore: always_declare_return_types
-  /// removes the selected contact at the given [index] from the event notification model
   removeSelectedContact(int index) {
     if (eventNotificationModel!.group!.members!.length > index &&
         selectedContacts!.length > index) {
@@ -327,7 +318,6 @@ class EventService {
     }
   }
 
-  /// checks if there is any overlap in time slots between the provided [hybridEvents] and [newEvent]
   dynamic isEventTimeSlotOverlap(List<EventNotificationModel?> hybridEvents,
       EventNotificationModel? newEvent) {
     var isOverlap = false;
@@ -390,7 +380,6 @@ class EventService {
     }
   }
 
-  /// checks for one-day event form validation based on the provided [eventData]
   dynamic checForOneDayEventFormValidation(EventNotificationModel eventData) {
     if (eventData.event!.date == null) {
       return 'add event date';
@@ -428,7 +417,6 @@ class EventService {
     return true;
   }
 
-  /// checks for recurring event form validation based on the provided [eventData]
   dynamic checForRecurringeDayEventFormValidation(
       EventNotificationModel eventData) {
     if (eventData.event!.repeatDuration == null) {
@@ -475,13 +463,10 @@ class EventService {
     } else if (!receiver.contains('@')) {
       receiver = '@$receiver';
     }
-    var checkPresence = (await CacheableSecondaryAddressFinder(root, 64)
-            .findSecondary(receiver))
-        .toString();
-    return checkPresence.isNotEmpty;
+    var checkPresence = await AtLookupImpl.findSecondary(receiver, root, 64);
+    return checkPresence != null;
   }
 
-  /// notifies all the specified Atsigns about an update using the provided [atkey], [value], and [atsigns]
   Future<void> notifyAll(
       AtKey atkey, String value, List<String?> atsigns) async {
     for (var element in atsigns) {

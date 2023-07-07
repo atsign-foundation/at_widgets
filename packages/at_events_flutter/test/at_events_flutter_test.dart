@@ -15,8 +15,7 @@ class MockAtClient extends Mock implements AtClient {
   }
 
   @override
-  Future<bool> delete(AtKey key,
-      {bool isDedicated = false, DeleteRequestOptions? deleteRequestOptions}) async {
+  Future<bool> delete(AtKey key, {bool isDedicated = false}) async {
     return true;
   }
 
