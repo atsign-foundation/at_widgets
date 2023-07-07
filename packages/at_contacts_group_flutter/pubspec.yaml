@@ -18,8 +18,8 @@ dependencies:
   fluttertoast: ^8.0.9
   file_picker: ^5.2.4
   emoji_picker_flutter: ^1.2.1
-  flutter_slidable: ^0.6.0
-  flutter_image_compress: ^1.1.0
+  flutter_slidable: '>=0.6.0 <4.0.0'
+  flutter_image_compress: ^2.0.3
   image_compression: ^1.0.3
   pedantic: ^1.11.0
   flutter_toastr: ^1.0.3
@@ -27,8 +27,8 @@ dependencies:
   mocktail: ^0.3.0
 
   # desktop - dependencies
-  file_selector: ^0.8.4+1
-  file_selector_macos: ^0.8.2
+  file_selector: '>=0.8.4+1 <2.0.0'
+  file_selector_macos: '>=0.8.2 <1.0.0'
 
   at_client_mobile: ^3.2.9
   at_commons: ^3.0.45
