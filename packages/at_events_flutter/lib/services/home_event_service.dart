@@ -15,6 +15,7 @@ class HomeEventService {
   static final HomeEventService _instance = HomeEventService._();
   factory HomeEventService() => _instance;
 
+  /// checks if any action is required for the given [event]
   bool isActionRequired(EventNotificationModel event) {
     if (isEventCancelled(event)) return true;
 
@@ -77,12 +78,14 @@ class HomeEventService {
         : '';
   }
 
+  /// returns a semi-title for the event based on the provided [EventNotificationModel] and whether the user has responded or not
   String? getSemiTitle(EventNotificationModel _event, bool _haveResponded) {
     return (isActionRequired(_event))
         ? getActionString(_event, _haveResponded)
         : null;
   }
 
+  /// calculates whether to show the retry option for the given [EventKeyLocationModel]
   bool calculateShowRetry(EventKeyLocationModel _eventKeyModel) {
     if ((_eventKeyModel.eventNotificationModel!.group != null) &&
         (isActionRequired(_eventKeyModel.eventNotificationModel!)) &&
@@ -98,6 +101,7 @@ class HomeEventService {
   }
 
   // ignore: always_declare_return_types
+  /// handles the tap on an event model.
   onEventModelTap(
       EventNotificationModel eventNotificationModel, bool haveResponded) {
     if (isActionRequired(eventNotificationModel) &&
@@ -208,6 +212,7 @@ class HomeEventService {
     // }
   }
 
+  /// checks if an event is cancelled
   bool isEventCancelled(EventNotificationModel _event) {
     EventInfo? _creatorInfo;
     if (compareAtSign(_event.atsignCreator!,

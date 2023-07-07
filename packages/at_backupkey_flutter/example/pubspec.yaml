@@ -15,7 +15,7 @@ dependencies:
 
   at_backupkey_flutter:
     path: ../
-  at_onboarding_flutter: ^5.0.3  
+  at_onboarding_flutter: ^6.1.0
 
   # When depending on this package from a real application you should use:
   #   at_backupkey_flutter: ^x.y.z
@@ -29,7 +29,12 @@ dev_dependencies:
   flutter_lints: ^2.0.1
 
 dependency_overrides:
-  file_selector_macos: ^0.8.2
+  win32: ^5.0.5
+  file_selector_windows: ^0.9.3
+  permission_handler: ^10.4.1
+  file_selector_linux: ^0.9.2
+  file_selector: ^0.9.5
+  file_selector_macos: ^0.9.3
   ffi: ^2.0.1
   at_backupkey_flutter:
     path: ../
