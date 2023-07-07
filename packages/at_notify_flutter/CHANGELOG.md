@@ -1,3 +1,6 @@
+## 1.0.7
+- **CHORE**: Improved pub score
+
 ## 1.0.6
 - **CHORE**: Updated dependency
 

@@ -76,7 +76,7 @@ class NotifyService {
   initializePlatformSpecifics() async {
     var initializationSettingsAndroid =
         const AndroidInitializationSettings('ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings(
+    var initializationSettingsIOS = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: false,
@@ -96,7 +96,6 @@ class NotifyService {
 
     await _notificationsPlugin.initialize(
       initializationSettings,
-      onSelectNotification: (payload) async {},
     );
   }
 
@@ -226,7 +225,7 @@ class NotifyService {
       timeoutAfter: 50000,
       styleInformation: DefaultStyleInformation(true, true),
     );
-    var iosChannelSpecifics = const IOSNotificationDetails();
+    var iosChannelSpecifics = const DarwinNotificationDetails();
 
     var platformChannelSpecifics = NotificationDetails(
         android: androidChannelSpecifics, iOS: iosChannelSpecifics);
