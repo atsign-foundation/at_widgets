@@ -8,7 +8,9 @@ import 'dart:collection';
 
 class VenuesServices {
   VenuesServices._();
+
   static final _instance = VenuesServices._();
+
   factory VenuesServices() => _instance;
 
   final _logger = AtSignLogger('VenuesServices');
@@ -17,6 +19,7 @@ class VenuesServices {
   int maxLengthOfVenues = 10;
   var venueLatLngKey = 'reusablevenues';
 
+  /// retrieves the list of venues from the storage location specified by [venueLatLngKey]
   getVenues() async {
     venues = Queue<VenueLatLng>(); // reset
 
@@ -26,11 +29,12 @@ class VenuesServices {
         ..metadata!.ttr = -1
         ..metadata!.ccd = true
         ..key = venueLatLngKey;
-      var value =
-          await AtClientManager.getInstance().atClient.get(atKey).catchError(
-              // ignore: invalid_return_type_for_catch_error, body_might_complete_normally_catch_error
-              (e) async {
+      var value = await AtClientManager.getInstance()
+          .atClient
+          .get(atKey)
+          .catchError((e) async {
         await _storeVenue(Queue<VenueLatLng>());
+        return AtValue();
       });
 
       // ignore: unnecessary_null_comparison
@@ -47,6 +51,7 @@ class VenuesServices {
     }
   }
 
+  /// stores a new venue in the local storage
   storeNewVenue(LatLng _latLng, String _venue, {String? displayName}) async {
     if (alreadyExists(VenueLatLng(
       _venue,
@@ -70,6 +75,7 @@ class VenuesServices {
     await _storeVenue(_tempVenues);
   }
 
+  /// persists the updated [venues] queue to the storage
   Future<void> _storeVenue(Queue<VenueLatLng> _tempVenues) async {
     try {
       var atKey = AtKey()
@@ -102,6 +108,7 @@ class VenuesServices {
     }
   }
 
+  /// checks if a given [_newVenue] already exists in the [venues] queue
   bool alreadyExists(VenueLatLng _newVenue) {
     for (var _venue in venues) {
       if (_venue.compare(_newVenue)) {
@@ -112,6 +119,7 @@ class VenuesServices {
     return false;
   }
 
+  /// clears the [venues] queue
   clear() {
     venues = Queue<VenueLatLng>();
   }
