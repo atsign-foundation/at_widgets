@@ -1,3 +1,6 @@
+## 3.1.10
+- **CHORE**: Improved pub score
+
 ## 3.1.9
 - **CHORE**: Updated dependencies and android gradle versions
 - **CHORE**: Package description updated
