@@ -52,6 +52,7 @@ class _ParticipantsState extends State<Participants> {
     );
   }
 
+  /// builds a container widget that displays a list of participants
   Widget builder() {
     return Container(
       height: 422.toHeight,

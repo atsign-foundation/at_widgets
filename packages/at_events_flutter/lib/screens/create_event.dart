@@ -409,6 +409,7 @@ class _CreateEventState extends State<CreateEvent> {
     );
   }
 
+  /// handles the event creation process
   // ignore: always_declare_return_types
   onCreateEvent() async {
     setState(() {

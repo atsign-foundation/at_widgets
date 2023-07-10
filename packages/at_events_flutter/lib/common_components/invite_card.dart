@@ -14,6 +14,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 class InviteCard extends StatefulWidget {
   final String? event, invitedPeopleCount, timeAndDate, atSign, memberCount;
   final bool isStartTime;
+
   const InviteCard(
       {Key? key,
       this.event,
@@ -30,12 +31,14 @@ class InviteCard extends StatefulWidget {
 
 class _InviteCardState extends State<InviteCard> {
   Uint8List? memoryImage;
+
   @override
   void initState() {
     super.initState();
     if (widget.atSign != null) getAtsignDetails();
   }
 
+  /// retrieves the contact details of the provided atsign, specifically the image if available, and updates the state with the image data
   // ignore: always_declare_return_types
   getAtsignDetails() async {
     var contact = await getAtSignDetails(widget.atSign!);

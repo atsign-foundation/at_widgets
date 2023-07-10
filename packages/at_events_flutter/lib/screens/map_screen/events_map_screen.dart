@@ -25,6 +25,7 @@ class EventsMapScreenData {
   late List<String?> exitedAtSigns;
   int count = 0;
 
+  /// moves to the event screen with the given EventNotificationModel
   void moveToEventScreen(EventNotificationModel _eventNotificationModel) async {
     // markers = [];
     exitedAtSigns = [];
@@ -51,6 +52,8 @@ class EventsMapScreenData {
     eventNotifier!.notifyListeners();
   }
 
+
+  /// calculates the AtSigns of members who have exited the event in the given EventNotificationModel
   void _calculateExitedAtsigns(EventNotificationModel _event) {
     _event.group!.members!.forEach((element) {
       if ((element.tags!['isExited']) && (!element.tags!['isAccepted'])) {
@@ -59,6 +62,7 @@ class EventsMapScreenData {
     });
   }
 
+  /// updates event data from a list of EventKeyLocationModel objects
   // ignore: prefer_final_fields
   List<List<EventKeyLocationModel>> _listOfLists = [];
   bool _updating = false;
@@ -69,6 +73,7 @@ class EventsMapScreenData {
     }
   }
 
+  /// starts the updating process for event data
   void _startUpdating() async {
     _updating = true;
     for (var i = 0; i < _listOfLists.length; i++) {
@@ -78,6 +83,7 @@ class EventsMapScreenData {
     _updating = false;
   }
 
+  /// updates event data from a list of EventKeyLocationModel objects
   Future<void> _updateEventdataFromList(
       List<EventKeyLocationModel> _list) async {
     count++;
@@ -108,6 +114,7 @@ class EventsMapScreenData {
     }
   }
 
+  /// adds a venue marker to the event
   HybridModel addVenueMarker(EventNotificationModel _event) {
     var _eventHybridModel = HybridModel(
         displayName: _event.venue!.label,
@@ -118,15 +125,18 @@ class EventsMapScreenData {
     return _eventHybridModel;
   }
 
+  /// initializes the chat for the event
   // ignore: always_declare_return_types
   _initChat(EventNotificationModel _event) async {
     await _getAtSignAndInitializeChat();
     _setAtsignToChatWith(_event);
   }
 
+  /// retrieves the current AtSign and initializes the chat
   // ignore: always_declare_return_types
   _getAtSignAndInitializeChat() async {}
 
+  /// sets the AtSign to chat with for the event
   // ignore: always_declare_return_types
   _setAtsignToChatWith(EventNotificationModel _event) {
     var groupMembers = <String>[];

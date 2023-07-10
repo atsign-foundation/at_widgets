@@ -73,6 +73,7 @@ class EventNotificationModel {
     }
   }
 
+  /// converts an EventNotificationModel object to a JSON string representation
   static String convertEventNotificationToJson(
       EventNotificationModel eventNotification) {
     var notification = json.encode({
@@ -219,6 +220,8 @@ enum Week { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
 
 enum EndsOn { NEVER, ON, AFTER }
 
+
+/// converts a weekday string to a Week enum value
 // ignore: missing_return
 Week getWeekEnum(String? weekday) {
   switch (weekday) {
@@ -241,6 +244,7 @@ Week getWeekEnum(String? weekday) {
   }
 }
 
+/// converts a Week enum value to a weekday string
 // ignore: missing_return
 String getWeekString(Week? weekday) {
   switch (weekday) {
@@ -263,6 +267,7 @@ String getWeekString(Week? weekday) {
   }
 }
 
+/// converts a DateTime object to a formatted time string
 String timeOfDayToString(DateTime time) {
   var minute = time.minute;
   if (minute < 10) return '${time.hour}: 0${time.minute}';
@@ -270,13 +275,17 @@ String timeOfDayToString(DateTime time) {
   return '${time.hour}: ${time.minute}';
 }
 
+/// converts a DateTime object to a formatted date string
 String dateToString(DateTime date) {
   var dateString = '${date.month}/${date.day}/${date.year}';
 
   return dateString;
 }
 
+/// list of repeat occurrence options
 List<String> get repeatOccuranceOptions => ['Week', 'Month'];
+
+/// list of options for the day of the week
 List<String> get occursOnWeekOptions => [
       'Monday',
       'Tuesday',
@@ -290,6 +299,7 @@ List<String> get occursOnWeekOptions => [
 // ignore: camel_case_types
 enum ATKEY_TYPE_ENUM { CREATEEVENT, ACKNOWLEDGEEVENT }
 
+/// mapping of months with their respective properties
 Map<String, dynamic> get monthsList => {
       '1': {'month': 'jan', 'days': 31, 'count': 1},
       '2': {'month': 'feb', 'days': 28, 'count': 2},

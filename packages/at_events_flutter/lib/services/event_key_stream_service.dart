@@ -33,6 +33,7 @@ class EventKeyStreamService {
   String? currentAtSign;
   List<AtContact> contactList = [];
 
+  /// streamController for AT notifications
   // ignore: close_sinks
   StreamController atNotificationsController =
       StreamController<List<EventKeyLocationModel>>.broadcast();

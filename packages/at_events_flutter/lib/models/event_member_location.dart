@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 
@@ -35,6 +36,7 @@ class EventMemberLocation {
             : null,
         key = json['key'] ?? '';
 
+  /// converts an EventMemberLocation object to a JSON string representation
   static String convertLocationNotificationToJson(
       EventMemberLocation eventMemberLocation) {
     var notification = json.encode({
