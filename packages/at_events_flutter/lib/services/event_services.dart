@@ -33,6 +33,7 @@ class EventService {
   List<EventNotificationModel> createdEvents = [];
   Function? onEventSaved;
 
+  /// streamController for AT event notifications
   // ignore: close_sinks
   final _atEventNotificationController =
       StreamController<EventNotificationModel?>.broadcast();

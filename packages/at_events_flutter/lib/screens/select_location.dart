@@ -285,6 +285,7 @@ class _SelectLocationState extends State<SelectLocation> {
     );
   }
 
+  /// renders the past venues dropdown
   Widget renderPastVenues() {
     return VenuesServices().venues.isNotEmpty
         ? Container(
@@ -335,6 +336,7 @@ class _SelectLocationState extends State<SelectLocation> {
   }
 }
 
+/// handles the selection of a location
 void onLocationSelect(BuildContext context, LatLng point,
     {String? displayName, String? label}) {
   Navigator.push(

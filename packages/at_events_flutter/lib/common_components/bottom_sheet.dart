@@ -1,6 +1,7 @@
 import 'package:at_events_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
+/// displays a bottom sheet with the provided widget 'T' and 'height' in the given 'context', and calls 'onSheetClosed' function when the sheet is closed
 void bottomSheet(BuildContext context, T, double height,
     {Function? onSheetCLosed}) {
   var future = showModalBottomSheet(

@@ -157,6 +157,7 @@ class VenueLatLng {
     return data;
   }
 
+  /// compares two VenueLatLng objects for equality
   bool compare(VenueLatLng _venueLatLng) {
     if ((latitude == _venueLatLng.latitude) &&
         (longitude == _venueLatLng.longitude) &&

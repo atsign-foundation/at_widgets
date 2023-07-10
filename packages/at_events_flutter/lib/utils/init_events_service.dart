@@ -58,6 +58,9 @@ Future<void> initialiseEventService(GlobalKey<NavigatorState> navKeyFromMainApp,
   EventKeyStreamService().init(streamAlternative: streamAlternative);
 }
 
+/// This method creates an event by storing event data in a remote database
+/// It checks for the validity of the input data and throws exceptions if it's invalid
+/// If the event creation is successful, it returns true; otherwise, it returns false
 Future<bool> createEvent(EventNotificationModel eventData) async {
   // ignore: unnecessary_null_comparison
   if (eventData == null) {
@@ -92,6 +95,11 @@ Future<bool> createEvent(EventNotificationModel eventData) async {
   }
 }
 
+
+/// This method deletes an event from the remote database using the provided event key
+/// It retrieves the event data associated with the key and checks if the current user is the creator of the event
+/// If the current user is not the creator, it throws an exception
+/// The method returns true if the event deletion is successful; otherwise, it returns false
 Future<bool> deleteEvent(String key) async {
   String? regexKey, currentAtsign;
   EventNotificationModel? eventData;
@@ -118,6 +126,11 @@ Future<bool> deleteEvent(String key) async {
   }
 }
 
+/// This method retrieves the details of an event from the remote database using the provided event key
+/// It first obtains the regex key associated with the event key
+/// If the regex key is not found, it throws an exception
+/// The method then fetches the event data from the remote database and converts it into an EventNotificationModel object
+/// If the retrieval is successful, it returns the event data; otherwise, it returns null
 Future<EventNotificationModel?> getEventDetails(String key) async {
   EventNotificationModel eventData;
   String? regexKey;
@@ -143,6 +156,13 @@ Future<EventNotificationModel?> getEventDetails(String key) async {
   }
 }
 
+/// This method retrieves a list of events from the remote database
+/// It retrieves all keys that match the regex pattern 'createevent-'
+/// If no matching keys are found, it returns an empty list
+/// The method then fetches the event data associated with each key and converts it into an EventNotificationModel object
+/// The event objects are added to the 'allEvents' list
+/// Finally, the method returns the 'allEvents' list containing the retrieved events
+/// If any error occurs during the process, it returns null
 Future<List<EventNotificationModel>?> getEvents() async {
   var allEvents = <EventNotificationModel>[];
   var regexList = await EventService().atClientManager.atClient.getKeys(
@@ -171,6 +191,10 @@ Future<List<EventNotificationModel>?> getEvents() async {
   }
 }
 
+/// This method retrieves a list of regex keys from the remote database
+/// It retrieves all keys that match the regex pattern 'createevent-'
+/// The method returns the list of regex keys
+/// If no matching keys are found, an empty list is returned
 Future<List<String>> getRegexKeys() async {
   var regexList = await EventService().atClientManager.atClient.getKeys(
         regex: 'createevent-',
@@ -179,6 +203,11 @@ Future<List<String>> getRegexKeys() async {
   return regexList;
 }
 
+
+/// This method retrieves the value associated with the given key from the remote database
+/// It fetches the value using the provided key and converts it into an EventNotificationModel object
+/// If the value is found and successfully converted, the method returns the event data
+/// If any error occurs during the process, it returns null
 Future<EventNotificationModel?> getValue(String key) async {
   try {
     EventNotificationModel? event;
@@ -195,6 +224,11 @@ Future<EventNotificationModel?> getValue(String key) async {
   }
 }
 
+/// This method retrieves the regex key associated with the given key from the remote database
+/// It first retrieves all regex keys using the 'getRegexKeys' method
+/// It searches for an index where the regex key contains the given key
+/// If an index is found, it assigns the corresponding regex key to 'regexKey' and returns it
+/// If no index is found, it returns null
 Future<String?> getRegexKeyFromKey(String key) async {
   String regexKey;
   var allRegex = await getRegexKeys();

@@ -43,6 +43,7 @@ class _DisplayTileState extends State<DisplayTile> {
     getEventCreator();
   }
 
+  /// retrieves the contact details of the event creator, including their image and name if available
   // ignore: always_declare_return_types
   getEventCreator() async {
     var contact = await getAtSignDetails(widget.atsignCreator!);

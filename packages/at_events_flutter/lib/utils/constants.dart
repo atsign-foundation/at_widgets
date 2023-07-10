@@ -18,10 +18,16 @@ class MixedConstants {
   ];
 
   static String? _map_key;
+
+  /// sets the map key used for map services
   static String setMapKey(String _key) => _map_key = _key;
+
   static String? get MAP_KEY => _map_key;
 
   static String? _api_key;
+
+  /// sets the API key used for API services
   static String setApiKey(String _key) => _api_key = _key;
+
   static String? get API_KEY => _api_key;
 }

@@ -312,6 +312,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
     );
   }
 
+  /// cancels an event
   _cancelEvent() async {
     LoadingDialog().show(text: AllText().CANCELLING);
     try {
@@ -340,6 +341,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
     }
   }
 
+  /// exits an event
   _exitEvent() async {
     //if member has not exited then only following code will run.
     LoadingDialog().show(text: AllText().EXITING);
