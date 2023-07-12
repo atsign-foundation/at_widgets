@@ -63,6 +63,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     }
   }
 
+  /// retrieves the event creator's details
   // ignore: always_declare_return_types
   getEventCreator() async {
     var contact = await getAtSignDetails(widget.eventData != null
@@ -79,6 +80,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     }
   }
 
+  /// checks for event overlap with other events
   void checkForEventOverlap() {
     var allEventsExcludingCurrentEvent = <EventKeyLocationModel>[];
     var allSavedEvents = EventKeyStreamService().allEventNotifications;
@@ -372,6 +374,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     );
   }
 
+  /// starts the loading state
   void startLoading() {
     if (mounted) {
       setState(() {
@@ -380,6 +383,7 @@ class _EventNotificationDialogState extends State<EventNotificationDialog> {
     }
   }
 
+  /// stops the loading state
   void stopLoading() {
     if (mounted) {
       setState(() {

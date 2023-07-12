@@ -1,3 +1,6 @@
+## 2.0.12
+- **CHORE**: Updated repository URL
+
 ## 2.0.11
 - **CHORE**: Updated dependencies and android gradle versions
 

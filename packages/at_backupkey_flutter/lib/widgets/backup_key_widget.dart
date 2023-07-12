@@ -159,12 +159,12 @@ class BackupKeyWidget extends StatelessWidget {
                                   '''Each atSign has a unique key used to verify ownership and encrypt your data. You will get this key when you first activate your atSign, and you will need it to pair your atSign with other devices and all atPlatform apps.
                                   
 PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE A BACKUP OR RESET THEM.''',
-                              shapeBorder: const CircleBorder(),
-                              disableAnimation: true,
-                              radius:
+                              targetShapeBorder: const CircleBorder(),
+                              disableMovingAnimation: true,
+                              targetBorderRadius:
                                   const BorderRadius.all(Radius.circular(40)),
                               showArrow: false,
-                              overlayPadding: const EdgeInsets.all(5),
+                              targetPadding: const EdgeInsets.all(5),
                               blurValue: 2,
                               child: Text(
                                 Strings.backUpKeysTitle,
@@ -338,8 +338,7 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
         var size = MediaQuery.of(context).size;
         await Share.shareXFiles(
           [XFile(tempFilePath)],
-          sharePositionOrigin:
-              Rect.fromLTWH(0, 0, size.width, size.height / 2),
+          sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2),
         ).then((ShareResult shareResult) {
           if (shareResult.status == ShareResultStatus.success) {
             ScaffoldMessenger.of(context).showSnackBar(

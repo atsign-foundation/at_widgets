@@ -46,6 +46,7 @@ class AllColors {
 }
 
 class ContactInitialsColors {
+  /// returns a color based on the given atsign
   static Color getColor(String atsign) {
     if (atsign.length == 1) {
       atsign = '$atsign ';

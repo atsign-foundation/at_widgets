@@ -6,6 +6,7 @@ enum LOC_START_TIME_ENUM { TWO_HOURS, SIXTY_MIN, THIRTY_MIN }
 // ignore: camel_case_types
 enum LOC_END_TIME_ENUM { TEN_MIN, AFTER_EVERY_ONE_REACHED, AT_EOD }
 
+/// converts a startTimeEnum value and startTime to a DateTime object representing the adjusted time of day, returning the adjusted DateTime value or null
 DateTime? startTimeEnumToTimeOfDay(String startTimeEnum, DateTime? startTime) {
   // ignore: unnecessary_null_comparison
   if (startTimeEnum == null ||
@@ -26,6 +27,8 @@ DateTime? startTimeEnumToTimeOfDay(String startTimeEnum, DateTime? startTime) {
   return null;
 }
 
+/// converts an endTimeEnum value and endTime to a DateTime object representing the adjusted time of day
+/// returns the adjusted DateTime value, or null if the conversion is not possible
 DateTime? endTimeEnumToTimeOfDay(String endTimeEnum, DateTime? endTime) {
   // ignore: unnecessary_null_comparison
   if (endTimeEnum == null ||

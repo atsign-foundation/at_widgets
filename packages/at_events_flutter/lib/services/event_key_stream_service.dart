@@ -33,6 +33,7 @@ class EventKeyStreamService {
   String? currentAtSign;
   List<AtContact> contactList = [];
 
+  /// streamController for AT notifications
   // ignore: close_sinks
   StreamController atNotificationsController =
       StreamController<List<EventKeyLocationModel>>.broadcast();
@@ -43,6 +44,7 @@ class EventKeyStreamService {
 
   Function(List<EventKeyLocationModel>)? streamAlternative;
 
+  /// initializes with necessary values and configurations
   void init({Function(List<EventKeyLocationModel>)? streamAlternative}) async {
     loggedInUserDetails = null;
     atClientManager = AtClientManager.getInstance();
@@ -61,6 +63,7 @@ class EventKeyStreamService {
     getAllContactDetails(currentAtSign!);
   }
 
+  /// retrieves all contact details for the given [currentAtSign]
   void getAllContactDetails(String currentAtSign) async {
     atContactImpl = await AtContactsImpl.getInstance(currentAtSign);
     contactList = await atContactImpl!.listContacts();
@@ -538,6 +541,7 @@ class EventKeyStreamService {
   }
 
   // ignore: missing_return
+  /// forms and returns an [AtKey] object based on the given [keyType], [atkeyMicrosecondId], [sharedWith], [sharedBy], and [eventData]
   AtKey? formAtKey(ATKEY_TYPE_ENUM keyType, String atkeyMicrosecondId,
       String? sharedWith, String sharedBy, EventNotificationModel eventData) {
     switch (keyType) {

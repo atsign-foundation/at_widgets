@@ -86,6 +86,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
     super.dispose();
   }
 
+  /// shows an indicator by animating its appearance and starting a repeating animation
   void _showIndicator() {
     _appearanceController!
       ..duration = const Duration(milliseconds: 750)
@@ -93,6 +94,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
     _repeatingController.repeat();
   }
 
+  /// hides the indicator by animating its disappearance and stopping the repeating animation
   void _hideIndicator() {
     _appearanceController!
       ..duration = const Duration(milliseconds: 150)
@@ -119,6 +121,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
     );
   }
 
+  /// builds an animated bubble widget with scaling animation based on the provided animation, position, and bubble content
   Widget _buildAnimatedBubble({
     required Animation<double> animation,
     required double left,
@@ -138,6 +141,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
     );
   }
 
+  /// builds a status bubble widget containing three flashing circles arranged horizontally
   Widget _buildStatusBubble() {
     return Container(
       width: 40,
@@ -154,6 +158,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
     );
   }
 
+  /// builds a flashing circle widget based on the provided index
   Widget _buildFlashingCircle(int index) {
     return AnimatedBuilder(
       animation: _repeatingController,

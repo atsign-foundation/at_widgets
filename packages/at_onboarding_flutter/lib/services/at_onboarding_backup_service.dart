@@ -7,7 +7,7 @@ class AtOnboardingBackupService {
   AtOnboardingBackupService._();
 
   static final AtOnboardingBackupService _instance =
-  AtOnboardingBackupService._();
+      AtOnboardingBackupService._();
 
   static AtOnboardingBackupService get instance => _instance;
 

@@ -37,11 +37,9 @@ dependencies:
   at_app_flutter: ^5.0.0+1
   at_notify_flutter:
     path: ../
-  at_onboarding_flutter: ^4.0.3
+  at_onboarding_flutter: ^6.0.0
 
 
-dependency_overrides:
-  at_onboarding_flutter: ^5.0.0
   
 dev_dependencies:
   flutter_test:

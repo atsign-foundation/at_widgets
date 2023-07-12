@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
   AtClientPreference? atClientPreference;
 
   bool isChangeLanguage = false;
-  var _currentLocale = Locale('en', '');
+  var _currentLocale = const Locale('en', '');
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +169,6 @@ class _MyAppState extends State<MyApp> {
                         DropdownButton(
                           onChanged: (value) {
                             setState(() {
-                              print(value);
                               value == 'en'
                                   ? _currentLocale = const Locale('en')
                                   : _currentLocale = const Locale('fr');

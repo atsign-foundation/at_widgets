@@ -63,7 +63,6 @@ void main() {
 
   group("test formatAtSign Func", () {
     test("formatAtSign don't @", () {
-
       final result = onboardingService.formatAtSign(
         "@${onboardingDataTest.atSignTest}",
       );
