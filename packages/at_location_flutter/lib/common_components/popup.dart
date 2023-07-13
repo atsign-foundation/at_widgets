@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 
+/// Builds a popup widget for a user
 Widget buildPopup(HybridModel user, {LatLng? center}) {
   var showEtaSection = true;
   if (LocationService().etaFrom != null) {

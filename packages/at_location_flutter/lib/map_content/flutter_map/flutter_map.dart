@@ -176,7 +176,7 @@ class MapOptions {
     this.swPanBoundary,
     this.nePanBoundary,
   }) {
-    center ??= LatLng(50.5, 30.51);
+    center ??= const LatLng(50.5, 30.51);
     _safeAreaZoom = zoom;
     assert(slideOnBoundaries ||
         !isOutOfBounds(center)); //You cannot start outside pan boundary

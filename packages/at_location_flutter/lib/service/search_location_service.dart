@@ -30,7 +30,7 @@ class SearchLocationService {
   ///
   /// Make sure that [apiKey] is passed while initialising.
   void getAddressLatLng(String address, LatLng? currentLocation) async {
-    currentLocation ??= LatLng(0, 0);
+    currentLocation ??= const LatLng(0, 0);
 
     var url =
         '$placesUrl?q=${address.replaceAll(RegExp(' '), '+')}&apiKey=${MixedConstants.API_KEY}&at=${currentLocation.latitude},${currentLocation.longitude}';

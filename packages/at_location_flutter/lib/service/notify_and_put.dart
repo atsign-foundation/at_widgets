@@ -1,13 +1,17 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+
 // ignore: implementation_imports
 import 'package:at_utils/at_logger.dart';
 
 class NotifyAndPut {
   NotifyAndPut._();
+
   static final NotifyAndPut _instance = NotifyAndPut._();
+
   factory NotifyAndPut() => _instance;
   final _logger = AtSignLogger('NotifyAndPut');
 
+  /// Notifies and puts the value of an AtKey
   Future<bool> notifyAndPut(AtKey atKey, dynamic value,
       {bool saveDataIfUndelivered = false}) async {
     try {
@@ -23,13 +27,15 @@ class NotifyAndPut {
         atKey.sharedWith = '@${atKey.sharedWith!}';
       }
 
-      var result =
-          await AtClientManager.getInstance().notificationService.notify(
-                NotificationParams.forUpdate(
-                  atKey,
-                  value: value,
-                ),
-              );
+      var result = await AtClientManager.getInstance()
+          .atClient
+          .notificationService
+          .notify(
+            NotificationParams.forUpdate(
+              atKey,
+              value: value,
+            ),
+          );
 
       _logger.finer(
           'notifyAndPut result for $atKey - $result ${result.atClientException}');
@@ -54,18 +60,14 @@ class NotifyAndPut {
     }
   }
 
+  /// Removes the namespace from the AtKey
   AtKey removeNamespaceFromKey(AtKey atKey) {
     if (AtClientManager.getInstance().atClient.getPreferences()!.namespace !=
         null) {
-      if (atKey.key!.contains('.${AtClientManager.getInstance()
-              .atClient
-              .getPreferences()!
-              .namespace!}')) {
+      if (atKey.key!.contains(
+          '.${AtClientManager.getInstance().atClient.getPreferences()!.namespace!}')) {
         atKey.key = atKey.key!.replaceAll(
-            ('.${AtClientManager.getInstance()
-                    .atClient
-                    .getPreferences()!
-                    .namespace!}'),
+            ('.${AtClientManager.getInstance().atClient.getPreferences()!.namespace!}'),
             '');
       }
     }
@@ -73,6 +75,7 @@ class NotifyAndPut {
     return atKey;
   }
 
+  /// Removes the namespace from a string
   String removeNamespaceFromString(String _id) {
     var _namespace =
         AtClientManager.getInstance().atClient.getPreferences()!.namespace;

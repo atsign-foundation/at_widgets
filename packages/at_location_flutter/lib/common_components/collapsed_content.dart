@@ -26,9 +26,11 @@ class CollapsedContent extends StatefulWidget {
   LocationNotificationModel? userListenerKeyword;
   AtClient? atClientInstance;
   String? currentAtSign;
+
   CollapsedContent(this.expanded, this.atClientInstance,
       {Key? key, this.userListenerKeyword, required this.currentAtSign})
       : super(key: key);
+
   @override
   _CollapsedContentState createState() => _CollapsedContentState();
 }
@@ -38,11 +40,13 @@ class _CollapsedContentState extends State<CollapsedContent> {
 
   late bool isSharing;
   bool locationAvailable = false;
+
   @override
   void initState() {
     super.initState();
     isSharing = widget.userListenerKeyword!.isSharing;
 
+    /// Listens to the stream of hybrid user locations provided by the `LocationService`
     LocationService().atHybridUsersStream.listen((e) {
       setState(() {
         locationAvailable = false;
@@ -314,6 +318,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
             ]));
   }
 
+  /// Removes a person from the system
   // ignore: always_declare_return_types
   removePerson() async {
     await confirmationDialog(
@@ -321,6 +326,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
         onYesPressed: _onRemovePersonYesPressed);
   }
 
+  /// Callback function called when the user selects "Yes" in the remove person confirmation dialog
   _onRemovePersonYesPressed() async {
     LoadingDialog().show();
     try {
@@ -353,6 +359,7 @@ class _CollapsedContentState extends State<CollapsedContent> {
     }
   }
 
+  /// Returns a widget that displays participants
   Widget participants(Function() onTap) {
     return Padding(
       padding: const EdgeInsets.only(left: 56),

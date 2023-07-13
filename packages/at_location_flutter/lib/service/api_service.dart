@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiService {
+  /// Sends a GET request to the specified URL and returns the response
   Future<dynamic> getRequest(String url, [Map<String, String>? header]) async {
     var val = await ConnectivityService().checkConnectivity();
     if (val) {
@@ -41,6 +42,7 @@ class ApiService {
     }
   }
 
+  /// Sends a POST request to the specified URL and returns the response
   Future<dynamic> postRequest(String url,
       {Map<String, String>? headers, body, encoding}) async {
     var val = await ConnectivityService().checkConnectivity();
@@ -91,9 +93,12 @@ class ApiService {
 
 class ConnectivityService {
   ConnectivityService._();
+
   static final ConnectivityService _instance = ConnectivityService._();
+
   factory ConnectivityService() => _instance;
 
+  /// Checks the internet connectivity by attempting to establish a connection to a specified host
   Future<bool> checkConnectivity() async {
     Socket? socket;
     bool connectivity;
