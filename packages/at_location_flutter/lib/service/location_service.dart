@@ -7,6 +7,7 @@ import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 
@@ -17,7 +18,9 @@ import 'package:at_utils/at_logger.dart';
 
 class LocationService {
   LocationService._();
+
   static final LocationService _instance = LocationService._();
+
   factory LocationService() => _instance;
 
   final _logger = AtSignLogger('LocationService');
@@ -44,8 +47,10 @@ class LocationService {
 
   late StreamController _atHybridUsersController =
       StreamController<List<HybridModel?>>.broadcast();
+
   Stream<List<HybridModel?>> get atHybridUsersStream =>
       _atHybridUsersController.stream as Stream<List<HybridModel?>>;
+
   StreamSink<List<HybridModel?>> get atHybridUsersSink =>
       _atHybridUsersController.sink as StreamSink<List<HybridModel?>>;
 
@@ -109,6 +114,7 @@ class LocationService {
     }
   }
 
+  /// Adds the current user's details to the hybridUsersList
   Future addMyDetailsToHybridUsersList() async {
     var permission = await Geolocator.checkPermission();
     if (((permission == LocationPermission.always) ||
@@ -142,6 +148,7 @@ class LocationService {
     }
   }
 
+  /// Updates the current user's latitude and longitude
   void updateMyLatLng(HybridModel _myData) async {
     if (etaFrom != null) {
       _myData.eta = await _calculateEta(_myData);
@@ -167,6 +174,7 @@ class LocationService {
     }
   }
 
+  /// Adds a centre marker to the hybridUsersList
   void addCentreMarker() {
     centreMarker = HybridModel(
         displayName: textForCenter, latLng: etaFrom, eta: '', image: null);

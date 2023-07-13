@@ -12,8 +12,10 @@ import 'package:at_location_flutter/service/my_location.dart';
 import 'package:at_location_flutter/service/notify_and_put.dart';
 import 'package:at_location_flutter/utils/constants/init_location_service.dart';
 import 'package:geolocator/geolocator.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
+
 // ignore: implementation_imports
 import 'key_stream_service.dart';
 import 'package:at_utils/at_logger.dart';
@@ -26,8 +28,10 @@ import 'package:at_utils/at_logger.dart';
 /// true if needed.
 class SendLocationNotification {
   SendLocationNotification._();
+
   static final SendLocationNotification _instance =
       SendLocationNotification._();
+
   factory SendLocationNotification() => _instance;
   Timer? timer;
   final String locationKey = 'location-notify';
@@ -397,6 +401,7 @@ class SendLocationNotification {
     }
   }
 
+  /// Prepares location data and sends it to the specified receiver
   Future<void> prepareLocationDataAndSend(String receiver,
       LocationDataModel locationData, LatLng? myLocation) async {
     //// don't send anything to logged in atsign
@@ -493,6 +498,7 @@ class SendLocationNotification {
     return result;
   }
 
+  /// Deletes all location keys
   void deleteAllLocationKey() async {
     var response = await atClient?.getKeys(
       regex: locationKey,
@@ -509,6 +515,7 @@ class SendLocationNotification {
     });
   }
 
+  /// Creates a new AtKey with the specified parameters
   AtKey newAtKey(int ttr, String key, String sharedWith, {int? ttl}) {
     if (sharedWith[0] != '@') {
       sharedWith = '@$sharedWith';

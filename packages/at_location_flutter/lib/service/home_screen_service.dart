@@ -12,9 +12,12 @@ import 'master_location_service.dart';
 
 class HomeScreenService {
   HomeScreenService._();
+
   static final HomeScreenService _instance = HomeScreenService._();
+
   factory HomeScreenService() => _instance;
 
+  /// Handles the tap event on a location notification model
   void onLocationModelTap(
       LocationNotificationModel locationNotificationModel, bool haveResponded) {
     var currentAtsign = AtLocationNotificationListener().currentAtSign;
@@ -63,6 +66,7 @@ class HomeScreenService {
     }
   }
 
+  /// Navigates to the MapScreen with the provided location notification model and current @sign
   void navigatorPushToMap(LocationNotificationModel locationNotificationModel) {
     Navigator.push(
       AtLocationNotificationListener().navKey.currentContext!,
@@ -75,6 +79,7 @@ class HomeScreenService {
   }
 }
 
+/// Returns the subtitle for a location notification model
 String getSubTitle(LocationNotificationModel locationNotificationModel) {
   DateTime? to;
   String time;
@@ -129,6 +134,7 @@ String getSubTitle(LocationNotificationModel locationNotificationModel) {
   }
 }
 
+/// Returns the semi-title for a location notification model
 String? getSemiTitle(
     LocationNotificationModel locationNotificationModel, bool haveResponded) {
   if (locationNotificationModel.key!.contains(MixedConstants.SHARE_LOCATION)) {
@@ -167,6 +173,7 @@ String? getSemiTitle(
   }
 }
 
+/// Returns the creator details for a location notification model
 LocationInfo? getCreatorDetails(
     LocationNotificationModel locationNotificationModel) {
   if (!compareAtSign(locationNotificationModel.atsignCreator!,
@@ -178,6 +185,7 @@ LocationInfo? getCreatorDetails(
   return getMyLocationInfo(locationNotificationModel);
 }
 
+/// Returns the location sharing information for the creator of a location notification model
 LocationSharingFor? getLocationSharingForCreator(
     LocationNotificationModel locationNotificationModel) {
   var _atsignCreator = locationNotificationModel.atsignCreator!;
@@ -215,6 +223,7 @@ LocationSharingFor? getLocationSharingForCreator(
   return null;
 }
 
+/// Returns the title for a location notification model
 String? getTitle(LocationNotificationModel locationNotificationModel) {
   if (locationNotificationModel.key!.contains(MixedConstants.SHARE_LOCATION)) {
     return locationNotificationModel.atsignCreator ==
@@ -229,6 +238,7 @@ String? getTitle(LocationNotificationModel locationNotificationModel) {
   }
 }
 
+/// Determines whether to show the retry option for a location notification
 bool calculateShowRetry(KeyLocationModel keyLocationModel) {
   if (keyLocationModel.locationNotificationModel!.key!
       .contains('sharelocation')) {
@@ -250,6 +260,7 @@ bool calculateShowRetry(KeyLocationModel keyLocationModel) {
   }
 }
 
+/// Converts a [TimeOfDay] object to a formatted string representation
 String timeOfDayToString(TimeOfDay time) {
   var minute = time.minute;
   if (minute < 10) return '${time.hour}: 0${time.minute}';

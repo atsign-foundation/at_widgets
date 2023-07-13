@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
-    show AtOnboarding, AtOnboardingConfig, AtOnboardingResultStatus, Onboarding;
+    show AtOnboarding, AtOnboardingConfig, AtOnboardingResultStatus;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
@@ -25,6 +25,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
       // TODO set the rest of your AtClientPreference here
       ;
 }
+
 final StreamController<ThemeMode> updateThemeMode =
     StreamController<ThemeMode>.broadcast();
 
@@ -39,7 +40,6 @@ class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
             colorScheme: ThemeData.light().colorScheme.copyWith(
                   primary: const Color(0xFFf4533d),
                 ),
-            backgroundColor: Colors.white,
+            bottomAppBarTheme: const BottomAppBarTheme(color: Colors.white),
             scaffoldBackgroundColor: Colors.white,
           ),
           darkTheme: ThemeData().copyWith(
@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
             colorScheme: ThemeData.dark().colorScheme.copyWith(
                   primary: Colors.blue,
                 ),
-            backgroundColor: Colors.grey[850],
+            bottomAppBarTheme: BottomAppBarTheme(color: Colors.grey[850]),
             scaffoldBackgroundColor: Colors.grey[850],
           ),
           themeMode: themeMode,

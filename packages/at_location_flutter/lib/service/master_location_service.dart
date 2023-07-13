@@ -14,7 +14,9 @@ import 'package:at_utils/at_logger.dart';
 
 class MasterLocationService {
   MasterLocationService._();
+
   static final MasterLocationService _instance = MasterLocationService._();
+
   factory MasterLocationService() => _instance;
   late AtClient atClientInstance;
   late Function getAtValueFromMainApp;
@@ -22,6 +24,7 @@ class MasterLocationService {
 
   String? currentAtSign;
   Map<String, HybridModel> _allReceivedUsersList = {};
+
   // ignore: prefer_final_fields
   Map<String, LocationDataModel> _locationReceivedData = {};
 
@@ -32,8 +35,10 @@ class MasterLocationService {
 
   StreamController _allReceivedUsersController =
       StreamController<Map<String, HybridModel>>.broadcast();
+
   Stream<Map<String, HybridModel>> get allReceivedUsersStream =>
       _allReceivedUsersController.stream as Stream<Map<String, HybridModel>>;
+
   StreamSink<Map<String, HybridModel>> get allReceivedUsersSink =>
       _allReceivedUsersController.sink as StreamSink<Map<String, HybridModel>>;
 
@@ -50,6 +55,7 @@ class MasterLocationService {
   ///  and DateTime.now() is between from and to of the locationSharingFor value
   ///  then we will return the HybridModel of the atsign in _allReceivedUsersList
 
+  /// Retrieves the HybridModel for a given Atsign and optional id
   HybridModel? getHybridModel(String atsign, {String? id}) {
     if (id != null) {
       id = trimAtsignsFromKey(id);
@@ -124,6 +130,7 @@ class MasterLocationService {
     createHybridFromLocationDataModel();
   }
 
+  /// Creates HybridModels from LocationDataModel and updates the allReceivedUsersSink
   void createHybridFromLocationDataModel() async {
     await Future.forEach(_locationReceivedData.entries,
         (MapEntry<String, LocationDataModel> _locationData) async {
@@ -139,6 +146,7 @@ class MasterLocationService {
     allReceivedUsersSink.add(_allReceivedUsersList);
   }
 
+  /// Updates the hybrid list with a new user or updates an existing user
   void updateHybridList(LocationDataModel _newUser) async {
     var contains = _allReceivedUsersList[_newUser.sender] != null;
 
@@ -178,6 +186,7 @@ class MasterLocationService {
     KeyStreamService().notifyListeners();
   }
 
+  /// Deletes received data for a given atsign
   void deleteReceivedData(String atsign) {
     _locationReceivedData.remove(atsign);
 
@@ -186,6 +195,7 @@ class MasterLocationService {
     allReceivedUsersSink.add(_allReceivedUsersList);
   }
 
+  /// Retrieves the image of an atsign from the contact details
   Future<Uint8List?> getImageOfAtsignNew(String? atsign) async {
     try {
       AtContact contact;
@@ -205,6 +215,7 @@ class MasterLocationService {
     }
   }
 
+  /// Retrieves the value of an AtKey from the AtClient instance
   Future<dynamic> getAtValue(AtKey key) async {
     try {
       var atvalue = await atClientInstance.get(key).catchError(

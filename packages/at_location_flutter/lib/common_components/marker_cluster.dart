@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'circle_marker_painter.dart';
 
+/// Builds a marker cluster widget
 Widget buildMarkerCluster(List<Marker?> markers, {HybridModel? eventData}) {
   return Stack(
     alignment: Alignment.center,

@@ -59,6 +59,7 @@ class AtLocationFlutterPlugin extends StatefulWidget {
     this.notificationID,
     this.refreshAt,
   }) : super(key: key);
+
   @override
   _AtLocationFlutterPluginState createState() =>
       _AtLocationFlutterPluginState();
@@ -116,6 +117,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     super.dispose();
   }
 
+  /// Calculates the list of currently sharing @signs based on the provided user data
   calculateAtsignsCurrentlySharing(List<HybridModel?> users) {
     List<String> _newAtsignsSharing = [], _atsignsStoppedSharing = [];
     for (var _user in users) {
@@ -239,7 +241,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
                         // ignore: unnecessary_null_comparison
                         center: ((users != null) && (users.isNotEmpty))
                             ? users[0]!.latLng
-                            : LatLng(45, 45),
+                            : const LatLng(45, 45),
                         zoom: markers.isNotEmpty ? 8 : 2,
                         plugins: [MarkerClusterPlugin(UniqueKey())],
                         onTap: (_) => _popupController
@@ -302,6 +304,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     ));
   }
 
+  /// Zooms out the map and hides the popup
   void zoomOutFn() {
     _popupController.hidePopup();
     if (LocationService().hybridUsersList.isNotEmpty) {
@@ -309,6 +312,7 @@ class _AtLocationFlutterPluginState extends State<AtLocationFlutterPlugin> {
     }
   }
 
+  /// Converts a list of strings to a single string
   String? _listToString(List _strings) {
     String? _res;
     if (_strings.isNotEmpty) {

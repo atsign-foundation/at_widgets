@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Builds a pointed bottom widget
 Widget pointedBottom({Color? color}) {
   return ClipPath(
     clipper: const ShapeBorderClipper(

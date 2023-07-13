@@ -17,6 +17,7 @@ import 'package:at_utils/at_logger.dart';
 class SharingLocationService {
   static final SharingLocationService _singleton =
       SharingLocationService._internal();
+
   SharingLocationService._internal();
 
   final _logger = AtSignLogger('SharingLocationService');
@@ -279,6 +280,7 @@ class SharingLocationService {
     }
   }
 
+  /// Removes a person from the location sharing
   Future removePerson(
       LocationNotificationModel locationNotificationModel) async {
     var result;
@@ -340,6 +342,7 @@ class SharingLocationService {
     }
   }
 
+  /// Deletes all keys
   Future<void> deleteAllKey() async {
     var response =
         await AtLocationNotificationListener().atClientInstance!.getKeys(

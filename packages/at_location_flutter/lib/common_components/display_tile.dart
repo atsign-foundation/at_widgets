@@ -14,6 +14,7 @@ class DisplayTile extends StatefulWidget {
   final Widget? action;
   final bool showName, showRetry;
   final Function? onRetryTapped;
+
   const DisplayTile(
       {Key? key,
       required this.title,
@@ -37,12 +38,14 @@ class _DisplayTileState extends State<DisplayTile> {
   AtContact? contact;
   AtContactsImpl? atContact;
   String? name;
+
   @override
   void initState() {
     super.initState();
     getEventCreator();
   }
 
+  /// Retrieves the details of the event creator
   // ignore: always_declare_return_types
   getEventCreator() async {
     var contact = await getAtSignDetails(widget.atsignCreator);

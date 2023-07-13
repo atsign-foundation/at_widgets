@@ -12,7 +12,9 @@ import 'package:flutter/material.dart';
 
 class RequestLocationSheet extends StatefulWidget {
   final Function? onTap;
+
   const RequestLocationSheet({Key? key, this.onTap}) : super(key: key);
+
   @override
   _RequestLocationSheetState createState() => _RequestLocationSheetState();
 }
@@ -128,8 +130,10 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
     } else if (!atSign.contains('@')) {
       atSign = '@$atSign';
     }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
-    return checkPresence != null;
+    var checkPresence = (await CacheableSecondaryAddressFinder(
+                AtLocationNotificationListener().ROOT_DOMAIN ?? '', 64)
+            .findSecondary(atSign))
+        .toString();
+    return checkPresence.isNotEmpty;
   }
 }

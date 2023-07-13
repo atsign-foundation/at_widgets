@@ -147,8 +147,8 @@ class _SecondScreenState extends State<SecondScreen> {
                 await Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) =>
                       showLocation(UniqueKey(), mapController, locationList: [
-                    LatLng(30, 45),
-                    LatLng(40, 45),
+                    const LatLng(30, 45),
+                    const LatLng(40, 45),
                   ]),
                 ));
               },
