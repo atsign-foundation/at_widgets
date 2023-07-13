@@ -1,3 +1,6 @@
+## 3.1.11
+- **CHORE**: Upgraded dependencies
+
 ## 3.1.10
 - **CHORE**: Improved pub score
 
