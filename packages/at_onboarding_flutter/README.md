@@ -127,10 +127,12 @@ Go to your project folder, macOS/Runner/DebugProfile.entitlements
 
 For release you need to open macOS/Runner/Release.entitlements
 
-and add the following key:
+and add the following keys:
 
 ```
 <key>com.apple.security.files.downloads.read-write</key>
+<true/>
+<key>com.apple.security.network.client</key>
 <true/>
 ```
 
