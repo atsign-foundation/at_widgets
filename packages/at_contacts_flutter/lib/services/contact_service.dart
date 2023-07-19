@@ -590,6 +590,24 @@ class ContactService {
     }
     contactDetails['nickname'] = nickName != '' ? nickName : null;
 
+    try {
+      // myTags
+      metadata.isPublic = true;
+      metadata.namespaceAware = false;
+      key.sharedBy = atSign;
+      key.metadata = metadata;
+      key.key = contactFields[3];
+      String? myTags;
+
+      var result = await atClientManager.atClient.get(key);
+      if (result.value != null) {
+        myTags = result.value;
+      }
+      contactDetails['myTags'] = myTags;
+    } catch (e) {
+      print("error in getting myTags: $e");
+    }
+
     return contactDetails;
   }
 
