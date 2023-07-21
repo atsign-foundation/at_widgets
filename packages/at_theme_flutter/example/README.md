@@ -5,7 +5,7 @@
 The at_theme_flutter package is designed to make it easy to add theme selection in Flutter apps on atPlatform.
 
 ### Give it a try
-This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_theme_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.
+This package includes a working sample application in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_theme_flutter/example) directory that demonstrates the key features of the package. To create a personalized copy, use ```at_app create``` as shown below or check it out on GitHub.
 
 ```sh
 $ flutter pub global activate at_app 
@@ -29,7 +29,7 @@ The package also manages all the data it needs for you.
 
 ## Sample Usage
 
-You can utilise a streamController and StreamBuilder to switch to the selected theme. The usage can be found in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_theme_flutter/example) app.
+You can utilise a streamController and StreamBuilder to switch to the selected theme. The usage can be found in the [example](https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_theme_flutter/example) app.
 
 To get saved theme
 ```dart

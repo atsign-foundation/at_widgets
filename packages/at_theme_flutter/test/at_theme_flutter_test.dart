@@ -4,14 +4,13 @@ import 'package:at_theme_flutter/services/theme_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-// ignore: depend_on_referenced_packages
-import 'package:at_client/src/client/request_options.dart';
 
 class MockAtClientManager extends Mock implements AtClientManager {}
 
 class MockAtClient extends Mock implements AtClient {
   @override
-  Future<bool> put(AtKey key, dynamic value, {bool isDedicated = false}) async {
+  Future<bool> put(AtKey key, dynamic value,
+      {bool isDedicated = false, PutRequestOptions? putRequestOptions}) async {
     return true;
   }
 
