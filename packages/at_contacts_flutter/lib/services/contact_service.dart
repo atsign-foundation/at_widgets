@@ -134,7 +134,6 @@ class ContactService {
   Future<List<AtContact>?> fetchContacts() async {
     try {
       /// if contact list is already present, data is not fetched again
-
       if (baseContactList.isNotEmpty) {
         List<AtContact?> baseContacts =
             baseContactList.map((e) => e.contact).toList();
