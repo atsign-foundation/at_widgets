@@ -18,7 +18,7 @@ dependencies:
   path_provider: ^2.0.9
   at_file_saver: ^0.1.2
   at_utils: ^3.0.12
-  at_client_mobile: ^3.2.10
+  at_client_mobile: ^3.2.11
   showcaseview: ^2.0.3
   device_info_plus: ^9.0.2
   # desktop - dependencies
@@ -31,9 +31,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.1
-
-dependency_overrides: 
-  win32: ^5.0.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
