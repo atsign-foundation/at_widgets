@@ -272,7 +272,7 @@ class _AtOnboardingActivateScreenState
       } else if (e == AtOnboardingResponseStatus.timeOut) {
         await _showAlertDialog(
           e,
-          title: AtOnboardingLocalizations.current.title_session_expired,
+          title: AtOnboardingLocalizations.current.msg_response_time_out,
         );
       }
     }
