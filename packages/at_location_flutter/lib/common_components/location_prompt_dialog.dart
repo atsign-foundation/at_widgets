@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'custom_toast.dart';
 
+/// Displays a location prompt dialog
 Future<void> locationPromptDialog(
     {String? text,
     String? yesText,
@@ -155,6 +156,7 @@ class _LocationPromptState extends State<LocationPrompt> {
     );
   }
 
+  /// Updates the sharing location status and sends an acknowledgement
   Future<void> updateShareLocation() async {
     var update = await SharingLocationService()
         .updateWithShareLocationAcknowledge(widget.locationNotificationModel!,
@@ -174,6 +176,7 @@ class _LocationPromptState extends State<LocationPrompt> {
     }
   }
 
+  /// Updates the request location status and sends an acknowledgement
   Future<void> updateRequestLocation() async {
     var update = await RequestLocationService()
         .updateWithRequestLocationAcknowledge(widget.locationNotificationModel!,

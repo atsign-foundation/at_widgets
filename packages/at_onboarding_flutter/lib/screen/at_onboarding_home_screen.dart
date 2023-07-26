@@ -578,7 +578,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_not_registered,
+          AtOnboardingLocalizations.current.error_authenticated_failed,
         );
       } else {
         await showErrorDialog(
@@ -963,11 +963,11 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_not_registered,
+          AtOnboardingLocalizations.current.msg_atSign_unreachable,
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_unreachable,
+          AtOnboardingLocalizations.current.error_authenticated_failed,
         );
       } else {
         await showErrorDialog(

@@ -8,6 +8,7 @@ import 'contacts_initial.dart';
 import 'custom_circle_avatar.dart';
 import 'marker_custom_painter.dart';
 
+/// Builds a marker for the given [user]
 Marker buildMarker(HybridModel user,
     {bool singleMarker = false, Widget? marker}) {
   return Marker(

@@ -22,7 +22,7 @@ We call giving people control of access to their data â€œflipping the internetâ€
 There are three options to get started using this package.
 
 ### 1. Quick start - generate a skeleton app with at_app
-This package includes a working sample application in the [Example](https://github.com/atsign-foundation/at_widgets/tree/trunk/at_theme_flutter/example) directory that you can use to create a personalized copy using ```at_app create``` in four commands.
+This package includes a working sample application in the [Example](https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_theme_flutter/example) directory that you can use to create a personalized copy using ```at_app create``` in four commands.
 
 ```sh
 $ flutter pub global activate at_app 

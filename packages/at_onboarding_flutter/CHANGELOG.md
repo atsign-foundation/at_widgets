@@ -1,3 +1,6 @@
+## 6.1.1
+- **FIX**: Updated error messages
+
 ## 6.1.0
 - **FEAT**: Internationalization support added for French
 - **FIX**: Issue fixed in UI theme

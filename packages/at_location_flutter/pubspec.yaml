@@ -1,44 +1,43 @@
 name: at_location_flutter
 description: A Flutter plugin project to share locations between two atSigns and track them on OSM (OpenStreetMap).
-version: 3.1.8
+version: 3.1.9
 homepage: https://docs.atsign.com/
-repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_location_flutter
+repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_location_flutter
 issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
-documentation: https://atsign.dev/docs/functional_architecture/libraries/#at_location_flutter
+documentation: https://docs.atsign.com/
 
 environment:
-  sdk: '>=2.12.0 <4.0.0'
+  sdk: '>=2.14.0 <4.0.0'
   flutter: ">=1.20.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  tuple: ^2.0.0
-  latlong2: ^0.8.1
+  tuple: ^2.0.2
+  latlong2: ^0.9.0
   positioned_tap_detector_2: ^1.0.4
-  transparent_image: ^2.0.0
-  async: ^2.8.2
-  flutter_image: ^4.1.0
-  cached_network_image: ^3.2.0
-  path_provider: ^2.0.9
-  vector_math: ^2.1.1
-  proj4dart: ^2.0.0
-  meta: ^1.7.0
-  geolocator: ^8.2.1
+  transparent_image: ^2.0.1
+  async: ^2.11.0
+  flutter_image: ^4.1.6
+  cached_network_image: ^3.2.3
+  path_provider: ^2.0.15
+  vector_math: ^2.1.4
+  proj4dart: ^2.1.0
+  meta: ^1.9.1
+  geolocator: ^9.0.2
   sliding_up_panel: ^2.0.0+1
-  http: ^0.13.4
-  fluttertoast: ^8.0.9
+  http: ^0.13.0
+  fluttertoast: ^8.2.2
 
   # at_chat_flutter: ^2.0.2
-  at_client_mobile: ^3.2.7
-  at_lookup: ^3.0.31
-  at_commons: ^3.0.26
+  at_client_mobile: ^3.2.10
+  at_lookup: ^3.0.37
+  at_commons: ^3.0.51
   at_contact: ^3.0.7
-  at_utils: ^3.0.11
-  at_client: ^3.0.40
-  at_common_flutter: ^2.0.11
-  at_contacts_flutter: ^4.0.8
-
+  at_utils: ^3.0.14
+  at_client: ^3.0.62
+  at_common_flutter: ^2.0.12
+  at_contacts_flutter: ^4.0.10
 
 dev_dependencies:
   flutter_lints: ^2.0.1

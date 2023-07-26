@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 
@@ -60,21 +61,31 @@ class LatLngBounds {
       _sw = LatLng(sw2!.latitude, sw2.longitude);
       _ne = LatLng(ne2!.latitude, ne2.longitude);
     } else {
-      _sw!.latitude = math.min(sw2!.latitude, _sw!.latitude);
-      _sw!.longitude = math.min(sw2.longitude, _sw!.longitude);
-      _ne!.latitude = math.max(ne2!.latitude, _ne!.latitude);
-      _ne!.longitude = math.max(ne2.longitude, _ne!.longitude);
+      _sw = LatLng(
+        math.min(sw2!.latitude, _sw!.latitude),
+        math.min(sw2.longitude, _sw!.longitude),
+      );
+      _ne = LatLng(
+        math.max(ne2!.latitude, _ne!.latitude),
+        math.max(ne2.longitude, _ne!.longitude),
+      );
     }
   }
 
   double get west => southWest!.longitude;
+
   double get south => southWest!.latitude;
+
   double get east => northEast!.longitude;
+
   double get north => northEast!.latitude;
 
   LatLng? get southWest => _sw;
+
   LatLng? get northEast => _ne;
+
   LatLng get northWest => LatLng(north, west);
+
   LatLng get southEast => LatLng(south, east);
 
   bool get isValid {

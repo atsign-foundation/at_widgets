@@ -34,7 +34,7 @@ Widget showLocation(Key? key, MapController? mapController,
     }
   } else {
     marker =
-        buildMarker(HybridModel(latLng: LatLng(45, 45)), singleMarker: true);
+        buildMarker(HybridModel(latLng: const LatLng(45, 45)), singleMarker: true);
     showMarker = false;
   }
 
@@ -59,7 +59,7 @@ Widget showLocation(Key? key, MapController? mapController,
             ? markerList[0].point
             : (location != null)
                 ? location
-                : LatLng(45, 45),
+                : const LatLng(45, 45),
         zoom: markerList != null
             ? 5
             : (location != null)

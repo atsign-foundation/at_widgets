@@ -11,6 +11,7 @@ class LoadingDialog {
   factory LoadingDialog() => _instance;
   bool _showing = false;
 
+  /// Shows a custom popup with a CircularProgressIndicator
   void show() {
     if (!_showing) {
       _showing = true;
@@ -28,6 +29,7 @@ class LoadingDialog {
     }
   }
 
+  /// Hides the custom popup
   void hide() {
     if (_showing) {
       AtLocationNotificationListener().navKey.currentState!.pop();
