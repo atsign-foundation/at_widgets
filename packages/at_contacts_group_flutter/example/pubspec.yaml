@@ -55,7 +55,6 @@ dependency_overrides:
   at_contacts_flutter: ^4.0.11
 
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

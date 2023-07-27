@@ -10,7 +10,7 @@ Future<Uint8List?> desktopImagePicker() async {
   AtSignLogger atSignLogger = AtSignLogger('desktopImagePicker');
   try {
     // ignore: omit_local_variable_types
-    final XTypeGroup typeGroup = XTypeGroup(
+    const XTypeGroup typeGroup = XTypeGroup(
       label: 'images',
       extensions: ['jpg', 'png', 'jpeg'],
     );
