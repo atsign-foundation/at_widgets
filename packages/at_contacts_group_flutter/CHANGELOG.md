@@ -1,3 +1,6 @@
+## 4.0.13
+- **CHORE**: Updated dependency and improved pub score
+
 ## 4.0.12
 - **FIX**: fetching contacts made faster.
 

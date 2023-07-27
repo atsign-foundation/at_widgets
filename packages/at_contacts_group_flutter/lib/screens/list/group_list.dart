@@ -22,7 +22,11 @@ import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 
-/// This widget gives a screen to display list of groups
+/// [GroupList] shows all the created groups.
+///
+/// If no group is present, an empty screen is shows.
+///
+/// [GroupList] also provides an option to create a new group.
 class GroupList extends StatefulWidget {
   const GroupList({Key? key}) : super(key: key);
   @override
