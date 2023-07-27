@@ -2,7 +2,6 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -15,18 +14,12 @@ class MockGroupService extends Mock implements GroupService {}
 class MockContactService extends Mock implements ContactService {}
 
 void main() {
-  const channel = MethodChannel('at_contacts_group_flutter');
   MockAtContactImpl mockAtContactImpl = MockAtContactImpl();
   MockAtClient mockAtClient = MockAtClient();
-  MockContactService mockContactService = MockContactService();
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
-  });
+  setUp(() {});
 
   test("create_group_test", () async {
     AtGroup grp = AtGroup("new_test_group", groupId: "1");
@@ -108,12 +101,4 @@ void main() {
 
     expect(res, true);
   });
-
-  tearDown(() {
-    channel.setMockMethodCallHandler(null);
-  });
-
-  // test('getPlatformVersion', () async {
-  //   expect(await AtContactsGroupFlutter.platformVersion, '42');
-  // });
 }
