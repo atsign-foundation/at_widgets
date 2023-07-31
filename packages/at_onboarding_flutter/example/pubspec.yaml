@@ -52,11 +52,24 @@ dependency_overrides:
     # See https://dart.dev/tools/pub/dependencies#version-constraints
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
+  at_client:
+      git: 
+        url: https://github.com/atsign-foundation/at_client_sdk.git
+        ref: srk_apkam_changes
+        path: packages/at_client
+#   at_client_mobile:
+#     git: 
+#       url: https://github.com/atsign-foundation/at_client_sdk.git
+#       ref: srk_apkam_changes
+#       path: packages/at_client_mobile
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^1.0.4
+# dev_dependencies:
+#   flutter_test:
+#     sdk: flutter
+#   flutter_lints: ^1.0.4
+
+
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -65,7 +78,7 @@ dev_dependencies:
 flutter:
   assets:
     - ../assets/images/
-    - .env
+    # - .env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
