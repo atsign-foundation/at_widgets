@@ -174,11 +174,11 @@ class _MyAppState extends State<MyApp> {
                         )
                       ],
                     ),
-                    // ElevatedButton(
-                    //     onPressed: () {
-                    //       showDialog(context: context, builder: (_) => ApkamRequestWidget());
-                    //     },
-                    //     child: const Text('Apkam Onboarding'))
+                    ElevatedButton(
+                        onPressed: () {
+                          showDialog(context: context, builder: (_) => ApkamRequestWidget());
+                        },
+                        child: const Text('Apkam Onboarding'))
                   ],
                 ),
               ),
