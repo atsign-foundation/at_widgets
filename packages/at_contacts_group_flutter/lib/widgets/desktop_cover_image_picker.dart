@@ -29,13 +29,40 @@ class DesktopCoverImagePicker extends StatelessWidget {
         }
       },
       child: selectedImage != null
-          ? ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.memory(
-                selectedImage!,
-                width: 360,
-                height: 88,
-                fit: BoxFit.cover,
+          ? SizedBox(
+              width: 360,
+              height: 88,
+              child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.expand,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: Image.memory(
+                      selectedImage!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  if (isEdit)
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white54.withOpacity(0.5),
+                        ),
+                        child: Image.asset(
+                          AllImages().edit,
+                          width: 16,
+                          height: 16,
+                          fit: BoxFit.cover,
+                          package: 'at_contacts_group_flutter',
+                        ),
+                      ),
+                    ),
+                ],
               ),
             )
           : Container(

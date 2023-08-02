@@ -2,9 +2,8 @@
 
 import 'dart:typed_data';
 
-import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
-import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
+import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
@@ -13,6 +12,7 @@ import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_cover_image_picker.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_floating_add_contact_button.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_group_contacts_list.dart';
 import 'package:at_contacts_group_flutter/widgets/icon_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +23,14 @@ class DesktopGroupDetail extends StatefulWidget {
   AtGroup group;
   int currentIndex;
   Function()? onBackArrowTap;
+  bool isEditing;
 
   DesktopGroupDetail({
     Key? key,
     required this.group,
     required this.currentIndex,
     this.onBackArrowTap,
+    this.isEditing = false,
   }) : super(key: key);
 
   @override
@@ -39,9 +41,12 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
   bool isEditingName = false, updatingName = false, updatingImage = false;
   TextEditingController? textController;
   Uint8List? groupImage;
+  late bool isEditing;
+  bool isAddingContacts = false;
 
   @override
   void initState() {
+    isEditing = widget.isEditing;
     textController = TextEditingController.fromValue(
       TextEditingValue(
         text: widget.group.groupName ?? '',
@@ -58,6 +63,9 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
 
   @override
   Widget build(BuildContext context) {
+    if (isAddingContacts) {
+      GroupService().fetchGroupsAndContacts(isDesktop: true);
+    }
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -65,7 +73,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
           isDesktop: true,
           showTitle: true,
           centerTitle: false,
-          titleText: widget.group.displayName,
+          titleText: isEditing ? 'Edit' : widget.group.displayName,
           titleTextStyle: CustomTextStyles.blackW50020,
           leadingIcon: InkWell(
             onTap: () {
@@ -84,77 +92,150 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
             ),
           ),
           showLeadingIcon: true,
-        ),
-        body: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          children: [
-            DesktopCoverImagePicker(
-              selectedImage: groupImage,
-              isEdit: false,
-              onSelected: (value) {
-                updateImage(value);
-              },
-            ),
-            SizedBox(height: 20.toHeight),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+          showTrailingIcon: isEditing,
+          trailingIcon: InkWell(
+            onTap: () async {},
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 52, vertical: 8),
+              margin: const EdgeInsets.only(right: 28),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Colors.black,
+                borderRadius: BorderRadius.circular(46),
+                color: AllColors().buttonColor,
               ),
-              child: Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Transfer File ",
-                      style: CustomTextStyles.whiteBold12,
-                    ),
-                    const SizedBox(width: 12),
-                    Image.asset(
-                      AllImages().enter,
-                      width: 16,
-                      height: 12,
-                      fit: BoxFit.cover,
-                      package: 'at_contacts_group_flutter',
-                    ),
-                  ],
-                ),
+              child: Text(
+                'Save',
+                style: CustomTextStyles.whiteW50015,
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+          ),
+        ),
+        body: Stack(
+          children: [
+            ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               children: [
-                IconButtonWidget(
-                  icon: AllImages().edit,
-                  backgroundColor: AllColors().iconButtonColor,
-                  onTap: () {},
-                ),
-                const SizedBox(width: 24),
-                IconButtonWidget(
-                  icon: AllImages().delete,
-                  backgroundColor: AllColors().iconButtonColor,
-                  onTap: () async {
-                    await showMyDialog(context, widget.group);
+                DesktopCoverImagePicker(
+                  selectedImage: groupImage,
+                  isEdit: isEditing,
+                  onSelected: (value) {
+                    updateImage(value);
                   },
+                ),
+                SizedBox(height: isEditing ? 16 : 20),
+                buildDetailOptions(),
+                const SizedBox(height: 12),
+                DesktopGroupContactsList(
+                  asSelectionScreen: isAddingContacts,
+                  selectedList: (selectedContactList) {
+                    GroupService().setSelectedContacts(
+                        selectedContactList.map((e) => e?.contact).toList());
+                  },
+                  initialData: isAddingContacts
+                      ? []
+                      : widget.group.members
+                          ?.map((e) => GroupContactsModel(
+                                contact: e,
+                              ))
+                          .toList(),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            DesktopGroupContactsList(
-              initialData: widget.group.members
-                  ?.map((e) => GroupContactsModel(
-                        contact: e,
-                      ))
-                  .toList(),
-            ),
+            if (isAddingContacts) const DesktopFloatingAddContactButton(),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildDetailOptions() {
+    return isEditing
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButtonWidget(
+                icon: AllImages().add,
+                isSelected: isAddingContacts,
+                onTap: () async {
+                  setState(() {
+                    isAddingContacts = !isAddingContacts;
+                  });
+                },
+                backgroundColor: AllColors().iconButtonColor,
+              ),
+              const SizedBox(width: 20),
+              IconButtonWidget(
+                icon: AllImages().share,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                onTap: () {},
+                backgroundColor: AllColors().iconButtonColor,
+              ),
+              const SizedBox(width: 20),
+              IconButtonWidget(
+                icon: AllImages().delete,
+                onTap: () async {
+                  await showMyDialog(context, widget.group);
+                },
+                backgroundColor: AllColors().iconButtonColor,
+              ),
+            ],
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.black,
+                ),
+                child: Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Transfer File ",
+                        style: CustomTextStyles.whiteBold12,
+                      ),
+                      const SizedBox(width: 12),
+                      Image.asset(
+                        AllImages().enter,
+                        width: 16,
+                        height: 12,
+                        fit: BoxFit.cover,
+                        package: 'at_contacts_group_flutter',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButtonWidget(
+                    icon: AllImages().edit,
+                    backgroundColor: AllColors().iconButtonColor,
+                    onTap: () {
+                      setState(() {
+                        isEditing = true;
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 24),
+                  IconButtonWidget(
+                    icon: AllImages().delete,
+                    backgroundColor: AllColors().iconButtonColor,
+                    onTap: () async {
+                      await showMyDialog(context, widget.group);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          );
   }
 
   void updateImage(selectedImageByteData) async {

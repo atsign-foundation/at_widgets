@@ -56,7 +56,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
       _filteredList = widget.groups;
     }
     return Container(
-      color: const Color(0xFFF8F8F8),
+      color: const Color(0xFFFAFAFA),
       child: Column(
         children: <Widget>[
           const SizedBox(

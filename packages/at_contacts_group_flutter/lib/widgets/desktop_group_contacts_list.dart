@@ -30,7 +30,7 @@ class DesktopGroupContactsList extends StatefulWidget {
     this.singleSelection = false,
     this.onContactsTap,
     this.showContacts = true,
-    this.showGroups = true,
+    this.showGroups = false,
     this.selectedList,
     this.initialData,
   }) : super(key: key);

@@ -17,4 +17,6 @@ class AllImages {
   String enter = 'assets/images/enter.png';
   String edit = 'assets/images/edit.png';
   String delete = 'assets/images/delete.png';
+  String add = 'assets/images/add.png';
+  String share = 'assets/images/share.png';
 }

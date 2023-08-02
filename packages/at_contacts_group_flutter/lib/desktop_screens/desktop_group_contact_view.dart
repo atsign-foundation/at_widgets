@@ -15,11 +15,10 @@ import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
-import 'package:at_contacts_group_flutter/widgets/add_contacts_group_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/circular_contacts.dart';
-import 'package:at_contacts_group_flutter/widgets/contacts_selction_bottom_sheet.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_cover_image_picker.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_floating_add_contact_button.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_group_contacts_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -212,31 +211,7 @@ class _DesktopGroupContactViewState extends State<DesktopGroupContactView> {
               ],
             ),
           ),
-          Positioned(
-            bottom: 32,
-            left: 48,
-            right: 48,
-            child: InkWell(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const AddContactDialog(),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  color: Colors.black,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  'Add Contact',
-                  style: CustomTextStyles.whiteBold16,
-                ),
-              ),
-            ),
-          ),
+          const DesktopFloatingAddContactButton(),
         ],
       ),
     );

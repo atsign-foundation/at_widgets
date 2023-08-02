@@ -6,6 +6,7 @@ class IconButtonWidget extends StatelessWidget {
   final Color backgroundColor;
   final Function() onTap;
   final bool isSelected;
+  final EdgeInsets? padding;
 
   const IconButtonWidget({
     Key? key,
@@ -13,6 +14,7 @@ class IconButtonWidget extends StatelessWidget {
     this.backgroundColor = Colors.white,
     required this.onTap,
     this.isSelected = false,
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class IconButtonWidget extends StatelessWidget {
       child: Container(
         width: 40,
         height: 40,
-        padding: const EdgeInsets.all(12),
+        padding: padding ?? const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: backgroundColor,
           shape: BoxShape.circle,

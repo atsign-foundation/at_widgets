@@ -93,6 +93,8 @@ flutter:
     - assets/images/enter.png
     - assets/images/edit.png
     - assets/images/delete.png
+    - assets/images/add.png
+    - assets/images/share.png
     # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   #
