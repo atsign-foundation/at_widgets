@@ -1,41 +1,47 @@
 import 'dart:typed_data';
 
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
-import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_contacts_flutter/utils/text_strings.dart';
+import 'package:at_contacts_flutter/widgets/contacts_initials.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/desktop_routes/desktop_routes.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/navigation_service.dart';
-import 'package:at_contacts_group_flutter/utils/text_constants.dart';
-import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
-import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
-import 'package:at_contacts_group_flutter/widgets/desktop_custom_input_field.dart';
+import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/utils/images.dart';
+import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_header.dart';
-import 'package:at_contacts_group_flutter/widgets/desktop_person_horizontal_tile.dart';
+import 'package:at_contacts_group_flutter/widgets/icon_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class DesktopGroupList extends StatefulWidget {
   final List<AtGroup> groups;
   final int expandIndex;
   final bool showBackButton;
+  final Function(bool) onCallback;
 
-  const DesktopGroupList(this.groups,
-      {Key? key, this.expandIndex = 0, this.showBackButton = true})
-      : super(key: key);
+  const DesktopGroupList(
+    this.groups, {
+    Key? key,
+    this.expandIndex = 0,
+    this.showBackButton = true,
+    required this.onCallback,
+  }) : super(key: key);
+
   @override
   _DesktopGroupListState createState() => _DesktopGroupListState();
 }
 
 class _DesktopGroupListState extends State<DesktopGroupList> {
-  int _selectedIndex = 0;
   String searchText = '';
-  var _filteredList = <AtGroup>[];
   bool showBackIcon = true;
+  List<AtGroup> _filteredList = [];
+  bool isSearching = false;
 
   @override
   void initState() {
-    _selectedIndex = widget.expandIndex;
     showBackIcon = GroupService().groupPreferece.showBackButton;
     super.initState();
   }
@@ -44,14 +50,13 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
   Widget build(BuildContext context) {
     if (searchText != '') {
       _filteredList = widget.groups.where((grp) {
-        return grp.groupName!.contains(searchText);
+        return grp.displayName!.contains(searchText);
       }).toList();
     } else {
       _filteredList = widget.groups;
     }
-
     return Container(
-      color: const Color(0xFFF7F7FF),
+      color: const Color(0xFFF8F8F8),
       child: Column(
         children: <Widget>[
           const SizedBox(
@@ -65,169 +70,322 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
               DesktopGroupSetupRoutes.exitGroupPackage();
             },
             actions: [
-              Expanded(
-                child: DesktopCustomInputField(
-                  backgroundColor: Colors.white,
-                  hintText: 'Search...',
-                  icon: Icons.search,
-                  height: 45,
-                  iconColor: ColorConstants.greyText,
-                  value: (str) {
-                    setState(() {
-                      searchText = str;
-                    });
-                  },
-                  initialValue: searchText,
-                ),
-              ),
-              const SizedBox(width: 15),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(
-                          NavService.groupPckgRightHalfNavKey.currentContext!)
-                      .pushNamed(DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW,
-                          arguments: {
-                        'onBackArrowTap': (selectedGroupContacts) {
-                          Navigator.of(NavService
-                                  .groupPckgRightHalfNavKey.currentContext!)
-                              .pop();
-                        },
-                        'onDoneTap': () {
-                          Navigator.of(NavService
-                                  .groupPckgRightHalfNavKey.currentContext!)
-                              .pushNamed(DesktopRoutes.DESKTOP_NEW_GROUP,
-                                  arguments: {
-                                'onPop': () {
-                                  Navigator.of(NavService
-                                          .groupPckgRightHalfNavKey
-                                          .currentContext!)
-                                      .pop();
-                                },
-                                'onDone': () {},
-                              });
-                        },
-                        'contactSelectedHistory':
-                            <GroupContactsModel>[] // will always be empty
-                      });
-                },
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    return ColorConstants.orangeColor;
-                  },
-                ), fixedSize: MaterialStateProperty.resolveWith<Size>(
-                  (Set<MaterialState> states) {
-                    return const Size(100, 40);
-                  },
-                )),
-                child: const Text(
-                  'Add',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10)
-            ],
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filteredList.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                    DesktopGroupSetupRoutes.navigator(
-                        DesktopRoutes.DESKTOP_GROUP_DETAIL,
-                        arguments: {
-                          'group': _filteredList[index],
-                          'currentIndex': index,
-                        })();
-                  },
-                  child: Container(
-                    color: index == _selectedIndex
-                        ? const Color(0xffF86060).withAlpha(20)
-                        : Colors.transparent,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 8.0,
-                            right: 15,
-                            left: 20,
+              isSearching
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(40),
+                      child: Container(
+                        height: 40,
+                        width: 308,
+                        color: Colors.white,
+                        child: TextField(
+                          autofocus: true,
+                          onChanged: (value) {
+                            setState(() {
+                              searchText = value;
+                            });
+                          },
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15.0, bottom: 15, left: 15, right: 15),
-                            child: DesktopCustomPersonHorizontalTile(
-                              title: _filteredList[index].groupName,
-                              image: _filteredList[index].groupPicture,
-                              subTitle: _filteredList[index]
-                                  .members!
-                                  .length
-                                  .toString(),
-                              isDesktop: true,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 28, vertical: 8),
+                            border: InputBorder.none,
+                            hintText: 'Search',
+                            hintStyle: TextStyle(
+                              color: AllColors().searchHintTextColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
                             ),
+                            suffixIcon: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    searchText = '';
+                                    isSearching = false;
+                                  });
+                                },
+                                child: const Icon(Icons.close)),
                           ),
                         ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.only(right: 15.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      showMyDialog(
-                                          context, _filteredList[index]);
-                                    },
-                                    child: const Icon(Icons.delete),
-                                  )),
-                            ],
-                          ),
-                        )
-                      ],
+                      ),
+                    )
+                  : IconButtonWidget(
+                      icon: AllImages().search,
+                      onTap: () {
+                        setState(() {
+                          isSearching = true;
+                        });
+                      },
                     ),
+              const SizedBox(width: 12),
+              IconButtonWidget(
+                icon: AllImages().refresh,
+                onTap: () {
+                  setState(() async {
+                    await GroupService().getAllGroupsDetails();
+                  });
+                },
+              ),
+              const SizedBox(width: 12),
+              buildAddGroupButton(),
+            ],
+          ),
+          Expanded(
+            child: _filteredList.isEmpty
+                ? Center(
+                    child: Text(
+                      TextStrings().noContactsFound,
+                      style: TextStyle(
+                        fontSize: 15.toFont,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  )
+                : ListView(
+                    physics: const ClampingScrollPhysics(),
+                    children: buildGroupList(),
                   ),
-                );
-              },
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> buildGroupList() {
+    final List<Widget> result = [];
+    if (_filteredList.isNotEmpty) {
+      final List<AtGroup> sortedList = sortGroupAlphabetical();
+      bool isSameCharWithPrev(int i) =>
+          (((sortedList[i].displayName ?? '').isNotEmpty
+                  ? sortedList[i].displayName![0]
+                  : ' ') !=
+              ((sortedList[i - 1].displayName ?? '').isNotEmpty
+                  ? sortedList[i - 1].displayName![0]
+                  : ' '));
+
+      bool isPrevCharacter(int i) => RegExp(r'^[a-z]+$').hasMatch(
+          (((sortedList[i - 1].displayName ?? '').isNotEmpty
+                  ? sortedList[i - 1].displayName![0]
+                  : ' '))[0]
+              .toLowerCase());
+
+      for (int i = 0; i < sortedList.length; i++) {
+        if (i == 0 || (isSameCharWithPrev(i) && isPrevCharacter(i))) {
+          result.add(buildAlphabeticalTitle(
+              (sortedList[i].displayName ?? '').isNotEmpty
+                  ? sortedList[i].displayName![0]
+                  : ''));
+        }
+        result.add(
+          buildGroupCard(
+            index: i,
+            data: sortedList[i],
+          ),
+        );
+      }
+    }
+    return result;
+  }
+
+  Widget buildGroupCard({
+    required AtGroup data,
+    required int index,
+  }) {
+    return InkWell(
+      onTap: () {
+        widget.onCallback(true);
+        Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
+            .pushNamed(DesktopRoutes.DESKTOP_GROUP_DETAIL, arguments: {
+          'group': data,
+          'currentIndex': index,
+          'onBackArrowTap': () {
+            Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
+                .pop();
+            widget.onCallback(false);
+          },
+        });
+      },
+      child: Container(
+        height: 72,
+        margin: const EdgeInsets.only(
+          bottom: 12,
+          left: 80,
+          right: 80,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                  ),
+                  child: data.groupPicture != null
+                      ? Image.memory(
+                          Uint8List.fromList(data.groupPicture.cast<int>()),
+                          fit: BoxFit.cover,
+                          width: 72,
+                        )
+                      : ContactInitial(
+                          size: 72,
+                          isDesktop: true,
+                          initials: ((data.displayName ?? '').isNotEmpty &&
+                                  RegExp(r'^[a-z]+$').hasMatch(
+                                      (data.displayName ?? '')[0]
+                                          .toLowerCase()))
+                              ? data.displayName!
+                              : 'UG',
+                        ),
+                ),
+                const SizedBox(width: 16),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.displayName ?? '',
+                      style: CustomTextStyles.blackW60013,
+                    ),
+                    Text(
+                      '${data.members?.length} Members',
+                      style: CustomTextStyles.blackW40011,
+                    ),
+                  ],
+                ),
+              ],
             ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: Image.asset(
+                    AllImages().sendGroup,
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                    package: 'at_contacts_group_flutter',
+                  ),
+                ),
+                const SizedBox(width: 12),
+                InkWell(
+                  onTap: () {},
+                  child: Image.asset(
+                    AllImages().more,
+                    width: 20,
+                    height: 24,
+                    fit: BoxFit.fitWidth,
+                    package: 'at_contacts_group_flutter',
+                  ),
+                ),
+                const SizedBox(width: 32),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildAlphabeticalTitle(String char) {
+    return Container(
+      margin: const EdgeInsets.only(
+        bottom: 12,
+        left: 52,
+        right: 52,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          char.isNotEmpty && RegExp(r'^[a-z]+$').hasMatch(char.toLowerCase())
+              ? Text(
+                  char.toUpperCase(),
+                  style: CustomTextStyles.alphabeticalTextBold20,
+                )
+              : Text(
+                  'Others',
+                  style: CustomTextStyles.alphabeticalTextBold20,
+                ),
+          Divider(
+            height: 1.toHeight,
+            color: AllColors().dividerColor,
           )
         ],
       ),
     );
   }
 
-  Future<void> showMyDialog(BuildContext context, AtGroup group) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        Uint8List? groupPicture;
-        if (group.groupPicture != null) {
-          List<int> intList = group.groupPicture.cast<int>();
-          groupPicture = Uint8List.fromList(intList);
-        }
-        return ConfirmationDialog(
-          title: '${group.displayName}',
-          heading: 'Are you sure you want to delete this group?',
-          onYesPressed: () async {
-            var result = await GroupService().deleteGroup(group);
+  List<AtGroup> sortGroupAlphabetical() {
+    final List<AtGroup> emptyTitleGroup = _filteredList
+        .where((e) =>
+            (e.displayName ?? '').isEmpty ||
+            !RegExp(r'^[a-z]+$').hasMatch(
+              (e.displayName ?? '')[0].toLowerCase(),
+            ))
+        .toList();
+    final List<AtGroup> nonEmptyTitleGroup = _filteredList
+        .where((e) =>
+            (e.displayName ?? '').isNotEmpty &&
+            RegExp(r'^[a-z]+$').hasMatch(
+              (e.displayName ?? '')[0].toLowerCase(),
+            ))
+        .toList();
+    nonEmptyTitleGroup.sort(
+      (a, b) => (a.displayName?[0] ?? '').compareTo(
+        (b.displayName?[0] ?? ''),
+      ),
+    );
+    return [...nonEmptyTitleGroup, ...emptyTitleGroup];
+  }
 
-            if(!mounted) return;
-            if (result != null && result) {
-              Navigator.of(context).pop();
-            } else {
-              CustomToast().show(TextConstants().SERVICE_ERROR, context);
-            }
+  Widget buildAddGroupButton() {
+    return InkWell(
+      onTap: () {
+        widget.onCallback(true);
+        Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
+            .pushNamed(DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW, arguments: {
+          'onBackArrowTap': (selectedGroupContacts) {
+            Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
+                .pop();
+            widget.onCallback(false);
           },
-          image: groupPicture,
-        );
+          'onDoneTap': () {
+            Navigator.of(NavService.groupPckgRightHalfNavKey.currentContext!)
+                .pushNamed(DesktopRoutes.DESKTOP_NEW_GROUP, arguments: {
+              'onPop': () {
+                Navigator.of(
+                        NavService.groupPckgRightHalfNavKey.currentContext!)
+                    .pop();
+                widget.onCallback(false);
+              },
+              'onDone': () {},
+            });
+          },
+          'contactSelectedHistory':
+              <GroupContactsModel>[] // will always be empty
+        });
       },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(46),
+          color: AllColors().buttonColor,
+        ),
+        child: Text(
+          'Add groups',
+          style: CustomTextStyles.whiteW50015,
+        ),
+      ),
     );
   }
 }

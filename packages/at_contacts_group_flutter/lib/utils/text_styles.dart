@@ -1,12 +1,15 @@
 import 'package:at_contacts_flutter/utils/colors.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
 class CustomTextStyles {
   CustomTextStyles._();
+
   static final CustomTextStyles _instance = CustomTextStyles._();
+
   factory CustomTextStyles() => _instance;
 
   TextStyle orange16 = TextStyle(
@@ -70,7 +73,8 @@ class CustomTextStyles {
       letterSpacing: 0.1,
       fontWeight: FontWeight.bold);
 
-  static TextStyle blackBold({int size = 16}) => TextStyle(
+  static TextStyle blackBold({int size = 16}) =>
+      TextStyle(
         color: Colors.black,
         fontSize: size.toFont,
         letterSpacing: 0.1,
@@ -107,4 +111,58 @@ class CustomTextStyles {
       fontSize: 14.toFont,
       letterSpacing: 0.1,
       fontWeight: FontWeight.normal);
+
+  static TextStyle textBlackW60025 = TextStyle(
+    color: AllColors().textBlack,
+    fontSize: 25.toFont,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle blackW60013 = const TextStyle(
+    color: Colors.black,
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle blackW40011 = const TextStyle(
+    color: Colors.black,
+    fontSize: 11,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle alphabeticalTextBold20 = TextStyle(
+    color: AllColors().alphabeticalTextColor,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle whiteW50015 = const TextStyle(
+    color: Colors.white,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle blackW50020 = const TextStyle(
+    color: Colors.black,
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle orangeW50014 = TextStyle(
+      color: AllColors().buttonColor,
+      fontSize: 14,
+      fontWeight: FontWeight.w500
+  );
+
+  static TextStyle whiteBold16 = const TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle whiteBold12 = const TextStyle(
+    color: Colors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
 }

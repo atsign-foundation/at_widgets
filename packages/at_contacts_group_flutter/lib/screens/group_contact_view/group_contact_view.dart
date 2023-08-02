@@ -1,5 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/services/contact_service.dart';
@@ -60,6 +61,7 @@ class GroupContactView extends StatefulWidget {
       this.contactSelectedHistory,
       this.onContactsTap})
       : super(key: key);
+
   @override
   _GroupContactViewState createState() => _GroupContactViewState();
 }
@@ -100,6 +102,7 @@ class _GroupContactViewState extends State<GroupContactView> {
   }
 
   List<AtContact> selectedList = [];
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -382,12 +385,13 @@ class _GroupContactViewState extends State<GroupContactView> {
                     ? Slidable(
                         endActionPane: ActionPane(
                           motion: const ScrollMotion(),
+                          extentRatio: 0.25,
                           children: [
                             SlidableAction(
                               label: TextStrings().block,
                               backgroundColor: ColorConstants.inputFieldColor,
                               icon: Icons.block,
-                              onPressed: (_context) async {
+                              onPressed: (context) async {
                                 blockUnblockContact(
                                     contactsForAlphabet[index]!.contact!);
                               },
@@ -396,11 +400,11 @@ class _GroupContactViewState extends State<GroupContactView> {
                               label: TextStrings().delete,
                               backgroundColor: Colors.red,
                               icon: Icons.delete,
-                              onPressed: (_context) async {
+                              onPressed: (context) async {
                                 deleteAtSign(
                                     contactsForAlphabet[index]!.contact!);
                               },
-                            )
+                            ),
                           ],
                         ),
                         child: CustomListTile(

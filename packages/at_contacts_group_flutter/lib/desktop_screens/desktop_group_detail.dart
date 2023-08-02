@@ -3,17 +3,18 @@
 import 'dart:typed_data';
 
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:at_contacts_flutter/utils/colors.dart';
+import 'package:at_common_flutter/widgets/custom_app_bar.dart';
 import 'package:at_contacts_group_flutter/at_contacts_group_flutter.dart';
-import 'package:at_contacts_group_flutter/desktop_routes/desktop_route_names.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
-import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
+import 'package:at_contacts_group_flutter/utils/images.dart';
 import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
-import 'package:at_contacts_group_flutter/services/desktop_image_picker.dart';
-import 'package:at_contacts_group_flutter/widgets/desktop_person_vertical_tile.dart';
-import 'package:at_contacts_group_flutter/widgets/remove_trusted_contact_dialog.dart';
+import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
+import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_cover_image_picker.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_group_contacts_list.dart';
+import 'package:at_contacts_group_flutter/widgets/icon_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
 
@@ -21,8 +22,14 @@ import 'package:at_contact/at_contact.dart';
 class DesktopGroupDetail extends StatefulWidget {
   AtGroup group;
   int currentIndex;
-  DesktopGroupDetail(this.group, this.currentIndex, {Key? key})
-      : super(key: key);
+  Function()? onBackArrowTap;
+
+  DesktopGroupDetail({
+    Key? key,
+    required this.group,
+    required this.currentIndex,
+    this.onBackArrowTap,
+  }) : super(key: key);
 
   @override
   _DesktopGroupDetailState createState() => _DesktopGroupDetailState();
@@ -54,350 +61,97 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  groupImage != null
-                      ? Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Image.memory(
-                              groupImage!,
-                              height: 272.toHeight,
-                              width: double.infinity,
-                              fit: BoxFit.contain,
-                            ),
-                            updatingImage
-                                ? Positioned(
-                                    child: Text('Updating image...',
-                                        style: CustomTextStyles.primaryBold16),
-                                  )
-                                : const SizedBox()
-                          ],
-                        )
-                      : Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SizedBox(
-                                height: 272.toHeight,
-                                width: double.infinity,
-                                child: Icon(Icons.groups_rounded,
-                                    size: 200, color: AllColors().LIGHT_GREY)),
-                            updatingImage
-                                ? Positioned(
-                                    child: Text('Updating image...',
-                                        style: CustomTextStyles.primaryBold16),
-                                  )
-                                : const SizedBox()
-                          ],
-                        ),
-                  SizedBox(
-                    height: 60.toHeight,
-                  ),
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    runAlignment: WrapAlignment.start,
-                    runSpacing: 10.0,
-                    spacing: 30.0,
-                    children:
-                        List.generate(widget.group.members!.length, (index) {
-                      return InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (context) => RemoveTrustedContact(
-                              'Remove ${widget.group.members!.elementAt(index).atSign}  ',
-                              contact: AtContact(
-                                  atSign: widget.group.members!
-                                      .elementAt(index)
-                                      .atSign),
-                              atGroup: widget.group,
-                            ),
-                          );
-                        },
-                        child: DesktopCustomPersonVerticalTile(
-                          subTitle:
-                              widget.group.members!.elementAt(index).atSign,
-                          isAssetImage: true,
-                          atsign: widget.group.members!.elementAt(index).atSign,
-                        ),
-                      );
-                    }),
-                  )
-                ],
+        appBar: CustomAppBar(
+          isDesktop: true,
+          showTitle: true,
+          centerTitle: false,
+          titleText: widget.group.displayName,
+          titleTextStyle: CustomTextStyles.blackW50020,
+          leadingIcon: InkWell(
+            onTap: () {
+              if (widget.onBackArrowTap != null) {
+                widget.onBackArrowTap!();
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Image.asset(
+                AllImages().back,
+                width: 8,
+                height: 20,
+                package: 'at_contacts_group_flutter',
               ),
-              Positioned(
-                top: 240.toHeight,
-                child: Container(
-                  height: 80.toHeight,
-                  width: (((SizeConfig().screenWidth -
-                              TextConstants.SIDEBAR_WIDTH) /
-                          2) -
-                      30 -
-                      30),
-                  margin: EdgeInsets.symmetric(
-                      horizontal: 15.toWidth, vertical: 0.toHeight),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 15.toWidth, vertical: 10.toHeight),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6.0),
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.white
-                        : Colors.black,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: ColorConstants.greyText,
-                        blurRadius: 10.0,
-                        spreadRadius: 1.0,
-                        offset: Offset(0.0, 0.0),
-                      )
-                    ],
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      isEditingName
-                          ? Row(
-                              children: [
-                                SizedBox(
-                                  width: 150,
-                                  child: TextField(
-                                    textInputAction: TextInputAction.search,
-                                    controller: textController,
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Change name',
-                                      hintStyle: TextStyle(
-                                        fontSize: 16,
-                                        color: ColorConstants.greyText,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                      filled: true,
-                                      // fillColor: ColorConstants.scaffoldColor,
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 15, horizontal: 5),
-                                    ),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: ColorConstants.fontPrimary,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                    onChanged: (s) {},
-                                  ),
-                                ),
-                                updatingName
-                                    ? const SizedBox(
-                                        width: 35,
-                                        height: 25,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 8.0),
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                      )
-                                    : InkWell(
-                                        onTap: () async {
-                                          setState(() {
-                                            updatingName = true;
-                                          });
-
-                                          if (textController!.text !=
-                                              widget.group.groupName) {
-                                            var _group = AtGroup(
-                                              widget.group.groupName,
-                                              groupId: widget.group.groupId,
-                                              displayName:
-                                                  widget.group.displayName,
-                                              description:
-                                                  widget.group.description,
-                                              groupPicture:
-                                                  widget.group.groupPicture,
-                                              members: widget.group.members,
-                                              tags: widget.group.tags,
-                                              createdOn: widget.group.createdOn,
-                                              updatedOn: widget.group.updatedOn,
-                                              createdBy: widget.group.createdBy,
-                                              updatedBy: widget.group.updatedBy,
-                                            );
-
-                                            _group.groupName =
-                                                textController!.text;
-
-                                            var result = await GroupService()
-                                                .updateGroupData(
-                                                    _group, context,
-                                                    isDesktop: true,
-                                                    expandIndex:
-                                                        widget.currentIndex);
-
-                                            if (result is AtGroup) {
-                                              // ignore: todo
-                                              // TODO: Doubt
-                                              widget.group = _group;
-                                              if (mounted) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(const SnackBar(
-                                                        content: Text(
-                                                            'Name updated')));
-                                              }
-                                            } else if (result == null) {
-                                              textController!.text =
-                                                  widget.group.groupName!;
-                                              if (mounted) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            TextConstants()
-                                                                .SERVICE_ERROR)));
-                                              }
-                                            } else {
-                                              textController!.text =
-                                                  widget.group.groupName!;
-                                              if (mounted) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(result
-                                                            .toString())));
-                                              }
-                                            }
-                                          }
-
-                                          setState(() {
-                                            updatingName = false;
-                                            isEditingName = false;
-                                          });
-                                        },
-                                        child: const Padding(
-                                          padding: EdgeInsets.only(left: 8.0),
-                                          child: Icon(
-                                            Icons.done,
-                                            color: Colors.black,
-                                            size: 20,
-                                          ),
-                                        ),
-                                      )
-                              ],
-                            )
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 250.toWidth,
-                                      child: RichText(
-                                        text: TextSpan(
-                                          text: '${widget.group.groupName}   ',
-                                          style: TextStyle(
-                                            color: ColorConstants.fontPrimary,
-                                            fontSize: 16.toFont,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                          children: [
-                                            WidgetSpan(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    isEditingName = true;
-                                                  });
-                                                },
-                                                child: const Icon(
-                                                  Icons.edit,
-                                                  color: Colors.black,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      widget.group.members!.length == 1
-                                          ? '${widget.group.members!.length} member'
-                                          : '${widget.group.members!.length} members',
-                                      style: CustomTextStyles
-                                          .desktopPrimaryRegular14,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                      InkWell(
-                        onTap: () async {
-                          await Navigator.pushNamed(
-                              NavService
-                                  .groupPckgRightHalfNavKey.currentContext!,
-                              DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW,
-                              arguments: {
-                                'onBackArrowTap': (selectedContacts) {
-                                  Navigator.of(NavService
-                                          .groupPckgRightHalfNavKey
-                                          .currentContext!)
-                                      .pop();
-                                },
-                                'onDoneTap': () async {
-                                  await GroupService().addGroupMembers(
-                                      GroupService().selecteContactList,
-                                      widget.group);
-
-                                  Navigator.of(NavService
-                                          .groupPckgRightHalfNavKey
-                                          .currentContext!)
-                                      .pop();
-                                },
-                                'contactSelectedHistory': widget.group.members
-                                    ?.map((e) => GroupContactsModel(contact: e))
-                                    .toList() // get contacts out of the group to display
-                              });
-                        },
-                        child: Icon(
-                          Icons.add,
-                          size: 30.toFont,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              // Positioned(
-              //     top: 30.toHeight,
-              //     left: 10.toWidth,
-              //     child: InkWell(
-              //       onTap: () => Navigator.pop(context),
-              //       child: Icon(
-              //         Icons.arrow_back,
-              //         color: Colors.black,
-              //         size: 25.toFont,
-              //       ),
-              //     )),
-              Positioned(
-                top: 30.toHeight,
-                right: 10.toWidth,
-                child: InkWell(
-                  onTap: () async {
-                    var _imageBytes = await desktopImagePicker();
-                    if (_imageBytes != null) {
-                      updateImage(_imageBytes);
-                    }
-                  },
-                  child: Container(
-                      width: 30,
-                      height: 30,
-                      decoration: const BoxDecoration(
-                        color: ColorConstants.fadedbackground,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.image)),
-                ),
-              )
-            ],
+            ),
           ),
+          showLeadingIcon: true,
+        ),
+        body: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          children: [
+            DesktopCoverImagePicker(
+              selectedImage: groupImage,
+              isEdit: false,
+              onSelected: (value) {
+                updateImage(value);
+              },
+            ),
+            SizedBox(height: 20.toHeight),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.black,
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Transfer File ",
+                      style: CustomTextStyles.whiteBold12,
+                    ),
+                    const SizedBox(width: 12),
+                    Image.asset(
+                      AllImages().enter,
+                      width: 16,
+                      height: 12,
+                      fit: BoxFit.cover,
+                      package: 'at_contacts_group_flutter',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButtonWidget(
+                  icon: AllImages().edit,
+                  backgroundColor: AllColors().iconButtonColor,
+                  onTap: () {},
+                ),
+                const SizedBox(width: 24),
+                IconButtonWidget(
+                  icon: AllImages().delete,
+                  backgroundColor: AllColors().iconButtonColor,
+                  onTap: () async {
+                    await showMyDialog(context, widget.group);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            DesktopGroupContactsList(
+              initialData: widget.group.members
+                  ?.map((e) => GroupContactsModel(
+                        contact: e,
+                      ))
+                  .toList(),
+            ),
+          ],
         ),
       ),
     );
@@ -445,5 +199,34 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
     setState(() {
       updatingImage = false;
     });
+  }
+
+  Future<void> showMyDialog(BuildContext context, AtGroup group) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        Uint8List? groupPicture;
+        if (group.groupPicture != null) {
+          List<int> intList = group.groupPicture.cast<int>();
+          groupPicture = Uint8List.fromList(intList);
+        }
+        return ConfirmationDialog(
+          title: '${group.displayName}',
+          heading: 'Are you sure you want to delete this group?',
+          onYesPressed: () async {
+            var result = await GroupService().deleteGroup(group);
+
+            if (!mounted) return;
+            if (result != null && result) {
+              Navigator.of(context).pop();
+            } else {
+              CustomToast().show(TextConstants().SERVICE_ERROR, context);
+            }
+          },
+          image: groupPicture,
+        );
+      },
+    );
   }
 }

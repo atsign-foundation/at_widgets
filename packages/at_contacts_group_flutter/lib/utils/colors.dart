@@ -50,4 +50,14 @@ class AllColors {
   Color LIGHT_GREY_LABEL = const Color(0xFFB3B6BE);
   // ignore: non_constant_identifier_names
   Color Orange = const Color(0xffF05E3F);
+  Color textBlack = const Color(0xFF252525);
+  Color alphabeticalTextColor = const Color(0xFF717171);
+  Color dividerColor = const Color(0xFFEFEFEF);
+  Color buttonColor = const Color(0xFFF07C50);
+  Color hintTextColor = const Color(0xFFBFBFBF);
+  Color textFieldFillColor = const Color(0xFFFCFCFC);
+  Color pickerBackgroundColor = const Color(0xFFF7ECE9);
+  Color shadowFieldColor = const Color(0x19A7A7A7);
+  Color searchHintTextColor = const Color(0xFF939393);
+  Color iconButtonColor = const Color(0xFFEAEAEA);
 }

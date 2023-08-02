@@ -17,6 +17,7 @@ class DesktopHeader extends StatelessWidget {
     'add-btn'
   ];
   bool showBackIcon, isTitleCentered;
+
   DesktopHeader({
     Key? key,
     required this.onBackTap,
@@ -26,52 +27,55 @@ class DesktopHeader extends StatelessWidget {
     this.actions,
     this.isTitleCentered = false,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: SizeConfig().screenWidth - TextConstants.SIDEBAR_WIDTH,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(width: 20),
-          showBackIcon
-              ? InkWell(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 68, vertical: 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: <Widget>[
+              if (showBackIcon) ...[
+                InkWell(
                   onTap: () {
                     onBackTap();
                   },
                   child: const Icon(Icons.arrow_back),
-                )
-              : const SizedBox(),
-          const SizedBox(width: 15),
-          title != null && isTitleCentered
-              ? Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Center(
-                      child: Text(
-                        title!,
-                        style: CustomTextStyles.primaryRegular20,
-                      ),
-                    ),
-                  ),
-                )
-              : const SizedBox(),
-          title != null && !isTitleCentered
-              ? Center(
-                  child: Text(
-                    title!,
-                    style: CustomTextStyles.primaryRegular20,
-                  ),
-                )
-              : const SizedBox(),
-          const SizedBox(width: 15),
-          // !isTitleCentered ? Expanded(child: SizedBox()) : SizedBox(),
-          actions != null
-              ? Expanded(
-                  child: Row(
-                    children: actions!,
-                  ),
-                )
-              : const SizedBox()
+                ),
+                const SizedBox(width: 32),
+              ],
+
+              title != null
+                  ? Expanded(
+                      child: isTitleCentered
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Center(
+                                child: Text(
+                                  title!,
+                                  style: CustomTextStyles.primaryRegular20,
+                                ),
+                              ),
+                            )
+                          : Text(
+                              title!,
+                              style: CustomTextStyles.textBlackW60025,
+                            ),
+                    )
+                  : const SizedBox(),
+              const SizedBox(width: 15),
+              // !isTitleCentered ? Expanded(child: SizedBox()) : SizedBox(),
+              actions != null
+                  ? Row(
+                      children: actions!,
+                    )
+                  : const SizedBox()
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 0.5)
         ],
       ),
     );

@@ -15,14 +15,17 @@ class ContactInitial extends StatelessWidget {
   /// Index in the list of atsigns
   final int? index;
 
-  ContactInitial(
-      {Key? key,
-      this.size = 40,
-      required this.initials,
-      this.index,
-      this.maxSize,
-      this.minSize})
+  /// Detect desktop or not
+  final bool isDesktop;
+
+  ContactInitial({Key? key,
+    this.size = 40,
+    required this.initials,
+    this.index,
+    this.maxSize,
+    this.minSize, this.isDesktop = false,})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     if (initials[0] == '@') {
@@ -35,12 +38,12 @@ class ContactInitial extends StatelessWidget {
       width: size.toFont,
       decoration: BoxDecoration(
         color: ContactInitialsColors.getColor(initials),
-        borderRadius: BorderRadius.circular((size.toFont)),
+        borderRadius: BorderRadius.circular(isDesktop ? 0 : (size.toFont)),
       ),
       child: Center(
         child: Text(
           String.fromCharCodes(encodedInitials, 0,
-                  (encodedInitials.length < 2 ? encodedInitials.length : 2))
+              (encodedInitials.length < 2 ? encodedInitials.length : 2))
               .toUpperCase(),
           style: TextStyle(
             color: Colors.white,

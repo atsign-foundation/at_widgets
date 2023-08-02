@@ -59,6 +59,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// By default, the value of `toolbarHeight` is 70pt
   final double toolbarHeight;
 
+  /// This display title in the center or not
+  /// By default, the value of `centerTitle` is true
+  final bool centerTitle;
+
   const CustomAppBar({
     Key? key,
     this.titleText,
@@ -77,7 +81,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.closeOnRight = false,
     this.isDesktop = false,
     this.toolbarHeight = 70,
+    this.centerTitle = true,
   }) : super(key: key);
+
   @override
   Size get preferredSize => Size.fromHeight(toolbarHeight.toHeight);
 
@@ -124,12 +130,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           // ),
           Expanded(
             child: (showTitle)
-                ? Center(
-                    child: Text(
-                      titleText!,
-                      style: titleTextStyle ?? CustomTextStyles.primaryBold18,
-                    ),
-                  )
+                ? centerTitle
+                    ? Center(
+                        child: Text(
+                          titleText!,
+                          style:
+                              titleTextStyle ?? CustomTextStyles.primaryBold18,
+                        ),
+                      )
+                    : Text(
+                        titleText!,
+                        style: titleTextStyle ?? CustomTextStyles.primaryBold18,
+                      )
                 : Container(),
           ),
         ],
@@ -157,19 +169,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               )
-            : SizedBox(
-                height: 22.toHeight,
-                width: 62.toWidth,
-                // margin: EdgeInsets.only(right: 20),
-                child: (showTrailingIcon)
-                    ? MaterialButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () {
-                          onTrailingIconPressed?.call();
-                        },
-                        child: trailingIcon,
-                      )
-                    : Container())
+            : (showTrailingIcon)
+                ? MaterialButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      onTrailingIconPressed?.call();
+                    },
+                    child: trailingIcon,
+                  )
+                : Container()
       ],
       automaticallyImplyLeading: false,
       backgroundColor: appBarColor ?? ColorConstants.appBarColor,
