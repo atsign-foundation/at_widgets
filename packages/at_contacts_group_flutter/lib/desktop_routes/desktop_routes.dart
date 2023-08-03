@@ -1,9 +1,9 @@
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_empty_group.dart';
+import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_contact_view.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_detail.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_group_list.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_new_group.dart';
-import 'package:at_contacts_group_flutter/screens/group_contact_view/group_contact_view.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/navigation_service.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class DesktopGroupSetupRoutes {
 
   static Map<String, WidgetBuilder> groupLeftRouteBuilders(
       BuildContext context, RouteSettings routeSettings, List<AtGroup> _data,
-      {int? expandIndex}) {
+      {int? expandIndex, Function(bool)? onCallback}) {
     return {
       DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL: (context) {
         if (_data.isEmpty) {
@@ -29,6 +29,7 @@ class DesktopGroupSetupRoutes {
             _data,
             key: UniqueKey(),
             expandIndex: expandIndex ?? 0,
+            onCallback: onCallback ?? (value) {},
           );
         }
       },
@@ -38,6 +39,7 @@ class DesktopGroupSetupRoutes {
           args['groups'],
           expandIndex: args['expandIndex'],
           key: UniqueKey(),
+          onCallback: onCallback ?? (value) {},
         );
       },
     };
@@ -50,26 +52,27 @@ class DesktopGroupSetupRoutes {
       int? expandIndex}) {
     return {
       DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL: (context) {
-        if (_data.length == 0) {
-          return GroupContactView(
-              asSelectionScreen: true,
-              singleSelection: false,
-              showGroups: false,
-              showContacts: true,
-              isDesktop: true,
-              selectedList: (selectedContactList) {
-                GroupService().setSelectedContacts(
-                    selectedContactList.map((e) => e?.contact).toList());
-              },
-              onBackArrowTap: (selectedGroupContacts) {
-                initialRouteOnArrowBackTap();
-              },
-              onDoneTap: () {
-                initialRouteOnDoneTap();
-              });
-        } else {
-          return DesktopGroupDetail(_data[expandIndex ?? 0], expandIndex ?? 0);
-        }
+        // if (_data.length == 0) {
+        //   return GroupContactView(
+        //       asSelectionScreen: true,
+        //       singleSelection: false,
+        //       showGroups: false,
+        //       showContacts: true,
+        //       isDesktop: true,
+        //       selectedList: (selectedContactList) {
+        //         GroupService().setSelectedContacts(
+        //             selectedContactList.map((e) => e?.contact).toList());
+        //       },
+        //       onBackArrowTap: (selectedGroupContacts) {
+        //         initialRouteOnArrowBackTap();
+        //       },
+        //       onDoneTap: () {
+        //         initialRouteOnDoneTap();
+        //       });
+        // } else {
+        //   return DesktopGroupDetail(_data[expandIndex ?? 0], expandIndex ?? 0);
+        // }
+        return const SizedBox(width: 0);
       },
       DesktopRoutes.DESKTOP_NEW_GROUP: (context) {
         var args = routeSettings.arguments as Map<String, dynamic>;
@@ -80,16 +83,19 @@ class DesktopGroupSetupRoutes {
       },
       DesktopRoutes.DESKTOP_GROUP_DETAIL: (context) {
         var args = routeSettings.arguments as Map<String, dynamic>;
-        return DesktopGroupDetail(args['group'], args['currentIndex']);
+        return DesktopGroupDetail(
+          group: args['group'],
+          currentIndex: args['currentIndex'],
+          onBackArrowTap: args['onBackArrowTap'],
+        );
       },
       DesktopRoutes.DESKTOP_GROUP_CONTACT_VIEW: (context) {
         var args = routeSettings.arguments as Map<String, dynamic>;
-        return GroupContactView(
+        return DesktopGroupContactView(
           asSelectionScreen: true,
           singleSelection: false,
           showGroups: false,
           showContacts: true,
-          isDesktop: true,
           selectedList: (selectedContactList) {
             GroupService().setSelectedContacts(
                 selectedContactList.map((e) => e?.contact).toList());

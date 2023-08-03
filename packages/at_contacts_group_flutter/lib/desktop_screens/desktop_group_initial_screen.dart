@@ -1,4 +1,5 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_group_flutter/desktop_screens/desktop_empty_group.dart';
@@ -14,6 +15,7 @@ import 'package:collection/collection.dart';
 
 class DesktopGroupInitialScreen extends StatefulWidget {
   final bool showBackButton;
+
   const DesktopGroupInitialScreen({Key? key, this.showBackButton = true})
       : super(key: key);
 
@@ -29,6 +31,7 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
   List<AtGroup>? previousData;
 
   AtSignLogger atSignLogger = AtSignLogger('DesktopGroupInitialScreen');
+
   @override
   void initState() {
     try {
@@ -42,10 +45,8 @@ class _DesktopGroupInitialScreenState extends State<DesktopGroupInitialScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Container(
-      width: SizeConfig().screenWidth - TextConstants.SIDEBAR_WIDTH,
-      color: const Color(0xFFF7F7FF),
+      color: const Color(0xFFF8F8F8),
       child: StreamBuilder(
         stream: GroupService().atGroupStream,
         builder: (BuildContext context, AsyncSnapshot<List<AtGroup>> snapshot) {
@@ -117,6 +118,7 @@ class NestedNavigators extends StatefulWidget {
   final Function initialRouteOnArrowBackTap;
   final bool shouldUpdate;
   final int expandIndex;
+
   const NestedNavigators(this.data, this.initialRouteOnArrowBackTap,
       {Key? key, this.shouldUpdate = false, required this.expandIndex})
       : super(key: key);
@@ -126,6 +128,8 @@ class NestedNavigators extends StatefulWidget {
 }
 
 class _NestedNavigatorsState extends State<NestedNavigators> {
+  bool isOpenHalfRight = false;
+
   @override
   void initState() {
     if (widget.shouldUpdate) {
@@ -136,46 +140,66 @@ class _NestedNavigatorsState extends State<NestedNavigators> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: SizeConfig().screenWidth - TextConstants.SIDEBAR_WIDTH,
-      child: Row(
-        children: [
-          Expanded(
-            child: Navigator(
-              key: NavService.groupPckgLeftHalfNavKey,
-              initialRoute: DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL,
-              onGenerateRoute: (routeSettings) {
-                var routeBuilders =
-                    DesktopGroupSetupRoutes.groupLeftRouteBuilders(
-                        context, routeSettings, widget.data,
-                        expandIndex: widget.expandIndex);
-                return MaterialPageRoute(builder: (context) {
-                  return routeBuilders[routeSettings.name]!(context);
-                });
-              },
-            ),
+    return Stack(
+      children: [
+        Navigator(
+          key: NavService.groupPckgLeftHalfNavKey,
+          initialRoute: DesktopRoutes.DESKTOP_GROUP_LEFT_INITIAL,
+          onGenerateRoute: (routeSettings) {
+            var routeBuilders = DesktopGroupSetupRoutes.groupLeftRouteBuilders(
+                context, routeSettings, widget.data,
+                expandIndex: widget.expandIndex, onCallback: (value) {
+              setState(() {
+                isOpenHalfRight = value;
+              });
+            });
+            return MaterialPageRoute(builder: (context) {
+              return routeBuilders[routeSettings.name]!(context);
+            });
+          },
+        ),
+        SizedBox(
+          width: isOpenHalfRight
+              ? MediaQuery.of(context).size.width - TextConstants.SIDEBAR_WIDTH
+              : 0,
+          child: Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(
+                            NavService.groupPckgRightHalfNavKey.currentContext!)
+                        .pop();
+                    setState(() {
+                      isOpenHalfRight = false;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: Navigator(
+                  key: NavService.groupPckgRightHalfNavKey,
+                  initialRoute: DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL,
+                  onGenerateRoute: (routeSettings) {
+                    var routeBuilders =
+                        DesktopGroupSetupRoutes.groupRightRouteBuilders(
+                            context, routeSettings, widget.data,
+                            initialRouteOnArrowBackTap:
+                                widget.initialRouteOnArrowBackTap,
+                            initialRouteOnDoneTap:
+                                DesktopGroupSetupRoutes.navigator(
+                                    DesktopRoutes.DESKTOP_NEW_GROUP),
+                            expandIndex: widget.expandIndex);
+                    return MaterialPageRoute(builder: (context) {
+                      return routeBuilders[routeSettings.name]!(context);
+                    });
+                  },
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: Navigator(
-              key: NavService.groupPckgRightHalfNavKey,
-              initialRoute: DesktopRoutes.DESKTOP_GROUP_RIGHT_INITIAL,
-              onGenerateRoute: (routeSettings) {
-                var routeBuilders =
-                    DesktopGroupSetupRoutes.groupRightRouteBuilders(
-                        context, routeSettings, widget.data,
-                        initialRouteOnArrowBackTap:
-                            widget.initialRouteOnArrowBackTap,
-                        initialRouteOnDoneTap: DesktopGroupSetupRoutes
-                            .navigator(DesktopRoutes.DESKTOP_NEW_GROUP),
-                        expandIndex: widget.expandIndex);
-                return MaterialPageRoute(builder: (context) {
-                  return routeBuilders[routeSettings.name]!(context);
-                });
-              },
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 }

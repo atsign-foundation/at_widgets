@@ -37,6 +37,18 @@ dependencies:
   at_contact: ^3.0.7
   at_utils: ^3.0.12
 
+dependency_overrides:
+  at_common_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets
+      path: packages/at_common_flutter
+      ref: feature/renew_group_screen
+
+  at_contacts_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets
+      path: packages/at_contacts_flutter
+      ref: feature/renew_group_screen
 
 dev_dependencies:
   flutter_lints: ^2.0.1
@@ -71,6 +83,18 @@ flutter:
   assets:
     - assets/images/empty_group.png
     - assets/images/send.png
+    - assets/images/search.png
+    - assets/images/refresh.png
+    - assets/images/send_group.png
+    - assets/images/more.png
+    - assets/images/back.png
+    - assets/images/image.png
+    - assets/images/trust.png
+    - assets/images/enter.png
+    - assets/images/edit.png
+    - assets/images/delete.png
+    - assets/images/add.png
+    - assets/images/share.png
     # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   #

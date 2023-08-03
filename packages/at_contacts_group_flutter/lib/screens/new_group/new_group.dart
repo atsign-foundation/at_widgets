@@ -286,7 +286,6 @@ class _NewGroupState extends State<NewGroup> {
                           indicatorColor: Colors.blue,
                           iconColor: Colors.grey,
                           iconColorSelected: Colors.blue,
-                          recentTabBehavior: RecentTabBehavior.RECENT,
                           recentsLimit: 28,
                           noRecents: Text(
                             "No Recents",
