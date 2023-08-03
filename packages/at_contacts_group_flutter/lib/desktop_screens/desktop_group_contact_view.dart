@@ -20,6 +20,7 @@ import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_cover_image_picker.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_floating_add_contact_button.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_group_contacts_list.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_group_name_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -168,26 +169,8 @@ class _DesktopGroupContactViewState extends State<DesktopGroupContactView> {
             height: double.infinity,
             child: ListView(
               children: [
-                TextField(
-                  style: TextStyle(
-                    fontSize: 14.toFont,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Group Name',
-                    enabledBorder: const UnderlineInputBorder(),
-                    filled: true,
-                    fillColor: AllColors().textFieldFillColor,
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 24),
-                    border: const UnderlineInputBorder(),
-                    hintStyle: TextStyle(
-                      fontSize: 14.toFont,
-                      fontWeight: FontWeight.w500,
-                      color: AllColors().hintTextColor,
-                    ),
-                  ),
-                  controller: groupNameController,
+                DesktopGroupNameTextField(
+                  groupNameController: groupNameController,
                 ),
                 SizedBox(height: 20.toHeight),
                 DesktopCoverImagePicker(

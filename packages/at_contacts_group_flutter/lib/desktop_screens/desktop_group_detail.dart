@@ -3,6 +3,7 @@
 import 'dart:typed_data';
 
 import 'package:at_common_flutter/widgets/custom_app_bar.dart';
+import 'package:at_commons/at_commons.dart';
 import 'package:at_contacts_group_flutter/models/group_contacts_model.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
@@ -14,6 +15,7 @@ import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_cover_image_picker.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_floating_add_contact_button.dart';
 import 'package:at_contacts_group_flutter/widgets/desktop_group_contacts_list.dart';
+import 'package:at_contacts_group_flutter/widgets/desktop_group_name_text_field.dart';
 import 'package:at_contacts_group_flutter/widgets/icon_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:at_contact/at_contact.dart';
@@ -43,10 +45,13 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
   Uint8List? groupImage;
   late bool isEditing;
   bool isAddingContacts = false;
+  late TextEditingController groupNameController;
 
   @override
   void initState() {
     isEditing = widget.isEditing;
+    groupNameController =
+        TextEditingController(text: widget.group.displayName ?? '');
     textController = TextEditingController.fromValue(
       TextEditingValue(
         text: widget.group.groupName ?? '',
@@ -58,6 +63,7 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
         widget.group.groupPicture.cast<int>(),
       );
     }
+
     super.initState();
   }
 
@@ -65,6 +71,18 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
   Widget build(BuildContext context) {
     if (isAddingContacts) {
       GroupService().fetchGroupsAndContacts(isDesktop: true);
+      if ((widget.group.members ?? {}).isNotEmpty) {
+        for (var i in widget.group.members ?? {}) {
+          GroupService().addGroupContact(
+            GroupContactsModel(
+              contact: i,
+              contactType: ContactsType.CONTACT,
+            ),
+          );
+        }
+      }
+    } else {
+      GroupService().selectedGroupContacts.clear();
     }
     return SafeArea(
       child: Scaffold(
@@ -94,7 +112,9 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
           showLeadingIcon: true,
           showTrailingIcon: isEditing,
           trailingIcon: InkWell(
-            onTap: () async {},
+            onTap: () async {
+              await updateGroup();
+            },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 52, vertical: 8),
               margin: const EdgeInsets.only(right: 28),
@@ -114,11 +134,19 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
             ListView(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               children: [
+                if (isEditing) ...[
+                  DesktopGroupNameTextField(
+                    groupNameController: groupNameController,
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 DesktopCoverImagePicker(
                   selectedImage: groupImage,
                   isEdit: isEditing,
                   onSelected: (value) {
-                    updateImage(value);
+                    setState(() {
+                      groupImage = value;
+                    });
                   },
                 ),
                 SizedBox(height: isEditing ? 16 : 20),
@@ -238,49 +266,49 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
           );
   }
 
-  void updateImage(selectedImageByteData) async {
-    setState(() {
-      updatingImage = true;
-    });
-
-    var _group = AtGroup(
-      widget.group.groupName,
-      groupId: widget.group.groupId,
-      displayName: widget.group.displayName,
-      description: widget.group.description,
-      groupPicture: widget.group.groupPicture,
-      members: widget.group.members,
-      tags: widget.group.tags,
-      createdOn: widget.group.createdOn,
-      updatedOn: widget.group.updatedOn,
-      createdBy: widget.group.createdBy,
-      updatedBy: widget.group.updatedBy,
-    );
-
-    _group.groupPicture = selectedImageByteData;
-    var result = await GroupService().updateGroupData(_group, context,
-        isDesktop: true, expandIndex: widget.currentIndex);
-
-    if (result is AtGroup) {
-      // ignore: todo
-      // TODO: Doubt
-      widget.group = _group;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-        'Image updated',
-        textAlign: TextAlign.center,
-      )));
-    } else if (result == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(result.toString())));
-    }
-    setState(() {
-      updatingImage = false;
-    });
-  }
+  // void updateImage(selectedImageByteData) async {
+  //   setState(() {
+  //     updatingImage = true;
+  //   });
+  //
+  //   var _group = AtGroup(
+  //     widget.group.groupName,
+  //     groupId: widget.group.groupId,
+  //     displayName: widget.group.displayName,
+  //     description: widget.group.description,
+  //     groupPicture: widget.group.groupPicture,
+  //     members: widget.group.members,
+  //     tags: widget.group.tags,
+  //     createdOn: widget.group.createdOn,
+  //     updatedOn: widget.group.updatedOn,
+  //     createdBy: widget.group.createdBy,
+  //     updatedBy: widget.group.updatedBy,
+  //   );
+  //
+  //   _group.groupPicture = selectedImageByteData;
+  //   var result = await GroupService().updateGroupData(_group, context,
+  //       isDesktop: true, expandIndex: widget.currentIndex);
+  //
+  //   if (result is AtGroup) {
+  //     // ignore: todo
+  //     // TODO: Doubt
+  //     widget.group = _group;
+  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //         content: Text(
+  //       'Image updated',
+  //       textAlign: TextAlign.center,
+  //     )));
+  //   } else if (result == null) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text(result.toString())));
+  //   }
+  //   setState(() {
+  //     updatingImage = false;
+  //   });
+  // }
 
   Future<void> showMyDialog(BuildContext context, AtGroup group) async {
     return showDialog<void>(
@@ -309,5 +337,72 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
         );
       },
     );
+  }
+
+  updateGroup() async {
+    String groupName = groupNameController.text;
+    // ignore: unnecessary_null_comparison
+    if (groupName != null) {
+      // if (groupName.contains(RegExp(TextConstants().GROUP_NAME_REGEX))) {
+      //   CustomToast().show(TextConstants().INVALID_NAME, context);
+      //   return;
+      // }
+
+      if (groupName.trim().isNotEmpty) {
+        var group = AtGroup(
+          groupName != widget.group.displayName
+              ? groupName
+              : widget.group.displayName,
+          groupId: widget.group.groupId,
+          description: widget.group.description,
+          displayName: groupName != widget.group.displayName
+              ? groupName
+              : widget.group.displayName,
+          groupPicture: groupImage != widget.group.groupPicture
+              ? groupImage
+              : widget.group.groupPicture,
+          members: GroupService().selectedGroupContacts.isEmpty
+              ? widget.group.members
+              : Set.from(GroupService()
+                  .selectedGroupContacts
+                  .map((element) => element?.contact)),
+          createdBy: GroupService().currentAtsign,
+          updatedBy: GroupService().currentAtsign,
+        );
+        var result = await GroupService().updateGroup(group);
+        if (result is AtGroup) {
+          //ignore: across_async_gaps
+          if (context.mounted) Navigator.of(context).pop();
+
+          // widget.onDone!();
+
+          GroupService().setSelectedContacts([]);
+
+        } else if (result != null) {
+          if (mounted) {
+            if (result.runtimeType == AlreadyExistsException) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(TextConstants().GROUP_ALREADY_EXISTS)));
+            } else if (result.runtimeType == InvalidAtSignException) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(result.message)));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+            }
+          }
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(TextConstants().SERVICE_ERROR)));
+          }
+        }
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(TextConstants().EMPTY_NAME)));
+      }
+    } else {
+      CustomToast().show(TextConstants().EMPTY_NAME, context, gravity: 0);
+    }
   }
 }
