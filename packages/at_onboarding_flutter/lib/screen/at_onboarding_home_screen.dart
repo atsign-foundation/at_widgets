@@ -426,7 +426,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     var image = img.decodePng(File(imagepath).readAsBytesSync())!;
 
     LuminanceSource source = RGBLuminanceSource(image.width, image.height,
-        image.getBytes(format: img.Format.abgr).buffer.asInt32List());
+        image.getBytes(order: img.ChannelOrder.abgr).buffer.asInt32List());
     var bitmap = BinaryBitmap(HybridBinarizer(source));
 
     var reader = QRCodeReader();
@@ -1022,7 +1022,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       img.Image image = img.decodePng(selectedFile.readAsBytesSync())!;
 
       LuminanceSource source = RGBLuminanceSource(image.width, image.height,
-          image.getBytes(format: img.Format.abgr).buffer.asInt32List());
+          image.getBytes(order: img.ChannelOrder.abgr).buffer.asInt32List());
       BinaryBitmap bitmap = BinaryBitmap(HybridBinarizer(source));
 
       QRCodeReader reader = QRCodeReader();
