@@ -1,3 +1,6 @@
+## 6.1.2
+- **CHORE**: Update to support Dart 3
+
 ## 6.1.1
 - **FIX**: Updated error messages
 
