@@ -1,3 +1,6 @@
+## 6.1.3
+- **CHORE**: Updated at_client_mobile package to fix onboarding issue on Windows
+
 ## 6.1.2
 - **CHORE**: Update to support Dart 3
 
