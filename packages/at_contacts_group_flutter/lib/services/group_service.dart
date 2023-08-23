@@ -2,6 +2,7 @@ import 'dart:async';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 // ignore_for_file: use_build_context_synchronously
 
@@ -19,7 +20,9 @@ import 'package:flutter/material.dart';
 class GroupService {
   /// Singleton instance of the service
   GroupService._();
+
   static final GroupService _instance = GroupService._();
+
   factory GroupService() => _instance;
 
   /// current atsign
@@ -72,30 +75,41 @@ class GroupService {
   StreamSink<AtGroup> get groupViewSink => _groupViewStreamController.sink;
 
   /// Controller for all contacts stream
-  final StreamController<List<GroupContactsModel?>> _allContactsStreamController =
+  final StreamController<List<GroupContactsModel?>>
+      _allContactsStreamController =
       StreamController<List<GroupContactsModel?>>.broadcast();
 
   /// all contacts stream
-  Stream<List<GroupContactsModel?>> get allContactsStream => _allContactsStreamController.stream;
+  Stream<List<GroupContactsModel?>> get allContactsStream =>
+      _allContactsStreamController.stream;
 
   /// Sink for all contacts stream
-  StreamSink<List<GroupContactsModel?>> get allContactsSink => _allContactsStreamController.sink;
+  StreamSink<List<GroupContactsModel?>> get allContactsSink =>
+      _allContactsStreamController.sink;
 
   /// Controller for selected group contact stream
-  final _selectedContactsStreamController = StreamController<List<GroupContactsModel?>>.broadcast();
+  final _selectedContactsStreamController =
+      StreamController<List<GroupContactsModel?>>.broadcast();
 
   /// Selected group contact stream
-  Stream<List<GroupContactsModel?>> get selectedContactsStream => _selectedContactsStreamController.stream;
+  Stream<List<GroupContactsModel?>> get selectedContactsStream =>
+      _selectedContactsStreamController.stream;
 
   /// Sink for selected group contact stream
-  StreamSink<List<GroupContactsModel?>> get selectedContactsSink => _selectedContactsStreamController.sink;
+  StreamSink<List<GroupContactsModel?>> get selectedContactsSink =>
+      _selectedContactsStreamController.sink;
 
   /// get list contact
   List<AtContact> listContact = [];
 
+  /// get list trusted contact
+  List<AtContact> trustedContacts = [];
+
   // show loader stream
   final _showLoaderStreamController = StreamController<bool>.broadcast();
+
   Stream<bool> get showLoaderStream => _showLoaderStreamController.stream;
+
   StreamSink<bool> get showLoaderSink => _showLoaderStreamController.sink;
 
   String? get currentAtsign => _atsign;
@@ -105,6 +119,7 @@ class GroupService {
   int? expandIndex = 0;
 
   AtSignLogger atSignLogger = AtSignLogger('GroupService');
+
   // ignore: always_declare_return_types
   setSelectedContacts(List<AtContact?>? list) {
     selecteContactList = list ?? [];
@@ -127,11 +142,12 @@ class GroupService {
   }
 
   /// Will show a dialog box, if yes is pressed, will clear the selectedGroupContacts
-  void clearSelectedGroupContacts({required BuildContext context, Function? onYesTap}) {
+  void clearSelectedGroupContacts(
+      {required BuildContext context, Function? onYesTap}) {
     if (selectedGroupContacts.isNotEmpty) {
-      shownConfirmationDialog(context, 'Selected contacts will not be added , confirm?', () {
-        selectedGroupContacts = [];
-        selectedContactsSink.add(selectedGroupContacts); // to update the UI
+      shownConfirmationDialog(
+          context, 'Selected contacts will not be added , confirm?', () {
+        emptySelectedGroupContact(); // to update the UI
 
         if (onYesTap != null) {
           onYesTap();
@@ -142,6 +158,12 @@ class GroupService {
         onYesTap();
       }
     }
+  }
+
+  /// Clear the selectedGroupContacts
+  void emptySelectedGroupContact() {
+    selectedGroupContacts = [];
+    selectedContactsSink.add(selectedGroupContacts);
   }
 
   /// Function to create a group
@@ -176,11 +198,12 @@ class GroupService {
       }
 
       for (AtGroup group in groupList) {
-        var index =
-            allContacts.indexWhere((element) => element!.group != null && element.group!.groupId == group.groupId);
+        var index = allContacts.indexWhere((element) =>
+            element!.group != null && element.group!.groupId == group.groupId);
 
         if (index == -1) {
-          allContacts.add(GroupContactsModel(group: group, contactType: ContactsType.GROUP));
+          allContacts.add(GroupContactsModel(
+              group: group, contactType: ContactsType.GROUP));
         }
       }
 
@@ -188,7 +211,8 @@ class GroupService {
         this.expandIndex = expandIndex;
       } else {
         if (expandGroup != null) {
-          this.expandIndex = groupList.indexWhere((element) => element.groupId == expandGroup.groupId);
+          this.expandIndex = groupList
+              .indexWhere((element) => element.groupId == expandGroup.groupId);
         } else {
           this.expandIndex = 0;
         }
@@ -224,7 +248,8 @@ class GroupService {
   }
 
   /// Function to delete members of a group
-  Future<dynamic> deletGroupMembers(List<AtContact> contacts, AtGroup group) async {
+  Future<dynamic> deletGroupMembers(
+      List<AtContact> contacts, AtGroup group) async {
     try {
       var result = await atContactImpl.deleteMembers(Set.from(contacts), group);
       await updateGroupStreams(group, expandGroup: true);
@@ -236,7 +261,8 @@ class GroupService {
   }
 
   /// Function to add members to a group
-  Future<dynamic> addGroupMembers(List<AtContact?> contacts, AtGroup group) async {
+  Future<dynamic> addGroupMembers(
+      List<AtContact?> contacts, AtGroup group) async {
     for (var i = 0; i < contacts.length; i++) {
       if (contacts[i]!.tags != null && contacts[i]!.tags!['image'] != null) {
         contacts[i]!.tags!['image'] = null;
@@ -271,10 +297,12 @@ class GroupService {
   }
 
   // ignore: always_declare_return_types
-  updateGroupStreams(AtGroup group, {int? expandIndex, bool expandGroup = false}) async {
+  updateGroupStreams(AtGroup group,
+      {int? expandIndex, bool expandGroup = false}) async {
     var groupDetail = await (getGroupDetail(group.groupId!));
     if (groupDetail is AtGroup) groupViewSink.add(groupDetail);
-    await getAllGroupsDetails(expandIndex: expandIndex, expandGroup: expandGroup ? group : null);
+    await getAllGroupsDetails(
+        expandIndex: expandIndex, expandGroup: expandGroup ? group : null);
   }
 
   /// Function to delete a group
@@ -339,13 +367,15 @@ class GroupService {
         for (AtContact? contact in contactList) {
           var index = -1;
           if (contact != null) {
-            index = allContacts
-                .indexWhere((element) => element!.contact != null && element.contact!.atSign == contact.atSign);
+            index = allContacts.indexWhere((element) =>
+                element!.contact != null &&
+                element.contact!.atSign == contact.atSign);
           }
 
           if (index == -1) {
             listContact.add(contact!);
-            allContacts.add(GroupContactsModel(contact: contact, contactType: ContactsType.CONTACT));
+            allContacts.add(GroupContactsModel(
+                contact: contact, contactType: ContactsType.CONTACT));
           }
         }
         await getAllGroupsDetails(addToGroupSink: !isDesktop);
@@ -364,12 +394,13 @@ class GroupService {
       });
 
       if (_indexOfContact != -1) {
-        var _indexOfContactInGroup =
-            allContacts.indexWhere((element) => element!.contact != null && element.contact!.atSign == atSign);
+        var _indexOfContactInGroup = allContacts.indexWhere((element) =>
+            element!.contact != null && element.contact!.atSign == atSign);
 
         if (_indexOfContactInGroup == -1) {
           allContacts.add(GroupContactsModel(
-              contact: ContactService().contactList[_indexOfContact], contactType: ContactsType.CONTACT));
+              contact: ContactService().contactList[_indexOfContact],
+              contactType: ContactsType.CONTACT));
         }
       }
       _allContactsStreamController.add(allContacts);
@@ -480,12 +511,80 @@ class GroupService {
 
   AtGroup removeImageFromAtGroupMembers(AtGroup atGroup) {
     for (var i = 0; i < atGroup.members!.length; i++) {
-      if (atGroup.members!.elementAt(i).tags != null && atGroup.members!.elementAt(i).tags!['image'] != null) {
+      if (atGroup.members!.elementAt(i).tags != null &&
+          atGroup.members!.elementAt(i).tags!['image'] != null) {
         atGroup.members!.elementAt(i).tags!['image'] = null;
       }
     }
 
     return atGroup;
+  }
+
+  /// Function to get trusted contact
+  Future<void> getTrustedContacts() async {
+    List<AtContact> fetchedTrustedContact = [];
+
+    if (trustedContacts.isEmpty) {
+      final List<AtKey> trustedContactsKeys =
+          await AtClientManager.getInstance()
+              .atClient
+              .getAtKeys(regex: 'trusted_contact_');
+
+      try {
+        for (var key in trustedContactsKeys) {
+          AtValue keyValue = await AtClientManager.getInstance()
+              .atClient
+              .get(key)
+              .catchError((e) {
+            return AtValue();
+          });
+          fetchedTrustedContact.add(AtContact(atSign: keyValue.value));
+        }
+
+        for (var element in fetchedTrustedContact) {
+          trustedContacts.add(element);
+        }
+
+        // var jsonValue;
+        // AtKey trustedContactsKey = AtKey()
+        //   ..key = 'trustedContactsKey'
+        //   ..metadata = Metadata();
+        // AtValue oldTrustedContactsKeys =
+        //     await AtClientManager.getInstance().atClient.get(trustedContactsKey);
+        // jsonValue = jsonDecode(oldTrustedContactsKeys.value);
+        // for (var i = 0; i < jsonValue['trustedContacts'].length; i++) {
+        //   var j = trustedContacts.indexWhere((element) =>
+        //       element.atSign == jsonValue['trustedContacts'][i]['atSign']);
+        //   if (j == -1) {
+        //     AtKey newTrustedContactsKey = AtKey()
+        //       ..key =
+        //           'trusted_contact_${jsonValue['trustedContacts'][i]['atSign'].replaceAll("@", "")}'
+        //       ..metadata = Metadata();
+        //     await AtClientManager.getInstance().atClient.put(
+        //           newTrustedContactsKey,
+        //           jsonValue['trustedContacts'][i]['atSign'],
+        //         );
+        //
+        //     trustedContacts.add(
+        //         AtContact(atSign: jsonValue['trustedContacts'][i]['atSign']));
+        //     jsonValue['trustedContacts'].removeAt(i);
+        //
+        //     await AtClientManager.getInstance().atClient.put(
+        //           trustedContactsKey,
+        //           json.encode({"trustedContacts": jsonValue["trustedContacts"]}),
+        //         );
+        //   } else {
+        //     jsonValue['trustedContacts'].removeAt(i);
+        //     await AtClientManager.getInstance().atClient.put(
+        //           trustedContactsKey,
+        //           json.encode({"trustedContacts": jsonValue["trustedContacts"]}),
+        //         );
+        //   }
+        // }
+      } catch (e) {
+        print('ERROR=====>$e');
+      }
+    }
   }
 
   /// Function to reset all data related to groups
