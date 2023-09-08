@@ -214,9 +214,10 @@ class _AtOnboardingActivateScreenState
       _onboardingService.setAtClientPreference =
           widget.config.atClientPreference;
 
-      authResponse = await _onboardingService.authenticate(atsign,
-          cramSecret: secret, status: OnboardingStatus.ACTIVATE);
-
+      _onboardingService.setAtsign = atsign;
+      // authResponse = await _onboardingService.authenticate(atsign,
+      //     cramSecret: secret, status: OnboardingStatus.ACTIVATE);
+      authResponse = await _onboardingService.onboard(cramSecret: secret);
       int round = 1;
       atSignStatus = await _onboardingService.checkAtSignServerStatus(atsign);
       while (atSignStatus != ServerStatus.activated) {
@@ -230,7 +231,7 @@ class _AtOnboardingActivateScreenState
         debugPrint("currentAtSignStatus: $atSignStatus");
       }
 
-      if (authResponse == AtOnboardingResponseStatus.authSuccess) {
+      if (authResponse) {
         if (atSignStatus == ServerStatus.teapot) {
           await _showAlertDialog(
             AtOnboardingLocalizations.current.msg_atSign_unreachable,
@@ -250,19 +251,20 @@ class _AtOnboardingActivateScreenState
 
         if (!mounted) return;
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
-      } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
-        await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_unreachable,
-        );
-      } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
+        // } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
+        //   await _showAlertDialog(
+        //     AtOnboardingLocalizations.current.msg_atSign_unreachable,
+        //   );if (authResponse == AtOnboardingResponseStatus.authFailed) {
+      } else {
         await _showAlertDialog(
           AtOnboardingLocalizations.current.error_authenticated_failed,
         );
-      } else {
-        await showErrorDialog(
-          AtOnboardingLocalizations.current.title_session_expired,
-        );
       }
+      // } else {
+      //   await showErrorDialog(
+      //     AtOnboardingLocalizations.current.title_session_expired,
+      //   );
+      // }
     } catch (e) {
       if (e == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
