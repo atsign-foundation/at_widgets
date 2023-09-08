@@ -14,7 +14,7 @@ class MockOnboardingService extends Mock implements OnboardingService {
   }
 
   @override
-  Future<bool> onboard() {
+  Future<bool> onboard({String? cramSecret}) {
     throw OnboardingStatus.ACTIVATE;
   }
 }
