@@ -91,14 +91,20 @@ class OnboardingService {
 
   /// Returns `true` if authentication is successful for the existing atsign in device.
   Future<bool> onboard() async {
-    AtClientService atClientServiceInstance =
-        _getClientServiceForAtsign(_atsign)!;
-    bool result = await atClientServiceInstance.onboard(
-        atClientPreference: _atClientPreference, atsign: _atsign);
+    // AtClientService atClientServiceInstance =
+    //     _getClientServiceForAtsign(_atsign)!;
+    // bool result = await atClientServiceInstance.onboard(
+    //     atClientPreference: _atClientPreference, atsign: _atsign);
     _atsign ??= await getAtSign();
-    atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
-    await _sync(_atsign);
-    return result;
+    AtAuthService authService =
+        AtAuthServiceImpl(_atsign!, _atClientPreference);
+    var onboardingResponse = await authService
+        .onboard(AtOnboardingRequest(_atsign!, _atClientPreference));
+    _logger.finer('onboardingResponse: $onboardingResponse');
+    // atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
+    //#TODO uncomment after auth flow is complete
+    // await _sync(_atsign);
+    return onboardingResponse.isSuccessful!;
   }
 
   /// Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].

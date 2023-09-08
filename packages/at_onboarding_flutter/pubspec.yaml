@@ -47,6 +47,8 @@ dependencies:
 
 dependency_overrides:
   file_selector: ^1.0.0
+  at_client_mobile:
+    path: ../../../at_client_sdk/packages/at_client_mobile
 
 dev_dependencies:
   flutter_test:
