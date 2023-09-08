@@ -68,7 +68,7 @@ class _AtOnboardingAccountsScreenState
         ),
         body: Padding(
           padding: const EdgeInsets.all(16),
-          child: pairedAtsignsList.isEmpty
+          child: pairedAtsignsList == null
               ? Center(
                   child: Column(
                     children: <Widget>[

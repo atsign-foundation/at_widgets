@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:at_auth/at_auth.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
@@ -12,6 +14,7 @@ class OnboardingService {
   static final OnboardingService _singleton = OnboardingService._internal();
 
   OnboardingService._internal();
+
   factory OnboardingService.getInstance() {
     return _singleton;
   }
@@ -34,6 +37,7 @@ class OnboardingService {
   ServerStatus? serverStatus;
 
   set setLogo(Widget? logo) => _applogo = logo;
+
   Widget? get logo => _applogo;
 
   bool? get isPkam => _isPkam;
@@ -47,7 +51,9 @@ class OnboardingService {
   AtClientPreference get atClientPreference => _atClientPreference;
 
   set namespace(String namespace) => _namespace = namespace;
+
   String? get appNamespace => _namespace;
+
   set setAtsign(String? atsign) {
     atsign = formatAtSign(atsign);
     _atsign = atsign;
@@ -57,6 +63,7 @@ class OnboardingService {
 
   // next route set from using app
   Widget? _nextScreen;
+
   set setNextScreen(Widget? nextScreen) {
     _nextScreen = nextScreen;
   }
@@ -89,16 +96,43 @@ class OnboardingService {
     await keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
   }
 
+  /// To register for a new enrollment request
+  Future<AtEnrollmentResponse> enroll(
+      String atSign, EnrollmentRequest enrollmentRequest) async {
+    AtAuthService authService =
+        AtClientMobile.authService(atSign, atClientPreference);
+    return authService.enroll(enrollmentRequest);
+  }
+
   /// Returns `true` if authentication is successful for the existing atsign in device.
-  Future<bool> onboard() async {
-    AtClientService atClientServiceInstance =
-        _getClientServiceForAtsign(_atsign)!;
-    bool result = await atClientServiceInstance.onboard(
-        atClientPreference: _atClientPreference, atsign: _atsign);
+  Future<bool> onboard({String? cramSecret}) async {
     _atsign ??= await getAtSign();
-    atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
+    if (_atsign == null || _atsign!.isEmpty) {
+      _logger.severe('atSign is not found');
+      throw OnboardingStatus.ATSIGN_NOT_FOUND;
+    }
+    AtAuthService authService =
+        AtAuthServiceImpl(_atsign!, _atClientPreference);
+    bool isAtSignOnboarded = await authService.isOnboarded(_atsign!);
+    // If atSign is onboarded, authenticate the atSign. Else onboard the atSign.
+    if (isAtSignOnboarded) {
+      AtAuthRequest atAuthRequest = AtAuthRequest(_atsign!);
+      AtAuthResponse atAuthResponse =
+          await authService.authenticate(atAuthRequest);
+      return atAuthResponse.isSuccessful;
+    }
+    // TODO: Read appName and deviceName from the user or preferences.
+    var onboardingResponse = await authService.onboard(
+        AtOnboardingRequest(_atsign!)
+          ..enableEnrollment = true
+          ..appName = 'buzz'
+          ..deviceName = 'pixel',
+        cramSecret: cramSecret);
+    _logger.finer('onboardingResponse: $onboardingResponse');
+    // atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
+    //#TODO uncomment after auth flow is complete
     await _sync(_atsign);
-    return result;
+    return onboardingResponse.isSuccessful!;
   }
 
   /// Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].
@@ -130,10 +164,17 @@ class OnboardingService {
       if (cramSecret != null) {
         _atClientPreference.privateKey = null;
       }
-      bool isAuthenticated = await atClientService.authenticate(
-          atsign, _atClientPreference,
-          jsonData: jsonData, decryptKey: decryptKey, status: status);
-      if (isAuthenticated) {
+      AtAuthRequest atAuthRequest = AtAuthRequest(atsign)
+        ..rootDomain = _atClientPreference.rootDomain;
+      if (jsonData != null) {
+        atAuthRequest.encryptedKeysMap = jsonDecode(jsonData);
+      }
+
+      AtAuthService atAuthService =
+          AtAuthServiceImpl(atsign, _atClientPreference);
+      AtAuthResponse atAuthResponse =
+          await atAuthService.authenticate(atAuthRequest);
+      if (atAuthResponse.isSuccessful) {
         _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
         c.complete(AtOnboardingResponseStatus.authSuccess);
