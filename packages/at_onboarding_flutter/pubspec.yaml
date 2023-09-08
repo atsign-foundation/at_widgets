@@ -32,7 +32,6 @@ dependencies:
     sdk: flutter
   http: ^1.1.0
   image: ^4.0.17
-
   intl: ^0.17.0
   path_provider: ^2.1.1
   permission_handler: ^11.0.0
@@ -44,13 +43,19 @@ dependencies:
   webview_flutter: ^4.2.4
   zxing2: ^0.2.0
 
+dependency_overrides:
+  file_selector: ^1.0.0
+  at_client_mobile:
+    path: ../../../at_client_sdk/packages/at_client_mobile
 
 
 dev_dependencies:
-  flutter_lints: ^2.0.3
   flutter_test:
     sdk: flutter
+  flutter_lints: ^2.0.1
   mocktail: ^0.3.0
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
