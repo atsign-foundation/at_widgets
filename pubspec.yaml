@@ -1,7 +1,71 @@
 name: at_widgets_workspace
 
 environment:
-  sdk: ">=2.18.0 <4.0.0"
+  sdk: ">=2.12.0 <4.0.0"
+  flutter: ">=1.20.0"
 
 dev_dependencies:
-  melos: ^3.0.1
+  flutter_lints: ^2.0.3
+  flutter_test:
+    sdk: flutter
+  melos: ^3.1.1
+  mocktail: ^0.3.0
+  plugin_platform_interface: ^2.1.6
+
+dependencies:
+  archive: ^3.3.9
+  async: ^2.11.0
+  at_client: ^3.0.64
+  at_client_mobile: ^3.2.12
+  at_commons: ^3.0.55
+  at_contact: ^3.0.7
+  at_file_saver: ^0.1.2
+  at_server_status: ^1.0.3
+  at_lookup: ^3.0.40
+  at_utils: ^3.0.15
+  basic_utils: ^5.6.1
+  cached_network_image: ^3.2.3
+  collection: ^1.17.0
+  device_info_plus: ^9.0.3
+  emoji_picker_flutter: ^1.6.1
+  file_picker: ^5.5.0
+  file_selector: ^1.0.1
+  file_selector_linux: ^0.9.2+1
+  file_selector_macos: ^0.9.3+2
+  file_selector_windows: ^0.9.3+1
+  flutter:
+    sdk: flutter
+  flutter_image: ^4.1.8
+  flutter_image_compress: ^2.0.4
+  flutter_local_notifications: ^15.1.1
+  flutter_qr_reader: ^1.0.5
+  flutter_slidable: ^3.0.0
+  flutter_toastr: ^1.0.3
+  fluttertoast: ^8.2.2
+  geolocator: ^10.0.1
+  http: ^1.1.0
+  image: ^4.0.17
+  image_compression: ^1.0.4
+  intl: ^0.17.0
+  latlong2: ^0.9.0
+  meta: ^1.9.0
+  path_provider: ^2.1.1
+  pedantic: ^1.11.1
+  permission_handler: ^11.0.0
+  pin_code_fields: ^8.0.1
+  positioned_tap_detector_2: ^1.0.4
+  proj4dart: ^2.1.0
+  provider: ^6.0.5
+  qr_code_scanner: ^1.0.1
+  share_plus: ^7.1.0
+  shared_preferences: ^2.2.1
+  showcaseview: ^2.0.3
+  sliding_up_panel: ^2.0.0+1
+  transparent_image: ^2.0.1
+  tuple: ^2.0.2
+  tutorial_coach_mark: ^1.2.9
+  url_launcher: ^6.1.14
+  uuid: ^3.0.4
+  vector_math: ^2.1.4
+  webview_flutter: ^4.2.4
+  zxing2: ^0.2.0

@@ -11,26 +11,25 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
+  at_client_mobile: ^3.2.12
+  at_common_flutter: ^2.0.12
+  at_commons: ^3.0.55
+  at_lookup: ^3.0.40
+  at_utils: ^3.0.15
   flutter:
     sdk: flutter
-  at_client_mobile: ^3.2.9
-  at_common_flutter: ^2.0.5
-  at_commons: ^3.0.5
-  at_lookup: ^3.0.7
-  at_utils: ^3.0.5
+  pin_code_fields: ^8.0.1
 
-  url_launcher: ^6.0.18
-  uuid: ^3.0.5
-  pin_code_fields: ^7.3.0
+  url_launcher: ^6.1.14
+  uuid: ^3.0.4
 
 dev_dependencies:
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.3
   flutter_test:
     sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
   # This section identifies this Flutter project as a plugin project.
@@ -44,7 +43,6 @@ flutter:
         pluginClass: AtInvitationFlutterPlugin
       ios:
         pluginClass: AtInvitationFlutterPlugin
-
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -55,7 +53,6 @@ flutter:
   #
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # To add custom fonts to your plugin package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

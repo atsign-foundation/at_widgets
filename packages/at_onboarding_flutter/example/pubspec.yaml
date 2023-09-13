@@ -33,17 +33,12 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.5
+  cupertino_icons: ^1.0.6
   at_app_flutter: ^5.2.0
   at_backupkey_flutter: ^4.0.10
   flutter_localizations:
     sdk: flutter
-  intl: any
-
-dependency_overrides:
-  at_onboarding_flutter:
-    path: ../
-  intl: ^0.18.0
+  intl: ^0.17.0
     # When depending on this package from a real application you should use in the dependencies section here we have used in dev_dependencies section:
     #   at_onboarding_flutter: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints
@@ -53,7 +48,10 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.3
+
+dependency_overrides:
+  intl: ^0.17.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
