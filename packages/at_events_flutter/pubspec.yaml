@@ -17,7 +17,6 @@ dependencies:
   at_common_flutter: ^2.0.12
   at_commons: ^3.0.55
   at_contact: ^3.0.7
-  # at_chat_flutter: ^2.0.2
   at_contacts_flutter: ^4.0.11
   at_contacts_group_flutter: ^4.0.13
   at_location_flutter: ^3.1.9
