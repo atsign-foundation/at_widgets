@@ -156,9 +156,9 @@ class BackupKeyWidget extends StatelessWidget {
                             child: Showcase(
                               key: key,
                               description:
-                                  '''Each atSign has a unique key used to verify ownership and encrypt your data. You will get this key when you first activate your atSign, and you will need it to pair your atSign with other devices and all atPlatform apps.
-                                  
-PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE A BACKUP OR RESET THEM.''',
+                                  'Each atSign has a unique key used to verify ownership and encrypt your data. You will get this key when you first activate your atSign, and you will need it to pair your atSign with other devices and all atPlatform apps.'
+                                  ''
+                                  'PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE A BACKUP OR RESET THEM.',
                               targetShapeBorder: const CircleBorder(),
                               disableMovingAnimation: true,
                               targetBorderRadius:
@@ -335,21 +335,25 @@ PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE 
           },
         );
       } else if (Platform.isIOS) {
-        var size = MediaQuery.of(context).size;
-        await Share.shareXFiles(
-          [XFile(tempFilePath)],
-          sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2),
-        ).then((ShareResult shareResult) {
-          if (shareResult.status == ShareResultStatus.success) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('File saved successfully')));
-          }
-        });
+        if (context.mounted) {
+          var size = MediaQuery.of(context).size;
+          await Share.shareXFiles(
+            [XFile(tempFilePath)],
+            sharePositionOrigin:
+                Rect.fromLTWH(0, 0, size.width, size.height / 2),
+          ).then((ShareResult shareResult) {
+            if (shareResult.status == ShareResultStatus.success) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('File saved successfully')));
+            }
+          });
+        }
       } else {
-        final path =
-            await getSavePath(suggestedName: '$atsign${Strings.backupKeyName}');
+        final path = await getSaveLocation(
+            suggestedName: '$atsign${Strings.backupKeyName}');
+        if (path == null) return;
         final file = XFile(tempFilePath);
-        await file.saveTo(path ?? '');
+        await file.saveTo(path.path);
         if (context.mounted) {
           showSnackBar(
             context: context,
