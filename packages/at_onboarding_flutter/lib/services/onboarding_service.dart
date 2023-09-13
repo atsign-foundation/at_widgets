@@ -90,7 +90,7 @@ class OnboardingService {
   }
 
   /// Returns `true` if authentication is successful for the existing atsign in device.
-  Future<bool> onboard() async {
+  Future<bool> onboard({String? cramSecret}) async {
     // AtClientService atClientServiceInstance =
     //     _getClientServiceForAtsign(_atsign)!;
     // bool result = await atClientServiceInstance.onboard(
@@ -98,8 +98,9 @@ class OnboardingService {
     _atsign ??= await getAtSign();
     AtAuthService authService =
         AtAuthServiceImpl(_atsign!, _atClientPreference);
-    var onboardingResponse = await authService
-        .onboard(AtOnboardingRequest(_atsign!, _atClientPreference));
+    var onboardingResponse = await authService.onboard(
+        AtOnboardingRequest(_atsign!, _atClientPreference),
+        cramSecret: cramSecret);
     _logger.finer('onboardingResponse: $onboardingResponse');
     // atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
     //#TODO uncomment after auth flow is complete

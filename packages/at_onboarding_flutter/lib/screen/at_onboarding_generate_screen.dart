@@ -438,7 +438,7 @@ class _AtOnboardingGenerateScreenState
     required String atSign,
     required String secret,
   }) async {
-    dynamic authResponse;
+    bool authResponse = false;
     String cramSecret = secret.split(':').last;
     String verifiedAtSign = atSign.startsWith('@') ? atSign : '@$atSign';
 
@@ -458,13 +458,15 @@ class _AtOnboardingGenerateScreenState
 
       await Future.delayed(const Duration(seconds: 10));
 
-      authResponse = await _onboardingService.authenticate(
-        verifiedAtSign,
-        cramSecret: cramSecret,
-        status: OnboardingStatus.ACTIVATE,
-      );
+      _onboardingService.setAtsign = verifiedAtSign;
+      // authResponse = await _onboardingService.authenticate(
+      //   verifiedAtSign,
+      //   cramSecret: cramSecret,
+      //   status: OnboardingStatus.ACTIVATE,
+      // );
+      authResponse = await _onboardingService.onboard(cramSecret: cramSecret);
       _inprogressDialog.close();
-      if (authResponse == AtOnboardingResponseStatus.authSuccess) {
+      if (authResponse) {
         if (!mounted) return;
         Navigator.push(
           context,
@@ -478,19 +480,20 @@ class _AtOnboardingGenerateScreenState
         if (!mounted) return;
         Navigator.pop(
             context, AtOnboardingResult.success(atsign: verifiedAtSign));
-      } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
-        await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_unreachable,
-        );
-      } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
+        // } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
+        //   await _showAlertDialog(
+        //     AtOnboardingLocalizations.current.msg_atSign_unreachable,
+        //   ); if (authResponse == AtOnboardingResponseStatus.authFailed
+      } else {
         await _showAlertDialog(
           AtOnboardingLocalizations.current.error_authenticated_failed,
         );
-      } else {
-        await showErrorDialog(
-          AtOnboardingLocalizations.current.msg_response_time_out,
-        );
       }
+      // } else {
+      //   await showErrorDialog(
+      //     AtOnboardingLocalizations.current.msg_response_time_out,
+      //   );
+      // }
     } catch (e) {
       _inprogressDialog.close();
       if (e == AtOnboardingResponseStatus.authFailed) {
