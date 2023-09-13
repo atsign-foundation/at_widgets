@@ -157,7 +157,7 @@ class BackupKeyWidget extends StatelessWidget {
                               key: key,
                               description:
                                   'Each atSign has a unique key used to verify ownership and encrypt your data. You will get this key when you first activate your atSign, and you will need it to pair your atSign with other devices and all atPlatform apps.'
-                                  ''
+                                  '\n\n'
                                   'PLEASE SECURELY SAVE YOUR KEYS. WE DO NOT HAVE ACCESS TO THEM AND CANNOT CREATE A BACKUP OR RESET THEM.',
                               targetShapeBorder: const CircleBorder(),
                               disableMovingAnimation: true,
