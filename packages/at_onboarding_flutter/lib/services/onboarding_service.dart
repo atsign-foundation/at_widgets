@@ -96,6 +96,10 @@ class OnboardingService {
     // bool result = await atClientServiceInstance.onboard(
     //     atClientPreference: _atClientPreference, atsign: _atsign);
     _atsign ??= await getAtSign();
+    if (_atsign == null || _atsign!.isEmpty) {
+      _logger.severe('atSign is not found');
+      throw OnboardingStatus.ATSIGN_NOT_FOUND;
+    }
     AtAuthService authService =
         AtAuthServiceImpl(_atsign!, _atClientPreference);
     var onboardingResponse = await authService.onboard(
