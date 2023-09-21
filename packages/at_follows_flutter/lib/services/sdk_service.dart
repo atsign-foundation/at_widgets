@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
@@ -154,7 +152,7 @@ class SDKService {
           : AppConstants.followersKey;
       await this.put(newKey, value.value);
       value = await this.get(newKey);
-      if (value != null && value.value != null) {
+      if (value.value != null) {
         await this.delete(scanKey[0]);
       }
     }
