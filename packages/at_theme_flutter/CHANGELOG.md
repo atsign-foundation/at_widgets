@@ -1,3 +1,6 @@
+## 1.0.6
+- **CHORE**: Bumped all dependency versions
+
 ## 1.0.5
 - **CHORE**: Improved pub score
 

@@ -1,3 +1,7 @@
+## 2.0.1
+
+- **CHORE**: Bumped all dependency versions
+  - Major version increase of pin_code_fields from ^7.3.0 to ^8.0.1
 ## 2.0.0
 - **DOCS**: Updated documentation
 - **CHORE**: Updated dependencies

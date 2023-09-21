@@ -1,3 +1,7 @@
+# 3.1.10
+- **CHORE**: Bumped all dependency versions
+  - Major version increase of geolocator from ^9.0.2 to ^10.0.1
+
 # 3.1.9
 - **CHORE**: Improved pub score of package
 

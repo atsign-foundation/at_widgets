@@ -1,3 +1,7 @@
+## 3.0.10
+
+- **CHORE**: Bumped all dependency versions
+
 ## 3.0.9
 
 - **CHORE**: Updated documentation link and addressed pub analyze issues
