@@ -12,7 +12,6 @@ import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_app_constants.dart';
 import 'package:flutter/material.dart';
 
-
 class AtOnboarding {
   /// Using this function to get onboard atsing.
   ///
@@ -65,12 +64,12 @@ class AtOnboarding {
 
       if (result is AtOnboardingResult) {
         return result;
-      } 
-      
-      return AtOnboardingResult.cancelled();
-    } 
+      }
 
-    if (context.mounted){
+      return AtOnboardingResult.cancelled();
+    }
+
+    if (context.mounted) {
       final result = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -80,7 +79,7 @@ class AtOnboarding {
             );
           },
         ),
-      ); 
+      );
 
       if (result is AtOnboardingResult) {
         //Update primary atsign after onboard success
@@ -89,7 +88,7 @@ class AtOnboarding {
           await changePrimaryAtsign(atsign: result.atsign!);
         }
         return result;
-      } 
+      }
     }
 
     return AtOnboardingResult.cancelled();
@@ -101,8 +100,8 @@ class AtOnboarding {
   }) async {
     /// Initial Setup
     await _initialSetup(context);
-    
-    if(context.mounted){
+
+    if (context.mounted) {
       final result = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -119,7 +118,7 @@ class AtOnboarding {
         return result;
       }
     }
-      
+
     return AtOnboardingResult.cancelled();
   }
 
@@ -135,7 +134,7 @@ class AtOnboarding {
     /// Initial Setup
     await _initialSetup(context);
 
-    if(context.mounted){
+    if (context.mounted) {
       final result = await Navigator.push(context,
           MaterialPageRoute(builder: (BuildContext context) {
         return AtOnboardingResetScreen(config: config);

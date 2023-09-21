@@ -521,19 +521,15 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
   Future<String?> _desktopKeyPicker() async {
     try {
-      // ignore: prefer_const_constructors
-      XTypeGroup typeGroup = XTypeGroup(
-        label: 'images',
-        // ignore: prefer_const_literals_to_create_immutables
-        extensions: <String>['atKeys'],
+      XFile? file = await openFile(
+        acceptedTypeGroups: const [
+          // General file extensions
+          XTypeGroup(extensions: ['atKeys', 'atkeys']),
+          // Apple specific UTIs
+          XTypeGroup(uniformTypeIdentifiers: ['com.atsign.atkeys']),
+        ],
       );
-      List<XFile> files =
-          await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
-      if (files.isEmpty) {
-        return null;
-      }
-      XFile file = files[0];
-      return file.path;
+      return file?.path;
     } catch (e) {
       _logger.severe('Error in desktopImagePicker $e');
       return null;

@@ -136,6 +136,33 @@ and add the following keys:
 <true/>
 ```
 
+Then to ensure that the .atKeys file type is supported by macOS, open
+macos/Runner/Info.plist and add the following array:
+```
+<key>UTImportedTypeDeclarations</key>
+<array>
+  <dict>
+    <key>UTTypeIdentifier</key>
+    <string>com.atsign.atkeys</string>
+    <key>UTTypeConformsTo</key>
+    <array>
+      <string>public.json</string>
+    </array>
+    <key>UTTypeDescription</key>
+    <string>Atsign Cryptographic Key File</string>
+    <key>UTTypeTagSpecification</key>
+    <dict>
+      <key>public.filename-extension</key>
+      <array>
+        <string>atkeys</string>
+      </array>
+    </dict>
+    <key>UTTypeReferenceURL</key>
+    <string>https://github.com/atsign-foundation/at_protocol</string>
+  </dict>
+</array>
+```
+
 </details>
 
 ### 3. Migration guide
@@ -153,14 +180,14 @@ and add the following keys:
 
 ## Usage
 
-| Parameters              | Description                                                                                                                      |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| domain                  | Domain can differ based on the environment you are using.Default the plugin connects to 'root.atsign.org' to perform onboarding. |
-| atClientPreference      | The atClientPreference to continue with the onboarding.                                                                          |
-| rootEnvironment         | Permission to access the device's location is allowed even when the App is running in the background.                            |
-| appAPIKey               | API authentication key for getting free atsigns.                                                                                 |
-| isSwitchingAtsign       | Param specifies whether this action is switching atsign or not. Default is false                                                 |
-| atsign                  | The atsign name when change the primary atsign. Default is null                                                                  |
+| Parameters         | Description                                                                                                                      |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| domain             | Domain can differ based on the environment you are using.Default the plugin connects to 'root.atsign.org' to perform onboarding. |
+| atClientPreference | The atClientPreference to continue with the onboarding.                                                                          |
+| rootEnvironment    | Permission to access the device's location is allowed even when the App is running in the background.                            |
+| appAPIKey          | API authentication key for getting free atsigns.                                                                                 |
+| isSwitchingAtsign  | Param specifies whether this action is switching atsign or not. Default is false                                                 |
+| atsign             | The atsign name when change the primary atsign. Default is null                                                                  |
 
 ```dart
 TextButton
