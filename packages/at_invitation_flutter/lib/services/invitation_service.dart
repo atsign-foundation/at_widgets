@@ -46,7 +46,8 @@ class InvitationService {
   // called again if outbound connection is dropped
   Future<bool> startMonitor() async {
     if (!hasMonitorStarted) {
-      AtClientManager.getInstance().atClient
+      AtClientManager.getInstance()
+          .atClient
           .notificationService
           .subscribe(shouldDecrypt: true)
           .listen((notification) {
@@ -91,7 +92,7 @@ class InvitationService {
 
       // build and fetch self key
       AtKey atKey = AtKey()..metadata = Metadata();
-      atKey.key = invitationKey + '.' + (receivedInformation.identifier ?? '');
+      atKey.key = '$invitationKey.${receivedInformation.identifier ?? ''}';
       atKey.metadata?.ttr = -1;
       var result = await AtClientManager.getInstance().atClient.get(atKey);
       MessageShareModel sentInformation =
@@ -107,6 +108,7 @@ class InvitationService {
             .put(atKey, jsonEncode(sentInformation.message))
             .catchError((e) {
           _logger.severe('Error in sharing saved message => $e');
+          throw e;
         });
       }
     }
@@ -122,15 +124,16 @@ class InvitationService {
         passcode: passcode, identifier: keyID, message: jsonData);
 
     AtKey atKey = AtKey()..metadata = Metadata();
-    atKey.key = invitationKey + '.' + keyID;
+    atKey.key = '$invitationKey.$keyID';
     atKey.metadata?.ttr = -1;
     var result = await AtClientManager.getInstance()
         .atClient
         .put(atKey, jsonEncode(messageContent))
         .catchError((e) {
       _logger.severe('Error in saving shared data => $e');
+      throw e;
     });
-    if (result == true) {
+    if (result && context.mounted) {
       showDialog(
         context: context,
         builder: (context) => ShareDialog(
@@ -151,7 +154,7 @@ class InvitationService {
       builder: (context) => const OTPDialog(),
     );
     AtKey atKey = AtKey()..metadata = Metadata();
-    atKey.key = invitationAckKey + '.' + data;
+    atKey.key = '$invitationAckKey.$data';
     atKey.sharedWith = atsign;
     atKey.metadata?.ttr = -1;
     MessageShareModel messageContent = MessageShareModel(
@@ -161,6 +164,7 @@ class InvitationService {
         .put(atKey, jsonEncode(messageContent))
         .catchError((e) {
       _logger.severe('Error in saving acknowledge message => $e');
+      throw e;
     });
   }
 }
