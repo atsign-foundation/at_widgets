@@ -1,4 +1,5 @@
 name: at_widgets
 
 packages:
-- packages/**
+  - packages/*
+  - packages/*/*example

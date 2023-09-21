@@ -1,3 +1,7 @@
+## 3.0.10
+- **CHORE**: Bumped all dependency versions
+  - Major version increase of permission_handler from ^9.2.0 to ^11.0.0
+
 ## 3.0.9
 - **CHORE**: Replaced file_saver with at_file_saver
 

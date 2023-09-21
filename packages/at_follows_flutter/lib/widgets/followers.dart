@@ -68,7 +68,7 @@ class _FollowersState extends State<Followers> {
           ),
         );
       } else if (provider.status == Status.done) {
-        WidgetsBinding.instance!.addPostFrameCallback((_) async {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
           widget.count!();
         });
         if (_connectionsService.followerAtsign != null) {
@@ -257,7 +257,7 @@ class _FollowersState extends State<Followers> {
       } else if (provider.status == Status.error) {
         return AtExceptionHandler().handle(provider.error, context);
       } else {
-        WidgetsBinding.instance!.addPostFrameCallback((_) async {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
           await provider.getAtsignsList(isFollowing: widget.isFollowing);
         });
         return SizedBox();
@@ -273,7 +273,7 @@ class _FollowersState extends State<Followers> {
 
       return;
     }
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       _isDialogOpen = true;
       showDialog(
           context: context,

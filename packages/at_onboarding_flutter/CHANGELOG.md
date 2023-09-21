@@ -1,3 +1,8 @@
+## 6.1.4
+- **CHORE**: Bumped all dependency versions
+  - Major version increase of permission_handler from ^10.4.3 to ^11.0.0
+  - Major version increase of file_selector from >=0.8.4+3 <=1.0.0 to ^1.1.0
+
 ## 6.1.3
 - **CHORE**: Updated at_client_mobile package to fix onboarding issue on Windows
 

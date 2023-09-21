@@ -1,3 +1,6 @@
+// ignoring this for the entire file to make it easier to detect real issues when doing review for publishing
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -10,7 +13,6 @@ import 'package:at_follows_flutter/services/sdk_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../at_demo_credentials.dart' as demo_data;
-import 'package:at_commons/at_commons.dart';
 
 SDKService _sdkService = SDKService();
 ConnectionsService _connectionsService = ConnectionsService();
@@ -23,7 +25,9 @@ void main() {
     final atClientManager = AtClientManager.getInstance();
     _connectionsService.init(senderAtsign);
     ConnectionProvider().init(senderAtsign);
-    atClientManager.notificationService.subscribe().listen((notification) {
+    atClientManager.atClient.notificationService
+        .subscribe()
+        .listen((notification) {
       monitorCallBack(notification);
     });
   });
@@ -34,6 +38,7 @@ void main() {
 
       await setUpFunc(receiverAtsign);
       AtClientManager.getInstance()
+          .atClient
           .notificationService
           .subscribe()
           .listen((notification) {

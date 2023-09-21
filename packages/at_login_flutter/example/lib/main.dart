@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_app_flutter/at_app_flutter.dart';
@@ -19,7 +18,6 @@ Future<AtClientPreference> loadAtClientPreference() async {
         ..hiveStoragePath = dir.path
         ..commitLogPath = dir.path
         ..isLocalStoreRequired = true
-        ..syncStrategy = SyncStrategy.onDemand
       // TODO set the rest of your AtClientPreference here
       ;
 }
@@ -27,7 +25,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -50,31 +48,38 @@ class _MyAppState extends State<MyApp> {
             child: TextButton(
               onPressed: () async {
                 atClientPreference = await futurePreference;
-                final result = await AtOnboarding.onboard(
-                  context: context,
-                  config: AtOnboardingConfig(
-                    atClientPreference: atClientPreference!,
-                    domain: AtEnv.rootDomain,
-                    rootEnvironment: AtEnv.rootEnvironment,
-                    appAPIKey: AtEnv.appApiKey,
-                  ),
-                );
-
-                switch (result.status) {
-                  case AtOnboardingResultStatus.success:
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const HomeScreen()));
-                    break;
-                  case AtOnboardingResultStatus.error:
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Colors.red,
-                        content: Text('An error has occurred'),
-                      ),
-                    );
-                    break;
-                  case AtOnboardingResultStatus.cancel:
-                    break;
+                if (context.mounted) {
+                  final result = await AtOnboarding.onboard(
+                    context: context,
+                    config: AtOnboardingConfig(
+                      atClientPreference: atClientPreference!,
+                      domain: AtEnv.rootDomain,
+                      rootEnvironment: AtEnv.rootEnvironment,
+                      appAPIKey: AtEnv.appApiKey,
+                    ),
+                  );
+                  switch (result.status) {
+                    case AtOnboardingResultStatus.success:
+                      if (context.mounted) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const HomeScreen()));
+                      }
+                      break;
+                    case AtOnboardingResultStatus.error:
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text('An error has occurred'),
+                          ),
+                        );
+                      }
+                      break;
+                    case AtOnboardingResultStatus.cancel:
+                      break;
+                  }
                 }
               },
               child: const Text(
@@ -98,7 +103,8 @@ class HomeScreen extends StatelessWidget {
     // * Get the AtContext from build context
     // ! NOTE: Only use this after successfully onboarding the @sign
 
-    var currentAtSign = AtClientManager.getInstance().atClient.getCurrentAtSign();
+    var currentAtSign =
+        AtClientManager.getInstance().atClient.getCurrentAtSign();
 
     // * Example Uses
     /// AtClientService atClientService = atContext.atClientService;

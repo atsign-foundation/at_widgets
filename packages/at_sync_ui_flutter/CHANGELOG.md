@@ -1,4 +1,5 @@
 ## 1.0.9
+- **CHORE**: Bumped all dependency versions
 - **REFACTOR**: Deprecated `sync()` method and moved it's implementation to init.
 - **CHORE**: Improved pub score
 

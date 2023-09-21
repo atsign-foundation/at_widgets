@@ -1,3 +1,7 @@
+## 4.0.14
+
+- **CHORE**: Bumped all dependency versions
+
 ## 4.0.13
 - **CHORE**: Updated dependency and improved pub score
 

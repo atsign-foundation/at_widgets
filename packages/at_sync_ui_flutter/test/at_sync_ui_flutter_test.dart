@@ -4,7 +4,6 @@ import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:at_client/src/service/sync_service.dart';
 
 class MockSyncService extends Mock implements SyncService {}
 
@@ -18,7 +17,7 @@ void main() {
   group('sync service test', () {
     test('AtSyncUIService init', () {
       AtSyncUIService().syncService = mockSyncService;
-      AtClientManager.getInstance().syncService = mockSyncService;
+      AtClientManager.getInstance().atClient.syncService = mockSyncService;
 
       AtSyncUIService().init(
         appNavigator: _key,
@@ -69,7 +68,7 @@ void main() {
 
     test('AtSyncUIService sync', () {
       AtSyncUIService().syncService = mockSyncService;
-      AtClientManager.getInstance().syncService = mockSyncService;
+      AtClientManager.getInstance().atClient.syncService = mockSyncService;
 
       AtSyncUIService().init(
           appNavigator: _key,

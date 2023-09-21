@@ -1,3 +1,7 @@
+## 3.1.12
+
+- **CHORE**: Bumped all dependency versions
+
 ## 3.1.11
 - **CHORE**: Upgraded dependencies
 

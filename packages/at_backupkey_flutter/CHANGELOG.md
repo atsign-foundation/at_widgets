@@ -1,3 +1,7 @@
+## 4.0.11:
+- **CHORE**: Bumped all dependency versions
+  - Major version increase of permission_handler from ^10.4.1 to ^11.0.0
+
 ## 4.0.10:
 - **CHORE**: Improved pub score
 
