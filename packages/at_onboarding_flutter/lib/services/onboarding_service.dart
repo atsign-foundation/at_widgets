@@ -12,6 +12,7 @@ class OnboardingService {
   static final OnboardingService _singleton = OnboardingService._internal();
 
   OnboardingService._internal();
+
   factory OnboardingService.getInstance() {
     return _singleton;
   }
@@ -34,6 +35,7 @@ class OnboardingService {
   ServerStatus? serverStatus;
 
   set setLogo(Widget? logo) => _applogo = logo;
+
   Widget? get logo => _applogo;
 
   bool? get isPkam => _isPkam;
@@ -47,7 +49,9 @@ class OnboardingService {
   AtClientPreference get atClientPreference => _atClientPreference;
 
   set namespace(String namespace) => _namespace = namespace;
+
   String? get appNamespace => _namespace;
+
   set setAtsign(String? atsign) {
     atsign = formatAtSign(atsign);
     _atsign = atsign;
@@ -57,6 +61,7 @@ class OnboardingService {
 
   // next route set from using app
   Widget? _nextScreen;
+
   set setNextScreen(Widget? nextScreen) {
     _nextScreen = nextScreen;
   }
@@ -89,6 +94,13 @@ class OnboardingService {
     await keyChainManager.initialSetup(useSharedStorage: usingSharedStorage);
   }
 
+  /// To register for a new enrollment request
+  Future<EnrollResponse> enroll(EnrollRequest atEnrollmentRequest) async {
+    AtAuthService authService =
+        AtAuthServiceImpl(_atsign!, _atClientPreference);
+    return await authService.enroll(atEnrollmentRequest);
+  }
+
   /// Returns `true` if authentication is successful for the existing atsign in device.
   Future<bool> onboard({String? cramSecret}) async {
     // AtClientService atClientServiceInstance =
@@ -102,9 +114,8 @@ class OnboardingService {
     }
     AtAuthService authService =
         AtAuthServiceImpl(_atsign!, _atClientPreference);
-    var onboardingResponse = await authService.onboard(
-        AtOnboardingRequest(_atsign!, _atClientPreference),
-        cramSecret: cramSecret);
+    var onboardingResponse = await authService
+        .onboard(AtOnboardingRequest(_atsign!), cramSecret: cramSecret);
     _logger.finer('onboardingResponse: $onboardingResponse');
     // atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
     //#TODO uncomment after auth flow is complete
