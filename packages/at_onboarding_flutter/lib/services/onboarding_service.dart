@@ -95,9 +95,10 @@ class OnboardingService {
   }
 
   /// To register for a new enrollment request
-  Future<EnrollResponse> enroll(EnrollRequest atEnrollmentRequest) async {
-    AtAuthService authService =
-        AtAuthServiceImpl(_atsign!, _atClientPreference);
+  Future<EnrollResponse> enroll(
+      String atSign, EnrollRequest atEnrollmentRequest) async {
+    _atClientPreference.enableEnrollmentDuringOnboard = true;
+    AtAuthService authService = AtAuthServiceImpl(atSign, _atClientPreference);
     return await authService.enroll(atEnrollmentRequest);
   }
 
@@ -119,7 +120,7 @@ class OnboardingService {
     _logger.finer('onboardingResponse: $onboardingResponse');
     // atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
     //#TODO uncomment after auth flow is complete
-    // await _sync(_atsign);
+    await _sync(_atsign);
     return onboardingResponse.isSuccessful!;
   }
 
@@ -152,10 +153,14 @@ class OnboardingService {
       if (cramSecret != null) {
         _atClientPreference.privateKey = null;
       }
-      bool isAuthenticated = await atClientService.authenticate(
-          atsign, _atClientPreference,
-          jsonData: jsonData, decryptKey: decryptKey, status: status);
-      if (isAuthenticated) {
+      AtAuthRequest atAuthRequest = AtAuthRequest(atsign, _atClientPreference);
+      atAuthRequest.atKeysData = AtKeysFileData(jsonData!, decryptKey!);
+
+      AtAuthService atAuthService =
+          AtAuthServiceImpl(atsign, _atClientPreference);
+      AtAuthResponse atAuthResponse =
+          await atAuthService.authenticate(atAuthRequest);
+      if (atAuthResponse.isSuccessful) {
         _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
         c.complete(AtOnboardingResponseStatus.authSuccess);
