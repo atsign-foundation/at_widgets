@@ -101,8 +101,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
   void _init() async {
     initTargets();
-    _showTutorial();
-    // await _checkShowTutorial();
+    await _checkShowTutorial();
   }
 
   Future<void> _checkShowTutorial() async {
