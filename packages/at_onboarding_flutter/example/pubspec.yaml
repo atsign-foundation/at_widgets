@@ -29,8 +29,6 @@ environment:
 dependencies:
   at_app_flutter: ^5.2.0
   at_backupkey_flutter: ^4.0.10
-  at_onboarding_flutter:
-    path: ../packages/at_onboarding_flutter
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
@@ -45,6 +43,8 @@ dev_dependencies:
 
 dependency_overrides:
   intl: ^0.17.0
+  at_onboarding_flutter:
+    path: ../
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

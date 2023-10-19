@@ -139,8 +139,13 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       paddingFocus: 10,
       opacityShadow: 0.8,
       onFinish: _endTutorial,
-      onSkip: _endTutorial,
+      onSkip: skipTutorial,
     )..show(context: context);
+  }
+
+  bool skipTutorial() {
+    _endTutorial();
+    return true;
   }
 
   void _endTutorial() async {
