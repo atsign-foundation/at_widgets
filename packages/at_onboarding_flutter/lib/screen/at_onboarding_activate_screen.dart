@@ -20,10 +20,15 @@ import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// This screen for activating an atSign during onboarding
 class AtOnboardingActivateScreen extends StatefulWidget {
-  ///will hide webpage references.
+  /// If true, will hide webpage references
   final bool hideReferences;
+
+  /// The atSign to be activated
   final String? atSign;
+
+  /// The configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingActivateScreen({

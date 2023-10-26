@@ -14,17 +14,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// This screen for pairing an atSign during onboarding process
 class AtOnboardingPairScreen extends StatefulWidget {
+  /// The atSign to be paired
   final String atSign;
 
-  ///will hide webpage references.
+  /// If true, will hide webpage references.
   final bool hideReferences;
 
+  /// A function to be called when the pairing is successful
+  /// It takes [atSign] and [secret] as required parameters
   final Function({
     required String atSign,
     required String secret,
   })? onGenerateSuccess;
 
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingPairScreen({

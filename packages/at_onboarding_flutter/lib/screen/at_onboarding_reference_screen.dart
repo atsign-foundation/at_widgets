@@ -5,7 +5,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+/// Displays onboarding reference screens
 class AtOnboardingReferenceScreen extends StatefulWidget {
+  /// Static method to navigate to this screen
   static push({
     required BuildContext context,
     required String? url,
@@ -24,8 +26,13 @@ class AtOnboardingReferenceScreen extends StatefulWidget {
     );
   }
 
+  /// The URL to display on the screen
   final String? url;
+
+  /// The title for the screen
   final String? title;
+
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingReferenceScreen({
