@@ -21,9 +21,9 @@ import 'package:flutter/material.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// This screen for generating an new atSign key during onboarding
+/// This screen is for generating atKey
 class AtOnboardingGenerateScreen extends StatefulWidget {
-  /// Callback function to be called when generation is successful
+  /// Callback function to be called when atKey generation is successful
   /// It receives the generated atSign and its corresponding secret
   final Function({
     required String atSign,

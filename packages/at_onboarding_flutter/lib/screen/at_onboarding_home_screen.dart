@@ -35,7 +35,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zxing2/qrcode.dart';
 import 'package:image/image.dart' as img;
 
-/// The home screen for the At Onboarding process
+///  Home screen provides multiple options like upload atKey, generate new atSign, activatte existing atSign
 class AtOnboardingHomeScreen extends StatefulWidget {
   /// Configuration for the onboarding process
   final AtOnboardingConfig config;

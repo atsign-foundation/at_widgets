@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 /// Displays onboarding reference screens
+/// It uses weview to display the [url]
 class AtOnboardingReferenceScreen extends StatefulWidget {
   /// Static method to navigate to this screen
   static push({

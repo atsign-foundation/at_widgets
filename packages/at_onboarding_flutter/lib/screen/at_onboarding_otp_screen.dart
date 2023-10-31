@@ -30,7 +30,7 @@ class AtOnboardingOTPResult {
   });
 }
 
-/// This screen for perform OTP-based verification
+/// This screen is to perform OTP-based verification
 class AtOnboardingOTPScreen extends StatefulWidget {
   /// Static method to navigate to this screen
   static Future<AtOnboardingOTPResult?> push({

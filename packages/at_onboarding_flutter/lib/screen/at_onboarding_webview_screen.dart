@@ -3,7 +3,7 @@ import 'package:at_onboarding_flutter/localizations/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-/// The screen for showing WebView during the onboarding process
+/// This screen is for showing WebView during the onboarding process
 class AtOnboardingWebviewScreen extends StatefulWidget {
   /// The URL to be displayed
   final String? url;

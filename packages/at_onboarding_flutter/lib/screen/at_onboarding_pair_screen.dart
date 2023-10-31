@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// This screen for pairing an atSign during onboarding process
+/// This screen is for pairing an atSign during onboarding process
 class AtOnboardingPairScreen extends StatefulWidget {
   /// The atSign to be paired
   final String atSign;
