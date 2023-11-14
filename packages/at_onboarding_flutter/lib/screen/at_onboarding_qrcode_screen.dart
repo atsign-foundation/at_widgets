@@ -7,8 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
+/// Represents the result of scanning a QR code during the onboarding process
 class AtOnboardingQRCodeResult {
+  /// The atSign associated with the QR result
   final String atSign;
+
+  /// The secret associated with the QR result
   final String secret;
 
   AtOnboardingQRCodeResult({
@@ -17,7 +21,9 @@ class AtOnboardingQRCodeResult {
   });
 }
 
+/// The QR code screen used during the onboarding process.
 class AtOnboardingQRCodeScreen extends StatefulWidget {
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingQRCodeScreen({

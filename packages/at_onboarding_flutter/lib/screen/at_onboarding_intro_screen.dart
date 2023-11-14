@@ -11,7 +11,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// The introductory screen for the at onboarding process
+/// [AtOnboardingIntroScreen] gives two options
+/// 1. Already have an atSign - proceeds to home screen to upload atKey
+/// 2. Get a free atSign - proceeds to generate free atSign
 class AtOnboardingIntroScreen extends StatefulWidget {
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingIntroScreen({

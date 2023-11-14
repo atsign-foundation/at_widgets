@@ -35,15 +35,25 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zxing2/qrcode.dart';
 import 'package:image/image.dart' as img;
 
+///  Home screen provides multiple options like upload atKey, generate new atSign, activatte existing atSign
 class AtOnboardingHomeScreen extends StatefulWidget {
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
-  /// If true, shows the custom dialog to get an atsign
+  /// If true, shows the custom dialog to get an atSign
   final bool getAtSign;
+
+  /// If true, hides references
   final bool hideReferences;
+
+  /// If true, hides QR code scanning
   final bool hideQrScan;
 
+  /// Set status for onboarding process
+  /// Set the [onboardStatus] to OnboardingStatus.ACTIVATE by default
   final onboardStatus = OnboardingStatus.ACTIVATE;
+
+  /// Specifies if the screen is being navigated from the intro screen
   final bool isFromIntroScreen;
 
   const AtOnboardingHomeScreen({
