@@ -48,6 +48,7 @@ jobs:
       - name: Install dependencies and analyze in ${{ matrix.package }}
         working-directory: packages/${{ matrix.package }}
         run: |
+          touch example/.env
           flutter pub get
           flutter analyze --no-fatal-infos
 
