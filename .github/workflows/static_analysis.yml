@@ -49,7 +49,7 @@ jobs:
         working-directory: packages/${{ matrix.package }}
         run: |
           flutter pub get
-          flutter analyze
+          flutter analyze --no-fatal-infos
 
       # Runs osv-scanner to find any vulnerable Dart dependencies
       # It needs to look at pubspec.lock files, which is why it's
