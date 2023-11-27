@@ -37,9 +37,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - uses: dart-lang/setup-dart@b64355ae6ca0b5d484f0106a033dd1388965d06d # v1.6.0
+      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225 # v2.12.0
         with:
-          sdk: stable
+          channel: "stable"
       - uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
         with:
           go-version: 'stable'
@@ -48,8 +48,8 @@ jobs:
       - name: Install dependencies and analyze in ${{ matrix.package }}
         working-directory: packages/${{ matrix.package }}
         run: |
-          dart pub get
-          dart analyze
+          flutter pub get
+          flutter analyze
 
       # Runs osv-scanner to find any vulnerable Dart dependencies
       # It needs to look at pubspec.lock files, which is why it's
