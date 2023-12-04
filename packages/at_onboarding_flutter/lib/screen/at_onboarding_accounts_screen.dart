@@ -67,7 +67,7 @@ class _AtOnboardingAccountsScreenState
         ),
         body: Padding(
           padding: const EdgeInsets.all(16),
-          child: pairedAtsignsList.isEmpty
+          child: widget.atsigns.isEmpty
               ? Center(
                   child: Column(
                     children: <Widget>[
@@ -120,7 +120,7 @@ class _AtOnboardingAccountsScreenState
                         itemBuilder: (BuildContext context, int index) {
                           String currentItem = '@${widget.atsigns[index]}';
                           bool isExist =
-                              pairedAtsignsList.contains(currentItem);
+                              widget.atsigns.contains(currentItem);
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2.0),
                             child: RadioListTile<Object>(
