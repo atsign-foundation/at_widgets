@@ -111,7 +111,8 @@ class ContactService {
   List<String> allContactsList = [];
 
   Future<void> initContactsService(
-      String rootDomainFromApp, int rootPortFromApp) async {
+      String rootDomainFromApp, int rootPortFromApp,
+      {bool fetchContacts = true}) async {
     loggedInUserDetails = null;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
@@ -119,9 +120,11 @@ class ContactService {
     currentAtsign = atClientManager.atClient.getCurrentAtSign()!;
     atContactImpl = await AtContactsImpl.getInstance(currentAtsign);
     loggedInUserDetails = await getAtSignDetails(currentAtsign);
-    cachedContactList = await atContactImpl.listContacts();
-    await fetchContactList();
-    await fetchBlockContactList();
+    if (fetchContacts) {
+      cachedContactList = await atContactImpl.listContacts();
+      await fetchContactList();
+      await fetchBlockContactList();
+    }
   }
 
   void resetData() {
