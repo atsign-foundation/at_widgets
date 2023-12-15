@@ -193,8 +193,8 @@ class _SendEnrollmentRequestWidgetState
 
   Future<void> _sendEnrollmentRequest(String atSign, String appName,
       String deviceName, String otp, Map<String, String> namespaceMap) async {
-    AtEnrollmentRequestBuilder atEnrollmentRequestBuilder =
-        AtEnrollmentRequest.request()
+    AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder = AtNewEnrollmentRequestBuilder();
+        atEnrollmentRequestBuilder
           ..setAppName(appName)
           ..setDeviceName(deviceName)
           ..setOtp(otp)

@@ -156,15 +156,23 @@ class _EnrollmentNotificationWidgetState
   }
 
   Future<dynamic> _approveEnrollment(EnrollmentData enrollmentData) async {
-    AtEnrollmentServiceImpl atEnrollmentServiceImpl =
-        AtEnrollmentServiceImpl(enrollmentData.atSign, _getAtClientPreferences());
+    AtEnrollmentServiceImpl atEnrollmentServiceImpl = AtEnrollmentServiceImpl(
+        enrollmentData.atSign, _getAtClientPreferences());
     String enrollmentId = enrollmentData.enrollmentKey
         .substring(0, enrollmentData.enrollmentKey.indexOf('.'));
-    AtEnrollmentRequest atEnrollmentRequest = (AtEnrollmentRequest.approve()
-          ..setEnrollmentId(enrollmentId)
-          ..setEncryptedAPKAMSymmetricKey(
-              enrollmentData.encryptedAPKAMSymmetricKey))
-        .build();
+    AtEnrollmentNotificationRequestBuilder atEnrollmentRequestBuilder =
+        AtEnrollmentNotificationRequestBuilder();
+    // atEnrollmentRequestBuilder
+    //           ..setEnrollmentId(enrollmentId)
+    //           ..setEncryptedAPKAMSymmetricKey(
+    //               enrollmentData.encryptedAPKAMSymmetricKey)
+    //         .build();
+
+    atEnrollmentRequestBuilder.setEnrollmentId(enrollmentId);
+    atEnrollmentRequestBuilder.setEncryptedApkamSymmetricKey(
+        enrollmentData.encryptedAPKAMSymmetricKey);
+    AtEnrollmentNotificationRequest atEnrollmentRequest =
+        atEnrollmentRequestBuilder.build();
 
     AtEnrollmentResponse atEnrollmentResponse = await atEnrollmentServiceImpl
         .manageEnrollmentApproval(atEnrollmentRequest);
