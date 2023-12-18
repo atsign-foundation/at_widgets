@@ -45,6 +45,7 @@ dependency_overrides:
   intl: ^0.17.0
   at_onboarding_flutter:
     path: ../
+  # at_onboarding_flutter: ^6.1.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
