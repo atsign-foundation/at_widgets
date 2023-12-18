@@ -637,6 +637,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
       primaryColor: widget.config.theme?.primaryColor,
+      textTheme: widget.config.theme?.textTheme,
       colorScheme: Theme.of(context).colorScheme.copyWith(
             primary: widget.config.theme?.primaryColor,
           ),
@@ -660,194 +661,196 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
             ],
           ),
           body: Center(
-            child: Container(
-              // width: _dialogWidth,
-              decoration: BoxDecoration(
-                  color: theme.primaryColor.withOpacity(0.1),
-                  borderRadius:
-                      BorderRadius.circular(AtOnboardingDimens.borderRadius)),
-              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              constraints: const BoxConstraints(
-                maxWidth: 400,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    AtOnboardingLocalizations.current.pair_atSign,
-                    style: const TextStyle(
-                      fontSize: AtOnboardingDimens.fontLarge,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  AtOnboardingPrimaryButton(
-                    key: keyUploadAtSign,
-                    height: 48,
-                    borderRadius: 24,
-                    onPressed: (Platform.isMacOS ||
-                            Platform.isLinux ||
-                            Platform.isWindows)
-                        ? _uploadKeyFileForDesktop
-                        : _uploadKeyFile,
-                    isLoading: loading,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AtOnboardingLocalizations.current.upload_atKeys,
-                          style: const TextStyle(
-                            fontSize: AtOnboardingDimens.fontLarge,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        const Icon(
-                          Icons.cloud_upload_rounded,
-                          // size: 20,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    AtOnboardingLocalizations.current.sub_upload_atKeys,
-                    style: const TextStyle(
-                      fontSize: AtOnboardingDimens.fontSmall,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  if (!widget.hideQrScan) const SizedBox(height: 5),
-                  if (!widget.hideQrScan)
+            child: SingleChildScrollView(
+              child: Container(
+                // width: _dialogWidth,
+                decoration: BoxDecoration(
+                    color: theme.primaryColor.withOpacity(0.1),
+                    borderRadius:
+                        BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+                padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
                     Text(
-                      AtOnboardingLocalizations.current.have_QRCode,
+                      AtOnboardingLocalizations.current.pair_atSign,
                       style: const TextStyle(
                         fontSize: AtOnboardingDimens.fontLarge,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  if (!widget.hideQrScan) const SizedBox(height: 5),
-                  if (!widget.hideQrScan)
-                    (Platform.isAndroid || Platform.isIOS)
-                        ? AtOnboardingSecondaryButton(
-                            key: keyUploadQRCode,
-                            height: 48,
-                            borderRadius: 24,
-                            onPressed: () async {
-                              _showQRCodeScreen(context: context);
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  AtOnboardingLocalizations
-                                      .current.btn_scan_QRCode,
-                                  style: const TextStyle(
-                                    fontSize: AtOnboardingDimens.fontLarge,
-                                  ),
-                                ),
-                                const Icon(Icons.arrow_right_alt_rounded)
-                              ],
-                            ),
-                          )
-                        : AtOnboardingSecondaryButton(
-                            key: keyUploadQRCode,
-                            height: 48,
-                            borderRadius: 24,
-                            isLoading: _uploadingQRCode,
-                            onPressed: () async {
-                              _uploadQRFileForDesktop();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  AtOnboardingLocalizations
-                                      .current.btn_upload_QRCode,
-                                  style: const TextStyle(
-                                      fontSize: AtOnboardingDimens.fontLarge),
-                                ),
-                                const Icon(Icons.arrow_right_alt_rounded)
-                              ],
-                            ),
-                          ),
-                  const SizedBox(height: 20),
-                  if (!widget.hideQrScan)
-                    Text(
-                      AtOnboardingLocalizations
-                          .current.title_activate_an_atSign,
-                      style: const TextStyle(
-                        fontSize: AtOnboardingDimens.fontLarge,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  if (!widget.hideQrScan) const SizedBox(height: 5),
-                  if (!widget.hideQrScan)
-                    AtOnboardingSecondaryButton(
-                      key: keyActivateAtSign,
+                    const SizedBox(height: 5),
+                    AtOnboardingPrimaryButton(
+                      key: keyUploadAtSign,
                       height: 48,
                       borderRadius: 24,
-                      onPressed: () async {
-                        _showActiveScreen(context: context);
-                      },
+                      onPressed: (Platform.isMacOS ||
+                              Platform.isLinux ||
+                              Platform.isWindows)
+                          ? _uploadKeyFileForDesktop
+                          : _uploadKeyFile,
+                      isLoading: loading,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            AtOnboardingLocalizations
-                                .current.btn_activate_atSign,
+                            AtOnboardingLocalizations.current.upload_atKeys,
                             style: const TextStyle(
-                                fontSize: AtOnboardingDimens.fontLarge),
+                              fontSize: AtOnboardingDimens.fontLarge,
+                            ),
                           ),
-                          const Icon(Icons.arrow_right_alt_rounded)
+                          const SizedBox(width: 10),
+                          const Icon(
+                            Icons.cloud_upload_rounded,
+                            // size: 20,
+                          )
                         ],
                       ),
                     ),
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: InkWell(
-                      onTap: () {
-                        if (widget.isFromIntroScreen) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => AtOnboardingGenerateScreen(
-                                onGenerateSuccess: ({
-                                  required String atSign,
-                                  required String secret,
-                                }) {
-                                  String cramSecret = secret.split(':').last;
-                                  String atsign = atSign.startsWith('@')
-                                      ? atSign
-                                      : '@$atSign';
-                                  _processSharedSecret(atsign, cramSecret);
-                                },
-                                config: widget.config,
+                    const SizedBox(height: 5),
+                    Text(
+                      AtOnboardingLocalizations.current.sub_upload_atKeys,
+                      style: const TextStyle(
+                        fontSize: AtOnboardingDimens.fontSmall,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    if (!widget.hideQrScan) const SizedBox(height: 5),
+                    if (!widget.hideQrScan)
+                      Text(
+                        AtOnboardingLocalizations.current.have_QRCode,
+                        style: const TextStyle(
+                          fontSize: AtOnboardingDimens.fontLarge,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    if (!widget.hideQrScan) const SizedBox(height: 5),
+                    if (!widget.hideQrScan)
+                      (Platform.isAndroid || Platform.isIOS)
+                          ? AtOnboardingSecondaryButton(
+                              key: keyUploadQRCode,
+                              height: 48,
+                              borderRadius: 24,
+                              onPressed: () async {
+                                _showQRCodeScreen(context: context);
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    AtOnboardingLocalizations
+                                        .current.btn_scan_QRCode,
+                                    style: const TextStyle(
+                                      fontSize: AtOnboardingDimens.fontLarge,
+                                    ),
+                                  ),
+                                  const Icon(Icons.arrow_right_alt_rounded)
+                                ],
+                              ),
+                            )
+                          : AtOnboardingSecondaryButton(
+                              key: keyUploadQRCode,
+                              height: 48,
+                              borderRadius: 24,
+                              isLoading: _uploadingQRCode,
+                              onPressed: () async {
+                                _uploadQRFileForDesktop();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    AtOnboardingLocalizations
+                                        .current.btn_upload_QRCode,
+                                    style: const TextStyle(
+                                        fontSize: AtOnboardingDimens.fontLarge),
+                                  ),
+                                  const Icon(Icons.arrow_right_alt_rounded)
+                                ],
                               ),
                             ),
-                          );
-                        } else {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      child: Text(
-                        AtOnboardingLocalizations.current.get_free_atSign,
-                        key: keyCreateAnAtSign,
-                        style: TextStyle(
-                          fontSize: AtOnboardingDimens.fontNormal,
-                          fontWeight: FontWeight.w500,
-                          color: theme.primaryColor,
-                          decoration: TextDecoration.underline,
+                    const SizedBox(height: 20),
+                    if (!widget.hideQrScan)
+                      Text(
+                        AtOnboardingLocalizations
+                            .current.title_activate_an_atSign,
+                        style: const TextStyle(
+                          fontSize: AtOnboardingDimens.fontLarge,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    if (!widget.hideQrScan) const SizedBox(height: 5),
+                    if (!widget.hideQrScan)
+                      AtOnboardingSecondaryButton(
+                        key: keyActivateAtSign,
+                        height: 48,
+                        borderRadius: 24,
+                        onPressed: () async {
+                          _showActiveScreen(context: context);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              AtOnboardingLocalizations
+                                  .current.btn_activate_atSign,
+                              style: const TextStyle(
+                                  fontSize: AtOnboardingDimens.fontLarge),
+                            ),
+                            const Icon(Icons.arrow_right_alt_rounded)
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: InkWell(
+                        onTap: () {
+                          if (widget.isFromIntroScreen) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => AtOnboardingGenerateScreen(
+                                  onGenerateSuccess: ({
+                                    required String atSign,
+                                    required String secret,
+                                  }) {
+                                    String cramSecret = secret.split(':').last;
+                                    String atsign = atSign.startsWith('@')
+                                        ? atSign
+                                        : '@$atSign';
+                                    _processSharedSecret(atsign, cramSecret);
+                                  },
+                                  config: widget.config,
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        child: Text(
+                          AtOnboardingLocalizations.current.get_free_atSign,
+                          key: keyCreateAnAtSign,
+                          style: TextStyle(
+                            fontSize: AtOnboardingDimens.fontNormal,
+                            fontWeight: FontWeight.w500,
+                            color: theme.primaryColor,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

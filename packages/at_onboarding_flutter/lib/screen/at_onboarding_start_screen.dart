@@ -107,6 +107,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
       primaryColor: widget.config.theme?.primaryColor,
+      textTheme: widget.config.theme?.textTheme,
       colorScheme: Theme.of(context).colorScheme.copyWith(
             primary: widget.config.theme?.primaryColor,
           ),
@@ -117,22 +118,24 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
-          child: Container(
-            padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            decoration: BoxDecoration(
-              color: theme.scaffoldBackgroundColor,
-              borderRadius:
-                  BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AtSyncIndicator(color: theme.primaryColor),
-                const SizedBox(width: AtOnboardingDimens.paddingSmall),
-                Text(
-                  AtOnboardingLocalizations.current.onboarding,
-                ),
-              ],
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              decoration: BoxDecoration(
+                color: theme.scaffoldBackgroundColor,
+                borderRadius:
+                    BorderRadius.circular(AtOnboardingDimens.dialogBorderRadius),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AtSyncIndicator(color: theme.primaryColor),
+                  const SizedBox(width: AtOnboardingDimens.paddingSmall),
+                  Text(
+                    AtOnboardingLocalizations.current.onboarding,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
