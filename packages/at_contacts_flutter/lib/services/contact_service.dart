@@ -574,7 +574,11 @@ class ContactService {
       key.metadata?.isBinary = true;
       key.key = contactFields[2];
       Uint8List? image;
-      var result = await atClientManager.atClient.get(key);
+
+      GetRequestOptions options = GetRequestOptions();
+      options.bypassCache = true;
+      var result =
+          await atClientManager.atClient.get(key, getRequestOptions: options);
 
       if (result.value != null) {
         try {
@@ -593,6 +597,53 @@ class ContactService {
     contactDetails['nickname'] = nickName != '' ? nickName : null;
 
     return contactDetails;
+  }
+
+  getProfilePicture(String atsign) async {
+    var contactDetails = <String, dynamic>{};
+
+    var metadata = Metadata();
+    metadata.isPublic = true;
+    metadata.namespaceAware = false;
+    var key = AtKey();
+    key.sharedBy = atsign;
+    key.metadata = metadata;
+    // making isPublic true (as get method changes it to false)
+    key.metadata?.isBinary = true;
+    key.key = "image.wavi";
+
+    GetRequestOptions options = GetRequestOptions();
+    options.bypassCache = true;
+    var result =
+        await atClientManager.atClient.get(key, getRequestOptions: options);
+
+    if (result.value != null) {
+      try {
+        List<int> intList = result.value.cast<int>();
+        var image = Uint8List.fromList(intList);
+        contactDetails['image'] = image;
+        return contactDetails;
+      } catch (e) {
+        print('invalid iamge data: $e');
+        contactDetails['image'] = null;
+        return contactDetails;
+      }
+    }
+  }
+
+  fetchProfilePictureMetaData(String atsign) async {
+    var metadata = Metadata();
+    metadata.isPublic = true;
+    metadata.namespaceAware = false;
+    var key = AtKey();
+    key.sharedBy = atsign;
+    key.metadata = metadata;
+    // making isPublic true (as get method changes it to false)
+    key.metadata?.isBinary = true;
+    key.key = "image.wavi";
+
+    var result = await atClientManager.atClient.getMeta(key);
+    return result;
   }
 
   /// updates status of contacts for [baseContactList] and [baseBlockedList]
