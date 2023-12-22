@@ -599,7 +599,7 @@ class ContactService {
     return contactDetails;
   }
 
-  getProfilePicture(String atsign) async {
+  Future<Map<String, dynamic>?> getProfilePicture(String atsign) async {
     var contactDetails = <String, dynamic>{};
 
     var metadata = Metadata();
@@ -628,10 +628,12 @@ class ContactService {
         contactDetails['image'] = null;
         return contactDetails;
       }
+    }else {
+      return null;
     }
   }
 
-  fetchProfilePictureMetaData(String atsign) async {
+  Future<Metadata?> fetchProfilePictureMetaData(String atsign) async {
     var metadata = Metadata();
     metadata.isPublic = true;
     metadata.namespaceAware = false;
