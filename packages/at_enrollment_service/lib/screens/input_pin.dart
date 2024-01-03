@@ -1,5 +1,8 @@
+// import 'package:at_auth/at_auth.dart';
+// import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
+// import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
 
 class InputPin extends StatefulWidget {
@@ -11,6 +14,42 @@ class InputPin extends StatefulWidget {
 
 class _InputPinState extends State<InputPin> {
   bool isLoading = false;
+  String otpValue = "";
+
+  List<TextEditingController> controllers = List.generate(
+    6,
+    (index) => TextEditingController(),
+  );
+
+  String getValue() {
+    return controllers.map((controller) => controller.text).join();
+  }
+
+  // Future<void> _sendEnrollmentRequest(String atSign, String appName,
+  //     String deviceName, String otp, Map<String, String> namespaceMap) async {
+  //   AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder = AtNewEnrollmentRequestBuilder();
+  //       atEnrollmentRequestBuilder
+  //         ..setAppName(appName)
+  //         ..setDeviceName(deviceName)
+  //         ..setOtp(otp)
+  //         ..setNamespaces(namespaceMap);
+  //   AtEnrollmentRequest atEnrollmentRequest =
+  //       atEnrollmentRequestBuilder.build();
+  //   EnrollResponse enrollResponse = await OnboardingService.getInstance()
+  //       .enroll(atSign, atEnrollmentRequest);
+
+  //   print(enrollResponse);
+
+  //   // setState(() {
+  //   //   if (enrollResponse.enrollmentId.isEmpty) {
+  //   //     showErrorWidget = true;
+  //   //   } else {
+  //   //     showSuccessWidget = true;
+  //   //     enrollmentId = enrollResponse.enrollmentId;
+  //   //     enrollmentStatus = enrollResponse.enrollStatus.toString();
+  //   //   }
+  //   // });
+  // }
 
   @override
   void initState() {
@@ -27,7 +66,7 @@ class _InputPinState extends State<InputPin> {
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: SingleChildScrollView(
+        child: Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -59,75 +98,73 @@ class _InputPinState extends State<InputPin> {
                         ),
                         const SizedBox(height: 20),
                         Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                height: 58,
-                                width: 51,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            6,
+                            (index) => Container(
+                              margin: const EdgeInsets.all(4.0),
+                              width: 45.0,
+                              height: 60.0,
+                              decoration: BoxDecoration(
                                 color: Colors.white,
-                                padding: const EdgeInsets.only(left: 20),
-                                child: const TextField(
-                                  decoration:
-                                      InputDecoration(border: InputBorder.none),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: TextField(
+                                  controller: controllers[index],
+                                  textAlign: TextAlign.center,
+                                  maxLength: 1,
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    counterText: "",
+                                    border: InputBorder.none,
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  onChanged: (value) {
+                                    if (value.length == 1 && index < 5) {
+                                      FocusScope.of(context).nextFocus();
+                                    }
+                                    setState(() {
+                                      otpValue = getValue();
+                                    });
+                                  },
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Container(
-                                height: 58,
-                                width: 51,
-                                color: Colors.white,
-                                padding: const EdgeInsets.only(left: 20),
-                                child: const TextField(
-                                  decoration:
-                                      InputDecoration(border: InputBorder.none),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Container(
-                                height: 58,
-                                width: 51,
-                                color: Colors.white,
-                                padding: const EdgeInsets.only(left: 20),
-                                child: const TextField(
-                                  decoration:
-                                      InputDecoration(border: InputBorder.none),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Container(
-                                height: 58,
-                                width: 51,
-                                color: Colors.white,
-                                padding: const EdgeInsets.only(left: 20),
-                                child: const TextField(
-                                  decoration:
-                                      InputDecoration(border: InputBorder.none),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                         const SizedBox(height: 50),
-                        CustomButton(
-                          width: double.infinity,
-                          buttonText: 'Onboard atSign',
-                          fontColor: Colors.white,
-                          buttonColor: ColorConstant.lightGrey.withOpacity(0.4),
-                          onPressed: () {
-                            setState(() {
-                              isLoading = !isLoading;
-                            });
-                          },
+                        AbsorbPointer(
+                          absorbing: otpValue.length != 6,
+                          child: CustomButton(
+                            width: double.infinity,
+                            buttonText: 'Onboard atSign',
+                            fontColor: Colors.white,
+                            buttonColor:
+                                otpValue.length == 6 ? Colors.red : ColorConstant.lightGrey.withOpacity(0.4),
+                            onPressed: () {
+                              setState(() {
+                                isLoading = !isLoading;
+                              });
+                            },
+                          ),
                         )
                       ],
                     )
                   : loader(),
+              const Spacer(),
+              const Center(
+                  child: Text(
+                "Onboard a different atsign",
+                style: TextStyle(decoration: TextDecoration.underline),
+              )),
+              const SizedBox(
+                height: 40,
+              ),
             ],
           ),
         ),
