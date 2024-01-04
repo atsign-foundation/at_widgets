@@ -2,7 +2,6 @@ import 'package:at_follows_flutter/screens/connections.dart';
 import 'package:at_follows_flutter_example/services/at_service.dart';
 import 'package:at_follows_flutter_example/services/notification_service.dart';
 import 'package:flutter/material.dart';
-import 'package:at_utils/at_logger.dart';
 import 'package:at_follows_flutter_example/utils/app_strings.dart';
 
 class NextScreen extends StatefulWidget {

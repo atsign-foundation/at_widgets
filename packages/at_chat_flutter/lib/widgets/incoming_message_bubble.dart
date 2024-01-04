@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:at_chat_flutter/models/message_model.dart';
 import 'package:at_chat_flutter/utils/colors.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_chat_flutter/widgets/contacts_initials.dart';
@@ -18,8 +19,9 @@ class IncomingMessageBubble extends StatefulWidget {
       this.color = CustomColors.incomingMessageColor,
       this.avatarColor = CustomColors.defaultColor})
       : super(key: key);
+
   @override
-  _IncomingMessageBubbleState createState() => _IncomingMessageBubbleState();
+  State<IncomingMessageBubble> createState() => _IncomingMessageBubbleState();
 }
 
 class _IncomingMessageBubbleState extends State<IncomingMessageBubble> {

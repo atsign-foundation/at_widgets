@@ -106,6 +106,7 @@ class SDKService {
   Future<bool> notify(AtKey key, String value, OperationEnum operation,
       Function onDone, Function onError) async {
     var notificationResponse = await AtClientManager.getInstance()
+        .atClient
         .notificationService
         .notify(_getNotificationParams(key, value, operation))
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
@@ -168,7 +169,7 @@ class SDKService {
 
   ///Performs sync for current @sign
   sync() async {
-    AtClientManager.getInstance().syncService.sync();
+    AtClientManager.getInstance().atClient.syncService.sync();
   }
 
   ///Throws [ResponseTimeOutException].

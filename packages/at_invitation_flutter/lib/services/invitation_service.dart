@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_invitation_flutter/models/message_share.dart';
 import 'package:at_invitation_flutter/widgets/share_dialog.dart';
 import 'package:at_invitation_flutter/widgets/otp_dialog.dart';

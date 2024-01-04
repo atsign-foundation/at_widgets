@@ -7,6 +7,7 @@ import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
   final String activeAtSign;
+
   const SecondScreen({required this.activeAtSign, Key? key}) : super(key: key);
 
   @override
@@ -70,12 +71,14 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
+                // ignore: deprecated_member_use
                 AtSyncUIService().sync();
               },
               child: const Text('Default Sync'),
             ),
             ElevatedButton(
               onPressed: () async {
+                // ignore: deprecated_member_use
                 AtSyncUIService().sync(
                   atSyncUIOverlay: AtSyncUIOverlay.dialog,
                 );
@@ -84,6 +87,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
+                // ignore: deprecated_member_use
                 AtSyncUIService().sync(
                   atSyncUIOverlay: AtSyncUIOverlay.snackbar,
                 );
@@ -92,6 +96,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
+                // ignore: deprecated_member_use
                 AtSyncUIService().sync(
                   atSyncUIOverlay: AtSyncUIOverlay.none,
                 );
@@ -133,6 +138,7 @@ class _SecondScreenState extends State<SecondScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          // ignore: deprecated_member_use
           AtSyncUIService().sync(
             atSyncUIOverlay: AtSyncUIOverlay.none,
           );

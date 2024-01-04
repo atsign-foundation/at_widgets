@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:at_follows_flutter_example/screens/follows_screen.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'

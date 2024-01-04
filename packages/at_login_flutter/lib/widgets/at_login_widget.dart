@@ -56,8 +56,9 @@ class AtLogin {
       this.domain}) {
     _show();
   }
+
   void _show() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -329,7 +330,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
                   ElevatedButton(
                     child: const Text(Strings.loginDenied),
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.red,
+                        backgroundColor: Colors.red,
                         // padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                         textStyle: TextStyle(
                           fontSize: 18,
@@ -346,7 +347,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
                   ElevatedButton(
                     child: Text(Strings.loginAllowed),
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
+                        backgroundColor: Colors.green,
                         textStyle: TextStyle(
                           fontSize: 18,
                         )),
@@ -378,7 +379,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
                   ElevatedButton(
                       child: const Text(Strings.notPairAtsign),
                       style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
+                          backgroundColor: Colors.red,
                           // padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                           textStyle: TextStyle(
                             fontSize: 18,
@@ -391,7 +392,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
                   ElevatedButton(
                     child: Text(Strings.pairAtsign),
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
+                        backgroundColor: Colors.green,
                         textStyle: TextStyle(
                           fontSize: 18,
                         )),

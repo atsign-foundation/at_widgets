@@ -1,13 +1,13 @@
 // ignore_for_file: implementation_imports, prefer_typing_uninitialized_variables
 
 import 'dart:async';
-import 'package:at_client/src/service/sync_service.dart';
 import 'package:at_client/at_client.dart';
 import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:flutter/material.dart';
 
 class AtSyncUIService extends SyncProgressListener {
   static final AtSyncUIService _singleton = AtSyncUIService._internal();
+
   AtSyncUIService._internal();
 
   factory AtSyncUIService() {
@@ -47,6 +47,7 @@ class AtSyncUIService extends SyncProgressListener {
   /// [atSyncUIListener] can be used to listen to sync status changes
   Stream<AtSyncUIStatus> get atSyncUIListener =>
       _atSyncUIListenerController.stream as Stream<AtSyncUIStatus>;
+
   StreamSink<AtSyncUIStatus> get _atSyncUIListenerSink =>
       _atSyncUIListenerController.sink as StreamSink<AtSyncUIStatus>;
 
@@ -101,10 +102,12 @@ class AtSyncUIService extends SyncProgressListener {
 
     var _atSyncUIController = AtSyncUIController();
     AtSyncUI.instance.setupController(controller: _atSyncUIController);
-    syncService = AtClientManager.getInstance().syncService;
+    syncService = AtClientManager.getInstance().atClient.syncService;
     syncService!.addProgressListener(this);
+    // ignore: deprecated_member_use
     syncService!.setOnDone(_onSuccessCallback);
 
+    // ignore: deprecated_member_use_from_same_package
     sync(atSyncUIOverlay: atSyncUIOverlay!, startTimer: startTimer);
   }
 
