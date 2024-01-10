@@ -8,6 +8,7 @@ import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
@@ -93,10 +94,11 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
         Navigator.pop(context, result);
       } else {
         if (!mounted) return;
+        var message = AtOnboardingErrorToString().getErrorMessage(e);
         Navigator.pop(
           context,
           AtOnboardingResult.error(
-            message: "$e",
+            message: message,
           ),
         );
       }
