@@ -1,7 +1,10 @@
+import 'package:at_auth/at_auth.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_enrollment_app/common_widgets/input_field.dart';
 import 'package:at_enrollment_app/screens/input_pin.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,10 +19,22 @@ class _HomeScreenState extends State<HomeScreen> {
   String pinValue = "";
   bool tooltipEnabled = false;
 
-  verifyAndProceed() {
+  verifyAndProceed() async {
     if (atSignValue.isNotEmpty && pinValue.isNotEmpty) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const InputPin()));
+      AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
+          AtNewEnrollmentRequestBuilder();
+      atEnrollmentRequestBuilder
+        ..setAppName('wavi')
+        ..setDeviceName('iphone')
+        ..setOtp(pinValue)
+        ..setNamespaces({'wavi': 'rw'});
+      AtEnrollmentRequest atEnrollmentRequest =
+          atEnrollmentRequestBuilder.build();
+      EnrollResponse enrollResponse = await OnboardingService.getInstance()
+          .enroll(atSignValue, atEnrollmentRequest);
+
+      print('enrollResponse: ${enrollResponse.enrollmentId}');
+      print('enrollResponse: ${enrollResponse.enrollStatus}');
     }
   }
 
@@ -107,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? InputField(
                     hintText: 'Enter your PIN',
                     isNumpad: true,
-                    maxLength: 4,
+                    maxLength: 6,
                     prefix: Container(
                       decoration: BoxDecoration(
                         color: Colors.orange,
@@ -146,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     suffix: InkWell(
                       onTap: () {
+                        print('enroll');
                         verifyAndProceed();
                       },
                       child: const Icon(
@@ -156,6 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onChange: (String val) {
                       setState(() {
                         pinValue = val;
+                        print('pin : $pinValue');
                       });
                     },
                   )
@@ -178,20 +195,53 @@ class _HomeScreenState extends State<HomeScreen> {
                 : const SizedBox(),
             const SizedBox(height: 15),
             atSignValue.isEmpty
-                ? const CustomButton(
+                ? CustomButton(
                     buttonColor: ColorConstant.orange,
                     fontColor: Colors.white,
                     buttonText: 'Create an Account for Free',
                     width: double.infinity,
+                    onPressed: () {
+                      _sendEnrollmentRequest(
+                          '@sonowboard89', 'wavi', 'pixel', '', {});
+                    },
                   )
-                : const Center(
-                    child: Text(
-                    "Forgot your PIN?",
-                    style: TextStyle(decoration: TextDecoration.underline),
-                  )),
+                : InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InputPin(
+                            atSign: atSignValue,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Center(
+                        child: Text(
+                      "Forgot your PIN?",
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    )),
+                  ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _sendEnrollmentRequest(String atSign, String appName,
+      String deviceName, String otp, Map<String, String> namespaceMap) async {
+    AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
+        AtNewEnrollmentRequestBuilder();
+    atEnrollmentRequestBuilder
+      ..setAppName(appName)
+      ..setDeviceName(deviceName)
+      ..setOtp(otp)
+      ..setNamespaces(namespaceMap);
+    AtEnrollmentRequest atEnrollmentRequest =
+        atEnrollmentRequestBuilder.build();
+    EnrollResponse enrollResponse = await OnboardingService.getInstance()
+        .enroll(atSign, atEnrollmentRequest);
+
+    setState(() {});
   }
 }
