@@ -1,10 +1,13 @@
 import 'package:at_auth/at_auth.dart';
+import 'package:at_enrollment_app/screens/atkey_authenticator.dart';
+import 'package:at_enrollment_app/screens/home.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:at_chops/at_chops.dart';
 
 class LandingPage extends StatelessWidget {
   static const String rootDomain = 'root.atsign.org';
@@ -58,8 +61,13 @@ class LandingPage extends StatelessWidget {
                   child: const Text('Authenticate'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    context.goNamed('submitEnrollment');
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const HomeScreen(),
+                      ),
+                    );
                   },
                   child: const Text('Enroll'),
                 )
@@ -95,8 +103,22 @@ class LandingPage extends StatelessWidget {
       ),
     );
     if (result.status == AtOnboardingResultStatus.success) {
+      // setup of current atsign and atChops
+      // AtChopsKeys atChopsKey = AtChopsKeys.create(atEncryptionKeyPair, _atPkamKeyPair);
+      // AtClientManager.getInstance().setCurrentAtSign(
+      //   result.atsign!,
+      //   'enroll',
+      //   await getAtClientPreferences(),
+      //   atChops: AtChops(atChopsKey),
+      // );
+
       if (context.mounted) {
-        context.goNamed('HomePage');
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const AtKeyAuthenticator(),
+          ),
+        );
       }
     }
   }

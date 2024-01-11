@@ -1,6 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_enrollment_app/models/enrollment.dart';
 import 'package:at_enrollment_app/screens/create_pin.dart';
+import 'package:at_enrollment_app/screens/enrollment_request_card.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 
 class AtKeyAuthenticator extends StatefulWidget {
@@ -11,6 +17,29 @@ class AtKeyAuthenticator extends StatefulWidget {
 }
 
 class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
+  String currentAtsign = '';
+  String otp = '';
+  Timer? timer;
+
+  @override
+  void initState() {
+    currentAtsign =
+        AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '';
+    _getOTPFromServer();
+
+    timer = Timer.periodic(const Duration(minutes: 1), (t) {
+      _getOTPFromServer();
+    });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -31,9 +60,9 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
                 'atKey Authenticator',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              const Text(
-                '@snowfirm0',
-                style: TextStyle(
+              Text(
+                currentAtsign,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                   color: ColorConstant.orange,
@@ -85,7 +114,6 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
               const SizedBox(height: 30),
               Container(
                 width: double.infinity,
-                height: 180,
                 padding: const EdgeInsets.all(20),
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -144,8 +172,13 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Text(
-                      'Create a PIN',
+                    // const Text(
+                    //   'Create a PIN',
+                    //   style:
+                    //       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    // ),
+                    Text(
+                      'PIN : $otp',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -162,8 +195,38 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
               const SizedBox(height: 20),
               const Divider(),
               const SizedBox(height: 20),
-              const Text('No request'),
-              const Text('At the moment')
+              StreamBuilder<AtNotification>(
+                stream: fetchEnrollmentNotifications(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<AtNotification> snapshot) {
+                  if (snapshot.hasData) {
+                    EnrollmentData enrollmentData = EnrollmentData(
+                        snapshot.data!.from,
+                        '${snapshot.data!.key}${snapshot.data!.from}',
+                        jsonDecode(snapshot.data!.value!)[
+                            'encryptedApkamSymmetricKey']);
+
+                    print('enrollmentData : ${snapshot.data!}');
+
+                    return EnrollmentRequestCard(
+                      enrollmentData: enrollmentData,
+                    );
+                  } else if (snapshot.hasError) {
+                    // Handle error case
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    // Handle loading or initial state
+                    return const Center(
+                      child: Column(
+                        children: [
+                          Text('No request'),
+                          Text('At the moment'),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -184,5 +247,28 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
         return CreatePin();
       },
     );
+  }
+
+  Stream<AtNotification> fetchEnrollmentNotifications() {
+    Stream<AtNotification> notificationStream = AtClientManager.getInstance()
+        .atClient
+        .notificationService
+        .subscribe(regex: '__manage');
+    return notificationStream;
+  }
+
+  Future<String?> _getOTPFromServer() async {
+    String? tempOtp = await AtClientManager.getInstance()
+        .atClient
+        .getRemoteSecondary()
+        ?.executeCommand('otp:get\n', auth: true);
+    tempOtp = tempOtp?.replaceAll('data:', '');
+    print('otp: ${tempOtp}');
+    if (mounted) {
+      setState(() {
+        otp = tempOtp ?? '';
+      });
+    }
+    return otp;
   }
 }

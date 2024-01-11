@@ -1,3 +1,5 @@
+import 'package:at_enrollment_app/screen/landing_screen.dart';
+import 'package:at_enrollment_app/screens/atkey_authenticator.dart';
 import 'package:at_enrollment_app/screens/home.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return const Scaffold(
       backgroundColor: ColorConstant.bgColor,
       body: SafeArea(
-        child: HomeScreen(),
+        child: LandingPage(),
       ),
     );
   }

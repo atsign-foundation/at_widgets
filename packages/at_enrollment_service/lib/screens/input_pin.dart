@@ -1,12 +1,19 @@
 // import 'package:at_auth/at_auth.dart';
 // import 'package:at_client_mobile/at_client_mobile.dart';
+import 'dart:convert';
+
+import 'package:at_auth/at_auth.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 // import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class InputPin extends StatefulWidget {
-  const InputPin({super.key});
+  String atSign;
+  InputPin({super.key, required this.atSign});
 
   @override
   State<InputPin> createState() => _InputPinState();
@@ -25,35 +32,38 @@ class _InputPinState extends State<InputPin> {
     return controllers.map((controller) => controller.text).join();
   }
 
-  // Future<void> _sendEnrollmentRequest(String atSign, String appName,
-  //     String deviceName, String otp, Map<String, String> namespaceMap) async {
-  //   AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder = AtNewEnrollmentRequestBuilder();
-  //       atEnrollmentRequestBuilder
-  //         ..setAppName(appName)
-  //         ..setDeviceName(deviceName)
-  //         ..setOtp(otp)
-  //         ..setNamespaces(namespaceMap);
-  //   AtEnrollmentRequest atEnrollmentRequest =
-  //       atEnrollmentRequestBuilder.build();
-  //   EnrollResponse enrollResponse = await OnboardingService.getInstance()
-  //       .enroll(atSign, atEnrollmentRequest);
+  sendEnrollmentRequest() async {
+    if (widget.atSign.isNotEmpty && otpValue.isNotEmpty) {
+      AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
+          AtNewEnrollmentRequestBuilder();
+      atEnrollmentRequestBuilder
+        ..setAppName('wavi')
+        ..setDeviceName('iphone')
+        ..setOtp(otpValue)
+        ..setNamespaces({'wavi': 'rw'});
+      AtEnrollmentRequest atEnrollmentRequest =
+          atEnrollmentRequestBuilder.build();
+      EnrollResponse enrollResponse = await OnboardingService.getInstance()
+          .enroll(widget.atSign, atEnrollmentRequest);
 
-  //   print(enrollResponse);
-
-  //   // setState(() {
-  //   //   if (enrollResponse.enrollmentId.isEmpty) {
-  //   //     showErrorWidget = true;
-  //   //   } else {
-  //   //     showSuccessWidget = true;
-  //   //     enrollmentId = enrollResponse.enrollmentId;
-  //   //     enrollmentStatus = enrollResponse.enrollStatus.toString();
-  //   //   }
-  //   // });
-  // }
+      print('enrollResponse: ${enrollResponse.enrollmentId}');
+      print('enrollResponse: ${enrollResponse.enrollStatus}');
+    }
+  }
 
   @override
   void initState() {
+    readEnrollmentRequests();
     super.initState();
+  }
+
+  readEnrollmentRequests() async {
+    final _enrollmentKeychainStore = FlutterSecureStorage();
+    String? enrollmentInfoJsonString =
+        await _enrollmentKeychainStore.read(key: 'enrollmentInfo');
+    var jsonString = (jsonDecode(enrollmentInfoJsonString ?? ''));
+    print(" enrollmentInfoJsonString : ${enrollmentInfoJsonString}");
+    print('jsonString: ${jsonString['atSign']}');
   }
 
   @override
@@ -64,9 +74,9 @@ class _InputPinState extends State<InputPin> {
       appBar: AppBar(
         backgroundColor: ColorConstant.bgColor,
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: Expanded(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -75,9 +85,9 @@ class _InputPinState extends State<InputPin> {
                 'Welcome',
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
               ),
-              const Text(
-                '@snowfirm0',
-                style: TextStyle(
+              Text(
+                widget.atSign,
+                style: const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w700,
                     color: ColorConstant.orange),
@@ -144,9 +154,16 @@ class _InputPinState extends State<InputPin> {
                             width: double.infinity,
                             buttonText: 'Onboard atSign',
                             fontColor: Colors.white,
-                            buttonColor:
-                                otpValue.length == 6 ? Colors.red : ColorConstant.lightGrey.withOpacity(0.4),
+                            buttonColor: otpValue.length == 6
+                                ? Colors.red
+                                : ColorConstant.lightGrey.withOpacity(0.4),
                             onPressed: () {
+                              setState(() {
+                                isLoading = !isLoading;
+                              });
+
+                              sendEnrollmentRequest();
+
                               setState(() {
                                 isLoading = !isLoading;
                               });
@@ -156,11 +173,16 @@ class _InputPinState extends State<InputPin> {
                       ],
                     )
                   : loader(),
-              const Spacer(),
-              const Center(
-                  child: Text(
-                "Onboard a different atsign",
-                style: TextStyle(decoration: TextDecoration.underline),
+              const SizedBox(height: 20),
+              Center(
+                  child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  "Onboard a different atsign",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
               )),
               const SizedBox(
                 height: 40,
@@ -174,10 +196,10 @@ class _InputPinState extends State<InputPin> {
 }
 
 Widget loader() {
-  return Column(
+  return const Column(
     children: [
       Padding(
-        padding: const EdgeInsets.only(top: 80.0),
+        padding: EdgeInsets.only(top: 80.0),
         child: Center(
           child: SizedBox(
             width: 100,
