@@ -11,7 +11,6 @@ import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_utils.dart';
 import 'package:crypton/crypton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class AtLoginService {
   static final AtLoginService _singleton = AtLoginService._internal();
@@ -144,8 +143,8 @@ class AtLoginService {
           .getEncryptionPrivateKey();
 
       var privateKey = RSAPrivateKey.fromString(encryptionPrivateKey ?? '');
-      var dataSignature = privateKey.createSHA256Signature(
-          utf8.encode(atLoginObj.challenge ?? '') as Uint8List);
+      var dataSignature = privateKey
+          .createSHA256Signature(utf8.encode(atLoginObj.challenge ?? ''));
       var signature = base64Encode(dataSignature);
 
       await setAtsign(atLoginObj.atsign);
