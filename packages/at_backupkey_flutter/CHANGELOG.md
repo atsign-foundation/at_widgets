@@ -1,3 +1,7 @@
+## 4.0.12:
+- **CHORE**: Updated dependencies
+- **CHORE**: Lint fixes
+
 ## 4.0.11:
 - **CHORE**: Bumped all dependency versions
   - Major version increase of permission_handler from ^10.4.1 to ^11.0.0

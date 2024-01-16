@@ -1,3 +1,8 @@
+## 3.0.11
+
+- **CHORE**: Updated dependencies
+- **CHORE**: Lint fixes
+
 ## 3.0.10
 
 - **CHORE**: Bumped all dependency versions
