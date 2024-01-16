@@ -51,7 +51,7 @@ class ChatScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
@@ -174,15 +174,19 @@ class _ChatScreenState extends State<ChatScreen> {
                                               (id) async {
                                                 var result = await _chatService
                                                     .deleteSelectedMessage(id);
-                                                Navigator.of(context).pop();
+                                                if (mounted) {
+                                                  Navigator.of(context).pop();
+                                                }
 
                                                 var message = result
                                                     ? 'Message is deleted'
                                                     : 'Failed to delete';
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content:
-                                                            Text(message)));
+                                                if (mounted) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content:
+                                                              Text(message)));
+                                                }
                                               },
                                               message: snapshot.data![index],
                                               color:
@@ -225,7 +229,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
     if ((result?.files ?? []).isNotEmpty) {
       final file = File(result!.files.first.path!);
-      await _chatService.sendImageFile(context, file);
+      if (mounted) await _chatService.sendImageFile(context, file);
     } else {
       // User canceled the picker
     }

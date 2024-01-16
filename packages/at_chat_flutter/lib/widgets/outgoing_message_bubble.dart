@@ -23,7 +23,7 @@ class OutgoingMessageBubble extends StatefulWidget {
       : super(key: key);
 
   @override
-  _OutgoingMessageBubbleState createState() => _OutgoingMessageBubbleState();
+  State<OutgoingMessageBubble> createState() => _OutgoingMessageBubbleState();
 }
 
 class _OutgoingMessageBubbleState extends State<OutgoingMessageBubble> {

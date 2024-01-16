@@ -11,8 +11,6 @@ environment:
 
 dependencies:
   at_app_flutter: ^5.2.0
-  at_backupkey_flutter:
-    path: ../
   at_client_mobile: ^3.2.12
   at_onboarding_flutter: ^6.1.3
   cupertino_icons: ^1.0.6
@@ -23,6 +21,10 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^2.0.3
+
+dependency_overrides:
+  at_backupkey_flutter:
+    path: ../
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

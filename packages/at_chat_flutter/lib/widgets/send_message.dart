@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/services/size_config.dart';
 
@@ -19,8 +20,9 @@ class SendMessage extends StatefulWidget {
     this.hintText,
     this.onMediaPressed,
   }) : super(key: key);
+
   @override
-  _SendMessageState createState() => _SendMessageState();
+  State<SendMessage> createState() => _SendMessageState();
 }
 
 class _SendMessageState extends State<SendMessage> {

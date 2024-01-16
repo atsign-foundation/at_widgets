@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:at_chat_flutter_example/second_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
@@ -27,8 +26,9 @@ Future<AtClientPreference> loadAtClientPreference() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -70,44 +70,51 @@ class _MyAppState extends State<MyApp> {
                       setState(() {
                         atClientPreference = preference;
                       });
-                      final result = await AtOnboarding.onboard(
-                        context: context,
-                        config: AtOnboardingConfig(
-                          atClientPreference: atClientPreference!,
-                          domain: AtEnv.rootDomain,
-                          appAPIKey: '477b-876u-bcez-c42z-6a3d',
-                          rootEnvironment: AtEnv.rootEnvironment,
-                        ),
-                      );
-                      switch (result.status) {
-                        case AtOnboardingResultStatus.success:
-                          await Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SecondScreen(),
-                              ));
-                          break;
-                        case AtOnboardingResultStatus.error:
-                          _logger.severe(
-                              'Onboarding throws ${result.errorCode} error');
-                          await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                content: const Text('Something went wrong'),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('ok'))
-                                ],
+                      if (mounted) {
+                        final result = await AtOnboarding.onboard(
+                          context: context,
+                          config: AtOnboardingConfig(
+                            atClientPreference: atClientPreference!,
+                            domain: AtEnv.rootDomain,
+                            appAPIKey: '477b-876u-bcez-c42z-6a3d',
+                            rootEnvironment: AtEnv.rootEnvironment,
+                          ),
+                        );
+
+                        switch (result.status) {
+                          case AtOnboardingResultStatus.success:
+                            if (mounted) {
+                              await Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SecondScreen(),
+                                  ));
+                            }
+                            break;
+                          case AtOnboardingResultStatus.error:
+                            _logger.severe(
+                                'Onboarding throws ${result.errorCode} error');
+                            if (mounted) {
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: const Text('Something went wrong'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('ok'))
+                                    ],
+                                  );
+                                },
                               );
-                            },
-                          );
-                          break;
-                        case AtOnboardingResultStatus.cancel:
-                          break;
+                            }
+                            break;
+                          case AtOnboardingResultStatus.cancel:
+                            break;
+                        }
                       }
                     },
                     child: const Text('Start onboarding'),

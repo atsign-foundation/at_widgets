@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_follows_flutter_example/services/notification_service.dart' as follows_notification_service;
+import 'package:at_follows_flutter_example/services/notification_service.dart'
+    as follows_notification_service;
 import 'package:at_follows_flutter_example/utils/app_constants.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_commons/at_commons.dart' as at_commons;
@@ -83,6 +84,7 @@ class AtService {
     _atsign = await getAtSign();
     String? privateKey = await getPrivateKey(_atsign!);
     // ignore: await_only_futures
+    // ignore: deprecated_member_use
     await atClientInstance!.startMonitor(privateKey!, (response) {
       acceptStream(response);
     });
@@ -93,7 +95,8 @@ class AtService {
   acceptStream(response) async {
     response = response.toString().replaceAll('notification:', '').trim();
     var notification = AtNotification.fromJson(jsonDecode(response));
-    await follows_notification_service.NotificationService().showNotification(notification);
+    await follows_notification_service.NotificationService()
+        .showNotification(notification);
   }
 }
 

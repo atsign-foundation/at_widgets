@@ -10,7 +10,7 @@ class BottomSheetDialog extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _BottomSheetDialogState createState() => _BottomSheetDialogState();
+  State<BottomSheetDialog> createState() => _BottomSheetDialogState();
 }
 
 class _BottomSheetDialogState extends State<BottomSheetDialog> {
