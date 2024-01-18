@@ -97,11 +97,9 @@ class OnboardingService {
   }
 
   /// To register for a new enrollment request
-  Future<EnrollResponse> enroll(
-      String atSign, AtEnrollmentRequest atEnrollmentRequest) async {
+  Future<EnrollResponse> enroll(AtEnrollmentServiceImpl atEnrollmentServiceImpl,
+      AtEnrollmentRequest atEnrollmentRequest) async {
     _atClientPreference.enableEnrollmentDuringOnboard = true;
-    AtEnrollmentServiceImpl atEnrollmentServiceImpl =
-        AtEnrollmentServiceImpl(atSign, _atClientPreference);
     return await atEnrollmentServiceImpl
         .submitEnrollmentRequest(atEnrollmentRequest);
   }
@@ -117,9 +115,10 @@ class OnboardingService {
         AtAuthServiceImpl(_atsign!, _atClientPreference);
     bool isAtSignOnboarded = await authService.isOnboarded(_atsign!);
     // If atSign is onboarded, authenticate the atSign. Else onboard the atSign.
-    if(isAtSignOnboarded){
+    if (isAtSignOnboarded) {
       AtAuthRequest atAuthRequest = AtAuthRequest(_atsign!);
-      AtAuthResponse atAuthResponse = await authService.authenticate(atAuthRequest);
+      AtAuthResponse atAuthResponse =
+          await authService.authenticate(atAuthRequest);
       return atAuthResponse.isSuccessful;
     }
     // TODO: Read appName and deviceName from the user or preferences.

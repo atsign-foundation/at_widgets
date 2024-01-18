@@ -44,18 +44,28 @@ dependencies:
   zxing2: ^0.2.0
 
 dependency_overrides:
+  at_auth:
+    git:
+      url: https://github.com/atsign-foundation/at_libraries.git
+      path: packages/at_auth
+      ref: trunk
   file_selector: ^1.0.0
+  at_client:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client
+      ref: apkam_onboarding_changes
   at_client_mobile:
-    path: ../../../at_client_sdk/packages/at_client_mobile
-
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: apkam_onboarding_changes
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.1
   mocktail: ^0.3.0
-
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
