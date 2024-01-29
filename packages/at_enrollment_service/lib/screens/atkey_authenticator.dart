@@ -234,8 +234,8 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
     );
   }
 
-  createPinBottomsheet() {
-    showModalBottomSheet(
+  createPinBottomsheet() async {
+    var res = await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       constraints: const BoxConstraints(

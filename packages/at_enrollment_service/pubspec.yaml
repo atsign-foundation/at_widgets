@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   go_router:
-  at_onboarding_flutter: ^6.1.5
+  # at_onboarding_flutter: ^6.1.5
   path_provider: ^2.1.0
 
   # The following adds the Cupertino Icons font to your application.
@@ -50,12 +50,12 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client
-      ref: apkam_onboarding_changes
+      ref: apkam_onboarding_changes_with_enrollment_status
   at_client_mobile:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client_mobile
-      ref: apkam_onboarding_changes
+      ref: apkam_onboarding_changes_with_enrollment_status
   at_auth:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git

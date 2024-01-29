@@ -22,6 +22,7 @@ class InputPin extends StatefulWidget {
 class _InputPinState extends State<InputPin> {
   bool isLoading = false;
   String otpValue = "";
+  late AtEnrollmentServiceImpl atEnrollmentServiceImpl;
 
   List<TextEditingController> controllers = List.generate(
     6,
@@ -43,17 +44,27 @@ class _InputPinState extends State<InputPin> {
         ..setNamespaces({'wavi': 'rw'});
       AtEnrollmentRequest atEnrollmentRequest =
           atEnrollmentRequestBuilder.build();
-      EnrollResponse enrollResponse = await OnboardingService.getInstance()
-          .enroll(widget.atSign, atEnrollmentRequest);
 
-      print('enrollResponse: ${enrollResponse.enrollmentId}');
-      print('enrollResponse: ${enrollResponse.enrollStatus}');
+      EnrollResponse enrollResponse =
+          await OnboardingService.getInstance().enroll(
+        atEnrollmentServiceImpl,
+        atEnrollmentRequest,
+      );
+
+      // print('enrollResponse: ${enrollResponse.enrollmentId}');
+      // print('enrollResponse: ${enrollResponse.enrollStatus}');
     }
   }
 
   @override
   void initState() {
-    readEnrollmentRequests();
+    // readEnrollmentRequests();
+    atEnrollmentServiceImpl = AtEnrollmentServiceImpl(
+      widget.atSign,
+      _getAtClientPreferences(),
+    );
+    listenForEnrollemntCallback();
+
     super.initState();
   }
 
@@ -64,6 +75,23 @@ class _InputPinState extends State<InputPin> {
     var jsonString = (jsonDecode(enrollmentInfoJsonString ?? ''));
     print(" enrollmentInfoJsonString : ${enrollmentInfoJsonString}");
     print('jsonString: ${jsonString['atSign']}');
+  }
+
+  listenForEnrollemntCallback() {
+    atEnrollmentServiceImpl.enrollmentStatusCallback = enrollemntCallback;
+    print('callback added');
+  }
+
+  enrollemntCallback(var data) {
+    print('enrollemnt data : ${data}');
+  }
+
+  _getAtClientPreferences() {
+    return AtClientPreference()
+      ..rootDomain = 'root.atsign.org'
+      ..namespace = 'enroll'
+      ..isLocalStoreRequired = true
+      ..enableEnrollmentDuringOnboard = true;
   }
 
   @override

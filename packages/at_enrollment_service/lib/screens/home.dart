@@ -20,23 +20,29 @@ class _HomeScreenState extends State<HomeScreen> {
   bool tooltipEnabled = false;
 
   verifyAndProceed() async {
-    if (atSignValue.isNotEmpty && pinValue.isNotEmpty) {
-      AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
-          AtNewEnrollmentRequestBuilder();
-      atEnrollmentRequestBuilder
-        ..setAppName('wavi')
-        ..setDeviceName('iphone')
-        ..setOtp(pinValue)
-        ..setNamespaces({'wavi': 'rw'});
-      AtEnrollmentRequest atEnrollmentRequest =
-          atEnrollmentRequestBuilder.build();
-      EnrollResponse enrollResponse = await OnboardingService.getInstance()
-          .enroll(atSignValue, atEnrollmentRequest);
+    // if (atSignValue.isNotEmpty && pinValue.isNotEmpty) {
+    //   AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
+    //       AtNewEnrollmentRequestBuilder();
+    //   atEnrollmentRequestBuilder
+    //     ..setAppName('wavi')
+    //     ..setDeviceName('iphone')
+    //     ..setOtp(pinValue)
+    //     ..setNamespaces({'wavi': 'rw'});
+    //   AtEnrollmentRequest atEnrollmentRequest =
+    //       atEnrollmentRequestBuilder.build();
+    //   EnrollResponse enrollResponse = await OnboardingService.getInstance()
+    //       .enroll(atSignValue, atEnrollmentRequest);
 
-      print('enrollResponse: ${enrollResponse.enrollmentId}');
-      print('enrollResponse: ${enrollResponse.enrollStatus}');
-    }
+    //   print('enrollResponse: ${enrollResponse.enrollmentId}');
+    //   print('enrollResponse: ${enrollResponse.enrollStatus}');
+    // }
   }
+
+  // @override
+  // void initState() {
+  //   enrollmentCallback();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -230,18 +236,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _sendEnrollmentRequest(String atSign, String appName,
       String deviceName, String otp, Map<String, String> namespaceMap) async {
-    AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
-        AtNewEnrollmentRequestBuilder();
-    atEnrollmentRequestBuilder
-      ..setAppName(appName)
-      ..setDeviceName(deviceName)
-      ..setOtp(otp)
-      ..setNamespaces(namespaceMap);
-    AtEnrollmentRequest atEnrollmentRequest =
-        atEnrollmentRequestBuilder.build();
-    EnrollResponse enrollResponse = await OnboardingService.getInstance()
-        .enroll(atSign, atEnrollmentRequest);
+    // AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
+    //     AtNewEnrollmentRequestBuilder();
+    // atEnrollmentRequestBuilder
+    //   ..setAppName(appName)
+    //   ..setDeviceName(deviceName)
+    //   ..setOtp(otp)
+    //   ..setNamespaces(namespaceMap);
+    // AtEnrollmentRequest atEnrollmentRequest =
+    //     atEnrollmentRequestBuilder.build();
+    // EnrollResponse enrollResponse = await OnboardingService.getInstance()
+    //     .enroll(atSign, atEnrollmentRequest);
 
-    setState(() {});
+    // setState(() {});
   }
 }
