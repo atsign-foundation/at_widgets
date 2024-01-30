@@ -1,6 +1,7 @@
 import 'package:at_auth/at_auth.dart';
 import 'package:at_enrollment_app/screens/atkey_authenticator.dart';
 import 'package:at_enrollment_app/screens/home.dart';
+import 'package:at_enrollment_app/screens/key_authenticator_home_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
@@ -116,7 +117,8 @@ class LandingPage extends StatelessWidget {
         await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => const AtKeyAuthenticator(),
+            builder: (BuildContext context) =>
+                const KeyAuthenticatorHomeScreen(),
           ),
         );
       }

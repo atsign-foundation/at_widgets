@@ -43,11 +43,11 @@ class _InputPinState extends State<InputPin> {
         ..setNamespaces({'wavi': 'rw'});
       AtEnrollmentRequest atEnrollmentRequest =
           atEnrollmentRequestBuilder.build();
-      EnrollResponse enrollResponse = await OnboardingService.getInstance()
-          .enroll(widget.atSign, atEnrollmentRequest);
+      // EnrollResponse enrollResponse = await OnboardingService.getInstance()
+      //     .enroll(widget.atSign, atEnrollmentRequest);
 
-      print('enrollResponse: ${enrollResponse.enrollmentId}');
-      print('enrollResponse: ${enrollResponse.enrollStatus}');
+      // print('enrollResponse: ${enrollResponse.enrollmentId}');
+      // print('enrollResponse: ${enrollResponse.enrollStatus}');
     }
   }
 
