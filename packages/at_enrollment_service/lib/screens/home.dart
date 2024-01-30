@@ -19,25 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String pinValue = "";
   bool tooltipEnabled = false;
 
-  verifyAndProceed() async {
-    if (atSignValue.isNotEmpty && pinValue.isNotEmpty) {
-      AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
-          AtNewEnrollmentRequestBuilder();
-      atEnrollmentRequestBuilder
-        ..setAppName('wavi')
-        ..setDeviceName('iphone')
-        ..setOtp(pinValue)
-        ..setNamespaces({'wavi': 'rw'});
-      AtEnrollmentRequest atEnrollmentRequest =
-          atEnrollmentRequestBuilder.build();
-      EnrollResponse enrollResponse = await OnboardingService.getInstance()
-          .enroll(atSignValue, atEnrollmentRequest);
-
-      print('enrollResponse: ${enrollResponse.enrollmentId}');
-      print('enrollResponse: ${enrollResponse.enrollStatus}');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -160,10 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     suffix: InkWell(
-                      onTap: () {
-                        print('enroll');
-                        verifyAndProceed();
-                      },
+                      onTap: () {},
                       child: const Icon(
                         Icons.arrow_right_alt,
                         color: Colors.orange,
@@ -239,8 +217,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ..setNamespaces(namespaceMap);
     AtEnrollmentRequest atEnrollmentRequest =
         atEnrollmentRequestBuilder.build();
-    EnrollResponse enrollResponse = await OnboardingService.getInstance()
-        .enroll(atSign, atEnrollmentRequest);
+    // EnrollResponse enrollResponse = await OnboardingService.getInstance()
+    //     .enroll(atSign, atEnrollmentRequest);
 
     setState(() {});
   }

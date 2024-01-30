@@ -193,26 +193,27 @@ class _SendEnrollmentRequestWidgetState
 
   Future<void> _sendEnrollmentRequest(String atSign, String appName,
       String deviceName, String otp, Map<String, String> namespaceMap) async {
-    AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder = AtNewEnrollmentRequestBuilder();
-        atEnrollmentRequestBuilder
-          ..setAppName(appName)
-          ..setDeviceName(deviceName)
-          ..setOtp(otp)
-          ..setNamespaces(namespaceMap);
+    AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
+        AtNewEnrollmentRequestBuilder();
+    atEnrollmentRequestBuilder
+      ..setAppName(appName)
+      ..setDeviceName(deviceName)
+      ..setOtp(otp)
+      ..setNamespaces(namespaceMap);
     AtEnrollmentRequest atEnrollmentRequest =
         atEnrollmentRequestBuilder.build();
-    EnrollResponse enrollResponse = await OnboardingService.getInstance()
-        .enroll(atSign, atEnrollmentRequest);
+    // EnrollResponse enrollResponse = await OnboardingService.getInstance()
+    //     .enroll(atSign, atEnrollmentRequest);
 
-    setState(() {
-      if (enrollResponse.enrollmentId.isEmpty) {
-        showErrorWidget = true;
-      } else {
-        showSuccessWidget = true;
-        enrollmentId = enrollResponse.enrollmentId;
-        enrollmentStatus = enrollResponse.enrollStatus.toString();
-      }
-    });
+    // setState(() {
+    //   if (enrollResponse.enrollmentId.isEmpty) {
+    //     showErrorWidget = true;
+    //   } else {
+    //     showSuccessWidget = true;
+    //     enrollmentId = enrollResponse.enrollmentId;
+    //     enrollmentStatus = enrollResponse.enrollStatus.toString();
+    //   }
+    // });
   }
 }
 
