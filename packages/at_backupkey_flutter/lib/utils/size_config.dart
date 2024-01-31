@@ -33,7 +33,7 @@ class SizeConfig {
     refHeight = height ?? 812;
     refWidth = width ?? 375;
 
-    deviceTextFactor = _mediaQueryData.textScaleFactor;
+    deviceTextFactor = _mediaQueryData.textScaler.scale(20) / 20;
 
     if (screenHeight < 1200) {
       blockSizeHorizontal = screenWidth / 100;
