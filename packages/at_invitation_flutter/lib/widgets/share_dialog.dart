@@ -51,7 +51,7 @@ class _ShareDialogState extends State<ShareDialog> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    var deviceTextFactor = MediaQuery.of(context).textScaler.scale(20) / 20;
     return SizedBox(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,
