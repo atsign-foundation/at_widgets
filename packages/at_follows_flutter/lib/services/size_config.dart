@@ -29,7 +29,7 @@ class SizeConfig {
     refHeight = 812;
     refWidth = 375;
 
-    deviceTextFactor = _mediaQueryData.textScaleFactor;
+    deviceTextFactor = _mediaQueryData.textScaler.scale(20) / 20;
 
     // print("height is::: $screenHeight");
 
