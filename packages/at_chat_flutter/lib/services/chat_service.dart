@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_chat_flutter/models/message_model.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
 
@@ -141,7 +142,7 @@ class ChatService {
         if (chatWithAtSignFromApp.startsWith('@')) {
           chatWithAtSign = chatWithAtSignFromApp;
         } else {
-          chatWithAtSign = '@' + chatWithAtSignFromApp;
+          chatWithAtSign = '@$chatWithAtSignFromApp';
         }
       } else {
         chatWithAtSign = '';

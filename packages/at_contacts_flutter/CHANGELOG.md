@@ -1,3 +1,6 @@
+## 4.0.13
+
+- **FIX**: Fixed methods for fetching profile picture
 ## 4.0.12
 
 - **CHORE**: Bumped all dependency versions

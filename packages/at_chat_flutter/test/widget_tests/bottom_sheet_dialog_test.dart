@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget bottomSheetDialog}) {
+  Widget wrapWidgetWithMaterialApp({required Widget bottomSheetDialog}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return bottomSheetDialog;
@@ -21,7 +21,7 @@ void main() {
     testWidgets("Botton Sheet is displayed", (WidgetTester tester) async {
       final bottomSheetDialog = BottomSheetDialog(() {});
       await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(bottomSheetDialog: bottomSheetDialog));
+          wrapWidgetWithMaterialApp(bottomSheetDialog: bottomSheetDialog));
       expect(find.byType(BottomSheetDialog), findsOneWidget);
     });
 
@@ -32,7 +32,7 @@ void main() {
         log('Call back is given');
       });
       await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(bottomSheetDialog: bottomSheetDialog));
+          wrapWidgetWithMaterialApp(bottomSheetDialog: bottomSheetDialog));
       await tester.tap((find.byType(BottomSheetDialog)));
       expect(bottomSheetDialog.deleteCallback.call(), null);
     });

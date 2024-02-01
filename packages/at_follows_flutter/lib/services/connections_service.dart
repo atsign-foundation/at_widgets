@@ -410,11 +410,11 @@ class ConnectionsService {
 
           atsignData.setData(atValue);
         } catch (e) {
-          _logger.severe('Error in _getAtsignData getting value ${e}');
+          _logger.severe('Error in _getAtsignData getting value $e');
         }
       }
     } catch (e) {
-      _logger.severe('Fetching keys for $connection throws ${e}');
+      _logger.severe('Fetching keys for $connection throws $e');
     }
 
     return atsignData;
@@ -446,6 +446,7 @@ class ConnectionsService {
 
   bool startMonitor() {
     AtClientManager.getInstance()
+        .atClient
         .notificationService
         .subscribe()
         .listen((notification) {

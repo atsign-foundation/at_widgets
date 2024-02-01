@@ -1,3 +1,6 @@
+## 6.1.6
+- **FIX**: Fixed file_selector issue on Windows
+
 ## 6.1.5
 - **CHORE**: Updated tutorial_coach_mark from 1.2.9 to 1.2.11
 

@@ -2,16 +2,16 @@ import 'package:at_app_flutter/at_app_flutter.dart';
 import 'package:at_invitation_flutter/at_invitation_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'constants.dart';
 import 'package:uni_links/uni_links.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:at_utils/at_logger.dart';
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
 
   @override
-  _SecondScreenState createState() => _SecondScreenState();
+  State<SecondScreen> createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
@@ -115,10 +115,10 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void _checkForInvite() async {
-    String _url = MixedConstants.cookiePage;
-    await canLaunch(_url)
-        ? await launch(_url, forceSafariVC: false)
-        : throw 'Could not launch $_url';
+    String url = MixedConstants.cookiePage;
+    await canLaunchUrlString(url)
+        ? await launchUrlString(url)
+        : throw 'Could not launch $url';
   }
 
   void _handleIncomingLinks() {

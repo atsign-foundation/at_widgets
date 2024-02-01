@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget incomingMessageBubble}) {
+  Widget wrapWidgetWithMaterialApp({required Widget incomingMessageBubble}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return incomingMessageBubble;
@@ -23,7 +23,7 @@ void main() {
     testWidgets("Incoming message bubble widget is used and shown on screen",
         (WidgetTester tester) async {
       const incomingMessageBubble = IncomingMessageBubble();
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           incomingMessageBubble: incomingMessageBubble));
 
       expect(find.byType(IncomingMessageBubble), findsOneWidget);
@@ -36,7 +36,7 @@ void main() {
       final incomingMessageBubble = IncomingMessageBubble(
         message: message,
       );
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           incomingMessageBubble: incomingMessageBubble));
       expect(incomingMessageBubble.message, message);
     });
@@ -46,7 +46,7 @@ void main() {
       const incomingMessageBubble = IncomingMessageBubble(
         color: CustomColors.defaultColor,
       );
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           incomingMessageBubble: incomingMessageBubble));
       final container = tester
           .widget<IncomingMessageBubble>(find.byType(IncomingMessageBubble));
@@ -60,7 +60,7 @@ void main() {
     testWidgets("Color of avatar in incoming message bubble",
         (WidgetTester tester) async {
       const incomingMessageBubble = IncomingMessageBubble();
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           incomingMessageBubble: incomingMessageBubble));
       final contactInitial =
           tester.widget<ContactInitial>(find.byType(ContactInitial));

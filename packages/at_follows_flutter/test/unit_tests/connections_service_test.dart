@@ -292,7 +292,7 @@ Future<AtClientService> setUpFunc(String atsign) async {
   final atClientManager = AtClientManager.getInstance();
   AtClientService atClientService = AtClientService();
   final atClient = atClientManager.atClient;
-  atClientManager.syncService.sync();
+  atClientManager.atClient.syncService.sync();
   await setEncryptionKeys(atClient, atsign);
   return atClientService;
 }
@@ -323,18 +323,24 @@ setEncryptionKeys(AtClient atClient, String atsign) async {
     metadata.namespaceAware = false;
     var result;
     // set pkam private key
-    result = await atClient.getLocalSecondary()!.putValue(AT_PKAM_PRIVATE_KEY,
-        demo_data.pkamPrivateKeyMap[atsign]!); // set pkam public key
-    result = await atClient
-        .getLocalSecondary()!
-        .putValue(AT_PKAM_PUBLIC_KEY, demo_data.pkamPublicKeyMap[atsign]!);
+    result = await atClient.getLocalSecondary()!.putValue(
+          AtConstants.atPkamPrivateKey,
+          demo_data.pkamPrivateKeyMap[atsign]!,
+        ); // set pkam public key
+    result = await atClient.getLocalSecondary()!.putValue(
+          AtConstants.atPkamPublicKey,
+          demo_data.pkamPublicKeyMap[atsign]!,
+        );
     // set encryption private key
     result = await atClient.getLocalSecondary()!.putValue(
-        AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]!);
+          AtConstants.atEncryptionPrivateKey,
+          demo_data.encryptionPrivateKeyMap[atsign]!,
+        );
     //set aesKey
-    result = await atClient
-        .getLocalSecondary()!
-        .putValue(AT_ENCRYPTION_SELF_KEY, demo_data.aesKeyMap[atsign]!);
+    result = await atClient.getLocalSecondary()!.putValue(
+          AtConstants.atEncryptionSelfKey,
+          demo_data.aesKeyMap[atsign]!,
+        );
 
     // set encryption public key. should be synced
     metadata.isPublic = true;

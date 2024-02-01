@@ -9,7 +9,7 @@ class CustomNav {
   }
 
   push(Widget widget, context) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
     });
   }

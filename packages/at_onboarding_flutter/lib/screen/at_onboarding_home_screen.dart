@@ -537,11 +537,11 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   Future<String?> _desktopKeyPicker() async {
     try {
       XFile? file = await openFile(
-        acceptedTypeGroups: const [
+        acceptedTypeGroups: [
           // General file extensions
-          XTypeGroup(extensions: ['atKeys', 'atkeys']),
+          const XTypeGroup(extensions: ['atKeys', 'atkeys']),
           // Apple specific UTIs
-          XTypeGroup(uniformTypeIdentifiers: ['com.atsign.atkeys']),
+          XTypeGroup(uniformTypeIdentifiers: Platform.isMacOS ? ['com.atsign.atkeys'] : null),
         ],
       );
       return file?.path;

@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget outgoingMessageBubble}) {
+  Widget wrapWidgetWithMaterialApp({required Widget outgoingMessageBubble}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return outgoingMessageBubble;
@@ -22,7 +22,7 @@ void main() {
         (WidgetTester tester) async {
       // ignore: prefer_const_constructors
       final outgoingMessageBubble = OutgoingMessageBubble((message) {});
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           outgoingMessageBubble: outgoingMessageBubble));
 
       expect(find.byType(OutgoingMessageBubble), findsOneWidget);
@@ -37,7 +37,7 @@ void main() {
         (message) {},
         message: displayMessage,
       );
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           outgoingMessageBubble: outgoingMessageBubble));
       expect(outgoingMessageBubble.message, displayMessage);
     });
@@ -49,7 +49,7 @@ void main() {
         (message) {},
         color: CustomColors.defaultColor,
       );
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           outgoingMessageBubble: outgoingMessageBubble));
       final container = tester
           .widget<OutgoingMessageBubble>(find.byType(OutgoingMessageBubble));
@@ -66,7 +66,7 @@ void main() {
         (message) {},
         avatarColor: CustomColors.defaultColor,
       );
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+      await tester.pumpWidget(wrapWidgetWithMaterialApp(
           outgoingMessageBubble: outgoingMessageBubble));
       final avatarColor = tester
           .widget<OutgoingMessageBubble>(find.byType(OutgoingMessageBubble));
