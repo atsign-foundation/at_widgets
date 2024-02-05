@@ -10,6 +10,7 @@ import 'package:at_contacts_flutter/models/contact_base_model.dart';
 import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:at_contacts_flutter/utils/text_strings.dart';
 import 'package:at_lookup/at_lookup.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// A service to handle CRUD operation on contacts
@@ -138,18 +139,19 @@ class ContactService {
     try {
       /// if contact list is already present, data is not fetched again
       if (baseContactList.isNotEmpty) {
-        List<AtContact?> baseContacts =
+         List<AtContact?> tempBaseContacts =
             baseContactList.map((e) => e.contact).toList();
-        baseContacts.sort((a, b) {
-          int? index = a?.atSign
+        baseContactList.sort((a, b) {
+          int? index = a.contact?.atSign
               .toString()
               .substring(1)
-              .compareTo((b?.atSign).toString().substring(1));
+              .compareTo((b.contact?.atSign).toString().substring(1));
           return index ?? 0;
         });
-        if (baseContacts == contactList) {
+        var res = listEquals(tempBaseContacts, contactList);
+        if (res == true) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-            contactSink.add(baseContacts);
+            contactSink.add(baseContactList);
           });
           return contactList;
         }
