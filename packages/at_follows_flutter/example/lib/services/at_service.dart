@@ -40,13 +40,13 @@ class AtService {
     return _atClientPreference;
   }
 
-  Future<bool> put({String? key, var value}) async {
+  Future<bool> put({required String key, var value}) async {
     var atKey = at_commons.AtKey()..key = key;
     // ..metadata = metaData;
     return await atClientInstance!.put(atKey, value);
   }
 
-  Future<bool> delete({String? key}) async {
+  Future<bool> delete({required String key}) async {
     var atKey = at_commons.AtKey()..key = key;
     return await atClientInstance!.delete(atKey);
   }

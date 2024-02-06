@@ -389,20 +389,20 @@ class ConnectionsService {
           //performs plookup if the data is not in cache.
           if (atValue.value == null) {
             //plookup for wavi keys.
-            atKey.metadata!.isCached = false;
+            atKey.metadata.isCached = false;
 
             /// remove cached
             key.replaceAll('cached:', '');
-            atKey.key?.replaceAll('cached:', '');
+            atKey.key.replaceAll('cached:', '');
             atValue = await _sdkService.get(atKey);
             //cache lookup for persona keys
             if (atValue.value == null) {
-              atKey.key = PublicData.personaMap[key];
-              atKey.metadata!.isCached = true;
+              atKey.key = PublicData.personaMap[key] ?? "";
+              atKey.metadata.isCached = true;
               atValue = await _sdkService.get(atKey);
               //plookup for persona keys.
               if (atValue.value == null) {
-                atKey.metadata!.isCached = false;
+                atKey.metadata.isCached = false;
                 atValue = await _sdkService.get(atKey);
               }
             }
