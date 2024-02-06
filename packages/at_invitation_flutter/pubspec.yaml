@@ -2,9 +2,9 @@ name: at_invitation_flutter
 description: A Flutter package to invite contacts into apps that use atProtocol.
 version: 2.0.2
 homepage: https://docs.atsign.com/
-repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/at_invitation_flutter
+repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_invitation_flutter
 issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
-documentation: https://atsign.dev/docs/functional_architecture/libraries/#at_invitation_flutter
+documentation: https://docs.atsign.com/
 
 environment:
   sdk: ">=2.15.1 <4.0.0"
@@ -13,15 +13,15 @@ environment:
 dependencies:
   at_client_mobile: ^3.2.12
   at_common_flutter: ^2.0.12
-  at_commons: ^3.0.55
+  at_commons: ^4.0.1
   at_lookup: ^3.0.40
-  at_utils: ^3.0.15
+  at_utils: ^3.0.16
   flutter:
     sdk: flutter
   pin_code_fields: ^8.0.1
 
-  url_launcher: ^6.1.14
-  uuid: ^3.0.4
+  url_launcher: ^6.2.4
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_lints: ^2.0.3

@@ -28,6 +28,8 @@ class InvitationService {
   bool hasMonitorStarted = false;
 
   GlobalKey<NavigatorState> get navigatorKey => navkey ?? GlobalKey();
+
+  /// initialize the invitation service
   void initInvitationService(
       GlobalKey<NavigatorState>? navkeyFromApp,
       String? webPageFromApp,
@@ -92,7 +94,7 @@ class InvitationService {
       // build and fetch self key
       AtKey atKey = AtKey()..metadata = Metadata();
       atKey.key = '$invitationKey.${receivedInformation.identifier ?? ''}';
-      atKey.metadata?.ttr = -1;
+      atKey.metadata.ttr = -1;
       var result = await AtClientManager.getInstance().atClient.get(atKey);
       MessageShareModel sentInformation =
           MessageShareModel.fromJson(jsonDecode(result.value));
@@ -113,6 +115,7 @@ class InvitationService {
     }
   }
 
+  /// share message and inviate the atsign provided
   Future<void> shareAndinvite(BuildContext context, String jsonData) async {
     // create a key and save the json data
     var keyID = const Uuid().v4();
@@ -124,7 +127,7 @@ class InvitationService {
 
     AtKey atKey = AtKey()..metadata = Metadata();
     atKey.key = '$invitationKey.$keyID';
-    atKey.metadata?.ttr = -1;
+    atKey.metadata.ttr = -1;
     var result = await AtClientManager.getInstance()
         .atClient
         .put(atKey, jsonEncode(messageContent))
@@ -146,6 +149,7 @@ class InvitationService {
     }
   }
 
+  /// show the OTP dialog and fetch the invite data
   Future<void> fetchInviteData(
       BuildContext context, String data, String atsign) async {
     String otp = await showDialog(
@@ -155,7 +159,7 @@ class InvitationService {
     AtKey atKey = AtKey()..metadata = Metadata();
     atKey.key = '$invitationAckKey.$data';
     atKey.sharedWith = atsign;
-    atKey.metadata?.ttr = -1;
+    atKey.metadata.ttr = -1;
     MessageShareModel messageContent = MessageShareModel(
         passcode: otp, identifier: data, message: 'invite acknowledgement');
     await AtClientManager.getInstance()

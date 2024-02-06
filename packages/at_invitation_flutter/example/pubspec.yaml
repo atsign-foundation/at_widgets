@@ -49,6 +49,14 @@ dependencies:
   uni_links: ^0.5.1
   url_launcher: ^6.1.14
 
+
+dependency_overrides:
+  at_onboarding_flutter:
+    git:
+      url: https://github.com/atsign-foundation/at_widgets.git
+      path: packages/at_onboarding_flutter
+      ref: fix/onboarding_deps_and_pub_points
+
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
