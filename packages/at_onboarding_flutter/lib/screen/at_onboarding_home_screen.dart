@@ -541,7 +541,9 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           // General file extensions
           const XTypeGroup(extensions: ['atKeys', 'atkeys']),
           // Apple specific UTIs
-          XTypeGroup(uniformTypeIdentifiers: Platform.isMacOS ? ['com.atsign.atkeys'] : null),
+          XTypeGroup(
+              uniformTypeIdentifiers:
+                  Platform.isMacOS ? ['com.atsign.atkeys'] : null),
         ],
       );
       return file?.path;
