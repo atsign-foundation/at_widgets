@@ -52,11 +52,11 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
     AtEnrollmentNotificationRequest atEnrollmentRequest =
         atEnrollmentRequestBuilder.build();
 
-    AtEnrollmentResponse atEnrollmentResponse = await atEnrollmentServiceImpl
-        .manageEnrollmentApproval(atEnrollmentRequest);
-    print(
-        'Enrollment Id: ${atEnrollmentResponse.enrollmentId} | Enrollment Status ${atEnrollmentResponse.enrollStatus}');
-    return atEnrollmentResponse;
+    // AtEnrollmentResponse atEnrollmentResponse = await atEnrollmentServiceImpl
+    //     .manageEnrollmentApproval(atEnrollmentRequest);
+    // print(
+    //     'Enrollment Id: ${atEnrollmentResponse.enrollmentId} | Enrollment Status ${atEnrollmentResponse.enrollStatus}');
+    // return atEnrollmentResponse;
   }
 
   _getAtClientPreferences() {

@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: asn1lib
-      sha256: b74e3842a52c61f8819a1ec8444b4de5419b41a7465e69d4aa681445377398b0
+      sha256: "21afe4333076c02877d14f4a89df111e658a6d466cbfc802eb705eb91bd5adfd"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.1"
+    version: "1.5.0"
   async:
     dependency: transitive
     description:
@@ -72,20 +72,20 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/at_client"
-      ref: apkam_onboarding_changes
-      resolved-ref: "1f90776382e159da976d3f43bf61077c7be12605"
+      ref: apkam_onboarding_changes_with_enrollment_status
+      resolved-ref: a27797c384008ba43c6a7df7f7c81d0d63c4fc6a
       url: "https://github.com/atsign-foundation/at_client_sdk.git"
     source: git
-    version: "3.0.68"
+    version: "3.0.74"
   at_client_mobile:
     dependency: "direct main"
     description:
       path: "packages/at_client_mobile"
-      ref: apkam_onboarding_changes
-      resolved-ref: "1f90776382e159da976d3f43bf61077c7be12605"
+      ref: apkam_onboarding_changes_with_enrollment_status
+      resolved-ref: a27797c384008ba43c6a7df7f7c81d0d63c4fc6a
       url: "https://github.com/atsign-foundation/at_client_sdk.git"
     source: git
-    version: "3.2.12"
+    version: "3.2.14"
   at_common_flutter:
     dependency: "direct main"
     description:
@@ -95,13 +95,13 @@ packages:
     source: hosted
     version: "2.0.12"
   at_commons:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: at_commons
-      sha256: "685753c1689c248ceef396fe128ce02e313347658df6dd2e0dff755f73cd5823"
+      sha256: c689910d6de33e60b440fe60dbdea0eb09506d9ca25439a26e6aeb95882d2675
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.58"
+    version: "4.0.1"
   at_demo_data:
     dependency: transitive
     description:
@@ -140,10 +140,10 @@ packages:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
-      sha256: "8dd493beaa10b42f42c47405884b926a01c07c345b53f25fa82383907880e24a"
+      sha256: b5736436dac6f13f80cc56e9fd5127dc7eae41ba9d3c761732f4dc0bb6db5e77
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.59"
+    version: "3.0.60"
   at_persistence_spec:
     dependency: transitive
     description:
@@ -180,10 +180,10 @@ packages:
     dependency: transitive
     description:
       name: at_utils
-      sha256: "7033979de6e6b023cb86405039e3316b8f25c184c0985dfbd3a690d8bc3b8812"
+      sha256: ec28600e4eec321ee5e22be051109fa7b2e94590dc51d9f957730c2540beb681
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.15"
+    version: "3.0.16"
   biometric_storage:
     dependency: "direct overridden"
     description:
@@ -268,10 +268,10 @@ packages:
     dependency: transitive
     description:
       name: crypton
-      sha256: "886462e83bf642ba10f5382002654d27da8c2e6e1f42d928f12764cfa204f124"
+      sha256: "17b6631fbf89e389d421b46629132287ed37d601b2ad1357445826ab85022271"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -576,7 +576,7 @@ packages:
     source: hosted
     version: "1.0.0+1"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
