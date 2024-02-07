@@ -8,39 +8,51 @@ class InputField extends StatelessWidget {
   bool isNumpad;
   int? maxLength;
   Function(String) onChange;
+  EdgeInsetsGeometry padding;
+  BorderRadius borderRadius;
+  TextStyle? hintStyle;
+  TextStyle? style;
+  bool isCenter;
 
-  InputField(
-      {super.key,
-      this.prefix,
-      this.suffix,
-      required this.onChange,
-      this.maxLength,
-      this.isNumpad = false,
-      this.hintText = ''});
+  InputField({
+    super.key,
+    this.prefix,
+    this.suffix,
+    required this.onChange,
+    this.maxLength,
+    this.isNumpad = false,
+    this.hintText = '',
+    this.padding = const EdgeInsets.symmetric(horizontal: 8),
+    this.borderRadius = const BorderRadius.all(Radius.circular(25)),
+    this.hintStyle,
+    this.style,
+    this.isCenter = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 8, right: 8),
-      decoration: const BoxDecoration(
+      padding: padding,
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(25)),
+        borderRadius: borderRadius,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(width: 5),
           prefix ?? const SizedBox.shrink(),
-          const SizedBox(width: 10),
           Expanded(
             child: TextField(
               maxLength: maxLength,
               maxLengthEnforcement: MaxLengthEnforcement.enforced,
               maxLines: 1,
-              keyboardType: isNumpad ? TextInputType.number : TextInputType.text,
+              textAlign: isCenter ? TextAlign.center : TextAlign.start,
+              keyboardType:
+                  isNumpad ? TextInputType.number : TextInputType.text,
+              style: style,
               decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: hintText,
+                  hintStyle: hintStyle,
                   counterText: "",
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10)),
@@ -50,7 +62,6 @@ class InputField extends StatelessWidget {
             ),
           ),
           suffix ?? const SizedBox.shrink(),
-          const SizedBox(width: 5),
         ],
       ),
     );
