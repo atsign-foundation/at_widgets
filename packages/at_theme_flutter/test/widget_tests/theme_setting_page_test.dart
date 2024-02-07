@@ -20,10 +20,11 @@ void main() {
   group('Theme Setting Page Tests:', () {
     // Test Case to Check Theme Mode Card is displayed
     final themeSettingPage = ThemeSettingPage(
-        currentAppTheme: appTheme.AppTheme.from(), primaryColors: const [Colors.blue,Colors.pink]);
+        currentAppTheme: appTheme.AppTheme.from(),
+        primaryColors: const [Colors.blue, Colors.pink]);
     testWidgets("Theme Setting Page is displayed", (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(themeSettingPage: themeSettingPage));
+      await tester.pumpWidget(
+          _wrapWidgetWithMaterialApp(themeSettingPage: themeSettingPage));
       expect(find.byType(ThemeSettingPage), findsOneWidget);
     });
   });
