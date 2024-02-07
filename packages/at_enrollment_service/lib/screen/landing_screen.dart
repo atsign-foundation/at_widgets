@@ -1,14 +1,11 @@
-import 'package:at_auth/at_auth.dart';
-import 'package:at_enrollment_app/screens/atkey_authenticator.dart';
-import 'package:at_enrollment_app/screens/home.dart';
-import 'package:at_enrollment_app/screens/key_authenticator_home_screen.dart';
+import 'package:at_enrollment_app/screens/home/home.dart';
+import 'package:at_enrollment_app/screens/atkey_authenticator/key_authenticator_home_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:at_chops/at_chops.dart';
 
 class LandingPage extends StatelessWidget {
   static const String rootDomain = 'root.atsign.org';
@@ -18,8 +15,12 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'At Enrollment Service',
-      theme: ThemeData().copyWith(
+      theme: ThemeData(
+        fontFamily: 'Poppins',
+        package: 'at_enrollment_app',
+      ).copyWith(
         brightness: Brightness.light,
         primaryColor: const Color(0xFFf4533d),
         colorScheme: ThemeData.light().colorScheme.copyWith(
@@ -29,7 +30,10 @@ class LandingPage extends StatelessWidget {
         backgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
       ),
-      darkTheme: ThemeData().copyWith(
+      darkTheme: ThemeData(
+        fontFamily: 'Poppins',
+        package: 'at_enrollment_app',
+      ).copyWith(
         brightness: Brightness.light,
         primaryColor: const Color(0xFFf4533d),
         colorScheme: ThemeData.light().colorScheme.copyWith(
