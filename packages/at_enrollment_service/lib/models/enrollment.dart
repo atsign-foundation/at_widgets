@@ -4,5 +4,8 @@ class EnrollmentData {
   late String encryptedAPKAMSymmetricKey;
 
   EnrollmentData(
-      this.atSign, this.enrollmentKey, this.encryptedAPKAMSymmetricKey);
+    this.atSign,
+    this.enrollmentKey,
+    this.encryptedAPKAMSymmetricKey,
+  );
 }

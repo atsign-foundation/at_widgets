@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:at_auth/at_auth.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
@@ -36,6 +37,10 @@ class _InputPinState extends State<InputPin> {
     if (widget.atSign.isNotEmpty && otpValue.isNotEmpty) {
       AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
           AtNewEnrollmentRequestBuilder();
+
+      AtEnrollmentServiceImpl atEnrollmentServiceImpl =
+          EnrollmentService.getInstance().getAtEnrollmentServiceImpl;
+
       atEnrollmentRequestBuilder
         ..setAppName('wavi')
         ..setDeviceName('iphone')
@@ -43,8 +48,11 @@ class _InputPinState extends State<InputPin> {
         ..setNamespaces({'wavi': 'rw'});
       AtEnrollmentRequest atEnrollmentRequest =
           atEnrollmentRequestBuilder.build();
-      // EnrollResponse enrollResponse = await OnboardingService.getInstance()
-      //     .enroll(widget.atSign, atEnrollmentRequest);
+      // EnrollResponse enrollResponse =
+      //     await OnboardingService.getInstance().enroll(
+      //   atEnrollmentServiceImpl,
+      //   atEnrollmentRequest,
+      // );
 
       // print('enrollResponse: ${enrollResponse.enrollmentId}');
       // print('enrollResponse: ${enrollResponse.enrollStatus}');
@@ -62,8 +70,12 @@ class _InputPinState extends State<InputPin> {
     String? enrollmentInfoJsonString =
         await _enrollmentKeychainStore.read(key: 'enrollmentInfo');
     var jsonString = (jsonDecode(enrollmentInfoJsonString ?? ''));
-    print(" enrollmentInfoJsonString : ${enrollmentInfoJsonString}");
-    print('jsonString: ${jsonString['atSign']}');
+    try {
+  print(" enrollmentInfoJsonString : ${enrollmentInfoJsonString}");
+  print('jsonString: ${jsonString['atSign']}');
+} finally {
+  // TODO
+}
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:at_auth/at_auth.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_enrollment_app/screens/atkey_authenticator.dart';
 import 'package:at_enrollment_app/screens/home.dart';
 import 'package:at_enrollment_app/screens/key_authenticator_home_screen.dart';
@@ -17,6 +18,7 @@ class LandingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return MaterialApp(
       title: 'At Enrollment Service',
       theme: ThemeData().copyWith(

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -17,12 +18,28 @@ class _OtpCardState extends State<OtpCard> {
 
   @override
   void initState() {
-    _getOTPFromServer();
-
-    timer = Timer.periodic(const Duration(minutes: 1), (t) {
-      _getOTPFromServer();
-    });
     super.initState();
+  }
+
+  // fetchOtp() async {
+  // EnrollmentService.getInstance().getOTPFromServer();
+
+  // timer = Timer.periodic(const Duration(minutes: 1), (t) async {
+  //   var tempOtp = await EnrollmentService.getInstance().getOTPFromServer();
+  //   otp = tempOtp ?? '';
+  // });
+  // }
+
+  @override
+  void didChangeDependencies() {
+    EnrollmentService.getInstance().getOTPFromServer();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -62,21 +79,6 @@ class _OtpCardState extends State<OtpCard> {
     );
   }
 
-  Future<String?> _getOTPFromServer() async {
-    String? tempOtp = await AtClientManager.getInstance()
-        .atClient
-        .getRemoteSecondary()
-        ?.executeCommand('otp:get\n', auth: true);
-    tempOtp = tempOtp?.replaceAll('data:', '');
-    print('otp: $tempOtp');
-    if (mounted) {
-      setState(() {
-        otp = tempOtp ?? '';
-      });
-    }
-    return otp;
-  }
-
   Widget otpView() {
     return Container(
         width: 140,
@@ -89,14 +91,22 @@ class _OtpCardState extends State<OtpCard> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              otp,
-              style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: ColorConstant.orange,
-                  letterSpacing: 7),
-            ),
+            StreamBuilder<String>(
+                stream: EnrollmentService.getInstance().otpControllerStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      snapshot.data as String,
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: ColorConstant.orange,
+                          letterSpacing: 7),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                })
           ],
         ));
   }

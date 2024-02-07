@@ -2,6 +2,7 @@ import 'package:at_auth/at_auth.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_enrollment_app/common_widgets/input_field.dart';
 import 'package:at_enrollment_app/screens/input_pin.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
@@ -18,6 +19,11 @@ class _HomeScreenState extends State<HomeScreen> {
   String atSignValue = "";
   String pinValue = "";
   bool tooltipEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

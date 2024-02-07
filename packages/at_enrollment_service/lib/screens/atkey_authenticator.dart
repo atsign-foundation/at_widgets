@@ -99,50 +99,10 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
               const SizedBox(height: 20),
               const Divider(),
               const SizedBox(height: 20),
-              StreamBuilder<AtNotification>(
-                stream: fetchEnrollmentNotifications(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<AtNotification> snapshot) {
-                  if (snapshot.hasData) {
-                    EnrollmentData enrollmentData = EnrollmentData(
-                        snapshot.data!.from,
-                        '${snapshot.data!.key}${snapshot.data!.from}',
-                        jsonDecode(snapshot.data!.value!)[
-                            'encryptedApkamSymmetricKey']);
-
-                    print('enrollmentData : ${snapshot.data!}');
-
-                    return EnrollmentRequestCard(
-                      enrollmentData: enrollmentData,
-                    );
-                  } else if (snapshot.hasError) {
-                    // Handle error case
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    // Handle loading or initial state
-                    return const Center(
-                      child: Column(
-                        children: [
-                          Text('No request'),
-                          Text('At the moment'),
-                        ],
-                      ),
-                    );
-                  }
-                },
-              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  Stream<AtNotification> fetchEnrollmentNotifications() {
-    Stream<AtNotification> notificationStream = AtClientManager.getInstance()
-        .atClient
-        .notificationService
-        .subscribe(regex: '__manage');
-    return notificationStream;
   }
 }
