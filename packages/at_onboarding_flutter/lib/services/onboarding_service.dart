@@ -97,7 +97,7 @@ class OnboardingService {
   }
 
   /// To register for a new enrollment request
-  Future<EnrollResponse> enroll(AtEnrollmentServiceImpl atEnrollmentServiceImpl,
+  Future<String> enroll(AtEnrollmentServiceImpl atEnrollmentServiceImpl,
       AtEnrollmentRequest atEnrollmentRequest) async {
     _atClientPreference.enableEnrollmentDuringOnboard = true;
     return await atEnrollmentServiceImpl
@@ -178,7 +178,6 @@ class OnboardingService {
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
         AtEnrollmentServiceImpl atEnrollmentServiceImpl =
             AtEnrollmentServiceImpl(_atsign!, _atClientPreference);
-        atEnrollmentServiceImpl.initEnrollmentAuthScheduler();
         c.complete(AtOnboardingResponseStatus.authSuccess);
         await _sync(_atsign);
       }

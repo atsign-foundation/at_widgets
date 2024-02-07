@@ -17,7 +17,7 @@ dependencies:
   at_backupkey_flutter: ^4.0.10
   at_client: ^3.0.64
   at_client_mobile: ^3.2.12
-  at_commons: ^3.0.55
+  at_commons: ^4.0.0
   at_server_status: ^1.0.3
   at_sync_ui_flutter: ^1.0.8
   at_utils: ^3.0.15
@@ -54,12 +54,12 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client
-      ref: apkam_onboarding_changes
+      ref: apkam_onboarding_changes_with_enrollment_status
   at_client_mobile:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client_mobile
-      ref: apkam_onboarding_changes
+      ref: apkam_onboarding_changes_with_enrollment_status
 
 dev_dependencies:
   flutter_test:
