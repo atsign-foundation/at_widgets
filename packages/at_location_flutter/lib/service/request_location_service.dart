@@ -305,15 +305,15 @@ class RequestLocationService {
       if ((locationNotificationModel.isAccepted) &&
           (locationNotificationModel.from != null) &&
           (locationNotificationModel.to != null)) {
-        key.metadata!.ttl = locationNotificationModel.to!
+        key.metadata.ttl = locationNotificationModel.to!
                 .difference(locationNotificationModel.from!)
                 .inMinutes *
             60000;
-        key.metadata!.ttr = locationNotificationModel.to!
+        key.metadata.ttr = locationNotificationModel.to!
                 .difference(locationNotificationModel.from!)
                 .inMinutes *
             60000;
-        key.metadata!.expiresAt = locationNotificationModel.to;
+        key.metadata.expiresAt = locationNotificationModel.to;
       }
 
       locationNotificationModel.isAcknowledgment = true;
@@ -438,14 +438,14 @@ class RequestLocationService {
       {int? ttl, DateTime? expiresAt}) {
     var atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata!.ttr = ttr
-      ..metadata!.ccd = true
+      ..metadata.ttr = ttr
+      ..metadata.ccd = true
       ..key = key
       ..sharedWith = sharedWith
       ..sharedBy =
           AtLocationNotificationListener().atClientInstance!.getCurrentAtSign();
-    if (ttl != null) atKey.metadata!.ttl = ttl;
-    if (expiresAt != null) atKey.metadata!.expiresAt = expiresAt;
+    if (ttl != null) atKey.metadata.ttl = ttl;
+    if (expiresAt != null) atKey.metadata.expiresAt = expiresAt;
 
     return atKey;
   }

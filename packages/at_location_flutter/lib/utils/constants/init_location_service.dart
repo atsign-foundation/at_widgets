@@ -100,8 +100,8 @@ void deleteAllLocationData() {
 /// returns the 'AtKey' of the [regexKey]
 AtKey getAtKey(String regexKey) {
   var atKey = AtKey.fromString(regexKey);
-  atKey.metadata!.ttr = -1;
-  atKey.metadata!.ccd = true;
+  atKey.metadata.ttr = -1;
+  atKey.metadata.ccd = true;
   return atKey;
 }
 
