@@ -12,10 +12,10 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
-  at_client: ^3.0.64
+  at_client: ^3.0.72
   at_client_mobile: ^3.2.12
   at_common_flutter: ^2.0.12
-  at_commons: ^3.0.55
+  at_commons: ^4.0.1
   flutter:
     sdk: flutter
   flutter_local_notifications: ^15.1.1
