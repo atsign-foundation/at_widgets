@@ -12,11 +12,11 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
-  at_client: ^3.0.64
+  at_client: ^3.0.72
   at_client_mobile: ^3.2.12
   at_common_flutter: ^2.0.12
   at_commons: ^3.0.55
-  at_contact: ^3.0.7
+  at_contact: ^3.0.8
   at_contacts_flutter: ^4.0.11
   at_contacts_group_flutter: ^4.0.13
   at_location_flutter: ^3.1.9
@@ -28,6 +28,10 @@ dependencies:
   geolocator: ^10.0.1
   latlong2: ^0.9.0
   sliding_up_panel: ^2.0.0+1
+
+dependency_overrides:
+  at_commons: ^4.0.1
+  file_picker: ^5.2.4
 
 dev_dependencies:
   flutter_lints: ^2.0.3
