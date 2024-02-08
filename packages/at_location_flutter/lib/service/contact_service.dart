@@ -74,7 +74,7 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
     }
 
     // profile picture
-    key.metadata!.isBinary = true;
+    key.metadata.isBinary = true;
     key.key = contactFields[2];
     result = await KeyStreamService().atClientInstance!.get(key);
     var image = result.value;
