@@ -155,7 +155,7 @@ class AtLoginService {
         ..isHidden = true
         ..ttl = 30;
       var atKey = AtKey()
-        ..key = atLoginObj.location
+        ..key = atLoginObj.location ?? ""
         ..metadata = metadata;
       var data = signature;
       _logger.info('putLoginProof|atKey:$atKey');

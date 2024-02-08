@@ -526,12 +526,12 @@ class SendLocationNotification {
         : atClient!.getCurrentAtSign()!;
     var atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata!.ttr = ttr
-      ..metadata!.ccd = true
+      ..metadata.ttr = ttr
+      ..metadata.ccd = true
       ..key = key
       ..sharedWith = sharedWith
       ..sharedBy = sharedBy;
-    if (ttl != null) atKey.metadata!.ttl = ttl;
+    if (ttl != null) atKey.metadata.ttl = ttl;
     return atKey;
   }
 

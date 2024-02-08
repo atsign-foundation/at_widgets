@@ -11,9 +11,9 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
-  at_client: ^3.0.64
+  at_client: ^3.0.72
   at_client_mobile: ^3.2.12
-  at_commons: ^3.0.55
+  at_commons: ^4.0.1
   at_file_saver: ^0.1.2
   at_lookup: ^3.0.40
   at_server_status: ^1.0.3

@@ -160,7 +160,7 @@ class ChatService {
         ..sharedBy = currentAtSign!
         ..sharedWith = chatWithAtSign
         ..metadata = Metadata();
-      key.metadata?.ccd = true;
+      key.metadata.ccd = true;
       var keyValue = await atClientManager.atClient.get(key).catchError((e) {
         return AtValue();
       });
@@ -262,8 +262,8 @@ class ChatService {
         ..sharedBy = currentAtSign!
         ..sharedWith = chatWithAtSign
         ..metadata = Metadata();
-      key.metadata?.ccd = true;
-      key.metadata?.ttr = -1;
+      key.metadata.ccd = true;
+      key.metadata.ttr = -1;
 
       chatHistoryMessages.insert(0, message.toJson());
       if (message.contentType == MessageContentType.image) {
@@ -295,7 +295,7 @@ class ChatService {
       ..sharedBy = currentAtSign!
       ..sharedWith = chatWithAtSign
       ..metadata = Metadata();
-    key.metadata?.ccd = true;
+    key.metadata.ccd = true;
     try {
       for (var i = 0; i < chatHistoryMessages.length; i++) {
         var message = Message.fromJson(chatHistoryMessages[i]);
@@ -326,7 +326,7 @@ class ChatService {
       ..sharedBy = currentAtSign!
       ..sharedWith = chatWithAtSign
       ..metadata = Metadata();
-    key.metadata?.ccd = true;
+    key.metadata.ccd = true;
 
     try {
       for (var i = 0; i < chatHistoryMessages.length; i++) {
@@ -369,9 +369,9 @@ class ChatService {
         ..sharedBy = currentAtSign!
         ..sharedWith = chatWithAtSign
         ..metadata = Metadata();
-      key.metadata?.ccd = true;
-      key.metadata?.ttr = -1;
-      key.metadata?.isBinary = true;
+      key.metadata.ccd = true;
+      key.metadata.ttr = -1;
+      key.metadata.isBinary = true;
 
       if (isGroupChat) {
         await Future.forEach(groupChatMembers!, (dynamic member) async {
@@ -422,14 +422,14 @@ class ChatService {
     var key = AtKey();
     Map<String, String> keyFields = fieldSeparator(savedKey);
     // construct key
-    key.key = keyFields['key'];
+    key.key = keyFields['key'] ?? "";
     key.sharedBy = keyFields['sharedBy'];
     key.sharedWith = keyFields['sharedWith'];
     // prepare metadata
     key.metadata = Metadata();
-    key.metadata?.ccd = true;
-    key.metadata?.ttr = -1;
-    key.metadata?.isBinary = true;
+    key.metadata.ccd = true;
+    key.metadata.ttr = -1;
+    key.metadata.isBinary = true;
     return key;
   }
 
