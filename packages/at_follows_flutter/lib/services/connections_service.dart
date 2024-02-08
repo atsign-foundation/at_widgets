@@ -118,7 +118,7 @@ class ConnectionsService {
     //change metadata to private to notify
     if (result) {
       atKey..sharedWith = atsign;
-      atMetadata?..isPublic = false;
+      atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
       await _sdkService.notify(
           atKey, atsign!, OperationEnum.update, _onNotifyDone, _onNotifyError);
@@ -140,7 +140,7 @@ class ConnectionsService {
     //notify @sign about delete
     if (result) {
       atKey..sharedWith = atsign;
-      atMetadata?..isPublic = false;
+      atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
       await _sdkService.notify(
           atKey, atsign, OperationEnum.delete, _onNotifyDone, _onNotifyError);
@@ -153,7 +153,7 @@ class ConnectionsService {
     //notify @sign about delete
     if (result) {
       atKey..sharedWith = atsign;
-      atMetadata?..isPublic = false;
+      atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
       await _sdkService.notify(
           atKey, atsign, OperationEnum.delete, _onNotifyDone, _onNotifyError);
@@ -171,7 +171,7 @@ class ConnectionsService {
     var result = await _modifyKey(atsign, this.following, atKey);
     if (result) {
       atKey..sharedWith = atsign;
-      atMetadata?..isPublic = false;
+      atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
       await _sdkService.notify(
           atKey, atsign!, OperationEnum.delete, _onNotifyDone, _onNotifyError);
@@ -320,7 +320,7 @@ class ConnectionsService {
       this.followers.create(followersValue);
       if (followersValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
-            !followersValue.metadata!.isPublic!;
+            !followersValue.metadata!.isPublic;
         await _sdkService.sync();
       }
     } else {
@@ -332,7 +332,7 @@ class ConnectionsService {
 
       if (followingValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowingPrivate =
-            !followingValue.metadata!.isPublic!;
+            !followingValue.metadata!.isPublic;
         await _sdkService.sync();
       }
     }
@@ -354,13 +354,13 @@ class ConnectionsService {
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followingKey
-        ..sharedWith = atMetadata.isPublic! ? null : atSign;
+        ..sharedWith = atMetadata.isPublic ? null : atSign;
     } else {
       var atMetadata = Metadata()..isPublic = !followers.isPrivate;
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followersKey
-        ..sharedWith = atMetadata.isPublic! ? null : atSign;
+        ..sharedWith = atMetadata.isPublic ? null : atSign;
     }
     return atKey;
   }
@@ -389,20 +389,20 @@ class ConnectionsService {
           //performs plookup if the data is not in cache.
           if (atValue.value == null) {
             //plookup for wavi keys.
-            atKey.metadata!.isCached = false;
+            atKey.metadata.isCached = false;
 
             /// remove cached
             key.replaceAll('cached:', '');
-            atKey.key?.replaceAll('cached:', '');
+            atKey.key.replaceAll('cached:', '');
             atValue = await _sdkService.get(atKey);
             //cache lookup for persona keys
             if (atValue.value == null) {
-              atKey.key = PublicData.personaMap[key];
-              atKey.metadata!.isCached = true;
+              atKey.key = PublicData.personaMap[key] ?? "";
+              atKey.metadata.isCached = true;
               atValue = await _sdkService.get(atKey);
               //plookup for persona keys.
               if (atValue.value == null) {
-                atKey.metadata!.isCached = false;
+                atKey.metadata.isCached = false;
                 atValue = await _sdkService.get(atKey);
               }
             }

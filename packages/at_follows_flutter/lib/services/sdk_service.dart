@@ -134,7 +134,7 @@ class SDKService {
             onTimeout: () => _onTimeOut());
     int index = scanKey.length - 1;
     for (int i = 0; i < scanKey.length; i++) {
-      if (scanKey[i].key!.endsWith("self.at_follows") &&
+      if (scanKey[i].key.endsWith("self.at_follows") &&
           scanKey[i].namespace == "wavi" &&
           scanKey[i].sharedWith == null) {
         index = i;
@@ -148,7 +148,7 @@ class SDKService {
         _isOldKey(scanKey[0].key) &&
         value.value != null) {
       var newKey = AtKey()..metadata = scanKey[0].metadata;
-      newKey.key = scanKey[0].key!.contains('following')
+      newKey.key = scanKey[0].key.contains('following')
           ? AppConstants.followingKey
           : AppConstants.followersKey;
       await this.put(newKey, value.value);
