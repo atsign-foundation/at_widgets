@@ -151,7 +151,7 @@ void main() {
           connectionProvider.connectionslistStatus.isFollowingPrivate, false);
       var result = await _connectionsService.changeListPublicStatus(true, true);
       expect(result, true);
-      expect(_connectionsService.following.getKey!.atKey.metadata!.isPublic,
+      expect(_connectionsService.following.getKey!.atKey.metadata.isPublic,
           false);
     });
     test('change from private to public', () async {
@@ -168,7 +168,7 @@ void main() {
           await _connectionsService.changeListPublicStatus(true, false);
       expect(result, true);
       expect(
-          _connectionsService.following.getKey!.atKey.metadata!.isPublic, true);
+          _connectionsService.following.getKey!.atKey.metadata.isPublic, true);
     });
   });
 
@@ -254,10 +254,10 @@ void main() {
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
       await _connectionsService.getAtsignsList();
       expect(
-          _connectionsService.following.getKey!.atKey.metadata!.isPublic, true);
+          _connectionsService.following.getKey!.atKey.metadata.isPublic, true);
       var result = await _connectionsService.changeListPublicStatus(true, true);
       expect(result, true);
-      expect(_connectionsService.following.getKey!.atKey.metadata!.isPublic,
+      expect(_connectionsService.following.getKey!.atKey.metadata.isPublic,
           false);
     });
 
@@ -270,7 +270,7 @@ void main() {
         ..metadata = atMetadata;
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
       await _connectionsService.getAtsignsList();
-      expect(_connectionsService.following.getKey!.atKey.metadata!.isPublic,
+      expect(_connectionsService.following.getKey!.atKey.metadata.isPublic,
           false);
 
       var result =
