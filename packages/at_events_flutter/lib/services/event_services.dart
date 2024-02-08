@@ -156,8 +156,8 @@ class EventService {
 
       var atKey = AtKey()
         ..metadata = Metadata()
-        ..metadata!.ttr = -1
-        ..metadata!.ccd = true
+        ..metadata.ttr = -1
+        ..metadata.ccd = true
         ..key = 'createevent-${DateTime.now().microsecondsSinceEpoch}'
         ..sharedBy = eventNotification.atsignCreator;
 
@@ -461,9 +461,9 @@ class EventService {
   /// returns [AtKey] of [regexKey]
   AtKey getAtKey(String regexKey) {
     var atKey = AtKey.fromString(regexKey);
-    atKey.metadata!.ttr = -1;
+    atKey.metadata.ttr = -1;
     // atKey.metadata.ttl = MixedConstants.maxTTL; // 7 days
-    atKey.metadata!.ccd = true;
+    atKey.metadata.ccd = true;
     return atKey;
   }
 

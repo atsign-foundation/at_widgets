@@ -26,8 +26,8 @@ class VenuesServices {
     try {
       var atKey = AtKey()
         ..metadata = Metadata()
-        ..metadata!.ttr = -1
-        ..metadata!.ccd = true
+        ..metadata.ttr = -1
+        ..metadata.ccd = true
         ..key = venueLatLngKey;
       var value = await AtClientManager.getInstance()
           .atClient
@@ -80,8 +80,8 @@ class VenuesServices {
     try {
       var atKey = AtKey()
         ..metadata = Metadata()
-        ..metadata!.ttr = -1
-        ..metadata!.ccd = true
+        ..metadata.ttr = -1
+        ..metadata.ccd = true
         ..key = venueLatLngKey;
 
       var _convertedObject = _tempVenues
