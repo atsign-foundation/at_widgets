@@ -571,7 +571,7 @@ class ContactService {
       key.sharedBy = atSign;
       key.metadata = metadata;
       // making isPublic true (as get method changes it to false)
-      key.metadata?.isBinary = true;
+      key.metadata.isBinary = true;
       key.key = contactFields[2];
       Uint8List? image;
 
@@ -609,7 +609,7 @@ class ContactService {
     key.sharedBy = atsign;
     key.metadata = metadata;
     // making isPublic true (as get method changes it to false)
-    key.metadata?.isBinary = true;
+    key.metadata.isBinary = true;
     key.key = "image.wavi";
 
     GetRequestOptions options = GetRequestOptions();
@@ -641,7 +641,7 @@ class ContactService {
     key.sharedBy = atsign;
     key.metadata = metadata;
     // making isPublic true (as get method changes it to false)
-    key.metadata?.isBinary = true;
+    key.metadata.isBinary = true;
     key.key = "image.wavi";
 
     var result = await atClientManager.atClient.getMeta(key);
