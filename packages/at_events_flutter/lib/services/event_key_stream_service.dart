@@ -559,8 +559,8 @@ class EventKeyStreamService {
       case ATKEY_TYPE_ENUM.ACKNOWLEDGEEVENT:
         var key = AtKey()
           ..metadata = Metadata()
-          ..metadata!.ttr = -1
-          ..metadata!.ccd = true
+          ..metadata.ttr = -1
+          ..metadata.ccd = true
           ..sharedWith = sharedWith
           ..sharedBy = sharedBy;
 

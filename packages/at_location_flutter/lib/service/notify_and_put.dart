@@ -64,9 +64,9 @@ class NotifyAndPut {
   AtKey removeNamespaceFromKey(AtKey atKey) {
     if (AtClientManager.getInstance().atClient.getPreferences()!.namespace !=
         null) {
-      if (atKey.key!.contains(
+      if (atKey.key.contains(
           '.${AtClientManager.getInstance().atClient.getPreferences()!.namespace!}')) {
-        atKey.key = atKey.key!.replaceAll(
+        atKey.key = atKey.key.replaceAll(
             ('.${AtClientManager.getInstance().atClient.getPreferences()!.namespace!}'),
             '');
       }
