@@ -59,8 +59,8 @@ class ThemeService {
     AtKey atKey = AtKey()
       ..key = MixedConstants.theme_key
       ..metadata = metaData
-      ..metadata!.ttr = -1
-      ..metadata!.ccd = true;
+      ..metadata.ttr = -1
+      ..metadata.ccd = true;
 
     return atKey;
   }
