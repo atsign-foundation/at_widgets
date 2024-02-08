@@ -92,7 +92,7 @@ class InvitationService {
       // build and fetch self key
       AtKey atKey = AtKey()..metadata = Metadata();
       atKey.key = '$invitationKey.${receivedInformation.identifier ?? ''}';
-      atKey.metadata?.ttr = -1;
+      atKey.metadata.ttr = -1;
       var result = await AtClientManager.getInstance().atClient.get(atKey);
       MessageShareModel sentInformation =
           MessageShareModel.fromJson(jsonDecode(result.value));
@@ -124,7 +124,7 @@ class InvitationService {
 
     AtKey atKey = AtKey()..metadata = Metadata();
     atKey.key = '$invitationKey.$keyID';
-    atKey.metadata?.ttr = -1;
+    atKey.metadata.ttr = -1;
     var result = await AtClientManager.getInstance()
         .atClient
         .put(atKey, jsonEncode(messageContent))
@@ -155,7 +155,7 @@ class InvitationService {
     AtKey atKey = AtKey()..metadata = Metadata();
     atKey.key = '$invitationAckKey.$data';
     atKey.sharedWith = atsign;
-    atKey.metadata?.ttr = -1;
+    atKey.metadata.ttr = -1;
     MessageShareModel messageContent = MessageShareModel(
         passcode: otp, identifier: data, message: 'invite acknowledgement');
     await AtClientManager.getInstance()
