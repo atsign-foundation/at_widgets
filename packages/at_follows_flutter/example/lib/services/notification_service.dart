@@ -26,15 +26,15 @@ class NotificationService {
 
   setOnNotificationClick(Function onNotificationClick) async {
     await _notificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String? payload) async {
-      onNotificationClick(payload);
+        onDidReceiveNotificationResponse: (payload) async {
+      await onNotificationClick(payload);
     });
   }
 
   initializePlatformSpecifics() {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('notification_icon');
-    var initializationSettingsIOS = IOSInitializationSettings(
+    var initializationSettingsIOS = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: false,
@@ -65,7 +65,7 @@ class NotificationService {
             importance: Importance.max,
             priority: Priority.high,
             showWhen: false);
-    var iosChannelSpecifics = IOSNotificationDetails();
+    var iosChannelSpecifics = DarwinNotificationDetails();
 
     var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics, iOS: iosChannelSpecifics);
