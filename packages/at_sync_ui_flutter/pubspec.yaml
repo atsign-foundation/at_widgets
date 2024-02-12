@@ -12,7 +12,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  at_client: ^3.0.64
+  at_client: ^3.0.72
   at_client_mobile: ^3.2.12
   at_common_flutter: ^2.0.12
   flutter:
