@@ -1,3 +1,6 @@
+## 4.0.15
+
+- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
 ## 4.0.14
 
 - **CHORE**: Bumped all dependency versions
