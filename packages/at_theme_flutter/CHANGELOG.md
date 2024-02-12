@@ -1,3 +1,6 @@
+## 1.0.7:
+- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
+
 ## 1.0.6
 - **CHORE**: Bumped all dependency versions
 

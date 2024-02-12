@@ -1,7 +1,7 @@
 name: at_notify_flutter
 description: A Flutter plugin project to send notification to any atSign in
   atPlatform apps with ease.
-version: 1.0.8
+version: 1.0.9
 homepage: https://atsign.dev
 repository: https://github.com/atsign-foundation/at_widgets/tree/trunk/packages/at_notify_flutter
 issue_tracker: https://github.com/atsign-foundation/at_widgets/issues
