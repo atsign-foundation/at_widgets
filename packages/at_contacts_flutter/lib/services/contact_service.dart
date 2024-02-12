@@ -628,7 +628,7 @@ class ContactService {
         contactDetails['image'] = null;
         return contactDetails;
       }
-    }else {
+    } else {
       return null;
     }
   }
