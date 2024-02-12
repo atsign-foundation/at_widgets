@@ -44,7 +44,7 @@ class LoadingDialog {
         Flexible(
           child: Text(
             text,
-            textScaleFactor: 1,
+            textScaler: const TextScaler.linear(1),
             style: style ??
                 TextStyle(
                     color: ColorConstants.mildGrey,

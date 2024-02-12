@@ -46,9 +46,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-dependency_overrides:
-  at_commons: ^4.0.1
-
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
