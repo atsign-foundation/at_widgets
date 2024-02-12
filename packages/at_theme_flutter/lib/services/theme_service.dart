@@ -24,12 +24,11 @@ class ThemeService {
     currentAtsign = atClientManager.atClient.getCurrentAtSign();
   }
 
-  Future<bool> updateThemeData(AppTheme themeData) async{
+  Future<bool> updateThemeData(AppTheme themeData) async {
     AtKey atKey = getAtkey();
     try {
-      var result = await atClientManager
-          .atClient
-          .put(atKey, themeData.encoded());
+      var result =
+          await atClientManager.atClient.put(atKey, themeData.encoded());
       return result;
     } catch (e) {
       _logger.severe('error in updating theme data: ${e.toString()}');
