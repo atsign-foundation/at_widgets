@@ -52,7 +52,6 @@ class EventsMapScreenData {
     eventNotifier!.notifyListeners();
   }
 
-
   /// calculates the AtSigns of members who have exited the event in the given EventNotificationModel
   void _calculateExitedAtsigns(EventNotificationModel _event) {
     _event.group!.members!.forEach((element) {

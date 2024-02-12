@@ -95,7 +95,6 @@ Future<bool> createEvent(EventNotificationModel eventData) async {
   }
 }
 
-
 /// This method deletes an event from the remote database using the provided event key
 /// It retrieves the event data associated with the key and checks if the current user is the creator of the event
 /// If the current user is not the creator, it throws an exception
@@ -202,7 +201,6 @@ Future<List<String>> getRegexKeys() async {
 
   return regexList;
 }
-
 
 /// This method retrieves the value associated with the given key from the remote database
 /// It fetches the value using the provided key and converts it into an EventNotificationModel object
