@@ -54,7 +54,8 @@ class _RecurringEventState extends State<RecurringEvent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            CustomHeading(heading: AllText().RECURRING_EVENT, action: AllText().CANCEL),
+            CustomHeading(
+                heading: AllText().RECURRING_EVENT, action: AllText().CANCEL),
             const SizedBox(height: 25),
             Text(AllText().REPEAT_EVERY, style: CustomTextStyles().greyLabel14),
             SizedBox(height: 6.toHeight),
@@ -240,7 +241,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                         initialEntryMode: TimePickerEntryMode.input);
 
                     if (eventData!.event!.endDate == null) {
-                      CustomToast().show(AllText().SELECT_START_TIME_FIRST, context,
+                      CustomToast().show(
+                          AllText().SELECT_START_TIME_FIRST, context,
                           isError: true);
                       return;
                     }

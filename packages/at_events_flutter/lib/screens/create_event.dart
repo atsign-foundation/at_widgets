@@ -283,8 +283,7 @@ class _CreateEventState extends State<CreateEvent> {
                                                               dateToString(
                                                                   DateTime
                                                                       .now()))
-                                                          ? '${AllText()
-                                                                  .EVENT_TODAY} (${timeOfDayToString(eventData.event!.startTime!)})'
+                                                          ? '${AllText().EVENT_TODAY} (${timeOfDayToString(eventData.event!.startTime!)})'
                                                           : '${AllText().EVENT_ON} ${(dateToString(eventData.event!.date!) != dateToString(DateTime.now()) ? dateToString(eventData.event!.date!) : dateToString(DateTime.now()))} (${timeOfDayToString(eventData.event!.startTime!)})') +
                                                       ((dateToString(eventData
                                                                   .event!
@@ -331,8 +330,8 @@ class _CreateEventState extends State<CreateEvent> {
                                                           eventData.event!
                                                                   .repeatDuration !=
                                                               null)
-                                                      ? Text('${AllText()
-                                                              .REPEATS_EVERY} ${eventData.event!.repeatDuration} ${AllText().WEEK_ON} ${eventData.event!.date!.day} ${AllText().DAY}')
+                                                      ? Text(
+                                                          '${AllText().REPEATS_EVERY} ${eventData.event!.repeatDuration} ${AllText().WEEK_ON} ${eventData.event!.date!.day} ${AllText().DAY}')
                                                       : (eventData.event!
                                                                       .repeatCycle ==
                                                                   RepeatCycle
@@ -340,9 +339,8 @@ class _CreateEventState extends State<CreateEvent> {
                                                               eventData.event!
                                                                       .occursOn !=
                                                                   null)
-                                                          ? Text('${AllText()
-                                                                  .REPEATS_EVERY} ${eventData.event!.repeatDuration} ${AllText()
-                                                                  .WEEK_ON} ${getWeekString(eventData.event!.occursOn)} ')
+                                                          ? Text(
+                                                              '${AllText().REPEATS_EVERY} ${eventData.event!.repeatDuration} ${AllText().WEEK_ON} ${getWeekString(eventData.event!.occursOn)} ')
                                                           : const SizedBox(),
                                                   EventService()
                                                                   .eventNotificationModel!
@@ -354,8 +352,8 @@ class _CreateEventState extends State<CreateEvent> {
                                                                   .event!
                                                                   .endsOn ==
                                                               EndsOn.AFTER
-                                                      ? Text('${AllText()
-                                                              .ENDS_AFTER} ${eventData.event!.endEventAfterOccurance} ${AllText().OCCURENCE}')
+                                                      ? Text(
+                                                          '${AllText().ENDS_AFTER} ${eventData.event!.endEventAfterOccurance} ${AllText().OCCURENCE}')
                                                       : const SizedBox(),
                                                 ],
                                               ),
