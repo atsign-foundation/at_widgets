@@ -26,6 +26,7 @@ class AtService {
 
   set atsign(String atsign) {}
 
+  ///Sets up the [AtClientPreference] object
   Future<AtClientPreference> getAtClientPreference({String? cramSecret}) async {
     final appDocumentDirectory =
         await path_provider.getApplicationSupportDirectory();
@@ -40,17 +41,20 @@ class AtService {
     return _atClientPreference;
   }
 
+  ///Creates a new atKey if it does not already exists. If exists, then updated the old key
   Future<bool> put({String? key, var value}) async {
     var atKey = at_commons.AtKey()..key = key ?? "";
     // ..metadata = metaData;
     return await atClientInstance!.put(atKey, value);
   }
 
+  ///Deletes the atKey if exists
   Future<bool> delete({String? key}) async {
     var atKey = at_commons.AtKey()..key = key ?? "";
     return await atClientInstance!.delete(atKey);
   }
 
+  ///Gets atKeys that matches the app namespace
   Future<List<String>> get() async {
     return await atClientInstance!.getKeys(regex: AppConstants.regex);
   }

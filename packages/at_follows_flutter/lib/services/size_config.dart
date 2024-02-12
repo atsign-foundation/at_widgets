@@ -84,9 +84,12 @@ class SizeConfig {
 }
 
 extension SizeUtils on num {
+  ///makes the [width] responsive on different screen sizes
   double get toWidth => SizeConfig().getWidthRatio(this.toDouble());
 
+  ///makes the [height] responsive on different screen sizes
   double get toHeight => SizeConfig().getHeightRatio(this.toDouble());
 
+  ///makes the [font] responsive on different screen sizes
   double get toFont => SizeConfig().getFontRatio(this.toDouble());
 }
