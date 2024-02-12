@@ -1,3 +1,7 @@
+## 1.0.11:
+- **CHORE**: Bumped up dependecy versions
+- **CHORE**: Improved pub score
+
 ## 1.0.10
 - **CHORE**: Updated dependencies
 - **CHORE**: Lint fixes

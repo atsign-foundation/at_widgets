@@ -1,3 +1,7 @@
+## 4.0.13:
+- **CHORE**: Bumped up dependency versions
+- **CHORE**: Improved pub score
+
 ## 4.0.12:
 - **CHORE**: Updated dependencies
 - **CHORE**: Lint fixes
