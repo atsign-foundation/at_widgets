@@ -33,8 +33,8 @@ Widget showLocation(Key? key, MapController? mapController,
       mapController.move(location, 8);
     }
   } else {
-    marker =
-        buildMarker(HybridModel(latLng: const LatLng(45, 45)), singleMarker: true);
+    marker = buildMarker(HybridModel(latLng: const LatLng(45, 45)),
+        singleMarker: true);
     showMarker = false;
   }
 

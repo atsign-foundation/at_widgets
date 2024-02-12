@@ -16,9 +16,9 @@ dependencies:
   at_client: ^3.0.72
   at_client_mobile: ^3.2.12
   at_common_flutter: ^2.0.12
-  at_commons: ^3.0.55
+  at_commons: ^4.0.1
   at_contact: ^3.0.8
-  at_contacts_flutter: ^4.0.11
+  at_contacts_flutter: ^4.0.14
   at_lookup: ^3.0.40
   at_utils: ^3.0.15
   cached_network_image: ^3.2.3
@@ -37,9 +37,6 @@ dependencies:
   transparent_image: ^2.0.1
   tuple: ^2.0.2
   vector_math: ^2.1.4
-
-dependency_overrides:
-  at_commons: ^4.0.1
 
 dev_dependencies:
   flutter_lints: ^2.0.3
