@@ -102,6 +102,7 @@ class ConnectionsService {
     return atsignList;
   }
 
+  ///Follows an [atsign] by adding it in your followers list
   Future<Atsign?> follow(String? atsign) async {
     if (atsign == _sdkService.atsign) {
       return null;

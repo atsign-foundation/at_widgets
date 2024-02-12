@@ -220,7 +220,6 @@ enum Week { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
 
 enum EndsOn { NEVER, ON, AFTER }
 
-
 /// converts a weekday string to a Week enum value
 // ignore: missing_return
 Week getWeekEnum(String? weekday) {

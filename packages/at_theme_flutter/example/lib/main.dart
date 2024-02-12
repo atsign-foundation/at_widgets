@@ -78,10 +78,10 @@ class _MyAppState extends State<MyApp> {
                                 switch (result.status) {
                                   case AtOnboardingResultStatus.success:
                                     await Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const ProfilePage()));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ProfilePage()));
                                     break;
                                   case AtOnboardingResultStatus.error:
                                     ScaffoldMessenger.of(context).showSnackBar(

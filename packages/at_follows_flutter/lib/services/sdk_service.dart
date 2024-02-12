@@ -21,6 +21,7 @@ class SDKService {
 
   String? _atsign;
 
+  ///Sets the [rootdomain]
   set setClientService(AtClientService service) {
     this._atsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     Strings.rootdomain =

@@ -282,8 +282,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Slidable(
-              endActionPane: ActionPane(motion: const ScrollMotion(), children: 
-              [
+              endActionPane:
+                  ActionPane(motion: const ScrollMotion(), children: [
                 SlidableAction(
                   label: TextStrings().block,
                   backgroundColor: ColorConstants.inputFieldColor,

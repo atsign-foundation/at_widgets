@@ -25,7 +25,7 @@ class _AddSingleContactState extends State<AddSingleContact> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    var deviceTextFactor = MediaQuery.of(context).textScaler.scale(20) / 20;
     return SizedBox(
       height: 100 * deviceTextFactor,
       width: 100,

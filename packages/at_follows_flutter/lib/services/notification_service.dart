@@ -28,17 +28,19 @@ class NotificationService {
     _logger.info('initialiazed notification service');
   }
 
+  ///Gets called when user clicks on notification
   setOnNotificationClick(Function onNotificationClick) async {
     await _notificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String? payload) async {
-      onNotificationClick(payload);
+        onDidReceiveNotificationResponse: (payload) async {
+      await onNotificationClick(payload);
     });
   }
 
+  ///Initialize the notification settings for iOS and Android
   initializePlatformSpecifics() {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('notification_icon');
-    var initializationSettingsIOS = IOSInitializationSettings(
+    var initializationSettingsIOS = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: false,
@@ -75,7 +77,7 @@ class NotificationService {
       showWhen: false,
       styleInformation: BigTextStyleInformation(''),
     );
-    var iosChannelSpecifics = IOSNotificationDetails();
+    var iosChannelSpecifics = DarwinNotificationDetails();
 
     var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics, iOS: iosChannelSpecifics);

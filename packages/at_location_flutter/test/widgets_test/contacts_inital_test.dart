@@ -15,12 +15,11 @@ void main() {
 
   /// Functional test cases for [contactInitial]
   group('Contacts Initial widget Tests:', () {
-  
-   // Test case to identify contact initial is used in screen or not
-  testWidgets("Button widget is used and shown on screen",
+    // Test case to identify contact initial is used in screen or not
+    testWidgets("Button widget is used and shown on screen",
         (WidgetTester tester) async {
-      await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(contactInitial: ContactInitial(initials:'@')));
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+          contactInitial: ContactInitial(initials: '@')));
 
       expect(find.byType(ContactInitial), findsOneWidget);
     });
@@ -29,16 +28,25 @@ void main() {
     testWidgets('Contacts initial with background color',
         (WidgetTester tester) async {
       await tester.pumpWidget(_wrapWidgetWithMaterialApp(
-          contactInitial: ContactInitial(initials: '@',backgroundColor: Colors.white,)));
+          contactInitial: ContactInitial(
+        initials: '@',
+        backgroundColor: Colors.white,
+      )));
       final contactsInitial =
           tester.widget<ContactInitial>(find.byType(ContactInitial));
-      expect(contactsInitial.backgroundColor, Colors.white,);
+      expect(
+        contactsInitial.backgroundColor,
+        Colors.white,
+      );
     });
-    
-   // Test case to check contact initial to check given without background color
+
+    // Test case to check contact initial to check given without background color
     testWidgets('Contacts initial without background color',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(contactInitial: ContactInitial(initials: '@',)));
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(
+          contactInitial: ContactInitial(
+        initials: '@',
+      )));
       final contactsInitial =
           tester.widget<ContactInitial>(find.byType(ContactInitial));
       expect(contactsInitial.backgroundColor, null);

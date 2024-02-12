@@ -103,8 +103,7 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                                         .atClientManager,
                                     isUpdate: true,
                                     eventData: eventListenerKeyword,
-                                    onEventSaved: (event) {
-                                    },
+                                    onEventSaved: (event) {},
                                   ),
                                   SizeConfig().screenHeight * 0.9,
                                 );
@@ -147,7 +146,8 @@ class _EventsCollapsedContentState extends State<EventsCollapsedContent> {
                   ),
                   const Divider(),
                   DisplayTile(
-                    title: '${eventListenerKeyword.atsignCreator} ${AllText().AND} ${eventListenerKeyword.group!.members!.length} ${AllText().MORE}',
+                    title:
+                        '${eventListenerKeyword.atsignCreator} ${AllText().AND} ${eventListenerKeyword.group!.members!.length} ${AllText().MORE}',
                     atsignCreator: eventListenerKeyword.atsignCreator,
                     semiTitle: (eventListenerKeyword.group!.members!.length ==
                             1)

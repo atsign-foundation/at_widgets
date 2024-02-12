@@ -15,9 +15,9 @@ environment:
 dependencies:
   at_client_mobile: ^3.2.12
   at_common_flutter: ^2.0.12
-  at_commons: ^3.0.55
+  at_commons: ^4.0.1
   at_contact: ^3.0.8
-  at_contacts_flutter: ^4.0.13
+  at_contacts_flutter: ^4.0.14
   at_utils: ^3.0.15
   collection: ^1.17.0
   emoji_picker_flutter: ^1.6.1
@@ -33,9 +33,6 @@ dependencies:
   fluttertoast: ^8.2.2
   image_compression: ^1.0.4
   pedantic: ^1.11.1
-
-dependency_overrides:
-  at_commons: ^4.0.1
 
 dev_dependencies:
   flutter_lints: ^2.0.3

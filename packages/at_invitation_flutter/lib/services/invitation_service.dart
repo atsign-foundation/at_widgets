@@ -28,6 +28,8 @@ class InvitationService {
   bool hasMonitorStarted = false;
 
   GlobalKey<NavigatorState> get navigatorKey => navkey ?? GlobalKey();
+
+  /// initialize the invitation service
   void initInvitationService(
       GlobalKey<NavigatorState>? navkeyFromApp,
       String? webPageFromApp,
@@ -113,6 +115,7 @@ class InvitationService {
     }
   }
 
+  /// share message and inviate the atsign provided
   Future<void> shareAndinvite(BuildContext context, String jsonData) async {
     // create a key and save the json data
     var keyID = const Uuid().v4();
@@ -146,6 +149,7 @@ class InvitationService {
     }
   }
 
+  /// show the OTP dialog and fetch the invite data
   Future<void> fetchInviteData(
       BuildContext context, String data, String atsign) async {
     String otp = await showDialog(
