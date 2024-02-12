@@ -19,8 +19,7 @@ void main() {
     // Test Case to Check Color Card is displayed
     const colorCard = ColorCard(color: Colors.orange, isSelected: true);
     testWidgets("Color Card is displayed", (WidgetTester tester) async {
-      await tester.pumpWidget(
-          _wrapWidgetWithMaterialApp(colorCard: colorCard));
+      await tester.pumpWidget(_wrapWidgetWithMaterialApp(colorCard: colorCard));
       expect(find.byType(ColorCard), findsOneWidget);
     });
   });

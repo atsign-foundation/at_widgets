@@ -22,7 +22,8 @@ void main() {
         brightness: Brightness.light,
         isSelected: true);
     testWidgets("Theme Mode Card is displayed", (WidgetTester tester) async {
-      await tester.pumpWidget(_wrapWidgetWithMaterialApp(themeModeCard: themeModeCard));
+      await tester
+          .pumpWidget(_wrapWidgetWithMaterialApp(themeModeCard: themeModeCard));
       expect(find.byType(ThemeModeCard), findsOneWidget);
     });
   });
