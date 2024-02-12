@@ -1,3 +1,7 @@
+## 4.0.15
+
+- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
+- **CHORE**: Changed IPHONEOS_DEPLOYMENT_TARGET from 9.0 to 12.0
 ## 4.0.14
 
 - **CHORE**: Bumped all dependency versions
