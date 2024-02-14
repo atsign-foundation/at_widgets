@@ -1,6 +1,7 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_enrollment_app/screens/atkey_authenticator/widgets/atkey_authenticator.dart';
 import 'package:at_enrollment_app/screens/atkey_authenticator/widgets/enrollment_request_screen.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_enrollment_app/utils/assets.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
@@ -21,8 +22,8 @@ class _KeyAuthenticatorHomeScreenState
 
   @override
   void initState() {
-    // currentAtsign =
-    //     AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '';
+    currentAtsign =
+        AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '';
     super.initState();
   }
 

@@ -8,6 +8,7 @@ import 'package:at_enrollment_app/screens/atkey_authenticator/widgets/create_pin
 import 'package:at_enrollment_app/screens/atkey_authenticator/widgets/otp_card.dart';
 import 'package:at_enrollment_app/screens/atkey_authenticator/widgets/create_pin.dart';
 import 'package:at_enrollment_app/screens/enrollment_request_card.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_enrollment_app/utils/assets.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
@@ -29,6 +30,9 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
   void initState() {
     // currentAtsign =
     //     AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '';
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      EnrollmentService.getInstance().getOTPFromServer();
+    });
     super.initState();
   }
 
@@ -131,83 +135,10 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
             const SizedBox(height: 24),
             const OtpCard(),
             const SizedBox(height: 24),
-            InkWell(
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(36, 12, 16, 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(41),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'View all active authentications ',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                      ),
-                    ),
-                    Container(
-                      width: 20,
-                      height: 20,
-                      alignment: Alignment.center,
-                      child: Image.asset(
-                        Images.forward,
-                        width: 8,
-                        height: 16,
-                        package: 'at_enrollment_app',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             const SizedBox(height: 72),
-            // StreamBuilder<AtNotification>(
-            //   stream: fetchEnrollmentNotifications(),
-            //   builder: (BuildContext context,
-            //       AsyncSnapshot<AtNotification> snapshot) {
-            //     if (snapshot.hasData) {
-            //       EnrollmentData enrollmentData = EnrollmentData(
-            //           snapshot.data!.from,
-            //           '${snapshot.data!.key}${snapshot.data!.from}',
-            //           jsonDecode(snapshot.data!.value!)[
-            //               'encryptedApkamSymmetricKey']);
-            //
-            //       print('enrollmentData : ${snapshot.data!}');
-            //
-            //       return EnrollmentRequestCard(
-            //         enrollmentData: enrollmentData,
-            //       );
-            //     } else if (snapshot.hasError) {
-            //       // Handle error case
-            //       return Text('Error: ${snapshot.error}');
-            //     } else {
-            //       // Handle loading or initial state
-            //       return const Center(
-            //         child: Column(
-            //           children: [
-            //             Text('No request'),
-            //             Text('At the moment'),
-            //           ],
-            //         ),
-            //       );
-            //     }
-            //   },
-            // ),
           ],
         ),
       ),
     );
   }
-
-// Stream<AtNotification> fetchEnrollmentNotifications() {
-//   Stream<AtNotification> notificationStream = AtClientManager.getInstance()
-//       .atClient
-//       .notificationService
-//       .subscribe(regex: '__manage');
-//   return notificationStream;
-// }
 }

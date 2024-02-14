@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -17,12 +18,12 @@ class _OtpCardState extends State<OtpCard> {
 
   @override
   void initState() {
-    // _getOTPFromServer();
-
-    // timer = Timer.periodic(const Duration(minutes: 1), (t) {
-    //   _getOTPFromServer();
-    // });
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -70,21 +71,6 @@ class _OtpCardState extends State<OtpCard> {
     );
   }
 
-  Future<String?> _getOTPFromServer() async {
-    String? tempOtp = await AtClientManager.getInstance()
-        .atClient
-        .getRemoteSecondary()
-        ?.executeCommand('otp:get\n', auth: true);
-    tempOtp = tempOtp?.replaceAll('data:', '');
-    print('otp: $tempOtp');
-    if (mounted) {
-      setState(() {
-        otp = tempOtp ?? '';
-      });
-    }
-    return otp;
-  }
-
   Widget otpView() {
     return Container(
         width: 112,
@@ -94,14 +80,22 @@ class _OtpCardState extends State<OtpCard> {
           color: ColorConstant.appBarColor,
           borderRadius: BorderRadius.circular(55),
         ),
-        child: Text(
-          otp,
-          style: const TextStyle(
-            fontSize: 21,
-            fontWeight: FontWeight.w500,
-            color: ColorConstant.orange,
-            letterSpacing: 8,
-          ),
-        ));
+        child: StreamBuilder<String>(
+            stream: EnrollmentService.getInstance().otpControllerStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text(
+                  snapshot.data as String,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: ColorConstant.orange,
+                    letterSpacing: 8,
+                  ),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            }));
   }
 }

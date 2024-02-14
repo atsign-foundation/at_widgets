@@ -1,7 +1,10 @@
 import 'package:at_enrollment_app/common_widgets/button.dart';
+import 'package:at_enrollment_app/models/enrollment.dart';
 import 'package:at_enrollment_app/screens/atkey_authenticator/widgets/countdown_timer_widget.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_enrollment_app/utils/assets.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 
 enum RequestStatus { pending, successful, expired }
@@ -11,6 +14,7 @@ class EnrollmentRequestCard extends StatefulWidget {
   final Function()? onDone;
   final Function()? onDeny;
   final Function()? onApprove;
+  final EnrollmentData enrollmentData;
 
   const EnrollmentRequestCard({
     super.key,
@@ -18,6 +22,7 @@ class EnrollmentRequestCard extends StatefulWidget {
     this.onDone,
     this.onDeny,
     this.onApprove,
+    required this.enrollmentData,
   });
 
   @override
@@ -56,7 +61,7 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Max’s Iphone 15 Pro Max',
+                      '${widget.enrollmentData.atSign}\'s Iphone 15 Pro Max',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -95,7 +100,12 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
               children: [
                 Expanded(
                   child: Button(
-                    onPressed: widget.onDeny,
+                    onPressed: () {
+                      EnrollmentService.getInstance().manageEnrollmentRequest(
+                        widget.enrollmentData,
+                        EnrollOperationEnum.deny,
+                      );
+                    },
                     height: 36,
                     width: double.infinity,
                     buttonText: 'Deny',
@@ -112,7 +122,12 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Button(
-                    onPressed: widget.onApprove,
+                    onPressed: () {
+                      EnrollmentService.getInstance().manageEnrollmentRequest(
+                        widget.enrollmentData,
+                        EnrollOperationEnum.approve,
+                      );
+                    },
                     height: 36,
                     width: double.infinity,
                     buttonText: 'Approve',

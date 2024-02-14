@@ -2,6 +2,7 @@ import 'package:at_enrollment_app/common_widgets/button.dart';
 import 'package:at_enrollment_app/common_widgets/input_otp_field.dart';
 import 'package:at_enrollment_app/screens/enrollment_request/enrollment_request.dart';
 import 'package:at_enrollment_app/screens/welcome/widgets/type_selection_widget.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_enrollment_app/utils/assets.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -223,14 +224,17 @@ class _WelcomeState extends State<Welcome> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Button(
-                    onPressed: () {
-                      if (selectedType != null && otp.length == 4) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const EnrollmentRequest(),
-                            ));
-                      }
+                    onPressed: () async {
+                      // if (selectedType != null && otp.length == 4) {
+                      //   Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => const EnrollmentRequest(),
+                      //       ));
+                      // }
+
+                      await EnrollmentService.getInstance()
+                          .sendEnrollmentRequest();
                     },
                     width: double.infinity,
                     buttonText: 'Continue',

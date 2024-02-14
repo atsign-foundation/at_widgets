@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:at_enrollment_app/models/enrollment.dart';
 import 'package:at_enrollment_app/screens/atkey_authenticator/widgets/enrollment_request_card.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_enrollment_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,31 +24,57 @@ class _EnrollmentRequestScreenState extends State<EnrollmentRequestScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildDateLabel('Today'),
+          // buildDateLabel('Today'),
           const SizedBox(height: 12),
-          ListView.separated(
-            itemCount: 3,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            separatorBuilder: (context, index) {
-              return const SizedBox(height: 12);
+          StreamBuilder(
+            stream:
+                EnrollmentService.getInstance().fetchEnrollmentNotifications(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                EnrollmentData enrollmentData = EnrollmentData(
+                  snapshot.data!.from,
+                  '${snapshot.data!.key}${snapshot.data!.from}',
+                  jsonDecode(
+                      snapshot.data!.value!)['encryptedApkamSymmetricKey'],
+                );
+
+                print('enrollmentData : ${snapshot.data!}');
+
+                return ListView.separated(
+                  itemCount: 1,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 12);
+                  },
+                  itemBuilder: (context, index) {
+                    return EnrollmentRequestCard(
+                      status: RequestStatus.pending,
+                      enrollmentData: enrollmentData,
+                    );
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                return const Center(
+                  child: Text('No data found'),
+                );
+              }
             },
-            itemBuilder: (context, index) {
-              return const EnrollmentRequestCard(
-                status: RequestStatus.pending,
-              );
-            },
           ),
-          const SizedBox(height: 12),
-          buildDateLabel('Tuesday'),
-          const SizedBox(height: 12),
-          const EnrollmentRequestCard(
-            status: RequestStatus.successful,
-          ),
-          const SizedBox(height: 12),
-          const EnrollmentRequestCard(
-            status: RequestStatus.expired,
-          ),
+
+          /// TODO: not in use right now
+          // const SizedBox(height: 12),
+          // buildDateLabel('Tuesday'),
+          // const SizedBox(height: 12),
+          // const EnrollmentRequestCard(
+          //   status: RequestStatus.successful,
+          // ),
+          // const SizedBox(height: 12),
+          // const EnrollmentRequestCard(
+          //   status: RequestStatus.expired,
+          // ),
         ],
       ),
     );

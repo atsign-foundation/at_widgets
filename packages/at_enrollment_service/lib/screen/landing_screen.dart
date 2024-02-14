@@ -1,5 +1,7 @@
+import 'package:at_enrollment_app/models/enrollment_config.dart';
 import 'package:at_enrollment_app/screens/home/home.dart';
 import 'package:at_enrollment_app/screens/atkey_authenticator/key_authenticator_home_screen.dart';
+import 'package:at_enrollment_app/services/enrollment_service.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
@@ -7,10 +9,23 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 
-class LandingPage extends StatelessWidget {
+class LandingPage extends StatefulWidget {
   static const String rootDomain = 'root.atsign.org';
 
   const LandingPage({super.key});
+
+  @override
+  State<LandingPage> createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
+  @override
+  void initState() {
+    EnrollmentService.getInstance().init(
+      EnrollmentConfig(namespace: 'wavi'),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +114,7 @@ class LandingPage extends StatelessWidget {
       context: context,
       config: AtOnboardingConfig(
         atClientPreference: await getAtClientPreferences(),
-        domain: rootDomain,
+        domain: LandingPage.rootDomain,
         rootEnvironment: RootEnvironment.Production,
         theme: AtOnboardingTheme(
           primaryColor: null,
@@ -159,7 +174,7 @@ class LandingPage extends StatelessWidget {
   Future<AtClientPreference> getAtClientPreferences() async {
     var directory = await getApplicationSupportDirectory();
     return AtClientPreference()
-      ..rootDomain = rootDomain
+      ..rootDomain = LandingPage.rootDomain
       ..namespace = 'enroll'
       ..hiveStoragePath = directory.path
       ..commitLogPath = directory.path
