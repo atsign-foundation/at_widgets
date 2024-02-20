@@ -81,7 +81,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   bool permissionGrated = false;
 
   bool _isContinue = true;
-  bool _uploadingQRCode = false;
   String? _pairingAtsign;
 
   ServerStatus? atSignStatus;
@@ -950,12 +949,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     try {
       String? aesKey, atsign;
       setState(() {
-        _uploadingQRCode = true;
       });
       String? path = await _desktopQRFilePicker();
       if (path == null) {
         setState(() {
-          _uploadingQRCode = false;
         });
         return;
       }
@@ -987,19 +984,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           AtOnboardingLocalizations.current.error_incorrect_QRFile,
         );
         setState(() {
-          _uploadingQRCode = false;
         });
         return;
       }
       _processSharedSecret(atsign, aesKey);
       // await processAESKey(atsign, aesKey, false);
       setState(() {
-        _uploadingQRCode = false;
       });
     } catch (error) {
       _logger.warning(error);
       setState(() {
-        _uploadingQRCode = false;
       });
       await showErrorDialog(
         AtOnboardingLocalizations.current.error_process_file,
