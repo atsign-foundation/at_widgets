@@ -721,61 +721,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  if (!widget.hideQrScan) const SizedBox(height: 5),
-                  if (!widget.hideQrScan)
-                    Text(
-                      AtOnboardingLocalizations.current.have_QRCode,
-                      style: const TextStyle(
-                        fontSize: AtOnboardingDimens.fontLarge,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  if (!widget.hideQrScan) const SizedBox(height: 5),
-                  if (!widget.hideQrScan)
-                    (Platform.isAndroid || Platform.isIOS)
-                        ? AtOnboardingSecondaryButton(
-                            key: keyUploadQRCode,
-                            height: 48,
-                            borderRadius: 24,
-                            onPressed: () async {
-                              _showQRCodeScreen(context: context);
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  AtOnboardingLocalizations
-                                      .current.btn_scan_QRCode,
-                                  style: const TextStyle(
-                                    fontSize: AtOnboardingDimens.fontLarge,
-                                  ),
-                                ),
-                                const Icon(Icons.arrow_right_alt_rounded)
-                              ],
-                            ),
-                          )
-                        : AtOnboardingSecondaryButton(
-                            key: keyUploadQRCode,
-                            height: 48,
-                            borderRadius: 24,
-                            isLoading: _uploadingQRCode,
-                            onPressed: () async {
-                              _uploadQRFileForDesktop();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  AtOnboardingLocalizations
-                                      .current.btn_upload_QRCode,
-                                  style: const TextStyle(
-                                      fontSize: AtOnboardingDimens.fontLarge),
-                                ),
-                                const Icon(Icons.arrow_right_alt_rounded)
-                              ],
-                            ),
-                          ),
-                  const SizedBox(height: 20),
                   if (!widget.hideQrScan)
                     Text(
                       AtOnboardingLocalizations
