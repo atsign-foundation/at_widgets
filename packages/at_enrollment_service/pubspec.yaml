@@ -48,15 +48,17 @@ dependencies:
 
 dependency_overrides:
   at_client:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client
-      ref: apkam_onboarding_changes_with_enrollment_status
+    path: /Users/sachinsingh/Documents/geekyAnts/Atsign/at_client_sdk/packages/at_client
+    # git:
+    #   url: https://github.com/atsign-foundation/at_client_sdk.git
+    #   path: packages/at_client
+    #   ref: apkam_onboarding_changes_with_enrollment_status
   at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client_mobile
-      ref: apkam_onboarding_changes_with_enrollment_status
+    path: /Users/sachinsingh/Documents/geekyAnts/Atsign/at_client_sdk/packages/at_client_mobile
+    # git:
+    #   url: https://github.com/atsign-foundation/at_client_sdk.git
+    #   path: packages/at_client_mobile
+    #   ref: apkam_onboarding_changes_with_enrollment_status
   at_auth:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git

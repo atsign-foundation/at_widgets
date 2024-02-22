@@ -9,7 +9,7 @@ import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 // import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class InputPin extends StatefulWidget {
   String atSign;
@@ -58,12 +58,12 @@ class _InputPinState extends State<InputPin> {
   }
 
   readEnrollmentRequests() async {
-    final _enrollmentKeychainStore = FlutterSecureStorage();
-    String? enrollmentInfoJsonString =
-        await _enrollmentKeychainStore.read(key: 'enrollmentInfo');
-    var jsonString = (jsonDecode(enrollmentInfoJsonString ?? ''));
-    print(" enrollmentInfoJsonString : ${enrollmentInfoJsonString}");
-    print('jsonString: ${jsonString['atSign']}');
+    // final _enrollmentKeychainStore = FlutterSecureStorage();
+    // String? enrollmentInfoJsonString =
+    //     await _enrollmentKeychainStore.read(key: 'enrollmentInfo');
+    // var jsonString = (jsonDecode(enrollmentInfoJsonString ?? ''));
+    // print(" enrollmentInfoJsonString : ${enrollmentInfoJsonString}");
+    // print('jsonString: ${jsonString['atSign']}');
   }
 
   @override
