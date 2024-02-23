@@ -31,6 +31,7 @@ class _AtOnboardingInputAtSignScreenState
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
       primaryColor: widget.config.theme?.primaryColor,
+      textTheme: widget.config.theme?.textTheme,
       colorScheme: Theme.of(context).colorScheme.copyWith(
             primary: widget.config.theme?.primaryColor,
           ),
@@ -51,77 +52,79 @@ class _AtOnboardingInputAtSignScreenState
           ],
         ),
         body: Center(
-          child: Container(
-            decoration: BoxDecoration(
-                color: theme.primaryColor.withOpacity(0.1),
-                borderRadius:
-                    BorderRadius.circular(AtOnboardingDimens.borderRadius)),
-            padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            constraints: const BoxConstraints(
-              maxWidth: 400,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  AtOnboardingLocalizations.current.activate_an_atSign,
-                  style: const TextStyle(
-                    fontSize: AtOnboardingDimens.fontLarge,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  AtOnboardingLocalizations
-                      .current.enter_atSign_need_to_activate,
-                  style: const TextStyle(
-                    fontSize: AtOnboardingDimens.fontSmall,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  enabled: true,
-                  validator: (String? value) {
-                    if ((value ?? '').isEmpty) {
-                      return AtOnboardingLocalizations
-                          .current.msg_atSign_cannot_empty;
-                    }
-                    return null;
-                  },
-                  controller: _atsignController,
-                  decoration: InputDecoration(
-                    hintText: AtOnboardingStrings.atsignHintText,
-                    prefix: Text(
-                      '@',
-                      style: TextStyle(color: theme.primaryColor),
+          child: SingleChildScrollView(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: theme.primaryColor.withOpacity(0.1),
+                  borderRadius:
+                      BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              constraints: const BoxConstraints(
+                maxWidth: 400,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    AtOnboardingLocalizations.current.activate_an_atSign,
+                    style: const TextStyle(
+                      fontSize: AtOnboardingDimens.fontLarge,
+                      fontWeight: FontWeight.bold,
                     ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: theme.primaryColor,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    AtOnboardingLocalizations
+                        .current.enter_atSign_need_to_activate,
+                    style: const TextStyle(
+                      fontSize: AtOnboardingDimens.fontSmall,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    enabled: true,
+                    validator: (String? value) {
+                      if ((value ?? '').isEmpty) {
+                        return AtOnboardingLocalizations
+                            .current.msg_atSign_cannot_empty;
+                      }
+                      return null;
+                    },
+                    controller: _atsignController,
+                    decoration: InputDecoration(
+                      hintText: AtOnboardingStrings.atsignHintText,
+                      prefix: Text(
+                        '@',
+                        style: TextStyle(color: theme.primaryColor),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: theme.primaryColor,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: AtOnboardingDimens.paddingSmall),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  AtOnboardingPrimaryButton(
+                    height: 48,
+                    borderRadius: 24,
+                    onPressed: _activateAtSign,
+                    child: Center(
+                      child: Text(
+                        AtOnboardingLocalizations.current.activate,
+                        style: const TextStyle(
+                          fontSize: AtOnboardingDimens.fontLarge,
+                        ),
                       ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: AtOnboardingDimens.paddingSmall),
                   ),
-                ),
-                const SizedBox(height: 20),
-                AtOnboardingPrimaryButton(
-                  height: 48,
-                  borderRadius: 24,
-                  onPressed: _activateAtSign,
-                  child: Center(
-                    child: Text(
-                      AtOnboardingLocalizations.current.activate,
-                      style: const TextStyle(
-                        fontSize: AtOnboardingDimens.fontLarge,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

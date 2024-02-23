@@ -61,6 +61,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
       primaryColor: widget.config.theme?.primaryColor,
+      textTheme: widget.config.theme?.textTheme,
       colorScheme: Theme.of(context).colorScheme.copyWith(
             primary: widget.config.theme?.primaryColor,
           ),
@@ -84,100 +85,102 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
             ],
           ),
           body: Center(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: theme.primaryColor.withOpacity(0.1),
-                  borderRadius:
-                      BorderRadius.circular(AtOnboardingDimens.borderRadius)),
-              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              constraints: const BoxConstraints(
-                maxWidth: 400,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    AtOnboardingLocalizations.current.enter_your_email_address,
-                    style: const TextStyle(
-                      fontSize: AtOnboardingDimens.fontLarge,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    enabled: true,
-                    focusNode: _focusNode,
-                    validator: (String? value) {
-                      if ((value ?? '').isEmpty) {
-                        return AtOnboardingLocalizations
-                            .current.msg_atSign_cannot_empty;
-                      }
-                      return null;
-                    },
-                    controller: _emailController,
-                    inputFormatters: <TextInputFormatter>[
-                      LengthLimitingTextInputFormatter(80),
-                      // This inputFormatter function will convert all the input to lowercase.
-                      TextInputFormatter.withFunction(
-                          (TextEditingValue oldValue,
-                              TextEditingValue newValue) {
-                        return newValue.copyWith(
-                          text: newValue.text.toLowerCase(),
-                          selection: newValue.selection,
-                        );
-                      })
-                    ],
-                    textCapitalization: TextCapitalization.none,
-                    decoration: InputDecoration(
-                      fillColor: Colors.blueAccent,
-                      errorStyle: const TextStyle(fontSize: 12),
-                      prefixStyle:
-                          TextStyle(color: theme.primaryColor, fontSize: 15),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: theme.primaryColor,
-                        ),
+            child: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: theme.primaryColor.withOpacity(0.1),
+                    borderRadius:
+                        BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+                padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      AtOnboardingLocalizations.current.enter_your_email_address,
+                      style: const TextStyle(
+                        fontSize: AtOnboardingDimens.fontLarge,
+                        fontWeight: FontWeight.bold,
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.grey[500]!,
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: AtOnboardingDimens.paddingSmall),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    AtOnboardingLocalizations.current.note_pair_content,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: AtOnboardingDimens.fontNormal,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  AtOnboardingPrimaryButton(
-                    height: 48,
-                    borderRadius: 24,
-                    isLoading: isParing,
-                    onPressed: _onSendCodePressed,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AtOnboardingLocalizations.current.send_code,
-                          style: const TextStyle(
-                            fontSize: AtOnboardingDimens.fontLarge,
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      enabled: true,
+                      focusNode: _focusNode,
+                      validator: (String? value) {
+                        if ((value ?? '').isEmpty) {
+                          return AtOnboardingLocalizations
+                              .current.msg_atSign_cannot_empty;
+                        }
+                        return null;
+                      },
+                      controller: _emailController,
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(80),
+                        // This inputFormatter function will convert all the input to lowercase.
+                        TextInputFormatter.withFunction(
+                            (TextEditingValue oldValue,
+                                TextEditingValue newValue) {
+                          return newValue.copyWith(
+                            text: newValue.text.toLowerCase(),
+                            selection: newValue.selection,
+                          );
+                        })
+                      ],
+                      textCapitalization: TextCapitalization.none,
+                      decoration: InputDecoration(
+                        fillColor: Colors.blueAccent,
+                        errorStyle: const TextStyle(fontSize: 12),
+                        prefixStyle:
+                            TextStyle(color: theme.primaryColor, fontSize: 15),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
                           ),
                         ),
-                        const Icon(Icons.arrow_right_alt_rounded)
-                      ],
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[500]!,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: AtOnboardingDimens.paddingSmall),
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    Text(
+                      AtOnboardingLocalizations.current.note_pair_content,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: AtOnboardingDimens.fontNormal,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    AtOnboardingPrimaryButton(
+                      height: 48,
+                      borderRadius: 24,
+                      isLoading: isParing,
+                      onPressed: _onSendCodePressed,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            AtOnboardingLocalizations.current.send_code,
+                            style: const TextStyle(
+                              fontSize: AtOnboardingDimens.fontLarge,
+                            ),
+                          ),
+                          const Icon(Icons.arrow_right_alt_rounded)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

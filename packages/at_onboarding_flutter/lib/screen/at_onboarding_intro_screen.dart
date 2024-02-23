@@ -34,6 +34,7 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
       primaryColor: widget.config.theme?.primaryColor,
+      textTheme: widget.config.theme?.textTheme,
       colorScheme: Theme.of(context).colorScheme.copyWith(
             primary: widget.config.theme?.primaryColor,
           ),
@@ -55,64 +56,66 @@ class _AtOnboardingIntroScreenState extends State<AtOnboardingIntroScreen> {
           centerTitle: true,
         ),
         body: Center(
-          child: Container(
-            decoration: BoxDecoration(
-                color: theme.primaryColor.withOpacity(0.1),
-                borderRadius:
-                    BorderRadius.circular(AtOnboardingDimens.borderRadius)),
-            padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-            constraints: const BoxConstraints(
-              maxWidth: 400,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                RichText(
-                  text: TextSpan(
-                    text: AtOnboardingLocalizations.current.title_intro,
-                    style: theme.textTheme.titleMedium,
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: AtOnboardingLocalizations.current.learn_more,
-                        style: TextStyle(
-                          fontSize: AtOnboardingDimens.fontLarge,
-                          fontWeight: FontWeight.w500,
-                          color: theme.primaryColor,
-                          decoration: TextDecoration.underline,
+          child: SingleChildScrollView(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: theme.primaryColor.withOpacity(0.1),
+                  borderRadius:
+                      BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+              constraints: const BoxConstraints(
+                maxWidth: 400,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      text: AtOnboardingLocalizations.current.title_intro,
+                      style: theme.textTheme.titleMedium,
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: AtOnboardingLocalizations.current.learn_more,
+                          style: TextStyle(
+                            fontSize: AtOnboardingDimens.fontLarge,
+                            fontWeight: FontWeight.w500,
+                            color: theme.primaryColor,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = _showReferenceWebview,
                         ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = _showReferenceWebview,
-                      ),
-                    ],
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                AtOnboardingPrimaryButton(
-                  height: 48,
-                  borderRadius: 24,
-                  child: Text(
-                    AtOnboardingLocalizations.current.already_have_an_atSign,
+                  const SizedBox(height: 16),
+                  AtOnboardingPrimaryButton(
+                    height: 48,
+                    borderRadius: 24,
+                    child: Text(
+                      AtOnboardingLocalizations.current.already_have_an_atSign,
+                    ),
+                    onPressed: () {
+                      _navigateToHomePage(true);
+                    },
                   ),
-                  onPressed: () {
-                    _navigateToHomePage(true);
-                  },
-                ),
-                const SizedBox(height: 16),
-                AtOnboardingSecondaryButton(
-                  height: 48,
-                  borderRadius: 24,
-                  child: Text(
-                    AtOnboardingLocalizations.current.get_free_atSign,
+                  const SizedBox(height: 16),
+                  AtOnboardingSecondaryButton(
+                    height: 48,
+                    borderRadius: 24,
+                    child: Text(
+                      AtOnboardingLocalizations.current.get_free_atSign,
+                    ),
+                    onPressed: () {
+                      _navigateToHomePage(false);
+                    },
                   ),
-                  onPressed: () {
-                    _navigateToHomePage(false);
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

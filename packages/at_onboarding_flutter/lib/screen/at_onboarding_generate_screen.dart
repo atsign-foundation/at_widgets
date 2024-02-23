@@ -192,6 +192,7 @@ class _AtOnboardingGenerateScreenState
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
       primaryColor: widget.config.theme?.primaryColor,
+      textTheme: widget.config.theme?.textTheme,
       colorScheme: Theme.of(context).colorScheme.copyWith(
             primary: widget.config.theme?.primaryColor,
           ),
@@ -214,155 +215,159 @@ class _AtOnboardingGenerateScreenState
             ],
           ),
           body: Center(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: theme.primaryColor.withOpacity(0.1),
-                  borderRadius:
-                      BorderRadius.circular(AtOnboardingDimens.borderRadius)),
-              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              constraints: const BoxConstraints(
-                maxWidth: 400,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    AtOnboardingLocalizations.current.btn_generate_atSign,
-                    style: const TextStyle(
-                      fontSize: AtOnboardingDimens.fontLarge,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    enabled: false,
-                    validator: (String? value) {
-                      if ((value ?? '').isEmpty) {
-                        return AtOnboardingLocalizations
-                            .current.msg_atSign_cannot_empty;
-                      }
-                      return null;
-                    },
-                    controller: _atsignController,
-                    decoration: InputDecoration(
-                      hintText: AtOnboardingStrings.atsignHintText,
-                      prefix: Text(
-                        '@',
-                        style: TextStyle(color: theme.primaryColor),
+            child: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: theme.primaryColor.withOpacity(0.1),
+                    borderRadius:
+                        BorderRadius.circular(AtOnboardingDimens.borderRadius)),
+                padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      AtOnboardingLocalizations.current.btn_generate_atSign,
+                      style: const TextStyle(
+                        fontSize: AtOnboardingDimens.fontLarge,
+                        fontWeight: FontWeight.bold,
                       ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: theme.primaryColor,
+                    ),
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      enabled: false,
+                      validator: (String? value) {
+                        if ((value ?? '').isEmpty) {
+                          return AtOnboardingLocalizations
+                              .current.msg_atSign_cannot_empty;
+                        }
+                        return null;
+                      },
+                      controller: _atsignController,
+                      decoration: InputDecoration(
+                        hintText: AtOnboardingStrings.atsignHintText,
+                        prefix: Text(
+                          '@',
+                          style: TextStyle(color: theme.primaryColor),
                         ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: AtOnboardingDimens.paddingSmall),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: AtOnboardingDimens.paddingSmall),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    AtOnboardingLocalizations.current.msg_refresh_atSign,
-                    style: const TextStyle(
-                      fontSize: AtOnboardingDimens.fontNormal,
-                      // fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: _showReferenceWebview,
-                    child: Text(
-                      AtOnboardingLocalizations.current.learn_about_atSign,
+                    const SizedBox(height: 20),
+                    Text(
+                      AtOnboardingLocalizations.current.msg_refresh_atSign,
                       style: const TextStyle(
                         fontSize: AtOnboardingDimens.fontNormal,
-                        fontStyle: FontStyle.italic,
-                        // fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.underline,
+                        // fontStyle: FontStyle.italic,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  AtOnboardingSecondaryButton(
-                    key: keyGenerateAtSign,
-                    height: 48,
-                    borderRadius: 24,
-                    onPressed: () async {
-                      _getFreeAtsign();
-                    },
-                    isLoading: _isGenerating,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Center(
-                          child: Text(
-                            AtOnboardingLocalizations.current.btn_refresh,
+                    const SizedBox(height: 6),
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: _showReferenceWebview,
+                      child: Text(
+                        AtOnboardingLocalizations.current.learn_about_atSign,
+                        style: const TextStyle(
+                          fontSize: AtOnboardingDimens.fontNormal,
+                          fontStyle: FontStyle.italic,
+                          // fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    AtOnboardingSecondaryButton(
+                      key: keyGenerateAtSign,
+                      height: 48,
+                      borderRadius: 24,
+                      onPressed: () async {
+                        _getFreeAtsign();
+                      },
+                      isLoading: _isGenerating,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Center(
+                            child: Text(
+                              AtOnboardingLocalizations.current.btn_refresh,
+                              style: const TextStyle(
+                                fontSize: AtOnboardingDimens.fontLarge,
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.refresh,
+                            size: 20,
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    AtOnboardingPrimaryButton(
+                      height: 48,
+                      borderRadius: 24,
+                      onPressed: _showPairScreen,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            AtOnboardingLocalizations.current.btn_pair,
                             style: const TextStyle(
-                                fontSize: AtOnboardingDimens.fontLarge),
+                              fontSize: AtOnboardingDimens.fontLarge,
+                            ),
                           ),
-                        ),
-                        const Icon(
-                          Icons.refresh,
-                          size: 20,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  AtOnboardingPrimaryButton(
-                    height: 48,
-                    borderRadius: 24,
-                    onPressed: _showPairScreen,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AtOnboardingLocalizations.current.btn_pair,
-                          style: const TextStyle(
-                            fontSize: AtOnboardingDimens.fontLarge,
-                          ),
-                        ),
-                        const Icon(
-                          Icons.arrow_right_alt_rounded,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  InkWell(
-                    onTap: () async {
-                      if (widget.isFromIntroScreen) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return AtOnboardingHomeScreen(
-                                config: widget.config,
-                              );
-                            },
-                          ),
-                        );
-                      } else {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    child: Text(
-                      AtOnboardingLocalizations.current.btn_already_have_atSign,
-                      key: keyHaveAnAtSign,
-                      style: TextStyle(
-                        fontSize: AtOnboardingDimens.fontNormal,
-                        fontWeight: FontWeight.w500,
-                        color: theme.primaryColor,
-                        decoration: TextDecoration.underline,
+                          const Icon(
+                            Icons.arrow_right_alt_rounded,
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                    InkWell(
+                      onTap: () async {
+                        if (widget.isFromIntroScreen) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return AtOnboardingHomeScreen(
+                                  config: widget.config,
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      child: Text(
+                        AtOnboardingLocalizations
+                            .current.btn_already_have_atSign,
+                        key: keyHaveAnAtSign,
+                        style: TextStyle(
+                          fontSize: AtOnboardingDimens.fontNormal,
+                          fontWeight: FontWeight.w500,
+                          color: theme.primaryColor,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -63,6 +63,7 @@ class _AtOnboardingActivateScreenState
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
       primaryColor: widget.config.theme?.primaryColor,
+      textTheme: widget.config.theme?.textTheme,
       colorScheme: Theme.of(context).colorScheme.copyWith(
             primary: widget.config.theme?.primaryColor,
           ),
@@ -85,25 +86,27 @@ class _AtOnboardingActivateScreenState
             ],
           ),
           body: Center(
-            child: Container(
-              padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
-              constraints: const BoxConstraints(
-                maxWidth: 400,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AtSyncIndicator(
-                    color: theme.primaryColor,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    AtOnboardingLocalizations.current.msg_wait_fetching_atSign,
-                  ),
-                ],
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                margin: const EdgeInsets.all(AtOnboardingDimens.paddingNormal),
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AtSyncIndicator(
+                      color: theme.primaryColor,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      AtOnboardingLocalizations.current.msg_wait_fetching_atSign,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

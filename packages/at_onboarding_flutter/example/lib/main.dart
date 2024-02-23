@@ -117,7 +117,13 @@ class _MyAppState extends State<MyApp> {
                             rootEnvironment: AtEnv.rootEnvironment,
                             appAPIKey: AtEnv.appApiKey,
                             theme: AtOnboardingTheme(
-                              primaryColor: null,
+                              primaryColor: Colors.blue,
+                              textTheme: const TextTheme(
+                                titleMedium: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                             showPopupSharedStorage: true,
                           ),
@@ -148,11 +154,21 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         var preference = await futurePreference;
                         atClientPreference = preference;
+                        // ignore: use_build_context_synchronously
                         AtOnboarding.reset(
                           context: context,
                           config: AtOnboardingConfig(
                             atClientPreference: atClientPreference!,
                             domain: AtEnv.rootDomain,
+                            theme: AtOnboardingTheme(
+                              primaryColor: Colors.blue,
+                              textTheme: const TextTheme(
+                                titleMedium: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
                             rootEnvironment: AtEnv.rootEnvironment,
                             appAPIKey: AtEnv.appApiKey,
                           ),
