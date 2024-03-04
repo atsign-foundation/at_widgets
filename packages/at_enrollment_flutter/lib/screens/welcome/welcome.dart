@@ -1,9 +1,12 @@
 import 'package:at_enrollment_flutter/common_widgets/button.dart';
 import 'package:at_enrollment_flutter/common_widgets/input_otp_field.dart';
+import 'package:at_enrollment_flutter/models/enrollment_config.dart';
+import 'package:at_enrollment_flutter/screens/enrollment_request/pending_enrollment_request.dart';
 import 'package:at_enrollment_flutter/screens/welcome/widgets/type_selection_widget.dart';
 import 'package:at_enrollment_flutter/services/enrollment_service.dart';
 import 'package:at_enrollment_flutter/utils/assets.dart';
 import 'package:at_enrollment_flutter/utils/colors.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 
 class Welcome extends StatefulWidget {
@@ -23,6 +26,46 @@ class _WelcomeState extends State<Welcome> {
   String otp = '';
   TextEditingController controller = TextEditingController();
   String searchText = '';
+
+  @override
+  void initState() {
+    /// assigning default namespace to atClientPreference one
+    addInitialNamespaceValue();
+    EnrollmentService.getInstance().getSentEnrollmentData();
+    checkForEnrollmentData();
+    super.initState();
+  }
+
+  /// If enrollment request is already present in keychain, another request can not be submitted
+  checkForEnrollmentData() {
+    var enrolmentController =
+        EnrollmentService.getInstance().enrollmentStatusController;
+    enrolmentController.stream.listen((event) {
+      if (event.isNotEmpty) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PendingEnrollmentRequest(
+              enrollmentInfo: event['id'] as EnrollmentInfo,
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  addInitialNamespaceValue() {
+    var enrollmentService = EnrollmentService.getInstance();
+    var atClientPreference = enrollmentService.getAtClientPreferences();
+    controller.text = atClientPreference.namespace ?? '';
+
+    var enrollmentConfig = EnrollmentConfig(
+      namespace: controller.text,
+    );
+    EnrollmentService.getInstance().updateEnrollmentConfig(
+      enrollmentConfig,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +154,10 @@ class _WelcomeState extends State<Welcome> {
                 Center(
                   child: InputOTPField(
                     onChange: (value) {
-                      setState(() {
-                        otp = value;
-                      });
+                      var enrollmentConfig = EnrollmentConfig(otp: value);
+                      EnrollmentService.getInstance().updateEnrollmentConfig(
+                        enrollmentConfig,
+                      );
                     },
                     fillColor: Colors.white,
                   ),
@@ -210,7 +254,24 @@ class _WelcomeState extends State<Welcome> {
                     return TypeSelectionWidget(
                       isSelected: selectedType == AccessType.values[index],
                       accessType: AccessType.values[index],
-                      onSelect: (value) {
+                      onSelect: (AccessType value) {
+                        Map<String, String> namespaceMap = {
+                          controller.text: ''
+                        };
+
+                        if (value == AccessType.readAndWrite) {
+                          namespaceMap[controller.text] = 'rw';
+                        } else if (value == AccessType.readOnly) {
+                          namespaceMap[controller.text] = 'r';
+                        }
+
+                        var enrollmentConfig = EnrollmentConfig(
+                          namespaceActionmap: namespaceMap,
+                        );
+                        EnrollmentService.getInstance().updateEnrollmentConfig(
+                          enrollmentConfig,
+                        );
+
                         setState(() {
                           selectedType = value;
                         });
@@ -234,14 +295,13 @@ class _WelcomeState extends State<Welcome> {
 
                       await EnrollmentService.getInstance()
                           .sendEnrollmentRequest();
-                      // await EnrollmentService.getInstance()
-                      // .getEnrollmentStatus();
                     },
                     width: double.infinity,
                     buttonText: 'Continue',
-                    buttonColor: selectedType != null && otp.length == 4
-                        ? ColorConstant.orange
-                        : ColorConstant.disableColor,
+                    buttonColor: ColorConstant.orange,
+                    //   buttonColor: selectedType != null && otp.length == 4
+                    // ? ColorConstant.orange
+                    // : ColorConstant.disableColor,
                     titleStyle: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,

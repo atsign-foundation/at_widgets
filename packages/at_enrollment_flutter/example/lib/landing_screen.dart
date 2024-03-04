@@ -1,7 +1,7 @@
-import 'package:at_enrollment_flutter/models/enrollment_config.dart';
+import 'package:at_enrollment_flutter/at_enrollment.dart';
+
 import 'package:at_enrollment_flutter/screens/home/home.dart';
 import 'package:at_enrollment_flutter/screens/key_authenticator_home_screen.dart';
-import 'package:at_enrollment_flutter/services/enrollment_service.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
@@ -21,10 +21,12 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
-    EnrollmentService.getInstance().init(
-      EnrollmentConfig(namespace: 'wavi'),
-    );
+    initEnrollmentPackage();
     super.initState();
+  }
+
+  initEnrollmentPackage() async {
+    // AtEnrollment.init(await getAtClientPreferences());
   }
 
   @override
@@ -123,15 +125,6 @@ class _LandingPageState extends State<LandingPage> {
       ),
     );
     if (result.status == AtOnboardingResultStatus.success) {
-      // setup of current atsign and atChops
-      // AtChopsKeys atChopsKey = AtChopsKeys.create(atEncryptionKeyPair, _atPkamKeyPair);
-      // AtClientManager.getInstance().setCurrentAtSign(
-      //   result.atsign!,
-      //   'enroll',
-      //   await getAtClientPreferences(),
-      //   atChops: AtChops(atChopsKey),
-      // );
-
       if (context.mounted) {
         await Navigator.push(
           context,
@@ -140,6 +133,7 @@ class _LandingPageState extends State<LandingPage> {
                 const KeyAuthenticatorHomeScreen(),
           ),
         );
+        // AtEnrollment.manageEnrollmentRequest(context);
       }
     }
   }

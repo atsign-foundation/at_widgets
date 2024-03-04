@@ -72,30 +72,35 @@ class _OtpCardState extends State<OtpCard> {
   }
 
   Widget otpView() {
-    return Container(
-        width: 112,
-        height: 36,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: ColorConstant.appBarColor,
-          borderRadius: BorderRadius.circular(55),
-        ),
-        child: StreamBuilder<String>(
-            stream: EnrollmentService.getInstance().otpControllerStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(
-                  snapshot.data as String,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: ColorConstant.orange,
-                    letterSpacing: 8,
-                  ),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            }));
+    return InkWell(
+      onTap: () {
+        EnrollmentService.getInstance().getOTPFromServer(refresh: true);
+      },
+      child: Container(
+          width: 112,
+          height: 36,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: ColorConstant.appBarColor,
+            borderRadius: BorderRadius.circular(55),
+          ),
+          child: StreamBuilder<String>(
+              stream: EnrollmentService.getInstance().otpControllerStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data as String,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: ColorConstant.orange,
+                      letterSpacing: 8,
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              })),
+    );
   }
 }

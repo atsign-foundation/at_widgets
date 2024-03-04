@@ -1,9 +1,16 @@
 class EnrollmentConfig {
-  String namespace;
-  String rootDomain;
+  String? namespace;
+  String? currentAtsign;
+  String? device;
+  String? otp;
+  String? pin;
+  Map<String, String>? namespaceActionmap;
 
   EnrollmentConfig({
-    required this.namespace,
-    this.rootDomain = 'root.atsign.org',
+    this.namespace,
+    this.currentAtsign,
+    this.otp,
+    this.pin,
+    this.namespaceActionmap,
   });
 }

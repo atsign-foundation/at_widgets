@@ -1,4 +1,4 @@
-import 'package:at_enrollment_flutter/screen/landing_screen.dart';
+import 'package:at_enrollment_flutter_example/landing_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

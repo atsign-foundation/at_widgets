@@ -15,35 +15,98 @@ class EnrollmentService {
 
   String otp = '';
   late AtEnrollmentServiceImpl _atEnrollmentServiceImpl;
-  late EnrollmentConfig _enrollmentConfig;
+  final EnrollmentConfig _enrollmentConfig = EnrollmentConfig();
   AtEnrollmentServiceImpl get getAtEnrollmentServiceImpl =>
       _atEnrollmentServiceImpl;
+  late AtClientPreference _atClientPreference;
 
+  /// otp streamController
   StreamController<String> otpStreamController =
       StreamController<String>.broadcast();
-
-  /// Sink for the contacts' list stream
   Sink get otpControllerSink => otpStreamController.sink;
-
-  /// Stream of contacts' list
   Stream<String> get otpControllerStream => otpStreamController.stream;
 
-  init(EnrollmentConfig enrollmentConfig) {
-    _enrollmentConfig = enrollmentConfig;
-    // TODO: replace with actual atsign
+  /// enrollment status streamController
+  StreamController<Map<String, dynamic>> enrollmentStatusController =
+      StreamController<Map<String, dynamic>>.broadcast();
+  Sink get enrollmentStatusControllerSink => enrollmentStatusController.sink;
+  Stream<Map<String, dynamic>> get enrollmentStatusControllerStream =>
+      enrollmentStatusController.stream;
+
+  /// pending enrollment requests controller
+  StreamController<List<EnrollmentData>> pendingEnrollmentController =
+      StreamController<List<EnrollmentData>>.broadcast();
+  Sink<List<EnrollmentData>> get pendingEnrollmentControllerSink =>
+      pendingEnrollmentController.sink;
+  Stream<List<EnrollmentData>> get pendingEnrollmentControllerStream =>
+      pendingEnrollmentController.stream;
+
+  set setAtClientPreference(AtClientPreference atClientPreference) {
+    _atClientPreference = atClientPreference;
+  }
+
+  EnrollmentConfig get enrollmentConfig => _enrollmentConfig;
+
+  /// Stream of contacts' list
+
+  /// enrollment id -> EnrollmentStatus
+  Map<String, dynamic> enrollmentDataStatus = {};
+  late String currentAtsign;
+
+  init() {
+    if (_enrollmentConfig.currentAtsign != null) {
+      currentAtsign = _enrollmentConfig.currentAtsign!;
+    } else {
+      currentAtsign =
+          AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '';
+    }
+
     _atEnrollmentServiceImpl = AtEnrollmentServiceImpl(
-      // AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '',
-      '@46honest',
+      currentAtsign,
       getAtClientPreferences(),
     );
   }
 
-  getAtClientPreferences() {
-    return AtClientPreference()
-      ..rootDomain = _enrollmentConfig.rootDomain
-      ..namespace = _enrollmentConfig.namespace
-      ..isLocalStoreRequired = true
-      ..enableEnrollmentDuringOnboard = true;
+  updateEnrollmentConfig(EnrollmentConfig enrollmentConfig) {
+    _enrollmentConfig.currentAtsign =
+        enrollmentConfig.currentAtsign ?? _enrollmentConfig.currentAtsign;
+
+    _enrollmentConfig.namespace =
+        enrollmentConfig.namespace ?? _enrollmentConfig.namespace;
+
+    _enrollmentConfig.device =
+        enrollmentConfig.device ?? _enrollmentConfig.device;
+
+    _enrollmentConfig.otp = enrollmentConfig.otp ?? _enrollmentConfig.otp;
+
+    _enrollmentConfig.pin = enrollmentConfig.pin ?? _enrollmentConfig.pin;
+
+    _enrollmentConfig.namespaceActionmap =
+        enrollmentConfig.namespaceActionmap ??
+            _enrollmentConfig.namespaceActionmap;
+  }
+
+  sendEnrollmentRequest() async {
+    AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
+        AtNewEnrollmentRequestBuilder();
+
+    AtEnrollmentServiceImpl atEnrollmentServiceImpl =
+        EnrollmentService.getInstance().getAtEnrollmentServiceImpl;
+
+    atEnrollmentRequestBuilder
+      ..setAppName(_enrollmentConfig.namespace!)
+      ..setDeviceName('iphone')
+      ..setOtp(_enrollmentConfig.otp!)
+      ..setNamespaces(_enrollmentConfig.namespaceActionmap!);
+    AtEnrollmentRequest atEnrollmentRequest =
+        atEnrollmentRequestBuilder.build();
+    String enrollResponse = await OnboardingService.getInstance()
+        .enroll(atEnrollmentServiceImpl, atEnrollmentRequest);
+    print('enrollResponse : ${enrollResponse}');
+  }
+
+  AtClientPreference getAtClientPreferences() {
+    return _atClientPreference..enableEnrollmentDuringOnboard = true;
   }
 
   Stream<AtNotification> fetchEnrollmentNotifications() {
@@ -52,8 +115,38 @@ class EnrollmentService {
         .notificationService
         .subscribe(regex: '__manage');
 
-    // notificationStream.listen((event) { });
+    notificationStream.listen((AtNotification event) {
+      // create EnrollmentRequest and add to stream controller
+      // EnrollmentData enrollmentRequest = EnrollmentData();
+
+      // pendingEnrollmentControllerSink.add(enrollmentRequest);
+    });
+
     return notificationStream;
+  }
+
+  Future<List<EnrollmentRequest>> fetchPendingRequests() async {
+    var atClient = AtClientManager.getInstance().atClient;
+    var pendingRequests = await atClient.fetchEnrollmentRequests(
+      EnrollListRequestParam(),
+    );
+
+    List<EnrollmentData> enrollmentList = [];
+    pendingRequests.forEach((EnrollmentRequest element) {
+      var enrollmentData = EnrollmentData(
+        currentAtsign,
+        element.enrollmentKey,
+        '',
+        element.appName,
+        element.deviceName,
+        element.namespace,
+      );
+
+      enrollmentList.add(enrollmentData);
+    });
+
+    pendingEnrollmentControllerSink.add(enrollmentList);
+    return pendingRequests;
   }
 
   Future<String?> getOTPFromServer({bool refresh = false}) async {
@@ -71,30 +164,6 @@ class EnrollmentService {
     otpControllerSink.add(otp);
     print('otp: $otp');
     return otp;
-  }
-
-  sendEnrollmentRequest() async {
-    AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
-        AtNewEnrollmentRequestBuilder();
-
-    AtEnrollmentServiceImpl atEnrollmentServiceImpl =
-        EnrollmentService.getInstance().getAtEnrollmentServiceImpl;
-
-    atEnrollmentRequestBuilder
-      ..setAppName('wavi')
-      ..setDeviceName('iphone')
-      ..setOtp('2JWC2T')
-      ..setNamespaces({'wavi': 'rw'});
-    AtEnrollmentRequest atEnrollmentRequest =
-        atEnrollmentRequestBuilder.build();
-    String enrollResponse = await OnboardingService.getInstance()
-        .enroll(atEnrollmentServiceImpl, atEnrollmentRequest);
-    print('enrollResponse : ${enrollResponse}');
-    // EnrollResponse enrollResponse =
-    //     await OnboardingService.getInstance().enroll(
-    //   atEnrollmentServiceImpl,
-    //   atEnrollmentRequest,
-    // );
   }
 
 // approves or denies the enrollment request
@@ -125,12 +194,26 @@ class EnrollmentService {
     return atEnrollmentResponse;
   }
 
-  getEnrollmentStatus() async {
+  getEnrollmentStatus({String? enrollmentId}) async {
     var enrollmentStatusFuture =
         getAtEnrollmentServiceImpl.getFinalEnrollmentStatus();
-    print('enrollmentStatus : ${enrollmentStatusFuture}');
     EnrollmentStatus enrollmentStatus = await enrollmentStatusFuture;
+    // enrollmentStatus[res.enrollmentId] = null;
+    if (enrollmentId != null) {
+      enrollmentDataStatus['status'] = enrollmentStatus;
+      enrollmentStatusControllerSink.add(enrollmentDataStatus);
+    }
     print('enrollmentStatus : ${enrollmentStatus}');
     print('enrollmentStatusFuture : ${enrollmentStatusFuture}');
+  }
+
+  Future<EnrollmentInfo?> getSentEnrollmentData() async {
+    var res = await _atEnrollmentServiceImpl.getSentEnrollmentRequest();
+    if (res != null) {
+      enrollmentDataStatus['id'] = res;
+      enrollmentStatusControllerSink.add(enrollmentDataStatus);
+      getEnrollmentStatus(enrollmentId: res.enrollmentId);
+    }
+    return res;
   }
 }

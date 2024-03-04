@@ -1,9 +1,9 @@
 import 'package:at_enrollment_flutter/common_widgets/button.dart';
 import 'package:at_enrollment_flutter/models/enrollment.dart';
-import 'package:at_enrollment_flutter/screens/atkey_authenticator/widgets/countdown_timer_widget.dart';
 import 'package:at_enrollment_flutter/services/enrollment_service.dart';
 import 'package:at_enrollment_flutter/utils/assets.dart';
 import 'package:at_enrollment_flutter/utils/colors.dart';
+import 'package:at_enrollment_flutter/utils/enrollment_utils.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +30,13 @@ class EnrollmentRequestCard extends StatefulWidget {
 }
 
 class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
+  bool isActioned = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,8 +68,8 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${widget.enrollmentData.atSign}\'s Iphone 15 Pro Max',
-                      style: TextStyle(
+                      widget.enrollmentData.atSign,
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: ColorConstant.black,
@@ -70,16 +77,19 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
                       ),
                     ),
                     Text(
-                      'SSH No Ports',
-                      style: TextStyle(
+                      widget.enrollmentData.deviceName,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: ColorConstant.black,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Text('Read Only',
-                        style: TextStyle(
+                    Text(
+                        EnrollmentUtil.enrollmentTypeToWord(
+                          widget.enrollmentData.namespace,
+                        ),
+                        style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: ColorConstant.lightGrey,
@@ -88,10 +98,6 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
                   ],
                 ),
               ),
-              if (widget.status == RequestStatus.pending) ...[
-                const SizedBox(width: 24),
-                CountdownTimerWidget(onDone: widget.onDone),
-              ]
             ],
           ),
           if (widget.status == RequestStatus.pending) ...[
@@ -100,12 +106,16 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
               children: [
                 Expanded(
                   child: Button(
-                    onPressed: () {
-                      EnrollmentService.getInstance().manageEnrollmentRequest(
-                        widget.enrollmentData,
-                        EnrollOperationEnum.deny,
-                      );
-                    },
+                    onPressed: isActioned
+                        ? null
+                        : () async {
+                            await Future.delayed(Duration(seconds: 5));
+                            EnrollmentService.getInstance()
+                                .manageEnrollmentRequest(
+                              widget.enrollmentData,
+                              EnrollOperationEnum.deny,
+                            );
+                          },
                     height: 36,
                     width: double.infinity,
                     buttonText: 'Deny',
@@ -122,12 +132,15 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Button(
-                    onPressed: () {
-                      EnrollmentService.getInstance().manageEnrollmentRequest(
-                        widget.enrollmentData,
-                        EnrollOperationEnum.approve,
-                      );
-                    },
+                    onPressed: isActioned
+                        ? null
+                        : () {
+                            EnrollmentService.getInstance()
+                                .manageEnrollmentRequest(
+                              widget.enrollmentData,
+                              EnrollOperationEnum.approve,
+                            );
+                          },
                     height: 36,
                     width: double.infinity,
                     buttonText: 'Approve',

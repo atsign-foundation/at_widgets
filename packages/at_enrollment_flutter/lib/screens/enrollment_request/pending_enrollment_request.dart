@@ -3,37 +3,30 @@ import 'package:at_enrollment_flutter/screens/enrollment_request/widgets/primary
 import 'package:at_enrollment_flutter/screens/key_authenticator_home_screen.dart';
 import 'package:at_enrollment_flutter/utils/assets.dart';
 import 'package:at_enrollment_flutter/utils/colors.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 
-class EnrollmentRequest extends StatefulWidget {
-  const EnrollmentRequest({super.key});
+class PendingEnrollmentRequest extends StatefulWidget {
+  final EnrollmentInfo enrollmentInfo;
+
+  const PendingEnrollmentRequest({
+    super.key,
+    required this.enrollmentInfo,
+  });
 
   @override
-  State<EnrollmentRequest> createState() => _EnrollmentRequestState();
+  State<PendingEnrollmentRequest> createState() =>
+      _PendingEnrollmentRequestState();
 }
 
-class _EnrollmentRequestState extends State<EnrollmentRequest> {
-  Timer? timer;
-
+class _PendingEnrollmentRequestState extends State<PendingEnrollmentRequest> {
   @override
   void initState() {
     super.initState();
-    timer = Timer(
-      const Duration(seconds: 5),
-      () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const KeyAuthenticatorHomeScreen(),
-          ),
-        );
-      },
-    );
   }
 
   @override
   void dispose() {
-    timer?.cancel();
     super.dispose();
   }
 
@@ -100,11 +93,12 @@ class _EnrollmentRequestState extends State<EnrollmentRequest> {
             ),
             const SizedBox(height: 20),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              alignment: Alignment.center,
-              color: ColorConstant.grey,
-              child: const PrimaryDeviceRequirement(),
-            ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                alignment: Alignment.center,
+                color: ColorConstant.grey,
+                child: Text('${widget.enrollmentInfo.namespace}')
+                // const PrimaryDeviceRequirement(),
+                ),
             const SizedBox(height: 20),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 112),

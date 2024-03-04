@@ -1,9 +1,11 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
+import 'package:at_enrollment_flutter/models/enrollment_config.dart';
 import 'package:at_enrollment_flutter/screens/home/widgets/action_button_widget.dart';
 import 'package:at_enrollment_flutter/screens/home/widgets/enter_atsign_widget.dart';
 import 'package:at_enrollment_flutter/screens/home/widgets/enter_pin_widget.dart';
 import 'package:at_enrollment_flutter/screens/home/widgets/home_title_widget.dart';
 import 'package:at_enrollment_flutter/screens/welcome/welcome.dart';
+import 'package:at_enrollment_flutter/services/enrollment_service.dart';
 import 'package:at_enrollment_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ColorConstant.bgColor,
+      ),
       backgroundColor: ColorConstant.bgColor,
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
@@ -40,6 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (tooltipEnabled) tooltipEnabled = !tooltipEnabled;
                     atSignValue = val;
                   });
+                  var enrollmentConfig = EnrollmentConfig(currentAtsign: val);
+                  EnrollmentService.getInstance().updateEnrollmentConfig(
+                    enrollmentConfig,
+                  );
                 },
                 isTooltipEnabled: tooltipEnabled,
                 isAtSignEmpty: atSignValue.isEmpty,
@@ -53,13 +62,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 16),
                 EnterPinWidget(
                   onChange: (String val) {
-                    setState(() {
-                      pinValue = val;
-                      print('pin : $pinValue');
-                    });
+                    pinValue = val;
+                    print('pin : $pinValue');
+
+                    var enrollmentConfig = EnrollmentConfig(pin: val);
+                    EnrollmentService.getInstance().updateEnrollmentConfig(
+                      enrollmentConfig,
+                    );
                   },
                   onSubmit: () {
-                    if (pinValue.isNotEmpty) {
+                    var enrollmentService = EnrollmentService.getInstance();
+                    if (enrollmentService.enrollmentConfig.pin?.isNotEmpty ??
+                        false) {
+                      EnrollmentService.getInstance().init();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -90,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
               const SizedBox(height: 16),
               ActionButtonWidget(isAtSignEmpty: atSignValue.isEmpty),
+              SizedBox(height: 20)
             ],
           ),
         ),

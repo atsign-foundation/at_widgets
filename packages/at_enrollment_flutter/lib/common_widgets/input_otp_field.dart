@@ -19,15 +19,15 @@ class InputOTPField extends StatefulWidget {
 
 class _InputOTPFieldState extends State<InputOTPField> {
   List<TextEditingController> listCellController = List.generate(
-    4,
+    6,
     (index) => TextEditingController(),
   );
 
   @override
   void initState() {
     super.initState();
-    if ((widget.pin ?? '').isNotEmpty && widget.pin?.length == 4) {
-      for (int i = 0; i < 4; i++) {
+    if ((widget.pin ?? '').isNotEmpty && widget.pin?.length == 6) {
+      for (int i = 0; i < 6; i++) {
         listCellController[i].text = widget.pin?[i] ?? '';
       }
     }
@@ -40,10 +40,10 @@ class _InputOTPFieldState extends State<InputOTPField> {
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: 4,
+        itemCount: 6,
         itemBuilder: (context, index) {
           return SizedBox(
-            width: 56,
+            width: 45,
             child: TextField(
               controller: listCellController[index],
               maxLength: 1,

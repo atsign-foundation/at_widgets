@@ -16,6 +16,16 @@ class EnrollmentRequestScreen extends StatefulWidget {
 
 class _EnrollmentRequestScreenState extends State<EnrollmentRequestScreen> {
   @override
+  void initState() {
+    fetchPendingEnrollments();
+    super.initState();
+  }
+
+  fetchPendingEnrollments() async {
+    var res = await EnrollmentService.getInstance().fetchPendingRequests();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
@@ -26,31 +36,33 @@ class _EnrollmentRequestScreenState extends State<EnrollmentRequestScreen> {
           // buildDateLabel('Today'),
           const SizedBox(height: 12),
           StreamBuilder(
-            stream:
-                EnrollmentService.getInstance().fetchEnrollmentNotifications(),
+            stream: EnrollmentService.getInstance()
+                .pendingEnrollmentControllerStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                EnrollmentData enrollmentData = EnrollmentData(
-                  snapshot.data!.from,
-                  '${snapshot.data!.key}${snapshot.data!.from}',
-                  jsonDecode(
-                      snapshot.data!.value!)['encryptedApkamSymmetricKey'],
-                );
+                // EnrollmentData enrollmentData = EnrollmentData(
+                //   snapshot.data!.from,
+                //   '${snapshot.data!.key}${snapshot.data!.from}',
+                //   jsonDecode(
+                //       snapshot.data!.value!)['encryptedApkamSymmetricKey'],
+                // );
 
                 print('enrollmentData : ${snapshot.data!}');
 
                 return ListView.separated(
-                  itemCount: 1,
+                  itemCount: snapshot.data?.length ?? 0,
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   separatorBuilder: (context, index) {
                     return const SizedBox(height: 12);
                   },
                   itemBuilder: (context, index) {
-                    return EnrollmentRequestCard(
-                      status: RequestStatus.pending,
-                      enrollmentData: enrollmentData,
-                    );
+                    return snapshot.data?[index] != null
+                        ? EnrollmentRequestCard(
+                            status: RequestStatus.pending,
+                            enrollmentData: snapshot.data![index],
+                          )
+                        : const SizedBox.shrink();
                   },
                 );
               } else if (snapshot.hasError) {

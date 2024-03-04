@@ -1,1 +1,2 @@
-library at_enrollment_flutter;
+export './at_enrollment.dart';
+export './services/enrollment_service.dart';
