@@ -97,11 +97,9 @@ class OnboardingService {
   }
 
   /// To register for a new enrollment request
-  Future<String> enroll(AtEnrollmentServiceImpl atEnrollmentServiceImpl,
-      AtEnrollmentRequest atEnrollmentRequest) async {
-    _atClientPreference.enableEnrollmentDuringOnboard = true;
-    return await atEnrollmentServiceImpl
-        .submitEnrollmentRequest(atEnrollmentRequest);
+  Future<AtEnrollmentResponse> enroll(
+      AtAuthService authService, EnrollmentRequest enrollmentRequest) async {
+    return await authService.enroll(enrollmentRequest);
   }
 
   /// Returns `true` if authentication is successful for the existing atsign in device.
@@ -112,11 +110,11 @@ class OnboardingService {
       throw OnboardingStatus.ATSIGN_NOT_FOUND;
     }
     AtAuthService authService =
-        AtAuthServiceImpl(_atsign!, _atClientPreference);
+        AtClientMobile.authService(_atsign!, _atClientPreference);
     bool isAtSignOnboarded = await authService.isOnboarded(_atsign!);
     // If atSign is onboarded, authenticate the atSign. Else onboard the atSign.
     if (isAtSignOnboarded) {
-      AtAuthRequest atAuthRequest = AtAuthRequest(_atsign!);
+      AtAuthRequest atAuthRequest = AtAuthRequest(_atsign!)..rootDomain = _atClientPreference.rootDomain;
       AtAuthResponse atAuthResponse =
           await authService.authenticate(atAuthRequest);
       return atAuthResponse.isSuccessful;
@@ -126,8 +124,9 @@ class OnboardingService {
         AtOnboardingRequest(_atsign!)
           ..enableEnrollment = true
           ..appName = 'buzz'
-          ..deviceName = 'pixel',
-        cramSecret: cramSecret);
+          ..deviceName = 'pixel'
+        ..rootDomain = _atClientPreference.rootDomain,//'vip.ve.atsign.zone',
+        cramSecret: cramSecret,);
     _logger.finer('onboardingResponse: $onboardingResponse');
     // atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
     //#TODO uncomment after auth flow is complete
@@ -164,20 +163,20 @@ class OnboardingService {
       if (cramSecret != null) {
         _atClientPreference.privateKey = null;
       }
-      AtAuthRequest atAuthRequest = AtAuthRequest(atsign);
+      AtAuthRequest atAuthRequest = AtAuthRequest(atsign)..rootDomain = _atClientPreference.rootDomain;
       if (jsonData != null) {
         atAuthRequest.encryptedKeysMap = jsonDecode(jsonData);
       }
 
       AtAuthService atAuthService =
-          AtAuthServiceImpl(atsign, _atClientPreference);
+          AtClientMobile.authService(atsign, _atClientPreference);
       AtAuthResponse atAuthResponse =
           await atAuthService.authenticate(atAuthRequest);
       if (atAuthResponse.isSuccessful) {
         _atsign = atsign;
         atClientServiceMap.putIfAbsent(_atsign, () => atClientService);
-        AtEnrollmentServiceImpl atEnrollmentServiceImpl =
-            AtEnrollmentServiceImpl(_atsign!, _atClientPreference);
+        AtAuthService authService =
+            AtClientMobile.authService(_atsign!, _atClientPreference);
         c.complete(AtOnboardingResponseStatus.authSuccess);
         await _sync(_atsign);
       }
