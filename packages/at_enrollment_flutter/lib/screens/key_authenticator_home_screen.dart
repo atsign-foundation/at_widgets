@@ -19,10 +19,10 @@ class _KeyAuthenticatorHomeScreenState
   String currentAtsign = '';
   @override
   void initState() {
-    EnrollmentService.getInstance().init();
     currentAtsign =
         AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '';
-
+    EnrollmentApp.getInstance().init();
+    EnrollmentApp.getInstance().fetchEnrollmentNotifications();
     super.initState();
   }
 

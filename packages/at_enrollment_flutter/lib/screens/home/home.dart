@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     atSignValue = val;
                   });
                   var enrollmentConfig = EnrollmentConfig(currentAtsign: val);
-                  EnrollmentService.getInstance().updateEnrollmentConfig(
+                  EnrollmentApp.getInstance().updateEnrollmentConfig(
                     enrollmentConfig,
                   );
                 },
@@ -66,15 +66,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     print('pin : $pinValue');
 
                     var enrollmentConfig = EnrollmentConfig(pin: val);
-                    EnrollmentService.getInstance().updateEnrollmentConfig(
+                    EnrollmentApp.getInstance().updateEnrollmentConfig(
                       enrollmentConfig,
                     );
                   },
                   onSubmit: () {
-                    var enrollmentService = EnrollmentService.getInstance();
+                    var enrollmentService = EnrollmentApp.getInstance();
                     if (enrollmentService.enrollmentConfig.pin?.isNotEmpty ??
                         false) {
-                      EnrollmentService.getInstance().init();
+                      EnrollmentApp.getInstance().init();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

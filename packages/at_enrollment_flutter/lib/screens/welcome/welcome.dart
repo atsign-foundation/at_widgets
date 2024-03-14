@@ -1,3 +1,4 @@
+import 'package:at_auth/at_auth.dart';
 import 'package:at_enrollment_flutter/common_widgets/button.dart';
 import 'package:at_enrollment_flutter/common_widgets/input_otp_field.dart';
 import 'package:at_enrollment_flutter/models/enrollment_config.dart';
@@ -26,43 +27,42 @@ class _WelcomeState extends State<Welcome> {
   String otp = '';
   TextEditingController controller = TextEditingController();
   String searchText = '';
+  bool isLoading = false;
+  EnrollmentApp enrollmentApp = EnrollmentApp.getInstance();
 
   @override
   void initState() {
     /// assigning default namespace to atClientPreference one
     addInitialNamespaceValue();
-    EnrollmentService.getInstance().getSentEnrollmentData();
+    enrollmentApp.getSentEnrollmentData();
     checkForEnrollmentData();
     super.initState();
   }
 
   /// If enrollment request is already present in keychain, another request can not be submitted
-  checkForEnrollmentData() {
-    var enrolmentController =
-        EnrollmentService.getInstance().enrollmentStatusController;
-    enrolmentController.stream.listen((event) {
-      if (event.isNotEmpty) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PendingEnrollmentRequest(
-              enrollmentInfo: event['id'] as EnrollmentInfo,
-            ),
+  checkForEnrollmentData() async {
+    var enrollmentInfo = await enrollmentApp.getSentEnrollmentData();
+    if (enrollmentInfo != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PendingEnrollmentRequestScreens(
+            enrollmentInfo: enrollmentInfo,
           ),
-        );
-      }
-    });
+        ),
+      );
+    }
   }
 
   addInitialNamespaceValue() {
-    var enrollmentService = EnrollmentService.getInstance();
+    var enrollmentService = EnrollmentApp.getInstance();
     var atClientPreference = enrollmentService.getAtClientPreferences();
     controller.text = atClientPreference.namespace ?? '';
 
     var enrollmentConfig = EnrollmentConfig(
       namespace: controller.text,
     );
-    EnrollmentService.getInstance().updateEnrollmentConfig(
+    EnrollmentApp.getInstance().updateEnrollmentConfig(
       enrollmentConfig,
     );
   }
@@ -155,7 +155,7 @@ class _WelcomeState extends State<Welcome> {
                   child: InputOTPField(
                     onChange: (value) {
                       var enrollmentConfig = EnrollmentConfig(otp: value);
-                      EnrollmentService.getInstance().updateEnrollmentConfig(
+                      EnrollmentApp.getInstance().updateEnrollmentConfig(
                         enrollmentConfig,
                       );
                     },
@@ -268,7 +268,7 @@ class _WelcomeState extends State<Welcome> {
                         var enrollmentConfig = EnrollmentConfig(
                           namespaceActionmap: namespaceMap,
                         );
-                        EnrollmentService.getInstance().updateEnrollmentConfig(
+                        EnrollmentApp.getInstance().updateEnrollmentConfig(
                           enrollmentConfig,
                         );
 
@@ -281,34 +281,30 @@ class _WelcomeState extends State<Welcome> {
                   itemCount: AccessType.values.length,
                 ),
                 const SizedBox(height: 80),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Button(
-                    onPressed: () async {
-                      // if (selectedType != null && otp.length == 4) {
-                      //   Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => const EnrollmentRequest(),
-                      //       ));
-                      // }
-
-                      await EnrollmentService.getInstance()
-                          .sendEnrollmentRequest();
-                    },
-                    width: double.infinity,
-                    buttonText: 'Continue',
-                    buttonColor: ColorConstant.orange,
-                    //   buttonColor: selectedType != null && otp.length == 4
-                    // ? ColorConstant.orange
-                    // : ColorConstant.disableColor,
-                    titleStyle: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
+                isLoading
+                    ? const Center(
+                        child: SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(
+                            backgroundColor: ColorConstant.orange,
+                          ),
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Button(
+                          onPressed: sendEnrollmentRequest,
+                          width: double.infinity,
+                          buttonText: 'Continue',
+                          buttonColor: ColorConstant.orange,
+                          titleStyle: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
                 const SizedBox(height: 40),
               ],
             ),
@@ -316,6 +312,30 @@ class _WelcomeState extends State<Welcome> {
         ),
       ),
     );
+  }
+
+  sendEnrollmentRequest() async {
+    setState(() {
+      isLoading = true;
+    });
+    AtEnrollmentResponse? res =
+        await EnrollmentApp.getInstance().sendEnrollmentRequest();
+    if (res != null) {
+      var sentEnrollmentRequest = await enrollmentApp.getSentEnrollmentData();
+      if (sentEnrollmentRequest != null && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PendingEnrollmentRequestScreens(
+              enrollmentInfo: sentEnrollmentRequest,
+            ),
+          ),
+        );
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Widget buildSearchWidget() {

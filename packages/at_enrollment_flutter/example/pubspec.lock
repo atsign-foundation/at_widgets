@@ -37,8 +37,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/at_auth"
-      ref: trunk
-      resolved-ref: eb36852161f3b1c9af7c16e49f2743cc768a3d89
+      ref: refactor_enrollment_methods
+      resolved-ref: fbd286a91451e871ddaf2f9266588da01870ec6b
       url: "https://github.com/atsign-foundation/at_libraries.git"
     source: git
     version: "1.0.5"
@@ -63,7 +63,7 @@ packages:
     description:
       path: "packages/at_chops"
       ref: trunk
-      resolved-ref: eb36852161f3b1c9af7c16e49f2743cc768a3d89
+      resolved-ref: a608d2758283ffb8d7bd62900344be69e7bb56c4
       url: "https://github.com/atsign-foundation/at_libraries.git"
     source: git
     version: "2.0.0"
@@ -72,16 +72,16 @@ packages:
     description:
       path: "packages/at_client"
       ref: apkam_onboarding_changes_with_enrollment_status
-      resolved-ref: bfd55cc8b4db821127685082057f8f836803d1a3
+      resolved-ref: "6592d5de4ae5c0377dc5511e820c0ba1c7814441"
       url: "https://github.com/atsign-foundation/at_client_sdk.git"
     source: git
-    version: "3.0.75"
+    version: "3.0.76"
   at_client_mobile:
     dependency: "direct overridden"
     description:
       path: "packages/at_client_mobile"
       ref: apkam_onboarding_changes_with_enrollment_status
-      resolved-ref: bfd55cc8b4db821127685082057f8f836803d1a3
+      resolved-ref: "6592d5de4ae5c0377dc5511e820c0ba1c7814441"
       url: "https://github.com/atsign-foundation/at_client_sdk.git"
     source: git
     version: "3.2.15"
@@ -137,7 +137,7 @@ packages:
     description:
       path: "packages/at_onboarding_flutter"
       ref: at_enrollment_app
-      resolved-ref: "325329ebdf60318fa60619b0f48fe20c4723add0"
+      resolved-ref: "8be3e3baf0151bd5e8eb36199cc357a751ee4167"
       url: "https://github.com/atsign-foundation/at_widgets.git"
     source: git
     version: "6.1.5"
@@ -1132,10 +1132,10 @@ packages:
     dependency: "direct overridden"
     description:
       name: win32
-      sha256: "464f5674532865248444b4c3daca12bd9bf2d7c47f759ce2617986e7229494a8"
+      sha256: "8cb58b45c47dcb42ab3651533626161d6b67a2921917d8d429791f76972b3480"
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
+    version: "5.3.0"
   win32_registry:
     dependency: transitive
     description:

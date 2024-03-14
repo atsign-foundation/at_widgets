@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:at_enrollment_flutter/at_enrollment_flutter.dart';
 import 'package:at_enrollment_flutter/screens/enrollment_request/widgets/primary_device_requirement.dart';
 import 'package:at_enrollment_flutter/screens/key_authenticator_home_screen.dart';
 import 'package:at_enrollment_flutter/utils/assets.dart';
@@ -6,20 +7,21 @@ import 'package:at_enrollment_flutter/utils/colors.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 
-class PendingEnrollmentRequest extends StatefulWidget {
+class PendingEnrollmentRequestScreens extends StatefulWidget {
   final EnrollmentInfo enrollmentInfo;
 
-  const PendingEnrollmentRequest({
+  const PendingEnrollmentRequestScreens({
     super.key,
     required this.enrollmentInfo,
   });
 
   @override
-  State<PendingEnrollmentRequest> createState() =>
-      _PendingEnrollmentRequestState();
+  State<PendingEnrollmentRequestScreens> createState() =>
+      _PendingEnrollmentRequestScreensState();
 }
 
-class _PendingEnrollmentRequestState extends State<PendingEnrollmentRequest> {
+class _PendingEnrollmentRequestScreensState
+    extends State<PendingEnrollmentRequestScreens> {
   @override
   void initState() {
     super.initState();
@@ -29,6 +31,14 @@ class _PendingEnrollmentRequestState extends State<PendingEnrollmentRequest> {
   void dispose() {
     super.dispose();
   }
+
+  // checkForEnrollmentData() {
+  //   var enrolmentController =
+  //       EnrollmentApp.getInstance().enrollmentStatusController;
+  //   enrolmentController.stream.listen((event) {
+  //     if (event.isNotEmpty) {}
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +109,16 @@ class _PendingEnrollmentRequestState extends State<PendingEnrollmentRequest> {
                 child: Text('${widget.enrollmentInfo.namespace}')
                 // const PrimaryDeviceRequirement(),
                 ),
+            Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                alignment: Alignment.center,
+                color: ColorConstant.grey,
+                child: Text('${widget.enrollmentInfo.enrollmentId}')),
+            Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                alignment: Alignment.center,
+                color: ColorConstant.grey,
+                child: Text('status')),
             const SizedBox(height: 20),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 112),

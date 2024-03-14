@@ -22,7 +22,7 @@ class _EnrollmentRequestScreenState extends State<EnrollmentRequestScreen> {
   }
 
   fetchPendingEnrollments() async {
-    var res = await EnrollmentService.getInstance().fetchPendingRequests();
+    var res = await EnrollmentApp.getInstance().fetchPendingRequests();
   }
 
   @override
@@ -36,8 +36,8 @@ class _EnrollmentRequestScreenState extends State<EnrollmentRequestScreen> {
           // buildDateLabel('Today'),
           const SizedBox(height: 12),
           StreamBuilder(
-            stream: EnrollmentService.getInstance()
-                .pendingEnrollmentControllerStream,
+            stream:
+                EnrollmentApp.getInstance().pendingEnrollmentControllerStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 // EnrollmentData enrollmentData = EnrollmentData(

@@ -74,7 +74,7 @@ class _OtpCardState extends State<OtpCard> {
   Widget otpView() {
     return InkWell(
       onTap: () {
-        EnrollmentService.getInstance().getOTPFromServer(refresh: true);
+        EnrollmentApp.getInstance().getOTPFromServer(refresh: true);
       },
       child: Container(
           width: 112,
@@ -85,7 +85,7 @@ class _OtpCardState extends State<OtpCard> {
             borderRadius: BorderRadius.circular(55),
           ),
           child: StreamBuilder<String>(
-              stream: EnrollmentService.getInstance().otpControllerStream,
+              stream: EnrollmentApp.getInstance().otpControllerStream,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Text(

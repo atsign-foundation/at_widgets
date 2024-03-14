@@ -26,7 +26,7 @@ class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
     // currentAtsign =
     //     AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '';
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      EnrollmentService.getInstance().getOTPFromServer();
+      EnrollmentApp.getInstance().getOTPFromServer();
     });
     super.initState();
   }

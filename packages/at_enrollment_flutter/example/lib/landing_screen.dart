@@ -2,6 +2,7 @@ import 'package:at_enrollment_flutter/at_enrollment.dart';
 
 import 'package:at_enrollment_flutter/screens/home/home.dart';
 import 'package:at_enrollment_flutter/screens/key_authenticator_home_screen.dart';
+import 'package:at_enrollment_flutter/services/enrollment_service.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_response_status.dart';
@@ -26,7 +27,7 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   initEnrollmentPackage() async {
-    // AtEnrollment.init(await getAtClientPreferences());
+    AtEnrollment.init(await getAtClientPreferences());
   }
 
   @override

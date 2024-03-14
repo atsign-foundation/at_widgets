@@ -30,7 +30,8 @@ class EnrollmentRequestCard extends StatefulWidget {
 }
 
 class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
-  bool isActioned = false;
+  bool isDenySubmitted = false;
+  bool isAcceptSubmitted = false;
 
   @override
   void initState() {
@@ -77,6 +78,15 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
                       ),
                     ),
                     Text(
+                      widget.enrollmentData.enrollmentKey,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: ColorConstant.black,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
                       widget.enrollmentData.deviceName,
                       style: const TextStyle(
                         fontSize: 15,
@@ -104,55 +114,59 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Expanded(
-                  child: Button(
-                    onPressed: isActioned
-                        ? null
-                        : () async {
-                            await Future.delayed(Duration(seconds: 5));
-                            EnrollmentService.getInstance()
-                                .manageEnrollmentRequest(
-                              widget.enrollmentData,
-                              EnrollOperationEnum.deny,
-                            );
-                          },
-                    height: 36,
-                    width: double.infinity,
-                    buttonText: 'Deny',
-                    buttonColor: Colors.transparent,
-                    titleStyle: const TextStyle(
-                      color: ColorConstant.denyColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                    borderRadius: 25,
-                    border: Border.all(color: ColorConstant.denyColor),
-                  ),
-                ),
+                isDenySubmitted
+                    ? const Expanded(
+                        child: Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Button(
+                          onPressed:
+                              isDenySubmitted ? null : denyEnrolmentRequest,
+                          height: 36,
+                          width: double.infinity,
+                          buttonText: 'Deny',
+                          buttonColor: Colors.transparent,
+                          titleStyle: const TextStyle(
+                            color: ColorConstant.denyColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                          ),
+                          borderRadius: 25,
+                          border: Border.all(color: ColorConstant.denyColor),
+                        ),
+                      ),
                 const SizedBox(width: 8),
-                Expanded(
-                  child: Button(
-                    onPressed: isActioned
-                        ? null
-                        : () {
-                            EnrollmentService.getInstance()
-                                .manageEnrollmentRequest(
-                              widget.enrollmentData,
-                              EnrollOperationEnum.approve,
-                            );
-                          },
-                    height: 36,
-                    width: double.infinity,
-                    buttonText: 'Approve',
-                    buttonColor: ColorConstant.orange,
-                    titleStyle: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                    borderRadius: 25,
-                  ),
-                ),
+                isAcceptSubmitted
+                    ? const Expanded(
+                        child: Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Button(
+                          onPressed: approveEnrollmentRequest,
+                          height: 36,
+                          width: double.infinity,
+                          buttonText: 'Approve',
+                          buttonColor: ColorConstant.orange,
+                          titleStyle: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                          ),
+                          borderRadius: 25,
+                        ),
+                      ),
               ],
             ),
           ] else
@@ -193,5 +207,34 @@ class _EnrollmentRequestCardState extends State<EnrollmentRequestCard> {
         ],
       ),
     );
+  }
+
+  denyEnrolmentRequest() async {
+    setState(() {
+      isDenySubmitted = true;
+    });
+    await Future.delayed(Duration(seconds: 5));
+    EnrollmentApp.getInstance().manageEnrollmentRequest(
+      widget.enrollmentData,
+      EnrollOperationEnum.deny,
+    );
+
+    setState(() {
+      isDenySubmitted = false;
+    });
+  }
+
+  approveEnrollmentRequest() async {
+    setState(() {
+      isAcceptSubmitted = true;
+    });
+    EnrollmentApp.getInstance().manageEnrollmentRequest(
+      widget.enrollmentData,
+      EnrollOperationEnum.approve,
+    );
+
+    setState(() {
+      isAcceptSubmitted = false;
+    });
   }
 }

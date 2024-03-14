@@ -24,6 +24,7 @@ dependencies:
   at_client_mobile: ^3.2.13
   at_backupkey_flutter: ^4.0.11
   intl: ^0.17.0
+  device_info_plus: ^9.1.2
   # at_lookup: ^3.0.44
   # at_chops: ^1.0.7
 
@@ -44,7 +45,7 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_libraries.git
       path: packages/at_auth
-      ref: trunk
+      ref: refactor_enrollment_methods
   at_onboarding_flutter:
     git:
       url: https://github.com/atsign-foundation/at_widgets.git

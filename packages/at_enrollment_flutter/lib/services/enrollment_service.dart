@@ -1,23 +1,25 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:at_auth/at_auth.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_enrollment_flutter/models/enrollment.dart';
 import 'package:at_enrollment_flutter/models/enrollment_config.dart';
+import 'package:at_onboarding_flutter/localizations/generated/intl/messages_en.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
-class EnrollmentService {
-  static final EnrollmentService _singleton = EnrollmentService._internal();
-  EnrollmentService._internal();
-  factory EnrollmentService.getInstance() {
+class EnrollmentApp {
+  static final EnrollmentApp _singleton = EnrollmentApp._internal();
+  EnrollmentApp._internal();
+  factory EnrollmentApp.getInstance() {
     return _singleton;
   }
 
   String otp = '';
-  late AtEnrollmentServiceImpl _atEnrollmentServiceImpl;
+  late AtAuthService _atEnrollmentServiceImpl;
   final EnrollmentConfig _enrollmentConfig = EnrollmentConfig();
-  AtEnrollmentServiceImpl get getAtEnrollmentServiceImpl =>
-      _atEnrollmentServiceImpl;
+  AtAuthService get getAtEnrollmentServiceImpl => _atEnrollmentServiceImpl;
   late AtClientPreference _atClientPreference;
 
   /// otp streamController
@@ -47,6 +49,8 @@ class EnrollmentService {
 
   EnrollmentConfig get enrollmentConfig => _enrollmentConfig;
 
+  List<EnrollmentData> pendingEnrollmentRequest = [];
+
   /// Stream of contacts' list
 
   /// enrollment id -> EnrollmentStatus
@@ -60,10 +64,9 @@ class EnrollmentService {
       currentAtsign =
           AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '';
     }
-
-    _atEnrollmentServiceImpl = AtEnrollmentServiceImpl(
+    _atEnrollmentServiceImpl = AtClientMobile.authService(
       currentAtsign,
-      getAtClientPreferences(),
+      _atClientPreference,
     );
   }
 
@@ -86,23 +89,26 @@ class EnrollmentService {
             _enrollmentConfig.namespaceActionmap;
   }
 
-  sendEnrollmentRequest() async {
-    AtNewEnrollmentRequestBuilder atEnrollmentRequestBuilder =
-        AtNewEnrollmentRequestBuilder();
+  Future<AtEnrollmentResponse?> sendEnrollmentRequest() async {
+    EnrollmentRequest enrollrollmentRequest = EnrollmentRequest(
+      appName: _enrollmentConfig.namespace!,
+      deviceName: await getDeviceModel(),
+      otp: _enrollmentConfig.otp!,
+      namespaces: _enrollmentConfig.namespaceActionmap!,
+    );
 
-    AtEnrollmentServiceImpl atEnrollmentServiceImpl =
-        EnrollmentService.getInstance().getAtEnrollmentServiceImpl;
-
-    atEnrollmentRequestBuilder
-      ..setAppName(_enrollmentConfig.namespace!)
-      ..setDeviceName('iphone')
-      ..setOtp(_enrollmentConfig.otp!)
-      ..setNamespaces(_enrollmentConfig.namespaceActionmap!);
-    AtEnrollmentRequest atEnrollmentRequest =
-        atEnrollmentRequestBuilder.build();
-    String enrollResponse = await OnboardingService.getInstance()
-        .enroll(atEnrollmentServiceImpl, atEnrollmentRequest);
-    print('enrollResponse : ${enrollResponse}');
+    try {
+      AtEnrollmentResponse enrollResponse =
+          await OnboardingService.getInstance().enroll(
+        getAtEnrollmentServiceImpl,
+        enrollrollmentRequest,
+      );
+      print('enrollResponse : ${enrollResponse}');
+      return enrollResponse;
+    } catch (e) {
+      throw Exception(e);
+      print('error in sending enrollment request : $e');
+    }
   }
 
   AtClientPreference getAtClientPreferences() {
@@ -116,37 +122,57 @@ class EnrollmentService {
         .subscribe(regex: '__manage');
 
     notificationStream.listen((AtNotification event) {
+      var notificationValue = jsonDecode(event.value!);
       // create EnrollmentRequest and add to stream controller
-      // EnrollmentData enrollmentRequest = EnrollmentData();
+      EnrollmentData enrollmentRequest = EnrollmentData(
+          event.from,
+          event.key,
+          notificationValue['encryptedApkamSymmetricKey'] ?? '',
+          notificationValue['appName'] ?? '',
+          notificationValue['deviceName'] ?? '',
+          notificationValue['namespace'] ?? {});
 
-      // pendingEnrollmentControllerSink.add(enrollmentRequest);
+      pendingEnrollmentRequest = [
+        enrollmentRequest,
+        ...pendingEnrollmentRequest
+      ];
+
+      pendingEnrollmentControllerSink.add(pendingEnrollmentRequest);
     });
 
     return notificationStream;
   }
 
-  Future<List<EnrollmentRequest>> fetchPendingRequests() async {
+  Future<List<EnrollmentData>> fetchPendingRequests() async {
+    // If data is already fetched
+    if (pendingEnrollmentRequest.isNotEmpty) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        pendingEnrollmentControllerSink.add(pendingEnrollmentRequest);
+      });
+      return pendingEnrollmentRequest;
+    }
+
     var atClient = AtClientManager.getInstance().atClient;
-    var pendingRequests = await atClient.fetchEnrollmentRequests(
-      EnrollListRequestParam(),
-    );
+    var atClientImpl = atClient as AtClientImpl;
+    List<PendingEnrollmentRequest> pendingRequests =
+        await atClientImpl.enrollmentService.fetchEnrollmentRequests();
 
     List<EnrollmentData> enrollmentList = [];
-    pendingRequests.forEach((EnrollmentRequest element) {
+    for (var element in pendingRequests) {
       var enrollmentData = EnrollmentData(
         currentAtsign,
-        element.enrollmentKey,
-        '',
-        element.appName,
-        element.deviceName,
-        element.namespace,
+        element.enrollmentId ?? '',
+        element.encryptedAPKAMSymmetricKey ?? '',
+        element.appName ?? '',
+        element.deviceName ?? '',
+        element.namespace ?? {},
       );
-
       enrollmentList.add(enrollmentData);
-    });
+    }
 
     pendingEnrollmentControllerSink.add(enrollmentList);
-    return pendingRequests;
+    pendingEnrollmentRequest = enrollmentList;
+    return enrollmentList;
   }
 
   Future<String?> getOTPFromServer({bool refresh = false}) async {
@@ -169,29 +195,46 @@ class EnrollmentService {
 // approves or denies the enrollment request
   manageEnrollmentRequest(EnrollmentData enrollmentData,
       EnrollOperationEnum enrollOperationEnum) async {
-    AtEnrollmentServiceImpl atEnrollmentServiceImpl = AtEnrollmentServiceImpl(
-      enrollmentData.atSign,
-      EnrollmentService.getInstance().getAtClientPreferences(),
-    );
-    String enrollmentId = enrollmentData.enrollmentKey
-        .substring(0, enrollmentData.enrollmentKey.indexOf('.'));
-    AtEnrollmentNotificationRequestBuilder atEnrollmentRequestBuilder =
-        AtEnrollmentNotificationRequestBuilder();
+    var atClient = AtClientManager.getInstance().atClient;
+    var atClientImpl = atClient as AtClientImpl;
 
-    atEnrollmentRequestBuilder.setEnrollmentId(enrollmentId);
-    atEnrollmentRequestBuilder.setEnrollOperationEnum(
-      enrollOperationEnum,
+    ApprovedRequestDecisionBuilder approvedRequestDecisionBuilder =
+        ApprovedRequestDecisionBuilder(
+      enrollmentId: enrollmentData.enrollmentKey,
+      encryptedAPKAMSymmetricKey: enrollmentData.encryptedAPKAMSymmetricKey,
     );
-    atEnrollmentRequestBuilder.setEncryptedApkamSymmetricKey(
-        enrollmentData.encryptedAPKAMSymmetricKey);
-    AtEnrollmentNotificationRequest atEnrollmentRequest =
-        atEnrollmentRequestBuilder.build();
 
-    AtEnrollmentResponse atEnrollmentResponse =
-        await atEnrollmentServiceImpl.approve(atEnrollmentRequest);
+    EnrollmentRequestDecision enrollmentRequestDecision =
+        enrollOperationEnum == EnrollOperationEnum.approve
+            ? EnrollmentRequestDecision.approved(approvedRequestDecisionBuilder)
+            : EnrollmentRequestDecision.denied(enrollmentData.enrollmentKey);
+
+    AtEnrollmentResponse atEnrollmentResponse;
+    if (enrollOperationEnum == EnrollOperationEnum.approve) {
+      atEnrollmentResponse = await atClientImpl.enrollmentService
+          .approve(enrollmentRequestDecision);
+
+      if (atEnrollmentResponse.enrollStatus == EnrollmentStatus.approved) {
+        updateEnrollmentRecord(atEnrollmentResponse.enrollmentId);
+      }
+    } else {
+      atEnrollmentResponse =
+          await atClientImpl.enrollmentService.deny(enrollmentRequestDecision);
+
+      if (atEnrollmentResponse.enrollStatus == EnrollmentStatus.denied) {
+        updateEnrollmentRecord(atEnrollmentResponse.enrollmentId);
+      }
+    }
+
     print(
         'Enrollment Id: ${atEnrollmentResponse.enrollmentId} | Enrollment Status ${atEnrollmentResponse.enrollStatus}');
     return atEnrollmentResponse;
+  }
+
+  updateEnrollmentRecord(String id) {
+    pendingEnrollmentRequest
+        .removeWhere((element) => element.enrollmentKey == id);
+    pendingEnrollmentControllerSink.add(pendingEnrollmentRequest);
   }
 
   getEnrollmentStatus({String? enrollmentId}) async {
@@ -202,6 +245,7 @@ class EnrollmentService {
     if (enrollmentId != null) {
       enrollmentDataStatus['status'] = enrollmentStatus;
       enrollmentStatusControllerSink.add(enrollmentDataStatus);
+      return enrollmentDataStatus;
     }
     print('enrollmentStatus : ${enrollmentStatus}');
     print('enrollmentStatusFuture : ${enrollmentStatusFuture}');
@@ -215,5 +259,13 @@ class EnrollmentService {
       getEnrollmentStatus(enrollmentId: res.enrollmentId);
     }
     return res;
+  }
+
+  Future<String> getDeviceModel() async {
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    BaseDeviceInfo deviceInfo = await deviceInfoPlugin.deviceInfo;
+    deviceInfo.data;
+    print('deviceInfo : ${deviceInfo.data['model']}');
+    return deviceInfo.data['model'] ?? '';
   }
 }
