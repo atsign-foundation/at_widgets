@@ -98,8 +98,12 @@ class OnboardingService {
 
   /// To register for a new enrollment request
   Future<AtEnrollmentResponse> enroll(
-      AtAuthService authService, EnrollmentRequest enrollmentRequest) async {
-    return await authService.enroll(enrollmentRequest);
+      AtAuthService authService, EnrollmentRequest enrollmentRequest,
+      {String? keysFilePath}) async {
+    return await authService.enroll(
+      enrollmentRequest,
+      keysFilePath: keysFilePath ?? '',
+    );
   }
 
   /// Returns `true` if authentication is successful for the existing atsign in device.
@@ -114,19 +118,21 @@ class OnboardingService {
     bool isAtSignOnboarded = await authService.isOnboarded(_atsign!);
     // If atSign is onboarded, authenticate the atSign. Else onboard the atSign.
     if (isAtSignOnboarded) {
-      AtAuthRequest atAuthRequest = AtAuthRequest(_atsign!)..rootDomain = _atClientPreference.rootDomain;
+      AtAuthRequest atAuthRequest = AtAuthRequest(_atsign!)
+        ..rootDomain = _atClientPreference.rootDomain;
       AtAuthResponse atAuthResponse =
           await authService.authenticate(atAuthRequest);
       return atAuthResponse.isSuccessful;
     }
     // TODO: Read appName and deviceName from the user or preferences.
     var onboardingResponse = await authService.onboard(
-        AtOnboardingRequest(_atsign!)
-          ..enableEnrollment = true
-          ..appName = 'buzz'
-          ..deviceName = 'pixel'
-        ..rootDomain = _atClientPreference.rootDomain,//'vip.ve.atsign.zone',
-        cramSecret: cramSecret,);
+      AtOnboardingRequest(_atsign!)
+        ..enableEnrollment = true
+        ..appName = 'buzz'
+        ..deviceName = 'pixel'
+        ..rootDomain = _atClientPreference.rootDomain, //'vip.ve.atsign.zone',
+      cramSecret: cramSecret,
+    );
     _logger.finer('onboardingResponse: $onboardingResponse');
     // atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
     //#TODO uncomment after auth flow is complete
@@ -163,7 +169,8 @@ class OnboardingService {
       if (cramSecret != null) {
         _atClientPreference.privateKey = null;
       }
-      AtAuthRequest atAuthRequest = AtAuthRequest(atsign)..rootDomain = _atClientPreference.rootDomain;
+      AtAuthRequest atAuthRequest = AtAuthRequest(atsign)
+        ..rootDomain = _atClientPreference.rootDomain;
       if (jsonData != null) {
         atAuthRequest.encryptedKeysMap = jsonDecode(jsonData);
       }
