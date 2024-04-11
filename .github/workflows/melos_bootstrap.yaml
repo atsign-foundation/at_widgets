@@ -1,0 +1,18 @@
+name: 'Melos bootstrap'
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  melos-bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1 # v2.16.0
+        with:
+          channel: "stable"
+      - name: flutter pub get
+        run: flutter pub get
+      - name: Do melos bootstrap
+        run: dart run melos bootstrap

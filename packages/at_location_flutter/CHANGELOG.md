@@ -1,3 +1,16 @@
+## 3.1.12:
+- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
+
+# 3.1.11
+- **CHORE**: Lint fixes
+
+# 3.1.10
+- **CHORE**: Bumped all dependency versions
+- Major version increase of geolocator from ^9.0.2 to ^10.0.1
+
+# 3.1.9
+- **CHORE**: Improved pub score of package
+
 ## 3.1.8
 - **CHORE**: Updated dependencies and android gradle versions
 - **CHORE**: Package description updated

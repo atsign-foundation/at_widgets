@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:at_client/src/service/notification_service.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/exceptions/at_follows_exceptions.dart';
 import 'package:at_follows_flutter/services/connections_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
@@ -23,6 +21,7 @@ class SDKService {
 
   String? _atsign;
 
+  ///Sets the [rootdomain]
   set setClientService(AtClientService service) {
     this._atsign = AtClientManager.getInstance().atClient.getCurrentAtSign();
     Strings.rootdomain =
@@ -108,6 +107,7 @@ class SDKService {
   Future<bool> notify(AtKey key, String value, OperationEnum operation,
       Function onDone, Function onError) async {
     var notificationResponse = await AtClientManager.getInstance()
+        .atClient
         .notificationService
         .notify(_getNotificationParams(key, value, operation))
         .timeout(Duration(seconds: AppConstants.responseTimeLimit),
@@ -135,7 +135,7 @@ class SDKService {
             onTimeout: () => _onTimeOut());
     int index = scanKey.length - 1;
     for (int i = 0; i < scanKey.length; i++) {
-      if (scanKey[i].key!.endsWith("self.at_follows") &&
+      if (scanKey[i].key.endsWith("self.at_follows") &&
           scanKey[i].namespace == "wavi" &&
           scanKey[i].sharedWith == null) {
         index = i;
@@ -149,12 +149,12 @@ class SDKService {
         _isOldKey(scanKey[0].key) &&
         value.value != null) {
       var newKey = AtKey()..metadata = scanKey[0].metadata;
-      newKey.key = scanKey[0].key!.contains('following')
+      newKey.key = scanKey[0].key.contains('following')
           ? AppConstants.followingKey
           : AppConstants.followersKey;
       await this.put(newKey, value.value);
       value = await this.get(newKey);
-      if (value != null && value.value != null) {
+      if (value.value != null) {
         await this.delete(scanKey[0]);
       }
     }
@@ -170,7 +170,7 @@ class SDKService {
 
   ///Performs sync for current @sign
   sync() async {
-    AtClientManager.getInstance().syncService.sync();
+    AtClientManager.getInstance().atClient.syncService.sync();
   }
 
   ///Throws [ResponseTimeOutException].

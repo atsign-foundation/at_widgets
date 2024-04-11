@@ -14,7 +14,7 @@ class OTPDialog extends StatefulWidget {
       : super(key: key);
 
   @override
-  _OTPDialogState createState() => _OTPDialogState();
+  State<OTPDialog> createState() => _OTPDialogState();
 }
 
 class _OTPDialogState extends State<OTPDialog> {
@@ -38,7 +38,7 @@ class _OTPDialogState extends State<OTPDialog> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    var deviceTextFactor = MediaQuery.of(context).textScaler.scale(20) / 20;
     return SizedBox(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,

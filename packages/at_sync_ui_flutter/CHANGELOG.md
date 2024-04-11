@@ -1,5 +1,15 @@
+## 1.0.11:
+- **CHORE**: Bumped up dependecy versions
+- **CHORE**: Improved pub score
+
+## 1.0.10
+- **CHORE**: Updated dependencies
+- **CHORE**: Lint fixes
+
 ## 1.0.9
+- **CHORE**: Bumped all dependency versions
 - **REFACTOR**: Deprecated `sync()` method and moved it's implementation to init.
+- **CHORE**: Improved pub score
 
 ## 1.0.8
 - **FEAT**: Provides exit option when sync takes longer

@@ -1,3 +1,6 @@
+// ignoring this for the entire file to make it easier to detect real issues when doing review for publishing
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -10,7 +13,6 @@ import 'package:at_follows_flutter/services/sdk_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../at_demo_credentials.dart' as demo_data;
-import 'package:at_commons/at_commons.dart';
 
 SDKService _sdkService = SDKService();
 ConnectionsService _connectionsService = ConnectionsService();
@@ -23,7 +25,9 @@ void main() {
     final atClientManager = AtClientManager.getInstance();
     _connectionsService.init(senderAtsign);
     ConnectionProvider().init(senderAtsign);
-    atClientManager.notificationService.subscribe().listen((notification) {
+    atClientManager.atClient.notificationService
+        .subscribe()
+        .listen((notification) {
       monitorCallBack(notification);
     });
   });
@@ -34,6 +38,7 @@ void main() {
 
       await setUpFunc(receiverAtsign);
       AtClientManager.getInstance()
+          .atClient
           .notificationService
           .subscribe()
           .listen((notification) {
@@ -66,7 +71,7 @@ void main() {
 
     test('to support wavi and persona namespace', () async {
       var firstAtSign = '@bob🛠';
-      var bobClientService = await setUpFunc(firstAtSign);
+      await setUpFunc(firstAtSign);
       var metadata = Metadata()
         ..isPublic = true
         ..namespaceAware = false;
@@ -81,7 +86,7 @@ void main() {
       await AtClientManager.getInstance().atClient.put(bobLastname, 'Geller');
 
       var secondAtSign = '@colin🛠';
-      var colinClientService = await setUpFunc(secondAtSign);
+      await setUpFunc(secondAtSign);
       var metadata1 = Metadata()..isPublic = true;
       var colinFirstname = AtKey()
         ..key = 'firstname'
@@ -146,7 +151,7 @@ void main() {
           connectionProvider.connectionslistStatus.isFollowingPrivate, false);
       var result = await _connectionsService.changeListPublicStatus(true, true);
       expect(result, true);
-      expect(_connectionsService.following.getKey!.atKey.metadata!.isPublic,
+      expect(_connectionsService.following.getKey!.atKey.metadata.isPublic,
           false);
     });
     test('change from private to public', () async {
@@ -163,7 +168,7 @@ void main() {
           await _connectionsService.changeListPublicStatus(true, false);
       expect(result, true);
       expect(
-          _connectionsService.following.getKey!.atKey.metadata!.isPublic, true);
+          _connectionsService.following.getKey!.atKey.metadata.isPublic, true);
     });
   });
 
@@ -171,7 +176,7 @@ void main() {
     test('follow functioanlity with wavi and persona namespace support',
         () async {
       var firstAtSign = '@bob🛠';
-      var bobClientService = await setUpFunc(firstAtSign);
+      await setUpFunc(firstAtSign);
       var metadata = Metadata()
         ..isPublic = true
         ..namespaceAware = false;
@@ -186,7 +191,7 @@ void main() {
       await AtClientManager.getInstance().atClient.put(bobLastname, 'Geller');
 
       var secondAtSign = '@colin🛠';
-      var colinClientService = await setUpFunc(secondAtSign);
+      await setUpFunc(secondAtSign);
       var metadata1 = Metadata()..isPublic = true;
       var colinFirstname = AtKey()
         ..key = 'firstname'
@@ -249,10 +254,10 @@ void main() {
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
       await _connectionsService.getAtsignsList();
       expect(
-          _connectionsService.following.getKey!.atKey.metadata!.isPublic, true);
+          _connectionsService.following.getKey!.atKey.metadata.isPublic, true);
       var result = await _connectionsService.changeListPublicStatus(true, true);
       expect(result, true);
-      expect(_connectionsService.following.getKey!.atKey.metadata!.isPublic,
+      expect(_connectionsService.following.getKey!.atKey.metadata.isPublic,
           false);
     });
 
@@ -265,7 +270,7 @@ void main() {
         ..metadata = atMetadata;
       await _sdkService.put(atKey1, '@sameeraja🛠,@sitaram🛠');
       await _connectionsService.getAtsignsList();
-      expect(_connectionsService.following.getKey!.atKey.metadata!.isPublic,
+      expect(_connectionsService.following.getKey!.atKey.metadata.isPublic,
           false);
 
       var result =
@@ -283,11 +288,10 @@ Future<void> tearDownFunc() async {
 }
 
 Future<AtClientService> setUpFunc(String atsign) async {
-  var preference = getAtSignPreference(atsign);
   final atClientManager = AtClientManager.getInstance();
   AtClientService atClientService = AtClientService();
   final atClient = atClientManager.atClient;
-  atClientManager.syncService.sync();
+  atClientManager.atClient.syncService.sync();
   await setEncryptionKeys(atClient, atsign);
   return atClientService;
 }
@@ -318,18 +322,24 @@ setEncryptionKeys(AtClient atClient, String atsign) async {
     metadata.namespaceAware = false;
     var result;
     // set pkam private key
-    result = await atClient.getLocalSecondary()!.putValue(AT_PKAM_PRIVATE_KEY,
-        demo_data.pkamPrivateKeyMap[atsign]!); // set pkam public key
-    result = await atClient
-        .getLocalSecondary()!
-        .putValue(AT_PKAM_PUBLIC_KEY, demo_data.pkamPublicKeyMap[atsign]!);
+    result = await atClient.getLocalSecondary()!.putValue(
+          AtConstants.atPkamPrivateKey,
+          demo_data.pkamPrivateKeyMap[atsign]!,
+        ); // set pkam public key
+    result = await atClient.getLocalSecondary()!.putValue(
+          AtConstants.atPkamPublicKey,
+          demo_data.pkamPublicKeyMap[atsign]!,
+        );
     // set encryption private key
     result = await atClient.getLocalSecondary()!.putValue(
-        AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]!);
+          AtConstants.atEncryptionPrivateKey,
+          demo_data.encryptionPrivateKeyMap[atsign]!,
+        );
     //set aesKey
-    result = await atClient
-        .getLocalSecondary()!
-        .putValue(AT_ENCRYPTION_SELF_KEY, demo_data.aesKeyMap[atsign]!);
+    result = await atClient.getLocalSecondary()!.putValue(
+          AtConstants.atEncryptionSelfKey,
+          demo_data.aesKeyMap[atsign]!,
+        );
 
     // set encryption public key. should be synced
     metadata.isPublic = true;

@@ -1,15 +1,12 @@
-import 'package:at_client/at_client.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_location_flutter/location_modal/hybrid_model.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/location_modal/location_notification.dart';
 import 'package:at_location_flutter/service/at_location_notification_listener.dart';
 import 'package:at_location_flutter/service/contact_service.dart';
-import 'package:at_location_flutter/service/distance_calculate.dart';
 import 'package:at_location_flutter/service/home_screen_service.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
 import 'package:at_location_flutter/service/location_service.dart';
-import 'package:at_location_flutter/service/master_location_service.dart';
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:at_location_flutter/service/request_location_service.dart';
 import 'package:flutter/material.dart';
@@ -20,23 +17,24 @@ import 'package:mocktail/mocktail.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 Position get mockPosition => Position(
-    latitude: 52.561270,
-    longitude: 5.639382,
-    timestamp: DateTime.fromMillisecondsSinceEpoch(
-      500,
-      isUtc: true,
-    ),
-    altitude: 3000.0,
-    accuracy: 0.0,
-    heading: 0.0,
-    speed: 0.0,
-    speedAccuracy: 0.0);
+      latitude: 52.561270,
+      longitude: 5.639382,
+      timestamp: DateTime.fromMillisecondsSinceEpoch(
+        500,
+        isUtc: true,
+      ),
+      altitude: 3000.0,
+      accuracy: 0.0,
+      heading: 0.0,
+      speed: 0.0,
+      speedAccuracy: 0.0,
+      altitudeAccuracy: 0.0,
+      headingAccuracy: 0.0,
+    );
 
 class MockAtContactImpl extends Mock implements AtContactsImpl {}
 
 void main() {
-  MockAtContactImpl mockAtContactImpl = MockAtContactImpl();
-
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() {
     GeolocatorPlatform.instance = MockGeolocatorPlatform();

@@ -14,7 +14,8 @@ class MockAtClient extends Mock implements AtClient {
   }
 
   @override
-  Future<bool> delete(AtKey key, {bool isDedicated = false}) async {
+  Future<bool> delete(AtKey key,
+      {deleteRequestOptions, bool isDedicated = false}) async {
     return true;
   }
 
@@ -24,7 +25,7 @@ class MockAtClient extends Mock implements AtClient {
     bool isDedicated = false,
     GetRequestOptions? getRequestOptions,
   }) async {
-    if (key.metadata?.isBinary == true) {
+    if (key.metadata.isBinary == true) {
       return AtValue()..value = Uint8List(5);
     } else {
       var atSign = "@83apedistinct";

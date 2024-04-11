@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_common_flutter/at_common_flutter.dart';
 
-/// This widget gives option to create group when there is no group
+/// [EmptyGroup] is displayed when no group is created.
+///  It also provides option to create a new group.
 class EmptyGroup extends StatefulWidget {
   const EmptyGroup({Key? key}) : super(key: key);
   @override

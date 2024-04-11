@@ -1,3 +1,14 @@
+## 4.0.15
+
+- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
+- **CHORE**: Changed IPHONEOS_DEPLOYMENT_TARGET from 9.0 to 12.0
+## 4.0.14
+
+- **CHORE**: Bumped all dependency versions
+
+## 4.0.13
+- **CHORE**: Updated dependency and improved pub score
+
 ## 4.0.12
 - **FIX**: fetching contacts made faster.
 

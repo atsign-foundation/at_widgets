@@ -64,10 +64,12 @@ class AtOnboarding {
 
       if (result is AtOnboardingResult) {
         return result;
-      } else {
-        return AtOnboardingResult.cancelled();
       }
-    } else {
+
+      return AtOnboardingResult.cancelled();
+    }
+
+    if (context.mounted) {
       final result = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -86,10 +88,10 @@ class AtOnboarding {
           await changePrimaryAtsign(atsign: result.atsign!);
         }
         return result;
-      } else {
-        return AtOnboardingResult.cancelled();
       }
     }
+
+    return AtOnboardingResult.cancelled();
   }
 
   static Future<AtOnboardingResult> activateAccount({
@@ -98,22 +100,26 @@ class AtOnboarding {
   }) async {
     /// Initial Setup
     await _initialSetup(context);
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return AtOnboardingActivateScreen(
-            hideReferences: false,
-            config: config,
-          );
-        },
-      ),
-    );
-    if (result is AtOnboardingResult) {
-      return result;
-    } else {
-      return AtOnboardingResult.cancelled();
+
+    if (context.mounted) {
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return AtOnboardingActivateScreen(
+              hideReferences: false,
+              config: config,
+            );
+          },
+        ),
+      );
+
+      if (result is AtOnboardingResult) {
+        return result;
+      }
     }
+
+    return AtOnboardingResult.cancelled();
   }
 
   static Future<bool> changePrimaryAtsign({required String atsign}) async {
@@ -128,15 +134,18 @@ class AtOnboarding {
     /// Initial Setup
     await _initialSetup(context);
 
-    final result = await Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) {
-      return AtOnboardingResetScreen(config: config);
-    }));
-    if (result is AtOnboardingResetResult) {
-      return result;
-    } else {
-      return AtOnboardingResetResult.cancelled;
+    if (context.mounted) {
+      final result = await Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+        return AtOnboardingResetScreen(config: config);
+      }));
+
+      if (result is AtOnboardingResetResult) {
+        return result;
+      }
     }
+
+    return AtOnboardingResetResult.cancelled;
   }
 
   Future<bool> enableUsingSharedStorage() async {

@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:at_follows_flutter/utils/app_constants.dart';
 import 'package:at_follows_flutter/utils/color_constants.dart';
 import 'package:at_follows_flutter/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:at_utils/at_logger.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -84,10 +82,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   _launchURL(String url) async {
     // url = Uri.encodeFull(url);
-    if (await canLaunch(url)) {
+    if (await canLaunchUrlString(url)) {
       Navigator.pop(context);
       Navigator.pop(context);
-      await launch(url);
+      await launchUrlString(url);
     } else {
       _logger.severe('unable to launch $url');
     }

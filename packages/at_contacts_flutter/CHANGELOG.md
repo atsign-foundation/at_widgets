@@ -1,3 +1,17 @@
+## 4.0.14
+- **CHORE**: Bumped up dependency versions
+- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
+
+## 4.0.13
+
+- **FIX**: Fixed methods for fetching profile picture
+## 4.0.12
+
+- **CHORE**: Bumped all dependency versions
+
+## 4.0.11
+- **CHORE**: Updated dependency and improved pub score
+
 ## 4.0.10
 - **FIX**: fetching contacts made faster
 

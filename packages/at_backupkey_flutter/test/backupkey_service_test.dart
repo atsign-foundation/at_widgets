@@ -13,36 +13,36 @@ void main() {
 
   group('Fetching AESKey', () {
     test('for registered @sign', () async {
-      MockDataService _mockDataService = MockDataService(atsign);
-      String aesKey = _mockDataService.getAESKey;
+      MockDataService mockDataService = MockDataService(atsign);
+      String aesKey = mockDataService.getAESKey;
       expect(aesKey.length == 44, true);
     });
 
     test('for unregistered @sign', () async {
-      MockDataService _mockDataService = MockDataService(atsign + '123');
-      String? aesKey = _mockDataService.getAESKey;
+      MockDataService mockDataService = MockDataService('${atsign}123');
+      String? aesKey = mockDataService.getAESKey;
       expect(aesKey, null);
     });
   });
 
   group('Fetch EncryptedKeys', () {
     test('for registerd @sign', () async {
-      MockDataService _mockDataService = MockDataService(atsign);
-      var map = _mockDataService.getEncryptedKeys();
+      MockDataService mockDataService = MockDataService(atsign);
+      var map = mockDataService.getEncryptedKeys();
       expect(map.length, greaterThan(0));
     });
 
     test('for unregisterd @sign', () async {
-      MockDataService _mockDataService = MockDataService(atsign + '123');
-      var map = _mockDataService.getEncryptedKeys();
+      MockDataService mockDataService = MockDataService('${atsign}123');
+      var map = mockDataService.getEncryptedKeys();
       expect(map, {});
     });
   });
 
   group('generate backupkey file', () {
     test('for registered @sign', () async {
-      MockDataService _mockDataService = MockDataService(atsign);
-      var aesEncryptedKeys = _mockDataService.getEncryptedKeys();
+      MockDataService mockDataService = MockDataService(atsign);
+      var aesEncryptedKeys = mockDataService.getEncryptedKeys();
       expect(aesEncryptedKeys.isNotEmpty, true);
       var result = await _generateFile(atsign, aesEncryptedKeys);
       expect(result, true);
@@ -50,9 +50,9 @@ void main() {
     });
 
     test('for unregistered @sign', () async {
-      String atSign = atsign + '123';
-      MockDataService _mockDataService = MockDataService(atSign);
-      var aesEncryptedKeys = _mockDataService.getEncryptedKeys();
+      String atSign = '${atsign}123';
+      MockDataService mockDataService = MockDataService(atSign);
+      var aesEncryptedKeys = mockDataService.getEncryptedKeys();
       expect(aesEncryptedKeys.isNotEmpty, false);
       var result = await _generateFile(atSign, aesEncryptedKeys);
       expect(result, false);
@@ -82,7 +82,9 @@ Future<void> setUpFunc(String atsign) async {
 
   // To setup encryption keys
   await atClient.getLocalSecondary()!.putValue(
-      AT_ENCRYPTION_PRIVATE_KEY, demo_data.encryptionPrivateKeyMap[atsign]!);
+        AtConstants.atEncryptionPrivateKey,
+        demo_data.encryptionPrivateKeyMap[atsign]!,
+      );
 }
 
 AtClientPreference getAtSignPreference(String atsign) {
@@ -113,6 +115,7 @@ class MockDataService {
   late String atsign;
 
   MockDataService(this.atsign);
+
   get getAESKey => demo_data.aesKeyMap[atsign];
 
   Map<String, String> getEncryptedKeys() {

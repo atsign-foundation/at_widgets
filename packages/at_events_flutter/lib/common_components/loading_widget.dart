@@ -14,6 +14,7 @@ class LoadingDialog {
   factory LoadingDialog() => _instance;
   bool _showing = false;
 
+  /// display a custom popup with an optional text parameter
   void show({String? text}) {
     if (!_showing) {
       _showing = true;
@@ -30,7 +31,7 @@ class LoadingDialog {
                             Flexible(
                               child: Text(
                                 text,
-                                textScaleFactor: 1,
+                                textScaler: const TextScaler.linear(1),
                                 style: TextStyle(
                                     color: AllColors().MILD_GREY,
                                     fontSize: 20.toFont,
@@ -53,6 +54,7 @@ class LoadingDialog {
     }
   }
 
+  /// hide the currently displayed popup
   void hide() {
     if (_showing) {
       AtEventNotificationListener().navKey!.currentState!.pop();

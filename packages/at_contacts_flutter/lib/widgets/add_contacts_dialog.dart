@@ -47,7 +47,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
   @override
   Widget build(BuildContext context) {
     var contactService = ContactService();
-    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    var deviceTextFactor = MediaQuery.of(context).textScaler.scale(20) / 20;
     return SizedBox(
       height: 140.toHeight * deviceTextFactor,
       width: 100.toWidth,

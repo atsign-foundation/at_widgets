@@ -9,7 +9,7 @@ class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
 
   @override
-  _SecondScreenState createState() => _SecondScreenState();
+  State<SecondScreen> createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
@@ -26,6 +26,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
   /// Get the AtClientManager instance
   var atClientManager = AtClientManager.getInstance();
+
   @override
   void initState() {
     getAtSignAndInitializeChat();
@@ -222,8 +223,8 @@ class _SecondScreenState extends State<SecondScreen> {
     if (member1.trim() != '' && member2.trim() != '' && groupId != '') {
       setChatWithAtSign(null, isGroup: true, groupId: groupId, groupMembers: [
         activeAtSign!,
-        member1.startsWith('@') ? member1 : '@' + member1,
-        member2.startsWith('@') ? member2 : '@' + member2
+        member1.startsWith('@') ? member1 : '@$member1',
+        member2.startsWith('@') ? member2 : '@$member2'
       ]);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const ThirdScreen()));
@@ -238,8 +239,8 @@ class _SecondScreenState extends State<SecondScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Row(
-              children: const [Text('Some details are missing!')],
+            title: const Row(
+              children: [Text('Some details are missing!')],
             ),
             content: const Text('Please enter all fields'),
             actions: <Widget>[

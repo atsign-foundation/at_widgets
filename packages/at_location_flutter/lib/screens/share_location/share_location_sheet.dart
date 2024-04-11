@@ -12,7 +12,9 @@ import 'package:flutter/material.dart';
 
 class ShareLocationSheet extends StatefulWidget {
   final Function? onTap;
+
   const ShareLocationSheet({Key? key, this.onTap}) : super(key: key);
+
   @override
   _ShareLocationSheetState createState() => _ShareLocationSheetState();
 }
@@ -175,8 +177,10 @@ class _ShareLocationSheetState extends State<ShareLocationSheet> {
     } else if (!atSign.contains('@')) {
       atSign = '@$atSign';
     }
-    var checkPresence = await AtLookupImpl.findSecondary(
-        atSign, AtLocationNotificationListener().ROOT_DOMAIN, 64);
-    return checkPresence != null;
+    var checkPresence = (await CacheableSecondaryAddressFinder(
+                AtLocationNotificationListener().ROOT_DOMAIN ?? '', 64)
+            .findSecondary(atSign))
+        .toString();
+    return checkPresence.isNotEmpty;
   }
 }

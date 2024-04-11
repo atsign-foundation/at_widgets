@@ -246,7 +246,7 @@ class AtSyncDialog {
     return showDialog(
       barrierDismissible: barrierDismissible,
       context: _context,
-      builder: (context) => WillPopScope(
+      builder: (context) => PopScope(
         child: AlertDialog(
           content: ValueListenableBuilder<double?>(
             valueListenable: _progress,
@@ -301,7 +301,7 @@ class AtSyncDialog {
             },
           ),
         ),
-        onWillPop: () => Future.value(
+        onPopInvoked: (didPop) => Future.value(
           barrierDismissible,
         ),
       ),

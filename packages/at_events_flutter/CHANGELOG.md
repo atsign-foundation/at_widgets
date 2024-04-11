@@ -1,3 +1,17 @@
+## 3.1.13:
+- **CHORE**: Bumped up all dependency versions
+- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
+
+## 3.1.12
+
+- **CHORE**: Bumped all dependency versions
+
+## 3.1.11
+- **CHORE**: Upgraded dependencies
+
+## 3.1.10
+- **CHORE**: Improved pub score
+
 ## 3.1.9
 - **CHORE**: Updated dependencies and android gradle versions
 - **CHORE**: Package description updated

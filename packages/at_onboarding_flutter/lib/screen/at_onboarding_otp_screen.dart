@@ -16,8 +16,12 @@ import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// Represent the result of OTP-based onboarding for an atSign
 class AtOnboardingOTPResult {
+  /// The atSign associated with the OTP result
   String atSign;
+
+  /// The secret value, if available
   String? secret;
 
   AtOnboardingOTPResult({
@@ -26,7 +30,9 @@ class AtOnboardingOTPResult {
   });
 }
 
+/// This screen is to perform OTP-based verification
 class AtOnboardingOTPScreen extends StatefulWidget {
+  /// Static method to navigate to this screen
   static Future<AtOnboardingOTPResult?> push({
     required BuildContext context,
     required String atSign,
@@ -47,12 +53,16 @@ class AtOnboardingOTPScreen extends StatefulWidget {
     );
   }
 
+  /// The atSign to be displayed on the OTP screen
   final String atSign;
+
+  /// The email address, if provided
   final String? email;
 
-  ///will hide webpage references.
+  /// If true, will hide webpage references
   final bool hideReferences;
 
+  /// The configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingOTPScreen({
@@ -198,7 +208,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                         children: <TextSpan>[
                           TextSpan(
                             text: AtOnboardingLocalizations.current.note,
-                            style: theme.textTheme.bodyText2?.copyWith(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               fontSize: AtOnboardingDimens.fontSmall,
                               height: 1.5,
                               fontWeight: FontWeight.bold,
@@ -207,7 +217,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
                           TextSpan(
                             text: AtOnboardingLocalizations
                                 .current.note_otp_content,
-                            style: theme.textTheme.bodyText2?.copyWith(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               fontSize: AtOnboardingDimens.fontSmall,
                               height: 1.5,
                             ),

@@ -21,13 +21,19 @@ import 'package:flutter/material.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// This screen is for generating atKey
 class AtOnboardingGenerateScreen extends StatefulWidget {
+  /// Callback function to be called when atKey generation is successful
+  /// It receives the generated atSign and its corresponding secret
   final Function({
     required String atSign,
     required String secret,
   })? onGenerateSuccess;
 
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
+
+  /// Indicates whether the screen is navigated from the intro screen
   final bool isFromIntroScreen;
 
   const AtOnboardingGenerateScreen({
@@ -106,8 +112,13 @@ class _AtOnboardingGenerateScreenState
       paddingFocus: 10,
       opacityShadow: 0.8,
       onFinish: _endTutorial,
-      onSkip: _endTutorial,
+      onSkip: skipTutorial,
     )..show(context: context);
+  }
+
+  bool skipTutorial() {
+    _endTutorial();
+    return true;
   }
 
   void _endTutorial() async {
@@ -447,8 +458,7 @@ class _AtOnboardingGenerateScreenState
         message: AtOnboardingLocalizations.current.processing,
       );
       await Future.delayed(const Duration(milliseconds: 400));
-      bool isExist =
-          await _onboardingService.isExistingAtsign(verifiedAtSign);
+      bool isExist = await _onboardingService.isExistingAtsign(verifiedAtSign);
 
       if (isExist) {
         _inprogressDialog.close();
@@ -481,11 +491,11 @@ class _AtOnboardingGenerateScreenState
             context, AtOnboardingResult.success(atsign: verifiedAtSign));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_not_registered,
+          AtOnboardingLocalizations.current.msg_atSign_unreachable,
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_unreachable,
+          AtOnboardingLocalizations.current.error_authenticated_failed,
         );
       } else {
         await showErrorDialog(
@@ -498,7 +508,7 @@ class _AtOnboardingGenerateScreenState
         _logger.severe('Error in authenticateWith cram secret');
         await _showAlertDialog(
           e,
-          title: AtOnboardingLocalizations.current.msg_auth_failed,
+          title: AtOnboardingLocalizations.current.error_authenticated_failed,
         );
       } else if (e == AtOnboardingResponseStatus.serverNotReached) {
         await _processSharedSecret(

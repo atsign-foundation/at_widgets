@@ -8,12 +8,15 @@ import 'package:at_onboarding_flutter/screen/at_onboarding_intro_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
+import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 
+/// The starting screen for the onboarding process
 class AtOnboardingStartScreen extends StatefulWidget {
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingStartScreen({
@@ -82,6 +85,7 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
         if (!mounted) return;
         Navigator.pop(context, result);
       } else if (e == OnboardingStatus.ACTIVATE) {
+        if (!mounted) return;
         final result = await AtOnboarding.activateAccount(
           context: context,
           config: widget.config,
@@ -90,10 +94,11 @@ class _AtOnboardingStartScreenState extends State<AtOnboardingStartScreen> {
         Navigator.pop(context, result);
       } else {
         if (!mounted) return;
+        var message = AtOnboardingErrorToString().getErrorMessage(e);
         Navigator.pop(
           context,
           AtOnboardingResult.error(
-            message: "$e",
+            message: message,
           ),
         );
       }

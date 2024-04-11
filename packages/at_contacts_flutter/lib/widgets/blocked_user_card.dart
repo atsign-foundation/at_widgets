@@ -47,17 +47,17 @@ class _BlockedUserCardState extends State<BlockedUserCard> {
 
       contactImage = image != null
           ? CustomCircleAvatar(
-              size: SizeConfig().isTablet(context)? 32: 45,
+              size: SizeConfig().isTablet(context) ? 32 : 45,
               byteImage: image,
               nonAsset: true,
             )
           : ContactInitial(
-              size: SizeConfig().isTablet(context)? 32: 45,
+              size: SizeConfig().isTablet(context) ? 32 : 45,
               initials: widget.blockeduser!.atSign!,
             );
     } else {
       contactImage = ContactInitial(
-        size: SizeConfig().isTablet(context)? 32: 45,
+        size: SizeConfig().isTablet(context) ? 32 : 45,
         initials: widget.blockeduser!.atSign!,
       );
     }

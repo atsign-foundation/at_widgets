@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:at_login_flutter/domain/at_login_model.dart';
 import 'package:at_login_flutter/exceptions/at_login_exceptions.dart';
 import 'package:at_login_flutter/utils/app_constants.dart';
@@ -5,9 +7,9 @@ import 'package:at_login_flutter/utils/strings.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'dart:core';
 import 'package:at_login_flutter/utils/at_login_utils.dart';
-import 'package:at_client/src/encryption_service/sign_in_public_data.dart';
 import 'package:at_server_status/at_server_status.dart';
 import 'package:at_utils/at_utils.dart';
+import 'package:crypton/crypton.dart';
 import 'package:flutter/material.dart';
 
 class AtLoginService {
@@ -15,9 +17,9 @@ class AtLoginService {
 
   // late List<AtLoginObj> _atLoginList;
   late AtClientPreference _atClientPreference;
-  late String? _requestorUrl;
   late String _initialised;
-  late String _atSign;
+
+  Widget get nextScreen => _nextScreen;
   late Widget _nextScreen;
 
   late AtStatus atStatus;
@@ -59,7 +61,7 @@ class AtLoginService {
   Future<bool> setAtsign(String? atSign) async {
     bool success = false;
     var namespace = _atClientPreference.namespace;
-    var result = await AtClientManager.getInstance()
+    await AtClientManager.getInstance()
         .setCurrentAtSign(atSign!, namespace, _atClientPreference);
     // if (result != null) success = true;
     return success;
@@ -140,13 +142,11 @@ class AtLoginService {
           .localSecondary!
           .getEncryptionPrivateKey();
 
-      var signature = await SignInPublicData.signInData(
-          atLoginObj.challenge, encryptionPrivateKey!);
+      var privateKey = RSAPrivateKey.fromString(encryptionPrivateKey ?? '');
+      var dataSignature = privateKey
+          .createSHA256Signature(utf8.encode(atLoginObj.challenge ?? ''));
+      var signature = base64Encode(dataSignature);
 
-      // var rsaKey = RSAPrivateKey.fromString(privateKey!);
-      // var sha256signature = rsaKey.createSHA256Signature(
-      //     utf8.encode(atLoginObj.challenge!) as Uint8List);
-      // var signature = base64Encode(sha256signature);
       await setAtsign(atLoginObj.atsign);
       _logger.info(
           'putLoginProof|atLoginObj.requestorUrl:${atLoginObj.requestorUrl}');
@@ -155,7 +155,7 @@ class AtLoginService {
         ..isHidden = true
         ..ttl = 30;
       var atKey = AtKey()
-        ..key = atLoginObj.location
+        ..key = atLoginObj.location ?? ""
         ..metadata = metadata;
       var data = signature;
       _logger.info('putLoginProof|atKey:$atKey');

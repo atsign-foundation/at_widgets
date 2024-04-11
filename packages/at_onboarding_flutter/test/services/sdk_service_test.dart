@@ -55,6 +55,4 @@ main() {
       expect(result, "@${onboardingDataTest.atSignTest.toLowerCase()}");
     });
   });
-
-
 }

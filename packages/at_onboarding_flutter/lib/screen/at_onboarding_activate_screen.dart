@@ -20,10 +20,15 @@ import 'package:at_sync_ui_flutter/at_sync_material.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// This screen is for activating an atSign during onboarding process
 class AtOnboardingActivateScreen extends StatefulWidget {
-  ///will hide webpage references.
+  /// If true, will hide webpage references
   final bool hideReferences;
+
+  /// The atSign to be activated
   final String? atSign;
+
+  /// The configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingActivateScreen({
@@ -70,8 +75,7 @@ class _AtOnboardingActivateScreenState
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              AtOnboardingLocalizations.current
-                  .title_setting_up_your_atSign,
+              AtOnboardingLocalizations.current.title_setting_up_your_atSign,
             ),
             actions: [
               IconButton(
@@ -97,8 +101,7 @@ class _AtOnboardingActivateScreenState
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    AtOnboardingLocalizations.current
-                        .msg_wait_fetching_atSign,
+                    AtOnboardingLocalizations.current.msg_wait_fetching_atSign,
                   ),
                 ],
               ),
@@ -249,11 +252,11 @@ class _AtOnboardingActivateScreenState
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_not_registered,
+          AtOnboardingLocalizations.current.msg_atSign_unreachable,
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_unreachable,
+          AtOnboardingLocalizations.current.error_authenticated_failed,
         );
       } else {
         await showErrorDialog(
@@ -269,12 +272,12 @@ class _AtOnboardingActivateScreenState
       } else if (e == AtOnboardingResponseStatus.serverNotReached) {
         await _showAlertDialog(
           e,
-          title: AtOnboardingLocalizations.current.error_server_not_found,
+          title: AtOnboardingLocalizations.current.msg_atSign_unreachable,
         );
       } else if (e == AtOnboardingResponseStatus.timeOut) {
         await _showAlertDialog(
           e,
-          title: AtOnboardingLocalizations.current.title_session_expired,
+          title: AtOnboardingLocalizations.current.msg_response_time_out,
         );
       }
     }

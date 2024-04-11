@@ -4,17 +4,18 @@ import 'package:at_onboarding_flutter/utils/at_onboarding_dimens.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 
-/// This screen shows the list of atsigns already available for the given email
+/// This screen shows the list of atSign already available for the given email
 class AtOnboardingAccountsScreen extends StatefulWidget {
-  /// list of atsigns for the email
+  /// list of atSign for the email
   final List<String> atsigns;
 
-  /// message to display along with the atsign list
+  /// message to display along with the atSign list
   final String? message;
 
-  /// the new atsign selected in the free atsign generator
+  /// the new atSign selected in the free atSign generator
   final String? newAtsign;
 
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingAccountsScreen({
@@ -87,8 +88,7 @@ class _AtOnboardingAccountsScreenState
                   children: <Widget>[
                     Text(
                       widget.message ??
-                          AtOnboardingLocalizations.current
-                              .title_select_atSign,
+                          AtOnboardingLocalizations.current.title_select_atSign,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: AtOnboardingDimens.fontNormal,
@@ -168,18 +168,18 @@ class _AtOnboardingAccountsScreenState
         child: AlertDialog(
           content: RichText(
             text: TextSpan(
-              style: theme.textTheme.bodyText1,
+              style: theme.textTheme.bodyLarge,
               children: <InlineSpan>[
                 TextSpan(
-                  text: AtOnboardingLocalizations.current
-                      .title_pair_atSign_prev,
+                  text:
+                      AtOnboardingLocalizations.current.title_pair_atSign_prev,
                 ),
                 TextSpan(
                     text: ' $atsign ',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(
-                  text: AtOnboardingLocalizations.current
-                      .title_pair_atSign_next,
+                  text:
+                      AtOnboardingLocalizations.current.title_pair_atSign_next,
                 )
               ],
             ),

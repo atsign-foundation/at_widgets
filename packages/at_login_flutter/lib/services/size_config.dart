@@ -11,7 +11,6 @@ class SizeConfig {
   late double screenHeight;
   late double blockSizeHorizontal;
   late double blockSizeVertical;
-  double? deviceTextFactor;
 
   late double _safeAreaHorizontal;
   late double _safeAreaVertical;
@@ -28,8 +27,6 @@ class SizeConfig {
     screenHeight = _mediaQueryData.size.height;
     refHeight = 812;
     refWidth = 375;
-
-    deviceTextFactor = _mediaQueryData.textScaleFactor;
 
     // print("height is::: $screenHeight");
 

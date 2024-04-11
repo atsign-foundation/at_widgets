@@ -90,8 +90,8 @@ class LocationSharingFor {
 
   Map<String, dynamic> toJson() {
     return {
-      'from': from != null ? from!.toUtc().toString() : null,
-      'to': to != null ? to!.toUtc().toString() : null,
+      'from': from?.toUtc().toString(),
+      'to': to?.toUtc().toString(),
       'locationSharingType': locationSharingType.toString(),
       'isAccepted': isAccepted.toString(),
       'isExited': isExited.toString(),

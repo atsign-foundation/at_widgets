@@ -1,7 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:typed_data';
+
+import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_contact/at_contact.dart';
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
+import 'package:at_contacts_group_flutter/screens/edit/person_horizontal.dart';
 import 'package:at_contacts_group_flutter/services/group_service.dart';
 import 'package:at_contacts_group_flutter/services/image_picker.dart';
 import 'package:at_contacts_group_flutter/utils/colors.dart';
@@ -9,12 +13,9 @@ import 'package:at_contacts_group_flutter/utils/text_constants.dart';
 import 'package:at_contacts_group_flutter/utils/text_styles.dart';
 import 'package:at_contacts_group_flutter/widgets/confirmation_dialog.dart';
 import 'package:at_contacts_group_flutter/widgets/custom_toast.dart';
-import 'package:at_contacts_group_flutter/screens/edit/person_horizontal.dart';
 import 'package:at_contacts_group_flutter/widgets/yes_no_dialog.dart';
-import 'package:flutter/material.dart';
-import 'package:at_common_flutter/at_common_flutter.dart';
-import 'dart:typed_data';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/material.dart';
 
 import '../../widgets/error_screen.dart';
 import '../list/group_list.dart';
@@ -300,7 +301,7 @@ class _GroupEditState extends State<GroupEdit> {
                               indicatorColor: Colors.blue,
                               iconColor: Colors.grey,
                               iconColorSelected: Colors.blue,
-                              showRecentsTab: true,
+                              recentTabBehavior: RecentTabBehavior.RECENT,
                               recentsLimit: 28,
                               noRecents: Text(
                                 "No Recents",

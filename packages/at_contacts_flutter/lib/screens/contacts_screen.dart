@@ -282,26 +282,26 @@ class _ContactsScreenState extends State<ContactsScreen> {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Slidable(
-              actionPane: const SlidableDrawerActionPane(),
-              actionExtentRatio: 0.25,
-              secondaryActions: <Widget>[
-                IconSlideAction(
-                  caption: TextStrings().block,
-                  color: ColorConstants.inputFieldColor,
+              endActionPane:
+                  ActionPane(motion: const ScrollMotion(), children: [
+                SlidableAction(
+                  label: TextStrings().block,
+                  backgroundColor: ColorConstants.inputFieldColor,
                   icon: Icons.block,
-                  onTap: () async {
+                  onPressed: (context) async {
                     blockUnblockContact(contactsForAlphabet[index]!);
                   },
                 ),
-                IconSlideAction(
-                  caption: TextStrings().delete,
-                  color: Colors.red,
+                SlidableAction(
+                  label: TextStrings().delete,
+                  backgroundColor: Colors.red,
                   icon: Icons.delete,
-                  onTap: () async {
+                  onPressed: (context) async {
                     deleteContact(contactsForAlphabet[index]!);
                   },
                 ),
-              ],
+              ]),
+              // actionExtentRatio: 0.25,
               child: CustomListTile(
                 key: UniqueKey(),
                 contactService: _contactService,

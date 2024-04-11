@@ -8,7 +8,9 @@ import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// [AtOnboardingInputAtSignScreen] allows to enter atSign for activation process
 class AtOnboardingInputAtSignScreen extends StatefulWidget {
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingInputAtSignScreen({

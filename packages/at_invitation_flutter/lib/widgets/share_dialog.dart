@@ -4,13 +4,14 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_invitation_flutter/utils/text_styles.dart'
     as invitation_text_styles;
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ShareDialog extends StatefulWidget {
   final String? uniqueID;
   final String? passcode;
   final String? webPageLink;
   final String currentAtsign;
+
   const ShareDialog(
       {Key? key,
       this.uniqueID,
@@ -20,7 +21,7 @@ class ShareDialog extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ShareDialogState createState() => _ShareDialogState();
+  State<ShareDialog> createState() => _ShareDialogState();
 }
 
 class _ShareDialogState extends State<ShareDialog> {
@@ -32,6 +33,7 @@ class _ShareDialogState extends State<ShareDialog> {
   String emailAddress = '';
   String phoneNumber = '';
   int activeOption = 0;
+
   @override
   void dispose() {
     atSignController.dispose();
@@ -49,7 +51,7 @@ class _ShareDialogState extends State<ShareDialog> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var deviceTextFactor = MediaQuery.of(context).textScaleFactor;
+    var deviceTextFactor = MediaQuery.of(context).textScaler.scale(20) / 20;
     return SizedBox(
       height: 100.toHeight * deviceTextFactor,
       width: 100.toWidth,
@@ -169,7 +171,7 @@ class _ShareDialogState extends State<ShareDialog> {
                     emailAddress = value.trim();
                     if (emailAddress != '') {
                       if (RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(emailAddress)) {
                         emailError = false;
                         emailErrorMessage = '';
@@ -220,7 +222,7 @@ class _ShareDialogState extends State<ShareDialog> {
                                 setState(() {
                                   isLoading = false;
                                 });
-                                Navigator.pop(context);
+                                if (mounted) Navigator.pop(context);
                               }
                             },
                             buttonColor:
@@ -264,8 +266,8 @@ class _ShareDialogState extends State<ShareDialog> {
 
   Future<void> _sendInformation() async {
     // construct message body
-    String link = (widget.webPageLink ?? '') +
-        '?key=${widget.uniqueID}&atsign=${widget.currentAtsign}';
+    String link =
+        '${widget.webPageLink ?? ''}?key=${widget.uniqueID}&atsign=${widget.currentAtsign}';
     String inviteText =
         'Hi there, you have been invited to join this app. \n link: $link \n password: ${widget.passcode}';
 
@@ -274,23 +276,22 @@ class _ShareDialogState extends State<ShareDialog> {
     // send SMS
     if (phoneNumber != '') {
       if (Platform.isAndroid) {
-        var uri = 'sms:' + phoneNumber + '?body=' + messageBody;
-        if (await canLaunch(uri)) {
-          await launch(uri);
+        var uri = 'sms:$phoneNumber?body=$messageBody';
+        if (await canLaunchUrlString(uri)) {
+          await launchUrlString(uri);
         }
       } else if (Platform.isIOS) {
-        var uri = 'sms:' + phoneNumber + '&body=' + messageBody;
-        if (await canLaunch(uri)) {
-          await launch(uri);
+        var uri = 'sms:$phoneNumber&body=$messageBody';
+        if (await canLaunchUrlString(uri)) {
+          await launchUrlString(uri);
         }
       }
     }
     // send email
     else if (emailAddress != '') {
-      var uri =
-          'mailto:' + emailAddress + '?subject=Invitation&body=' + messageBody;
-      if (await canLaunch(uri)) {
-        await launch(uri);
+      var uri = 'mailto:$emailAddress?subject=Invitation&body=$messageBody';
+      if (await canLaunchUrlString(uri)) {
+        await launchUrlString(uri);
       }
     }
   }

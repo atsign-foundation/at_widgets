@@ -17,6 +17,7 @@ import 'package:at_utils/at_logger.dart';
 class SharingLocationService {
   static final SharingLocationService _singleton =
       SharingLocationService._internal();
+
   SharingLocationService._internal();
 
   final _logger = AtSignLogger('SharingLocationService');
@@ -243,15 +244,15 @@ class SharingLocationService {
 
       if ((locationNotificationModel.from != null) &&
           (locationNotificationModel.to != null)) {
-        key.metadata!.ttl = locationNotificationModel.to!
+        key.metadata.ttl = locationNotificationModel.to!
                 .difference(locationNotificationModel.from!)
                 .inMinutes *
             60000;
-        key.metadata!.ttr = locationNotificationModel.to!
+        key.metadata.ttr = locationNotificationModel.to!
                 .difference(locationNotificationModel.from!)
                 .inMinutes *
             60000;
-        key.metadata!.expiresAt = locationNotificationModel.to;
+        key.metadata.expiresAt = locationNotificationModel.to;
       }
 
       if (shouldCheckForTimeChanges) {
@@ -279,6 +280,7 @@ class SharingLocationService {
     }
   }
 
+  /// Removes a person from the location sharing
   Future removePerson(
       LocationNotificationModel locationNotificationModel) async {
     var result;
@@ -340,6 +342,7 @@ class SharingLocationService {
     }
   }
 
+  /// Deletes all keys
   Future<void> deleteAllKey() async {
     var response =
         await AtLocationNotificationListener().atClientInstance!.getKeys(
@@ -362,13 +365,13 @@ class SharingLocationService {
       {int? ttl, DateTime? expiresAt}) {
     var atKey = AtKey()
       ..metadata = Metadata()
-      ..metadata!.ttr = ttr
-      ..metadata!.ccd = true
+      ..metadata.ttr = ttr
+      ..metadata.ccd = true
       ..key = key
       ..sharedWith = sharedWith
       ..sharedBy = AtLocationNotificationListener().currentAtSign;
-    if (ttl != null) atKey.metadata!.ttl = ttl;
-    if (expiresAt != null) atKey.metadata!.expiresAt = expiresAt;
+    if (ttl != null) atKey.metadata.ttl = ttl;
+    if (expiresAt != null) atKey.metadata.expiresAt = expiresAt;
     return atKey;
   }
 }

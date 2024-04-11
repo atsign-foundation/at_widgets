@@ -1,0 +1,62 @@
+name: static_analysis
+# Runs the workflow on the below events:
+# 1. on pull request raised to trunk branch.
+# 2. on push event to trunk branch.
+on:
+  push:
+    branches:
+      - trunk
+  pull_request:
+    branches:
+      - trunk
+
+permissions:  # added using https://github.com/step-security/secure-workflows
+  contents: read
+
+jobs:
+  static_analysis:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - at_backupkey_flutter
+          - at_chat_flutter
+          - at_common_flutter
+          - at_contacts_flutter
+          - at_contacts_group_flutter
+          - at_events_flutter
+          - at_follows_flutter
+          - at_invitation_flutter
+          - at_location_flutter
+          - at_login_flutter
+          - at_notify_flutter
+          - at_onboarding_flutter
+          - at_sync_ui_flutter
+          - at_theme_flutter
+
+    steps:
+      - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1 # v2.16.0
+        with:
+          channel: "stable"
+      - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
+        with:
+          go-version: 'stable'
+          cache-dependency-path: tools/osv-scanner/go.sum
+
+      - name: Install dependencies and analyze in ${{ matrix.package }}
+        working-directory: packages/${{ matrix.package }}
+        run: |
+          touch example/.env
+          flutter pub get
+          flutter analyze --no-fatal-infos
+
+      # Runs osv-scanner to find any vulnerable Dart dependencies
+      # It needs to look at pubspec.lock files, which is why it's
+      # placed here, as the `dart pub get` above will create them
+      - name: Run osv-scanner
+        working-directory: packages/${{ matrix.package }}
+        run: |
+          go install github.com/google/osv-scanner/cmd/osv-scanner@6316373e47d7e3e4b4fd3630c4bbc10987738de6 # v1.4.3
+          osv-scanner --lockfile=./pubspec.lock

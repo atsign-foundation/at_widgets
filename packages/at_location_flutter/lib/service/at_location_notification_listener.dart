@@ -60,6 +60,7 @@ class AtLocationNotificationListener {
   Future<void> startMonitor() async {
     if (!monitorStarted) {
       AtClientManager.getInstance()
+          .atClient
           .notificationService
           .subscribe(shouldDecrypt: true)
           .listen((monitorNotification) {
@@ -135,7 +136,6 @@ class AtLocationNotificationListener {
     }
 
     var decryptedMessage = value;
-    
 
     if (decryptedMessage == null || decryptedMessage == '') {
       return;
@@ -227,6 +227,7 @@ class AtLocationNotificationListener {
     }
   }
 
+  /// Shows a custom notification dialog
   Future<void> showMyDialog(
       String? fromAtSign, LocationNotificationModel locationData) async {
     if (showDialogBox) {
@@ -244,6 +245,7 @@ class AtLocationNotificationListener {
     }
   }
 
+  /// Shows a toast message
   showToast(String msg, BuildContext _context,
       {bool isError = false, bool isSuccess = true}) {
     try {
@@ -258,6 +260,7 @@ class AtLocationNotificationListener {
     }
   }
 
+  /// Returns the key type based on a given key regex
   String getKeyType(String keyRegex) {
     if (keyRegex.contains(MixedConstants.SHARE_LOCATION)) {
       return 'Share location';

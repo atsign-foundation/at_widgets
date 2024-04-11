@@ -5,8 +5,11 @@ import 'package:at_contacts_flutter/services/contact_service.dart';
 
 /// Function to initialise contacts Service
 Future<void> initializeContactsService(
-    {rootDomain = 'root.atsign.org', rootPort = 64}) async {
-  await ContactService().initContactsService(rootDomain, rootPort);
+    {rootDomain = 'root.atsign.org',
+    rootPort = 64,
+    bool fetchContacts = true}) async {
+  await ContactService()
+      .initContactsService(rootDomain, rootPort, fetchContacts: fetchContacts);
 }
 
 /// Function call from app to dispose stream controllers used in the package

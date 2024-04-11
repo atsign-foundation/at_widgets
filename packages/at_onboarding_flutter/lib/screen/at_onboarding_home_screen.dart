@@ -35,15 +35,25 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zxing2/qrcode.dart';
 import 'package:image/image.dart' as img;
 
+///  Home screen provides multiple options like upload atKey, generate new atSign, activatte existing atSign
 class AtOnboardingHomeScreen extends StatefulWidget {
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
-  /// If true, shows the custom dialog to get an atsign
+  /// If true, shows the custom dialog to get an atSign
   final bool getAtSign;
+
+  /// If true, hides references
   final bool hideReferences;
+
+  /// If true, hides QR code scanning
   final bool hideQrScan;
 
+  /// Set status for onboarding process
+  /// Set the [onboardStatus] to OnboardingStatus.ACTIVATE by default
   final onboardStatus = OnboardingStatus.ACTIVATE;
+
+  /// Specifies if the screen is being navigated from the intro screen
   final bool isFromIntroScreen;
 
   const AtOnboardingHomeScreen({
@@ -71,7 +81,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
   bool permissionGrated = false;
 
   bool _isContinue = true;
-  bool _uploadingQRCode = false;
   String? _pairingAtsign;
 
   ServerStatus? atSignStatus;
@@ -139,8 +148,13 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       paddingFocus: 10,
       opacityShadow: 0.8,
       onFinish: _endTutorial,
-      onSkip: _endTutorial,
+      onSkip: skipTutorial,
     )..show(context: context);
+  }
+
+  bool skipTutorial() {
+    _endTutorial();
+    return true;
   }
 
   void _endTutorial() async {
@@ -426,7 +440,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     var image = img.decodePng(File(imagepath).readAsBytesSync())!;
 
     LuminanceSource source = RGBLuminanceSource(image.width, image.height,
-        image.getBytes(format: img.Format.abgr).buffer.asInt32List());
+        image.getBytes(order: img.ChannelOrder.abgr).buffer.asInt32List());
     var bitmap = BinaryBitmap(HybridBinarizer(source));
 
     var reader = QRCodeReader();
@@ -521,19 +535,17 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
 
   Future<String?> _desktopKeyPicker() async {
     try {
-      // ignore: prefer_const_constructors
-      XTypeGroup typeGroup = XTypeGroup(
-        label: 'images',
-        // ignore: prefer_const_literals_to_create_immutables
-        extensions: <String>['atKeys'],
+      XFile? file = await openFile(
+        acceptedTypeGroups: [
+          // General file extensions
+          const XTypeGroup(extensions: ['atKeys', 'atkeys']),
+          // Apple specific UTIs
+          XTypeGroup(
+              uniformTypeIdentifiers:
+                  Platform.isMacOS ? ['com.atsign.atkeys'] : null),
+        ],
       );
-      List<XFile> files =
-          await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
-      if (files.isEmpty) {
-        return null;
-      }
-      XFile file = files[0];
-      return file.path;
+      return file?.path;
     } catch (e) {
       _logger.severe('Error in desktopImagePicker $e');
       return null;
@@ -578,7 +590,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_not_registered,
+          AtOnboardingLocalizations.current.error_authenticated_failed,
         );
       } else {
         await showErrorDialog(
@@ -707,61 +719,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                       fontSize: AtOnboardingDimens.fontSmall,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  if (!widget.hideQrScan) const SizedBox(height: 5),
-                  if (!widget.hideQrScan)
-                    Text(
-                      AtOnboardingLocalizations.current.have_QRCode,
-                      style: const TextStyle(
-                        fontSize: AtOnboardingDimens.fontLarge,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  if (!widget.hideQrScan) const SizedBox(height: 5),
-                  if (!widget.hideQrScan)
-                    (Platform.isAndroid || Platform.isIOS)
-                        ? AtOnboardingSecondaryButton(
-                            key: keyUploadQRCode,
-                            height: 48,
-                            borderRadius: 24,
-                            onPressed: () async {
-                              _showQRCodeScreen(context: context);
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  AtOnboardingLocalizations
-                                      .current.btn_scan_QRCode,
-                                  style: const TextStyle(
-                                    fontSize: AtOnboardingDimens.fontLarge,
-                                  ),
-                                ),
-                                const Icon(Icons.arrow_right_alt_rounded)
-                              ],
-                            ),
-                          )
-                        : AtOnboardingSecondaryButton(
-                            key: keyUploadQRCode,
-                            height: 48,
-                            borderRadius: 24,
-                            isLoading: _uploadingQRCode,
-                            onPressed: () async {
-                              _uploadQRFileForDesktop();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  AtOnboardingLocalizations
-                                      .current.btn_upload_QRCode,
-                                  style: const TextStyle(
-                                      fontSize: AtOnboardingDimens.fontLarge),
-                                ),
-                                const Icon(Icons.arrow_right_alt_rounded)
-                              ],
-                            ),
-                          ),
                   const SizedBox(height: 20),
                   if (!widget.hideQrScan)
                     Text(
@@ -963,11 +920,11 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
         Navigator.pop(context, AtOnboardingResult.success(atsign: atsign));
       } else if (authResponse == AtOnboardingResponseStatus.serverNotReached) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_not_registered,
+          AtOnboardingLocalizations.current.msg_atSign_unreachable,
         );
       } else if (authResponse == AtOnboardingResponseStatus.authFailed) {
         await _showAlertDialog(
-          AtOnboardingLocalizations.current.msg_atSign_unreachable,
+          AtOnboardingLocalizations.current.error_authenticated_failed,
         );
       } else {
         await showErrorDialog(
@@ -999,12 +956,10 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     try {
       String? aesKey, atsign;
       setState(() {
-        _uploadingQRCode = true;
       });
       String? path = await _desktopQRFilePicker();
       if (path == null) {
         setState(() {
-          _uploadingQRCode = false;
         });
         return;
       }
@@ -1022,7 +977,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
       img.Image image = img.decodePng(selectedFile.readAsBytesSync())!;
 
       LuminanceSource source = RGBLuminanceSource(image.width, image.height,
-          image.getBytes(format: img.Format.abgr).buffer.asInt32List());
+          image.getBytes(order: img.ChannelOrder.abgr).buffer.asInt32List());
       BinaryBitmap bitmap = BinaryBitmap(HybridBinarizer(source));
 
       QRCodeReader reader = QRCodeReader();
@@ -1036,19 +991,16 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
           AtOnboardingLocalizations.current.error_incorrect_QRFile,
         );
         setState(() {
-          _uploadingQRCode = false;
         });
         return;
       }
       _processSharedSecret(atsign, aesKey);
       // await processAESKey(atsign, aesKey, false);
       setState(() {
-        _uploadingQRCode = false;
       });
     } catch (error) {
       _logger.warning(error);
       setState(() {
-        _uploadingQRCode = false;
       });
       await showErrorDialog(
         AtOnboardingLocalizations.current.error_process_file,

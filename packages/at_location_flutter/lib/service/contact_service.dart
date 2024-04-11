@@ -5,6 +5,7 @@ import 'package:at_contact/at_contact.dart';
 
 import 'key_stream_service.dart';
 
+/// Retrieves the details of an @sign
 Future<AtContact> getAtSignDetails(String? atSign) async {
   var atContact = getCachedContactDetail(atSign);
   if (atContact == null) {
@@ -17,6 +18,7 @@ Future<AtContact> getAtSignDetails(String? atSign) async {
   return atContact;
 }
 
+/// Retrieves the cached contact details for an @sign
 AtContact? getCachedContactDetail(String? atsign) {
   if (atsign ==
       KeyStreamService().atContactImpl?.atClient?.getCurrentAtSign()) {
@@ -31,6 +33,7 @@ AtContact? getCachedContactDetail(String? atsign) {
   return null;
 }
 
+/// Retrieves the contact details for an @sign
 Future<Map<String, dynamic>> getContactDetails(atSign) async {
   var contactDetails = <String, dynamic>{};
 
@@ -71,7 +74,7 @@ Future<Map<String, dynamic>> getContactDetails(atSign) async {
     }
 
     // profile picture
-    key.metadata!.isBinary = true;
+    key.metadata.isBinary = true;
     key.key = contactFields[2];
     result = await KeyStreamService().atClientInstance!.get(key);
     var image = result.value;

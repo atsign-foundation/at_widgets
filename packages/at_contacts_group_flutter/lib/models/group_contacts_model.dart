@@ -3,7 +3,7 @@ import 'dart:convert';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:at_contact/at_contact.dart';
 
-/// Model to contain group details with associated contact
+/// [GroupContactsModel] contains groups and contacts in a single model
 class GroupContactsModel {
   final AtContact? contact;
   final AtGroup? group;
@@ -76,5 +76,6 @@ class GroupPreference {
 /// Enum for contact types
 // ignore: constant_identifier_names
 enum ContactsType { CONTACT, GROUP }
+
 // ignore: constant_identifier_names
 enum ContactTabs { RECENT, FAVS, ALL }

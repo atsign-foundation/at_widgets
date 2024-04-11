@@ -14,17 +14,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// This screen is for pairing an atSign during onboarding process
 class AtOnboardingPairScreen extends StatefulWidget {
+  /// The atSign to be paired
   final String atSign;
 
-  ///will hide webpage references.
+  /// If true, will hide webpage references.
   final bool hideReferences;
 
+  /// A function to be called when the pairing is successful
+  /// It takes [atSign] and [secret] as required parameters
   final Function({
     required String atSign,
     required String secret,
   })? onGenerateSuccess;
 
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingPairScreen({
@@ -211,6 +216,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       if (status) {
         _showOTPScreen();
       } else {
+        if (!mounted) return;
         AtOnboardingDialog.showError(
           context: context,
           message: AtOnboardingLocalizations.current.error_please_enter_email,
@@ -249,6 +255,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       if (errorMessage.contains('maximum number of free atSigns')) {
         await showlimitDialog();
       } else {
+        if (!mounted) return status;
         AtOnboardingDialog.showError(context: context, message: errorMessage);
       }
     }
@@ -346,8 +353,10 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
         data = response.body;
         data = jsonDecode(data);
         String errorMessage = data['message'];
+        if (!mounted) return;
         AtOnboardingDialog.showError(context: context, message: errorMessage);
       }
+      if (!mounted) return;
       final result2 = await AtOnboardingOTPScreen.push(
         context: context,
         atSign: result.atSign,

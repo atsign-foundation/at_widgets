@@ -6,13 +6,11 @@ import 'package:at_onboarding_flutter/utils/at_onboarding_error_util.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 
-enum AtOnboardingResetResult {
-  cancelled,
-  success,
-}
-
+/// The screen is used for resetting the paired atSign
 class AtOnboardingResetScreen extends StatefulWidget {
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingResetScreen({

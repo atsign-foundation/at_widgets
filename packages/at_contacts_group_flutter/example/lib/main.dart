@@ -23,6 +23,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
     ..commitLogPath = dir.path
     ..isLocalStoreRequired = true;
 }
+
 final StreamController<ThemeMode> updateThemeMode =
     StreamController<ThemeMode>.broadcast();
 
@@ -38,7 +39,6 @@ class _MyAppState extends State<MyApp> {
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
 
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ThemeMode>(
@@ -52,18 +52,15 @@ class _MyAppState extends State<MyApp> {
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
             colorScheme: ThemeData.light().colorScheme.copyWith(
-                  primary: const Color(0xFFf4533d),
-                ),
-            backgroundColor: Colors.white,
+                primary: const Color(0xFFf4533d), background: Colors.white),
             scaffoldBackgroundColor: Colors.white,
           ),
           darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
             primaryColor: Colors.blue,
-            colorScheme: ThemeData.dark().colorScheme.copyWith(
-                  primary: Colors.blue,
-                ),
-            backgroundColor: Colors.grey[850],
+            colorScheme: ThemeData.dark()
+                .colorScheme
+                .copyWith(primary: Colors.blue, background: Colors.white),
             scaffoldBackgroundColor: Colors.grey[850],
           ),
           themeMode: themeMode,

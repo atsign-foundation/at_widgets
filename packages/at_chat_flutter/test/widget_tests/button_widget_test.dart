@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_material_app.dart';
 
 void main() {
-  Widget _wrapWidgetWithMaterialApp({required Widget buttonWidget}) {
+  Widget wrapWidgetWithMaterialApp({required Widget buttonWidget}) {
     return TestMaterialApp(home: Builder(builder: (BuildContext context) {
       SizeConfig().init(context);
       return buttonWidget;
@@ -34,7 +34,7 @@ void main() {
     testWidgets("Button widget is used and shown on screen",
         (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+          .pumpWidget(wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
 
       expect(find.byType(ButtonWidget), findsOneWidget);
     });
@@ -42,14 +42,14 @@ void main() {
     // Test case to check button string is given
     testWidgets("Button text displayed", (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+          .pumpWidget(wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
       expect(find.text('Click here'), findsOneWidget);
     });
 
     // Test case to check onPress functionality
     testWidgets("OnPress is given an action", (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+          .pumpWidget(wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
       expect(buttonWidget.onPress!.call(), null);
     });
 
@@ -57,7 +57,7 @@ void main() {
     testWidgets("BorderRadius of button widget as circular",
         (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+          .pumpWidget(wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
       final container = tester.widget<Container>(find.byType(Container));
       final decoration = container.decoration as BoxDecoration;
       final borderRadius = decoration.borderRadius as BorderRadius;
@@ -71,7 +71,7 @@ void main() {
     testWidgets("Color of button is button default color",
         (WidgetTester tester) async {
       await tester
-          .pumpWidget(_wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
+          .pumpWidget(wrapWidgetWithMaterialApp(buttonWidget: buttonWidget));
       final container = tester.widget<Container>(find.byType(Container));
       final decoration = container.decoration as BoxDecoration;
       expect(

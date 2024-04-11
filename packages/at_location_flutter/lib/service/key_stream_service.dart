@@ -15,7 +15,9 @@ import 'package:at_utils/at_logger.dart';
 
 class KeyStreamService {
   KeyStreamService._();
+
   static final KeyStreamService _instance = KeyStreamService._();
+
   factory KeyStreamService() => _instance;
 
   final _logger = AtSignLogger('KeyStreamService');
@@ -30,8 +32,10 @@ class KeyStreamService {
   // ignore: close_sinks
   StreamController atNotificationsController =
       StreamController<List<KeyLocationModel>>.broadcast();
+
   Stream<List<KeyLocationModel>> get atNotificationsStream =>
       atNotificationsController.stream as Stream<List<KeyLocationModel>>;
+
   StreamSink<List<KeyLocationModel>> get atNotificationsSink =>
       atNotificationsController.sink as StreamSink<List<KeyLocationModel>>;
 
@@ -60,7 +64,7 @@ class KeyStreamService {
 
   /// adds all share and request location notifications to [atNotificationsSink]
   void getAllNotifications() async {
-    AtClientManager.getInstance().syncService.sync();
+    AtClientManager.getInstance().atClient.syncService.sync();
 
     var allResponse = await atClientInstance!.getKeys(
       regex: 'sharelocation-',
@@ -151,6 +155,7 @@ class KeyStreamService {
     });
   }
 
+  /// Updates the pending status of a location notification
   void updatePendingStatus(LocationNotificationModel notification) {
     for (var i = 0; i < allLocationNotifications.length; i++) {
       if ((allLocationNotifications[i]
@@ -338,6 +343,7 @@ class KeyStreamService {
     }
   }
 
+  /// Checks if a location notification is in the past
   isPastNotification(LocationNotificationModel _locationNotificationModel) {
     if ((_locationNotificationModel.to != null) &&
         (_locationNotificationModel.to!.isBefore(DateTime.now()))) {
@@ -384,6 +390,7 @@ class KeyStreamService {
     return tempHyridNotificationModel;
   }
 
+  /// Retrieves the value of an AtKey
   Future<dynamic> getAtValue(AtKey key) async {
     try {
       var atvalue =
@@ -402,6 +409,7 @@ class KeyStreamService {
     }
   }
 
+  /// Deletes data associated with a LocationNotificationModel
   deleteData(LocationNotificationModel locationNotificationModel) async {
     if (isPastNotification(locationNotificationModel)) {
       notifyListeners();

@@ -1,3 +1,14 @@
+## 3.0.12:
+- **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
+
+## 3.0.11
+- **CHORE**: Updated dependencies
+- **CHORE**: Lint fixes
+
+## 3.0.10
+- **CHORE**: Bumped all dependency versions
+  - Major version increase of permission_handler from ^9.2.0 to ^11.0.0
+
 ## 3.0.9
 - **CHORE**: Replaced file_saver with at_file_saver
 

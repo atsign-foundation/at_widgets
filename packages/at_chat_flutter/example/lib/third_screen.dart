@@ -5,7 +5,7 @@ class ThirdScreen extends StatefulWidget {
   const ThirdScreen({Key? key}) : super(key: key);
 
   @override
-  _ThirdScreenState createState() => _ThirdScreenState();
+  State<ThirdScreen> createState() => _ThirdScreenState();
 }
 
 class _ThirdScreenState extends State<ThirdScreen> {
@@ -28,8 +28,10 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
             var result = await deleteMessages();
             var message = result ? 'Messages are deleted' : 'Failed to delete';
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(message)));
+            if (mounted) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(message)));
+            }
           },
         ),
       ]),

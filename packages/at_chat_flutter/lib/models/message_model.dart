@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 enum MessageType { incoming, outgoing }
+
 enum MessageContentType { text, image }
 
 extension MessageContentTypeExt on MessageContentType {

@@ -1,6 +1,7 @@
 import 'package:at_location_flutter/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
+/// Display a customizable bottom sheet on the screen
 void bottomSheet(BuildContext context, T, double height,
     {Function? onSheetCLosed}) {
   var future = showModalBottomSheet(

@@ -111,7 +111,8 @@ class ContactService {
   List<String> allContactsList = [];
 
   Future<void> initContactsService(
-      String rootDomainFromApp, int rootPortFromApp) async {
+      String rootDomainFromApp, int rootPortFromApp,
+      {bool fetchContacts = true}) async {
     loggedInUserDetails = null;
     rootDomain = rootDomainFromApp;
     rootPort = rootPortFromApp;
@@ -119,9 +120,11 @@ class ContactService {
     currentAtsign = atClientManager.atClient.getCurrentAtSign()!;
     atContactImpl = await AtContactsImpl.getInstance(currentAtsign);
     loggedInUserDetails = await getAtSignDetails(currentAtsign);
-    cachedContactList = await atContactImpl.listContacts();
-    await fetchContactList();
-    await fetchBlockContactList();
+    if (fetchContacts) {
+      cachedContactList = await atContactImpl.listContacts();
+      await fetchContactList();
+      await fetchBlockContactList();
+    }
   }
 
   void resetData() {
@@ -134,7 +137,6 @@ class ContactService {
   Future<List<AtContact>?> fetchContacts() async {
     try {
       /// if contact list is already present, data is not fetched again
-
       if (baseContactList.isNotEmpty) {
         List<AtContact?> baseContacts =
             baseContactList.map((e) => e.contact).toList();
@@ -569,10 +571,14 @@ class ContactService {
       key.sharedBy = atSign;
       key.metadata = metadata;
       // making isPublic true (as get method changes it to false)
-      key.metadata?.isBinary = true;
+      key.metadata.isBinary = true;
       key.key = contactFields[2];
       Uint8List? image;
-      var result = await atClientManager.atClient.get(key);
+
+      GetRequestOptions options = GetRequestOptions();
+      options.bypassCache = true;
+      var result =
+          await atClientManager.atClient.get(key, getRequestOptions: options);
 
       if (result.value != null) {
         try {
@@ -591,6 +597,55 @@ class ContactService {
     contactDetails['nickname'] = nickName != '' ? nickName : null;
 
     return contactDetails;
+  }
+
+  Future<Map<String, dynamic>?> getProfilePicture(String atsign) async {
+    var contactDetails = <String, dynamic>{};
+
+    var metadata = Metadata();
+    metadata.isPublic = true;
+    metadata.namespaceAware = false;
+    var key = AtKey();
+    key.sharedBy = atsign;
+    key.metadata = metadata;
+    // making isPublic true (as get method changes it to false)
+    key.metadata.isBinary = true;
+    key.key = "image.wavi";
+
+    GetRequestOptions options = GetRequestOptions();
+    options.bypassCache = true;
+    var result =
+        await atClientManager.atClient.get(key, getRequestOptions: options);
+
+    if (result.value != null) {
+      try {
+        List<int> intList = result.value.cast<int>();
+        var image = Uint8List.fromList(intList);
+        contactDetails['image'] = image;
+        return contactDetails;
+      } catch (e) {
+        print('invalid iamge data: $e');
+        contactDetails['image'] = null;
+        return contactDetails;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<Metadata?> fetchProfilePictureMetaData(String atsign) async {
+    var metadata = Metadata();
+    metadata.isPublic = true;
+    metadata.namespaceAware = false;
+    var key = AtKey();
+    key.sharedBy = atsign;
+    key.metadata = metadata;
+    // making isPublic true (as get method changes it to false)
+    key.metadata.isBinary = true;
+    key.key = "image.wavi";
+
+    var result = await atClientManager.atClient.getMeta(key);
+    return result;
   }
 
   /// updates status of contacts for [baseContactList] and [baseBlockedList]

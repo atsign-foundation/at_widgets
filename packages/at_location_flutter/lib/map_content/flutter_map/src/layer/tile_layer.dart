@@ -12,6 +12,7 @@ import 'package:at_location_flutter/map_content/flutter_map/src/core/util.dart'
 import 'package:at_location_flutter/map_content/flutter_map/src/geo/crs/crs.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/layer/tile_provider/tile_provider.dart';
 import 'package:at_location_flutter/map_content/flutter_map/src/map/map.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:latlong2/latlong.dart';
 import 'package:tuple/tuple.dart';
@@ -392,6 +393,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   Tuple2<double, double>? _wrapX;
   Tuple2<double, double>? _wrapY;
   double? _tileZoom;
+
   //ignore: unused_field
   Level? _level;
   StreamSubscription? _moveSub;
@@ -1084,6 +1086,7 @@ class Tile implements Comparable<Tile> {
   DateTime? loaded;
 
   AnimationController? animationController;
+
   double get opacity => animationController == null
       ? (active ? 1.0 : 0.0)
       : animationController!.value;
@@ -1276,7 +1279,7 @@ class Coords<T extends num> extends CustomPoint<T> {
   String toString() => 'Coords($x, $y, $z)';
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (other is Coords) {
       return x == other.x && y == other.y && z == other.z;
     }
@@ -1284,5 +1287,5 @@ class Coords<T extends num> extends CustomPoint<T> {
   }
 
   @override
-  int get hashCode => hashValues(x.hashCode, y.hashCode, z.hashCode);
+  int get hashCode => Object.hash(x.hashCode, y.hashCode, z.hashCode);
 }

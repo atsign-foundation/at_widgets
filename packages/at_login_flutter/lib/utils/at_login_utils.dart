@@ -44,8 +44,9 @@ class AtLoginUtils {
         var x509Pem = socket.peerCertificate!.pem;
         // test with an internet available certificate to ensure we are picking out the SAN and not the CN
         var data = X509Utils.x509CertificateFromPem(x509Pem);
-        var subjectAlternativeName = data.subjectAlternativNames;
-        var commonName = data.subject['2.5.4.3'];
+        var subjectAlternativeName =
+            data.tbsCertificate?.extensions?.subjectAlternativNames;
+        var commonName = data.tbsCertificate?.subject['2.5.4.3'];
         subjectAlternativeName!.add(commonName!);
         print('SAN: $subjectAlternativeName');
         for (var i = 0; i < subjectAlternativeName.length; i++) {

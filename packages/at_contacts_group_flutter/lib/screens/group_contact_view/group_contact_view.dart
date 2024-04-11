@@ -380,28 +380,29 @@ class _GroupContactViewState extends State<GroupContactView> {
               child: Container(
                 child: (contactsForAlphabet[index]!.contact != null)
                     ? Slidable(
-                        actionPane: const SlidableDrawerActionPane(),
-                        actionExtentRatio: 0.25,
-                        secondaryActions: <Widget>[
-                          IconSlideAction(
-                            caption: TextStrings().block,
-                            color: ColorConstants.inputFieldColor,
-                            icon: Icons.block,
-                            onTap: () async {
-                              blockUnblockContact(
-                                  contactsForAlphabet[index]!.contact!);
-                            },
-                          ),
-                          IconSlideAction(
-                            caption: TextStrings().delete,
-                            color: Colors.red,
-                            icon: Icons.delete,
-                            onTap: () async {
-                              deleteAtSign(
-                                  contactsForAlphabet[index]!.contact!);
-                            },
-                          ),
-                        ],
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              label: TextStrings().block,
+                              backgroundColor: ColorConstants.inputFieldColor,
+                              icon: Icons.block,
+                              onPressed: (_context) async {
+                                blockUnblockContact(
+                                    contactsForAlphabet[index]!.contact!);
+                              },
+                            ),
+                            SlidableAction(
+                              label: TextStrings().delete,
+                              backgroundColor: Colors.red,
+                              icon: Icons.delete,
+                              onPressed: (_context) async {
+                                deleteAtSign(
+                                    contactsForAlphabet[index]!.contact!);
+                              },
+                            )
+                          ],
+                        ),
                         child: CustomListTile(
                           key: UniqueKey(),
                           onTap: () {},
@@ -555,10 +556,10 @@ class _GroupContactViewState extends State<GroupContactView> {
     });
 
     if (_res && closeBottomSheet) {
-      if(mounted){
+      if (mounted) {
         /// to close bottomsheet
         Navigator.pop(context);
-      } 
+      }
     }
   }
 
@@ -590,10 +591,10 @@ class _GroupContactViewState extends State<GroupContactView> {
     });
 
     if (_res && closeBottomSheet) {
-      if(mounted){
+      if (mounted) {
         /// to close bottomsheet
         Navigator.pop(context);
-      } 
+      }
     }
   }
 

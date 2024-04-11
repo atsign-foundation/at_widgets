@@ -1,3 +1,27 @@
+## 6.1.7
+- **CHORE**: Bumped all dependency versions
+  - Major version increase of at_commons from ^3.0.55 to ^4.0.1
+
+## 6.1.6
+- **FIX**: Fixed file_selector issue on Windows
+
+## 6.1.5
+- **CHORE**: Updated tutorial_coach_mark from 1.2.9 to 1.2.11
+
+## 6.1.4
+- **CHORE**: Bumped all dependency versions
+  - Major version increase of permission_handler from ^10.4.3 to ^11.0.0
+  - Major version increase of file_selector from >=0.8.4+3 <=1.0.0 to ^1.1.0
+
+## 6.1.3
+- **CHORE**: Updated at_client_mobile package to fix onboarding issue on Windows
+
+## 6.1.2
+- **CHORE**: Update to support Dart 3
+
+## 6.1.1
+- **FIX**: Updated error messages
+
 ## 6.1.0
 - **FEAT**: Internationalization support added for French
 - **FIX**: Issue fixed in UI theme

@@ -9,7 +9,9 @@ import 'package:at_onboarding_flutter/utils/at_onboarding_strings.dart';
 import 'package:at_onboarding_flutter/widgets/at_onboarding_button.dart';
 import 'package:flutter/material.dart';
 
+/// This screen is for backing up an atKey during onboarding
 class AtOnboardingBackupScreen extends StatefulWidget {
+  /// Configuration for the onboarding process
   final AtOnboardingConfig config;
 
   const AtOnboardingBackupScreen({

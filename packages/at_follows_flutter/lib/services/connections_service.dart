@@ -3,10 +3,8 @@ import 'package:at_follows_flutter/domain/atsign.dart';
 import 'package:at_follows_flutter/domain/connection_model.dart';
 import 'package:at_follows_flutter/services/sdk_service.dart';
 import 'package:at_follows_flutter/utils/app_constants.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_follows_flutter/utils/strings.dart';
 import 'package:at_utils/at_logger.dart';
-import 'package:at_lookup/at_lookup.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_client/at_client.dart';
 
@@ -104,6 +102,7 @@ class ConnectionsService {
     return atsignList;
   }
 
+  ///Follows an [atsign] by adding it in your followers list
   Future<Atsign?> follow(String? atsign) async {
     if (atsign == _sdkService.atsign) {
       return null;
@@ -120,7 +119,7 @@ class ConnectionsService {
     //change metadata to private to notify
     if (result) {
       atKey..sharedWith = atsign;
-      atMetadata?..isPublic = false;
+      atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
       await _sdkService.notify(
           atKey, atsign!, OperationEnum.update, _onNotifyDone, _onNotifyError);
@@ -142,7 +141,7 @@ class ConnectionsService {
     //notify @sign about delete
     if (result) {
       atKey..sharedWith = atsign;
-      atMetadata?..isPublic = false;
+      atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
       await _sdkService.notify(
           atKey, atsign, OperationEnum.delete, _onNotifyDone, _onNotifyError);
@@ -155,7 +154,7 @@ class ConnectionsService {
     //notify @sign about delete
     if (result) {
       atKey..sharedWith = atsign;
-      atMetadata?..isPublic = false;
+      atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
       await _sdkService.notify(
           atKey, atsign, OperationEnum.delete, _onNotifyDone, _onNotifyError);
@@ -173,7 +172,7 @@ class ConnectionsService {
     var result = await _modifyKey(atsign, this.following, atKey);
     if (result) {
       atKey..sharedWith = atsign;
-      atMetadata?..isPublic = false;
+      atMetadata..isPublic = false;
       atKey..metadata = atMetadata;
       await _sdkService.notify(
           atKey, atsign!, OperationEnum.delete, _onNotifyDone, _onNotifyError);
@@ -322,7 +321,7 @@ class ConnectionsService {
       this.followers.create(followersValue);
       if (followersValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowersPrivate =
-            !followersValue.metadata!.isPublic!;
+            !followersValue.metadata!.isPublic;
         await _sdkService.sync();
       }
     } else {
@@ -334,7 +333,7 @@ class ConnectionsService {
 
       if (followingValue.metadata != null) {
         connectionProvider.connectionslistStatus.isFollowingPrivate =
-            !followingValue.metadata!.isPublic!;
+            !followingValue.metadata!.isPublic;
         await _sdkService.sync();
       }
     }
@@ -356,13 +355,13 @@ class ConnectionsService {
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followingKey
-        ..sharedWith = atMetadata.isPublic! ? null : atSign;
+        ..sharedWith = atMetadata.isPublic ? null : atSign;
     } else {
       var atMetadata = Metadata()..isPublic = !followers.isPrivate;
       atKey = AtKey()
         ..metadata = atMetadata
         ..key = AppConstants.followersKey
-        ..sharedWith = atMetadata.isPublic! ? null : atSign;
+        ..sharedWith = atMetadata.isPublic ? null : atSign;
     }
     return atKey;
   }
@@ -391,20 +390,20 @@ class ConnectionsService {
           //performs plookup if the data is not in cache.
           if (atValue.value == null) {
             //plookup for wavi keys.
-            atKey.metadata!.isCached = false;
+            atKey.metadata.isCached = false;
 
             /// remove cached
             key.replaceAll('cached:', '');
-            atKey.key?.replaceAll('cached:', '');
+            atKey.key.replaceAll('cached:', '');
             atValue = await _sdkService.get(atKey);
             //cache lookup for persona keys
             if (atValue.value == null) {
-              atKey.key = PublicData.personaMap[key];
-              atKey.metadata!.isCached = true;
+              atKey.key = PublicData.personaMap[key] ?? "";
+              atKey.metadata.isCached = true;
               atValue = await _sdkService.get(atKey);
               //plookup for persona keys.
               if (atValue.value == null) {
-                atKey.metadata!.isCached = false;
+                atKey.metadata.isCached = false;
                 atValue = await _sdkService.get(atKey);
               }
             }
@@ -412,11 +411,11 @@ class ConnectionsService {
 
           atsignData.setData(atValue);
         } catch (e) {
-          _logger.severe('Error in _getAtsignData getting value ${e}');
+          _logger.severe('Error in _getAtsignData getting value $e');
         }
       }
     } catch (e) {
-      _logger.severe('Fetching keys for $connection throws ${e}');
+      _logger.severe('Fetching keys for $connection throws $e');
     }
 
     return atsignData;
@@ -448,6 +447,7 @@ class ConnectionsService {
 
   bool startMonitor() {
     AtClientManager.getInstance()
+        .atClient
         .notificationService
         .subscribe()
         .listen((notification) {
