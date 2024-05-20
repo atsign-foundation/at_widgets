@@ -339,7 +339,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
     if (result != null && result.secret != null) {
       if (!mounted) return;
       Navigator.pop(context);
-      widget.onGenerateSuccess
+      await widget.onGenerateSuccess
           ?.call(atSign: result.atSign, secret: result.secret ?? '');
     } else if (result != null) {
       dynamic data;

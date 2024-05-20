@@ -764,12 +764,12 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
                                 onGenerateSuccess: ({
                                   required String atSign,
                                   required String secret,
-                                }) {
+                                }) async {
                                   String cramSecret = secret.split(':').last;
                                   String atsign = atSign.startsWith('@')
                                       ? atSign
                                       : '@$atSign';
-                                  _processSharedSecret(atsign, cramSecret);
+                                  await _processSharedSecret(atsign, cramSecret);
                                 },
                                 config: widget.config,
                               ),

@@ -431,12 +431,12 @@ class _AtOnboardingGenerateScreenState
           onGenerateSuccess: ({
             required String atSign,
             required String secret,
-          }) {
+          }) async {
             if (widget.onGenerateSuccess != null) {
               Navigator.pop(context);
               widget.onGenerateSuccess?.call(atSign: atSign, secret: secret);
             } else {
-              _processSharedSecret(atSign: atSign, secret: secret);
+              await _processSharedSecret(atSign: atSign, secret: secret);
             }
           },
           config: widget.config,
@@ -477,7 +477,7 @@ class _AtOnboardingGenerateScreenState
       _inprogressDialog.close();
       if (authResponse == AtOnboardingResponseStatus.authSuccess) {
         if (!mounted) return;
-        Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => AtOnboardingBackupScreen(
