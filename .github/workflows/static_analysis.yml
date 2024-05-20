@@ -53,7 +53,11 @@ jobs:
         run: |
           touch example/.env
           flutter pub get
-          flutter analyze --no-fatal-infos
+          if [ "${{ matrix.flutter-channel}}" = "beta" ]; then
+            flutter analyze
+          else
+            flutter analyze --no-fatal-infos
+          fi
 
       # Runs osv-scanner to find any vulnerable Dart dependencies
       # It needs to look at pubspec.lock files, which is why it's
