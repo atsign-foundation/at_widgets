@@ -52,8 +52,8 @@ class _MyAppState extends State<MyApp> {
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
             scaffoldBackgroundColor: Colors.white, colorScheme: ThemeData.light().colorScheme.copyWith(
-                  primary: const Color(0xFFf4533d),
-                ).copyWith(surface: Colors.white),
+                  primary: const Color(0xFFf4533d), surface: Colors.white
+                ).copyWith(),
           ),
           darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
