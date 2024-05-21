@@ -51,16 +51,17 @@ class _MyAppState extends State<MyApp> {
           theme: ThemeData().copyWith(
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
-            scaffoldBackgroundColor: Colors.white, colorScheme: ThemeData.light().colorScheme.copyWith(
-                  primary: const Color(0xFFf4533d), surface: Colors.white
-                ).copyWith(),
+            scaffoldBackgroundColor: Colors.white,
+            colorScheme: ThemeData.light().colorScheme.copyWith(
+                primary: const Color(0xFFf4533d), surface: Colors.white),
           ),
           darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
             primaryColor: Colors.blue,
-            scaffoldBackgroundColor: Colors.grey[850], colorScheme: ThemeData.dark().colorScheme.copyWith(
-                  primary: Colors.blue,
-                ).copyWith(surface: Colors.grey[850]),
+            scaffoldBackgroundColor: Colors.grey[850],
+            colorScheme: ThemeData.dark()
+                .colorScheme
+                .copyWith(primary: Colors.blue, surface: Colors.grey[850]),
           ),
           locale: _currentLocale,
           localizationsDelegates: const [
