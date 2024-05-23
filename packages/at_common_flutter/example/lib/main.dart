@@ -25,13 +25,13 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf04924),
-            backgroundColor: Colors.white,
+            colorScheme: ThemeData.light().colorScheme.copyWith(surface: Colors.white),
           ),
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             fontFamily: 'RobotoSlab',
             primaryColor: const Color(0xFFF05E3E),
-            backgroundColor: Colors.black,
+            colorScheme: ThemeData.dark().colorScheme.copyWith(surface: Colors.black),
           ),
           themeMode: snapshot.data,
           title: 'Example App',
