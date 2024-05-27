@@ -25,14 +25,14 @@ class ThemeModeCard extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         backgroundColor:
-            MaterialStateProperty.all<Color>(theme.backgroundColor),
-        padding: MaterialStateProperty.all(EdgeInsets.zero),
+            WidgetStateProperty.all<Color>(theme.backgroundColor),
+        padding: WidgetStateProperty.all(EdgeInsets.zero),
       ),
       child: SizedBox(
         width: double.infinity,
@@ -60,14 +60,14 @@ class ThemeModeCard extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: null,
                     style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16.0),
                         ),
                       ),
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(primaryColor),
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          WidgetStateProperty.all<Color>(primaryColor),
+                      padding: WidgetStateProperty.all(EdgeInsets.zero),
                     ),
                     child: Container(),
                   ),

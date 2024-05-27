@@ -99,18 +99,14 @@ class EventNotificationModel {
         'isRecurring': eventNotification.event!.isRecurring.toString(),
         'date': eventNotification.event!.date.toString(),
         'endDate': eventNotification.event!.endDate.toString(),
-        'startTime': eventNotification.event!.startTime != null
-            ? eventNotification.event!.startTime!.toUtc().toString()
-            : null,
-        'endTime': eventNotification.event!.endTime != null
-            ? eventNotification.event!.endTime!.toUtc().toString()
-            : null,
+        'startTime': eventNotification.event!.startTime?.toUtc().toString(),
+        'endTime': eventNotification.event!.endTime?.toUtc().toString(),
         'repeatDuration': eventNotification.event!.repeatDuration.toString(),
         'repeatCycle': eventNotification.event!.repeatCycle.toString(),
         'occursOn': eventNotification.event!.occursOn.toString(),
         'endsOn': eventNotification.event!.endsOn.toString(),
         'endEventOnDate': eventNotification.event!.endEventOnDate.toString(),
-        'endEventAfterOccurance':
+        'endEventAfterOccurrence':
             eventNotification.event!.endEventAfterOccurance.toString()
       })
     });

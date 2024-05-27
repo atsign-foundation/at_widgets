@@ -71,7 +71,7 @@ class _SecondScreenState extends State<SecondScreen> {
             TextButton(
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.black12),
+                    WidgetStateProperty.all<Color>(Colors.black12),
               ),
               onPressed: () {
                 shareAndInvite(context, 'welcome');
@@ -87,7 +87,7 @@ class _SecondScreenState extends State<SecondScreen> {
             TextButton(
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.black12),
+                    WidgetStateProperty.all<Color>(Colors.black12),
               ),
               onPressed: () {
                 _checkForInvite();

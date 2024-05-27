@@ -19,7 +19,7 @@ class AddContactDialog extends StatefulWidget {
 }
 
 class _AddContactDialogState extends State<AddContactDialog> {
-  String atsignName = '';
+  String atsign = '';
   TextEditingController atSignController = TextEditingController();
   @override
   void dispose() {
@@ -67,7 +67,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                 TextFormField(
                   autofocus: true,
                   onChanged: (value) {
-                    atsignName = value;
+                    atsign = value;
                   },
                   // validator: Validators.validateAdduser,
                   decoration: InputDecoration(
@@ -119,16 +119,16 @@ class _AddContactDialogState extends State<AddContactDialog> {
                                 isLoading = true;
                               });
                               var response = await _contactService.addAtSign(
-                                  atSign: atsignName);
+                                  atSign: atsign);
                               var _groupService = GroupService();
-                              _groupService.appendNewContact(atsignName);
+                              _groupService.appendNewContact(atsign);
                               setState(() {
                                 isLoading = false;
                               });
                               if (_contactService.checkAtSign != null &&
                                   _contactService.checkAtSign! &&
                                   response) {
-                                if(!mounted) return;
+                                if(!context.mounted) return;
                                 Navigator.pop(context);
                               }
                             },

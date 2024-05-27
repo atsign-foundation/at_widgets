@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
             primaryColor: const Color(0xFFf4533d),
             colorScheme: ThemeData.light().colorScheme.copyWith(
                   primary: const Color(0xFFf4533d),
-                  background: Colors.white,
+                  surface: Colors.white,
                 ),
             scaffoldBackgroundColor: Colors.white,
           ),
@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
             primaryColor: Colors.blue,
             colorScheme: ThemeData.dark().colorScheme.copyWith(
                   primary: Colors.blue,
-                  background: Colors.grey[850],
+                  surface: Colors.grey[850],
                 ),
             scaffoldBackgroundColor: Colors.grey[850],
           ),

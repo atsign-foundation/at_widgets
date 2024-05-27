@@ -22,8 +22,6 @@ Future<AtClientPreference> loadAtClientPreference() async {
         ..hiveStoragePath = dir.path
         ..commitLogPath = dir.path
         ..isLocalStoreRequired = true
-      // ignore: todo
-      // TODO set the rest of your AtClientPreference here
       ;
 }
 
@@ -56,7 +54,7 @@ class _MyAppState extends State<MyApp> {
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
             colorScheme: ThemeData.light().colorScheme.copyWith(
-                primary: const Color(0xFFf4533d), background: Colors.white),
+                primary: const Color(0xFFf4533d), surface: Colors.white),
             scaffoldBackgroundColor: Colors.white,
           ),
           darkTheme: ThemeData().copyWith(
@@ -64,7 +62,7 @@ class _MyAppState extends State<MyApp> {
             primaryColor: Colors.blue,
             colorScheme: ThemeData.dark()
                 .colorScheme
-                .copyWith(primary: Colors.blue, background: Colors.grey[850]),
+                .copyWith(primary: Colors.blue, surface: Colors.grey[850]),
             scaffoldBackgroundColor: Colors.grey[850],
           ),
           themeMode: themeMode,

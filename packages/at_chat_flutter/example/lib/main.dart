@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
                       setState(() {
                         atClientPreference = preference;
                       });
-                      if (mounted) {
+                      if (context.mounted) {
                         final result = await AtOnboarding.onboard(
                           context: context,
                           config: AtOnboardingConfig(
@@ -127,7 +127,7 @@ class _MyAppState extends State<MyApp> {
                     child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black12),
+                              WidgetStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () {
                           FlutterKeychain.remove(key: '@atsign');

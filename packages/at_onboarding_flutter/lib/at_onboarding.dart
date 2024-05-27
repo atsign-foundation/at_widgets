@@ -54,13 +54,16 @@ class AtOnboarding {
 
       //Check if existing an atsign => return onboard success
       // ignore: use_build_context_synchronously
-      final result = await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => AtOnboardingStartScreen(
-          config: config,
-        ),
-      );
+      AtOnboardingResult? result;
+      if (context.mounted) {
+        result = await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => AtOnboardingStartScreen(
+            config: config,
+          ),
+        );
+      }
 
       if (result is AtOnboardingResult) {
         return result;

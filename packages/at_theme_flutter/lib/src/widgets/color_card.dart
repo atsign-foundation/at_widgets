@@ -18,12 +18,12 @@ class ColorCard extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
-        backgroundColor: MaterialStateProperty.all(color),
+        backgroundColor: WidgetStateProperty.all(color),
       ),
       child: Visibility(
         visible: isSelected,

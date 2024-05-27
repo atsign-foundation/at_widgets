@@ -8,10 +8,10 @@ class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
 
   @override
-  _SecondScreenState createState() => _SecondScreenState();
+  SecondScreenState createState() => SecondScreenState();
 }
 
-class _SecondScreenState extends State<SecondScreen> {
+class SecondScreenState extends State<SecondScreen> {
   String? activeAtSign, pickedAtSign;
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _SecondScreenState extends State<SecondScreen> {
     if (atsign[0] == '@') {
       return atsign;
     } else {
-      return '@' + atsign;
+      return '@$atsign';
     }
   }
 
@@ -83,7 +83,9 @@ class _SecondScreenState extends State<SecondScreen> {
               }
 
               pickedAtSign = '';
-              Navigator.pop(context);
+              if(context.mounted) {
+                Navigator.pop(context);
+              }
             },
             child: Text(
               'Delete',

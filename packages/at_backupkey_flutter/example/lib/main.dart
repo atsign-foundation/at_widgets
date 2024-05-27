@@ -4,7 +4,6 @@ import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
     show AtOnboardingConfig, AtOnboardingResultStatus, BackupKeyWidget;
 
-// import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
@@ -54,7 +53,7 @@ class _MyAppState extends State<MyApp> {
             primaryColor: const Color(0xFFf4533d),
             colorScheme: ThemeData.light().colorScheme.copyWith(
                   primary: const Color(0xFFf4533d),
-                  background: Colors.white,
+                  surface: Colors.white,
                 ),
             scaffoldBackgroundColor: Colors.white,
           ),
@@ -63,7 +62,7 @@ class _MyAppState extends State<MyApp> {
             primaryColor: Colors.blue,
             colorScheme: ThemeData.dark().colorScheme.copyWith(
                   primary: Colors.blue,
-                  background: Colors.grey[850],
+                  surface: Colors.grey[850],
                 ),
             scaffoldBackgroundColor: Colors.grey[850],
           ),
