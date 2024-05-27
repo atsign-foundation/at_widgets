@@ -44,8 +44,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
               child: Container(
                 height: 100,
                 width: screenSize.width,
-                // ignore: deprecated_member_use
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).canvasColor,
                 child: Row(
                   children: [
                     Expanded(
@@ -101,7 +100,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                               Text(
                                 widget.atSignList[index],
                                 // ignore: deprecated_member_use
-                                style: Theme.of(context).textTheme.bodyText1,
+                                style: Theme.of(context).textTheme.bodyMedium,
                               )
                             ],
                           ),
