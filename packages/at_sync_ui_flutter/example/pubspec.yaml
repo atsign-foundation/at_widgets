@@ -35,11 +35,21 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
-  flutter_colorpicker: ^1.0.3
+  flutter_colorpicker: ^1.1.0
 
 dependency_overrides:
   at_sync_ui_flutter:
     path: ../
+  showcaseview:
+    git:
+      url: https://github.com/chandrabezzo/flutter_showcaseview
+      ref: bugfix/text-theme/removed-3.22
+
+# dependency_overrides:
+#   at_sync_ui_flutter:
+#     path: ../
+
+
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
