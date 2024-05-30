@@ -40,14 +40,6 @@ dependencies:
 dependency_overrides:
   at_sync_ui_flutter:
     path: ../
-  showcaseview:
-    git:
-      url: https://github.com/chandrabezzo/flutter_showcaseview
-      ref: bugfix/text-theme/removed-3.22
-
-# dependency_overrides:
-#   at_sync_ui_flutter:
-#     path: ../
 
 
 
