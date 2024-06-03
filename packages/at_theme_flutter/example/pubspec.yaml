@@ -39,6 +39,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+dependency_overrides:
+  showcaseview:
+    git:
+      url: https://github.com/chandrabezzo/flutter_showcaseview
+      ref: bugfix/text-theme/removed-3.22
+
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
