@@ -137,7 +137,7 @@ class BackupKeyWidget extends StatelessWidget {
     showDialog(
         context: context,
         builder: (BuildContext ctxt) {
-          return ShowCaseWidget(builder: Builder(builder: (context) {
+          return ShowCaseWidget(builder: (context) {
             myContext = context;
             return Dialog(
               child: Container(
@@ -237,7 +237,7 @@ class BackupKeyWidget extends StatelessWidget {
                 ),
               ),
             );
-          }));
+          });
         });
   }
 
