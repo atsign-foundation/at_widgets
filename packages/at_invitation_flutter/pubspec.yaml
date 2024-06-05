@@ -20,6 +20,7 @@ dependencies:
     sdk: flutter
   pin_code_fields: ^8.0.1
 
+  uni_links: ^0.5.1
   url_launcher: ^6.2.4
   uuid: ^3.0.7
 
