@@ -3,16 +3,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_backupkey_flutter/services/backupkey_service.dart';
-import 'package:at_backupkey_flutter/utils/strings.dart';
-import 'package:flutter/material.dart';
 import 'package:at_backupkey_flutter/utils/size_config.dart';
+import 'package:at_backupkey_flutter/utils/strings.dart';
+import 'package:at_file_saver/at_file_saver.dart';
+import 'package:at_utils/at_logger.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:share_plus/share_plus.dart';
-import 'package:at_utils/at_logger.dart';
-import 'package:at_file_saver/at_file_saver.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class BackupKeyWidget extends StatelessWidget {
@@ -101,7 +101,7 @@ class BackupKeyWidget extends StatelessWidget {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (_) {
+        builder: (context1) {
           return AlertDialog(
             title: Row(
               children: [
@@ -114,14 +114,14 @@ class BackupKeyWidget extends StatelessWidget {
               ],
             ),
             content: Text(
-              'Couldn\'t able to backup the key file',
+              'Could not backup the key file',
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontSize: 14.toFont),
             ),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.pop(_);
+                  Navigator.pop(context1);
                 },
                 child: const Text('Close'),
               )

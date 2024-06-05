@@ -1,15 +1,10 @@
-/// A service to handle save and retrieve operation on chat
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:at_chat_flutter/models/message_model.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:at_client_mobile/at_client_mobile.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter/material.dart';
 
 /// Service to manage the chat messages for different atsigns
