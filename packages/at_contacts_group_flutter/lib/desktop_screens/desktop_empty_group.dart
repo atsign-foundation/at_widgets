@@ -118,14 +118,14 @@ class _DesktopEmptyGroupState extends State<DesktopEmptyGroup> {
                   widget.onCreateBtnTap!();
                 },
           style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
+              backgroundColor: WidgetStateProperty.resolveWith<Color>(
+            (Set<WidgetState> states) {
               return widget.createBtnTapped
                   ? ColorConstants.dullText
                   : ColorConstants.orangeColor;
             },
-          ), fixedSize: MaterialStateProperty.resolveWith<Size>(
-            (Set<MaterialState> states) {
+          ), fixedSize: WidgetStateProperty.resolveWith<Size>(
+            (Set<WidgetState> states) {
               return const Size(160, 45);
             },
           )),

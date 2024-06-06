@@ -145,19 +145,21 @@ class _AtOnboardingActivateScreenState
       data = response.body;
       data = jsonDecode(data);
 
-      // ignore: use_build_context_synchronously
-      final result = await AtOnboardingOTPScreen.push(
-        context: context,
-        atSign: atsign ?? (widget.atSign ?? ''),
-        hideReferences: false,
-        config: widget.config,
-      );
+      AtOnboardingOTPResult? result;
+      if(context.mounted) {
+        result = await AtOnboardingOTPScreen.push(
+          context: context,
+          atSign: atsign ?? (widget.atSign ?? ''),
+          hideReferences: false,
+          config: widget.config,
+        );
+      }
 
       if (result != null) {
         String? secret = result.secret?.split(':').last ?? '';
         _processSharedSecret(atsign: result.atSign, secret: secret);
       } else {
-        if (!mounted) return;
+        if (!context.mounted) return;
         Navigator.pop(context, AtOnboardingResult.cancelled());
       }
     } else {

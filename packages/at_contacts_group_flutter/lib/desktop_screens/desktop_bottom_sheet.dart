@@ -44,12 +44,12 @@ class _DesktopGroupBottomSheetState extends State<DesktopGroupBottomSheet> {
               : TextButton(
                   onPressed: () {},
                   style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                    (Set<MaterialState> states) {
+                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                    (Set<WidgetState> states) {
                       return ColorConstants.orangeColor;
                     },
-                  ), fixedSize: MaterialStateProperty.resolveWith<Size>(
-                    (Set<MaterialState> states) {
+                  ), fixedSize: WidgetStateProperty.resolveWith<Size>(
+                    (Set<WidgetState> states) {
                       return const Size(120, 40);
                     },
                   )),

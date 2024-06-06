@@ -1,3 +1,6 @@
+## 4.0.14
+- **FIX**: Replace deprecated/removed elements in Flutter 3.22.* with up-to-date alternatives
+- **CHORE**: Bumped up dependency versions.
 ## 4.0.13:
 - **CHORE**: Bumped up dependency versions
 - **CHORE**: Improved pub score

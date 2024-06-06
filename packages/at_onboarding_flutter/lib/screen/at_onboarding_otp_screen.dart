@@ -356,7 +356,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
         cramSecret = data['cramkey'];
       } else {
         String errorMessage = data['message'];
-        if (!mounted) return '';
+        if (!context.mounted) return '';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.red,
@@ -368,7 +368,7 @@ class _AtOnboardingOTPScreenState extends State<AtOnboardingOTPScreen> {
       data = response.body;
       data = jsonDecode(data);
       String errorMessage = data['message'];
-      if (!mounted) return '';
+      if (!context.mounted) return '';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,

@@ -18,10 +18,10 @@ class AtSignBottomSheet extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AtSignBottomSheetState createState() => _AtSignBottomSheetState();
+  AtSignBottomSheetState createState() => AtSignBottomSheetState();
 }
 
-class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
+class AtSignBottomSheetState extends State<AtSignBottomSheet> {
 //  var atClientManager = AtClientManager.getInstance();
   bool isLoading = false;
   late AtClientPreference atClientPreferenceLocal;
@@ -63,7 +63,7 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                 final result =
                                     await AtOnboarding.changePrimaryAtsign(
                                         atsign: widget.atSignList[index]);
-                                if (result) {
+                                if (result && context.mounted) {
                                   await AtOnboarding.onboard(
                                     context: context,
                                     config: AtOnboardingConfig(
@@ -74,11 +74,10 @@ class _AtSignBottomSheetState extends State<AtSignBottomSheet> {
                                       appAPIKey: AtEnv.appApiKey,
                                     ),
                                   );
-                                  if (mounted) {
                                     setState(() {
                                       isLoading = false;
                                     });
-                                  }
+                                  if(!context.mounted) return;
                                   Navigator.pop(context);
                                 } else {
                                   //Failure

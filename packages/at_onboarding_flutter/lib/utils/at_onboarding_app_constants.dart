@@ -26,7 +26,7 @@ class AtOnboardingConstants {
   //Button titles
 
   static String get serverDomain => _rootDomain;
-  static RootEnvironment rootEnvironment = RootEnvironment.Staging;
+  static RootEnvironment rootEnvironment = RootEnvironment.Production;
 
   static set rootDomain(String? domain) {
     _rootDomain = domain ?? 'root.atsign.org';

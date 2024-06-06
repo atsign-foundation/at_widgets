@@ -163,7 +163,7 @@ class _AddContactDialogState extends State<AddContactDialog> {
                               if (contactService.checkAtSign != null &&
                                   contactService.checkAtSign! &&
                                   response) {
-                                if (!mounted) return;
+                                if (!context.mounted) return;
                                 Navigator.pop(context);
                               }
                             },

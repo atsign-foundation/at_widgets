@@ -258,7 +258,7 @@ class _AtOnboardingPairScreenState extends State<AtOnboardingPairScreen> {
       if (errorMessage.contains('maximum number of free atSigns')) {
         await showlimitDialog();
       } else {
-        if (!mounted) return status;
+        if (!context.mounted) return status;
         AtOnboardingDialog.showError(context: context, message: errorMessage);
       }
     }

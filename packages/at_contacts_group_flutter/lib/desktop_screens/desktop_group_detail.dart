@@ -234,8 +234,6 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
                                                         widget.currentIndex);
 
                                             if (result is AtGroup) {
-                                              // ignore: todo
-                                              // TODO: Doubt
                                               widget.group = _group;
                                               if (mounted) {
                                                 ScaffoldMessenger.of(context)
@@ -427,8 +425,6 @@ class _DesktopGroupDetailState extends State<DesktopGroupDetail> {
         isDesktop: true, expandIndex: widget.currentIndex);
 
     if (result is AtGroup) {
-      // ignore: todo
-      // TODO: Doubt
       widget.group = _group;
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(

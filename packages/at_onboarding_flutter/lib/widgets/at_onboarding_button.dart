@@ -56,10 +56,10 @@ class AtOnboardingPrimaryButton extends AtOnboardingButton {
       child: TextButton(
         onPressed: isLoading ? null : onPressed,
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
+            backgroundColor: WidgetStateProperty.all<Color>(
                 backgroundColor ?? themeData.primaryColor),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(borderRadius ?? 4),
                     side: BorderSide(
@@ -104,11 +104,11 @@ class AtOnboardingSecondaryButton extends AtOnboardingButton {
       child: TextButton(
         onPressed: isLoading ? null : onPressed,
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
+            backgroundColor: WidgetStateProperty.all<Color>(
                 backgroundColor ?? Colors.transparent),
             foregroundColor:
-                MaterialStateProperty.all<Color>(themeData.primaryColor),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                WidgetStateProperty.all<Color>(themeData.primaryColor),
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(borderRadius ?? 4),
                     side: BorderSide(

@@ -190,7 +190,7 @@ class _SecondScreenState extends State<SecondScreen> {
             const SizedBox(height: 10),
             TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                backgroundColor: WidgetStateProperty.all<Color>(Colors.black),
               ),
               onPressed: () {
                 setGroupToChatWith(context);

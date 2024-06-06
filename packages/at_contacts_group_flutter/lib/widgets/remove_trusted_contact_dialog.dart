@@ -146,7 +146,7 @@ class _RemoveTrustedContactState extends State<RemoveTrustedContact> {
                               );
 
                               if (result is bool && result) {
-                                if(mounted){
+                                if(context.mounted){
                                   Navigator.of(context).pop();
                                 }
                               } else if (result == null) {

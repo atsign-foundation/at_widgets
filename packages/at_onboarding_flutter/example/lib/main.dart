@@ -29,10 +29,10 @@ class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
@@ -104,32 +104,32 @@ class _MyAppState extends State<MyApp> {
                         setState(() {
                           atClientPreference = preference;
                         });
-                        final result = await AtOnboarding.onboard(
-                          context: context,
-                          config: AtOnboardingConfig(
-                            atClientPreference: atClientPreference!,
-                            domain: AtEnv.rootDomain,
-                            rootEnvironment: AtEnv.rootEnvironment,
-                            appAPIKey: AtEnv.appApiKey,
-                            theme: AtOnboardingTheme(
-                              primaryColor: Colors.blue,
-                              textTheme: const TextTheme(
-                                titleMedium: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                        AtOnboardingResult? result;
+                        if (context.mounted) {
+                          result = await AtOnboarding.onboard(
+                            context: context,
+                            config: AtOnboardingConfig(
+                              atClientPreference: atClientPreference!,
+                              domain: AtEnv.rootDomain,
+                              rootEnvironment: AtEnv.rootEnvironment,
+                              appAPIKey: AtEnv.appApiKey,
+                              theme: AtOnboardingTheme(
+                                primaryColor: null,
+                                
                               ),
+                              showPopupSharedStorage: true,
                             ),
-                            showPopupSharedStorage: true,
-                          ),
-                        );
-                        switch (result.status) {
+                          );
+                        }
+
+                        switch (result?.status) {
                           case AtOnboardingResultStatus.success:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const HomeScreen()));
                             break;
+                          case null:
                           case AtOnboardingResultStatus.error:
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -149,25 +149,17 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         var preference = await futurePreference;
                         atClientPreference = preference;
-                        // ignore: use_build_context_synchronously
-                        AtOnboarding.reset(
-                          context: context,
-                          config: AtOnboardingConfig(
-                            atClientPreference: atClientPreference!,
-                            domain: AtEnv.rootDomain,
-                            theme: AtOnboardingTheme(
-                              primaryColor: Colors.blue,
-                              textTheme: const TextTheme(
-                                titleMedium: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                        if (context.mounted) {
+                          AtOnboarding.reset(
+                            context: context,
+                            config: AtOnboardingConfig(
+                              atClientPreference: atClientPreference!,
+                              domain: AtEnv.rootDomain,
+                              rootEnvironment: AtEnv.rootEnvironment,
+                              appAPIKey: AtEnv.appApiKey,
                             ),
-                            rootEnvironment: AtEnv.rootEnvironment,
-                            appAPIKey: AtEnv.appApiKey,
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: const Text('Reset'),
                     ),
@@ -188,9 +180,9 @@ class _MyAppState extends State<MyApp> {
                           value: _currentLocale.languageCode,
                           items: const [
                             DropdownMenuItem(
-                                child: Text('English'), value: 'en'),
+                                value: 'en', child: Text('English')),
                             DropdownMenuItem(
-                                child: Text('French'), value: 'fr'),
+                                value: 'fr', child: Text('French')),
                           ],
                         )
                       ],
@@ -231,12 +223,14 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Switch atSign',
             onPressed: () async {
               var atSignList = await KeychainUtil.getAtsignList();
-              await showModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.transparent,
-                builder: (context) =>
-                    AtSignBottomSheet(atSignList: atSignList ?? []),
-              );
+              if (context.mounted) {
+                await showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) =>
+                      AtSignBottomSheet(atSignList: atSignList ?? []),
+                );
+              }
               setState(() {});
             },
           ),

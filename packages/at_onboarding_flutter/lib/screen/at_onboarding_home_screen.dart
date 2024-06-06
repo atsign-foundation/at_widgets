@@ -10,7 +10,6 @@ import 'package:at_onboarding_flutter/screen/at_onboarding_activate_screen.dart'
 import 'package:at_onboarding_flutter/screen/at_onboarding_backup_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_generate_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_input_atsign_screen.dart';
-import 'package:at_onboarding_flutter/screen/at_onboarding_qrcode_screen.dart';
 import 'package:at_onboarding_flutter/screen/at_onboarding_reference_screen.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_config.dart';
 import 'package:at_onboarding_flutter/services/at_onboarding_tutorial_service.dart';
@@ -512,26 +511,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     }
   }
 
-  Future<String?> _desktopQRFilePicker() async {
-    try {
-      // ignore: omit_local_variable_types, prefer_const_constructors
-      XTypeGroup typeGroup = XTypeGroup(
-        label: 'images',
-        // ignore: prefer_const_literals_to_create_immutables
-        extensions: <String>['png'],
-      );
-      List<XFile> files =
-          await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
-      if (files.isEmpty) {
-        return null;
-      }
-      XFile file = files[0];
-      return file.path;
-    } catch (e) {
-      _logger.severe('Error in desktopImagePicker $e');
-      return null;
-    }
-  }
 
   Future<String?> _desktopKeyPicker() async {
     try {
@@ -808,7 +787,7 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     );
 
     if ((result ?? '').isNotEmpty) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       final result2 = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -837,21 +816,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     }
   }
 
-  void _showQRCodeScreen({
-    required BuildContext context,
-  }) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => AtOnboardingQRCodeScreen(
-          config: widget.config,
-        ),
-      ),
-    );
-    if (result is AtOnboardingQRCodeResult) {
-      _processSharedSecret(result.atSign, result.secret);
-    }
-  }
 
   Future<dynamic> _processSharedSecret(String atsign, String secret) async {
     dynamic authResponse;
@@ -945,61 +909,6 @@ class _AtOnboardingHomeScreenState extends State<AtOnboardingHomeScreen> {
     return authResponse;
   }
 
-  Future<void> _uploadQRFileForDesktop() async {
-    try {
-      String? aesKey, atsign;
-      setState(() {
-      });
-      String? path = await _desktopQRFilePicker();
-      if (path == null) {
-        setState(() {
-        });
-        return;
-      }
-
-      File selectedFile = File(path);
-
-      int length = selectedFile.lengthSync();
-      if (length < 10) {
-        await showErrorDialog(
-          AtOnboardingLocalizations.current.error_incorrect_QRFile,
-        );
-        return;
-      }
-
-      img.Image image = img.decodePng(selectedFile.readAsBytesSync())!;
-
-      LuminanceSource source = RGBLuminanceSource(image.width, image.height,
-          image.getBytes(order: img.ChannelOrder.abgr).buffer.asInt32List());
-      BinaryBitmap bitmap = BinaryBitmap(HybridBinarizer(source));
-
-      QRCodeReader reader = QRCodeReader();
-      Result result = reader.decode(bitmap);
-      List<String> params = result.text.replaceAll('"', '').split(':');
-      atsign = params[0];
-      aesKey = params[1];
-
-      if (aesKey.isEmpty && atsign.isEmpty) {
-        await showErrorDialog(
-          AtOnboardingLocalizations.current.error_incorrect_QRFile,
-        );
-        setState(() {
-        });
-        return;
-      }
-      _processSharedSecret(atsign, aesKey);
-      // await processAESKey(atsign, aesKey, false);
-      setState(() {
-      });
-    } catch (error) {
-      _logger.warning(error);
-      setState(() {
-      });
-      await showErrorDialog(
-        AtOnboardingLocalizations.current.error_process_file,
-      );
-    }
-  }
 
   Future<void> _showAlertDialog(dynamic errorMessage, {String? title}) async {
     String? messageString =
