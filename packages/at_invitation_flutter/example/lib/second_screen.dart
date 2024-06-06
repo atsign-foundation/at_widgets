@@ -1,11 +1,12 @@
 import 'package:at_app_flutter/at_app_flutter.dart';
-import 'package:at_invitation_flutter/at_invitation_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-import 'constants.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:at_invitation_flutter/at_invitation_flutter.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:flutter/material.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
+import 'constants.dart';
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class _SecondScreenState extends State<SecondScreen> {
   String chatWithAtSign = '';
   bool showOptions = false;
 
-  // for goup chat
+  // for group chat
   String groupId = '';
   String member1 = '';
   String member2 = '';
@@ -70,8 +71,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             TextButton(
               style: ButtonStyle(
-                backgroundColor:
-                    WidgetStateProperty.all<Color>(Colors.black12),
+                backgroundColor: WidgetStateProperty.all<Color>(Colors.black12),
               ),
               onPressed: () {
                 shareAndInvite(context, 'welcome');
@@ -86,8 +86,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             TextButton(
               style: ButtonStyle(
-                backgroundColor:
-                    WidgetStateProperty.all<Color>(Colors.black12),
+                backgroundColor: WidgetStateProperty.all<Color>(Colors.black12),
               ),
               onPressed: () {
                 _checkForInvite();
