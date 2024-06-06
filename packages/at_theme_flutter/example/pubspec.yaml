@@ -40,10 +40,8 @@ dependencies:
     sdk: flutter
 
 dependency_overrides:
-  showcaseview:
-    git:
-      url: https://github.com/chandrabezzo/flutter_showcaseview
-      ref: bugfix/text-theme/removed-3.22
+  at_backupkey_flutter:
+    path: ../../at_backupkey_flutter
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to

@@ -40,6 +40,8 @@ dependencies:
 dependency_overrides:
   at_sync_ui_flutter:
     path: ../
+  at_backupkey_flutter:
+    path: ../../at_backupkey_flutter
 
 
 

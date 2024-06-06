@@ -12,6 +12,8 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
+  flutter:
+    sdk: flutter
   at_client: ^3.0.75
   at_client_mobile: ^3.2.15
   at_common_flutter: ^2.0.12
@@ -19,9 +21,6 @@ dependencies:
   at_contact: ^3.0.8
   at_lookup: ^3.0.40
   at_utils: ^3.0.15
-  flutter:
-    sdk: flutter
-
   flutter_slidable: ^3.0.0
 
 dev_dependencies:
