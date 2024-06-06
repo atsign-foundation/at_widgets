@@ -44,12 +44,8 @@ class EventMemberLocation {
       'receiver': eventMemberLocation.receiver,
       'lat': eventMemberLocation.lat.toString(),
       'long': eventMemberLocation.long.toString(),
-      'startSharingFrom': eventMemberLocation.startSharingFrom != null
-          ? eventMemberLocation.startSharingFrom!.toUtc().toString()
-          : null,
-      'shareUntil': eventMemberLocation.shareUntil != null
-          ? eventMemberLocation.shareUntil!.toUtc().toString()
-          : null,
+      'startSharingFrom': eventMemberLocation.startSharingFrom?.toUtc().toString(),
+      'shareUntil': eventMemberLocation.shareUntil?.toUtc().toString(),
       'key': eventMemberLocation.key.toString(),
     });
 

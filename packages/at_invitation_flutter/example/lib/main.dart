@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> {
                     child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black12),
+                              WidgetStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () {
                           FlutterKeychain.remove(key: '@atsign');

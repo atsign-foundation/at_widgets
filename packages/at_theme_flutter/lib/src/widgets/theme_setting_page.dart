@@ -138,7 +138,7 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                         widget.onPreviewPressed?.call(_appTheme);
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
+                        backgroundColor: WidgetStateProperty.all<Color>(
                             _appTheme.primaryColor),
                       ),
                       child: Container(
@@ -156,7 +156,7 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
                   ElevatedButton(
                     onPressed: applyTheme,
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
+                      backgroundColor: WidgetStateProperty.all<Color>(
                           _appTheme.primaryColor),
                     ),
                     child: Container(

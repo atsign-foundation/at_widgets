@@ -72,7 +72,7 @@ class AppTheme {
       colorScheme: ThemeData().colorScheme.copyWith(
           secondary: accentColor,
           brightness: brightness,
-          background: backgroundColor),
+          surface: backgroundColor),
     );
   }
 

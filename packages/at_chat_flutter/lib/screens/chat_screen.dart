@@ -174,14 +174,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                               (id) async {
                                                 var result = await _chatService
                                                     .deleteSelectedMessage(id);
-                                                if (mounted) {
+                                                if (context.mounted) {
                                                   Navigator.of(context).pop();
                                                 }
 
                                                 var message = result
                                                     ? 'Message is deleted'
                                                     : 'Failed to delete';
-                                                if (mounted) {
+                                                if (context.mounted) {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(SnackBar(
                                                           content:

@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
             colorScheme: ThemeData.light().colorScheme.copyWith(
-                primary: const Color(0xFFf4533d), background: Colors.white),
+                primary: const Color(0xFFf4533d), surface: Colors.white),
             scaffoldBackgroundColor: Colors.white,
           ),
           darkTheme: ThemeData().copyWith(
@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
             primaryColor: Colors.blue,
             colorScheme: ThemeData.dark()
                 .colorScheme
-                .copyWith(primary: Colors.blue, background: Colors.white),
+                .copyWith(primary: Colors.blue, surface: Colors.white),
             scaffoldBackgroundColor: Colors.grey[850],
           ),
           themeMode: themeMode,

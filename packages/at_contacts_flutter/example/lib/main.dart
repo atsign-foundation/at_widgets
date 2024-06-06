@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:at_contacts_flutter_example/second_screen.dart';
+import 'package:at_onboarding_flutter/at_onboarding_result.dart';
 import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
@@ -33,10 +34,10 @@ class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
@@ -55,7 +56,7 @@ class _MyAppState extends State<MyApp> {
             primaryColor: const Color(0xFFf4533d),
             colorScheme: ThemeData.light().colorScheme.copyWith(
                   primary: const Color(0xFFf4533d),
-                  background: Colors.white,
+                  surface: Colors.white,
                 ),
             scaffoldBackgroundColor: Colors.white,
           ),
@@ -64,7 +65,7 @@ class _MyAppState extends State<MyApp> {
             primaryColor: Colors.blue,
             colorScheme: ThemeData.dark().colorScheme.copyWith(
                   primary: Colors.blue,
-                  background: Colors.grey[850],
+                  surface: Colors.grey[850],
                 ),
             scaffoldBackgroundColor: Colors.grey[850],
           ),
@@ -98,22 +99,26 @@ class _MyAppState extends State<MyApp> {
                         setState(() {
                           atClientPreference = preference;
                         });
-                        final result = await AtOnboarding.onboard(
-                          context: context,
-                          config: AtOnboardingConfig(
-                            atClientPreference: atClientPreference!,
-                            domain: AtEnv.rootDomain,
-                            rootEnvironment: AtEnv.rootEnvironment,
-                            appAPIKey: AtEnv.appApiKey,
-                          ),
-                        );
-                        switch (result.status) {
+                        AtOnboardingResult? result;
+                        if (context.mounted) {
+                          result = await AtOnboarding.onboard(
+                            context: context,
+                            config: AtOnboardingConfig(
+                              atClientPreference: atClientPreference!,
+                              domain: AtEnv.rootDomain,
+                              rootEnvironment: AtEnv.rootEnvironment,
+                              appAPIKey: AtEnv.appApiKey,
+                            ),
+                          );
+                        }
+                        switch (result?.status) {
                           case AtOnboardingResultStatus.success:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const SecondScreen()));
                             break;
+                          case null:
                           case AtOnboardingResultStatus.error:
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -133,15 +138,17 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         var preference = await futurePreference;
                         atClientPreference = preference;
-                        AtOnboarding.reset(
-                          context: context,
-                          config: AtOnboardingConfig(
-                            atClientPreference: atClientPreference!,
-                            domain: AtEnv.rootDomain,
-                            rootEnvironment: AtEnv.rootEnvironment,
-                            appAPIKey: AtEnv.appApiKey,
-                          ),
-                        );
+                        if(context.mounted) {
+                          AtOnboarding.reset(
+                            context: context,
+                            config: AtOnboardingConfig(
+                              atClientPreference: atClientPreference!,
+                              domain: AtEnv.rootDomain,
+                              rootEnvironment: AtEnv.rootEnvironment,
+                              appAPIKey: AtEnv.appApiKey,
+                            ),
+                          );
+                        }
                       },
                       child: const Text('Reset'),
                     ),

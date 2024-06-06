@@ -111,12 +111,12 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
                       });
                 },
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
+                    backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                  (Set<WidgetState> states) {
                     return ColorConstants.orangeColor;
                   },
-                ), fixedSize: MaterialStateProperty.resolveWith<Size>(
-                  (Set<MaterialState> states) {
+                ), fixedSize: WidgetStateProperty.resolveWith<Size>(
+                  (Set<WidgetState> states) {
                     return const Size(100, 40);
                   },
                 )),
@@ -218,7 +218,7 @@ class _DesktopGroupListState extends State<DesktopGroupList> {
           onYesPressed: () async {
             var result = await GroupService().deleteGroup(group);
 
-            if(!mounted) return;
+            if(!context.mounted) return;
             if (result != null && result) {
               Navigator.of(context).pop();
             } else {

@@ -28,7 +28,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
             var result = await deleteMessages();
             var message = result ? 'Messages are deleted' : 'Failed to delete';
-            if (mounted) {
+            if (context.mounted) {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(message)));
             }

@@ -222,7 +222,7 @@ class _ShareDialogState extends State<ShareDialog> {
                                 setState(() {
                                   isLoading = false;
                                 });
-                                if (mounted) Navigator.pop(context);
+                                if (context.mounted) Navigator.pop(context);
                               }
                             },
                             buttonColor:

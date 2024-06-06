@@ -21,7 +21,7 @@ dependencies:
   at_contacts_flutter: ^4.0.14
   at_lookup: ^3.0.40
   at_utils: ^3.0.15
-  cached_network_image: ^3.2.3
+  cached_network_image: ^3.3.1
   flutter:
     sdk: flutter
   flutter_image: ^4.1.8
