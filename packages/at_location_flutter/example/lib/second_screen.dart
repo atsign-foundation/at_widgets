@@ -1,20 +1,21 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/common_components/custom_toast.dart';
 import 'package:at_location_flutter/location_modal/key_location_model.dart';
 import 'package:at_location_flutter/service/key_stream_service.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_lookup/at_lookup.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
-import 'main.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
+import 'package:latlong2/latlong.dart';
+
+import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
 
   @override
-  _SecondScreenState createState() => _SecondScreenState();
+  State<SecondScreen> createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
@@ -145,8 +146,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ElevatedButton(
               onPressed: () async {
                 await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      showLocation(UniqueKey(), mapController, locationList: [
+                  builder: (BuildContext context) => showLocation(UniqueKey(), mapController, locationList: [
                     const LatLng(30, 45),
                     const LatLng(40, 45),
                   ]),
@@ -170,8 +170,7 @@ class _SecondScreenState extends State<SecondScreen> {
               padding: const EdgeInsets.all(8.0),
               child: StreamBuilder(
                   stream: KeyStreamService().atNotificationsStream,
-                  builder: (context,
-                      AsyncSnapshot<List<KeyLocationModel>> snapshot) {
+                  builder: (context, AsyncSnapshot<List<KeyLocationModel>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
                       if (snapshot.hasError) {
                         return const Text('error');
@@ -181,11 +180,8 @@ class _SecondScreenState extends State<SecondScreen> {
                             : const Text('No Data');
                       }
                     } else {
-                      if (KeyStreamService()
-                          .allLocationNotifications
-                          .isNotEmpty) {
-                        return renderNotifications(
-                            KeyStreamService().allLocationNotifications);
+                      if (KeyStreamService().allLocationNotifications.isNotEmpty) {
+                        return renderNotifications(KeyStreamService().allLocationNotifications);
                       }
                       return const Text('No Data');
                     }
@@ -197,13 +193,13 @@ class _SecondScreenState extends State<SecondScreen> {
     );
   }
 
-  Widget renderNotifications(List<KeyLocationModel> _data) {
+  Widget renderNotifications(List<KeyLocationModel> data) {
     return Column(
-        children: _data.map((notification) {
+        children: data.map((notification) {
       return Padding(
         padding: const EdgeInsets.all(14.0),
         child: Text(
-          '${_data.indexOf(notification) + 1}. ${notification.locationNotificationModel!.key}',
+          '${data.indexOf(notification) + 1}. ${notification.locationNotificationModel!.key}',
           style: const TextStyle(fontSize: 16),
           textAlign: TextAlign.left,
         ),
@@ -215,7 +211,7 @@ class _SecondScreenState extends State<SecondScreen> {
     if (receiver == null) {
       return false;
     } else if (!receiver!.contains('@')) {
-      receiver = '@' + receiver!;
+      receiver = '@${receiver!}';
     }
     var checkPresence =
         // ignore: deprecated_member_use
