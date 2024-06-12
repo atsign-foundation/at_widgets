@@ -111,7 +111,7 @@ class _SecondScreenState extends State<SecondScreen> {
       showSnackBar('Atsign not valid');
       return;
     }
-
+    if (!mounted) return showSnackBar('Something went wrong');
     var res = await notifyText(
       context,
       activeAtSign,
