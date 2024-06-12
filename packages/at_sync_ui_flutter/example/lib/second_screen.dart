@@ -3,6 +3,7 @@ import 'package:at_sync_ui_flutter/at_sync_ui_flutter.dart';
 import 'package:at_sync_ui_flutter_example/custom_sync_widget.dart';
 import 'package:at_sync_ui_flutter_example/ui_options.dart';
 import 'package:flutter/material.dart';
+
 import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class SecondScreen extends StatefulWidget {
   const SecondScreen({required this.activeAtSign, Key? key}) : super(key: key);
 
   @override
-  _SecondScreenState createState() => _SecondScreenState();
+  State<SecondScreen> createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
@@ -105,8 +106,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const UIOptions()));
+                await Navigator.push(context, MaterialPageRoute(builder: (context) => const UIOptions()));
               },
               child: const Text('See all UI options'),
             ),
@@ -125,8 +125,7 @@ class _SecondScreenState extends State<SecondScreen> {
                             width: 50,
                             fit: BoxFit.cover,
                             gaplessPlayback: true,
-                            image: NetworkImage(
-                                'https://source.unsplash.com/random'),
+                            image: NetworkImage('https://source.unsplash.com/random'),
                           ),
                         ),
                       )),
@@ -167,16 +166,11 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void showSnackBar(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(NavService.navKey.currentContext!)
-        .showSnackBar(SnackBar(
+    ScaffoldMessenger.of(NavService.navKey.currentContext!).showSnackBar(SnackBar(
       backgroundColor: isError ? const Color(0xFFe34040) : Colors.green,
       content: Text(
         msg,
-        style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            letterSpacing: 0.1,
-            fontWeight: FontWeight.normal),
+        style: const TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 0.1, fontWeight: FontWeight.normal),
       ),
     ));
   }
