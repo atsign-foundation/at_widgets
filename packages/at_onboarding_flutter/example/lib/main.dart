@@ -1,11 +1,11 @@
 import 'dart:async';
+
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_onboarding_flutter_example/switch_atsign.dart';
 import 'package:flutter/material.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:path_provider/path_provider.dart'
-    show getApplicationSupportDirectory;
-import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
+import 'package:path_provider/path_provider.dart' show getApplicationSupportDirectory;
 
 Future<void> main() async {
   await AtEnv.load();
@@ -22,8 +22,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
     ..isLocalStoreRequired = true;
 }
 
-final StreamController<ThemeMode> updateThemeMode =
-    StreamController<ThemeMode>.broadcast();
+final StreamController<ThemeMode> updateThemeMode = StreamController<ThemeMode>.broadcast();
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -52,16 +51,14 @@ class MyAppState extends State<MyApp> {
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
             scaffoldBackgroundColor: Colors.white,
-            colorScheme: ThemeData.light().colorScheme.copyWith(
-                primary: const Color(0xFFf4533d), surface: Colors.white),
+            colorScheme:
+                ThemeData.light().colorScheme.copyWith(primary: const Color(0xFFf4533d), surface: Colors.white),
           ),
           darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
             primaryColor: Colors.blue,
             scaffoldBackgroundColor: Colors.grey[850],
-            colorScheme: ThemeData.dark()
-                .colorScheme
-                .copyWith(primary: Colors.blue, surface: Colors.grey[850]),
+            colorScheme: ThemeData.dark().colorScheme.copyWith(primary: Colors.blue, surface: Colors.grey[850]),
           ),
           locale: _currentLocale,
           localizationsDelegates: const [
@@ -81,9 +78,7 @@ class MyAppState extends State<MyApp> {
               actions: <Widget>[
                 IconButton(
                   onPressed: () {
-                    updateThemeMode.sink.add(themeMode == ThemeMode.light
-                        ? ThemeMode.dark
-                        : ThemeMode.light);
+                    updateThemeMode.sink.add(themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light);
                   },
                   icon: Icon(
                     Theme.of(context).brightness == Brightness.light
@@ -114,7 +109,15 @@ class MyAppState extends State<MyApp> {
                               rootEnvironment: AtEnv.rootEnvironment,
                               appAPIKey: AtEnv.appApiKey,
                               theme: AtOnboardingTheme(
-                                primaryColor: null,
+                                primaryColor: Colors.blue,
+                                textTheme: const TextTheme(
+                                  titleMedium: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  // ),
+                                ),
                               ),
                               showPopupSharedStorage: true,
                             ),
@@ -123,10 +126,7 @@ class MyAppState extends State<MyApp> {
 
                         switch (result?.status) {
                           case AtOnboardingResultStatus.success:
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const HomeScreen()));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
                             break;
                           case null:
                           case AtOnboardingResultStatus.error:
@@ -156,6 +156,15 @@ class MyAppState extends State<MyApp> {
                               domain: AtEnv.rootDomain,
                               rootEnvironment: AtEnv.rootEnvironment,
                               appAPIKey: AtEnv.appApiKey,
+                              theme: AtOnboardingTheme(
+                                primaryColor: Colors.blue,
+                                textTheme: const TextTheme(
+                                  titleMedium: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
                             ),
                           );
                         }
@@ -171,17 +180,13 @@ class MyAppState extends State<MyApp> {
                         DropdownButton(
                           onChanged: (value) {
                             setState(() {
-                              value == 'en'
-                                  ? _currentLocale = const Locale('en')
-                                  : _currentLocale = const Locale('fr');
+                              value == 'en' ? _currentLocale = const Locale('en') : _currentLocale = const Locale('fr');
                             });
                           },
                           value: _currentLocale.languageCode,
                           items: const [
-                            DropdownMenuItem(
-                                value: 'en', child: Text('English')),
-                            DropdownMenuItem(
-                                value: 'fr', child: Text('French')),
+                            DropdownMenuItem(value: 'en', child: Text('English')),
+                            DropdownMenuItem(value: 'fr', child: Text('French')),
                           ],
                         )
                       ],
@@ -226,8 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 await showModalBottomSheet(
                   context: context,
                   backgroundColor: Colors.transparent,
-                  builder: (context) =>
-                      AtSignBottomSheet(atSignList: atSignList ?? []),
+                  builder: (context) => AtSignBottomSheet(atSignList: atSignList ?? []),
                 );
               }
               setState(() {});
