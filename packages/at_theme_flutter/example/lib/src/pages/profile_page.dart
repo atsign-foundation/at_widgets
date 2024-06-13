@@ -218,7 +218,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                   onTap: () async {
                     var appTheme = AppTheme.from();
                     var res = await setAppTheme(appTheme);
-                    if (res) {
+                    if (res && context.mounted) {
                       Navigator.of(context).pop();
                       appThemeController.sink.add(appTheme);
                     }
