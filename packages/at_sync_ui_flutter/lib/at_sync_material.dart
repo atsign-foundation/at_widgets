@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'at_sync_cupertino.dart' as cupertino;
 
+import 'at_sync_cupertino.dart' as cupertino;
 import 'at_sync_progress_indicator.dart';
 
 const double _kDefaultIndicatorRadius = 10.0;
@@ -56,8 +56,7 @@ class AtSyncIndicator extends StatelessWidget {
         padding: EdgeInsets.all(radius / _kDefaultIndicatorRadius),
         child: CircularProgressIndicator(
           value: value,
-          backgroundColor: backgroundColor ??
-              (color ?? _kDefaultActiveTickColor).withAlpha(46),
+          backgroundColor: backgroundColor ?? (color ?? _kDefaultActiveTickColor).withAlpha(46),
           color: (color ?? _kDefaultActiveTickColor).withAlpha(146),
           strokeWidth: radius / _kDefaultIndicatorRadius * 2,
         ),
@@ -133,8 +132,7 @@ class AtSyncLinearProgressIndicator extends AtSyncProgressIndicator {
   @override
   Widget build(BuildContext context) {
     return LinearProgressIndicator(
-      backgroundColor:
-          backgroundColor ?? (color ?? _kDefaultActiveTickColor).withAlpha(47),
+      backgroundColor: backgroundColor ?? (color ?? _kDefaultActiveTickColor).withAlpha(47),
       color: color ?? _kDefaultActiveTickColor,
       value: value,
       minHeight: minHeight ?? 4,
@@ -301,7 +299,7 @@ class AtSyncDialog {
             },
           ),
         ),
-        onPopInvoked: (didPop) => Future.value(
+        onPopInvokedWithResult: (didPop, result) => Future.value(
           barrierDismissible,
         ),
       ),
@@ -390,7 +388,6 @@ class AtSyncSnackBar {
 
   ///[dismiss] Dismiss the snack bar.
   void dismiss() {
-    ScaffoldMessenger.of(_context)
-        .hideCurrentSnackBar(reason: SnackBarClosedReason.dismiss);
+    ScaffoldMessenger.of(_context).hideCurrentSnackBar(reason: SnackBarClosedReason.dismiss);
   }
 }
