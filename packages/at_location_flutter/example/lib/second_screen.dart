@@ -100,10 +100,11 @@ class _SecondScreenState extends State<SecondScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     var result = await checkAtsign();
-                    if (!result) {
+                    if (!result && context.mounted) {
                       CustomToast().show('Atsign not valid', context);
                       return;
                     }
+                    if (!result) return;
                     await sendShareLocationNotification(receiver!, 30);
                   },
                   child: const Text('Send Location '),
@@ -111,10 +112,11 @@ class _SecondScreenState extends State<SecondScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     var result = await checkAtsign();
-                    if (!result) {
+                    if (!result && context.mounted) {
                       CustomToast().show('Atsign not valid', context);
                       return;
                     }
+                    if (!result) return;
                     await sendRequestLocationNotification(receiver!);
                   },
                   child: const Text('Request Location'),
@@ -127,19 +129,21 @@ class _SecondScreenState extends State<SecondScreen> {
             ElevatedButton(
               onPressed: () async {
                 var result = await checkAtsign();
-                if (!result) {
-                  CustomToast().show('Atsign not valid', context);
-                  return;
+                if (context.mounted) {
+                  if (!result) {
+                    CustomToast().show('Atsign not valid', context);
+                    return;
+                  }
+                  await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => AtLocationFlutterPlugin(
+                      [receiver],
+                      calculateETA: true,
+                      addCurrentUserMarker: true,
+                      // etaFrom: LatLng(44, -112),
+                      // textForCenter: 'Final',
+                    ),
+                  ));
                 }
-                await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => AtLocationFlutterPlugin(
-                    [receiver],
-                    calculateETA: true,
-                    addCurrentUserMarker: true,
-                    // etaFrom: LatLng(44, -112),
-                    // textForCenter: 'Final',
-                  ),
-                ));
               },
               child: const Text('Track Location '),
             ),
