@@ -88,29 +88,31 @@ class _MyAppState extends State<MyApp> {
                         setState(() {
                           atClientPreference = preference;
                         });
-                        final result = await AtOnboarding.onboard(
-                          context: context,
-                          config: AtOnboardingConfig(
-                            atClientPreference: atClientPreference!,
-                            domain: AtEnv.rootDomain,
-                            rootEnvironment: AtEnv.rootEnvironment,
-                            appAPIKey: AtEnv.appApiKey,
-                          ),
-                        );
-                        switch (result.status) {
-                          case AtOnboardingResultStatus.success:
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => const SecondScreen()));
-                            break;
-                          case AtOnboardingResultStatus.error:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text('An error has occurred'),
-                              ),
-                            );
-                            break;
-                          case AtOnboardingResultStatus.cancel:
-                            break;
+                        if (context.mounted) {
+                          final result = await AtOnboarding.onboard(
+                            context: context,
+                            config: AtOnboardingConfig(
+                              atClientPreference: atClientPreference!,
+                              domain: AtEnv.rootDomain,
+                              rootEnvironment: AtEnv.rootEnvironment,
+                              appAPIKey: AtEnv.appApiKey,
+                            ),
+                          );
+                          switch (result.status) {
+                            case AtOnboardingResultStatus.success:
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const SecondScreen()));
+                              break;
+                            case AtOnboardingResultStatus.error:
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('An error has occurred'),
+                                ),
+                              );
+                              break;
+                            case AtOnboardingResultStatus.cancel:
+                              break;
+                          }
                         }
                       },
                       child: const Text('Onboard an @sign'),
@@ -120,15 +122,17 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         var preference = await futurePreference;
                         atClientPreference = preference;
-                        AtOnboarding.reset(
-                          context: context,
-                          config: AtOnboardingConfig(
-                            atClientPreference: atClientPreference!,
-                            domain: AtEnv.rootDomain,
-                            rootEnvironment: AtEnv.rootEnvironment,
-                            appAPIKey: AtEnv.appApiKey,
-                          ),
-                        );
+                        if (context.mounted) {
+                          AtOnboarding.reset(
+                            context: context,
+                            config: AtOnboardingConfig(
+                              atClientPreference: atClientPreference!,
+                              domain: AtEnv.rootDomain,
+                              rootEnvironment: AtEnv.rootEnvironment,
+                              appAPIKey: AtEnv.appApiKey,
+                            ),
+                          );
+                        }
                       },
                       child: const Text('Reset'),
                     ),
