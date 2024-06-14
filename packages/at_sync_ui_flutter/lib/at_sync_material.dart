@@ -299,7 +299,7 @@ class AtSyncDialog {
             },
           ),
         ),
-        onPopInvokedWithResult: (didPop, result) => Future.value(
+        onPopInvoked: (didPop) => Future.value(
           barrierDismissible,
         ),
       ),
