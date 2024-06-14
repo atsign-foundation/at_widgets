@@ -299,6 +299,7 @@ class AtSyncDialog {
             },
           ),
         ),
+        // ignore: deprecated_member_use
         onPopInvoked: (didPop) => Future.value(
           barrierDismissible,
         ),
