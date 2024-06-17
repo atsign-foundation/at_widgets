@@ -32,7 +32,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.8
   at_common_flutter:
     path: ../
 
@@ -41,7 +41,7 @@ dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.2
+  flutter_lints: ^4.0.0
 
 
 # For information on the generic Dart part of this file, see the
