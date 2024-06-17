@@ -1,11 +1,11 @@
 import 'package:at_app_flutter/at_app_flutter.dart';
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_theme_flutter/at_theme_flutter.dart';
 import 'package:at_theme_flutter_example/main.dart';
 import 'package:at_theme_flutter_example/src/utils/color_constants.dart';
 import 'package:at_theme_flutter_example/src/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
 
 class ProfilePage extends StatefulWidget {
   final String title;
@@ -16,11 +16,10 @@ class ProfilePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with SingleTickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
   late TabController tabController;
   String? activeAtSign;
 
@@ -82,9 +81,7 @@ class _ProfilePageState extends State<ProfilePage>
                       ),
                       Text(
                         activeAtSign ?? 'Atsign',
-                        style: TextStyle(
-                            color: appTheme.secondaryColor,
-                            fontSize: 15.toFont),
+                        style: TextStyle(color: appTheme.secondaryColor, fontSize: 15.toFont),
                       ),
                     ],
                   ),
@@ -198,8 +195,7 @@ class _ProfilePageState extends State<ProfilePage>
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  title:
-                      Text("Default theme setting", style: TextStyles.text15),
+                  title: Text("Default theme setting", style: TextStyles.text15),
                   trailing: Icon(Icons.chevron_right, size: 15.toFont),
                   onTap: () {
                     Navigator.of(context).pop();
@@ -217,13 +213,12 @@ class _ProfilePageState extends State<ProfilePage>
 
                 /// we can save theme data without using package ui by using setAppTheme function.
                 ListTile(
-                  title: Text("Set theme without using package UI",
-                      style: TextStyles.text15),
+                  title: Text("Set theme without using package UI", style: TextStyles.text15),
                   trailing: Icon(Icons.chevron_right, size: 15.toFont),
                   onTap: () async {
                     var appTheme = AppTheme.from();
                     var res = await setAppTheme(appTheme);
-                    if (res) {
+                    if (res && context.mounted) {
                       Navigator.of(context).pop();
                       appThemeController.sink.add(appTheme);
                     }

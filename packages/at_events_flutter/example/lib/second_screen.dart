@@ -1,15 +1,15 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_events_flutter/at_events_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 
 import 'main.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
 
   @override
-  _SecondScreenState createState() => _SecondScreenState();
+  State<SecondScreen> createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
@@ -43,9 +43,9 @@ class _SecondScreenState extends State<SecondScreen> {
     }
   }
 
-  void updateEvents(List<EventKeyLocationModel> _events) {
+  void updateEvents(List<EventKeyLocationModel> events) {
     setState(() {
-      events = _events;
+      events = events;
     });
   }
 
@@ -75,13 +75,11 @@ class _SecondScreenState extends State<SecondScreen> {
           ),
           TextButton(
             onPressed: () {
-              bottomSheet(CreateEvent(atClientManager),
-                  MediaQuery.of(context).size.height * 0.9);
+              bottomSheet(CreateEvent(atClientManager), MediaQuery.of(context).size.height * 0.9);
             },
             child: const SizedBox(
               height: 40,
-              child:
-                  Text('Create event', style: TextStyle(color: Colors.black)),
+              child: Text('Create event', style: TextStyle(color: Colors.black)),
             ),
           ),
           const SizedBox(
@@ -92,30 +90,19 @@ class _SecondScreenState extends State<SecondScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () {
-                      HomeEventService().onEventModelTap(
-                          events[index].eventNotificationModel!,
-                          events[index].haveResponded);
+                      HomeEventService()
+                          .onEventModelTap(events[index].eventNotificationModel!, events[index].haveResponded);
                     },
                     child: DisplayTile(
-                      atsignCreator:
-                          events[index].eventNotificationModel!.atsignCreator,
-                      number: events[index]
-                          .eventNotificationModel!
-                          .group!
-                          .members!
-                          .length,
-                      title: 'Event - ' +
-                          events[index].eventNotificationModel!.title!,
-                      subTitle: HomeEventService()
-                          .getSubTitle(events[index].eventNotificationModel!),
-                      semiTitle: HomeEventService().getSemiTitle(
-                          events[index].eventNotificationModel!,
-                          events[index].haveResponded),
-                      showRetry:
-                          HomeEventService().calculateShowRetry(events[index]),
+                      atsignCreator: events[index].eventNotificationModel!.atsignCreator,
+                      number: events[index].eventNotificationModel!.group!.members!.length,
+                      title: 'Event - ${events[index].eventNotificationModel!.title!}',
+                      subTitle: HomeEventService().getSubTitle(events[index].eventNotificationModel!),
+                      semiTitle: HomeEventService()
+                          .getSemiTitle(events[index].eventNotificationModel!, events[index].haveResponded),
+                      showRetry: HomeEventService().calculateShowRetry(events[index]),
                       onRetryTapped: () {
-                        HomeEventService().onEventModelTap(
-                            events[index].eventNotificationModel!, false);
+                        HomeEventService().onEventModelTap(events[index].eventNotificationModel!, false);
                       },
                     ),
                   );

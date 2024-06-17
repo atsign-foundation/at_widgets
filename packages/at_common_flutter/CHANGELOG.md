@@ -1,3 +1,7 @@
+## 2.0.14
+- **CHORE**: Addressed static analysis info and warning messages to improve code quality and reduce noise during analysis.
+- **FIX**: Replace depreciated items with up-to-date-ones
+
 ## 2.0.13:
 - **CHORE**: Major version increase of at_commons from ^3.0.55 to ^4.0.1
 

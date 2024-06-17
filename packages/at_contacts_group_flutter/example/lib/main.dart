@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'second_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart'
     show AtOnboarding, AtOnboardingConfig, AtOnboardingResultStatus;
-import 'package:path_provider/path_provider.dart'
-    show getApplicationSupportDirectory;
-import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' show getApplicationSupportDirectory;
+
+import 'second_screen.dart';
 
 Future<void> main() async {
   await AtEnv.load();
@@ -24,14 +24,13 @@ Future<AtClientPreference> loadAtClientPreference() async {
     ..isLocalStoreRequired = true;
 }
 
-final StreamController<ThemeMode> updateThemeMode =
-    StreamController<ThemeMode>.broadcast();
+final StreamController<ThemeMode> updateThemeMode = StreamController<ThemeMode>.broadcast();
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -51,16 +50,14 @@ class _MyAppState extends State<MyApp> {
           theme: ThemeData().copyWith(
             brightness: Brightness.light,
             primaryColor: const Color(0xFFf4533d),
-            colorScheme: ThemeData.light().colorScheme.copyWith(
-                primary: const Color(0xFFf4533d), surface: Colors.white),
+            colorScheme:
+                ThemeData.light().colorScheme.copyWith(primary: const Color(0xFFf4533d), surface: Colors.white),
             scaffoldBackgroundColor: Colors.white,
           ),
           darkTheme: ThemeData().copyWith(
             brightness: Brightness.dark,
             primaryColor: Colors.blue,
-            colorScheme: ThemeData.dark()
-                .colorScheme
-                .copyWith(primary: Colors.blue, surface: Colors.white),
+            colorScheme: ThemeData.dark().colorScheme.copyWith(primary: Colors.blue, surface: Colors.white),
             scaffoldBackgroundColor: Colors.grey[850],
           ),
           themeMode: themeMode,
@@ -70,9 +67,7 @@ class _MyAppState extends State<MyApp> {
               actions: <Widget>[
                 IconButton(
                   onPressed: () {
-                    updateThemeMode.sink.add(themeMode == ThemeMode.light
-                        ? ThemeMode.dark
-                        : ThemeMode.light);
+                    updateThemeMode.sink.add(themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light);
                   },
                   icon: Icon(
                     Theme.of(context).brightness == Brightness.light
@@ -93,32 +88,31 @@ class _MyAppState extends State<MyApp> {
                         setState(() {
                           atClientPreference = preference;
                         });
-                        final result = await AtOnboarding.onboard(
-                          context: context,
-                          config: AtOnboardingConfig(
-                            atClientPreference: atClientPreference!,
-                            domain: AtEnv.rootDomain,
-                            rootEnvironment: AtEnv.rootEnvironment,
-                            appAPIKey: AtEnv.appApiKey,
-                          ),
-                        );
-                        switch (result.status) {
-                          case AtOnboardingResultStatus.success:
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const SecondScreen()));
-                            break;
-                          case AtOnboardingResultStatus.error:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text('An error has occurred'),
-                              ),
-                            );
-                            break;
-                          case AtOnboardingResultStatus.cancel:
-                            break;
+                        if (context.mounted) {
+                          final result = await AtOnboarding.onboard(
+                            context: context,
+                            config: AtOnboardingConfig(
+                              atClientPreference: atClientPreference!,
+                              domain: AtEnv.rootDomain,
+                              rootEnvironment: AtEnv.rootEnvironment,
+                              appAPIKey: AtEnv.appApiKey,
+                            ),
+                          );
+                          switch (result.status) {
+                            case AtOnboardingResultStatus.success:
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const SecondScreen()));
+                              break;
+                            case AtOnboardingResultStatus.error:
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('An error has occurred'),
+                                ),
+                              );
+                              break;
+                            case AtOnboardingResultStatus.cancel:
+                              break;
+                          }
                         }
                       },
                       child: const Text('Onboard an @sign'),
@@ -128,15 +122,17 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         var preference = await futurePreference;
                         atClientPreference = preference;
-                        AtOnboarding.reset(
-                          context: context,
-                          config: AtOnboardingConfig(
-                            atClientPreference: atClientPreference!,
-                            domain: AtEnv.rootDomain,
-                            rootEnvironment: AtEnv.rootEnvironment,
-                            appAPIKey: AtEnv.appApiKey,
-                          ),
-                        );
+                        if (context.mounted) {
+                          AtOnboarding.reset(
+                            context: context,
+                            config: AtOnboardingConfig(
+                              atClientPreference: atClientPreference!,
+                              domain: AtEnv.rootDomain,
+                              rootEnvironment: AtEnv.rootEnvironment,
+                              appAPIKey: AtEnv.appApiKey,
+                            ),
+                          );
+                        }
                       },
                       child: const Text('Reset'),
                     ),

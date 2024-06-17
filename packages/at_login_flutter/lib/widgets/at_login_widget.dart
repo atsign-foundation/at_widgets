@@ -1,19 +1,20 @@
 import 'dart:convert';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_login_flutter/domain/at_login_model.dart';
-import 'package:at_login_flutter/utils/app_constants.dart';
 import 'package:at_login_flutter/services/at_login_service.dart';
+import 'package:at_login_flutter/services/custom_nav.dart';
+import 'package:at_login_flutter/services/size_config.dart';
+import 'package:at_login_flutter/utils/app_constants.dart';
 import 'package:at_login_flutter/utils/color_constants.dart';
 import 'package:at_login_flutter/utils/custom_textstyles.dart';
 import 'package:at_login_flutter/utils/strings.dart';
 import 'package:at_login_flutter/widgets/custom_appbar.dart';
 import 'package:at_server_status/at_server_status.dart';
+import 'package:at_utils/at_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:at_utils/at_logger.dart';
-import 'package:at_login_flutter/services/size_config.dart';
-import 'package:at_login_flutter/services/custom_nav.dart';
 
 class AtLogin {
   ///Required field as for navigation.
@@ -210,8 +211,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
                       width: SizeConfig().screenWidth,
                       child: Center(
                         child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                ColorConstants.buttonHighLightColor!)),
+                            valueColor: AlwaysStoppedAnimation<Color>(ColorConstants.buttonHighLightColor!)),
                       ),
                     )
                   : SizedBox()
@@ -224,9 +224,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
     var cameraStatus = await Permission.camera.status;
     _logger.info("camera status => $cameraStatus");
 
-    if (cameraStatus.isRestricted ||
-        cameraStatus.isDenied ||
-        cameraStatus.isPermanentlyDenied) {
+    if (cameraStatus.isRestricted || cameraStatus.isDenied || cameraStatus.isPermanentlyDenied) {
       await askPermissions(Permission.camera);
     } else if (cameraStatus.isGranted) {
       setState(() {
@@ -269,11 +267,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
       _currentAtsign = _atLoginService.formatAtSign(jsonMap['atsign'])!;
       var isPaired = await _atLoginService.atsignIsPaired(_currentAtsign);
       if (isPaired) {
-        var message = Strings.loginRequest +
-            ' for ' +
-            _currentAtsign +
-            ' from ' +
-            requestorUrl;
+        var message = Strings.loginRequest + ' for ' + _currentAtsign + ' from ' + requestorUrl;
         _atLoginObj.requestorUrl = requestorUrl;
         _atLoginObj.atsign = _currentAtsign;
         _atLoginObj.challenge = challenge;
@@ -325,7 +319,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
           return AlertDialog(
             content: Text(message, style: CustomTextStyles.fontR20primary),
             actions: [
-              ButtonBar(
+              OverflowBar(
                 children: [
                   ElevatedButton(
                     child: const Text(Strings.loginDenied),
@@ -374,7 +368,7 @@ class _AtLoginWidgetState extends State<AtLoginWidget> {
           return AlertDialog(
             content: Text(message, style: CustomTextStyles.fontR20primary),
             actions: [
-              ButtonBar(
+              OverflowBar(
                 children: [
                   ElevatedButton(
                       child: const Text(Strings.notPairAtsign),

@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:at_sync_ui_flutter/at_sync_material.dart' as material;
 import 'package:at_sync_ui_flutter/at_sync_cupertino.dart' as cupertino;
+import 'package:at_sync_ui_flutter/at_sync_material.dart' as material;
+import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:at_sync_ui_flutter/at_sync_ui.dart';
 
 const double _kNormalPadding = 16;
 const double _kSmallPadding = 8;
@@ -44,8 +44,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   bool isLoading = false;
   double progress = 0.0;
 
@@ -58,8 +57,7 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
 
-    controller =
-        AnimationController(duration: const Duration(seconds: 5), vsync: this);
+    controller = AnimationController(duration: const Duration(seconds: 5), vsync: this);
     animation = Tween<double>(begin: 0.0, end: 1.0).animate(controller)
       ..addListener(() {
         setState(() {
@@ -107,10 +105,8 @@ class _MyHomePageState extends State<MyHomePage>
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text('Material',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('Cupertino',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Material', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Cupertino', style: TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               const SizedBox(height: _kNormalPadding),
@@ -151,18 +147,18 @@ class _MyHomePageState extends State<MyHomePage>
                     isLoading: isLoading,
                     syncIndicatorColor: _indicatorColor,
                     child: ElevatedButton(
-                      child: const Text('Material'),
                       onPressed: _startLoading,
+                      child: const Text('Material'),
                     ),
                   ),
                   cupertino.AtSyncButton(
                     isLoading: isLoading,
                     syncIndicatorColor: _indicatorColor,
                     child: CupertinoButton(
-                      child: const Text('Cupertino'),
                       color: Colors.grey,
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       onPressed: _startLoading,
+                      child: const Text('Cupertino'),
                     ),
                   ),
                 ],
@@ -234,16 +230,16 @@ class _MyHomePageState extends State<MyHomePage>
                     flex: 1,
                     child: material.AtSyncText(
                       value: progress,
-                      child: const Text('completed'),
                       indicatorColor: _indicatorColor,
+                      child: const Text('completed'),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: cupertino.AtSyncText(
                       value: progress,
-                      child: const Text('completed'),
                       indicatorColor: _indicatorColor,
+                      child: const Text('completed'),
                     ),
                   ),
                 ],
@@ -252,12 +248,12 @@ class _MyHomePageState extends State<MyHomePage>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   TextButton(
-                    child: const Text('Material Dialog'),
                     onPressed: _startMaterialDialog,
+                    child: const Text('Material Dialog'),
                   ),
                   TextButton(
-                    child: const Text('Cupertino Dialog'),
                     onPressed: _startCupertinoDialog,
+                    child: const Text('Cupertino Dialog'),
                   ),
                 ],
               ),
@@ -265,12 +261,12 @@ class _MyHomePageState extends State<MyHomePage>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   TextButton(
-                    child: const Text('Material SnackBar'),
                     onPressed: _startMaterialSnackBar,
+                    child: const Text('Material SnackBar'),
                   ),
                   TextButton(
-                    child: const Text('Cupertino SnackBar'),
                     onPressed: _startCupertinoSnackBar,
+                    child: const Text('Cupertino SnackBar'),
                   ),
                 ],
               ),
@@ -278,12 +274,12 @@ class _MyHomePageState extends State<MyHomePage>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   TextButton(
-                    child: const Text('Loading Dialog'),
                     onPressed: _showLoadingDialog,
+                    child: const Text('Loading Dialog'),
                   ),
                   TextButton(
-                    child: const Text('Loading SnackBar '),
                     onPressed: _showLoadingSnackBar,
+                    child: const Text('Loading SnackBar '),
                   ),
                 ],
               ),
@@ -291,8 +287,8 @@ class _MyHomePageState extends State<MyHomePage>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   TextButton(
-                    child: const Text('Show queue loading Dialog'),
                     onPressed: _showQueueLoadingDialog,
+                    child: const Text('Show queue loading Dialog'),
                   ),
                 ],
               ),

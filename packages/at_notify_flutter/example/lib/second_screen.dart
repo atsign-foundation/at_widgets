@@ -1,12 +1,11 @@
 import 'package:at_app_flutter/at_app_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_lookup/at_lookup.dart';
 import 'package:at_notify_flutter/screens/notify_screen.dart';
 import 'package:at_notify_flutter/services/notify_service.dart';
 import 'package:at_notify_flutter/utils/init_notify_service.dart';
 import 'package:at_notify_flutter/utils/notify_utils.dart';
-
-import 'package:at_lookup/at_lookup.dart';
+import 'package:flutter/material.dart';
 
 import 'main.dart';
 
@@ -15,7 +14,7 @@ class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
 
   @override
-  _SecondScreenState createState() => _SecondScreenState();
+  State<SecondScreen> createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
@@ -55,8 +54,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
                 TextField(
                   controller: atSignController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), hintText: '@atSign'),
+                  decoration: const InputDecoration(border: OutlineInputBorder(), hintText: '@atSign'),
                   onChanged: (text) {},
                 ),
                 const SizedBox(
@@ -64,8 +62,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
                 TextField(
                   controller: messageController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'Enter Message'),
+                  decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Enter Message'),
                   onChanged: (text) {},
                 ),
                 const SizedBox(
@@ -82,9 +79,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   onPressed: () async {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              NotifyScreen(notifyService: NotifyService())),
+                      MaterialPageRoute(builder: (context) => NotifyScreen(notifyService: NotifyService())),
                     );
                   },
                   child: const Text(
@@ -111,19 +106,19 @@ class _SecondScreenState extends State<SecondScreen> {
       return;
     }
 
-    var _isValidAtsign = await checkAtsign();
-    if (!_isValidAtsign) {
+    var isValidAtsign = await checkAtsign();
+    if (!isValidAtsign) {
       showSnackBar('Atsign not valid');
       return;
     }
-
-    var _res = await notifyText(
+    if (!mounted) return showSnackBar('Something went wrong');
+    var res = await notifyText(
       context,
       activeAtSign,
       atSignController.text,
       messageController.text,
     );
-    if (_res) {
+    if (res) {
       messageController.clear();
       showSnackBar('Message sent succesfully', color: Colors.green);
     } else {
@@ -135,11 +130,10 @@ class _SecondScreenState extends State<SecondScreen> {
     if (atSignController.text.isEmpty) {
       return false;
     } else if (!atSignController.text.contains('@')) {
-      atSignController.text = '@' + atSignController.text;
+      atSignController.text = '@${atSignController.text}';
     }
     // ignore: deprecated_member_use
-    var checkPresence = await AtLookupImpl.findSecondary(
-        atSignController.text, AtEnv.rootDomain, 64);
+    var checkPresence = await AtLookupImpl.findSecondary(atSignController.text, AtEnv.rootDomain, 64);
     return checkPresence != null;
   }
 
