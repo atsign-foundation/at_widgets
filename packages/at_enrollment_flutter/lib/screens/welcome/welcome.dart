@@ -2,7 +2,7 @@ import 'package:at_auth/at_auth.dart';
 import 'package:at_enrollment_flutter/common_widgets/button.dart';
 import 'package:at_enrollment_flutter/common_widgets/input_otp_field.dart';
 import 'package:at_enrollment_flutter/models/enrollment_config.dart';
-import 'package:at_enrollment_flutter/screens/enrollment_request/pending_enrollment_request.dart';
+import 'package:at_enrollment_flutter/screens/enrollment/pending_enrollment_request.dart';
 import 'package:at_enrollment_flutter/screens/welcome/widgets/type_selection_widget.dart';
 import 'package:at_enrollment_flutter/services/enrollment_service.dart';
 import 'package:at_enrollment_flutter/utils/assets.dart';

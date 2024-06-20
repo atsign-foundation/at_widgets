@@ -1,7 +1,8 @@
-import 'package:at_enrollment_flutter/screens/create_pin.dart';
+import 'package:at_enrollment_flutter/screens/home/create_pin.dart';
 import 'package:at_enrollment_flutter/utils/assets.dart';
 import 'package:flutter/material.dart';
 
+/// This class contains code related the "create a PIN" card in the home screen.
 class CreatePinCard extends StatefulWidget {
   const CreatePinCard({super.key});
 

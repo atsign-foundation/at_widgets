@@ -2,29 +2,29 @@ import 'dart:async';
 
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_enrollment_flutter/common_widgets/button.dart';
-import 'package:at_enrollment_flutter/screens/atkey_authenticator/widgets/create_pin_card.dart';
 import 'package:at_enrollment_flutter/screens/atkey_authenticator/widgets/otp_card.dart';
+import 'package:at_enrollment_flutter/screens/home/create_pin_card.dart';
 import 'package:at_enrollment_flutter/services/enrollment_service.dart';
 import 'package:at_enrollment_flutter/utils/assets.dart';
 import 'package:at_enrollment_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-class AtKeyAuthenticator extends StatefulWidget {
-  const AtKeyAuthenticator({super.key});
+/// This class contains code related to home screen displayed when user is onboarded successfully.
+/// In home screen, when user click on "Settings" tab, control comes into this class.
+class HomePageWidget extends StatefulWidget {
+  const HomePageWidget({super.key});
 
   @override
-  State<AtKeyAuthenticator> createState() => _AtKeyAuthenticatorState();
+  State<HomePageWidget> createState() => _HomePageWidgetState();
 }
 
-class _AtKeyAuthenticatorState extends State<AtKeyAuthenticator> {
+class _HomePageWidgetState extends State<HomePageWidget> {
   String currentAtsign = '';
   String otp = '';
   Timer? timer;
 
   @override
   void initState() {
-    // currentAtsign =
-    //     AtClientManager.getInstance().atClient.getCurrentAtSign() ?? '';
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       EnrollmentServiceWrapper.getInstance().getOTPFromServer();
     });
