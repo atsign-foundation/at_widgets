@@ -28,7 +28,6 @@ class _PendingEnrollmentRequestScreensState
   void initState() {
     checkForEnrollmentData();
     EnrollmentServiceWrapper.getInstance().getEnrollmentStatus();
-
     super.initState();
   }
 

@@ -1,21 +1,21 @@
 import 'package:at_common_flutter/at_common_flutter.dart';
 import 'package:at_enrollment_flutter/at_enrollment_flutter.dart';
-import 'package:at_enrollment_flutter/screens/atkey_authenticator/widgets/atkey_authenticator.dart';
-import 'package:at_enrollment_flutter/screens/atkey_authenticator/widgets/enrollment_request_screen.dart';
+import 'package:at_enrollment_flutter/screens/home/enrollment_request_screen.dart';
+import 'package:at_enrollment_flutter/screens/home/home_screen.dart';
 import 'package:at_enrollment_flutter/utils/colors.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 
-class KeyAuthenticatorHomeScreen extends StatefulWidget {
-  const KeyAuthenticatorHomeScreen({super.key});
+/// This class contains code related to home screen after the user is successfully
+/// onboarded/authenticated
+class OnboardingHomeScreen extends StatefulWidget {
+  const OnboardingHomeScreen({super.key});
 
   @override
-  State<KeyAuthenticatorHomeScreen> createState() =>
-      _KeyAuthenticatorHomeScreenState();
+  State<OnboardingHomeScreen> createState() => _OnboardingHomeScreenState();
 }
 
-class _KeyAuthenticatorHomeScreenState
-    extends State<KeyAuthenticatorHomeScreen> {
+class _OnboardingHomeScreenState extends State<OnboardingHomeScreen> {
   String currentAtsign = '';
 
   @override
@@ -75,7 +75,7 @@ class _KeyAuthenticatorHomeScreenState
                   const Expanded(
                     child: TabBarView(
                       children: [
-                        AtKeyAuthenticator(),
+                        HomePageWidget(),
                         EnrollmentRequestScreen(),
                       ],
                     ),

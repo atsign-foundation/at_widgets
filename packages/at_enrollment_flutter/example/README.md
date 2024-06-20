@@ -14,8 +14,7 @@ It is compatible with Flutter version 3.22.2 (Stable).
 ## Notifications
 
 - When an enrollment request is submitted, all users with access to the "__manage" namespace will receive a notification
-  to review and
-  manage the request.
+  to review and manage the request.
 
 ## Usage
 

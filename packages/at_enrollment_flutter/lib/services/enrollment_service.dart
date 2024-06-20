@@ -120,33 +120,6 @@ class EnrollmentServiceWrapper {
     return _atClientPreference;
   }
 
-  Stream<AtNotification> fetchEnrollmentNotifications() {
-    Stream<AtNotification> notificationStream = AtClientManager.getInstance()
-        .atClient
-        .notificationService
-        .subscribe(regex: '__manage');
-
-    notificationStream.listen((AtNotification event) {
-      var notificationValue = jsonDecode(event.value!);
-      // create EnrollmentRequest and add to stream controller
-      EnrollmentData enrollmentRequest = EnrollmentData(
-          event.from,
-          event.key.split('.').first,
-          notificationValue['encryptedApkamSymmetricKey'] ?? '',
-          notificationValue['appName'] ?? '',
-          notificationValue['deviceName'] ?? '',
-          notificationValue['namespace'] ?? {});
-
-      pendingEnrollmentRequest = [
-        enrollmentRequest,
-        ...pendingEnrollmentRequest
-      ];
-
-      pendingEnrollmentControllerSink.add(pendingEnrollmentRequest);
-    });
-    return notificationStream;
-  }
-
   Future<List<EnrollmentData>> fetchPendingRequests() async {
     // If data is already fetched
     if (pendingEnrollmentRequest.isNotEmpty) {

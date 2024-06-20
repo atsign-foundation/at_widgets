@@ -1,7 +1,8 @@
 ## at_enrollment_flutter
 
 The at_enrollment_flutter package enables APKAM authentication and authorization for AtProtocol applications. For
-detailed information on APKAM, refer to the [APKAM documentation](Link to apkam documents).
+detailed information on APKAM, refer to
+the [APKAM documentation](https://docs.google.com/document/d/15DWFQvhIW_IPwHFtyx60Gw82pmiqQZSEly9AdJ9GNao/edit?usp=sharing).
 
 This open-source package, written in Dart, integrates seamlessly with Flutter and offers the following key features:
 

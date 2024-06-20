@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path_provider/path_provider.dart';
 
 class LandingPage extends StatefulWidget {
-  static const String rootDomain = 'vip.ve.atsign.zone';
+  static const String rootDomain = 'root.atsign.org';
 
   const LandingPage({super.key});
 
