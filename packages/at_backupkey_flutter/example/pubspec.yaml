@@ -11,17 +11,23 @@ environment:
 
 dependencies:
   at_app_flutter: ^5.2.0
-  at_client_mobile: ^3.2.15
+  at_client_mobile: ^3.2.16
   at_onboarding_flutter: ^6.1.7
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
   path: ^1.8.3
   path_provider: ^2.1.1
+  
 
 dependency_overrides:
   at_backupkey_flutter:
     path: ../
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: expose_backupkey-constants
 
 dev_dependencies:
   flutter_lints: ^4.0.0

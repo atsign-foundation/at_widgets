@@ -44,6 +44,11 @@ dependencies:
 dependency_overrides:
   at_backupkey_flutter:
     path: ../../at_backupkey_flutter
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: expose_backupkey-constants
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to

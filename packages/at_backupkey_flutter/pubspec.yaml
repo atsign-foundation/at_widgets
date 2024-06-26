@@ -18,7 +18,7 @@ dependencies:
   path_provider: ^2.1.1
   at_file_saver: ^0.1.2
   at_utils: ^3.0.15
-  at_client_mobile: ^3.2.12
+  at_client_mobile: ^3.2.16
   showcaseview: ^3.0.0
   device_info_plus: ^9.0.3
   # desktop - dependencies
@@ -31,6 +31,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+
+dependency_overrides:
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: expose_backupkey-constants
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

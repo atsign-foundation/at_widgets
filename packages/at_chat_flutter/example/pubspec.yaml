@@ -41,6 +41,13 @@ dependencies:
   path_provider: ^2.1.1
   flutter_keychain: ^2.4.0
 
+dependency_overrides:
+  at_client_mobile:
+    git:
+      url: https://github.com/atsign-foundation/at_client_sdk.git
+      path: packages/at_client_mobile
+      ref: expose_backupkey-constants
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
