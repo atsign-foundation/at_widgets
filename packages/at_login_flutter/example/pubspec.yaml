@@ -39,7 +39,7 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client_mobile
-      ref: expose_backupkey-constants
+      ref: trunk
 
 dev_dependencies:
   flutter_lints: ^2.0.3

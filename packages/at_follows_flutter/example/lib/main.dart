@@ -1,12 +1,13 @@
 import 'dart:async';
+
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_follows_flutter_example/screens/follows_screen.dart';
-import 'package:at_onboarding_flutter/services/onboarding_service.dart';
-import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
-import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 
 import 'services/at_service.dart';
 
@@ -29,6 +30,7 @@ Future<AtClientPreference> loadAtClientPreference() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -37,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
-  AtClientService? atClientService;
+  AtAuthService? atClientService;
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
@@ -75,9 +77,12 @@ class _MyAppState extends State<MyApp> {
                       switch (result.status) {
                         case AtOnboardingResultStatus.success:
                           final atsign = result.atsign;
-                          atClientService = OnboardingService.getInstance().atClientServiceMap[atsign];
-                          AtService.getInstance().atClientServiceInstance = OnboardingService.getInstance().atClientServiceMap[atsign];
-                          
+                          atClientService = OnboardingService.getInstance()
+                              .atClientServiceMap[atsign];
+                          AtService.getInstance().atClientServiceInstance =
+                              OnboardingService.getInstance()
+                                  .atClientServiceMap[atsign];
+
                           await AtClientManager.getInstance().setCurrentAtSign(
                               atsign!,
                               atClientPreference!.namespace!,

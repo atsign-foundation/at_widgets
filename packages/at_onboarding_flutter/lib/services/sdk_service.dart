@@ -1,10 +1,10 @@
 import 'dart:async';
+
 import 'package:at_client_mobile/at_client_mobile.dart';
 
 class SDKService {
   static final KeyChainManager _keyChainManager = KeyChainManager.getInstance();
-  Map<String?, AtClientService>? atClientServiceMap =
-      <String?, AtClientService>{};
+  Map<String?, AtAuthService>? atClientServiceMap = <String?, AtAuthService>{};
   List<String>? atSignsList;
   String? currentAtsign;
   String? lastOnboardedAtsign;

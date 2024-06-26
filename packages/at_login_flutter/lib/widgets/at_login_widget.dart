@@ -32,7 +32,7 @@ class AtLogin {
   final Widget? logo;
 
   ///Function returns atClientServiceMap successful login.
-  final Function(Map<String, AtClientService>, String) login;
+  final Function(Map<String, AtAuthService>, String) login;
 
   ///Function returns error when failed in atLogin the existing or given atsign
   ///if [nextScreen] is null;
@@ -97,7 +97,7 @@ class AtLoginWidget extends StatefulWidget {
   final Widget? logo;
 
   ///Function returns atClientServiceMap on successful login.
-  final Function(Map<String, AtClientService>, String) login;
+  final Function(Map<String, AtAuthService>, String) login;
 
   ///Function returns error when failed in login the existing or given atsign if [nextScreen] is null;
   final Function(Object) onError;

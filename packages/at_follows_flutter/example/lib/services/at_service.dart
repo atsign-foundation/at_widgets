@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_commons/at_commons.dart' as at_commons;
 import 'package:at_follows_flutter_example/services/notification_service.dart'
     as follows_notification_service;
 import 'package:at_follows_flutter_example/utils/app_constants.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:at_commons/at_commons.dart' as at_commons;
 
 class AtService {
   static final AtService _singleton = AtService._internal();
@@ -18,9 +18,8 @@ class AtService {
   }
 
   String? _atsign;
-  Map<String?, AtClientService> atClientServiceMap =
-      <String?, AtClientService>{};
-  AtClientService? atClientServiceInstance;
+  Map<String?, AtAuthService> atClientServiceMap = <String?, AtAuthService>{};
+  AtAuthService? atClientServiceInstance;
   AtClientImpl? atClientInstance;
   Function? monitorCallBack;
 

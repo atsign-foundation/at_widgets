@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:at_app_flutter/at_app_flutter.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 void main() {
   AtEnv.load();
@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
 
-  AtClientService? atClientService;
+  AtAuthService? atClientService;
   AtClientPreference? atClientPreference;
 
   @override

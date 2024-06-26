@@ -37,7 +37,7 @@ dependency_overrides:
     git:
       url: https://github.com/atsign-foundation/at_client_sdk.git
       path: packages/at_client_mobile
-      ref: expose_backupkey-constants
+      ref: trunk
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
