@@ -36,17 +36,10 @@ dependencies:
     # the parent directory to use the current plugin's version.
     path: ../
   at_onboarding_flutter: ^6.1.7
-  at_client_mobile: ^3.2.13
+  at_client_mobile: ^3.2.17
   at_utils: ^3.0.15
   path_provider: ^2.1.1
   flutter_keychain: ^2.4.0
-
-dependency_overrides:
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client_mobile
-      ref: trunk
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
