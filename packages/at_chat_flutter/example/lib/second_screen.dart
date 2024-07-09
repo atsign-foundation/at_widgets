@@ -1,6 +1,9 @@
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_chat_flutter/at_chat_flutter.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
+import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +17,7 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
+  AtAuthService? atAuthService;
   String? activeAtSign;
   GlobalKey<ScaffoldState>? scaffoldKey;
   String chatWithAtSign = '';
@@ -90,8 +94,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       const SizedBox(height: 20.0),
                       TextButton(
                         onPressed: () {
-                          scaffoldKey!.currentState!
-                              .showBottomSheet((context) => const ChatScreen());
+                          scaffoldKey!.currentState!.showBottomSheet((context) => const ChatScreen());
                         },
                         child: const Text(
                           'Open chat in bottom sheet',
@@ -101,10 +104,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       const SizedBox(height: 10.0),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const ThirdScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ThirdScreen()));
                         },
                         child: const Text(
                           'Navigate to chat screen',
@@ -211,8 +211,7 @@ class _SecondScreenState extends State<SecondScreen> {
     setState(() {
       activeAtSign = currentAtSign;
     });
-    initializeChatService(atClientManager, activeAtSign!,
-        rootDomain: AtEnv.rootDomain);
+    initializeChatService(atClientManager, activeAtSign!, rootDomain: AtEnv.rootDomain);
   }
 
   void setAtsignToChatWith() {
@@ -226,8 +225,7 @@ class _SecondScreenState extends State<SecondScreen> {
         member1.startsWith('@') ? member1 : '@$member1',
         member2.startsWith('@') ? member2 : '@$member2'
       ]);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const ThirdScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const ThirdScreen()));
     } else {
       showAtsignErrorDialog(context);
     }

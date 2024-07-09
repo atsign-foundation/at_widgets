@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_chat_flutter_example/second_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:flutter/material.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
-import 'package:path_provider/path_provider.dart'
-    show getApplicationSupportDirectory;
+import 'package:path_provider/path_provider.dart' show getApplicationSupportDirectory;
 
 Future<void> main() async {
   await AtEnv.load();
@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
+  AtAuthService? atAuthService;
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
@@ -91,8 +92,7 @@ class _MyAppState extends State<MyApp> {
                             }
                             break;
                           case AtOnboardingResultStatus.error:
-                            _logger.severe(
-                                'Onboarding throws ${result.errorCode} error');
+                            _logger.severe('Onboarding throws ${result.errorCode} error');
                             if (mounted) {
                               await showDialog(
                                 context: context,
@@ -125,14 +125,12 @@ class _MyAppState extends State<MyApp> {
                 Center(
                     child: TextButton(
                         style: ButtonStyle(
-                          backgroundColor:
-                              WidgetStateProperty.all<Color>(Colors.black12),
+                          backgroundColor: WidgetStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () {
                           FlutterKeychain.remove(key: '@atsign');
                         },
-                        child: const Text('Clear paired atsigns',
-                            style: TextStyle(color: Colors.black)))),
+                        child: const Text('Clear paired atsigns', style: TextStyle(color: Colors.black)))),
               ],
             ),
           )),
