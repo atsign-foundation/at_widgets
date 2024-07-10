@@ -88,7 +88,7 @@ class ChatService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String> getPrivateKey(String atsign) async {
-    var str = await KeychainUtil.getPrivateKey(atsign);
+    var str = await KeyChainManager.getInstance().getPkamPrivateKey(atsign);
     return str!;
   }
 

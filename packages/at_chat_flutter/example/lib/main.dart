@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_chat_flutter_example/second_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
+import 'package:flutter/material.dart';
+import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationSupportDirectory;
-import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
-import 'package:flutter_keychain/flutter_keychain.dart';
 
 Future<void> main() async {
   await AtEnv.load();
@@ -35,7 +35,6 @@ class _MyAppState extends State<MyApp> {
   // * load the AtClientPreference in the background
   Future<AtClientPreference> futurePreference = loadAtClientPreference();
   AtClientPreference? atClientPreference;
-  AtClientService? atClientService;
 
   final AtSignLogger _logger = AtSignLogger(AtEnv.appNamespace);
 
