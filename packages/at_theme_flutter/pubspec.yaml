@@ -11,7 +11,7 @@ environment:
   sdk: ">=2.12.0 <4.0.0"
 
 dependencies:
-  at_client_mobile: ^3.2.12
+  at_client_mobile: ^3.2.17
   at_common_flutter: ^2.0.12
   at_commons: ^4.0.1
   at_utils: ^3.0.15
@@ -19,12 +19,6 @@ dependencies:
     sdk: flutter
   fluttertoast: ^8.2.2
 
-dependency_overrides:
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client_mobile
-      ref: expose_backupkey-constants
 dev_dependencies:
   flutter_lints: ^2.0.3
   flutter_test:
