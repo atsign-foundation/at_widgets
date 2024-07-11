@@ -29,7 +29,7 @@ environment:
 dependencies:
   at_app_flutter: ^5.2.0
   at_backupkey_flutter: ^4.0.10
-  at_client_mobile: ^3.2.15
+  at_client_mobile: ^3.2.17
   at_onboarding_flutter: ^6.1.7
   at_sync_ui_flutter: ^1.0.11
   # The following adds the Cupertino Icons font to your application.
@@ -46,11 +46,6 @@ dependency_overrides:
     path: ../
   at_backupkey_flutter:
     path: ../../at_backupkey_flutter
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client_mobile
-      ref: expose_backupkey-constants
 
 
 
