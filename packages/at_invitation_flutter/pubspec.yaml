@@ -11,7 +11,7 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
-  at_client_mobile: ^3.2.12
+  at_client_mobile: ^3.2.17
   at_common_flutter: ^2.0.12
   at_commons: ^4.0.1
   at_lookup: ^3.0.40
@@ -23,13 +23,6 @@ dependencies:
   uni_links: ^0.5.1
   url_launcher: ^6.2.4
   uuid: ^3.0.7
-
-dependency_overrides:
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client_mobile
-      ref: trunk
 
 dev_dependencies:
   flutter_lints: ^2.0.3
