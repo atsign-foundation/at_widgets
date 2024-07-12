@@ -14,7 +14,7 @@ environment:
 dependencies:
   async: ^2.11.0
   at_client: ^3.0.72
-  at_client_mobile: ^3.2.12
+  at_client_mobile: ^3.2.17
   at_common_flutter: ^2.0.13
   at_commons: ^4.0.1
   at_contact: ^3.0.8
@@ -37,13 +37,6 @@ dependencies:
   transparent_image: ^2.0.1
   tuple: ^2.0.2
   vector_math: ^2.1.4
-
-dependency_overrides:
-  at_client_mobile:
-    git:
-      url: https://github.com/atsign-foundation/at_client_sdk.git
-      path: packages/at_client_mobile
-      ref: trunk
 
 dev_dependencies:
   flutter_lints: ^2.0.3
