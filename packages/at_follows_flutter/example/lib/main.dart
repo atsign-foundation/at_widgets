@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_follows_flutter_example/screens/follows_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:at_onboarding_flutter/services/onboarding_service.dart';
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart'
-    show getApplicationSupportDirectory;
+import 'package:path_provider/path_provider.dart' show getApplicationSupportDirectory;
 
 import 'services/at_service.dart';
 
@@ -77,16 +75,12 @@ class _MyAppState extends State<MyApp> {
                       switch (result.status) {
                         case AtOnboardingResultStatus.success:
                           final atsign = result.atsign;
-                          atClientService = OnboardingService.getInstance()
-                              .atClientServiceMap[atsign];
-                          AtService.getInstance().atClientServiceInstance =
-                              OnboardingService.getInstance()
-                                  .atClientServiceMap[atsign];
 
-                          await AtClientManager.getInstance().setCurrentAtSign(
-                              atsign!,
-                              atClientPreference!.namespace!,
-                              atClientPreference!);
+                          AtService.getInstance().atClientServiceInstance =
+                              AtClientMobile.authService(atsign!, atClientPreference!);
+
+                          await AtClientManager.getInstance()
+                              .setCurrentAtSign(atsign, atClientPreference!.namespace!, atClientPreference!);
                           await Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -95,8 +89,7 @@ class _MyAppState extends State<MyApp> {
                           );
                           break;
                         case AtOnboardingResultStatus.error:
-                          _logger.severe(
-                              'Onboarding throws ${result.errorCode} error');
+                          _logger.severe('Onboarding throws ${result.errorCode} error');
                           await showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -124,8 +117,7 @@ class _MyAppState extends State<MyApp> {
                 Center(
                     child: TextButton(
                         style: ButtonStyle(
-                          backgroundColor:
-                              WidgetStateProperty.all<Color>(Colors.black12),
+                          backgroundColor: WidgetStateProperty.all<Color>(Colors.black12),
                         ),
                         onPressed: () async {
                           var _atsignsList = await KeychainUtil.getAtsignList();
@@ -133,12 +125,10 @@ class _MyAppState extends State<MyApp> {
                             await KeychainUtil.resetAtSignFromKeychain(atsign);
                           }
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Cleared all paired atsigns')));
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(content: Text('Cleared all paired atsigns')));
                         },
-                        child: const Text('Clear paired atsigns',
-                            style: TextStyle(color: Colors.black)))),
+                        child: const Text('Clear paired atsigns', style: TextStyle(color: Colors.black)))),
               ],
             ),
           )),

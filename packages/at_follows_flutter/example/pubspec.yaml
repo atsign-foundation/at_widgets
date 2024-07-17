@@ -29,10 +29,6 @@ dependencies:
   flutter_local_notifications: ^14.1.1
   path_provider: ^2.1.1
 
-dependency_overrides:
-  at_onboarding_flutter:
-    path: ../../at_onboarding_flutter
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
