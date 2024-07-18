@@ -9,10 +9,10 @@ class AtEnrollment {
   /// [init] should be called before using enrollment_flutter package
   /// it sets [atClientPreference],
   static init(AtClientPreference atClientPreference) {
-    EnrollmentServiceWrapper.getInstance().setAtClientPreference =
-        atClientPreference;
+    EnrollmentServiceWrapper.getInstance().setAtClientPreference = atClientPreference;
   }
 
+  // TODO: Add list of namespaces and permissions to be requested
   /// Use [submitEnrollmentRequest] to submit new enrollment request and generate atKey
   static Future submitEnrollmentRequest(BuildContext context) async {
     Navigator.push(
