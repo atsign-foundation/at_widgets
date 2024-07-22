@@ -1,9 +1,6 @@
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
-import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_chat_flutter/at_chat_flutter.dart';
 import 'package:at_client_mobile/at_client_mobile.dart';
-import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:flutter/material.dart';
 

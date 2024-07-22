@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
-import 'package:at_app_flutter/at_app_flutter.dart' show AtEnv;
 import 'package:at_chat_flutter_example/second_screen.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart' show AtSignLogger;
